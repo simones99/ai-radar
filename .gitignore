@@ -6,3 +6,7 @@ __pycache__/
 .DS_Store
 .lsp/
 .clj-kondo/
+web/node_modules/
+web/public/data/
+web/test-results/
+web/playwright-report/

@@ -1,0 +1,31 @@
+const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+
+export const nf = (v: number, d = 0): string =>
+  v.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+/** Data a mezzogiorno locale: niente salti di giorno per il fuso orario. */
+export const parseDay = (iso: string): Date => new Date(`${iso.slice(0, 10)}T12:00:00`);
+
+export const day = (iso: string): string => {
+  const d = parseDay(iso);
+  return `${d.getDate()} ${MESI[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
+};
+
+export const monthName = (ymStr: string): string => MESI[Number(ymStr.slice(5, 7)) - 1];
+export const monthYear = (ymStr: string): string => `${monthName(ymStr)} ${ymStr.slice(0, 4)}`;
+
+const pad = (n: number) => String(n).padStart(2, '0');
+export const isoDay = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+export const ym = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+
+export function daysTo(iso: string, today: Date): number {
+  return Math.round((parseDay(iso).getTime() - parseDay(isoDay(today)).getTime()) / 864e5);
+}
+
+export function signedPts(v: number): string {
+  const r = Math.round(v * 100);
+  return (r > 0 ? '+' : r < 0 ? '−' : '±') + Math.abs(r);
+}
+
+export const capitalize = (s: string): string => (s ? s[0].toUpperCase() + s.slice(1) : s);
+export const lowerFirst = (s: string): string => (s ? s[0].toLowerCase() + s.slice(1) : s);

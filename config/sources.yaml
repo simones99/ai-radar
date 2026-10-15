@@ -41,28 +41,43 @@ github_repos:
   - ggml-org/llama.cpp
   - unslothai/unsloth
 
-# Feed per il blocco "Stare al passo".
+# Feed per le notizie. tema: politica, ricerca, prodotti, business.
+# alternativi: indirizzi provati in ordine se il primo non risponde
+# (alcuni Substack rispondono 403 da GitHub Actions).
 feeds:
   - name: OpenAI
     url: https://openai.com/news/rss.xml
+    tema: prodotti
   - name: Google DeepMind
     url: https://deepmind.google/blog/rss.xml
+    tema: ricerca
   - name: Hugging Face
     url: https://huggingface.co/blog/feed.xml
+    tema: ricerca
   - name: Epoch AI
-    url: https://epochai.substack.com/feed
+    url: https://epoch.ai/atom.xml
+    alternativi: [https://epochai.substack.com/feed]
+    tema: ricerca
   - name: Import AI
-    url: https://importai.substack.com/feed
+    url: https://jack-clark.net/feed/
+    alternativi: [https://importai.substack.com/feed]
+    tema: ricerca
   - name: EU AI Act Newsletter
     url: https://artificialintelligenceact.substack.com/feed
+    alternativi: [https://artificialintelligenceact.eu/feed/]
+    tema: politica
   - name: Google AI
     url: https://blog.google/innovation-and-ai/technology/ai/rss/
+    tema: prodotti
   - name: Simon Willison
     url: https://simonwillison.net/atom/entries/   # solo articoli; /atom/everything/ include anche link e citazioni
+    tema: prodotti
   - name: The Decoder
     url: https://the-decoder.com/feed/
+    tema: prodotti
   - name: Latent Space
     url: https://www.latent.space/feed
+    tema: business
 
 # Quanti giorni di notizie tenere e quante al massimo per fonte.
 feeds_days: 45

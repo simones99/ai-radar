@@ -11,6 +11,7 @@
   const start = parseHash(location.hash);
   let openId = $state<TileId | null>(start?.tema ?? null);
   let elemento = $state<string | null>(start?.elemento ?? null);
+  let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
   let pushed = false; // la card aperta ha aggiunto un passo alla cronologia
   setTitle(start?.tema ?? null);
@@ -19,30 +20,37 @@
     document.title = id ? `${TILES.find((t) => t.id === id)?.label} · AI Radar` : 'AI Radar';
   }
 
-  function withTransition(update: () => void) {
-    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+  function withTransition(update: () => void): Promise<void> {
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => { updateCallbackDone?: Promise<void> } };
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (doc.startViewTransition && !reduce) doc.startViewTransition(() => flushSync(update));
-    else update();
+    if (doc.startViewTransition && !reduce) {
+      const t = doc.startViewTransition(() => flushSync(update));
+      return (t?.updateCallbackDone ?? Promise.resolve()).catch(() => {});
+    }
+    update();
+    return Promise.resolve();
   }
 
-  function show(id: TileId | null, el: string | null = null) {
-    withTransition(() => {
+  function show(id: TileId | null, el: string | null = null): Promise<void> {
+    current = id;
+    if (id) lastOpened = id;
+    const p = withTransition(() => {
       openId = id;
       elemento = el;
-      if (id) lastOpened = id;
     });
     setTitle(id);
+    return p;
   }
 
-  async function refocus() {
+  async function refocus(done: Promise<void>) {
+    await done;
     await tick();
     if (lastOpened) document.querySelector<HTMLButtonElement>(`#tile-${lastOpened} .face`)?.focus();
   }
 
   function openTile(id: TileId) {
-    if (openId === id) return closeTile();
-    if (openId === null) {
+    if (current === id) return closeTile();
+    if (current === null) {
       history.pushState({ tema: id }, '', toHash(id));
       pushed = true;
     } else {
@@ -52,26 +60,26 @@
   }
 
   function closeTile() {
-    if (openId === null) return;
+    if (current === null) return;
     if (pushed) {
       pushed = false;
       history.back(); // onPop chiude e riporta il focus
       return;
     }
     history.replaceState(null, '', location.pathname + location.search);
-    show(null);
-    refocus();
+    refocus(show(null));
   }
 
   function onPop() {
     const h = parseHash(location.hash);
-    pushed = false;
-    show(h?.tema ?? null, h?.elemento ?? null);
-    if (!h) refocus();
+    if (!h && current === null) return;
+    pushed = history.state?.tema != null;
+    const p = show(h?.tema ?? null, h?.elemento ?? null);
+    if (!h) refocus(p);
   }
 
   function onKey(e: KeyboardEvent) {
-    if (e.key === 'Escape' && openId) {
+    if (e.key === 'Escape' && current) {
       e.preventDefault();
       closeTile();
     }

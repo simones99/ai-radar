@@ -74,4 +74,47 @@ describe('TileGrid', () => {
       expect(n === 0 ? location.hash === '' : location.hash === '#business' && n === 1).toBe(true);
     });
   });
+
+  it('con View Transitions il focus torna sulla card dopo Esc', async () => {
+    const doc = document as unknown as Record<string, unknown>;
+    doc.startViewTransition = (cb: () => void) => {
+      const updateCallbackDone = new Promise<void>((r) => setTimeout(() => { cb(); r(); }, 0));
+      return { updateCallbackDone, finished: updateCallbackDone, ready: updateCallbackDone, skipTransition() {} };
+    };
+    try {
+      render(TileGrid, { data, today });
+      await fireEvent.click(face('Business'));
+      await waitFor(() => expect(details()).toHaveLength(1));
+      await fireEvent.keyDown(window, { key: 'Escape' });
+      await waitFor(() => expect(document.activeElement).toBe(face('Business')));
+    } finally {
+      delete doc.startViewTransition;
+    }
+  });
+
+  it('un’ancora della pagina dopo la chiusura non ruba il focus', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Business'));
+    await fireEvent.keyDown(window, { key: 'Escape' });
+    await waitFor(() => expect(details()).toHaveLength(0));
+    await waitFor(() => expect(document.activeElement).toBe(face('Business')));
+    (document.activeElement as HTMLElement).blur();
+    history.pushState(null, '', '#stato');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(document.activeElement).not.toBe(face('Business'));
+    expect(details()).toHaveLength(0);
+  });
+
+  it('indietro, avanti, Esc: chiude e azzera l’indirizzo', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Business'));
+    history.back();
+    await waitFor(() => expect(details()).toHaveLength(0));
+    history.forward();
+    await waitFor(() => expect(details()).toHaveLength(1));
+    await fireEvent.keyDown(window, { key: 'Escape' });
+    await waitFor(() => expect(details()).toHaveLength(0));
+    await waitFor(() => expect(location.hash).toBe(''));
+  });
 });

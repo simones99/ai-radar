@@ -78,7 +78,7 @@
   .logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
   nav { display: flex; gap: var(--s3); font-size: 14px; }
   nav a { text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
-  nav a:hover { color: var(--fg); }
+  @media (hover: hover) { nav a:hover { color: var(--fg); } }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
   h1 { font-weight: 500; font-size: clamp(32px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
   h1 em { font-style: normal; color: var(--accent); font-weight: 700; }

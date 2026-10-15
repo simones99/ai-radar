@@ -24,5 +24,8 @@ SOFTWARE.
 This license covers the code only. The data in data/ comes from third-party
 sources and keeps their terms: Epoch AI (CC BY 4.0), arXiv metadata (CC0),
 Eurostat (reuse with attribution), Artificial Analysis, Adzuna, GitHub and
-Hugging Face (their respective API terms). site/vendor/d3.min.js is D3
-(ISC license, see site/vendor/d3-LICENSE.txt).
+Hugging Face (their respective API terms), Our World in Data (CC BY 4.0,
+with the original producers' terms). The D3 modules (ISC license) and the
+Bricolage Grotesque font (SIL Open Font License) are installed via npm and
+bundled into the built site. Photos come from Wikimedia Commons under the
+licenses credited on the page.

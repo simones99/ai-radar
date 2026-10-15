@@ -13,6 +13,9 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `jobs.json` | Annunci di lavoro per competenza e Paese | The Adzuna API |
 | `eurostat.json` | Imprese UE che usano l'AI | Eurostat, isoc_eb_ai |
 | `news.json` | Titoli e link dai feed RSS configurati | Feed dei siti indicati |
+| `owid.json` | Investimenti, adozione, uso dell'AI generativa, data center | Our World in Data (dati dei produttori citati) |
+| `ai_act.json` | Scadenze dell'AI Act | `config/ai_act.yaml`, a mano |
+| `rapporti.json` | Rapporti periodici: edizioni e prossime uscite | `config/rapporti.yaml`, a mano |
 | `radar.json` | Radar delle competenze, calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
 

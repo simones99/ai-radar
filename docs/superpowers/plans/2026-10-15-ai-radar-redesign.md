@@ -4080,7 +4080,8 @@ export const dotsTable = (data: { k: string; now: number; was?: number | null }[
   const head = $derived(tile.head(data, today));
   const rows = $derived(data.radar ? radarRows(data.radar) : []);
   const quadranti = $derived(data.radar?.quadranti ?? ({ 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" } as Record<Quadrant, string>));
-  let highlight = $state<string | null>(null);
+  let highlight = $state<string | null>(null); // selezione fissata (clic, tocco, link diretto)
+  let hovered = $state<string | null>(null); // anteprima al passaggio del mouse
   $effect(() => {
     highlight = elemento && rows.some((r) => r.id === elemento) ? elemento : null;
   });
@@ -4109,10 +4110,10 @@ export const dotsTable = (data: { k: string; now: number; was?: number | null }[
       cite={[{ t: basis + arxivDown }]}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio', 'Domanda', 'Un mese fa (slancio / domanda)'],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], pct(r.slancio), pct(r.domanda), r.hasPrev ? `${pct(r.sp)} / ${pct(r.dp)}` : '—']) }}>
-      <Radar {rows} {quadranti} {highlight} onpick={(id) => (highlight = highlight === id ? null : id)} />
+      <Radar {rows} {quadranti} highlight={hovered ?? highlight} onpick={(id) => (highlight = highlight === id ? null : id)} />
     </Block>
     <Block span={4} title="Movimenti del mese">
-      <MovesPanel {rows} {quadranti} bind:highlight />
+      <MovesPanel {rows} {quadranti} bind:highlight bind:hovered />
     </Block>
     <Block span={12} title="Le competenze una per una">
       <DataTable cols={['Competenza', 'Cosa è', 'Quadrante', 'Slancio', 'Domanda']}

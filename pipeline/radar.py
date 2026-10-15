@@ -10,6 +10,11 @@
   degli ultimi 3 mesi come misura di adozione.
 
 I ranghi sono relativi alle competenze del radar: 0 = la più bassa, 1 = la più alta.
+
+Per mostrare il movimento si calcola anche la posizione di un mese prima
+(slancio_prec, domanda_prec, quadrante_prec): stesse formule e stessa base della
+domanda, con le serie mensili fermate al mese precedente e le rilevazioni del
+lavoro di almeno 28 giorni prima.
 """
 from __future__ import annotations
 
@@ -163,43 +168,72 @@ def quadrant(m: float | None, d: float | None) -> str | None:
     return "osserva"
 
 
-def run(skills: list[dict], today: date) -> dict:
-    arx = read_json("arxiv.json", {}) or {}
-    gh = read_json("github.json", {}) or {}
-    jobs = read_json("jobs.json", {}) or {}
-
+def _signals(skills: list[dict], arx: dict, gh: dict, jobs: dict, today: date) -> list[dict]:
     rows = []
     for sk in skills:
         sid = sk["id"]
         rows.append({
             "id": sid,
             "nome": sk["nome"],
+            "breve": sk.get("breve", sk["nome"]),
             "descrizione": sk.get("descrizione", ""),
             "arxiv": arxiv_signal(arx, sid),
             "github": github_signal(gh, sid),
             "lavoro": jobs_signal(jobs, sid, today),
         })
+    return rows
 
+
+def _place(rows: list[dict], basis: str | None = None, use_jobs_growth: bool | None = None):
+    """Slancio e domanda di ogni competenza. basis e use_jobs_growth, se dati, sono imposti
+    (serve alla posizione precedente, che deve usare le stesse misure di quella attuale)."""
     def pick(fn):
         return {r["id"]: fn(r) for r in rows}
 
     r_arx = pct_ranks(pick(lambda r: r["arxiv"]["crescita"] if r["arxiv"] else None))
     r_gh = pct_ranks(pick(lambda r: r["github"]["crescita"] if r["github"] else None))
     r_jg = pct_ranks(pick(lambda r: r["lavoro"]["crescita"] if r["lavoro"] else None))
-    use_jobs_growth = sum(v is not None for v in r_jg.values()) >= len(rows) / 2
+    if use_jobs_growth is None:
+        use_jobs_growth = sum(v is not None for v in r_jg.values()) >= len(rows) / 2
 
     job_level = pick(lambda r: r["lavoro"]["media"] if r["lavoro"] else None)
-    if sum(v is not None for v in job_level.values()) >= len(rows) / 2:
-        basis, r_dem = "lavoro", pct_ranks(job_level)
-    else:
-        basis, r_dem = "open-source", pct_ranks(pick(lambda r: r["github"]["ultimi3"] if r["github"] else None))
+    if basis is None:
+        basis = "lavoro" if sum(v is not None for v in job_level.values()) >= len(rows) / 2 else "open-source"
+    r_dem = pct_ranks(job_level) if basis == "lavoro" else pct_ranks(pick(lambda r: r["github"]["ultimi3"] if r["github"] else None))
 
+    pos = {}
     for r in rows:
         parts = [r_arx[r["id"]], r_gh[r["id"]]] + ([r_jg[r["id"]]] if use_jobs_growth else [])
         parts = [p for p in parts if p is not None]
-        r["slancio"] = round(sum(parts) / len(parts), 4) if parts else None
-        r["domanda"] = r_dem[r["id"]]
+        pos[r["id"]] = (round(sum(parts) / len(parts), 4) if parts else None, r_dem[r["id"]])
+    return basis, use_jobs_growth, pos
+
+
+def _month_before(arx: dict, gh: dict, jobs: dict) -> tuple[dict, dict, dict]:
+    """I dati come erano un mese prima: serie senza l'ultimo mese, rilevazioni di almeno 28 giorni prima."""
+    arx_p = {**arx, "mesi": arx.get("mesi", [])[:-1]}
+    gh_p = {**gh, "mesi": gh.get("mesi", [])[:-1]}
+    snaps = jobs.get("snapshots", [])
+    if snaps:
+        cutoff = date.fromordinal(date.fromisoformat(max(x["data"] for x in snaps)).toordinal() - 28).isoformat()
+        snaps = [x for x in snaps if x["data"] <= cutoff]
+    return arx_p, gh_p, {**jobs, "snapshots": snaps}
+
+
+def run(skills: list[dict], today: date) -> dict:
+    arx = read_json("arxiv.json", {}) or {}
+    gh = read_json("github.json", {}) or {}
+    jobs = read_json("jobs.json", {}) or {}
+
+    rows = _signals(skills, arx, gh, jobs, today)
+    basis, use_jobs_growth, pos = _place(rows)
+    _, _, prev = _place(_signals(skills, *_month_before(arx, gh, jobs), today), basis, use_jobs_growth)
+
+    for r in rows:
+        r["slancio"], r["domanda"] = pos[r["id"]]
         r["quadrante"] = quadrant(r["slancio"], r["domanda"])
+        r["slancio_prec"], r["domanda_prec"] = prev[r["id"]]
+        r["quadrante_prec"] = quadrant(r["slancio_prec"], r["domanda_prec"])
 
     out = {
         "generato": today.isoformat(),

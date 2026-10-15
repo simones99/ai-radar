@@ -1,29 +1,37 @@
-"""Assembla il sito statico in _site/ (pagina + dati), pronto per GitHub Pages.
+"""Prepara il sito per GitHub Pages: copia i dati nell'app e la costruisce in _site/.
 
-Uso:  python scripts/build_site.py [cartella_dati] [cartella_uscita]
-Anteprima locale:  python scripts/build_site.py && python -m http.server -d _site 8000
+Uso:  python scripts/build_site.py [cartella_dati]
+Anteprima locale:  python scripts/build_site.py && (cd web && npm run preview)
 """
 from __future__ import annotations
 
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+WEB = ROOT / "web"
+OUT = ROOT / "_site"
 
 
-def build(data_dir: Path, out: Path) -> None:
-    if out.exists():
-        shutil.rmtree(out)
-    shutil.copytree(ROOT / "site", out)
-    (out / "data").mkdir()
-    for f in sorted(data_dir.glob("*.json")):
-        shutil.copy2(f, out / "data" / f.name)
-    (out / ".nojekyll").write_text("")
-    print(f"Sito pronto in {out} ({len(list((out / 'data').glob('*.json')))} file di dati)")
+def copy_data(data_dir: Path, web: Path | None = None) -> int:
+    pub = (web or WEB) / "public" / "data"
+    if pub.exists():
+        shutil.rmtree(pub)
+    pub.mkdir(parents=True)
+    files = sorted(data_dir.glob("*.json"))
+    for f in files:
+        shutil.copy2(f, pub / f.name)
+    return len(files)
+
+
+def build(data_dir: Path, run=subprocess.run) -> None:
+    n = copy_data(data_dir, WEB)
+    run(["npm", "run", "build"], cwd=WEB, check=True)
+    (OUT / ".nojekyll").write_text("")
+    print(f"Sito pronto in {OUT} ({n} file di dati)")
 
 
 if __name__ == "__main__":
-    data = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "data"
-    out = Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / "_site"
-    build(data, out)
+    build(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "data")

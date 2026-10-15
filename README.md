@@ -9,7 +9,7 @@ Una dashboard pubblica che risponde a tre domande, con dati aperti che si aggior
 Tutto gira gratis su GitHub: GitHub Actions raccoglie i dati ogni lunedì e GitHub Pages pubblica la pagina.
 
 ```
-fonti pubbliche ──► pipeline Python ──► data/*.json ──► pagina statica (D3) ──► GitHub Pages
+fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Svelte (D3) ──► GitHub Pages
                      (GitHub Actions, ogni lunedì)      salvati nel repo
 ```
 
@@ -67,28 +67,37 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 
 - **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e i parametri di ricerca per gli annunci. Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
+- **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
+- **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).
+- **Scadenze dell'AI Act e rapporti**: `config/ai_act.yaml` e `config/rapporti.yaml`, da aggiornare a mano. Ogni voce ha un link alla fonte.
 - **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`.
 
 ## Provarlo sul proprio computer
 
+Servono Python 3.12 e Node 24.
+
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python -m pytest -q                                     # test con risposte simulate, senza rete
-python -m pipeline.run --months 7                       # dati veri, storico corto (circa 10 minuti con GITHUB_TOKEN, 20 senza)
-python scripts/build_site.py && python -m http.server -d _site 8000
+python -m pytest -q                                     # test della pipeline, senza rete
+python -m pipeline.run --months 7                       # dati veri, storico corto
+cd web && npm ci && npm test                            # test dell'app
+cd .. && python scripts/build_site.py                   # copia i dati e costruisce _site/
+cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
 
-Poi apri http://localhost:8000. Le chiavi si passano come variabili d'ambiente (`AA_API_KEY`, `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `GITHUB_TOKEN`).
+Per lavorare sull'app con il ricaricamento automatico: `mkdir -p web/public/data && cp data/*.json web/public/data/` e poi `cd web && npm run dev`.
+
+Le chiavi si passano come variabili d'ambiente: `AA_API_KEY`, `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `GITHUB_TOKEN`.
 
 ## Struttura
 
 ```
-config/      competenze e fonti (da modificare)
+config/      competenze, fonti, scadenze AI Act, rapporti (da modificare)
 pipeline/    un modulo per fonte + radar.py (calcolo) + run.py (orchestrazione)
 data/        dati raccolti e storico (scritti dalla pipeline)
-site/        pagina statica: index.html, style.css, app.js, vendor/d3.min.js
-scripts/     build_site.py (assembla _site/ per GitHub Pages)
+web/         app Svelte: card, grafici, foto, test
+scripts/     build_site.py (costruisce _site/), fetch_photos.py (foto da Commons)
 tests/       test della pipeline con risposte HTTP simulate
 .github/     workflow settimanale
 ```
@@ -103,4 +112,4 @@ tests/       test della pipeline con risposte HTTP simulate
 
 Dati di [Epoch AI](https://epoch.ai/data/ai-models) (CC BY 4.0), [Artificial Analysis](https://artificialanalysis.ai/), [arXiv](https://arxiv.org) (grazie ad arXiv per l'accesso aperto ai metadati), [GitHub](https://github.com), [Hugging Face](https://huggingface.co), [The Adzuna API](https://www.adzuna.co.uk) ed [Eurostat](https://ec.europa.eu/eurostat). Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
 
-Codice con licenza MIT (vedi `LICENSE`). D3 è incluso in `site/vendor/` con la sua licenza ISC.
+Codice con licenza MIT (vedi `LICENSE`). D3 (ISC), Svelte (MIT) e il font Bricolage Grotesque (OFL) arrivano da npm; i testi delle loro licenze sono in `web/public/THIRD_PARTY_LICENSES.txt`, linkato in fondo alla pagina. Le foto sono da Wikimedia Commons, con autore e licenza indicati in pagina. Our World in Data pubblica in CC BY 4.0, ma i dati restano dei produttori originali, sempre citati: le serie dell'AI Index (Stanford HAI: investimenti, imprese che usano l'AI, annunci di lavoro) sono CC BY-ND 4.0 e vanno citate senza modifiche; le cifre di IEA, NVIDIA e TSMC restano dei produttori. La licenza di ogni serie è nel campo `licenza` di `config/sources.yaml` e compare in pagina accanto alla fonte.

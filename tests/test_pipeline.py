@@ -134,6 +134,16 @@ def _rss(n_days_ago: list[int]):
     return f'<?xml version="1.0"?><rss version="2.0"><channel><title>T</title>{items}</channel></rss>'
 
 
+def _owid_csv(url):
+    """CSV con la colonna giusta per ogni slug configurato in sources.yaml."""
+    from pipeline.common import load_yaml
+    slug = url.rsplit("/", 1)[-1].removesuffix(".csv")
+    cfg = next(c for c in load_yaml("sources.yaml")["owid"] if c["slug"] == slug)
+    ents = cfg.get("entita") or ["World"]
+    lines = [f"entity,year,{cfg['colonna']}"] + [f'"{e}",{y},{10 + y - 2020}' for e in ents for y in (2024, 2025)]
+    return "\n".join(lines)
+
+
 class FakeSession:
     def __init__(self):
         self.headers = {}
@@ -174,6 +184,10 @@ class FakeSession:
                  "evaluations": {"artificial_analysis_intelligence_index": 70 - i},
                  "pricing": {"price_1m_blended_3_to_1": 1.5 + i}, "median_output_tokens_per_second": 80}
                 for i in range(15)]})
+        if host == "ourworldindata.org":
+            if url.endswith(".metadata.json"):
+                return FakeResponse(body={"columns": {}})
+            return FakeResponse(text=_owid_csv(url))
         if "deepmind" in url:
             return FakeResponse(status=500, text="errore")
         return FakeResponse(text=_rss([1, 3, 10, 90]))
@@ -273,3 +287,38 @@ def test_network_error_log_does_not_leak_keys(monkeypatch, caplog):
         common.http_get(Down(), "https://api.adzuna.com/v1/api/jobs/it/search/1", retries=2)
     assert "Errore di rete" in caplog.text
     assert "id-0123456789" not in caplog.text and "key-abcdef0123456789" not in caplog.text
+
+
+def test_radar_previous_positions(tmp_path, monkeypatch):
+    # Tre competenze solo GitHub, 7 mesi. Oggi le finestre sono apr-giu contro lug-set;
+    # un mese prima erano mar-mag contro giu-ago. x cresce solo a settembre, y cresceva prima.
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    months = [f"2026-{m:02d}" for m in range(3, 10)]
+    counts = {"x": [10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0], "z": [40, 40, 40, 20, 20, 20, 20]}
+    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
+    skills = [{"id": k, "nome": f"Competenza {k}", "breve": k.upper()} for k in counts]
+    radar.run(skills, date(2026, 10, 15))
+    rows = {r["id"]: r for r in json.loads((tmp_path / "radar.json").read_text())["competenze"]}
+
+    assert (rows["x"]["slancio"], rows["x"]["domanda"], rows["x"]["quadrante"]) == (1.0, 1.0, "impara-ora")
+    assert (rows["x"]["slancio_prec"], rows["x"]["domanda_prec"], rows["x"]["quadrante_prec"]) == (0.5, 0.0, "prova")
+    assert (rows["y"]["slancio_prec"], rows["y"]["domanda_prec"], rows["y"]["quadrante_prec"]) == (1.0, 1.0, "impara-ora")
+    assert (rows["z"]["slancio_prec"], rows["z"]["domanda_prec"], rows["z"]["quadrante_prec"]) == (0.0, 0.5, "consolida")
+    assert rows["z"]["quadrante"] == "osserva"
+    assert rows["x"]["breve"] == "X"
+
+
+def test_radar_previous_demand_needs_old_job_snapshot(tmp_path, monkeypatch):
+    # Domanda dal lavoro con una sola rilevazione: la posizione precedente non si può calcolare.
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    months = [f"2026-{m:02d}" for m in range(3, 10)]
+    common.write_json("github.json", {"mesi": months, "topics": {k: dict.fromkeys(months, 10 + i) for i, k in enumerate("ab")}})
+    common.write_json("jobs.json", {"paesi_ue": ["it"], "snapshots": [
+        {"data": "2026-10-12", "paese": "it", "totale": 1000, "competenze": {"a": 5, "b": 9}}]})
+    radar.run([{"id": "a", "nome": "A"}, {"id": "b", "nome": "B"}], date(2026, 10, 15))
+    out = json.loads((tmp_path / "radar.json").read_text())
+    assert out["base_domanda"] == "lavoro"
+    for r in out["competenze"]:
+        assert r["slancio_prec"] is not None
+        assert r["domanda_prec"] is None and r["quadrante_prec"] is None
+        assert r["breve"] == r["nome"]

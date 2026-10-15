@@ -41,29 +41,113 @@ github_repos:
   - ggml-org/llama.cpp
   - unslothai/unsloth
 
-# Feed per il blocco "Stare al passo".
+# Feed per le notizie. tema: politica, ricerca, prodotti, business.
+# alternativi: indirizzi provati in ordine se il primo non risponde
+# (alcuni Substack rispondono 403 da GitHub Actions).
 feeds:
   - name: OpenAI
     url: https://openai.com/news/rss.xml
+    tema: prodotti
   - name: Google DeepMind
     url: https://deepmind.google/blog/rss.xml
+    tema: ricerca
   - name: Hugging Face
     url: https://huggingface.co/blog/feed.xml
+    tema: ricerca
   - name: Epoch AI
-    url: https://epochai.substack.com/feed
+    url: https://epoch.ai/atom.xml
+    alternativi: [https://epochai.substack.com/feed]
+    tema: ricerca
   - name: Import AI
-    url: https://importai.substack.com/feed
+    url: https://jack-clark.net/feed/
+    alternativi: [https://importai.substack.com/feed]
+    tema: ricerca
   - name: EU AI Act Newsletter
     url: https://artificialintelligenceact.substack.com/feed
+    alternativi: [https://artificialintelligenceact.eu/feed/]
+    tema: politica
   - name: Google AI
     url: https://blog.google/innovation-and-ai/technology/ai/rss/
+    tema: prodotti
   - name: Simon Willison
     url: https://simonwillison.net/atom/entries/   # solo articoli; /atom/everything/ include anche link e citazioni
+    tema: prodotti
   - name: The Decoder
     url: https://the-decoder.com/feed/
+    tema: prodotti
   - name: Latent Space
     url: https://www.latent.space/feed
+    tema: business
 
 # Quanti giorni di notizie tenere e quante al massimo per fonte.
 feeds_days: 45
 feeds_per_source: 12
+
+# Our World in Data: grafici del grapher (https://ourworldindata.org/grapher/<slug>).
+# colonna = nome breve della colonna nel CSV; entita = righe da tenere (assente = tutte).
+# Licenze verificate il 2026-10-15 (metadati OWID: nessun produttore vieta di ripubblicare i numeri).
+# Da tenere d'occhio: AI Index/Stanford HAI (Quid, McKinsey, Lightcast) e' CC BY-ND 4.0, quindi
+# i dati vanno citati senza alterarli; IEA (testo (c) OECD/IEA), NVIDIA e TSMC sono (c) dei produttori:
+# si mostrano solo cifre di fatto con la fonte, e le condizioni vanno riviste se il loro uso cambia.
+# licenza = licenza dei dati mostrata in pagina accanto alla citazione (CC BY 4.0 per le altre serie OWID).
+owid:
+  - id: investimenti_privati
+    slug: private-investment-in-artificial-intelligence
+    colonna: private_investment
+    licenza: "CC BY-ND 4.0"
+    entita: [World, United States, China, Europe]
+  - id: investimenti_generativa
+    slug: global-investment-in-generative-ai
+    colonna: generative_ai
+    licenza: "CC BY-ND 4.0"
+    entita: [World]
+  - id: investimenti_tipo
+    slug: corporate-investment-in-artificial-intelligence-by-type
+    colonna: corporate_investment
+    licenza: "CC BY-ND 4.0"
+  - id: imprese_ai
+    slug: share-companies-using-artificial-intelligence
+    colonna: pct_of_respondents
+    licenza: "CC BY-ND 4.0"
+  - id: uso_genai
+    slug: estimated-share-people-generative-ai
+    colonna: ai_user_share
+    licenza: "CC BY 4.0"
+    entita: [World, Italy, United States, China, Germany, France, Spain, United Kingdom]
+  - id: uso_genai_ue
+    slug: share-europe-using-generative-ai
+    colonna: pct_used_genai_16_74
+    licenza: "CC BY 4.0"
+  - id: uso_genai_giovani_ue
+    slug: share-of-young-people-in-european-countries-using-generative-ai-tools
+    colonna: pct_used_genai_16_24
+    licenza: "CC BY 4.0"
+  - id: sviluppatori_ai
+    slug: share-of-professional-software-developers-using-ai-tools
+    colonna: yes_overall
+    licenza: "CC BY 4.0"
+    entita: [World]
+  - id: annunci_ai
+    slug: share-artificial-intelligence-job-postings
+    colonna: ai_job_postings_share
+    licenza: "CC BY-ND 4.0"
+  - id: data_center_spesa
+    slug: monthly-spending-data-center-us
+    colonna: datacenter_construction_spending_real
+    licenza: "CC BY 4.0"
+    entita: [United States]
+  - id: data_center_elettricita
+    slug: data-centers-share-electricity-demand
+    colonna: total_electricity_consumption__share_of_total_electricity_demand__historical
+    licenza: "© OECD/IEA"
+    entita: [World, United States, China, Europe (IEA)]
+  - id: nvidia_ricavi
+    slug: nvidia-quarterly-revenue-segment
+    colonna: revenue
+    licenza: "© NVIDIA"
+    entita: [Data centers and AI, Gaming, Total]
+  - id: tsmc_ricavi
+    slug: tsmc-annual-revenue
+    colonna: revenue_usd
+    licenza: "© TSMC"
+    entita: [Taiwan]

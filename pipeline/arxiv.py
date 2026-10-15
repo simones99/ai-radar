@@ -19,6 +19,7 @@ TOTAL_KEY = "_totale"
 MONTHS = 13          # storico mantenuto per i grafici
 REFRESH_LAST = 2     # mesi recenti ricontati a ogni giro (arrivano invii in ritardo)
 OUT = "arxiv.json"
+RETRY_BACKOFF = 30.0  # arXiv risponde 500/429 per qualche decina di secondi: si attende 30 s, poi 60 s
 
 
 def build_query(phrases: list[str], ym: str) -> str:
@@ -56,7 +57,8 @@ def run(s, skills: list[dict], today: date, *, sleep: float = 3.1, months: int =
         for ym in window:
             if ym in current and ym not in refresh:
                 continue
-            r = http_get(s, API, params={"search_query": build_query(phrases, ym), "start": 0, "max_results": 0})
+            r = http_get(s, API, params={"search_query": build_query(phrases, ym), "start": 0, "max_results": 0},
+                         backoff=RETRY_BACKOFF)
             n = parse_total(r.text)
             if key == TOTAL_KEY and n == 0:
                 raise ValueError(f"arXiv ha restituito 0 paper totali per {ym}: risposta sospetta")

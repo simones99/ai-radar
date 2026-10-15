@@ -1,5 +1,8 @@
 # Competenze monitorate dal radar "Su cosa formarsi".
 #
+# nome è il nome completo (tabella, tooltip); breve è l'etichetta sul grafico
+# (facoltativa, se manca si usa nome).
+#
 # Ogni competenza ha tre segnali, tutti opzionali:
 #   arxiv:  frasi cercate negli abstract dei paper (OR tra le frasi)
 #   github: un topic GitHub; si contano i nuovi repository creati ogni mese
@@ -12,6 +15,7 @@
 skills:
   - id: agenti
     nome: Agenti AI
+    breve: Agenti AI
     descrizione: Sistemi che pianificano e usano strumenti per completare compiti in più passi.
     arxiv: ["LLM agent", "LLM agents", "agentic"]
     github: ai-agents
@@ -19,6 +23,7 @@ skills:
 
   - id: coding-agenti
     nome: Sviluppo con agenti di coding
+    breve: Agenti di coding
     descrizione: Scrivere e mantenere software delegando a agenti come Claude Code o Codex.
     arxiv: ["coding agent", "software engineering agent", "SWE-bench"]
     github: coding-agent
@@ -26,6 +31,7 @@ skills:
 
   - id: mcp
     nome: Model Context Protocol (MCP)
+    breve: MCP
     descrizione: Lo standard per collegare modelli e agenti a strumenti e dati esterni.
     arxiv: ["Model Context Protocol"]
     github: mcp
@@ -33,6 +39,7 @@ skills:
 
   - id: rag
     nome: RAG e ricerca semantica
+    breve: RAG
     descrizione: Far rispondere i modelli sui propri documenti tramite recupero di informazioni.
     arxiv: ["retrieval-augmented generation", "retrieval augmented generation"]
     github: rag
@@ -40,6 +47,7 @@ skills:
 
   - id: valutazione
     nome: Valutazione dei modelli (eval)
+    breve: Eval
     descrizione: Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.
     arxiv: ["LLM evaluation", "evaluating large language models", "LLM-as-a-judge"]
     github: llm-evaluation
@@ -47,6 +55,7 @@ skills:
 
   - id: post-training
     nome: Fine-tuning e post-training
+    breve: Fine-tuning
     descrizione: Adattare un modello aperto a un dominio specifico con dati propri.
     arxiv: ["fine-tuning large language models", "post-training", "parameter-efficient fine-tuning"]
     github: fine-tuning
@@ -54,6 +63,7 @@ skills:
 
   - id: context-engineering
     nome: Prompt e context engineering
+    breve: Context engineering
     descrizione: Progettare istruzioni, contesto e memoria che rendono affidabile un modello.
     arxiv: ["prompt engineering", "context engineering"]
     github: prompt-engineering
@@ -61,6 +71,7 @@ skills:
 
   - id: sicurezza
     nome: Sicurezza dei sistemi AI
+    breve: Sicurezza AI
     descrizione: Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.
     arxiv: ["prompt injection", "jailbreak", "AI security"]
     github: ai-security
@@ -68,6 +79,7 @@ skills:
 
   - id: governance
     nome: Governance e conformità AI
+    breve: Governance
     descrizione: AI Act, gestione del rischio, audit e documentazione dei sistemi AI.
     arxiv: ["AI governance", "AI Act", "AI regulation"]
     github: ai-governance
@@ -75,6 +87,7 @@ skills:
 
   - id: dati-per-ai
     nome: Data engineering per l'AI
+    breve: Data engineering
     descrizione: Pipeline, qualità e governance dei dati che alimentano modelli e agenti.
     arxiv: ["data curation", "data quality for machine learning", "synthetic data generation"]
     github: data-engineering
@@ -82,6 +95,7 @@ skills:
 
   - id: text-to-sql
     nome: AI per analisi dati e BI
+    breve: AI per BI
     descrizione: Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).
     arxiv: ["text-to-SQL", "table question answering"]
     github: text-to-sql
@@ -89,6 +103,7 @@ skills:
 
   - id: vector-db
     nome: Database vettoriali
+    breve: DB vettoriali
     descrizione: Archivi di embedding per ricerca semantica e memoria degli agenti.
     arxiv: ["vector database", "approximate nearest neighbor search"]
     github: vector-database
@@ -96,6 +111,7 @@ skills:
 
   - id: multimodale
     nome: Modelli multimodali
+    breve: Multimodali
     descrizione: Modelli che combinano testo, immagini, audio e video.
     arxiv: ["vision-language model", "multimodal large language model"]
     github: multimodal
@@ -103,6 +119,7 @@ skills:
 
   - id: llmops
     nome: LLMOps e messa in produzione
+    breve: LLMOps
     descrizione: Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.
     arxiv: ["LLMOps", "LLM serving", "inference optimization"]
     github: llmops
@@ -110,6 +127,7 @@ skills:
 
   - id: modelli-locali
     nome: Modelli piccoli e locali
+    breve: Modelli locali
     descrizione: Modelli aperti che girano su laptop o server propri, senza cloud.
     arxiv: ["small language model", "on-device inference", "quantization"]
     github: local-llm
@@ -117,6 +135,7 @@ skills:
 
   - id: robotica
     nome: AI fisica e robotica
+    breve: Robotica
     descrizione: Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).
     arxiv: ["vision-language-action", "world model", "robot learning"]
     github: embodied-ai

@@ -1,0 +1,59 @@
+/* Token: un neutro (fondo e card), il testo, un blu. Spazi multipli di 8. Un solo font. */
+:root {
+  color-scheme: light;
+  --bg: #f4f4f2;
+  --card: #ffffff;
+  --fg: #121211;
+  --accent: #0068d6;
+  --fg-2: color-mix(in srgb, var(--fg) 68%, var(--card));
+  --fg-3: color-mix(in srgb, var(--fg) 66%, var(--card)); /* ≥ 4,5:1 anche sullo sfondo --bg (AA) */
+  --line: color-mix(in srgb, var(--fg) 9%, var(--card));
+  --line-2: color-mix(in srgb, var(--fg) 18%, var(--card));
+  --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--card));
+  --shadow: 0 1px 2px rgba(18, 18, 17, .04), 0 8px 24px rgba(18, 18, 17, .06);
+  --shadow-up: 0 2px 4px rgba(18, 18, 17, .05), 0 16px 40px rgba(18, 18, 17, .10);
+  --font: "Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r-sm: 8px; --r-md: 16px; --r-lg: 24px;
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 40px; --s6: 48px; --s8: 64px; --s12: 96px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0b0b0a; --card: #161615; --fg: #ececea; --accent: #4ea3ff;
+    --shadow: 0 0 0 1px rgba(255, 255, 255, .06); --shadow-up: 0 0 0 1px rgba(255, 255, 255, .14);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0b0a; --card: #161615; --fg: #ececea; --accent: #4ea3ff;
+  --shadow: 0 0 0 1px rgba(255, 255, 255, .06); --shadow-up: 0 0 0 1px rgba(255, 255, 255, .14);
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: var(--s8); }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/24px var(--font); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p, figure { margin: 0; }
+button { font: inherit; color: inherit; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin-inline: auto; padding-inline: var(--s2); padding-block: var(--s3) var(--s12); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
+@media (min-width: 720px) { .wrap { padding-inline: var(--s5); } }
+.small { font-size: 12px; line-height: 16px; }
+.muted { color: var(--fg-2); }
+.skip { position: absolute; left: var(--s2); top: -64px; background: var(--card); padding: var(--s1) var(--s2); border-radius: var(--r-sm); box-shadow: var(--shadow); z-index: 10; }
+.skip:focus { top: var(--s2); }
+
+/* testo dentro gli SVG dei grafici */
+.t10 { font: 400 10px var(--font); fill: var(--fg-3); font-variant-numeric: tabular-nums; }
+.t12 { font: 400 12px var(--font); fill: var(--fg-2); }
+.t12b { font: 600 12px var(--font); fill: var(--fg); }
+.t12b.hot, .t12.hot { fill: var(--accent); }
+.halo { paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; }
+
+::view-transition-group(*) { animation-duration: .4s; animation-timing-function: var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

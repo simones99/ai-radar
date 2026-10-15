@@ -36,17 +36,31 @@ def run(s, feeds: list[dict], days: int, per_source: int) -> dict:
     since = datetime.now(timezone.utc) - timedelta(days=days)
     items, errors = [], {}
     for f in feeds:
-        try:
-            r = http_get(s, f["url"], timeout=30, retries=2)
-            items.extend(parse_feed(r.content, f["name"], since, per_source))
-        except Exception as exc:  # una fonte giù non ferma le altre
-            errors[f["name"]] = str(exc)[:200]
-            log.warning("Feed %s non letto: %s", f["name"], exc)
+        tema = f.get("tema", "altro")
+        tried = []
+        for url in [f["url"], *f.get("alternativi", [])]:
+            try:
+                r = http_get(s, url, timeout=30, retries=2)
+                got = parse_feed(r.content, f["name"], since, per_source)
+            except Exception as exc:  # si prova l'indirizzo successivo
+                tried.append(f"{url}: {str(exc)[:120]}")
+                continue
+            for it in got:
+                it["tema"] = tema
+            items.extend(got)
+            break
+        else:
+            errors[f["name"]] = " | ".join(tried)[:300]
+            log.warning("Feed %s non letto: %s", f["name"], errors[f["name"]])
     if not items:
         raise ValueError(f"nessun feed leggibile: {errors}")
+    unique: dict[str, dict] = {}  # stessa notizia in più feed: resta la prima occorrenza
+    for it in items:
+        unique.setdefault(it["link"], it)
+    items = list(unique.values())
     items.sort(key=lambda x: (x["data"], x["fonte"]), reverse=True)
     write_json(OUT, {
-        "fonti": [{"nome": f["name"], "url": f["url"]} for f in feeds],
+        "fonti": [{"nome": f["name"], "url": f["url"], "tema": f.get("tema", "altro")} for f in feeds],
         "errori": errors,
         "giorni": days,
         "notizie": items,

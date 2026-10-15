@@ -55,6 +55,22 @@ describe('Persone', () => {
   });
 });
 
+describe('Persone: Italia nei grafici europei', () => {
+  it('con molti Paesi l’Italia in fondo alla classifica resta nel grafico, in evidenza', () => {
+    const ents = Array.from({ length: 22 }, (_, i) => `Paese ${String.fromCharCode(65 + i)}`);
+    const punti = [...ents.map((e, i) => ({ entita: e, t: '2025', v: 80 - i })), { entita: 'Italy', t: '2025', v: 10 }];
+    const base = data.owid!;
+    const ue = { titolo: '', unita: '%', citazione: 'Eurostat (2026)', url: 'https://ourworldindata.org/grapher/share-europe-using-generative-ai', aggiornato_owid: null, punti };
+    const d = { ...data, owid: { ...base, serie: { ...base.serie, uso_genai_ue: ue } } } as Dataset;
+    const tile = mk('persone', 'Persone e lavoro', headPersone, PersoneDetail);
+    render(PersoneDetail, { data: d, today, tile, elemento: null, onclose: () => {} });
+    const chart = screen.getByRole('img', { name: "Uso dell'AI generativa in Europa" });
+    expect(within(chart).getByText('Italia')).toHaveClass('hot');
+    expect(within(chart).getByText('Paese A')).toBeInTheDocument();
+    expect(within(chart).queryByText('Paese V')).not.toBeInTheDocument(); // 22ª: fuori dai primi 15
+  });
+});
+
 describe('Rapporti', () => {
   it('uscite passate e prossime stimate, con link', () => {
     show(RapportiDetail, mk('rapporti', 'Rapporti', headRapporti, RapportiDetail));

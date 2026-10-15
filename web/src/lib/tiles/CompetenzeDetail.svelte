@@ -1,5 +1,6 @@
 <script lang="ts">
   import Block from '../charts/Block.svelte';
+  import type { Cite } from '../charts/types';
   import DataTable from '../charts/DataTable.svelte';
   import MovesPanel from '../charts/MovesPanel.svelte';
   import Radar from '../charts/Radar.svelte';
@@ -23,6 +24,11 @@
     ? 'Domanda dagli annunci di lavoro in Europa e USA (The Adzuna API).'
     : 'Senza la chiave di Adzuna la domanda si stima dai nuovi repository open source degli ultimi 3 mesi.');
   const arxivDown = $derived(data.status?.fonti?.arxiv?.stato === 'errore' ? ' In questo giro arXiv non ha risposto: lo slancio viene solo da GitHub.' : '');
+  const sources = $derived<Cite>([
+    { t: 'Fonti: ' }, { t: 'arXiv', href: 'https://arxiv.org' }, { t: ', ' }, { t: 'GitHub', href: 'https://github.com' },
+    ...(data.radar?.base_domanda === 'lavoro' ? [{ t: ', ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }] : []),
+    { t: '.' },
+  ]);
   const METODO = [
     'Slancio e domanda sono ranghi percentili da 0 a 100 tra le competenze del radar: 0 è la più bassa, 100 la più alta.',
     "Paper: quota di paper AI su arXiv che citano la competenza nell'abstract, ultimi 3 mesi interi rispetto ai 3 precedenti.",
@@ -40,12 +46,12 @@
   {:else}
     <Block span={8} title="Radar delle competenze"
       note="Posizione rispetto alle altre competenze: al centro la mediana. Le frecce partono da dove era un mese fa."
-      cite={[{ t: basis + arxivDown }]}
+      cite={[{ t: basis + arxivDown + ' ' }, ...sources]}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio', 'Domanda', 'Un mese fa (slancio / domanda)'],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], pct(r.slancio), pct(r.domanda), r.hasPrev ? `${pct(r.sp)} / ${pct(r.dp)}` : '—']) }}>
       <Radar {rows} {quadranti} highlight={hovered ?? highlight} onpick={(id) => (highlight = highlight === id ? null : id)} />
     </Block>
-    <Block span={4} title="Movimenti del mese">
+    <Block span={4} title="Movimenti del mese" cite={sources}>
       <MovesPanel {rows} {quadranti} bind:highlight bind:hovered />
     </Block>
     <Block span={12} title="Le competenze una per una">

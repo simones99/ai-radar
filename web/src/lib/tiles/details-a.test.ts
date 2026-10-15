@@ -27,6 +27,21 @@ describe('Competenze', () => {
     expect(screen.getByRole('heading', { name: 'Le competenze una per una' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Come si calcola' })).toBeInTheDocument();
   });
+  it('radar e movimenti con fonti cliccabili; Adzuna solo con la domanda dagli annunci', () => {
+    const { unmount } = show(CompetenzeDetail, tile);
+    for (const name of ['Radar delle competenze', 'Movimenti del mese']) {
+      const blk = screen.getByRole('heading', { name }).closest('section')!;
+      expect(within(blk).getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com');
+      expect(within(blk).getByRole('link', { name: 'arXiv' })).toHaveAttribute('href', 'https://arxiv.org');
+      expect(within(blk).queryByRole('link', { name: 'The Adzuna API' })).not.toBeInTheDocument();
+    }
+    expect(screen.getByText(/nuovi repository open source/)).toBeInTheDocument();
+    unmount();
+    const lavoro = { ...data, radar: { ...data.radar!, base_domanda: 'lavoro' } } as Dataset;
+    render(CompetenzeDetail, { data: lavoro, today, tile, elemento: null, onclose: () => {} });
+    const blk = screen.getByRole('heading', { name: 'Radar delle competenze' }).closest('section')!;
+    expect(within(blk).getByRole('link', { name: 'The Adzuna API' })).toHaveAttribute('href', 'https://www.adzuna.co.uk');
+  });
   it('link diretto a una competenza: è evidenziata', async () => {
     show(CompetenzeDetail, tile, 'mcp');
     const row = await screen.findByRole('button', { name: /^MCP/ });

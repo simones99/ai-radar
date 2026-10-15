@@ -20,9 +20,15 @@
     .map((e) => ({ name: paese(e), hot: e === 'Italy', pts: owidPoints(o, id, e).map((p) => ({ x: tNum(p.t), y: p.v })) }))
     .filter((x) => x.pts.length);
   const uso = $derived(lines('uso_genai', ['World', 'Italy', 'United States', 'China']));
-  const dots = (id: string) => [...owidLatestByEntity(o, id)]
-    .map(([e, x]) => ({ k: paese(e), now: x.now.v, was: x.was?.v ?? null, hot: e === 'Italy' }))
-    .sort((a, b) => b.now - a.now).slice(0, 16);
+  // primi 15 Paesi, più l'Italia se è più in basso: resta sempre nel grafico, in evidenza
+  const dots = (id: string) => {
+    const all = [...owidLatestByEntity(o, id)]
+      .map(([e, x]) => ({ k: paese(e), now: x.now.v, was: x.was?.v ?? null, hot: e === 'Italy' }))
+      .sort((a, b) => b.now - a.now);
+    const top = all.slice(0, 15);
+    const it = all.find((d) => d.hot);
+    return it && !top.includes(it) ? [...top, it] : top;
+  };
   const ue = $derived(dots('uso_genai_ue'));
   const giovani = $derived(dots('uso_genai_giovani_ue'));
   const dev = $derived(owidPoints(o, 'sviluppatori_ai', 'World').map((p) => ({ k: p.t, v: p.v })));

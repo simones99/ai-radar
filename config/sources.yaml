@@ -85,6 +85,10 @@ feeds_per_source: 12
 
 # Our World in Data: grafici del grapher (https://ourworldindata.org/grapher/<slug>).
 # colonna = nome breve della colonna nel CSV; entita = righe da tenere (assente = tutte).
+# Licenze verificate il 2026-10-15 (metadati OWID: nessun produttore vieta di ripubblicare i numeri).
+# Da tenere d'occhio: AI Index/Stanford HAI (Quid, McKinsey, Lightcast) e' CC BY-ND 4.0, quindi
+# i dati vanno citati senza alterarli; IEA (testo (c) OECD/IEA), NVIDIA e TSMC sono (c) dei produttori:
+# si mostrano solo cifre di fatto con la fonte, e le condizioni vanno riviste se il loro uso cambia.
 owid:
   - id: investimenti_privati
     slug: private-investment-in-artificial-intelligence

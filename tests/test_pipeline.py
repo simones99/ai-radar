@@ -322,3 +322,26 @@ def test_radar_previous_demand_needs_old_job_snapshot(tmp_path, monkeypatch):
         assert r["slancio_prec"] is not None
         assert r["domanda_prec"] is None and r["quadrante_prec"] is None
         assert r["breve"] == r["nome"]
+
+
+def test_adzuna_runs_once_per_week(env, monkeypatch):
+    # la chiave è condivisa con altri progetti: una rilevazione a settimana, non a ogni push
+    from pipeline import adzuna
+    monkeypatch.setenv("ADZUNA_APP_ID", "x")
+    monkeypatch.setenv("ADZUNA_APP_KEY", "y")
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    calls = []
+    monkeypatch.setattr(adzuna, "count", lambda s, code, extra, *_: calls.append(code) or 10)
+    skills = [{"id": "rag", "jobs": {"what": "rag"}}]
+    countries = {"it": "Italia", "de": "Germania"}
+
+    assert adzuna.run(None, skills, countries, ["it", "de"], date(2026, 10, 12))["chiamate"] == 4  # lunedì
+    info = adzuna.run(None, skills, countries, ["it", "de"], date(2026, 10, 15))                     # giovedì, stessa settimana
+    assert info["chiamate"] == 0 and info["rilevazione"] == "2026-10-12"
+    assert len(calls) == 4
+    # un Paese nuovo in configurazione fa ripartire la rilevazione
+    assert adzuna.run(None, skills, {**countries, "fr": "Francia"}, ["it", "de", "fr"], date(2026, 10, 15))["chiamate"] == 6
+    # settimana nuova: nuova rilevazione, le precedenti restano nello storico
+    assert adzuna.run(None, skills, countries, ["it", "de"], date(2026, 10, 19))["chiamate"] == 4
+    days = {x["data"] for x in json.loads((env[0] / "jobs.json").read_text())["snapshots"]}
+    assert days == {"2026-10-12", "2026-10-15", "2026-10-19"}

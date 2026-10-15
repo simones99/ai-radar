@@ -46,6 +46,16 @@ def run(s, skills: list[dict], countries: dict, eu: list[str], today: date) -> d
         raise MissingCredentials("ADZUNA_APP_ID/ADZUNA_APP_KEY non impostati")
 
     old = read_json(OUT, {}) or {}
+    # Una rilevazione a settimana (ISO), non a ogni push: la chiave può essere condivisa con altri progetti
+    # e un giro costa (competenze + 1) x Paesi chiamate sul limite di 250 al giorno e 1.000 a settimana.
+    week = today.isocalendar()[:2]
+    done = {x["paese"]: x["data"] for x in old.get("snapshots", [])
+            if date.fromisoformat(x["data"]).isocalendar()[:2] == week}
+    if set(countries) <= set(done):
+        last = max(done[c] for c in countries)
+        log.info("Adzuna: rilevazione della settimana già fatta il %s, nessuna chiamata", last)
+        return {"chiamate": 0, "rilevazione": last}
+
     stamp = today.isoformat()
     snaps = [x for x in old.get("snapshots", []) if x["data"] != stamp]
     calls = 0

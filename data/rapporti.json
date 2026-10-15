@@ -1,0 +1,70 @@
+{
+ "rapporti": [
+  {
+   "nome": "AI Index Report",
+   "editore": "Stanford HAI",
+   "url": "https://hai.stanford.edu/ai-index",
+   "cadenza": "annuale",
+   "edizioni": [
+    {
+     "anno": 2025,
+     "data": "2025-04",
+     "url": "https://hai.stanford.edu/ai-index/2025-ai-index-report"
+    },
+    {
+     "anno": 2026,
+     "data": "2026-04",
+     "url": "https://hai.stanford.edu/ai-index/2026-ai-index-report"
+    }
+   ],
+   "prossima_prevista": "2027-04"
+  },
+  {
+   "nome": "State of AI Report",
+   "editore": "Air Street Capital",
+   "url": "https://www.stateof.ai",
+   "cadenza": "annuale",
+   "edizioni": [
+    {
+     "anno": 2025,
+     "data": "2025-10",
+     "url": "https://www.stateof.ai/2025"
+    },
+    {
+     "anno": 2026,
+     "data": "2026-10",
+     "url": "https://www.stateof.ai/State-of-AI-Report-2026.pdf"
+    }
+   ],
+   "prossima_prevista": "2027-10"
+  },
+  {
+   "nome": "The State of AI",
+   "editore": "McKinsey & Company",
+   "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai",
+   "cadenza": "annuale",
+   "edizioni": [
+    {
+     "anno": 2025,
+     "data": "2025-11",
+     "url": "https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai"
+    }
+   ],
+   "prossima_prevista": "2026-11"
+  },
+  {
+   "nome": "State of Generative AI in the Enterprise",
+   "editore": "Menlo Ventures",
+   "url": "https://menlovc.com",
+   "cadenza": "annuale",
+   "edizioni": [
+    {
+     "anno": 2025,
+     "data": "2025-12",
+     "url": "https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/"
+    }
+   ],
+   "prossima_prevista": "2026-12"
+  }
+ ]
+}

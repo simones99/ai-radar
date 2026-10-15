@@ -1,0 +1,3816 @@
+{
+ "aggiornato": "2026-10-15T12:41:53+00:00",
+ "errori": {},
+ "serie": {
+  "investimenti_privati": {
+   "titolo": "Private investment in AI by region",
+   "unita": "constant 2021 US$",
+   "citazione": "Quid via AI Index Report (2026); U.S. Bureau of Labor Statistics (2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-04-20",
+   "url": "https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence",
+   "licenza": "CC BY-ND 4.0",
+   "punti": [
+    {
+     "entita": "China",
+     "t": "2013",
+     "v": 717196154.0
+    },
+    {
+     "entita": "China",
+     "t": "2014",
+     "v": 771392259.0
+    },
+    {
+     "entita": "China",
+     "t": "2015",
+     "v": 2385249652.0
+    },
+    {
+     "entita": "China",
+     "t": "2016",
+     "v": 5102962753.0
+    },
+    {
+     "entita": "China",
+     "t": "2017",
+     "v": 7314146387.0
+    },
+    {
+     "entita": "China",
+     "t": "2018",
+     "v": 15069709833.0
+    },
+    {
+     "entita": "China",
+     "t": "2019",
+     "v": 14895814015.0
+    },
+    {
+     "entita": "China",
+     "t": "2020",
+     "v": 17871570528.0
+    },
+    {
+     "entita": "China",
+     "t": "2021",
+     "v": 25891134262.0
+    },
+    {
+     "entita": "China",
+     "t": "2022",
+     "v": 13951917588.0
+    },
+    {
+     "entita": "China",
+     "t": "2023",
+     "v": 8419883132.0
+    },
+    {
+     "entita": "China",
+     "t": "2024",
+     "v": 8109463468.0
+    },
+    {
+     "entita": "China",
+     "t": "2025",
+     "v": 10446895788.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2013",
+     "v": 763586708.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2014",
+     "v": 1489116674.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2015",
+     "v": 975011980.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2016",
+     "v": 1392650570.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2017",
+     "v": 2861612653.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2018",
+     "v": 3240709083.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2019",
+     "v": 6714982701.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2020",
+     "v": 6493127811.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2021",
+     "v": 14647912025.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2022",
+     "v": 13689530446.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2023",
+     "v": 10796100014.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2024",
+     "v": 16865450460.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2025",
+     "v": 17608219360.0
+    },
+    {
+     "entita": "United States",
+     "t": "2013",
+     "v": 4211478899.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014",
+     "v": 7963123765.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015",
+     "v": 10632666176.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016",
+     "v": 11464266076.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017",
+     "v": 15548779419.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018",
+     "v": 22716604134.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019",
+     "v": 33994613790.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020",
+     "v": 46294131458.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021",
+     "v": 86855560303.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022",
+     "v": 56651417674.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023",
+     "v": 64353629904.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024",
+     "v": 94629349595.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025",
+     "v": 240612883142.0
+    },
+    {
+     "entita": "World",
+     "t": "2013",
+     "v": 6011928538.0
+    },
+    {
+     "entita": "World",
+     "t": "2014",
+     "v": 10940620567.0
+    },
+    {
+     "entita": "World",
+     "t": "2015",
+     "v": 15258740290.0
+    },
+    {
+     "entita": "World",
+     "t": "2016",
+     "v": 19340762642.0
+    },
+    {
+     "entita": "World",
+     "t": "2017",
+     "v": 28434515011.0
+    },
+    {
+     "entita": "World",
+     "t": "2018",
+     "v": 46508654628.0
+    },
+    {
+     "entita": "World",
+     "t": "2019",
+     "v": 61663636439.0
+    },
+    {
+     "entita": "World",
+     "t": "2020",
+     "v": 77252637155.0
+    },
+    {
+     "entita": "World",
+     "t": "2021",
+     "v": 145398696899.0
+    },
+    {
+     "entita": "World",
+     "t": "2022",
+     "v": 104637757614.0
+    },
+    {
+     "entita": "World",
+     "t": "2023",
+     "v": 92792585552.0
+    },
+    {
+     "entita": "World",
+     "t": "2024",
+     "v": 130850813417.0
+    },
+    {
+     "entita": "World",
+     "t": "2025",
+     "v": 290094148769.0
+    }
+   ]
+  },
+  "investimenti_generativa": {
+   "titolo": "Global investment in generative AI",
+   "unita": "constant 2021 US$",
+   "citazione": "Quid via AI Index Report (2026); U.S. Bureau of Labor Statistics (2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-04-20",
+   "url": "https://ourworldindata.org/grapher/global-investment-in-generative-ai",
+   "licenza": "CC BY-ND 4.0",
+   "punti": [
+    {
+     "entita": "World",
+     "t": "2019",
+     "v": 889295685.0
+    },
+    {
+     "entita": "World",
+     "t": "2020",
+     "v": 2481927099.0
+    },
+    {
+     "entita": "World",
+     "t": "2021",
+     "v": 5320168495.0
+    },
+    {
+     "entita": "World",
+     "t": "2022",
+     "v": 3685014789.0
+    },
+    {
+     "entita": "World",
+     "t": "2023",
+     "v": 25433174472.0
+    },
+    {
+     "entita": "World",
+     "t": "2024",
+     "v": 43731429590.0
+    },
+    {
+     "entita": "World",
+     "t": "2025",
+     "v": 143815532431.0
+    }
+   ]
+  },
+  "investimenti_tipo": {
+   "titolo": "Global corporate investment in AI",
+   "unita": "constant 2021 US$",
+   "citazione": "Quid via AI Index Report (2026); U.S. Bureau of Labor Statistics (2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-04-20",
+   "url": "https://ourworldindata.org/grapher/corporate-investment-in-artificial-intelligence-by-type",
+   "licenza": "CC BY-ND 4.0",
+   "punti": [
+    {
+     "entita": "Merger/acquisition",
+     "t": "2013",
+     "v": 6886002236.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2014",
+     "v": 7657430140.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2015",
+     "v": 10117774807.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2016",
+     "v": 14733564070.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2017",
+     "v": 27282718040.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2018",
+     "v": 23621536987.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2019",
+     "v": 38612036114.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2020",
+     "v": 41701223871.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2021",
+     "v": 175360000610.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2022",
+     "v": 112395306487.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2023",
+     "v": 73153419350.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2024",
+     "v": 79635324935.0
+    },
+    {
+     "entita": "Merger/acquisition",
+     "t": "2025",
+     "v": 180487878156.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2013",
+     "v": 2244929693.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2014",
+     "v": 389166854.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2015",
+     "v": 1349036523.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2016",
+     "v": 1817704063.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2017",
+     "v": 1426041523.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2018",
+     "v": 2168994538.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2019",
+     "v": 2278777948.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2020",
+     "v": 92333187696.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2021",
+     "v": 2650000095.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2022",
+     "v": 8222014494.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2023",
+     "v": 7985869867.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2024",
+     "v": 3878539769.0
+    },
+    {
+     "entita": "Minority stake",
+     "t": "2025",
+     "v": 4991107416.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2013",
+     "v": 6013620207.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2014",
+     "v": 10942456611.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2015",
+     "v": 15262405843.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2016",
+     "v": 19339918504.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2017",
+     "v": 28432393865.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2018",
+     "v": 46509284444.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2019",
+     "v": 61664788747.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2020",
+     "v": 77256671006.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2021",
+     "v": 145399993896.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2022",
+     "v": 104636245902.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2023",
+     "v": 92789050680.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2024",
+     "v": 130851050672.0
+    },
+    {
+     "entita": "Private investment",
+     "t": "2025",
+     "v": 290090244534.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2013",
+     "v": 1802922804.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2014",
+     "v": 2804290590.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2015",
+     "v": 2343665195.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2016",
+     "v": 2291887678.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2017",
+     "v": 2244080882.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2018",
+     "v": 13618264156.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2019",
+     "v": 6899927583.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2020",
+     "v": 21002422549.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2021",
+     "v": 37319999695.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2022",
+     "v": 9231248384.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2023",
+     "v": 4819979676.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2024",
+     "v": 4198152506.0
+    },
+    {
+     "entita": "Public offering",
+     "t": "2025",
+     "v": 14022234603.0
+    },
+    {
+     "entita": "Total",
+     "t": "2013",
+     "v": 16947474940.0
+    },
+    {
+     "entita": "Total",
+     "t": "2014",
+     "v": 21793344195.0
+    },
+    {
+     "entita": "Total",
+     "t": "2015",
+     "v": 29072882368.0
+    },
+    {
+     "entita": "Total",
+     "t": "2016",
+     "v": 38183074315.0
+    },
+    {
+     "entita": "Total",
+     "t": "2017",
+     "v": 59385234310.0
+    },
+    {
+     "entita": "Total",
+     "t": "2018",
+     "v": 85918080126.0
+    },
+    {
+     "entita": "Total",
+     "t": "2019",
+     "v": 109455530391.0
+    },
+    {
+     "entita": "Total",
+     "t": "2020",
+     "v": 232293505123.0
+    },
+    {
+     "entita": "Total",
+     "t": "2021",
+     "v": 360729994297.0
+    },
+    {
+     "entita": "Total",
+     "t": "2022",
+     "v": 234484815268.0
+    },
+    {
+     "entita": "Total",
+     "t": "2023",
+     "v": 178748319573.0
+    },
+    {
+     "entita": "Total",
+     "t": "2024",
+     "v": 218563067882.0
+    },
+    {
+     "entita": "Total",
+     "t": "2025",
+     "v": 489591464709.0
+    }
+   ]
+  },
+  "imprese_ai": {
+   "titolo": "Organizations reporting having adopted AI",
+   "unita": "%",
+   "citazione": "McKinsey & Company via AI Index Report – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-04-20",
+   "url": "https://ourworldindata.org/grapher/share-companies-using-artificial-intelligence",
+   "licenza": "CC BY-ND 4.0",
+   "punti": [
+    {
+     "entita": "All geographies",
+     "t": "2021",
+     "v": 56.0
+    },
+    {
+     "entita": "All geographies",
+     "t": "2022",
+     "v": 50.0
+    },
+    {
+     "entita": "All geographies",
+     "t": "2023",
+     "v": 55.0
+    },
+    {
+     "entita": "All geographies",
+     "t": "2024",
+     "v": 78.0
+    },
+    {
+     "entita": "All geographies",
+     "t": "2025",
+     "v": 88.0
+    },
+    {
+     "entita": "Asia-Pacific",
+     "t": "2021",
+     "v": 64.0
+    },
+    {
+     "entita": "Asia-Pacific",
+     "t": "2022",
+     "v": 55.0
+    },
+    {
+     "entita": "Asia-Pacific",
+     "t": "2023",
+     "v": 58.0
+    },
+    {
+     "entita": "Asia-Pacific",
+     "t": "2024",
+     "v": 72.0
+    },
+    {
+     "entita": "Asia-Pacific",
+     "t": "2025",
+     "v": 82.0
+    },
+    {
+     "entita": "Developing markets",
+     "t": "2021",
+     "v": 52.03603
+    },
+    {
+     "entita": "Developing markets",
+     "t": "2022",
+     "v": 44.0
+    },
+    {
+     "entita": "Developing markets",
+     "t": "2023",
+     "v": 49.0
+    },
+    {
+     "entita": "Developing markets",
+     "t": "2024",
+     "v": 77.0
+    },
+    {
+     "entita": "Developing markets",
+     "t": "2025",
+     "v": 88.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2021",
+     "v": 51.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2022",
+     "v": 48.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2023",
+     "v": 57.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2024",
+     "v": 80.0
+    },
+    {
+     "entita": "Europe",
+     "t": "2025",
+     "v": 91.0
+    },
+    {
+     "entita": "Greater China",
+     "t": "2021",
+     "v": 61.0
+    },
+    {
+     "entita": "Greater China",
+     "t": "2022",
+     "v": 41.0
+    },
+    {
+     "entita": "Greater China",
+     "t": "2023",
+     "v": 48.0
+    },
+    {
+     "entita": "Greater China",
+     "t": "2024",
+     "v": 75.0
+    },
+    {
+     "entita": "Greater China",
+     "t": "2025",
+     "v": 88.0
+    },
+    {
+     "entita": "North America",
+     "t": "2021",
+     "v": 55.0
+    },
+    {
+     "entita": "North America",
+     "t": "2022",
+     "v": 59.0
+    },
+    {
+     "entita": "North America",
+     "t": "2023",
+     "v": 61.0
+    },
+    {
+     "entita": "North America",
+     "t": "2024",
+     "v": 82.0
+    },
+    {
+     "entita": "North America",
+     "t": "2025",
+     "v": 90.0
+    }
+   ]
+  },
+  "uso_genai": {
+   "titolo": "Estimated share of working-age adults who use generative AI",
+   "unita": "%",
+   "citazione": "Microsoft (2026) – with minor processing by Our World in Data",
+   "aggiornato_owid": "2026-06-12",
+   "url": "https://ourworldindata.org/grapher/estimated-share-people-generative-ai",
+   "licenza": "CC BY 4.0",
+   "punti": [
+    {
+     "entita": "China",
+     "t": "2025-06-30",
+     "v": 15.4
+    },
+    {
+     "entita": "China",
+     "t": "2025-12-31",
+     "v": 16.3
+    },
+    {
+     "entita": "China",
+     "t": "2026-03-31",
+     "v": 16.4
+    },
+    {
+     "entita": "France",
+     "t": "2025-06-30",
+     "v": 40.9
+    },
+    {
+     "entita": "France",
+     "t": "2025-12-31",
+     "v": 44.0
+    },
+    {
+     "entita": "France",
+     "t": "2026-03-31",
+     "v": 47.8
+    },
+    {
+     "entita": "Germany",
+     "t": "2025-06-30",
+     "v": 26.5
+    },
+    {
+     "entita": "Germany",
+     "t": "2025-12-31",
+     "v": 28.6
+    },
+    {
+     "entita": "Germany",
+     "t": "2026-03-31",
+     "v": 31.1
+    },
+    {
+     "entita": "Italy",
+     "t": "2025-06-30",
+     "v": 25.8
+    },
+    {
+     "entita": "Italy",
+     "t": "2025-12-31",
+     "v": 27.8
+    },
+    {
+     "entita": "Italy",
+     "t": "2026-03-31",
+     "v": 30.2
+    },
+    {
+     "entita": "Spain",
+     "t": "2025-06-30",
+     "v": 39.7
+    },
+    {
+     "entita": "Spain",
+     "t": "2025-12-31",
+     "v": 41.8
+    },
+    {
+     "entita": "Spain",
+     "t": "2026-03-31",
+     "v": 44.2
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2025-06-30",
+     "v": 36.4
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2025-12-31",
+     "v": 38.9
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2026-03-31",
+     "v": 42.2
+    },
+    {
+     "entita": "United States",
+     "t": "2025-06-30",
+     "v": 26.3
+    },
+    {
+     "entita": "United States",
+     "t": "2025-12-31",
+     "v": 28.3
+    },
+    {
+     "entita": "United States",
+     "t": "2026-03-31",
+     "v": 31.3
+    },
+    {
+     "entita": "World",
+     "t": "2025-06-30",
+     "v": 15.1
+    },
+    {
+     "entita": "World",
+     "t": "2025-12-31",
+     "v": 16.3
+    },
+    {
+     "entita": "World",
+     "t": "2026-03-31",
+     "v": 17.8
+    }
+   ]
+  },
+  "uso_genai_ue": {
+   "titolo": "Share of individuals aged 16-74 who used generative AI tools in the last three months",
+   "unita": "%",
+   "citazione": "Eurostat (2026) – with minor processing by Our World in Data",
+   "aggiornato_owid": "2026-04-07",
+   "url": "https://ourworldindata.org/grapher/share-europe-using-generative-ai",
+   "licenza": "CC BY 4.0",
+   "punti": [
+    {
+     "entita": "Austria",
+     "t": "2025",
+     "v": 39.42
+    },
+    {
+     "entita": "Belgium",
+     "t": "2025",
+     "v": 42.01
+    },
+    {
+     "entita": "Bosnia and Herzegovina",
+     "t": "2025",
+     "v": 20.26
+    },
+    {
+     "entita": "Bulgaria",
+     "t": "2025",
+     "v": 22.5
+    },
+    {
+     "entita": "Croatia",
+     "t": "2025",
+     "v": 27.52
+    },
+    {
+     "entita": "Cyprus",
+     "t": "2025",
+     "v": 44.2
+    },
+    {
+     "entita": "Czechia",
+     "t": "2025",
+     "v": 35.35
+    },
+    {
+     "entita": "Denmark",
+     "t": "2025",
+     "v": 48.44
+    },
+    {
+     "entita": "Estonia",
+     "t": "2025",
+     "v": 46.64
+    },
+    {
+     "entita": "Finland",
+     "t": "2025",
+     "v": 46.27
+    },
+    {
+     "entita": "France",
+     "t": "2025",
+     "v": 37.46
+    },
+    {
+     "entita": "Germany",
+     "t": "2025",
+     "v": 32.25
+    },
+    {
+     "entita": "Greece",
+     "t": "2025",
+     "v": 44.09
+    },
+    {
+     "entita": "Hungary",
+     "t": "2025",
+     "v": 29.56
+    },
+    {
+     "entita": "Ireland",
+     "t": "2025",
+     "v": 44.93
+    },
+    {
+     "entita": "Italy",
+     "t": "2025",
+     "v": 19.86
+    },
+    {
+     "entita": "Latvia",
+     "t": "2025",
+     "v": 33.4
+    },
+    {
+     "entita": "Lithuania",
+     "t": "2025",
+     "v": 36.89
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2025",
+     "v": 42.54
+    },
+    {
+     "entita": "Malta",
+     "t": "2025",
+     "v": 46.46
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2025",
+     "v": 44.7
+    },
+    {
+     "entita": "North Macedonia",
+     "t": "2025",
+     "v": 22.03
+    },
+    {
+     "entita": "Norway",
+     "t": "2025",
+     "v": 56.32
+    },
+    {
+     "entita": "Poland",
+     "t": "2025",
+     "v": 22.68
+    },
+    {
+     "entita": "Portugal",
+     "t": "2025",
+     "v": 38.7
+    },
+    {
+     "entita": "Romania",
+     "t": "2025",
+     "v": 17.76
+    },
+    {
+     "entita": "Serbia",
+     "t": "2025",
+     "v": 18.64
+    },
+    {
+     "entita": "Slovakia",
+     "t": "2025",
+     "v": 30.79
+    },
+    {
+     "entita": "Slovenia",
+     "t": "2025",
+     "v": 37.56
+    },
+    {
+     "entita": "Spain",
+     "t": "2025",
+     "v": 37.88
+    },
+    {
+     "entita": "Sweden",
+     "t": "2025",
+     "v": 42.01
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2025",
+     "v": 47.02
+    },
+    {
+     "entita": "Turkey",
+     "t": "2025",
+     "v": 17.19
+    }
+   ]
+  },
+  "uso_genai_giovani_ue": {
+   "titolo": "Share of individuals aged 16-24 who used generative AI tools in the last three months",
+   "unita": "%",
+   "citazione": "Eurostat (2026) – with minor processing by Our World in Data",
+   "aggiornato_owid": "2026-04-07",
+   "url": "https://ourworldindata.org/grapher/share-of-young-people-in-european-countries-using-generative-ai-tools",
+   "licenza": "CC BY 4.0",
+   "punti": [
+    {
+     "entita": "Austria",
+     "t": "2025",
+     "v": 73.19
+    },
+    {
+     "entita": "Belgium",
+     "t": "2025",
+     "v": 74.4
+    },
+    {
+     "entita": "Bosnia and Herzegovina",
+     "t": "2025",
+     "v": 65.37
+    },
+    {
+     "entita": "Bulgaria",
+     "t": "2025",
+     "v": 49.98
+    },
+    {
+     "entita": "Croatia",
+     "t": "2025",
+     "v": 58.16
+    },
+    {
+     "entita": "Cyprus",
+     "t": "2025",
+     "v": 76.46
+    },
+    {
+     "entita": "Czechia",
+     "t": "2025",
+     "v": 78.47
+    },
+    {
+     "entita": "Denmark",
+     "t": "2025",
+     "v": 77.64
+    },
+    {
+     "entita": "Estonia",
+     "t": "2025",
+     "v": 82.81
+    },
+    {
+     "entita": "Finland",
+     "t": "2025",
+     "v": 67.05
+    },
+    {
+     "entita": "France",
+     "t": "2025",
+     "v": 76.48
+    },
+    {
+     "entita": "Germany",
+     "t": "2025",
+     "v": 52.65
+    },
+    {
+     "entita": "Greece",
+     "t": "2025",
+     "v": 83.54
+    },
+    {
+     "entita": "Hungary",
+     "t": "2025",
+     "v": 62.88
+    },
+    {
+     "entita": "Ireland",
+     "t": "2025",
+     "v": 66.45
+    },
+    {
+     "entita": "Italy",
+     "t": "2025",
+     "v": 47.17
+    },
+    {
+     "entita": "Latvia",
+     "t": "2025",
+     "v": 73.23
+    },
+    {
+     "entita": "Lithuania",
+     "t": "2025",
+     "v": 73.67
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2025",
+     "v": 66.04
+    },
+    {
+     "entita": "Malta",
+     "t": "2025",
+     "v": 76.0
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2025",
+     "v": 73.57
+    },
+    {
+     "entita": "North Macedonia",
+     "t": "2025",
+     "v": 45.37
+    },
+    {
+     "entita": "Norway",
+     "t": "2025",
+     "v": 79.7
+    },
+    {
+     "entita": "Poland",
+     "t": "2025",
+     "v": 49.28
+    },
+    {
+     "entita": "Portugal",
+     "t": "2025",
+     "v": 76.54
+    },
+    {
+     "entita": "Romania",
+     "t": "2025",
+     "v": 44.05
+    },
+    {
+     "entita": "Serbia",
+     "t": "2025",
+     "v": 46.97
+    },
+    {
+     "entita": "Slovakia",
+     "t": "2025",
+     "v": 75.49
+    },
+    {
+     "entita": "Slovenia",
+     "t": "2025",
+     "v": 73.03
+    },
+    {
+     "entita": "Spain",
+     "t": "2025",
+     "v": 75.56
+    },
+    {
+     "entita": "Sweden",
+     "t": "2025",
+     "v": 67.01
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2025",
+     "v": 78.56
+    },
+    {
+     "entita": "Turkey",
+     "t": "2025",
+     "v": 38.52
+    }
+   ]
+  },
+  "sviluppatori_ai": {
+   "titolo": "Share of professional software developers using AI tools",
+   "unita": "%",
+   "citazione": "Stack Overflow (2025) – with minor processing by Our World in Data",
+   "aggiornato_owid": "2026-02-05",
+   "url": "https://ourworldindata.org/grapher/share-of-professional-software-developers-using-ai-tools",
+   "licenza": "CC BY 4.0",
+   "punti": [
+    {
+     "entita": "World",
+     "t": "2020",
+     "v": 0.0
+    },
+    {
+     "entita": "World",
+     "t": "2023",
+     "v": 44.17
+    },
+    {
+     "entita": "World",
+     "t": "2024",
+     "v": 63.2
+    },
+    {
+     "entita": "World",
+     "t": "2025",
+     "v": 80.8
+    }
+   ]
+  },
+  "annunci_ai": {
+   "titolo": "Share of artificial intelligence jobs among all job postings",
+   "unita": "%",
+   "citazione": "Lightcast via AI Index Report (2026) – with minor processing by Our World in Data",
+   "aggiornato_owid": "2026-04-20",
+   "url": "https://ourworldindata.org/grapher/share-artificial-intelligence-job-postings",
+   "licenza": "CC BY-ND 4.0",
+   "punti": [
+    {
+     "entita": "Australia",
+     "t": "2014",
+     "v": 0.23514293
+    },
+    {
+     "entita": "Australia",
+     "t": "2015",
+     "v": 0.26475707
+    },
+    {
+     "entita": "Australia",
+     "t": "2016",
+     "v": 0.29612854
+    },
+    {
+     "entita": "Australia",
+     "t": "2017",
+     "v": 0.42793155
+    },
+    {
+     "entita": "Australia",
+     "t": "2018",
+     "v": 0.598439
+    },
+    {
+     "entita": "Australia",
+     "t": "2019",
+     "v": 0.6753557
+    },
+    {
+     "entita": "Australia",
+     "t": "2020",
+     "v": 0.7135912
+    },
+    {
+     "entita": "Australia",
+     "t": "2021",
+     "v": 1.0030906
+    },
+    {
+     "entita": "Australia",
+     "t": "2022",
+     "v": 0.9733121
+    },
+    {
+     "entita": "Australia",
+     "t": "2023",
+     "v": 0.7989642
+    },
+    {
+     "entita": "Australia",
+     "t": "2024",
+     "v": 1.0585991
+    },
+    {
+     "entita": "Australia",
+     "t": "2025",
+     "v": 1.7760297
+    },
+    {
+     "entita": "Austria",
+     "t": "2018",
+     "v": 0.48120254
+    },
+    {
+     "entita": "Austria",
+     "t": "2019",
+     "v": 0.53068185
+    },
+    {
+     "entita": "Austria",
+     "t": "2020",
+     "v": 0.5108747
+    },
+    {
+     "entita": "Austria",
+     "t": "2021",
+     "v": 0.47235155
+    },
+    {
+     "entita": "Austria",
+     "t": "2022",
+     "v": 0.6922138
+    },
+    {
+     "entita": "Austria",
+     "t": "2023",
+     "v": 0.7078427
+    },
+    {
+     "entita": "Austria",
+     "t": "2024",
+     "v": 0.7692686
+    },
+    {
+     "entita": "Austria",
+     "t": "2025",
+     "v": 0.84165347
+    },
+    {
+     "entita": "Belgium",
+     "t": "2018",
+     "v": 0.64441305
+    },
+    {
+     "entita": "Belgium",
+     "t": "2019",
+     "v": 0.6084931
+    },
+    {
+     "entita": "Belgium",
+     "t": "2020",
+     "v": 0.8602126
+    },
+    {
+     "entita": "Belgium",
+     "t": "2021",
+     "v": 0.8604677
+    },
+    {
+     "entita": "Belgium",
+     "t": "2022",
+     "v": 0.855406
+    },
+    {
+     "entita": "Belgium",
+     "t": "2023",
+     "v": 0.91526043
+    },
+    {
+     "entita": "Belgium",
+     "t": "2024",
+     "v": 1.2248663
+    },
+    {
+     "entita": "Belgium",
+     "t": "2025",
+     "v": 1.3567568
+    },
+    {
+     "entita": "Canada",
+     "t": "2014",
+     "v": 0.34980002
+    },
+    {
+     "entita": "Canada",
+     "t": "2015",
+     "v": 0.4005
+    },
+    {
+     "entita": "Canada",
+     "t": "2016",
+     "v": 0.5208
+    },
+    {
+     "entita": "Canada",
+     "t": "2017",
+     "v": 0.68490005
+    },
+    {
+     "entita": "Canada",
+     "t": "2018",
+     "v": 0.7895
+    },
+    {
+     "entita": "Canada",
+     "t": "2019",
+     "v": 0.91159993
+    },
+    {
+     "entita": "Canada",
+     "t": "2020",
+     "v": 0.9586
+    },
+    {
+     "entita": "Canada",
+     "t": "2021",
+     "v": 1.1837
+    },
+    {
+     "entita": "Canada",
+     "t": "2022",
+     "v": 1.1328
+    },
+    {
+     "entita": "Canada",
+     "t": "2023",
+     "v": 0.9675
+    },
+    {
+     "entita": "Canada",
+     "t": "2024",
+     "v": 1.303
+    },
+    {
+     "entita": "Canada",
+     "t": "2025",
+     "v": 3.0013
+    },
+    {
+     "entita": "Chile",
+     "t": "2020",
+     "v": 0.37233862
+    },
+    {
+     "entita": "Chile",
+     "t": "2021",
+     "v": 0.32695824
+    },
+    {
+     "entita": "Chile",
+     "t": "2022",
+     "v": 0.38041025
+    },
+    {
+     "entita": "Chile",
+     "t": "2023",
+     "v": 0.39746058
+    },
+    {
+     "entita": "Chile",
+     "t": "2024",
+     "v": 0.3752349
+    },
+    {
+     "entita": "Chile",
+     "t": "2025",
+     "v": 2.4124293
+    },
+    {
+     "entita": "Croatia",
+     "t": "2018",
+     "v": 0.16973126
+    },
+    {
+     "entita": "Croatia",
+     "t": "2019",
+     "v": 0.10531931
+    },
+    {
+     "entita": "Croatia",
+     "t": "2020",
+     "v": 0.14183854
+    },
+    {
+     "entita": "Croatia",
+     "t": "2021",
+     "v": 0.10705837
+    },
+    {
+     "entita": "Croatia",
+     "t": "2022",
+     "v": 0.124611855
+    },
+    {
+     "entita": "Croatia",
+     "t": "2023",
+     "v": 0.15522133
+    },
+    {
+     "entita": "Croatia",
+     "t": "2024",
+     "v": 0.22465158
+    },
+    {
+     "entita": "Croatia",
+     "t": "2025",
+     "v": 0.37966642
+    },
+    {
+     "entita": "France",
+     "t": "2018",
+     "v": 0.3505631
+    },
+    {
+     "entita": "France",
+     "t": "2019",
+     "v": 0.3544775
+    },
+    {
+     "entita": "France",
+     "t": "2020",
+     "v": 0.4463002
+    },
+    {
+     "entita": "France",
+     "t": "2021",
+     "v": 0.69235307
+    },
+    {
+     "entita": "France",
+     "t": "2022",
+     "v": 0.8566496
+    },
+    {
+     "entita": "France",
+     "t": "2023",
+     "v": 0.7389364
+    },
+    {
+     "entita": "France",
+     "t": "2024",
+     "v": 0.7623889
+    },
+    {
+     "entita": "France",
+     "t": "2025",
+     "v": 0.9880101
+    },
+    {
+     "entita": "Germany",
+     "t": "2018",
+     "v": 0.53823173
+    },
+    {
+     "entita": "Germany",
+     "t": "2019",
+     "v": 0.58580464
+    },
+    {
+     "entita": "Germany",
+     "t": "2020",
+     "v": 0.50800794
+    },
+    {
+     "entita": "Germany",
+     "t": "2021",
+     "v": 0.82475746
+    },
+    {
+     "entita": "Germany",
+     "t": "2022",
+     "v": 0.9679177
+    },
+    {
+     "entita": "Germany",
+     "t": "2023",
+     "v": 0.8113591
+    },
+    {
+     "entita": "Germany",
+     "t": "2024",
+     "v": 0.8380593
+    },
+    {
+     "entita": "Germany",
+     "t": "2025",
+     "v": 1.1298784
+    },
+    {
+     "entita": "Hong Kong",
+     "t": "2020",
+     "v": 2.0287213
+    },
+    {
+     "entita": "Hong Kong",
+     "t": "2021",
+     "v": 1.8338885
+    },
+    {
+     "entita": "Hong Kong",
+     "t": "2022",
+     "v": 1.7299262
+    },
+    {
+     "entita": "Hong Kong",
+     "t": "2023",
+     "v": 1.7173071
+    },
+    {
+     "entita": "Hong Kong",
+     "t": "2024",
+     "v": 2.0070775
+    },
+    {
+     "entita": "Hong Kong",
+     "t": "2025",
+     "v": 3.4755673
+    },
+    {
+     "entita": "Italy",
+     "t": "2014",
+     "v": 0.043118898
+    },
+    {
+     "entita": "Italy",
+     "t": "2015",
+     "v": 0.07177662
+    },
+    {
+     "entita": "Italy",
+     "t": "2016",
+     "v": 0.121533476
+    },
+    {
+     "entita": "Italy",
+     "t": "2017",
+     "v": 0.13540308
+    },
+    {
+     "entita": "Italy",
+     "t": "2018",
+     "v": 0.29866162
+    },
+    {
+     "entita": "Italy",
+     "t": "2019",
+     "v": 0.45550194
+    },
+    {
+     "entita": "Italy",
+     "t": "2020",
+     "v": 0.51397014
+    },
+    {
+     "entita": "Italy",
+     "t": "2021",
+     "v": 0.55000854
+    },
+    {
+     "entita": "Italy",
+     "t": "2022",
+     "v": 0.6894798
+    },
+    {
+     "entita": "Italy",
+     "t": "2023",
+     "v": 0.61225945
+    },
+    {
+     "entita": "Italy",
+     "t": "2024",
+     "v": 0.7089902
+    },
+    {
+     "entita": "Italy",
+     "t": "2025",
+     "v": 1.3286461
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2018",
+     "v": 1.5398878
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2019",
+     "v": 1.6915064
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2020",
+     "v": 2.443262
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2021",
+     "v": 2.1424086
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2022",
+     "v": 1.9091222
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2023",
+     "v": 1.7806337
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2024",
+     "v": 2.3907356
+    },
+    {
+     "entita": "Luxembourg",
+     "t": "2025",
+     "v": 3.4337115
+    },
+    {
+     "entita": "Mexico",
+     "t": "2020",
+     "v": 0.33564395
+    },
+    {
+     "entita": "Mexico",
+     "t": "2021",
+     "v": 0.41817525
+    },
+    {
+     "entita": "Mexico",
+     "t": "2022",
+     "v": 0.6485988
+    },
+    {
+     "entita": "Mexico",
+     "t": "2023",
+     "v": 0.68505526
+    },
+    {
+     "entita": "Mexico",
+     "t": "2024",
+     "v": 0.54301816
+    },
+    {
+     "entita": "Mexico",
+     "t": "2025",
+     "v": 1.3831784
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2018",
+     "v": 0.76883066
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2019",
+     "v": 0.74953943
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2020",
+     "v": 0.8527898
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2021",
+     "v": 1.0274134
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2022",
+     "v": 0.81936055
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2023",
+     "v": 0.8101318
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2024",
+     "v": 0.88843817
+    },
+    {
+     "entita": "Netherlands",
+     "t": "2025",
+     "v": 1.0408113
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2014",
+     "v": 0.13967815
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2015",
+     "v": 0.16566826
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2016",
+     "v": 0.13729489
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2017",
+     "v": 0.16162631
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2018",
+     "v": 0.1943496
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2019",
+     "v": 0.18969496
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2020",
+     "v": 0.2458042
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2021",
+     "v": 0.36882412
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2022",
+     "v": 0.43562236
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2023",
+     "v": 0.43662727
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2024",
+     "v": 0.5457445
+    },
+    {
+     "entita": "New Zealand",
+     "t": "2025",
+     "v": 0.812238
+    },
+    {
+     "entita": "Poland",
+     "t": "2018",
+     "v": 0.19608219
+    },
+    {
+     "entita": "Poland",
+     "t": "2019",
+     "v": 0.35039598
+    },
+    {
+     "entita": "Poland",
+     "t": "2020",
+     "v": 0.35091656
+    },
+    {
+     "entita": "Poland",
+     "t": "2021",
+     "v": 0.7808614
+    },
+    {
+     "entita": "Poland",
+     "t": "2022",
+     "v": 1.0283303
+    },
+    {
+     "entita": "Poland",
+     "t": "2023",
+     "v": 0.918272
+    },
+    {
+     "entita": "Poland",
+     "t": "2024",
+     "v": 1.7049537
+    },
+    {
+     "entita": "Poland",
+     "t": "2025",
+     "v": 2.9166508
+    },
+    {
+     "entita": "Singapore",
+     "t": "2014",
+     "v": 0.33926564
+    },
+    {
+     "entita": "Singapore",
+     "t": "2015",
+     "v": 0.49389145
+    },
+    {
+     "entita": "Singapore",
+     "t": "2016",
+     "v": 0.6669914
+    },
+    {
+     "entita": "Singapore",
+     "t": "2017",
+     "v": 1.3431454
+    },
+    {
+     "entita": "Singapore",
+     "t": "2018",
+     "v": 2.1162353
+    },
+    {
+     "entita": "Singapore",
+     "t": "2019",
+     "v": 2.9439535
+    },
+    {
+     "entita": "Singapore",
+     "t": "2020",
+     "v": 4.3815193
+    },
+    {
+     "entita": "Singapore",
+     "t": "2021",
+     "v": 3.2930474
+    },
+    {
+     "entita": "Singapore",
+     "t": "2022",
+     "v": 2.997524
+    },
+    {
+     "entita": "Singapore",
+     "t": "2023",
+     "v": 2.3137205
+    },
+    {
+     "entita": "Singapore",
+     "t": "2024",
+     "v": 2.8287144
+    },
+    {
+     "entita": "Singapore",
+     "t": "2025",
+     "v": 4.688576
+    },
+    {
+     "entita": "Spain",
+     "t": "2018",
+     "v": 0.9612001
+    },
+    {
+     "entita": "Spain",
+     "t": "2019",
+     "v": 1.1394137
+    },
+    {
+     "entita": "Spain",
+     "t": "2020",
+     "v": 1.2189388
+    },
+    {
+     "entita": "Spain",
+     "t": "2021",
+     "v": 1.9508905
+    },
+    {
+     "entita": "Spain",
+     "t": "2022",
+     "v": 2.0180895
+    },
+    {
+     "entita": "Spain",
+     "t": "2023",
+     "v": 1.7508345
+    },
+    {
+     "entita": "Spain",
+     "t": "2024",
+     "v": 2.161311
+    },
+    {
+     "entita": "Spain",
+     "t": "2025",
+     "v": 3.3149037
+    },
+    {
+     "entita": "Sweden",
+     "t": "2014",
+     "v": 0.2671136
+    },
+    {
+     "entita": "Sweden",
+     "t": "2015",
+     "v": 0.2009379
+    },
+    {
+     "entita": "Sweden",
+     "t": "2016",
+     "v": 0.26198173
+    },
+    {
+     "entita": "Sweden",
+     "t": "2017",
+     "v": 0.4142932
+    },
+    {
+     "entita": "Sweden",
+     "t": "2018",
+     "v": 0.62258244
+    },
+    {
+     "entita": "Sweden",
+     "t": "2019",
+     "v": 0.8806631
+    },
+    {
+     "entita": "Sweden",
+     "t": "2020",
+     "v": 1.0482328
+    },
+    {
+     "entita": "Sweden",
+     "t": "2021",
+     "v": 1.209983
+    },
+    {
+     "entita": "Sweden",
+     "t": "2022",
+     "v": 1.1470551
+    },
+    {
+     "entita": "Sweden",
+     "t": "2023",
+     "v": 1.262952
+    },
+    {
+     "entita": "Sweden",
+     "t": "2024",
+     "v": 1.7386522
+    },
+    {
+     "entita": "Sweden",
+     "t": "2025",
+     "v": 2.7679513
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2018",
+     "v": 0.8354103
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2019",
+     "v": 0.989974
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2020",
+     "v": 1.0472848
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2021",
+     "v": 1.1268016
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2022",
+     "v": 0.95275545
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2023",
+     "v": 0.7470552
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2024",
+     "v": 1.0252402
+    },
+    {
+     "entita": "Switzerland",
+     "t": "2025",
+     "v": 1.5940037
+    },
+    {
+     "entita": "United Arab Emirates",
+     "t": "2020",
+     "v": 0.7904223
+    },
+    {
+     "entita": "United Arab Emirates",
+     "t": "2021",
+     "v": 0.85614026
+    },
+    {
+     "entita": "United Arab Emirates",
+     "t": "2022",
+     "v": 1.4115463
+    },
+    {
+     "entita": "United Arab Emirates",
+     "t": "2023",
+     "v": 1.2904267
+    },
+    {
+     "entita": "United Arab Emirates",
+     "t": "2024",
+     "v": 1.7058071
+    },
+    {
+     "entita": "United Arab Emirates",
+     "t": "2025",
+     "v": 2.8717885
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2014",
+     "v": 0.3813
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2015",
+     "v": 0.43600002
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2016",
+     "v": 0.4902
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2017",
+     "v": 0.6583
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2018",
+     "v": 0.7428
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2019",
+     "v": 0.8606
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2020",
+     "v": 1.0545001
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2021",
+     "v": 1.0878
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2022",
+     "v": 1.1659
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2023",
+     "v": 0.7905
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2024",
+     "v": 1.052
+    },
+    {
+     "entita": "United Kingdom",
+     "t": "2025",
+     "v": 1.928
+    },
+    {
+     "entita": "United States",
+     "t": "2014",
+     "v": 0.5615
+    },
+    {
+     "entita": "United States",
+     "t": "2015",
+     "v": 0.644
+    },
+    {
+     "entita": "United States",
+     "t": "2016",
+     "v": 0.6716
+    },
+    {
+     "entita": "United States",
+     "t": "2017",
+     "v": 0.8758
+    },
+    {
+     "entita": "United States",
+     "t": "2018",
+     "v": 1.1462001
+    },
+    {
+     "entita": "United States",
+     "t": "2019",
+     "v": 1.2778
+    },
+    {
+     "entita": "United States",
+     "t": "2020",
+     "v": 1.1605
+    },
+    {
+     "entita": "United States",
+     "t": "2021",
+     "v": 1.3055999
+    },
+    {
+     "entita": "United States",
+     "t": "2022",
+     "v": 1.4890001
+    },
+    {
+     "entita": "United States",
+     "t": "2023",
+     "v": 1.2642
+    },
+    {
+     "entita": "United States",
+     "t": "2024",
+     "v": 1.6524
+    },
+    {
+     "entita": "United States",
+     "t": "2025",
+     "v": 2.5554
+    }
+   ]
+  },
+  "data_center_spesa": {
+   "titolo": "Monthly spending on data center construction in the United States",
+   "unita": "constant 2021 US$",
+   "citazione": "United States Census Bureau (2026); U.S. Bureau of Labor Statistics (2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-10-02",
+   "url": "https://ourworldindata.org/grapher/monthly-spending-data-center-us",
+   "licenza": "CC BY 4.0",
+   "punti": [
+    {
+     "entita": "United States",
+     "t": "2014-01",
+     "v": 157895121.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-02",
+     "v": 166808555.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-03",
+     "v": 170255331.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-04",
+     "v": 185206999.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-05",
+     "v": 195200074.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-06",
+     "v": 191245497.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-07",
+     "v": 194050006.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-08",
+     "v": 214211046.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-09",
+     "v": 215627044.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-10",
+     "v": 203240620.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-11",
+     "v": 208170101.0
+    },
+    {
+     "entita": "United States",
+     "t": "2014-12",
+     "v": 168063286.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-01",
+     "v": 182241758.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-02",
+     "v": 182164445.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-03",
+     "v": 212109285.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-04",
+     "v": 236084837.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-05",
+     "v": 352926497.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-06",
+     "v": 424677918.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-07",
+     "v": 285760116.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-08",
+     "v": 304444022.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-09",
+     "v": 308306734.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-10",
+     "v": 298493584.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-11",
+     "v": 309528736.0
+    },
+    {
+     "entita": "United States",
+     "t": "2015-12",
+     "v": 305716193.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-01",
+     "v": 296703038.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-02",
+     "v": 354566286.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-03",
+     "v": 404240040.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-04",
+     "v": 443098241.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-05",
+     "v": 430687759.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-06",
+     "v": 483362945.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-07",
+     "v": 452221892.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-08",
+     "v": 489015337.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-09",
+     "v": 459260349.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-10",
+     "v": 396373816.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-11",
+     "v": 408569934.0
+    },
+    {
+     "entita": "United States",
+     "t": "2016-12",
+     "v": 435401392.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-01",
+     "v": 368134856.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-02",
+     "v": 391219220.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-03",
+     "v": 383503554.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-04",
+     "v": 426283908.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-05",
+     "v": 531048598.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-06",
+     "v": 492867096.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-07",
+     "v": 483688217.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-08",
+     "v": 457883618.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-09",
+     "v": 491861325.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-10",
+     "v": 478867595.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-11",
+     "v": 519397343.0
+    },
+    {
+     "entita": "United States",
+     "t": "2017-12",
+     "v": 541786434.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-01",
+     "v": 538596172.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-02",
+     "v": 554731709.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-03",
+     "v": 600182417.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-04",
+     "v": 624926154.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-05",
+     "v": 716181544.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-06",
+     "v": 736817545.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-07",
+     "v": 750518018.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-08",
+     "v": 692682761.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-09",
+     "v": 633530622.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-10",
+     "v": 729820053.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-11",
+     "v": 642340124.0
+    },
+    {
+     "entita": "United States",
+     "t": "2018-12",
+     "v": 724582864.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-01",
+     "v": 701878149.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-02",
+     "v": 683404861.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-03",
+     "v": 682073960.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-04",
+     "v": 703309555.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-05",
+     "v": 837995047.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-06",
+     "v": 863348265.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-07",
+     "v": 834659808.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-08",
+     "v": 823909346.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-09",
+     "v": 766008923.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-10",
+     "v": 811840962.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-11",
+     "v": 829561910.0
+    },
+    {
+     "entita": "United States",
+     "t": "2019-12",
+     "v": 684831968.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-01",
+     "v": 797074213.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-02",
+     "v": 792320879.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-03",
+     "v": 809382970.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-04",
+     "v": 780068709.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-05",
+     "v": 805917537.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-06",
+     "v": 839737787.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-07",
+     "v": 811003231.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-08",
+     "v": 840905949.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-09",
+     "v": 938488751.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-10",
+     "v": 824502809.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-11",
+     "v": 789628267.0
+    },
+    {
+     "entita": "United States",
+     "t": "2020-12",
+     "v": 789549805.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-01",
+     "v": 782725369.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-02",
+     "v": 736710904.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-03",
+     "v": 874986825.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-04",
+     "v": 814128316.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-05",
+     "v": 831268766.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-06",
+     "v": 833389553.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-07",
+     "v": 858035635.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-08",
+     "v": 928420438.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-09",
+     "v": 951538122.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-10",
+     "v": 739417624.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-11",
+     "v": 774423430.0
+    },
+    {
+     "entita": "United States",
+     "t": "2021-12",
+     "v": 833653916.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-01",
+     "v": 758487089.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-02",
+     "v": 697845226.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-03",
+     "v": 783387967.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-04",
+     "v": 835367468.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-05",
+     "v": 843680049.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-06",
+     "v": 852266178.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-07",
+     "v": 856828307.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-08",
+     "v": 897258251.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-09",
+     "v": 981544989.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-10",
+     "v": 809384149.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-11",
+     "v": 841431106.0
+    },
+    {
+     "entita": "United States",
+     "t": "2022-12",
+     "v": 867617419.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-01",
+     "v": 931711940.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-02",
+     "v": 1028227875.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-03",
+     "v": 1091455095.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-04",
+     "v": 1133915422.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-05",
+     "v": 1156908793.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-06",
+     "v": 1193867292.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-07",
+     "v": 1287536634.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-08",
+     "v": 1372194241.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-09",
+     "v": 1404544629.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-10",
+     "v": 1508348914.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-11",
+     "v": 1464249112.0
+    },
+    {
+     "entita": "United States",
+     "t": "2023-12",
+     "v": 1485621031.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-01",
+     "v": 1587535409.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-02",
+     "v": 1641183552.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-03",
+     "v": 1849679507.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-04",
+     "v": 1781483496.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-05",
+     "v": 2064834259.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-06",
+     "v": 2266019644.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-07",
+     "v": 2351373733.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-08",
+     "v": 2436327701.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-09",
+     "v": 2474761463.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-10",
+     "v": 2548833107.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-11",
+     "v": 2521084879.0
+    },
+    {
+     "entita": "United States",
+     "t": "2024-12",
+     "v": 2734951217.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-01",
+     "v": 2708508261.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-02",
+     "v": 2677047304.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-03",
+     "v": 2846878945.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-04",
+     "v": 3338234618.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-05",
+     "v": 3097981529.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-06",
+     "v": 3019403118.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-07",
+     "v": 3082495041.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-08",
+     "v": 3228965955.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-09",
+     "v": 3318620654.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-10",
+     "v": 3369933995.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-11",
+     "v": 3189271464.0
+    },
+    {
+     "entita": "United States",
+     "t": "2025-12",
+     "v": 3306030283.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-01",
+     "v": 3269125368.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-02",
+     "v": 3266471174.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-03",
+     "v": 3495279518.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-04",
+     "v": 3797314911.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-05",
+     "v": 4104616369.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-06",
+     "v": 4552216993.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-07",
+     "v": 4915367713.0
+    },
+    {
+     "entita": "United States",
+     "t": "2026-08",
+     "v": 5371310412.0
+    }
+   ]
+  },
+  "data_center_elettricita": {
+   "titolo": "Share of total electricity demand coming from data centers",
+   "unita": "%",
+   "citazione": "International Energy Agency (2025); International Energy Agency (2026); Ember (2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-06-30",
+   "url": "https://ourworldindata.org/grapher/data-centers-share-electricity-demand",
+   "licenza": "© OECD/IEA",
+   "punti": [
+    {
+     "entita": "China",
+     "t": "2020",
+     "v": 0.7987601
+    },
+    {
+     "entita": "China",
+     "t": "2023",
+     "v": 0.8898899
+    },
+    {
+     "entita": "China",
+     "t": "2024",
+     "v": 1.0129217
+    },
+    {
+     "entita": "China",
+     "t": "2025",
+     "v": 1.1075455
+    },
+    {
+     "entita": "Europe (IEA)",
+     "t": "2020",
+     "v": 1.4439007
+    },
+    {
+     "entita": "Europe (IEA)",
+     "t": "2023",
+     "v": 1.7518435
+    },
+    {
+     "entita": "Europe (IEA)",
+     "t": "2024",
+     "v": 1.7685213
+    },
+    {
+     "entita": "Europe (IEA)",
+     "t": "2025",
+     "v": 1.8701056
+    },
+    {
+     "entita": "United States",
+     "t": "2020",
+     "v": 2.6402705
+    },
+    {
+     "entita": "United States",
+     "t": "2023",
+     "v": 3.6041856
+    },
+    {
+     "entita": "United States",
+     "t": "2024",
+     "v": 4.1545305
+    },
+    {
+     "entita": "United States",
+     "t": "2025",
+     "v": 4.9384785
+    },
+    {
+     "entita": "World",
+     "t": "2020",
+     "v": 1.0066096
+    },
+    {
+     "entita": "World",
+     "t": "2023",
+     "v": 1.2135375
+    },
+    {
+     "entita": "World",
+     "t": "2024",
+     "v": 1.3449625
+    },
+    {
+     "entita": "World",
+     "t": "2025",
+     "v": 1.5264845
+    }
+   ]
+  },
+  "nvidia_ricavi": {
+   "titolo": "NVIDIA’s quarterly revenue by market segment",
+   "unita": "US dollars",
+   "citazione": "NVIDIA Corporation (2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-09-02",
+   "url": "https://ourworldindata.org/grapher/nvidia-quarterly-revenue-segment",
+   "licenza": "© NVIDIA",
+   "punti": [
+    {
+     "entita": "Data centers and AI",
+     "t": "2014-Q2",
+     "v": 57000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2014-Q3",
+     "v": 83000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2014-Q4",
+     "v": 89000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2015-Q1",
+     "v": 88000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2015-Q2",
+     "v": 88000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2015-Q3",
+     "v": 72000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2015-Q4",
+     "v": 82000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2016-Q1",
+     "v": 97000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2016-Q2",
+     "v": 143000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2016-Q3",
+     "v": 151000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2016-Q4",
+     "v": 240000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2017-Q1",
+     "v": 296000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2017-Q2",
+     "v": 409000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2017-Q3",
+     "v": 416000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2017-Q4",
+     "v": 501000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2018-Q1",
+     "v": 606000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2018-Q2",
+     "v": 701000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2018-Q3",
+     "v": 760000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2018-Q4",
+     "v": 792000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2019-Q1",
+     "v": 679000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2019-Q2",
+     "v": 634000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2019-Q3",
+     "v": 655000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2019-Q4",
+     "v": 726000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2020-Q1",
+     "v": 968000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2020-Q2",
+     "v": 1141000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2020-Q3",
+     "v": 1752000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2020-Q4",
+     "v": 1900000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2021-Q1",
+     "v": 1903000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2021-Q2",
+     "v": 2048000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2021-Q3",
+     "v": 2366000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2021-Q4",
+     "v": 2936000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2022-Q1",
+     "v": 3263000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2022-Q2",
+     "v": 3750000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2022-Q3",
+     "v": 3806000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2022-Q4",
+     "v": 3833000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2023-Q1",
+     "v": 3616000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2023-Q2",
+     "v": 4284000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2023-Q3",
+     "v": 10323000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2023-Q4",
+     "v": 14514000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2024-Q1",
+     "v": 18404000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2024-Q2",
+     "v": 22563000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2024-Q3",
+     "v": 26272000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2024-Q4",
+     "v": 30771000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2025-Q1",
+     "v": 35580000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2025-Q2",
+     "v": 39112000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2025-Q3",
+     "v": 41096000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2025-Q4",
+     "v": 51215000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2026-Q1",
+     "v": 62314000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2026-Q2",
+     "v": 75246000000.0
+    },
+    {
+     "entita": "Data centers and AI",
+     "t": "2026-Q3",
+     "v": 89023000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2014-Q2",
+     "v": 1103000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2014-Q3",
+     "v": 1103000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2014-Q4",
+     "v": 1225000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2015-Q1",
+     "v": 1251000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2015-Q2",
+     "v": 1151000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2015-Q3",
+     "v": 1153000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2015-Q4",
+     "v": 1305000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2016-Q1",
+     "v": 1401000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2016-Q2",
+     "v": 1305000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2016-Q3",
+     "v": 1428000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2016-Q4",
+     "v": 2004000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2017-Q1",
+     "v": 2173000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2017-Q2",
+     "v": 1937000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2017-Q3",
+     "v": 2230000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2017-Q4",
+     "v": 2636000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2018-Q1",
+     "v": 2911000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2018-Q2",
+     "v": 3207000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2018-Q3",
+     "v": 3123000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2018-Q4",
+     "v": 3181000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2019-Q1",
+     "v": 2205000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2019-Q2",
+     "v": 2220000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2019-Q3",
+     "v": 2579000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2019-Q4",
+     "v": 3014000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2020-Q1",
+     "v": 3105000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2020-Q2",
+     "v": 3080000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2020-Q3",
+     "v": 3866000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2020-Q4",
+     "v": 4726000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2021-Q1",
+     "v": 5003000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2021-Q2",
+     "v": 5661000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2021-Q3",
+     "v": 6507000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2021-Q4",
+     "v": 7103000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2022-Q1",
+     "v": 7643000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2022-Q2",
+     "v": 8288000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2022-Q3",
+     "v": 6704000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2022-Q4",
+     "v": 5931000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2023-Q1",
+     "v": 6051000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2023-Q2",
+     "v": 7192000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2023-Q3",
+     "v": 13507000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2023-Q4",
+     "v": 18120000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2024-Q1",
+     "v": 22103000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2024-Q2",
+     "v": 26044000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2024-Q3",
+     "v": 30040000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2024-Q4",
+     "v": 35082000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2025-Q1",
+     "v": 39331000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2025-Q2",
+     "v": 44062000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2025-Q3",
+     "v": 46743000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2025-Q4",
+     "v": 57006000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2026-Q1",
+     "v": 68127000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2026-Q2",
+     "v": 81615000000.0
+    },
+    {
+     "entita": "Total",
+     "t": "2026-Q3",
+     "v": 96221000000.0
+    }
+   ]
+  },
+  "tsmc_ricavi": {
+   "titolo": "TSMC's annual revenue",
+   "unita": "US dollars",
+   "citazione": "Taiwan Semiconductor Manufacturing Company (2025); Central Bank of the Republic of China (Taiwan) (2026) – with minor processing by Our World in Data",
+   "aggiornato_owid": "2025-11-10",
+   "url": "https://ourworldindata.org/grapher/tsmc-annual-revenue",
+   "licenza": "© TSMC",
+   "punti": [
+    {
+     "entita": "Taiwan",
+     "t": "2006",
+     "v": 9754408182.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2007",
+     "v": 9825374708.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2008",
+     "v": 10561913003.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2009",
+     "v": 8949894214.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2010",
+     "v": 13263715849.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2011",
+     "v": 14489670554.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2012",
+     "v": 17098018901.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2013",
+     "v": 20054546114.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2014",
+     "v": 25107096238.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2015",
+     "v": 26419898049.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2016",
+     "v": 29346928200.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2017",
+     "v": 32130423057.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2018",
+     "v": 34167617836.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2019",
+     "v": 34600561997.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2020",
+     "v": 45294840984.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2021",
+     "v": 56667718786.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2022",
+     "v": 75837969522.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2023",
+     "v": 69334860521.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2024",
+     "v": 90102262854.0
+    },
+    {
+     "entita": "Taiwan",
+     "t": "2025",
+     "v": 122303390254.0
+    }
+   ]
+  }
+ }
+}

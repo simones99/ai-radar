@@ -2,543 +2,757 @@
  "fonti": [
   {
    "nome": "OpenAI",
-   "url": "https://openai.com/news/rss.xml"
+   "url": "https://openai.com/news/rss.xml",
+   "tema": "prodotti"
   },
   {
    "nome": "Google DeepMind",
-   "url": "https://deepmind.google/blog/rss.xml"
+   "url": "https://deepmind.google/blog/rss.xml",
+   "tema": "ricerca"
   },
   {
    "nome": "Hugging Face",
-   "url": "https://huggingface.co/blog/feed.xml"
+   "url": "https://huggingface.co/blog/feed.xml",
+   "tema": "ricerca"
   },
   {
    "nome": "Epoch AI",
-   "url": "https://epochai.substack.com/feed"
+   "url": "https://epoch.ai/atom.xml",
+   "tema": "ricerca"
   },
   {
    "nome": "Import AI",
-   "url": "https://importai.substack.com/feed"
+   "url": "https://jack-clark.net/feed/",
+   "tema": "ricerca"
   },
   {
    "nome": "EU AI Act Newsletter",
-   "url": "https://artificialintelligenceact.substack.com/feed"
+   "url": "https://artificialintelligenceact.substack.com/feed",
+   "tema": "politica"
   },
   {
    "nome": "Google AI",
-   "url": "https://blog.google/innovation-and-ai/technology/ai/rss/"
+   "url": "https://blog.google/innovation-and-ai/technology/ai/rss/",
+   "tema": "prodotti"
   },
   {
    "nome": "Simon Willison",
-   "url": "https://simonwillison.net/atom/entries/"
+   "url": "https://simonwillison.net/atom/entries/",
+   "tema": "prodotti"
   },
   {
    "nome": "The Decoder",
-   "url": "https://the-decoder.com/feed/"
+   "url": "https://the-decoder.com/feed/",
+   "tema": "prodotti"
   },
   {
    "nome": "Latent Space",
-   "url": "https://www.latent.space/feed"
+   "url": "https://www.latent.space/feed",
+   "tema": "business"
   }
  ],
- "errori": {
-  "Epoch AI": "HTTP 403 su https://epochai.substack.com/feed",
-  "Import AI": "HTTP 403 su https://importai.substack.com/feed",
-  "EU AI Act Newsletter": "HTTP 403 su https://artificialintelligenceact.substack.com/feed"
- },
+ "errori": {},
  "giorni": 45,
  "notizie": [
+  {
+   "titolo": "Anthropic's Q3 revenue hits $16.8B but growth slows ahead of planned November IPO",
+   "link": "https://the-decoder.com/anthropics-q3-revenue-hits-16-8b-but-growth-slows-ahead-of-planned-november-ipo/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] Modal’s $1B ARR, $16B Series D makes it NYC’s newest AI Infra Decacorn, 3x usage and 3x valuation in 5 months, 15x in 1 yr",
+   "link": "https://www.latent.space/p/ainews-modals-1b-arr-16b-series-d",
+   "data": "2026-10-15",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
   {
    "titolo": "Google says self-improving AI isn't anywhere close",
    "link": "https://the-decoder.com/google-says-self-improving-ai-isnt-anywhere-close/",
    "data": "2026-10-14",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Researchers tracked down a rogue fleet of Chinese AI agents in the wild and actually talked to it",
    "link": "https://the-decoder.com/researchers-tracked-down-a-rogue-fleet-of-chinese-ai-agents-in-the-wild-and-actually-talked-to-it/",
    "data": "2026-10-14",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "OpenAI will reportedly ship at least one model this year but its flagship still needs alignment work",
    "link": "https://the-decoder.com/openai-will-reportedly-ship-at-least-one-model-this-year-but-its-flagship-still-needs-alignment-work/",
    "data": "2026-10-14",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Nvidia's Jensen Huang pledges $2 billion for Europe, $250 million in compute for UK safety labs",
    "link": "https://the-decoder.com/nvidias-jensen-huang-pledges-2-billion-for-europe-250-million-in-compute-for-uk-safety-labs/",
    "data": "2026-10-14",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "AI guardrails designed to stop hackers are now blocking defenders, and Orion-1 aims to fill the gap",
    "link": "https://the-decoder.com/ai-guardrails-designed-to-stop-hackers-are-now-blocking-defenders-and-orion-1-aims-to-fill-the-gap/",
    "data": "2026-10-14",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Alleged OpenAI spy vibe-coded a surveillance device using his wife's chatbot account",
    "link": "https://the-decoder.com/alleged-openai-spy-vibe-coded-a-surveillance-device-using-his-wifes-chatbot-account/",
    "data": "2026-10-14",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Amp puts AI agents to work beyond code with OpenAI models",
    "link": "https://openai.com/index/amp-beyond-coding",
    "data": "2026-10-14",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "SentinelOne cuts malware analysis from weeks to hours",
    "link": "https://openai.com/index/sentinelone",
    "data": "2026-10-14",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "How Third Moment Research runs 10,000 agents for 36+ hours",
    "link": "https://openai.com/index/third-moment-research",
    "data": "2026-10-14",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "How Block is building AI-powered security with OpenAI technology",
    "link": "https://openai.com/index/block-ai-powered-security",
    "data": "2026-10-14",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "The EU’s next chapter in AI is agentic",
    "link": "https://openai.com/index/the-eus-next-chapter-in-ai-is-agentic",
    "data": "2026-10-14",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Crossing the Threshold: How OpenAI and Anthropic Approach Autonomy and Safety in Financial Agents",
    "link": "https://www.latent.space/p/crossing-the-threshold",
    "data": "2026-10-14",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "Lab-in-the-Loop at Compute Speed — Ian Quigley, Leash Bio",
    "link": "https://www.latent.space/p/lab-in-the-loop-at-compute-speed",
    "data": "2026-10-14",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "[AINews] AI Engineer NYC: Gemini 4 Argon, Vals AI Benchmarks",
    "link": "https://www.latent.space/p/ainews-ai-engineer-nyc-gemini-4-argon",
    "data": "2026-10-14",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "HiRO-ACEv2: Simulating extreme weather at 3 km resolution for a fraction of the cost",
    "link": "https://huggingface.co/blog/allenai/hiro-acev2",
    "data": "2026-10-14",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "Google DeepMind and Singapore Government collaborate to build fine-tuned AI model for scam detection",
    "link": "https://deepmind.google/blog/on-device-ai-scam-detection-mddi/",
    "data": "2026-10-14",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "How well can AI play Slay the Spire?",
+   "link": "https://epoch.ai/publications/ai-systems-are-improving-rapidly-at-slay-the-spire-and-its-sequel",
+   "data": "2026-10-14",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "406 scientists demand AI models be cut off from the internet immediately",
    "link": "https://the-decoder.com/406-scientists-demand-ai-models-be-cut-off-from-the-internet-immediately/",
    "data": "2026-10-13",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Gemini 4 Argon is now available worldwide as Google's most capable frontier model",
    "link": "https://the-decoder.com/gemini-4-argon-is-now-available-worldwide-as-googles-most-capable-frontier-model/",
    "data": "2026-10-13",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Machine learning pioneer Michael I. Jordan dismantles AI doom rhetoric as \"grand moralizing performance\"",
    "link": "https://the-decoder.com/machine-learning-pioneer-michael-i-jordan-dismantles-ai-doom-rhetoric-as-grand-moralizing-performance/",
    "data": "2026-10-13",
-   "fonte": "The Decoder"
-  },
-  {
-   "titolo": "Character.ai will shut down if no buyer emerges, capping a fall from $2.7 billion Google deal to bankruptcy",
-   "link": "https://the-decoder.com/character-ai-will-shut-down-if-no-buyer-emerges-capping-a-fall-from-2-7-billion-google-deal-to-bankruptcy/",
-   "data": "2026-10-13",
-   "fonte": "The Decoder"
+   "fonte": "The Decoder",
+   "tema": "prodotti"
   },
   {
    "titolo": "Higgsfield takes AI video from 1 minute to over 10",
    "link": "https://openai.com/index/higgsfield-longer-videos-voice",
    "data": "2026-10-13",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Dyna-2: General Purpose Physical Agents with Hour-Long Autonomy — Jason Ma, Dyna Robotics",
    "link": "https://www.latent.space/p/dyna",
    "data": "2026-10-13",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "[AINews] Meta Muse Wonder & Wonder Full: MSL’s Claude 5.5-tier Frontier Model",
    "link": "https://www.latent.space/p/ainews-meta-muse-wonder-and-wonder",
    "data": "2026-10-13",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "Run fast, private agents on-device with LFM2.5-24B-A2B",
    "link": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b",
    "data": "2026-10-13",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "Developing Gemini 4 Argon responsibly and safely",
    "link": "https://deepmind.google/blog/developing-gemini-4-argon-responsibly-and-safely/",
    "data": "2026-10-13",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Gemini 4 Argon for Robotics",
    "link": "https://deepmind.google/blog/gemini-4-argon-for-robotics/",
    "data": "2026-10-13",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Gemini 4 Argon: Built to solve your hardest problems",
    "link": "https://deepmind.google/blog/introducing-gemini-4-argon/",
    "data": "2026-10-13",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Gemini 4 Argon: Built to solve your hardest problems",
    "link": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
    "data": "2026-10-13",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Hello Python 3.15, goodbye 3.10, and now I can use 3.11",
    "link": "https://simonwillison.net/2026/Oct/12/python-3-15/",
    "data": "2026-10-12",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "How Anthropic’s Dynamic Workflows Coordinate Claude Agents",
    "link": "https://www.latent.space/p/claude-dynamic-workflows",
    "data": "2026-10-12",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Import AI 476: Creativity and RSI; worse-than-China open weight models; AI goes to space",
+   "link": "https://jack-clark.net/2026/10/12/import-ai-476-creativity-and-rsi-worse-than-china-open-weight-models-ai-goes-to-space/",
+   "data": "2026-10-12",
+   "fonte": "Import AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "[Subscriber Exclusive] NYC Subscriber Meetups!",
    "link": "https://www.latent.space/p/nyc2026",
    "data": "2026-10-10",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "Building AI for Reliable Execution: Lessons From Industrial Robotics",
    "link": "https://www.latent.space/p/standard-bots",
    "data": "2026-10-10",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "[AINews] TypeSafe/Jev at >$100M ARR, $7.5B valuation 3 weeks after launch",
    "link": "https://www.latent.space/p/ainews-typesafejev-at-100m-arr-75b",
    "data": "2026-10-10",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "Why AlphaFold Didn't Solve Protein Folding — Pushmeet Kohli, Google DeepMind & Sal Candido, Biohub",
    "link": "https://www.latent.space/p/biohub-deepmind",
    "data": "2026-10-10",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "A new feature for my blog, built using my voice",
    "link": "https://simonwillison.net/2026/Oct/9/built-using-my-voice/",
    "data": "2026-10-09",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "Asana cuts model costs 76x in browser tests with GPT-6.1 Sol",
    "link": "https://openai.com/index/asana-browser-agent",
    "data": "2026-10-09",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Sophos cuts threat investigation time by 96% with OpenAI Daybreak",
    "link": "https://openai.com/index/sophos",
    "data": "2026-10-09",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "How Oracle turns days of work into minutes with ChatGPT and Codex",
    "link": "https://openai.com/index/oracle",
    "data": "2026-10-08",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Pollo AI turns creative ideas into campaigns with OpenAI",
    "link": "https://openai.com/index/pollo-ai",
    "data": "2026-10-08",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "LegalOn halves Codex costs while maintaining development speed",
    "link": "https://openai.com/index/legalon-halves-codex-costs",
    "data": "2026-10-08",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Disrupting AI-enabled “false front” operations",
    "link": "https://openai.com/index/disrupting-ai-enabled-false-front-operations",
    "data": "2026-10-08",
-   "fonte": "OpenAI"
+   "fonte": "OpenAI",
+   "tema": "prodotti"
   },
   {
    "titolo": "[AINews] not much happened today",
    "link": "https://www.latent.space/p/ainews-not-much-happened-today-60f",
    "data": "2026-10-08",
-   "fonte": "Latent Space"
-  },
-  {
-   "titolo": "Synthesis Superintelligence: from Semiconductors to Superconductors — Periodic Labs’ Liam Fedus and Ekin Dogus Cubuk",
-   "link": "https://www.latent.space/p/periodic",
-   "data": "2026-10-08",
-   "fonte": "Latent Space"
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "The model that didn't exist, so you made it yourself",
    "link": "https://huggingface.co/blog/building-with-ml-intern",
    "data": "2026-10-08",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Can AI automate Epoch?",
+   "link": "https://epoch.ai/publications/can-ai-automate-epoch",
+   "data": "2026-10-08",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "Claude Haiku 5.5",
    "link": "https://simonwillison.net/2026/Oct/7/claude-haiku-5-5/",
    "data": "2026-10-07",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "Introducing Falcon ASR",
    "link": "https://huggingface.co/blog/tiiuae/falcon-asr",
    "data": "2026-10-07",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "One Model Family, Two Gold-Level Results: Fine-Tuning Nemotron for IOI and IMO",
    "link": "https://huggingface.co/blog/nvidia/nemotron-ioi-and-imo-2026",
    "data": "2026-10-07",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "Introducing Playground: Create and play custom games",
    "link": "https://blog.google/innovation-and-ai/technology/ai/playground-experimental-gaming-platform/",
    "data": "2026-10-07",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "US adults are no more likely to face cyber incidents than when Claude Fable 5 launched",
+   "link": "https://epoch.ai/data-insights/cyber-incidents-flat-since-fable-5",
+   "data": "2026-10-07",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "EBR-bench update",
+   "link": "https://epoch.ai/publications/ebr-bench-update",
+   "data": "2026-10-07",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Can AI automate AI R&amp;D yet?",
+   "link": "https://epoch.ai/publications/innovationeval",
+   "data": "2026-10-07",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "EmbeddingGemma 2: an open, lightweight multimodal embedding model",
    "link": "https://deepmind.google/blog/embeddinggemma-2-an-open-lightweight-multimodal-embedding-model/",
    "data": "2026-10-06",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Who is most exposed to a chip supply shock?",
+   "link": "https://epoch.ai/publications/china-us-semiconductor-supply-chain-exposure",
+   "data": "2026-10-06",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "How do Chinese AI companies make money?",
+   "link": "https://epoch.ai/publications/how-do-chinese-ai-companies-make-money",
+   "data": "2026-10-06",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Import AI 475: Swarm scaling; Google DeepMind watermarks biology; and the AI science economy",
+   "link": "https://jack-clark.net/2026/10/05/import-ai-475-swarm-scaling-google-deepmind-watermarks-biology-and-the-ai-science-economy/",
+   "data": "2026-10-05",
+   "fonte": "Import AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Coding-agent use at OpenAI is doubling roughly every month",
+   "link": "https://epoch.ai/data-insights/openai-coding-agent-spending",
+   "data": "2026-10-05",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "We're going to need default hard budget caps on pretty much everything",
    "link": "https://simonwillison.net/2026/Oct/3/default-hard-budget-caps/",
    "data": "2026-10-03",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "The Agent Said It Was Done. The Database Disagreed.",
    "link": "https://huggingface.co/blog/microsoft/thinkingbox",
    "data": "2026-10-03",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "AutoSynthData: Generating Training Data for Enterprise Agents",
    "link": "https://huggingface.co/blog/ServiceNow-AI/autosynthdata",
    "data": "2026-10-02",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "The latest AI news we announced in September 2026",
    "link": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-september-2026/",
    "data": "2026-10-02",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "How many AI agents could we run?",
+   "link": "https://epoch.ai/publications/estimating-the-agent-population",
+   "data": "2026-10-02",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "How do people actually use ChatGPT?",
+   "link": "https://epoch.ai/latest/introducing-the-chatgpt-usage-explorer",
+   "data": "2026-10-01",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "Open TTS Leaderboard: Scalable Evaluation for Multilingual Text-to-Speech and Voice Cloning",
    "link": "https://huggingface.co/blog/open-tts-leaderboard",
    "data": "2026-09-30",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "Gemini 4 Argon: our next era of frontier intelligence",
    "link": "https://deepmind.google/blog/gemini-4-argon-our-next-era-of-frontier-intelligence/",
    "data": "2026-09-30",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Introducing SynthID Bio",
    "link": "https://deepmind.google/blog/introducing-synthid-bio/",
    "data": "2026-09-30",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "OpenAI DevDay 2026 live blog",
    "link": "https://simonwillison.net/2026/Sep/29/openai-devday-2026-live-blog/",
    "data": "2026-09-29",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "Getting the Source Right, Not Just the Fact: Source-Aware Verification for MCP Agents",
    "link": "https://huggingface.co/blog/MultiverseComputingCAI/getting-the-source-right-not-just-the-fact-source",
    "data": "2026-09-29",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Import AI 474: Platonic mindspace; TPUs in space; Zhipu starts an outer RSI loop",
+   "link": "https://jack-clark.net/2026/09/28/import-ai-474-platonic-mindspace-tpus-in-space-zhipu-starts-an-outer-rsi-loop/",
+   "data": "2026-09-28",
+   "fonte": "Import AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "Holo4: powering generalist computer-use agents",
    "link": "https://huggingface.co/blog/Hcompany/holo4",
    "data": "2026-09-28",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "Welcome RL Environments to the hub",
    "link": "https://huggingface.co/blog/rl-environments",
    "data": "2026-09-28",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
   },
   {
    "titolo": "Watch the winning trailer from the Future Vision XPRIZE, The Gifted.",
    "link": "https://blog.google/innovation-and-ai/technology/ai/winner-future-vision-xprize/",
    "data": "2026-09-28",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "2026 in LLMs (so far)",
    "link": "https://simonwillison.net/2026/Sep/27/2026-in-llms-so-far/",
    "data": "2026-09-27",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "Introducing Gemini 3.8 Live with Live Avatar",
    "link": "https://deepmind.google/blog/introducing-gemini-38-live-with-live-avatar/",
    "data": "2026-09-24",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Advancing Private AI Compute with secure, server-side memory",
    "link": "https://deepmind.google/blog/advancing-private-ai-compute-with-secure-server-side-memory/",
    "data": "2026-09-23",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Gemini 3.8 text-to-speech says hello",
    "link": "https://deepmind.google/blog/say-hello-to-gemini-38-text-to-speech/",
    "data": "2026-09-23",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "Google Beam expands with new regions, partners, and customers",
    "link": "https://blog.google/innovation-and-ai/technology/research/google-beam-expansion/",
    "data": "2026-09-23",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Can AI spot mistakes in IKEA assembly?",
+   "link": "https://epoch.ai/publications/furniture-assembly",
+   "data": "2026-09-23",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "Claude Opus 5.5, GPT-6 Sol, GPT-6 Luna, and a new price war",
    "link": "https://simonwillison.net/2026/Sep/22/opus-and-sol-and-luna/",
    "data": "2026-09-22",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "How UK AISI and EvalEval Are Making Benchmark Results Reproducible",
    "link": "https://huggingface.co/blog/evaleval-aisi",
    "data": "2026-09-22",
-   "fonte": "Hugging Face"
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "The plunging price of thought",
+   "link": "https://epoch.ai/publications/the-plunging-price-of-thought",
+   "data": "2026-09-22",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "Jev introduces a new shape of LLM - System One, aka Decision Models",
    "link": "https://simonwillison.net/2026/Sep/21/jev/",
    "data": "2026-09-21",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Import AI 473: The US’s superintelligence strategy; human brain in a mouse skull; and machine hermeneutics",
+   "link": "https://jack-clark.net/2026/09/21/import-ai-473-the-uss-superintelligence-strategy-human-brain-in-a-mouse-skull-and-machine-hermeneutics/",
+   "data": "2026-09-21",
+   "fonte": "Import AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "New experts join Google’s AI & Economy team",
    "link": "https://blog.google/innovation-and-ai/technology/ai/expanding-ai-economy-research-bench/",
    "data": "2026-09-18",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Co-creating the future of fashion with Google",
    "link": "https://blog.google/innovation-and-ai/technology/ai/google-flow-fashion-week/",
    "data": "2026-09-18",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Making global data easier to explore",
    "link": "https://blog.google/innovation-and-ai/technology/ai/google-un-data-commons-platform/",
    "data": "2026-09-17",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Introducing Gemini 3.8 Live and 3.8 Live Extended Thinking",
    "link": "https://deepmind.google/blog/introducing-gemini-3-8-live-and-3-8-live-extended-thinking/",
    "data": "2026-09-15",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
    "titolo": "AI for Societal Impact",
    "link": "https://blog.google/innovation-and-ai/technology/ai/ai-for-societal-impact/",
    "data": "2026-09-15",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Building AI to accelerate science and improve lives",
    "link": "https://blog.google/innovation-and-ai/technology/ai/ai-applications-science-people/",
    "data": "2026-09-15",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "AI for everyone in every language",
    "link": "https://blog.google/innovation-and-ai/technology/ai/ai-for-every-language/",
    "data": "2026-09-15",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "New insights from Google’s AI & Economy ATLAS",
    "link": "https://blog.google/innovation-and-ai/technology/ai/ai-economy-atlas-september-2026/",
    "data": "2026-09-15",
-   "fonte": "Google AI"
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Generating running routes with GPT-6 Astra and ChatGPT Work",
    "link": "https://simonwillison.net/2026/Sep/12/astra-running-routes/",
    "data": "2026-09-12",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "OpenAI agents attacked RubyGems back in May",
    "link": "https://simonwillison.net/2026/Sep/12/openai-agents-rubygems/",
    "data": "2026-09-12",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "Some thoughts on the Navier–Stokes Millennium Prize Problem",
    "link": "https://simonwillison.net/2026/Sep/8/on-navier-stokes/",
    "data": "2026-09-08",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
   },
   {
    "titolo": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
    "link": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome/",
    "data": "2026-09-08",
-   "fonte": "Google DeepMind"
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Import AI 472: DeepMind’s cheating math agents; populist AI policies; and Forethought theorizes a nightwatchman",
+   "link": "https://jack-clark.net/2026/09/07/import-ai-472-deepminds-cheating-math-agents-populist-ai-policies-and-forethought-theorizes-a-nightwatchman/",
+   "data": "2026-09-07",
+   "fonte": "Import AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "The Pelican comparison grid for Astra is pretty interesting",
    "link": "https://simonwillison.net/2026/Sep/4/astra-pelicans/",
    "data": "2026-09-04",
-   "fonte": "Simon Willison"
+   "fonte": "Simon Willison",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Import AI 471: Why Hugging Face worries me; space mining; FIve Eyes on AI",
+   "link": "https://jack-clark.net/2026/08/31/import-ai-471-why-hugging-face-worries-me-space-mining-five-eyes-on-ai/",
+   "data": "2026-08-31",
+   "fonte": "Import AI",
+   "tema": "ricerca"
   }
  ]
 }

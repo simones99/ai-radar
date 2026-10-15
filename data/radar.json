@@ -12,12 +12,13 @@
   {
    "id": "agenti",
    "nome": "Agenti AI",
+   "breve": "Agenti AI",
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
    "arxiv": null,
    "github": {
-    "ultimi3": 51344,
+    "ultimi3": 51364,
     "precedenti3": 30073,
-    "crescita": 0.7072,
+    "crescita": 0.7079,
     "mensile": [
      {
       "mese": "2025-09",
@@ -65,28 +66,32 @@
      },
      {
       "mese": "2026-08",
-      "n": 17620
+      "n": 17623
      },
      {
       "mese": "2026-09",
-      "n": 17452
+      "n": 17469
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.8,
    "domanda": 1.0,
-   "quadrante": "impara-ora"
+   "quadrante": "impara-ora",
+   "slancio_prec": 0.7333,
+   "domanda_prec": 1.0,
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "coding-agenti",
    "nome": "Sviluppo con agenti di coding",
+   "breve": "Agenti di coding",
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
    "arxiv": null,
    "github": {
-    "ultimi3": 3476,
+    "ultimi3": 3477,
     "precedenti3": 2067,
-    "crescita": 0.68,
+    "crescita": 0.6805,
     "mensile": [
      {
       "mese": "2025-09",
@@ -138,24 +143,28 @@
      },
      {
       "mese": "2026-09",
-      "n": 1138
+      "n": 1139
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.7333,
    "domanda": 0.6,
-   "quadrante": "impara-ora"
+   "quadrante": "impara-ora",
+   "slancio_prec": 0.8667,
+   "domanda_prec": 0.5333,
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "mcp",
    "nome": "Model Context Protocol (MCP)",
+   "breve": "MCP",
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
    "arxiv": null,
    "github": {
-    "ultimi3": 36474,
+    "ultimi3": 36482,
     "precedenti3": 25412,
-    "crescita": 0.4352,
+    "crescita": 0.4355,
     "mensile": [
      {
       "mese": "2025-09",
@@ -203,28 +212,32 @@
      },
      {
       "mese": "2026-08",
-      "n": 11531
+      "n": 11529
      },
      {
       "mese": "2026-09",
-      "n": 13935
+      "n": 13945
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.6,
    "domanda": 0.9333,
-   "quadrante": "impara-ora"
+   "quadrante": "impara-ora",
+   "slancio_prec": 0.2667,
+   "domanda_prec": 0.9333,
+   "quadrante_prec": "consolida"
   },
   {
    "id": "rag",
    "nome": "RAG e ricerca semantica",
+   "breve": "RAG",
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
    "arxiv": null,
    "github": {
-    "ultimi3": 17574,
+    "ultimi3": 17586,
     "precedenti3": 14129,
-    "crescita": 0.2437,
+    "crescita": 0.2446,
     "mensile": [
      {
       "mese": "2025-09",
@@ -272,28 +285,32 @@
      },
      {
       "mese": "2026-08",
-      "n": 5776
+      "n": 5777
      },
      {
       "mese": "2026-09",
-      "n": 5518
+      "n": 5529
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.2667,
    "domanda": 0.8667,
-   "quadrante": "consolida"
+   "quadrante": "consolida",
+   "slancio_prec": 0.5333,
+   "domanda_prec": 0.8667,
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "valutazione",
    "nome": "Valutazione dei modelli (eval)",
+   "breve": "Eval",
    "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
    "arxiv": null,
    "github": {
-    "ultimi3": 3866,
+    "ultimi3": 3869,
     "precedenti3": 1687,
-    "crescita": 1.2878,
+    "crescita": 1.2896,
     "mensile": [
      {
       "mese": "2025-09",
@@ -341,22 +358,26 @@
      },
      {
       "mese": "2026-08",
-      "n": 1378
+      "n": 1380
      },
      {
       "mese": "2026-09",
-      "n": 1424
+      "n": 1425
      }
     ]
    },
    "lavoro": null,
    "slancio": 1.0,
    "domanda": 0.6667,
-   "quadrante": "impara-ora"
+   "quadrante": "impara-ora",
+   "slancio_prec": 1.0,
+   "domanda_prec": 0.6,
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "post-training",
    "nome": "Fine-tuning e post-training",
+   "breve": "Fine-tuning",
    "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
    "arxiv": null,
    "github": {
@@ -421,17 +442,21 @@
    "lavoro": null,
    "slancio": 0.1333,
    "domanda": 0.1333,
-   "quadrante": "osserva"
+   "quadrante": "osserva",
+   "slancio_prec": 0.1333,
+   "domanda_prec": 0.1333,
+   "quadrante_prec": "osserva"
   },
   {
    "id": "context-engineering",
    "nome": "Prompt e context engineering",
+   "breve": "Context engineering",
    "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
    "arxiv": null,
    "github": {
-    "ultimi3": 6836,
+    "ultimi3": 6839,
     "precedenti3": 5893,
-    "crescita": 0.1599,
+    "crescita": 0.1604,
     "mensile": [
      {
       "mese": "2025-09",
@@ -483,24 +508,28 @@
      },
      {
       "mese": "2026-09",
-      "n": 2042
+      "n": 2045
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.2,
    "domanda": 0.8,
-   "quadrante": "consolida"
+   "quadrante": "consolida",
+   "slancio_prec": 0.2,
+   "domanda_prec": 0.8,
+   "quadrante_prec": "consolida"
   },
   {
    "id": "sicurezza",
    "nome": "Sicurezza dei sistemi AI",
+   "breve": "Sicurezza AI",
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
    "arxiv": null,
    "github": {
-    "ultimi3": 2449,
+    "ultimi3": 2450,
     "precedenti3": 1734,
-    "crescita": 0.4112,
+    "crescita": 0.4117,
     "mensile": [
      {
       "mese": "2025-09",
@@ -548,7 +577,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 806
+      "n": 807
      },
      {
       "mese": "2026-09",
@@ -559,11 +588,15 @@
    "lavoro": null,
    "slancio": 0.4667,
    "domanda": 0.4,
-   "quadrante": "osserva"
+   "quadrante": "osserva",
+   "slancio_prec": 0.3333,
+   "domanda_prec": 0.4,
+   "quadrante_prec": "osserva"
   },
   {
    "id": "governance",
    "nome": "Governance e conformità AI",
+   "breve": "Governance",
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
    "arxiv": null,
    "github": {
@@ -628,17 +661,21 @@
    "lavoro": null,
    "slancio": 0.0667,
    "domanda": 0.4667,
-   "quadrante": "osserva"
+   "quadrante": "osserva",
+   "slancio_prec": 0.0667,
+   "domanda_prec": 0.4667,
+   "quadrante_prec": "osserva"
   },
   {
    "id": "dati-per-ai",
    "nome": "Data engineering per l'AI",
+   "breve": "Data engineering",
    "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
    "arxiv": null,
    "github": {
-    "ultimi3": 5892,
+    "ultimi3": 5896,
     "precedenti3": 4281,
-    "crescita": 0.3759,
+    "crescita": 0.3768,
     "mensile": [
      {
       "mese": "2025-09",
@@ -686,28 +723,32 @@
      },
      {
       "mese": "2026-08",
-      "n": 2020
+      "n": 2021
      },
      {
       "mese": "2026-09",
-      "n": 1935
+      "n": 1938
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.4,
    "domanda": 0.7333,
-   "quadrante": "consolida"
+   "quadrante": "consolida",
+   "slancio_prec": 0.4667,
+   "domanda_prec": 0.7333,
+   "quadrante_prec": "consolida"
   },
   {
    "id": "text-to-sql",
    "nome": "AI per analisi dati e BI",
+   "breve": "AI per BI",
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
    "arxiv": null,
    "github": {
-    "ultimi3": 614,
+    "ultimi3": 615,
     "precedenti3": 348,
-    "crescita": 0.7535,
+    "crescita": 0.7564,
     "mensile": [
      {
       "mese": "2025-09",
@@ -755,7 +796,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 178
+      "n": 179
      },
      {
       "mese": "2026-09",
@@ -766,11 +807,15 @@
    "lavoro": null,
    "slancio": 0.8667,
    "domanda": 0.0667,
-   "quadrante": "prova"
+   "quadrante": "prova",
+   "slancio_prec": 0.9333,
+   "domanda_prec": 0.0667,
+   "quadrante_prec": "prova"
   },
   {
    "id": "vector-db",
    "nome": "Database vettoriali",
+   "breve": "DB vettoriali",
    "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
    "arxiv": null,
    "github": {
@@ -835,11 +880,15 @@
    "lavoro": null,
    "slancio": 0.0,
    "domanda": 0.3333,
-   "quadrante": "osserva"
+   "quadrante": "osserva",
+   "slancio_prec": 0.0,
+   "domanda_prec": 0.3333,
+   "quadrante_prec": "osserva"
   },
   {
    "id": "multimodale",
    "nome": "Modelli multimodali",
+   "breve": "Multimodali",
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
    "arxiv": null,
    "github": {
@@ -904,17 +953,21 @@
    "lavoro": null,
    "slancio": 0.6667,
    "domanda": 0.2,
-   "quadrante": "prova"
+   "quadrante": "prova",
+   "slancio_prec": 0.4,
+   "domanda_prec": 0.2,
+   "quadrante_prec": "osserva"
   },
   {
    "id": "llmops",
    "nome": "LLMOps e messa in produzione",
+   "breve": "LLMOps",
    "descrizione": "Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.",
    "arxiv": null,
    "github": {
-    "ultimi3": 1268,
+    "ultimi3": 1269,
     "precedenti3": 995,
-    "crescita": 0.273,
+    "crescita": 0.274,
     "mensile": [
      {
       "mese": "2025-09",
@@ -966,18 +1019,22 @@
      },
      {
       "mese": "2026-09",
-      "n": 370
+      "n": 371
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.3333,
    "domanda": 0.2667,
-   "quadrante": "osserva"
+   "quadrante": "osserva",
+   "slancio_prec": 0.8,
+   "domanda_prec": 0.2667,
+   "quadrante_prec": "prova"
   },
   {
    "id": "modelli-locali",
    "nome": "Modelli piccoli e locali",
+   "breve": "Modelli locali",
    "descrizione": "Modelli aperti che girano su laptop o server propri, senza cloud.",
    "arxiv": null,
    "github": {
@@ -1031,28 +1088,32 @@
      },
      {
       "mese": "2026-08",
-      "n": 1151
+      "n": 1150
      },
      {
       "mese": "2026-09",
-      "n": 1268
+      "n": 1269
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.5333,
    "domanda": 0.5333,
-   "quadrante": "impara-ora"
+   "quadrante": "impara-ora",
+   "slancio_prec": 0.6,
+   "domanda_prec": 0.6667,
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "robotica",
    "nome": "AI fisica e robotica",
+   "breve": "Robotica",
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "arxiv": null,
    "github": {
-    "ultimi3": 478,
+    "ultimi3": 479,
     "precedenti3": 224,
-    "crescita": 1.1092,
+    "crescita": 1.1135,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1104,14 +1165,17 @@
      },
      {
       "mese": "2026-09",
-      "n": 181
+      "n": 182
      }
     ]
    },
    "lavoro": null,
    "slancio": 0.9333,
    "domanda": 0.0,
-   "quadrante": "prova"
+   "quadrante": "prova",
+   "slancio_prec": 0.6667,
+   "domanda_prec": 0.0,
+   "quadrante_prec": "prova"
   }
  ]
 }

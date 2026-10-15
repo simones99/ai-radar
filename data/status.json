@@ -1,13 +1,13 @@
 {
- "aggiornato": "2026-10-15T08:49:44+00:00",
+ "aggiornato": "2026-10-15T12:41:58+00:00",
  "fonti": {
   "epoch": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-15T08:40:08+00:00",
+   "ultimo_successo": "2026-10-15T12:38:39+00:00",
    "dettagli": {
     "modelli": 1078
    },
-   "secondi": 0.4
+   "secondi": 0.3
   },
   "artificial_analysis": {
    "stato": "non configurata",
@@ -16,21 +16,21 @@
   "arxiv": {
    "stato": "errore",
    "messaggio": "500 Server Error: Internal Server Error for url: https://export.arxiv.org/api/query?search_query=%28cat%3Acs.AI+OR+cat%3Acs.CL+OR+cat%3Acs.LG+OR+cat%3Acs.CV+OR+cat%3Acs.MA+OR+cat%3Acs.RO+OR+cat%3Acs.IR+OR+cat%3Acs.CR+OR+cat%3Acs.SE%29+AND+submittedDate%3A%5B202509010000+TO+202509302359%5D&start=0&ma",
-   "ultimo_tentativo": "2026-10-15T08:40:50+00:00"
+   "ultimo_tentativo": "2026-10-15T12:40:10+00:00"
   },
   "github": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-15T08:49:40+00:00",
+   "ultimo_successo": "2026-10-15T12:41:40+00:00",
    "dettagli": {
-    "chiamate": 220,
+    "chiamate": 44,
     "topic": 16,
     "repository": 12
    },
-   "secondi": 530.7
+   "secondi": 90.3
   },
   "huggingface": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-15T08:49:40+00:00",
+   "ultimo_successo": "2026-10-15T12:41:41+00:00",
    "dettagli": {
     "modelli": 100
    },
@@ -42,28 +42,53 @@
   },
   "eurostat": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-15T08:49:41+00:00",
+   "ultimo_successo": "2026-10-15T12:41:41+00:00",
    "dettagli": {
     "paesi": 10
    },
-   "secondi": 0.4
+   "secondi": 0.8
   },
   "feeds": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-15T08:49:44+00:00",
+   "ultimo_successo": "2026-10-15T12:41:58+00:00",
    "dettagli": {
-    "notizie": 82,
-    "feed_non_letti": 3
+    "notizie": 100,
+    "feed_non_letti": 0
    },
-   "secondi": 3.0
+   "secondi": 5.1
   },
   "radar": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-15T08:49:44+00:00",
+   "ultimo_successo": "2026-10-15T12:41:58+00:00",
    "dettagli": {
     "competenze": 16,
     "posizionate": 16,
     "base_domanda": "open-source"
+   },
+   "secondi": 0.0
+  },
+  "owid": {
+   "stato": "ok",
+   "ultimo_successo": "2026-10-15T12:41:53+00:00",
+   "dettagli": {
+    "serie": 13,
+    "errori": 0
+   },
+   "secondi": 11.5
+  },
+  "ai_act": {
+   "stato": "ok",
+   "ultimo_successo": "2026-10-15T12:41:53+00:00",
+   "dettagli": {
+    "scadenze": 8
+   },
+   "secondi": 0.0
+  },
+  "rapporti": {
+   "stato": "ok",
+   "ultimo_successo": "2026-10-15T12:41:53+00:00",
+   "dettagli": {
+    "rapporti": 4
    },
    "secondi": 0.0
   }

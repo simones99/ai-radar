@@ -30,6 +30,7 @@
     </ol>
   </Block>
   <Block span={4} title="Che compiti fanno" note="Tipi più frequenti tra i 100 modelli di tendenza." missing={tipi.length ? null : 'Dati di Hugging Face non disponibili.'}
+    cite={hf ? [{ t: 'Fonte: ' }, { t: 'Hugging Face', href: hf.url }, { t: '.' }] : null}
     table={{ cols: ['Tipo', 'Modelli su 100'], rows: tipi.map((t) => [t.k, t.v]) }}>
     <Bars label="Tipi di compito dei modelli di tendenza" data={tipi} />
   </Block>

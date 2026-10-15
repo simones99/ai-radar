@@ -6,7 +6,7 @@
   const fmt = (v: string | number) => (typeof v === 'number' ? nf(v, Number.isInteger(v) ? 0 : 1) : v);
 </script>
 
-<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
 <div class="tw" tabindex="0" role="region" aria-label="Tabella dei dati">
   <table>
     <thead><tr>{#each cols as c (c)}<th scope="col">{c}</th>{/each}</tr></thead>

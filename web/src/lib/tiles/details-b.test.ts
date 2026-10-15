@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, within } from '@testing-library/svelte';
 import type { Component } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
@@ -41,6 +41,8 @@ describe('Open source', () => {
     show(OpenDetail, mk('open', 'Open source', headOpen, OpenDetail));
     expect(screen.getByRole('link', { name: 'google/embeddinggemma-2' })).toHaveAttribute('href', 'https://huggingface.co/google/embeddinggemma-2');
     expect(screen.getByText('+707')).toBeInTheDocument();
+    const blk = screen.getByRole('heading', { name: 'Che compiti fanno' }).closest('section')!;
+    expect(within(blk).getByRole('link', { name: 'Hugging Face' })).toBeInTheDocument();
   });
 });
 

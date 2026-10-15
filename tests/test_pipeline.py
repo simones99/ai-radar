@@ -273,3 +273,38 @@ def test_network_error_log_does_not_leak_keys(monkeypatch, caplog):
         common.http_get(Down(), "https://api.adzuna.com/v1/api/jobs/it/search/1", retries=2)
     assert "Errore di rete" in caplog.text
     assert "id-0123456789" not in caplog.text and "key-abcdef0123456789" not in caplog.text
+
+
+def test_radar_previous_positions(tmp_path, monkeypatch):
+    # Tre competenze solo GitHub, 7 mesi. Oggi le finestre sono apr-giu contro lug-set;
+    # un mese prima erano mar-mag contro giu-ago. x cresce solo a settembre, y cresceva prima.
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    months = [f"2026-{m:02d}" for m in range(3, 10)]
+    counts = {"x": [10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0], "z": [40, 40, 40, 20, 20, 20, 20]}
+    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
+    skills = [{"id": k, "nome": f"Competenza {k}", "breve": k.upper()} for k in counts]
+    radar.run(skills, date(2026, 10, 15))
+    rows = {r["id"]: r for r in json.loads((tmp_path / "radar.json").read_text())["competenze"]}
+
+    assert (rows["x"]["slancio"], rows["x"]["domanda"], rows["x"]["quadrante"]) == (1.0, 1.0, "impara-ora")
+    assert (rows["x"]["slancio_prec"], rows["x"]["domanda_prec"], rows["x"]["quadrante_prec"]) == (0.5, 0.0, "prova")
+    assert (rows["y"]["slancio_prec"], rows["y"]["domanda_prec"], rows["y"]["quadrante_prec"]) == (1.0, 1.0, "impara-ora")
+    assert (rows["z"]["slancio_prec"], rows["z"]["domanda_prec"], rows["z"]["quadrante_prec"]) == (0.0, 0.5, "consolida")
+    assert rows["z"]["quadrante"] == "osserva"
+    assert rows["x"]["breve"] == "X"
+
+
+def test_radar_previous_demand_needs_old_job_snapshot(tmp_path, monkeypatch):
+    # Domanda dal lavoro con una sola rilevazione: la posizione precedente non si può calcolare.
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    months = [f"2026-{m:02d}" for m in range(3, 10)]
+    common.write_json("github.json", {"mesi": months, "topics": {k: dict.fromkeys(months, 10 + i) for i, k in enumerate("ab")}})
+    common.write_json("jobs.json", {"paesi_ue": ["it"], "snapshots": [
+        {"data": "2026-10-12", "paese": "it", "totale": 1000, "competenze": {"a": 5, "b": 9}}]})
+    radar.run([{"id": "a", "nome": "A"}, {"id": "b", "nome": "B"}], date(2026, 10, 15))
+    out = json.loads((tmp_path / "radar.json").read_text())
+    assert out["base_domanda"] == "lavoro"
+    for r in out["competenze"]:
+        assert r["slancio_prec"] is not None
+        assert r["domanda_prec"] is None and r["quadrante_prec"] is None
+        assert r["breve"] == r["nome"]

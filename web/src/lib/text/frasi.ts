@@ -150,6 +150,7 @@ export function faceNotizie(d: Dataset, today: Date): Face | null {
   return { fig: String(n), unit: '', sent: `Notizie negli ultimi 7 giorni da ${d.news.fonti.length} fonti.` };
 }
 export function headNotizie(d: Dataset, today: Date): Head {
+  if (!d.news) return { title: plain('Notizie'), deck: null };
   const n = newsInLastDays(d.news, today).length;
   return {
     title: [{ t: String(n), em: true }, { t: n === 1 ? ' notizia in una settimana' : ' notizie in una settimana' }],

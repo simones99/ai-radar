@@ -3,7 +3,7 @@ import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, facePolitica, faceRapporti,
-  headBusiness, headCompetenze, headPolitica, heroThesis, tipoLabel,
+  headBusiness, headCompetenze, headNotizie, headPolitica, heroThesis, tipoLabel,
 } from './frasi';
 
 const d = FIXTURE as Dataset;
@@ -39,6 +39,9 @@ describe('numeri chiave delle card', () => {
   it('notizie: settimana e settimana vuota', () => {
     expect(faceNotizie(d, today)).toEqual({ fig: '2', unit: '', sent: 'Notizie negli ultimi 7 giorni da 2 fonti.' });
     expect(faceNotizie(d, new Date(2026, 11, 1))?.sent).toBe('Nessuna notizia negli ultimi 7 giorni.');
+  });
+  it('notizie: titolo di riserva senza dati', () => {
+    expect(headNotizie({}, today)).toEqual({ title: [{ t: 'Notizie' }], deck: null });
   });
   it('rapporti: prossimo previsto', () => {
     expect(faceRapporti(d, today)).toEqual({ fig: 'Ottobre', unit: '2026', sent: 'Prossimo rapporto previsto: State of AI Report.' });

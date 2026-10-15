@@ -73,3 +73,15 @@ def test_feed_all_urls_fail_is_reported(tmp_path, monkeypatch):
     assert info == {"notizie": 1, "feed_non_letti": 1}
     assert "Uno" in out["errori"]
     assert out["notizie"][0]["tema"] == "altro"
+
+
+def test_arxiv_waits_30_then_60_seconds_on_server_errors(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    slept = []
+    monkeypatch.setattr("time.sleep", lambda s: slept.append(s))
+    ok = Resp(200, '<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">'
+                   "<opensearch:totalResults>100</opensearch:totalResults></feed>")
+    s = MapSession({arxiv.API: [Resp(500), Resp(500), ok]})
+    info = arxiv.run(s, [], date(2026, 10, 15), sleep=0, months=6)
+    assert info["chiamate"] == 6
+    assert [x for x in slept if x] == [30.0, 60.0]

@@ -15,7 +15,7 @@
   onMount(() => {
     h2.focus({ preventScroll: true });
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches; // jsdom non ha matchMedia
-    h2.closest('.tiles')?.parentElement?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    h2.closest('.detail')?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
   });
 
   async function copy() {
@@ -54,7 +54,8 @@
 </section>
 
 <style>
-  .detail { display: grid; gap: var(--s3); }
+  .detail { display: grid; gap: var(--s3); scroll-margin-top: var(--s2); }
+  @media (max-width: 560px) { .detail { scroll-margin-top: var(--s8); } }
   .d-hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s4); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s1); }
   @media (max-width: 860px) { .d-hero { grid-template-columns: minmax(0, 1fr); gap: var(--s2); } }
   figure { display: grid; gap: var(--s1); }

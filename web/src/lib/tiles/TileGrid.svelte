@@ -74,6 +74,10 @@
     const h = parseHash(location.hash);
     if (!h && current === null) return;
     pushed = history.state?.tema != null;
+    if (!h && location.hash) {
+      show(null); // ancora interna (#stato, #crediti, #temi): chiude la card e lascia la pagina dove va il link
+      return;
+    }
     const p = show(h?.tema ?? null, h?.elemento ?? null);
     if (!h) refocus(p);
   }

@@ -15,6 +15,13 @@ test.beforeEach(async ({ page }) => {
 
 const noHorizontalScroll = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+// attende la fine dello scorrimento morbido: scrollY fermo per 300 ms
+const scrollSettled = (page: Page) =>
+  expect.poll(async () => {
+    const a = await page.evaluate(() => window.scrollY);
+    await page.waitForTimeout(300);
+    return a === (await page.evaluate(() => window.scrollY));
+  }).toBe(true);
 // cast: @axe-core/playwright usa playwright-core 1.64, @playwright/test 1.63: tipi Page nominalmente diversi
 const seriousViolations = async (page: Page) =>
   (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
@@ -102,4 +109,28 @@ test('accessibilità: nessuna violazione grave in home e nelle card', async ({ p
     await expect(page.locator(`#detail-${id}`)).toBeVisible();
     expect(await seriousViolations(page), id).toEqual([]);
   }
+});
+
+test('ancora interna con una card aperta: la pagina va all’ancora, non alle card', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#tile-business .face').click();
+  await expect(page.locator('#detail-business')).toBeVisible();
+  await page.getByRole('navigation', { name: 'Pagina' }).getByRole('link', { name: 'Stato delle fonti' }).click();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await scrollSettled(page);
+  await expect(page.locator('#stato')).toBeInViewport();
+});
+
+test('360px: all’apertura il titolo della card è nella finestra, sotto le pillole', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.goto('/');
+  await page.locator('#tile-rapporti .face').click();
+  await expect(page.locator('#detail-rapporti')).toBeVisible();
+  await scrollSettled(page);
+  await expect(page.locator('#h-rapporti')).toBeInViewport();
+  await expect.poll(async () => {
+    const pills = await page.locator('nav[aria-label="Altri temi"]').boundingBox();
+    const det = await page.locator('#detail-rapporti').boundingBox();
+    return pills && det ? det.y >= pills.y + pills.height : false;
+  }).toBe(true);
 });

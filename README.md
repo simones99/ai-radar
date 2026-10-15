@@ -86,7 +86,9 @@ cd .. && python scripts/build_site.py                   # copia i dati e costrui
 cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
 
-Per lavorare sull'app con il ricaricamento automatico: `cp data/*.json web/public/data/` (creando prima la cartella) e poi `cd web && npm run dev`.
+Per lavorare sull'app con il ricaricamento automatico: `mkdir -p web/public/data && cp data/*.json web/public/data/` e poi `cd web && npm run dev`.
+
+Le chiavi si passano come variabili d'ambiente: `AA_API_KEY`, `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `GITHUB_TOKEN`.
 
 ## Struttura
 

@@ -1,8 +1,9 @@
 """Our World in Data: serie sull'AI (investimenti, adozione, uso, infrastruttura).
 
 Si scaricano il CSV e i metadati di ogni grafico del grapher. OWID pubblica in
-CC BY 4.0, ma i dati restano dei produttori originali: la pagina riporta sempre
-la citazione e il link.
+CC BY 4.0, ma i dati restano dei produttori originali (le serie dell'AI Index sono
+CC BY-ND 4.0): la pagina riporta sempre la citazione, il link e la licenza, che
+viene dal campo `licenza` di config/sources.yaml.
 """
 from __future__ import annotations
 
@@ -64,14 +65,14 @@ def run(s, series_cfg: list[dict]) -> dict:
             errori[sid] = str(exc)[:200]
             log.warning("OWID %s non aggiornata: %s", sid, exc)
             if sid in old:  # resta l'ultima copia buona
-                serie[sid] = old[sid]
+                serie[sid] = {**old[sid], "licenza": cfg.get("licenza", "")}
             continue
         try:
             meta = parse_meta(http_json(s, url + ".metadata.json", params={"v": 1}), cfg["colonna"])
         except Exception as exc:
             log.warning("OWID %s: metadati non disponibili (%s)", sid, exc)
             meta = parse_meta({}, cfg["colonna"])
-        serie[sid] = {**meta, "url": url, "punti": punti}
+        serie[sid] = {**meta, "url": url, "licenza": cfg.get("licenza", ""), "punti": punti}
     if len(errori) == len(series_cfg):
         raise ValueError(f"OWID: nessuna serie aggiornata: {errori}")
     write_json(OUT, {"aggiornato": now_iso(), "errori": errori, "serie": serie})

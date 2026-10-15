@@ -55,6 +55,14 @@ describe('Detail', () => {
     expect(screen.getByText('blocchi')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Foto' })).toHaveAttribute('href', expect.stringContaining('commons.wikimedia.org'));
   });
+  it('licenza della foto: link al testo quando esiste, solo scritta per il pubblico dominio', () => {
+    const { unmount } = render(Detail, { tile: tile({ id: 'politica', label: 'Politica' }), head: tile().head({}, today), onclose: () => {}, children: blocks });
+    expect(screen.getByRole('link', { name: 'CC BY 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
+    unmount();
+    render(Detail, { tile: tile(), head: tile().head({}, today), onclose: () => {}, children: blocks });
+    expect(screen.getByText(/Pubblico dominio/)).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Pubblico dominio' })).not.toBeInTheDocument();
+  });
   it('chiudi', async () => {
     const onclose = vi.fn();
     render(Detail, { tile: tile(), head: tile().head({}, today), onclose, children: blocks });

@@ -68,7 +68,7 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 - **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e i parametri di ricerca per gli annunci. Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
 - **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
-- **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità).
+- **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).
 - **Scadenze dell'AI Act e rapporti**: `config/ai_act.yaml` e `config/rapporti.yaml`, da aggiornare a mano. Ogni voce ha un link alla fonte.
 - **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`.
 
@@ -112,4 +112,4 @@ tests/       test della pipeline con risposte HTTP simulate
 
 Dati di [Epoch AI](https://epoch.ai/data/ai-models) (CC BY 4.0), [Artificial Analysis](https://artificialanalysis.ai/), [arXiv](https://arxiv.org) (grazie ad arXiv per l'accesso aperto ai metadati), [GitHub](https://github.com), [Hugging Face](https://huggingface.co), [The Adzuna API](https://www.adzuna.co.uk) ed [Eurostat](https://ec.europa.eu/eurostat). Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
 
-Codice con licenza MIT (vedi `LICENSE`). D3 (ISC) e il font Bricolage Grotesque (OFL) arrivano da npm. Le foto sono da Wikimedia Commons, con autore e licenza indicati in pagina. I dati di Our World in Data sono CC BY 4.0, ma restano dei produttori originali, sempre citati.
+Codice con licenza MIT (vedi `LICENSE`). D3 (ISC), Svelte (MIT) e il font Bricolage Grotesque (OFL) arrivano da npm; i testi delle loro licenze sono in `web/public/THIRD_PARTY_LICENSES.txt`, linkato in fondo alla pagina. Le foto sono da Wikimedia Commons, con autore e licenza indicati in pagina. Our World in Data pubblica in CC BY 4.0, ma i dati restano dei produttori originali, sempre citati: le serie dell'AI Index (Stanford HAI: investimenti, imprese che usano l'AI, annunci di lavoro) sono CC BY-ND 4.0 e vanno citate senza modifiche; le cifre di IEA, NVIDIA e TSMC restano dei produttori. La licenza di ogni serie è nel campo `licenza` di `config/sources.yaml` e compare in pagina accanto alla fonte.

@@ -3,10 +3,21 @@ import type { OwidSeries } from '../data/types';
 
 export const MISSING = 'Dati non disponibili in questo aggiornamento.';
 
-/** Citazione completa di una serie OWID: produttore originale + link al grafico. */
+const LICENZE: Record<string, string> = {
+  'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC BY-ND 4.0': 'https://creativecommons.org/licenses/by-nd/4.0/',
+};
+
+/** Citazione completa di una serie OWID: produttore originale, link al grafico e licenza dei dati. */
 export function owidCite(s: OwidSeries | undefined): Cite {
   if (!s) return [];
-  return [{ t: `${s.citazione || 'Our World in Data'}. Elaborazione: ` }, { t: 'Our World in Data', href: s.url }, { t: '.' }];
+  const owid = { t: 'Our World in Data', href: s.url };
+  const cit = s.citazione?.trim();
+  const out: Cite = !cit ? [{ t: 'Fonte: ' }, owid, { t: '.' }]
+    : cit.includes('Our World in Data') ? [{ t: `${cit}. Grafico: ` }, owid, { t: '.' }]
+    : [{ t: `${cit}. Elaborazione: ` }, owid, { t: '.' }];
+  if (s.licenza) out.push({ t: ' Licenza: ' }, { t: s.licenza, href: LICENZE[s.licenza] }, { t: '.' });
+  return out;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');

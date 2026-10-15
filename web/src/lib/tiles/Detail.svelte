@@ -34,7 +34,7 @@
   <div class="d-hero">
     <figure>
       <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 860px) 100vw, 40vw" alt={photo.alt} /></span>
-      <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {photo.licenza}</figcaption>
+      <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
     </figure>
     <div class="d-text">
       <span class="lab">{tile.label}</span>

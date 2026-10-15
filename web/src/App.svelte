@@ -60,12 +60,13 @@
     <ul>
       {#each TILES as t (t.id)}
         {@const p = PHOTOS[t.id]}
-        <li>{t.label}: <a href={p.pagina} target="_blank" rel="noopener">{p.titolo}</a> · {p.autore} · {p.licenza} · Wikimedia Commons</li>
+        <li>{t.label}: <a href={p.pagina} target="_blank" rel="noopener">{p.titolo}</a> · {p.autore} · {#if p.licenzaUrl}<a href={p.licenzaUrl} target="_blank" rel="noopener">{p.licenza}</a>{:else}{p.licenza}{/if} · Wikimedia Commons</li>
       {/each}
     </ul>
     <p class="small muted">
       Dati di {#each FONTI as [n, u], i (n)}<a href={u} target="_blank" rel="noopener">{n}</a>{i < FONTI.length - 1 ? ', ' : '.'}{/each}
       Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
+      <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
     </p>
     <SourcesStatus status={data.status} />
   </footer>

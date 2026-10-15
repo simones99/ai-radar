@@ -28,7 +28,7 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
   owid: {
     aggiornato: '2026-10-15T08:00:00+00:00', errori: {},
     serie: {
-      investimenti_privati: { titolo: 'Private investment in AI', unita: 'constant 2021 US$', citazione: 'Quid via AI Index Report (2026)', url: 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence', aggiornato_owid: '2026-04-20', punti: [
+      investimenti_privati: { titolo: 'Private investment in AI', unita: 'constant 2021 US$', citazione: 'Quid via AI Index Report (2026)', url: 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence', aggiornato_owid: '2026-04-20', licenza: 'CC BY-ND 4.0', punti: [
         { entita: 'World', t: '2024', v: 130850813417 }, { entita: 'World', t: '2025', v: 290094148769 },
         { entita: 'United States', t: '2024', v: 109e9 }, { entita: 'United States', t: '2025', v: 230e9 },
         { entita: 'China', t: '2024', v: 9e9 }, { entita: 'China', t: '2025', v: 12e9 },

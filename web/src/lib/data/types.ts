@@ -39,6 +39,7 @@ export interface OwidSeries {
   citazione: string;
   url: string;
   aggiornato_owid: string | null;
+  licenza?: string; // licenza dei dati, da config/sources.yaml
   punti: OwidPoint[];
 }
 export interface Owid { aggiornato: string; errori: Record<string, string>; serie: Record<string, OwidSeries> }

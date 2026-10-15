@@ -66,7 +66,7 @@ def test_run_keeps_good_series_when_one_breaks(tmp_path, monkeypatch):
         BASE + "b.metadata.json": Resp(body=META),
     })
     info = owid.run(s, [
-        {"id": "buona", "slug": "a", "colonna": "private_investment", "entita": ["World"]},
+        {"id": "buona", "slug": "a", "colonna": "private_investment", "entita": ["World"], "licenza": "CC BY-ND 4.0"},
         {"id": "rotta", "slug": "b", "colonna": "colonna_che_non_esiste"},
     ])
     out = json.loads((tmp_path / "owid.json").read_text())
@@ -74,6 +74,7 @@ def test_run_keeps_good_series_when_one_breaks(tmp_path, monkeypatch):
     assert out["serie"]["buona"]["citazione"] == "Quid via AI Index"
     assert out["serie"]["buona"]["unita"] == "constant 2021 US$"
     assert out["serie"]["buona"]["url"] == BASE + "a"
+    assert out["serie"]["buona"]["licenza"] == "CC BY-ND 4.0"
     assert [p["v"] for p in out["serie"]["buona"]["punti"]] == [130.0, 290.0]
     assert "rotta" in out["errori"] and "rotta" not in out["serie"]
 
@@ -85,9 +86,11 @@ def test_run_keeps_last_good_copy_of_a_broken_series(tmp_path, monkeypatch):
     s = Session({BASE + "a.csv": Resp(text=CSV), BASE + "a.metadata.json": Resp(status=500),
                  BASE + "b.csv": Resp(status=404)})
     owid.run(s, [{"id": "buona", "slug": "a", "colonna": "private_investment"},
-                 {"id": "rotta", "slug": "b", "colonna": "private_investment"}])
+                 {"id": "rotta", "slug": "b", "colonna": "private_investment", "licenza": "CC BY 4.0"}])
     out = json.loads((tmp_path / "owid.json").read_text())
     assert out["serie"]["rotta"]["titolo"] == "vecchia"
+    assert out["serie"]["rotta"]["licenza"] == "CC BY 4.0"  # la licenza viene dalla configurazione
+    assert out["serie"]["buona"]["licenza"] == ""  # licenza non indicata
     assert out["serie"]["buona"]["titolo"] == ""  # metadati non disponibili: la serie resta valida
 
 

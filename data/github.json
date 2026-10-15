@@ -47,8 +47,8 @@
    "2026-05": 9459,
    "2026-06": 12365,
    "2026-07": 16272,
-   "2026-08": 17623,
-   "2026-09": 17469
+   "2026-08": 17625,
+   "2026-09": 17473
   },
   "coding-agenti": {
    "2025-09": 22,
@@ -62,7 +62,7 @@
    "2026-05": 694,
    "2026-06": 832,
    "2026-07": 984,
-   "2026-08": 1354,
+   "2026-08": 1355,
    "2026-09": 1139
   },
   "mcp": {
@@ -77,8 +77,8 @@
    "2026-05": 8595,
    "2026-06": 9161,
    "2026-07": 11008,
-   "2026-08": 11529,
-   "2026-09": 13945
+   "2026-08": 11528,
+   "2026-09": 13949
   },
   "rag": {
    "2025-09": 828,
@@ -92,8 +92,8 @@
    "2026-05": 4611,
    "2026-06": 5824,
    "2026-07": 6280,
-   "2026-08": 5777,
-   "2026-09": 5529
+   "2026-08": 5779,
+   "2026-09": 5531
   },
   "valutazione": {
    "2025-09": 33,
@@ -197,7 +197,7 @@
    "2026-05": 103,
    "2026-06": 178,
    "2026-07": 198,
-   "2026-08": 179,
+   "2026-08": 180,
    "2026-09": 238
   },
   "vector-db": {
@@ -281,11 +281,11 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-10-15T12:36:10Z",
+   "ultimo_push": "2026-10-15T13:22:59Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 167718
+     "stelle": 167717
     }
    ]
   },
@@ -293,11 +293,11 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-10-15T12:34:15Z",
+   "ultimo_push": "2026-10-15T13:29:25Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 93849
+     "stelle": 93855
     }
    ]
   },
@@ -309,7 +309,7 @@
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 183239
+     "stelle": 183246
     }
    ]
   },
@@ -317,11 +317,11 @@
    "repo": "langchain-ai/langgraph",
    "url": "https://github.com/langchain-ai/langgraph",
    "descrizione": "Build resilient agents.",
-   "ultimo_push": "2026-10-15T04:32:39Z",
+   "ultimo_push": "2026-10-15T13:11:30Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 43309
+     "stelle": 43310
     }
    ]
   },
@@ -345,7 +345,7 @@
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 91282
+     "stelle": 91283
     }
    ]
   },
@@ -377,11 +377,11 @@
    "repo": "crewAIInc/crewAI",
    "url": "https://github.com/crewAIInc/crewAI",
    "descrizione": "Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.",
-   "ultimo_push": "2026-10-15T11:05:35Z",
+   "ultimo_push": "2026-10-15T13:19:46Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 59732
+     "stelle": 59733
     }
    ]
   },
@@ -393,7 +393,7 @@
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 150990
+     "stelle": 150999
     }
    ]
   },
@@ -401,11 +401,11 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-10-15T12:28:32Z",
+   "ultimo_push": "2026-10-15T13:28:10Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 131250
+     "stelle": 131255
     }
    ]
   },
@@ -413,11 +413,11 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-10-15T12:40:50Z",
+   "ultimo_push": "2026-10-15T13:28:18Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 78042
+     "stelle": 78045
     }
    ]
   }

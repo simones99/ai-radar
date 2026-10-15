@@ -69,6 +69,13 @@
    "tema": "business"
   },
   {
+   "titolo": "Apertus 1.5 Release Notes",
+   "link": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
+   "data": "2026-10-15",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
    "titolo": "Google says self-improving AI isn't anywhere close",
    "link": "https://the-decoder.com/google-says-self-improving-ai-isnt-anywhere-close/",
    "data": "2026-10-14",
@@ -620,13 +627,6 @@
    "data": "2026-09-22",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "How UK AISI and EvalEval Are Making Benchmark Results Reproducible",
-   "link": "https://huggingface.co/blog/evaleval-aisi",
-   "data": "2026-09-22",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
   },
   {
    "titolo": "The plunging price of thought",

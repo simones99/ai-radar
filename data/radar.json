@@ -16,9 +16,9 @@
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
    "arxiv": null,
    "github": {
-    "ultimi3": 51364,
+    "ultimi3": 51370,
     "precedenti3": 30073,
-    "crescita": 0.7079,
+    "crescita": 0.7081,
     "mensile": [
      {
       "mese": "2025-09",
@@ -66,11 +66,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 17623
+      "n": 17625
      },
      {
       "mese": "2026-09",
-      "n": 17469
+      "n": 17473
      }
     ]
    },
@@ -89,9 +89,9 @@
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
    "arxiv": null,
    "github": {
-    "ultimi3": 3477,
+    "ultimi3": 3478,
     "precedenti3": 2067,
-    "crescita": 0.6805,
+    "crescita": 0.681,
     "mensile": [
      {
       "mese": "2025-09",
@@ -139,7 +139,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 1354
+      "n": 1355
      },
      {
       "mese": "2026-09",
@@ -162,9 +162,9 @@
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
    "arxiv": null,
    "github": {
-    "ultimi3": 36482,
+    "ultimi3": 36485,
     "precedenti3": 25412,
-    "crescita": 0.4355,
+    "crescita": 0.4357,
     "mensile": [
      {
       "mese": "2025-09",
@@ -212,11 +212,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 11529
+      "n": 11528
      },
      {
       "mese": "2026-09",
-      "n": 13945
+      "n": 13949
      }
     ]
    },
@@ -235,9 +235,9 @@
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
    "arxiv": null,
    "github": {
-    "ultimi3": 17586,
+    "ultimi3": 17590,
     "precedenti3": 14129,
-    "crescita": 0.2446,
+    "crescita": 0.2449,
     "mensile": [
      {
       "mese": "2025-09",
@@ -285,11 +285,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 5777
+      "n": 5779
      },
      {
       "mese": "2026-09",
-      "n": 5529
+      "n": 5531
      }
     ]
    },
@@ -746,9 +746,9 @@
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
    "arxiv": null,
    "github": {
-    "ultimi3": 615,
+    "ultimi3": 616,
     "precedenti3": 348,
-    "crescita": 0.7564,
+    "crescita": 0.7592,
     "mensile": [
      {
       "mese": "2025-09",
@@ -796,7 +796,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 179
+      "n": 180
      },
      {
       "mese": "2026-09",

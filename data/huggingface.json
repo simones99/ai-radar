@@ -8,9 +8,9 @@
    "url": "https://huggingface.co/google/embeddinggemma-2",
    "tipo": "feature-extraction",
    "libreria": "transformers",
-   "like": 2334,
+   "like": 2339,
    "download": 144280,
-   "trending": 1061,
+   "trending": 1055,
    "creato": "2026-09-14"
   },
   {
@@ -18,9 +18,9 @@
    "url": "https://huggingface.co/jialinyyzz/humanizer",
    "tipo": "text-generation",
    "libreria": "gguf",
-   "like": 1678,
+   "like": 1686,
    "download": 75253,
-   "trending": 1031,
+   "trending": 1030,
    "creato": "2026-09-11"
   },
   {
@@ -28,9 +28,9 @@
    "url": "https://huggingface.co/Qwen/Qwen-Image-2.1-Turbo",
    "tipo": "text-to-image",
    "libreria": "diffusers",
-   "like": 814,
+   "like": 817,
    "download": 15315,
-   "trending": 752,
+   "trending": 753,
    "creato": "2026-10-09"
   },
   {
@@ -38,9 +38,9 @@
    "url": "https://huggingface.co/openbmb/MiniCPM-V-4.7-35B-A3B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 753,
+   "like": 756,
    "download": 9278,
-   "trending": 656,
+   "trending": 658,
    "creato": "2026-10-07"
   },
   {
@@ -48,9 +48,9 @@
    "url": "https://huggingface.co/autotrust/JEV-35B",
    "tipo": "text-classification",
    "libreria": "transformers",
-   "like": 907,
+   "like": 911,
    "download": 41837,
-   "trending": 558,
+   "trending": 561,
    "creato": "2026-10-11"
   },
   {
@@ -58,9 +58,9 @@
    "url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
    "tipo": "text-to-image",
    "libreria": "gguf",
-   "like": 4341,
+   "like": 4345,
    "download": 2415278,
-   "trending": 506,
+   "trending": 507,
    "creato": "2026-09-20"
   },
   {
@@ -68,7 +68,7 @@
    "url": "https://huggingface.co/Lightricks/LTX-2.5",
    "tipo": "image-to-video",
    "libreria": "diffusion-single-file",
-   "like": 7870,
+   "like": 7875,
    "download": 1866657,
    "trending": 442,
    "creato": "2026-07-23"
@@ -80,7 +80,7 @@
    "libreria": "gguf",
    "like": 477,
    "download": 344177,
-   "trending": 413,
+   "trending": 411,
    "creato": "2026-10-08"
   },
   {
@@ -88,9 +88,9 @@
    "url": "https://huggingface.co/AtomicChat/Qwen-Image-2.1-Turbo-Uncensored-GGUF",
    "tipo": "text-to-image",
    "libreria": "gguf",
-   "like": 464,
+   "like": 465,
    "download": 296253,
-   "trending": 404,
+   "trending": 405,
    "creato": "2026-10-09"
   },
   {
@@ -98,9 +98,9 @@
    "url": "https://huggingface.co/fishaudio/drama-3",
    "tipo": "text-to-speech",
    "libreria": null,
-   "like": 381,
+   "like": 385,
    "download": 4048,
-   "trending": 374,
+   "trending": 378,
    "creato": "2026-10-01"
   },
   {
@@ -108,9 +108,9 @@
    "url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 351,
+   "like": 353,
    "download": 6286,
-   "trending": 348,
+   "trending": 350,
    "creato": "2026-10-12"
   },
   {
@@ -118,9 +118,9 @@
    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 17748,
+   "like": 17749,
    "download": 7363968,
-   "trending": 334,
+   "trending": 332,
    "creato": "2026-08-05"
   },
   {
@@ -128,9 +128,9 @@
    "url": "https://huggingface.co/nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
    "tipo": "image-text-to-text",
    "libreria": null,
-   "like": 346,
+   "like": 347,
    "download": 148660,
-   "trending": 317,
+   "trending": 318,
    "creato": "2026-10-04"
   },
   {
@@ -138,9 +138,9 @@
    "url": "https://huggingface.co/baidu/Unlimited-OCR",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 4654,
+   "like": 4662,
    "download": 1163009,
-   "trending": 291,
+   "trending": 298,
    "creato": "2026-06-19"
   },
   {
@@ -148,9 +148,9 @@
    "url": "https://huggingface.co/speridlabs/iris-3b",
    "tipo": "text-to-image",
    "libreria": "pytorch",
-   "like": 268,
+   "like": 269,
    "download": 1257,
-   "trending": 263,
+   "trending": 264,
    "creato": "2026-10-05"
   },
   {
@@ -168,9 +168,9 @@
    "url": "https://huggingface.co/openbmb/MiniCPM-V-4.7-1B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 344,
+   "like": 345,
    "download": 5274,
-   "trending": 251,
+   "trending": 252,
    "creato": "2026-10-06"
   },
   {
@@ -180,7 +180,7 @@
    "libreria": "transformers",
    "like": 405,
    "download": 16731,
-   "trending": 250,
+   "trending": 247,
    "creato": "2026-10-05"
   },
   {
@@ -198,9 +198,9 @@
    "url": "https://huggingface.co/convaiinnovations/laya",
    "tipo": "text-classification",
    "libreria": "transformers",
-   "like": 5611,
+   "like": 5613,
    "download": 48894,
-   "trending": 211,
+   "trending": 210,
    "creato": "2026-09-18"
   },
   {
@@ -218,9 +218,9 @@
    "url": "https://huggingface.co/facebook/sam3",
    "tipo": "mask-generation",
    "libreria": "transformers",
-   "like": 4381,
+   "like": 4384,
    "download": 2034602,
-   "trending": 197,
+   "trending": 198,
    "creato": "2025-11-07"
   },
   {
@@ -230,7 +230,7 @@
    "libreria": "minimax-h3",
    "like": 457,
    "download": 18202,
-   "trending": 180,
+   "trending": 178,
    "creato": "2026-09-27"
   },
   {
@@ -238,9 +238,9 @@
    "url": "https://huggingface.co/vllm-sr/d3",
    "tipo": "zero-shot-classification",
    "libreria": "transformers",
-   "like": 181,
+   "like": 182,
    "download": 2747,
-   "trending": 176,
+   "trending": 177,
    "creato": "2026-10-10"
   },
   {
@@ -248,9 +248,9 @@
    "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 6234,
+   "like": 6235,
    "download": 2290500,
-   "trending": 167,
+   "trending": 165,
    "creato": "2026-08-24"
   }
  ],
@@ -270,8 +270,8 @@
   "image-to-image": 2,
   "text-to-video": 2,
   "video-to-video": 1,
-  "image-feature-extraction": 1,
   "image-to-text": 1,
+  "image-feature-extraction": 1,
   "audio-classification": 1,
   "text-to-audio": 1,
   "any-to-any": 1
@@ -295,8 +295,8 @@
     "image-to-image": 2,
     "text-to-video": 2,
     "video-to-video": 1,
-    "image-feature-extraction": 1,
     "image-to-text": 1,
+    "image-feature-extraction": 1,
     "audio-classification": 1,
     "text-to-audio": 1,
     "any-to-any": 1

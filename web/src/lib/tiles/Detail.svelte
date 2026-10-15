@@ -44,6 +44,7 @@
       {#if head.deck}<p class="deck">{head.deck}</p>{/if}
       <div class="actions">
         <button type="button" class="copy" onclick={copy}>{copied ? 'Link copiato' : 'Copia link'}</button>
+        <span class="sr" aria-live="polite">{copied ? 'Link copiato' : ''}</span>
         {#if fallbackUrl}<input class="copy-url" readonly value={fallbackUrl} bind:this={urlInput} aria-label="Link da copiare" />{/if}
       </div>
       <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}>×</button>
@@ -72,6 +73,7 @@
   .copy-url { font: inherit; font-size: 14px; border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: var(--s1); min-width: 0; flex: 1 1 240px; background: var(--card); color: var(--fg); }
   .close { position: absolute; top: var(--s2); right: var(--s2); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--bg); cursor: pointer; font-size: 24px; line-height: 40px; }
   @media (max-width: 860px) { .close { display: none; } }
-  .copy:hover, .close:hover { background: var(--line-2); }
+  @media (hover: hover) { .copy:hover, .close:hover { background: var(--line-2); } }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }
 </style>

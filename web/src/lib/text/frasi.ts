@@ -2,7 +2,7 @@ import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
 } from '../data/derive';
 import type { Dataset } from '../data/types';
-import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf } from './format';
+import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf, short } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -59,7 +59,7 @@ export function headOpen(d: Dataset, _today?: Date): Head {
 }
 
 // ---------------------------------------------------------------- business
-// Gli investimenti AI Index sono CC BY-ND 4.0: si mostrano i valori come pubblicati, senza conversioni né rapporti.
+// Gli investimenti AI Index sono CC BY-ND 4.0: importi in forma breve (M/B), nessun rapporto tra anni.
 // Per il numero chiave e la tesi si usa Eurostat (CC BY 4.0), anche quello senza calcoli.
 function impreseUe(d: Dataset) {
   const s = d.eurostat?.serie;
@@ -79,8 +79,8 @@ export function headBusiness(d: Dataset, _today?: Date): Head {
   if (!last) return { title: plain('Business'), deck: null };
   const prev = owidPrev(d.owid, 'investimenti_privati', 'World');
   return {
-    title: [{ t: `Investimenti privati in AI nel ${last.t}: ` }, { t: `${exact(last.v)} dollari`, em: true }],
-    deck: 'A prezzi 2021, in aziende AI non quotate.' + (prev ? ` Nel ${prev.t}: ${exact(prev.v)} dollari.` : ''),
+    title: [{ t: `Investimenti privati in AI nel ${last.t}: ` }, { t: `${short(last.v)} $`, em: true }],
+    deck: 'A prezzi 2021, in aziende AI non quotate.' + (prev ? ` Nel ${prev.t}: ${short(prev.v)} $.` : '') + ' B = miliardi.',
   };
 }
 

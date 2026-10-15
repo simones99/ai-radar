@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { capitalize, day, daysTo, exact, isoDay, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
+import { capitalize, day, daysTo, exact, isoDay, short, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
 
 describe('formati italiani', () => {
   it('numeri con separatori italiani', () => {
@@ -11,6 +11,12 @@ describe('formati italiani', () => {
     expect(exact(290094148769)).toBe('290.094.148.769');
     expect(exact(2.5554)).toBe('2,5554');
     expect(exact(1.4890001)).toBe('1,489');
+  });
+  it('importi brevi con M e B', () => {
+    expect(short(290094148769)).toBe('290 B');
+    expect(short(5102962753)).toBe('5,1 B');
+    expect(short(717196154)).toBe('717 M');
+    expect(short(0)).toBe('0');
   });
   it('date brevi', () => {
     expect(day('2026-12-02')).toBe('2 dic 2026');

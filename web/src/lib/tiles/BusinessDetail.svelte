@@ -4,7 +4,7 @@
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import { owidLatestByEntity, owidPoints, tNum } from '../data/derive';
-  import { exact, nf } from '../text/format';
+  import { exact, nf, short } from '../text/format';
   import { barsTable, dotsTable, fmtYm, owidCite, seriesTable, MISSING } from './cite';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
@@ -14,10 +14,10 @@
   const head = $derived(tile.head(data, today));
   const o = $derived(data.owid);
   const mld = (v: number) => nf(v, v < 10 ? 1 : 0);
-  // investimenti e imprese: serie AI Index in CC BY-ND 4.0, quindi valori come pubblicati (dollari, non miliardi) e nessun calcolo
-  const ND = 'Dollari USA a prezzi 2021, come pubblicati dalla fonte.';
+  // investimenti: serie AI Index in CC BY-ND 4.0; nei grafici M/B, nelle tabelle i valori esatti come pubblicati
+  const ND = 'Dollari USA a prezzi 2021 (M = milioni, B = miliardi). Valori esatti nella tabella.';
   const REG: [string, string][] = [['United States', 'USA'], ['China', 'Cina'], ['Europe', 'Europa']];
-  const inv = $derived(REG.map(([e, name]) => ({ name, hot: e === 'United States', pts: owidPoints(o, 'investimenti_privati', e).map((p) => ({ x: tNum(p.t), y: p.v })) })).filter((s) => s.pts.length));
+  const inv = $derived(REG.map(([e, name]) => ({ name, hot: e === 'Europe', pts: owidPoints(o, 'investimenti_privati', e).map((p) => ({ x: tNum(p.t), y: p.v })) })).filter((s) => s.pts.length));
   const gen = $derived(owidPoints(o, 'investimenti_generativa', 'World').map((p) => ({ k: p.t, v: p.v })));
   const TIPI: Record<string, string> = { 'Merger/acquisition': 'Acquisizioni', 'Minority stake': 'Quote di minoranza', 'Private investment': 'Investimenti privati', 'Public offering': 'Quotazioni' };
   const byType = $derived.by(() => {
@@ -44,15 +44,15 @@
   <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
     missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
     table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
-    <LineChart label="Investimenti privati per regione" series={inv} yFormat={exact} left={104} endValues={false} />
+    <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
   </Block>
-  <Block span={4} title="Di cui AI generativa" note="{ND} Mondo; i valori sono nella tabella." missing={gen.length ? null : MISSING}
+  <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
     cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
-    <Bars label="Investimenti in AI generativa" data={gen} values={false} />
+    <Bars label="Investimenti in AI generativa" data={gen} format={short} />
   </Block>
-  <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note="{ND} I valori sono nella tabella." missing={byType.length ? null : MISSING}
+  <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
     cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
-    <Bars label="Investimenti delle aziende per tipo" data={byType} values={false} />
+    <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
   </Block>
 
   <h3 class="group">Adozione</h3>

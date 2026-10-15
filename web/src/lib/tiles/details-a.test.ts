@@ -65,7 +65,8 @@ describe('Business', () => {
     expect(within(inv).getByText('230.000.000.000')).toBeInTheDocument();
     const gen = screen.getByRole('img', { name: 'Investimenti in AI generativa' }).closest('section')!;
     expect(within(gen).getByText('143.800.000.000')).toBeInTheDocument();
-    expect(within(gen).queryByText('144')).toBeNull();
+    expect(within(screen.getByRole('img', { name: 'Investimenti in AI generativa' })).getByText('144 B')).toBeInTheDocument();
+    expect(within(screen.getByRole('img', { name: 'Investimenti privati per regione' })).getByText(/^Europa/)).toHaveClass('hot');
     expect(screen.getAllByText('Dati non disponibili in questo aggiornamento.').length).toBeGreaterThan(0);
     expect(within(screen.getByRole('img', { name: "Imprese europee che usano l'AI" })).getByText('Italia')).toHaveClass('hot');
   });

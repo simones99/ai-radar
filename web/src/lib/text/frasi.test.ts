@@ -65,10 +65,10 @@ describe('titoli e tesi', () => {
     expect(h.deck).toBe('RAG esce da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
   });
   it('business e politica', () => {
-    // serie CC BY-ND: valori originali, senza conversioni né rapporti
+    // serie CC BY-ND: importi brevi, nessun rapporto tra anni
     const hb = headBusiness(d, today);
-    expect(text(hb.title)).toBe('Investimenti privati in AI nel 2025: 290.094.148.769 dollari');
-    expect(hb.deck).toBe('A prezzi 2021, in aziende AI non quotate. Nel 2024: 130.850.813.417 dollari.');
+    expect(text(hb.title)).toBe('Investimenti privati in AI nel 2025: 290 B $');
+    expect(hb.deck).toBe('A prezzi 2021, in aziende AI non quotate. Nel 2024: 131 B $. B = miliardi.');
     expect(text(headPolitica(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
   });
   it('tesi della home e riserva', () => {

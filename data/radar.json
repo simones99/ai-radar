@@ -14,9 +14,81 @@
    "nome": "Agenti AI",
    "breve": "Agenti AI",
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 7629,
+    "precedenti3": 7442,
+    "per_mille": 184.95,
+    "crescita": 0.0697,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 1264,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 1560,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 1207,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 1147,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 1437,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 1754,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 2010,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 2048,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 2903,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 2491,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 2131,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 2463,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 3035,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
-    "ultimi3": 51383,
+    "ultimi3": 51384,
     "precedenti3": 30073,
     "crescita": 0.7085,
     "mensile": [
@@ -66,11 +138,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 17628
+      "n": 17627
      },
      {
       "mese": "2026-09",
-      "n": 17483
+      "n": 17485
      }
     ]
    },
@@ -94,7 +166,7 @@
    "slancio": 0.8,
    "domanda": 1.0,
    "quadrante": "impara-ora",
-   "slancio_prec": 0.7333,
+   "slancio_prec": 0.7667,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -103,7 +175,79 @@
    "nome": "Sviluppo con agenti di coding",
    "breve": "Agenti di coding",
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 644,
+    "precedenti3": 480,
+    "per_mille": 15.61,
+    "crescita": 0.3964,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 27,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 45,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 31,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 37,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 57,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 75,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 89,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 122,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 194,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 164,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 204,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 190,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 250,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 3479,
     "precedenti3": 2067,
@@ -180,10 +324,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.7333,
+   "slancio": 0.8666,
    "domanda": 0.4,
    "quadrante": "prova",
-   "slancio_prec": 0.8667,
+   "slancio_prec": 0.9,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -192,7 +336,79 @@
    "nome": "Model Context Protocol (MCP)",
    "breve": "MCP",
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 117,
+    "precedenti3": 116,
+    "per_mille": 2.84,
+    "crescita": 0.0521,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 20,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 30,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 14,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 25,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 26,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 31,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 40,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 39,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 42,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 35,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 36,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 37,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 44,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 36489,
     "precedenti3": 25412,
@@ -244,11 +460,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 11526
+      "n": 11525
      },
      {
       "mese": "2026-09",
-      "n": 13955
+      "n": 13956
      }
     ]
    },
@@ -269,10 +485,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.6,
+   "slancio": 0.6666,
    "domanda": 0.3333,
    "quadrante": "prova",
-   "slancio_prec": 0.2667,
+   "slancio_prec": 0.3667,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -281,9 +497,81 @@
    "nome": "RAG e ricerca semantica",
    "breve": "RAG",
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 565,
+    "precedenti3": 740,
+    "per_mille": 13.7,
+    "crescita": -0.2016,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 188,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 259,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 172,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 160,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 244,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 185,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 220,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 261,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 263,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 216,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 163,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 207,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 195,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
-    "ultimi3": 17594,
+    "ultimi3": 17595,
     "precedenti3": 14129,
     "crescita": 0.2452,
     "mensile": [
@@ -333,7 +621,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 5780
+      "n": 5781
      },
      {
       "mese": "2026-09",
@@ -358,10 +646,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.2667,
+   "slancio": 0.2334,
    "domanda": 0.5333,
    "quadrante": "consolida",
-   "slancio_prec": 0.5333,
+   "slancio_prec": 0.3667,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -370,11 +658,83 @@
    "nome": "Valutazione dei modelli (eval)",
    "breve": "Eval",
    "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 317,
+    "precedenti3": 373,
+    "per_mille": 7.68,
+    "crescita": -0.1111,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 81,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 90,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 73,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 77,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 105,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 91,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 93,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 111,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 153,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 109,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 88,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 114,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 115,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
-    "ultimi3": 3870,
+    "ultimi3": 3872,
     "precedenti3": 1687,
-    "crescita": 1.2902,
+    "crescita": 1.2914,
     "mensile": [
      {
       "mese": "2025-09",
@@ -422,11 +782,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 1380
+      "n": 1381
      },
      {
       "mese": "2026-09",
-      "n": 1426
+      "n": 1427
      }
     ]
    },
@@ -447,10 +807,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 1.0,
+   "slancio": 0.6666,
    "domanda": 0.2667,
    "quadrante": "prova",
-   "slancio_prec": 1.0,
+   "slancio_prec": 0.7,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -459,7 +819,79 @@
    "nome": "Fine-tuning e post-training",
    "breve": "Fine-tuning",
    "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 1163,
+    "precedenti3": 1169,
+    "per_mille": 28.19,
+    "crescita": 0.0382,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 232,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 285,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 193,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 189,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 263,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 314,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 287,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 293,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 512,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 364,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 293,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 362,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 508,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 1151,
     "precedenti3": 997,
@@ -536,10 +968,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.1333,
+   "slancio": 0.4,
    "domanda": 0.1333,
    "quadrante": "osserva",
-   "slancio_prec": 0.1333,
+   "slancio_prec": 0.3666,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -548,7 +980,79 @@
    "nome": "Prompt e context engineering",
    "breve": "Context engineering",
    "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 125,
+    "precedenti3": 195,
+    "per_mille": 3.03,
+    "crescita": -0.3217,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 72,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 84,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 56,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 55,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 64,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 47,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 65,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 68,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 71,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 56,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 46,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 44,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 35,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 6838,
     "precedenti3": 5893,
@@ -625,10 +1129,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.2,
+   "slancio": 0.1333,
    "domanda": 0.6667,
    "quadrante": "consolida",
-   "slancio_prec": 0.2,
+   "slancio_prec": 0.1333,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -637,11 +1141,83 @@
    "nome": "Sicurezza dei sistemi AI",
    "breve": "Sicurezza AI",
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 375,
+    "precedenti3": 480,
+    "per_mille": 9.09,
+    "crescita": -0.1824,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 91,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 114,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 81,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 77,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 103,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 115,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 117,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 135,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 189,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 156,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 102,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 126,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 147,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
-    "ultimi3": 2450,
+    "ultimi3": 2451,
     "precedenti3": 1734,
-    "crescita": 0.4117,
+    "crescita": 0.4123,
     "mensile": [
      {
       "mese": "2025-09",
@@ -693,7 +1269,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 870
+      "n": 871
      }
     ]
    },
@@ -714,7 +1290,7 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.4667,
+   "slancio": 0.3667,
    "domanda": 0.8667,
    "quadrante": "consolida",
    "slancio_prec": 0.3333,
@@ -726,7 +1302,79 @@
    "nome": "Governance e conformità AI",
    "breve": "Governance",
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 94,
+    "precedenti3": 109,
+    "per_mille": 2.28,
+    "crescita": -0.0938,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 26,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 22,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 13,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 22,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 23,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 26,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 36,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 44,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 38,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 27,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 34,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 29,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 31,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 2465,
     "precedenti3": 2305,
@@ -803,10 +1451,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.0667,
+   "slancio": 0.2334,
    "domanda": 0.9333,
    "quadrante": "consolida",
-   "slancio_prec": 0.0667,
+   "slancio_prec": 0.1,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -815,7 +1463,79 @@
    "nome": "Data engineering per l'AI",
    "breve": "Data engineering",
    "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 162,
+    "precedenti3": 242,
+    "per_mille": 3.93,
+    "crescita": -0.2945,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 86,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 90,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 73,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 53,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 54,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 78,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 90,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 87,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 70,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 85,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 45,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 41,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 76,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 5896,
     "precedenti3": 4281,
@@ -892,10 +1612,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.4,
+   "slancio": 0.2666,
    "domanda": 0.6,
    "quadrante": "consolida",
-   "slancio_prec": 0.4667,
+   "slancio_prec": 0.2334,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -904,7 +1624,79 @@
    "nome": "AI per analisi dati e BI",
    "breve": "AI per BI",
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 72,
+    "precedenti3": 76,
+    "per_mille": 1.75,
+    "crescita": -0.008,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 17,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 30,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 17,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 13,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 21,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 13,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 14,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 20,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 24,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 32,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 17,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 33,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 22,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 617,
     "precedenti3": 348,
@@ -981,10 +1773,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.8667,
+   "slancio": 0.7,
    "domanda": 0.0,
    "quadrante": "prova",
-   "slancio_prec": 0.9333,
+   "slancio_prec": 0.9667,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -993,7 +1785,79 @@
    "nome": "Database vettoriali",
    "breve": "DB vettoriali",
    "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 33,
+    "precedenti3": 58,
+    "per_mille": 0.8,
+    "crescita": -0.3706,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 17,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 15,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 11,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 14,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 17,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 24,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 10,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 24,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 14,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 20,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 15,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 10,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 8,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 1723,
     "precedenti3": 1852,
@@ -1073,7 +1937,7 @@
    "slancio": 0.0,
    "domanda": 0.4667,
    "quadrante": "osserva",
-   "slancio_prec": 0.0,
+   "slancio_prec": 0.3333,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -1082,7 +1946,79 @@
    "nome": "Modelli multimodali",
    "breve": "Multimodali",
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 2177,
+    "precedenti3": 2318,
+    "per_mille": 52.78,
+    "crescita": -0.0198,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 591,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 619,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 612,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 529,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 565,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 647,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 882,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 735,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 865,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 718,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 636,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 766,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 775,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 1258,
     "precedenti3": 863,
@@ -1159,10 +2095,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.6667,
+   "slancio": 0.5667,
    "domanda": 0.2,
    "quadrante": "prova",
-   "slancio_prec": 0.4,
+   "slancio_prec": 0.3334,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -1171,11 +2107,83 @@
    "nome": "LLMOps e messa in produzione",
    "breve": "LLMOps",
    "descrizione": "Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 118,
+    "precedenti3": 110,
+    "per_mille": 2.86,
+    "crescita": 0.1161,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 13,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 28,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 19,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 15,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 21,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 21,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 29,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 30,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 47,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 33,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 33,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 39,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 46,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
-    "ultimi3": 1269,
+    "ultimi3": 1270,
     "precedenti3": 995,
-    "crescita": 0.274,
+    "crescita": 0.275,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1227,7 +2235,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 371
+      "n": 372
      }
     ]
    },
@@ -1248,10 +2256,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.3333,
+   "slancio": 0.6,
    "domanda": 0.7333,
-   "quadrante": "consolida",
-   "slancio_prec": 0.8,
+   "quadrante": "impara-ora",
+   "slancio_prec": 0.7667,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -1260,11 +2268,83 @@
    "nome": "Modelli piccoli e locali",
    "breve": "Modelli locali",
    "descrizione": "Modelli aperti che girano su laptop o server propri, senza cloud.",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 913,
+    "precedenti3": 954,
+    "per_mille": 22.13,
+    "crescita": -0.0011,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 209,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 241,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 196,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 165,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 207,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 245,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 251,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 282,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 374,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 298,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 262,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 281,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 370,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
-    "ultimi3": 3471,
+    "ultimi3": 3472,
     "precedenti3": 2451,
-    "crescita": 0.4153,
+    "crescita": 0.4157,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1316,7 +2396,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 1269
+      "n": 1270
      }
     ]
    },
@@ -1337,10 +2417,10 @@
     "crescita": null,
     "data": "2026-10-15"
    },
-   "slancio": 0.5333,
+   "slancio": 0.5666,
    "domanda": 0.8,
    "quadrante": "impara-ora",
-   "slancio_prec": 0.6,
+   "slancio_prec": 0.5666,
    "domanda_prec": null,
    "quadrante_prec": null
   },
@@ -1349,7 +2429,79 @@
    "nome": "AI fisica e robotica",
    "breve": "Robotica",
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
-   "arxiv": null,
+   "arxiv": {
+    "ultimi3": 1430,
+    "precedenti3": 1187,
+    "per_mille": 34.67,
+    "crescita": 0.2562,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 152,
+      "totale": 11217
+     },
+     {
+      "mese": "2025-10",
+      "n": 198,
+      "totale": 12170
+     },
+     {
+      "mese": "2025-11",
+      "n": 187,
+      "totale": 10288
+     },
+     {
+      "mese": "2025-12",
+      "n": 204,
+      "totale": 9111
+     },
+     {
+      "mese": "2026-01",
+      "n": 154,
+      "totale": 10323
+     },
+     {
+      "mese": "2026-02",
+      "n": 267,
+      "totale": 11303
+     },
+     {
+      "mese": "2026-03",
+      "n": 337,
+      "totale": 13138
+     },
+     {
+      "mese": "2026-04",
+      "n": 231,
+      "totale": 12389
+     },
+     {
+      "mese": "2026-05",
+      "n": 438,
+      "totale": 16700
+     },
+     {
+      "mese": "2026-06",
+      "n": 518,
+      "totale": 13956
+     },
+     {
+      "mese": "2026-07",
+      "n": 346,
+      "totale": 11848
+     },
+     {
+      "mese": "2026-08",
+      "n": 407,
+      "totale": 13156
+     },
+     {
+      "mese": "2026-09",
+      "n": 677,
+      "totale": 16246
+     }
+    ]
+   },
    "github": {
     "ultimi3": 480,
     "precedenti3": 224,
@@ -1429,7 +2581,7 @@
    "slancio": 0.9333,
    "domanda": 0.0667,
    "quadrante": "prova",
-   "slancio_prec": 0.6667,
+   "slancio_prec": 0.7667,
    "domanda_prec": null,
    "quadrante_prec": null
   }

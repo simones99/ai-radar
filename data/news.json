@@ -55,6 +55,20 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "Bank of America puts 4,000 people on fixing vulnerabilities uncovered by Anthropic's Mythos and other AI models",
+   "link": "https://the-decoder.com/bank-of-america-puts-4000-people-on-fixing-vulnerabilities-uncovered-by-anthropics-mythos-and-other-ai-models/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "GPT-6-Astra solves 49 of 50 physics research problems at $2.40 apiece",
+   "link": "https://the-decoder.com/gpt-6-astra-solves-49-of-50-physics-research-problems-at-2-40-apiece/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Anthropic's Q3 revenue hits $16.8B but growth slows ahead of planned November IPO",
    "link": "https://the-decoder.com/anthropics-q3-revenue-hits-16-8b-but-growth-slows-ahead-of-planned-november-ipo/",
    "data": "2026-10-15",
@@ -78,6 +92,13 @@
   {
    "titolo": "Apertus 1.5 Release Notes",
    "link": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
+   "data": "2026-10-15",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Welcome FLUX.3 Image Klein in Diffusers",
+   "link": "https://huggingface.co/blog/flux-3",
    "data": "2026-10-15",
    "fonte": "Hugging Face",
    "tema": "ricerca"
@@ -204,20 +225,6 @@
   {
    "titolo": "406 scientists demand AI models be cut off from the internet immediately",
    "link": "https://the-decoder.com/406-scientists-demand-ai-models-be-cut-off-from-the-internet-immediately/",
-   "data": "2026-10-13",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Gemini 4 Argon is now available worldwide as Google's most capable frontier model",
-   "link": "https://the-decoder.com/gemini-4-argon-is-now-available-worldwide-as-googles-most-capable-frontier-model/",
-   "data": "2026-10-13",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Machine learning pioneer Michael I. Jordan dismantles AI doom rhetoric as \"grand moralizing performance\"",
-   "link": "https://the-decoder.com/machine-learning-pioneer-michael-i-jordan-dismantles-ai-doom-rhetoric-as-grand-moralizing-performance/",
    "data": "2026-10-13",
    "fonte": "The Decoder",
    "tema": "prodotti"
@@ -561,13 +568,6 @@
   {
    "titolo": "Holo4: powering generalist computer-use agents",
    "link": "https://huggingface.co/blog/Hcompany/holo4",
-   "data": "2026-09-28",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Welcome RL Environments to the hub",
-   "link": "https://huggingface.co/blog/rl-environments",
    "data": "2026-09-28",
    "fonte": "Hugging Face",
    "tema": "ricerca"

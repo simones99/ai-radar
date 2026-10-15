@@ -3,10 +3,11 @@
   import type { Quadrant } from '../data/types';
   import { signedPts } from '../text/format';
 
-  let { rows, quadranti, highlight = $bindable(null) }: {
+  let { rows, quadranti, highlight = $bindable(null), hovered = $bindable(null) }: {
     rows: RadarRowM[];
     quadranti: Record<Quadrant, string>;
     highlight?: string | null;
+    hovered?: string | null;
   } = $props();
 
   const moved = $derived(rows.filter((r) => r.hasPrev).sort((a, b) => Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
@@ -26,8 +27,8 @@
       {#each moved as r (r.id)}
         <li>
           <button type="button" class="row" aria-pressed={highlight === r.id} title={r.nome}
-            onpointerenter={() => (highlight = r.id)} onpointerleave={() => (highlight = null)}
-            onfocus={() => (highlight = r.id)} onblur={() => (highlight = null)}
+            onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
+            onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}
             onclick={() => (highlight = highlight === r.id ? null : r.id)}>
             <span class="n">{r.breve}</span>
             <span class="v {cls(r.dS)}">{signedPts(r.dS)}</span>
@@ -54,7 +55,8 @@
   ul { list-style: none; margin: 0; padding: 0; display: grid; }
   li + li { border-top: 1px solid var(--line); }
   .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 0 var(--s1); padding-inline: var(--s1); }
-  .row:hover, .row[aria-pressed='true'], .row:focus-visible { background: var(--accent-soft); }
+  .row[aria-pressed='true'], .row:focus-visible { background: var(--accent-soft); }
+  @media (hover: hover) { .row:hover { background: var(--accent-soft); } }
   .row:focus-visible { outline: 2px solid var(--accent); }
   .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
   .v { text-align: right; }

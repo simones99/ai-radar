@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/svelte';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { radarRows } from '../data/derive';
 import type { Radar as RadarT } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
@@ -27,7 +27,25 @@ describe('Radar', () => {
   });
 });
 
+describe('Radar onpick', () => {
+  it('il clic sul cerchio di tocco di MCP chiama onpick', async () => {
+    const onpick = vi.fn();
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti, onpick });
+    await fireEvent.click(container.querySelectorAll('g.pt')[1].querySelector('circle.hit')!);
+    expect(onpick).toHaveBeenCalledWith('mcp');
+  });
+});
+
 describe('MovesPanel', () => {
+  it('passaggio del mouse e poi clic: la riga resta selezionata', async () => {
+    render(MovesPanel, { rows, quadranti: radar.quadranti });
+    const b = screen.getAllByRole('button')[0];
+    const ev = new Event('pointerenter');
+    Object.defineProperty(ev, 'pointerType', { value: 'mouse' });
+    await fireEvent(b, ev);
+    await fireEvent.click(b);
+    expect(b).toHaveAttribute('aria-pressed', 'true');
+  });
   it('riepilogo e righe ordinate per spostamento', () => {
     render(MovesPanel, { rows, quadranti: radar.quadranti });
     expect(screen.getByText('cambi di quadrante').previousElementSibling).toHaveTextContent('2');

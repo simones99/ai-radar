@@ -45,7 +45,7 @@ describe('Business', () => {
     expect(screen.getByRole('img', { name: 'Investimenti privati per regione' })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: 'Our World in Data' })[0]).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
     expect(screen.getAllByText('Dati non disponibili in questo aggiornamento.').length).toBeGreaterThan(0);
-    expect(screen.getByText('Italia')).toHaveClass('hot');
+    expect(within(screen.getByRole('img', { name: "Imprese europee che usano l'AI" })).getByText('Italia')).toHaveClass('hot');
   });
 });
 

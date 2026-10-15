@@ -76,12 +76,12 @@
           <line class="arrow" class:hot x1={x0} y1={y0} x2={x0 + (x(r.slancio) - x0) * k} y2={y0 + (y(r.domanda) - y0) * k}
             marker-end="url(#{uid}-{hot ? 'hot' : 'cold'})" />
         {/if}
-        <circle class="dot" class:hot cx={x(r.slancio)} cy={y(r.domanda)} r={hot ? 6 : 4.5}>
+        <circle class="dot" class:hot cx={x(r.slancio)} cy={y(r.domanda)} r={hot ? 6 : 4.5} />
+        <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+        <!-- la tastiera usa il pannello dei movimenti; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
+        <circle class="hit" cx={x(r.slancio)} cy={y(r.domanda)} r="20" onclick={() => onpick?.(r.id)}>
           <title>{r.nome}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {Math.round(r.slancio * 100)} ({signedPts(r.dS)}), domanda {Math.round(r.domanda * 100)} ({signedPts(r.dD)}).</title>
         </circle>
-        <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-        <!-- la tastiera usa il pannello dei movimenti; il cerchio trasparente allarga l'area di tocco -->
-        <circle class="hit" cx={x(r.slancio)} cy={y(r.domanda)} r="20" onclick={() => onpick?.(r.id)} />
       </g>
     {/each}
 

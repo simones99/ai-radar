@@ -143,18 +143,23 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
 }
 
 // ---------------------------------------------------------------- notizie
+/** "N fonti": le fonti distinte tra le notizie date, non i feed configurati. */
+const fontiDi = (items: { fonte: string }[]): string => {
+  const k = new Set(items.map((x) => x.fonte)).size;
+  return `${k} ${k === 1 ? 'fonte' : 'fonti'}`;
+};
 export function faceNotizie(d: Dataset, today: Date): Face | null {
   if (!d.news) return null;
-  const n = newsInLastDays(d.news, today).length;
-  if (!n) return { fig: '0', unit: '', sent: 'Nessuna notizia negli ultimi 7 giorni.' };
-  return { fig: String(n), unit: '', sent: `Notizie negli ultimi 7 giorni da ${d.news.fonti.length} fonti.` };
+  const week = newsInLastDays(d.news, today);
+  if (!week.length) return { fig: '0', unit: '', sent: 'Nessuna notizia negli ultimi 7 giorni.' };
+  return { fig: String(week.length), unit: '', sent: `Notizie negli ultimi 7 giorni da ${fontiDi(week)}.` };
 }
 export function headNotizie(d: Dataset, today: Date): Head {
   if (!d.news) return { title: plain('Notizie'), deck: null };
   const n = newsInLastDays(d.news, today).length;
   return {
     title: [{ t: String(n), em: true }, { t: n === 1 ? ' notizia in una settimana' : ' notizie in una settimana' }],
-    deck: `Solo titolo, data e link agli articoli originali, da ${d.news?.fonti.length ?? 0} fonti.`,
+    deck: `Solo titolo, data e link agli articoli originali, da ${fontiDi(d.news.notizie)}.`,
   };
 }
 

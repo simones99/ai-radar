@@ -38,6 +38,6 @@
   .list li { display: grid; gap: 4px; padding-block: var(--s2); }
   .list li + li { border-top: 1px solid var(--line); }
   .list a { font-weight: 600; text-decoration: none; }
-  .list a:hover { text-decoration: underline; }
+  @media (hover: hover) { .list a:hover { text-decoration: underline; } }
   .list span { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

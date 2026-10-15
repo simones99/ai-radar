@@ -20,6 +20,14 @@ describe('Radar', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti, highlight: 'mcp' });
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(4);
   });
+  it('il suggerimento di ogni punto sta sul cerchio di tocco, quello sopra il punto', () => {
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti });
+    const pts = container.querySelectorAll('g.pt');
+    for (const g of pts) {
+      expect(g.querySelector('circle.hit > title')?.textContent).toMatch(/Slancio \d+/);
+      expect(g.querySelector('circle.dot > title')).toBeNull();
+    }
+  });
   it('radar senza posizione precedente: nessuna freccia', () => {
     const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) });
     const { container } = render(Radar, { rows: old, quadranti: radar.quadranti });

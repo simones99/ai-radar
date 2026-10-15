@@ -60,6 +60,6 @@
   .news li + li { border-top: 1px solid var(--line); }
   @media (max-width: 560px) { .news li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
   .news a { font-weight: 500; text-decoration: none; display: block; }
-  .news a:hover { text-decoration: underline; }
+  @media (hover: hover) { .news a:hover { text-decoration: underline; } }
   .meta { font-size: 12px; line-height: 16px; color: var(--fg-3); display: block; }
 </style>

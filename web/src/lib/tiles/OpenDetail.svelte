@@ -45,6 +45,6 @@
   .list li { padding-block: var(--s1); }
   .list li + li { border-top: 1px solid var(--line); }
   .list a { font-weight: 500; text-decoration: none; overflow-wrap: anywhere; }
-  .list a:hover { text-decoration: underline; }
+  @media (hover: hover) { .list a:hover { text-decoration: underline; } }
   .list span { display: block; font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

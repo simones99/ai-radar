@@ -1,0 +1,8 @@
+_site/
+__pycache__/
+.pytest_cache/
+*.tmp
+.venv/
+.DS_Store
+.lsp/
+.clj-kondo/

@@ -1,0 +1,82 @@
+name: Aggiorna e pubblica
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"   # ogni lunedì alle 05:17 UTC (07:17 in Italia d'estate)
+  workflow_dispatch:         # pulsante "Run workflow" nella scheda Actions
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "pipeline/**"
+      - "config/**"
+      - "scripts/**"
+      - "requirements.txt"
+      - ".github/workflows/**"
+
+permissions:
+  contents: write   # per salvare i dati aggiornati nel repository
+  pages: write      # per pubblicare su GitHub Pages
+  id-token: write
+
+concurrency:
+  group: aggiornamento
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installa le dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Test
+        run: python -m pytest -q
+
+      - name: Raccogli i dati
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          AA_API_KEY: ${{ secrets.AA_API_KEY }}
+          AI_RADAR_USER_AGENT: "ai-radar (+https://github.com/${{ github.repository }})"
+        run: python -m pipeline.run
+
+      - name: Salva i dati nel repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "Nessun dato nuovo da salvare."
+          else
+            git commit -m "Dati aggiornati $(date -u +%F)"
+            # se nel frattempo qualcuno ha fatto push, mettiamo i dati sopra le sue modifiche
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+
+      - name: Prepara il sito
+        run: python scripts/build_site.py
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  pubblica:
+    needs: aggiorna
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,123 @@
+# Competenze monitorate dal radar "Su cosa formarsi".
+#
+# Ogni competenza ha tre segnali, tutti opzionali:
+#   arxiv:  frasi cercate negli abstract dei paper (OR tra le frasi)
+#   github: un topic GitHub; si contano i nuovi repository creati ogni mese
+#   jobs:   parametri di ricerca Adzuna (what = tutte le parole,
+#           what_phrase = frase esatta, what_or = almeno una parola)
+#
+# Per aggiungere o togliere una competenza basta modificare questo file:
+# al prossimo aggiornamento la pipeline recupera lo storico che manca.
+
+skills:
+  - id: agenti
+    nome: Agenti AI
+    descrizione: Sistemi che pianificano e usano strumenti per completare compiti in più passi.
+    arxiv: ["LLM agent", "LLM agents", "agentic"]
+    github: ai-agents
+    jobs: {what_phrase: "AI agent"}
+
+  - id: coding-agenti
+    nome: Sviluppo con agenti di coding
+    descrizione: Scrivere e mantenere software delegando a agenti come Claude Code o Codex.
+    arxiv: ["coding agent", "software engineering agent", "SWE-bench"]
+    github: coding-agent
+    jobs: {what: "AI coding agents"}
+
+  - id: mcp
+    nome: Model Context Protocol (MCP)
+    descrizione: Lo standard per collegare modelli e agenti a strumenti e dati esterni.
+    arxiv: ["Model Context Protocol"]
+    github: mcp
+    jobs: {what_phrase: "Model Context Protocol"}
+
+  - id: rag
+    nome: RAG e ricerca semantica
+    descrizione: Far rispondere i modelli sui propri documenti tramite recupero di informazioni.
+    arxiv: ["retrieval-augmented generation", "retrieval augmented generation"]
+    github: rag
+    jobs: {what: "RAG LLM"}
+
+  - id: valutazione
+    nome: Valutazione dei modelli (eval)
+    descrizione: Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.
+    arxiv: ["LLM evaluation", "evaluating large language models", "LLM-as-a-judge"]
+    github: llm-evaluation
+    jobs: {what: "LLM evaluation"}
+
+  - id: post-training
+    nome: Fine-tuning e post-training
+    descrizione: Adattare un modello aperto a un dominio specifico con dati propri.
+    arxiv: ["fine-tuning large language models", "post-training", "parameter-efficient fine-tuning"]
+    github: fine-tuning
+    jobs: {what: "fine-tuning LLM"}
+
+  - id: context-engineering
+    nome: Prompt e context engineering
+    descrizione: Progettare istruzioni, contesto e memoria che rendono affidabile un modello.
+    arxiv: ["prompt engineering", "context engineering"]
+    github: prompt-engineering
+    jobs: {what_phrase: "prompt engineering"}
+
+  - id: sicurezza
+    nome: Sicurezza dei sistemi AI
+    descrizione: Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.
+    arxiv: ["prompt injection", "jailbreak", "AI security"]
+    github: ai-security
+    jobs: {what_phrase: "AI security"}
+
+  - id: governance
+    nome: Governance e conformità AI
+    descrizione: AI Act, gestione del rischio, audit e documentazione dei sistemi AI.
+    arxiv: ["AI governance", "AI Act", "AI regulation"]
+    github: ai-governance
+    jobs: {what_phrase: "AI governance"}
+
+  - id: dati-per-ai
+    nome: Data engineering per l'AI
+    descrizione: Pipeline, qualità e governance dei dati che alimentano modelli e agenti.
+    arxiv: ["data curation", "data quality for machine learning", "synthetic data generation"]
+    github: data-engineering
+    jobs: {what: "data engineer AI"}
+
+  - id: text-to-sql
+    nome: AI per analisi dati e BI
+    descrizione: Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).
+    arxiv: ["text-to-SQL", "table question answering"]
+    github: text-to-sql
+    jobs: {what: "LLM SQL analytics"}
+
+  - id: vector-db
+    nome: Database vettoriali
+    descrizione: Archivi di embedding per ricerca semantica e memoria degli agenti.
+    arxiv: ["vector database", "approximate nearest neighbor search"]
+    github: vector-database
+    jobs: {what_phrase: "vector database"}
+
+  - id: multimodale
+    nome: Modelli multimodali
+    descrizione: Modelli che combinano testo, immagini, audio e video.
+    arxiv: ["vision-language model", "multimodal large language model"]
+    github: multimodal
+    jobs: {what: "multimodal AI"}
+
+  - id: llmops
+    nome: LLMOps e messa in produzione
+    descrizione: Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.
+    arxiv: ["LLMOps", "LLM serving", "inference optimization"]
+    github: llmops
+    jobs: {what_or: "LLMOps MLOps"}
+
+  - id: modelli-locali
+    nome: Modelli piccoli e locali
+    descrizione: Modelli aperti che girano su laptop o server propri, senza cloud.
+    arxiv: ["small language model", "on-device inference", "quantization"]
+    github: local-llm
+    jobs: {what_phrase: "edge AI"}
+
+  - id: robotica
+    nome: AI fisica e robotica
+    descrizione: Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).
+    arxiv: ["vision-language-action", "world model", "robot learning"]
+    github: embodied-ai
+    jobs: {what: "robotics machine learning"}

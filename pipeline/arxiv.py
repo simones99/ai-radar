@@ -19,7 +19,9 @@ TOTAL_KEY = "_totale"
 MONTHS = 13          # storico mantenuto per i grafici
 REFRESH_LAST = 2     # mesi recenti ricontati a ogni giro (arrivano invii in ritardo)
 OUT = "arxiv.json"
-RETRY_BACKOFF = 30.0  # arXiv risponde 500/429 per qualche decina di secondi: si attende 30 s, poi 60 s
+RETRY_BACKOFF = 30.0  # dopo un 429/500 si attende 30, 60, 90, 120 s prima di arrendersi
+RETRIES = 5
+SLEEP = 5.0  # sopra i 3 s chiesti da arXiv: da GitHub Actions l'IP è condiviso e i 429 arrivano prima
 
 
 def build_query(phrases: list[str], ym: str) -> str:
@@ -40,15 +42,31 @@ def parse_total(xml_text: str) -> int:
     return int(node.text)
 
 
-def run(s, skills: list[dict], today: date, *, sleep: float = 3.1, months: int = MONTHS) -> dict:
+def run(s, skills: list[dict], today: date, *, sleep: float = SLEEP, months: int = MONTHS) -> dict:
     old = read_json(OUT, {}) or {}
     old_series: dict = old.get("series", {})
     window = complete_months(months, today)
     refresh = set(window[-REFRESH_LAST:])
 
     targets = [(TOTAL_KEY, [])] + [(sk["id"], sk["arxiv"]) for sk in skills if sk.get("arxiv")]
-    series: dict[str, dict[str, int]] = {}
+    # Si riparte dalle serie già salvate e si salva dopo ogni serie: se arXiv blocca a metà (429),
+    # il giro dopo continua da lì. Il radar usa il file solo quando "completo" è vero.
+    series: dict[str, dict[str, int]] = {k: v for k, v in old_series.items() if k in dict(targets)}
+    queries: dict[str, list[str]] = {k: p for k, p in old.get("queries", {}).items() if k in dict(targets)}
     calls = 0
+
+    def save() -> None:
+        done = all(k in series and set(window) <= set(series[k]) and queries.get(k) == p for k, p in targets)
+        write_json(OUT, {
+            "fonte": "arXiv API (metadati CC0)",
+            "url": "https://arxiv.org",
+            "categorie": CATS,
+            "mesi": window,
+            "queries": queries,
+            "series": series,
+            "completo": done,
+        })
+
     for key, phrases in targets:
         current = dict(old_series.get(key, {}))
         # Se le frasi di ricerca sono cambiate, lo storico va ricalcolato.
@@ -58,8 +76,13 @@ def run(s, skills: list[dict], today: date, *, sleep: float = 3.1, months: int =
             if ym in current and ym not in refresh:
                 continue
             # max_results=1: con 0 arXiv risponde 500; serve solo totalResults
-            r = http_get(s, API, params={"search_query": build_query(phrases, ym), "start": 0, "max_results": 1},
-                         backoff=RETRY_BACKOFF)
+            try:
+                r = http_get(s, API, params={"search_query": build_query(phrases, ym), "start": 0, "max_results": 1},
+                             retries=RETRIES, backoff=RETRY_BACKOFF)
+            except Exception:
+                series[key], queries[key] = {m: current[m] for m in sorted(current) if m in window}, phrases
+                save()
+                raise
             n = parse_total(r.text)
             if key == TOTAL_KEY and n == 0:
                 raise ValueError(f"arXiv ha restituito 0 paper totali per {ym}: risposta sospetta")
@@ -67,15 +90,8 @@ def run(s, skills: list[dict], today: date, *, sleep: float = 3.1, months: int =
             calls += 1
             time.sleep(sleep)
         series[key] = {m: current[m] for m in sorted(current) if m in window}
+        queries[key] = phrases
+        save()
 
-    out = {
-        "fonte": "arXiv API (metadati CC0)",
-        "url": "https://arxiv.org",
-        "categorie": CATS,
-        "mesi": window,
-        "queries": {k: p for k, p in targets},
-        "series": series,
-    }
-    write_json(OUT, out)
     log.info("arXiv: %d chiamate, %d serie", calls, len(series))
     return {"chiamate": calls, "serie": len(series)}

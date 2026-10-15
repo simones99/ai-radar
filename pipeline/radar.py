@@ -222,6 +222,8 @@ def _month_before(arx: dict, gh: dict, jobs: dict) -> tuple[dict, dict, dict]:
 
 def run(skills: list[dict], today: date) -> dict:
     arx = read_json("arxiv.json", {}) or {}
+    if arx.get("completo") is False:  # giro interrotto: con poche serie i ranghi sarebbero falsati
+        arx = {}
     gh = read_json("github.json", {}) or {}
     jobs = read_json("jobs.json", {}) or {}
 

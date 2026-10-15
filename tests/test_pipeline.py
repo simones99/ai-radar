@@ -308,6 +308,27 @@ def test_radar_previous_positions(tmp_path, monkeypatch):
     assert rows["x"]["breve"] == "X"
 
 
+def test_radar_ignores_incomplete_arxiv(tmp_path, monkeypatch):
+    # arxiv.json a metà (giro interrotto da un 429): il radar non lo usa, altrimenti confronterebbe poche competenze
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    months = [f"2026-{m:02d}" for m in range(3, 10)]
+    counts = {"x": [10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0], "z": [40, 40, 40, 20, 20, 20, 20]}
+    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
+    skills = [{"id": k, "nome": f"Competenza {k}", "breve": k.upper()} for k in counts]
+
+    def slancio():
+        radar.run(skills, date(2026, 10, 15))
+        return {r["id"]: r["slancio"] for r in json.loads((tmp_path / "radar.json").read_text())["competenze"]}
+
+    base = slancio()
+    arx = {"mesi": months, "series": {"_totale": dict.fromkeys(months, 1000),
+                                       "z": dict(zip(months, [1, 1, 1, 1, 1, 1, 900]))}}
+    common.write_json("arxiv.json", {**arx, "completo": False})
+    assert slancio() == base
+    common.write_json("arxiv.json", {**arx, "completo": True})
+    assert slancio() != base
+
+
 def test_radar_previous_demand_needs_old_job_snapshot(tmp_path, monkeypatch):
     # Domanda dal lavoro con una sola rilevazione: la posizione precedente non si può calcolare.
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))

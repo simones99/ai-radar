@@ -119,3 +119,25 @@ def test_arxiv_asks_for_one_result(tmp_path, monkeypatch):
 
     arxiv.run(S({arxiv.API: ok}), [], date(2026, 10, 15), sleep=0, months=1)
     assert seen and all(p["max_results"] == 1 for p in seen)
+
+
+def test_arxiv_keeps_progress_when_rate_limited(tmp_path, monkeypatch):
+    # 429 a metà del primo giro: le serie finite restano salvate e il giro dopo riparte da lì
+    import json
+    import pytest
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    ok = Resp(200, '<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">'
+                   "<opensearch:totalResults>100</opensearch:totalResults></feed>")
+    skills = [{"id": "a", "arxiv": ["x"]}, {"id": "b", "arxiv": ["y"]}]
+    # 3 mesi: _totale (3) + a (3) riescono, poi b riceve solo 429
+    s = MapSession({arxiv.API: [ok] * 6 + [Resp(429)] * 10})
+    with pytest.raises(RuntimeError, match="429"):
+        arxiv.run(s, skills, date(2026, 10, 15), sleep=0, months=3)
+    saved = json.loads((tmp_path / "arxiv.json").read_text())
+    assert saved["series"]["a"] and saved["series"]["b"] == {} and saved["completo"] is False
+
+    info = arxiv.run(MapSession({arxiv.API: ok}), skills, date(2026, 10, 15), sleep=0, months=3)
+    # b per intero (3 mesi) + gli ultimi 2 mesi di _totale e a, che si ricontano sempre
+    assert info["chiamate"] == 3 + 2 + 2
+    assert json.loads((tmp_path / "arxiv.json").read_text())["completo"] is True

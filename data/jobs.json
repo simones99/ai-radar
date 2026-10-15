@@ -1,0 +1,209 @@
+{
+ "fonte": "The Adzuna API",
+ "url": "https://www.adzuna.co.uk",
+ "nota": "Annunci pubblicati negli ultimi 30 giorni al momento della rilevazione.",
+ "paesi": {
+  "us": "Stati Uniti",
+  "gb": "Regno Unito",
+  "de": "Germania",
+  "fr": "Francia",
+  "it": "Italia",
+  "es": "Spagna",
+  "nl": "Paesi Bassi",
+  "pl": "Polonia"
+ },
+ "paesi_ue": [
+  "de",
+  "fr",
+  "it",
+  "es",
+  "nl",
+  "pl"
+ ],
+ "snapshots": [
+  {
+   "data": "2026-10-15",
+   "paese": "us",
+   "totale": 4027319,
+   "competenze": {
+    "agenti": 18765,
+    "coding-agenti": 3511,
+    "mcp": 2286,
+    "rag": 1892,
+    "valutazione": 2463,
+    "post-training": 373,
+    "context-engineering": 7313,
+    "sicurezza": 3849,
+    "governance": 5699,
+    "dati-per-ai": 6548,
+    "text-to-sql": 1,
+    "vector-db": 4670,
+    "multimodale": 939,
+    "llmops": 5747,
+    "modelli-locali": 4708,
+    "robotica": 592
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "gb",
+   "totale": 455347,
+   "competenze": {
+    "agenti": 1128,
+    "coding-agenti": 167,
+    "mcp": 96,
+    "rag": 126,
+    "valutazione": 144,
+    "post-training": 24,
+    "context-engineering": 360,
+    "sicurezza": 235,
+    "governance": 479,
+    "dati-per-ai": 383,
+    "text-to-sql": 0,
+    "vector-db": 218,
+    "multimodale": 49,
+    "llmops": 344,
+    "modelli-locali": 395,
+    "robotica": 22
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "de",
+   "totale": 678649,
+   "competenze": {
+    "agenti": 851,
+    "coding-agenti": 111,
+    "mcp": 49,
+    "rag": 156,
+    "valutazione": 26,
+    "post-training": 4,
+    "context-engineering": 1198,
+    "sicurezza": 127,
+    "governance": 245,
+    "dati-per-ai": 116,
+    "text-to-sql": 0,
+    "vector-db": 69,
+    "multimodale": 19,
+    "llmops": 373,
+    "modelli-locali": 170,
+    "robotica": 8
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "fr",
+   "totale": 672161,
+   "competenze": {
+    "agenti": 408,
+    "coding-agenti": 30,
+    "mcp": 73,
+    "rag": 424,
+    "valutazione": 103,
+    "post-training": 48,
+    "context-engineering": 328,
+    "sicurezza": 25,
+    "governance": 71,
+    "dati-per-ai": 75,
+    "text-to-sql": 0,
+    "vector-db": 57,
+    "multimodale": 13,
+    "llmops": 528,
+    "modelli-locali": 88,
+    "robotica": 9
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "it",
+   "totale": 139797,
+   "competenze": {
+    "agenti": 2643,
+    "coding-agenti": 33,
+    "mcp": 36,
+    "rag": 78,
+    "valutazione": 19,
+    "post-training": 26,
+    "context-engineering": 142,
+    "sicurezza": 3102,
+    "governance": 2627,
+    "dati-per-ai": 468,
+    "text-to-sql": 0,
+    "vector-db": 43,
+    "multimodale": 37,
+    "llmops": 155,
+    "modelli-locali": 1043,
+    "robotica": 24
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "es",
+   "totale": 97061,
+   "competenze": {
+    "agenti": 177,
+    "coding-agenti": 64,
+    "mcp": 67,
+    "rag": 122,
+    "valutazione": 56,
+    "post-training": 15,
+    "context-engineering": 305,
+    "sicurezza": 115,
+    "governance": 244,
+    "dati-per-ai": 144,
+    "text-to-sql": 0,
+    "vector-db": 194,
+    "multimodale": 34,
+    "llmops": 451,
+    "modelli-locali": 354,
+    "robotica": 6
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "nl",
+   "totale": 93462,
+   "competenze": {
+    "agenti": 169,
+    "coding-agenti": 11,
+    "mcp": 5,
+    "rag": 19,
+    "valutazione": 3,
+    "post-training": 2,
+    "context-engineering": 33,
+    "sicurezza": 27,
+    "governance": 26,
+    "dati-per-ai": 73,
+    "text-to-sql": 0,
+    "vector-db": 2,
+    "multimodale": 7,
+    "llmops": 50,
+    "modelli-locali": 72,
+    "robotica": 2
+   }
+  },
+  {
+   "data": "2026-10-15",
+   "paese": "pl",
+   "totale": 97137,
+   "competenze": {
+    "agenti": 77,
+    "coding-agenti": 53,
+    "mcp": 71,
+    "rag": 122,
+    "valutazione": 42,
+    "post-training": 16,
+    "context-engineering": 200,
+    "sicurezza": 62,
+    "governance": 148,
+    "dati-per-ai": 52,
+    "text-to-sql": 0,
+    "vector-db": 8,
+    "multimodale": 15,
+    "llmops": 385,
+    "modelli-locali": 125,
+    "robotica": 3
+   }
+  }
+ ]
+}

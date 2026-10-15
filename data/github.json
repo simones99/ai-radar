@@ -47,8 +47,8 @@
    "2026-05": 9459,
    "2026-06": 12365,
    "2026-07": 16272,
-   "2026-08": 17625,
-   "2026-09": 17473
+   "2026-08": 17628,
+   "2026-09": 17483
   },
   "coding-agenti": {
    "2025-09": 22,
@@ -62,7 +62,7 @@
    "2026-05": 694,
    "2026-06": 832,
    "2026-07": 984,
-   "2026-08": 1355,
+   "2026-08": 1356,
    "2026-09": 1139
   },
   "mcp": {
@@ -77,8 +77,8 @@
    "2026-05": 8595,
    "2026-06": 9161,
    "2026-07": 11008,
-   "2026-08": 11528,
-   "2026-09": 13949
+   "2026-08": 11526,
+   "2026-09": 13955
   },
   "rag": {
    "2025-09": 828,
@@ -92,8 +92,8 @@
    "2026-05": 4611,
    "2026-06": 5824,
    "2026-07": 6280,
-   "2026-08": 5779,
-   "2026-09": 5531
+   "2026-08": 5780,
+   "2026-09": 5534
   },
   "valutazione": {
    "2025-09": 33,
@@ -108,7 +108,7 @@
    "2026-06": 729,
    "2026-07": 1064,
    "2026-08": 1380,
-   "2026-09": 1425
+   "2026-09": 1426
   },
   "post-training": {
    "2025-09": 91,
@@ -137,7 +137,7 @@
    "2026-05": 1974,
    "2026-06": 2162,
    "2026-07": 2476,
-   "2026-08": 2318,
+   "2026-08": 2317,
    "2026-09": 2045
   },
   "sicurezza": {
@@ -167,8 +167,8 @@
    "2026-05": 882,
    "2026-06": 751,
    "2026-07": 784,
-   "2026-08": 905,
-   "2026-09": 777
+   "2026-08": 903,
+   "2026-09": 778
   },
   "dati-per-ai": {
    "2025-09": 277,
@@ -198,7 +198,7 @@
    "2026-06": 178,
    "2026-07": 198,
    "2026-08": 180,
-   "2026-09": 238
+   "2026-09": 239
   },
   "vector-db": {
    "2025-09": 183,
@@ -213,7 +213,7 @@
    "2026-06": 723,
    "2026-07": 707,
    "2026-08": 555,
-   "2026-09": 459
+   "2026-09": 461
   },
   "multimodale": {
    "2025-09": 87,
@@ -227,7 +227,7 @@
    "2026-05": 270,
    "2026-06": 311,
    "2026-07": 317,
-   "2026-08": 539,
+   "2026-08": 540,
    "2026-09": 401
   },
   "llmops": {
@@ -273,7 +273,7 @@
    "2026-06": 80,
    "2026-07": 158,
    "2026-08": 139,
-   "2026-09": 182
+   "2026-09": 183
   }
  },
  "repos": [
@@ -281,11 +281,11 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-10-15T13:22:59Z",
+   "ultimo_push": "2026-10-15T15:00:13Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 167717
+     "stelle": 167714
     }
    ]
   },
@@ -293,11 +293,11 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-10-15T13:29:25Z",
+   "ultimo_push": "2026-10-15T15:04:05Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 93855
+     "stelle": 93859
     }
    ]
   },
@@ -305,11 +305,11 @@
    "repo": "ollama/ollama",
    "url": "https://github.com/ollama/ollama",
    "descrizione": "Get up and running with Kimi, GLM, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
-   "ultimo_push": "2026-10-15T04:58:46Z",
+   "ultimo_push": "2026-10-15T14:29:31Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 183246
+     "stelle": 183250
     }
    ]
   },
@@ -357,7 +357,7 @@
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 30056
+     "stelle": 30057
     }
    ]
   },
@@ -369,7 +369,7 @@
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 61421
+     "stelle": 61423
     }
    ]
   },
@@ -377,11 +377,11 @@
    "repo": "crewAIInc/crewAI",
    "url": "https://github.com/crewAIInc/crewAI",
    "descrizione": "Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.",
-   "ultimo_push": "2026-10-15T13:19:46Z",
+   "ultimo_push": "2026-10-15T14:47:56Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 59733
+     "stelle": 59735
     }
    ]
   },
@@ -393,7 +393,7 @@
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 150999
+     "stelle": 151011
     }
    ]
   },
@@ -401,11 +401,11 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-10-15T13:28:10Z",
+   "ultimo_push": "2026-10-15T15:00:41Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 131255
+     "stelle": 131265
     }
    ]
   },
@@ -413,11 +413,11 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-10-15T13:28:18Z",
+   "ultimo_push": "2026-10-15T15:03:18Z",
    "storico": [
     {
      "data": "2026-10-15",
-     "stelle": 78045
+     "stelle": 78055
     }
    ]
   }

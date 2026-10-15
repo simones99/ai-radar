@@ -1,6 +1,6 @@
 {
  "generato": "2026-10-15",
- "base_domanda": "open-source",
+ "base_domanda": "lavoro",
  "crescita_lavoro_nello_slancio": false,
  "quadranti": {
   "impara-ora": "Impara ora",
@@ -16,9 +16,9 @@
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
    "arxiv": null,
    "github": {
-    "ultimi3": 51370,
+    "ultimi3": 51383,
     "precedenti3": 30073,
-    "crescita": 0.7081,
+    "crescita": 0.7085,
     "mensile": [
      {
       "mese": "2025-09",
@@ -66,21 +66,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 17625
+      "n": 17628
      },
      {
       "mese": "2026-09",
-      "n": 17473
+      "n": 17483
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 12.54,
+     "es": 18.24,
+     "fr": 6.07,
+     "gb": 24.77,
+     "it": 189.06,
+     "nl": 18.08,
+     "pl": 7.93,
+     "us": 46.59
+    },
+    "media": 40.41,
+    "media_ue": 41.986,
+    "usa": 46.594,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.8,
    "domanda": 1.0,
    "quadrante": "impara-ora",
    "slancio_prec": 0.7333,
-   "domanda_prec": 1.0,
-   "quadrante_prec": "impara-ora"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "coding-agenti",
@@ -89,9 +105,9 @@
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
    "arxiv": null,
    "github": {
-    "ultimi3": 3478,
+    "ultimi3": 3479,
     "precedenti3": 2067,
-    "crescita": 0.681,
+    "crescita": 0.6815,
     "mensile": [
      {
       "mese": "2025-09",
@@ -139,7 +155,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 1355
+      "n": 1356
      },
      {
       "mese": "2026-09",
@@ -147,13 +163,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 1.64,
+     "es": 6.59,
+     "fr": 0.45,
+     "gb": 3.67,
+     "it": 2.36,
+     "nl": 1.18,
+     "pl": 5.46,
+     "us": 8.72
+    },
+    "media": 3.757,
+    "media_ue": 2.945,
+    "usa": 8.718,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.7333,
-   "domanda": 0.6,
-   "quadrante": "impara-ora",
+   "domanda": 0.4,
+   "quadrante": "prova",
    "slancio_prec": 0.8667,
-   "domanda_prec": 0.5333,
-   "quadrante_prec": "impara-ora"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "mcp",
@@ -162,9 +194,9 @@
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
    "arxiv": null,
    "github": {
-    "ultimi3": 36485,
+    "ultimi3": 36489,
     "precedenti3": 25412,
-    "crescita": 0.4357,
+    "crescita": 0.4358,
     "mensile": [
      {
       "mese": "2025-09",
@@ -212,21 +244,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 11528
+      "n": 11526
      },
      {
       "mese": "2026-09",
-      "n": 13949
+      "n": 13955
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 0.72,
+     "es": 6.9,
+     "fr": 1.09,
+     "gb": 2.11,
+     "it": 2.58,
+     "nl": 0.53,
+     "pl": 7.31,
+     "us": 5.68
+    },
+    "media": 3.364,
+    "media_ue": 3.188,
+    "usa": 5.676,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.6,
-   "domanda": 0.9333,
-   "quadrante": "impara-ora",
+   "domanda": 0.3333,
+   "quadrante": "prova",
    "slancio_prec": 0.2667,
-   "domanda_prec": 0.9333,
-   "quadrante_prec": "consolida"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "rag",
@@ -235,9 +283,9 @@
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
    "arxiv": null,
    "github": {
-    "ultimi3": 17590,
+    "ultimi3": 17594,
     "precedenti3": 14129,
-    "crescita": 0.2449,
+    "crescita": 0.2452,
     "mensile": [
      {
       "mese": "2025-09",
@@ -285,21 +333,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 5779
+      "n": 5780
      },
      {
       "mese": "2026-09",
-      "n": 5531
+      "n": 5534
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 2.3,
+     "es": 12.57,
+     "fr": 6.31,
+     "gb": 2.77,
+     "it": 5.58,
+     "nl": 2.03,
+     "pl": 12.56,
+     "us": 4.7
+    },
+    "media": 6.102,
+    "media_ue": 6.891,
+    "usa": 4.698,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.2667,
-   "domanda": 0.8667,
+   "domanda": 0.5333,
    "quadrante": "consolida",
    "slancio_prec": 0.5333,
-   "domanda_prec": 0.8667,
-   "quadrante_prec": "impara-ora"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "valutazione",
@@ -308,9 +372,9 @@
    "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
    "arxiv": null,
    "github": {
-    "ultimi3": 3869,
+    "ultimi3": 3870,
     "precedenti3": 1687,
-    "crescita": 1.2896,
+    "crescita": 1.2902,
     "mensile": [
      {
       "mese": "2025-09",
@@ -362,17 +426,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 1425
+      "n": 1426
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 0.38,
+     "es": 5.77,
+     "fr": 1.53,
+     "gb": 3.16,
+     "it": 1.36,
+     "nl": 0.32,
+     "pl": 4.32,
+     "us": 6.12
+    },
+    "media": 2.871,
+    "media_ue": 2.281,
+    "usa": 6.116,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 1.0,
-   "domanda": 0.6667,
-   "quadrante": "impara-ora",
+   "domanda": 0.2667,
+   "quadrante": "prova",
    "slancio_prec": 1.0,
-   "domanda_prec": 0.6,
-   "quadrante_prec": "impara-ora"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "post-training",
@@ -439,13 +519,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 0.06,
+     "es": 1.55,
+     "fr": 0.71,
+     "gb": 0.53,
+     "it": 1.86,
+     "nl": 0.21,
+     "pl": 1.65,
+     "us": 0.93
+    },
+    "media": 0.937,
+    "media_ue": 1.007,
+    "usa": 0.926,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.1333,
    "domanda": 0.1333,
    "quadrante": "osserva",
    "slancio_prec": 0.1333,
-   "domanda_prec": 0.1333,
-   "quadrante_prec": "osserva"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "context-engineering",
@@ -454,9 +550,9 @@
    "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
    "arxiv": null,
    "github": {
-    "ultimi3": 6839,
+    "ultimi3": 6838,
     "precedenti3": 5893,
-    "crescita": 0.1604,
+    "crescita": 0.1602,
     "mensile": [
      {
       "mese": "2025-09",
@@ -504,7 +600,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 2318
+      "n": 2317
      },
      {
       "mese": "2026-09",
@@ -512,13 +608,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 17.65,
+     "es": 31.42,
+     "fr": 4.88,
+     "gb": 7.91,
+     "it": 10.16,
+     "nl": 3.53,
+     "pl": 20.59,
+     "us": 18.16
+    },
+    "media": 14.287,
+    "media_ue": 14.706,
+    "usa": 18.158,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.2,
-   "domanda": 0.8,
+   "domanda": 0.6667,
    "quadrante": "consolida",
    "slancio_prec": 0.2,
-   "domanda_prec": 0.8,
-   "quadrante_prec": "consolida"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "sicurezza",
@@ -585,13 +697,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 1.87,
+     "es": 11.85,
+     "fr": 0.37,
+     "gb": 5.16,
+     "it": 221.89,
+     "nl": 2.89,
+     "pl": 6.38,
+     "us": 9.56
+    },
+    "media": 32.497,
+    "media_ue": 40.876,
+    "usa": 9.557,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.4667,
-   "domanda": 0.4,
-   "quadrante": "osserva",
+   "domanda": 0.8667,
+   "quadrante": "consolida",
    "slancio_prec": 0.3333,
-   "domanda_prec": 0.4,
-   "quadrante_prec": "osserva"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "governance",
@@ -600,9 +728,9 @@
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
    "arxiv": null,
    "github": {
-    "ultimi3": 2466,
+    "ultimi3": 2465,
     "precedenti3": 2305,
-    "crescita": 0.0697,
+    "crescita": 0.0693,
     "mensile": [
      {
       "mese": "2025-09",
@@ -650,21 +778,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 905
+      "n": 903
      },
      {
       "mese": "2026-09",
-      "n": 777
+      "n": 778
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 3.61,
+     "es": 25.14,
+     "fr": 1.06,
+     "gb": 10.52,
+     "it": 187.92,
+     "nl": 2.78,
+     "pl": 15.24,
+     "us": 14.15
+    },
+    "media": 32.551,
+    "media_ue": 39.29,
+    "usa": 14.151,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.0667,
-   "domanda": 0.4667,
-   "quadrante": "osserva",
+   "domanda": 0.9333,
+   "quadrante": "consolida",
    "slancio_prec": 0.0667,
-   "domanda_prec": 0.4667,
-   "quadrante_prec": "osserva"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "dati-per-ai",
@@ -731,13 +875,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 1.71,
+     "es": 14.84,
+     "fr": 1.12,
+     "gb": 8.41,
+     "it": 33.48,
+     "nl": 7.81,
+     "pl": 5.35,
+     "us": 16.26
+    },
+    "media": 11.122,
+    "media_ue": 10.717,
+    "usa": 16.259,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.4,
-   "domanda": 0.7333,
+   "domanda": 0.6,
    "quadrante": "consolida",
    "slancio_prec": 0.4667,
-   "domanda_prec": 0.7333,
-   "quadrante_prec": "consolida"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "text-to-sql",
@@ -746,9 +906,9 @@
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
    "arxiv": null,
    "github": {
-    "ultimi3": 616,
+    "ultimi3": 617,
     "precedenti3": 348,
-    "crescita": 0.7592,
+    "crescita": 0.762,
     "mensile": [
      {
       "mese": "2025-09",
@@ -800,17 +960,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 238
+      "n": 239
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 0.0,
+     "es": 0.0,
+     "fr": 0.0,
+     "gb": 0.0,
+     "it": 0.0,
+     "nl": 0.0,
+     "pl": 0.0,
+     "us": 0.0
+    },
+    "media": 0.0,
+    "media_ue": 0.0,
+    "usa": 0.002,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.8667,
-   "domanda": 0.0667,
+   "domanda": 0.0,
    "quadrante": "prova",
    "slancio_prec": 0.9333,
-   "domanda_prec": 0.0667,
-   "quadrante_prec": "prova"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "vector-db",
@@ -819,9 +995,9 @@
    "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
    "arxiv": null,
    "github": {
-    "ultimi3": 1721,
+    "ultimi3": 1723,
     "precedenti3": 1852,
-    "crescita": -0.0705,
+    "crescita": -0.0695,
     "mensile": [
      {
       "mese": "2025-09",
@@ -873,17 +1049,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 459
+      "n": 461
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 1.02,
+     "es": 19.99,
+     "fr": 0.85,
+     "gb": 4.79,
+     "it": 3.08,
+     "nl": 0.21,
+     "pl": 0.82,
+     "us": 11.6
+    },
+    "media": 5.294,
+    "media_ue": 4.328,
+    "usa": 11.596,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.0,
-   "domanda": 0.3333,
+   "domanda": 0.4667,
    "quadrante": "osserva",
    "slancio_prec": 0.0,
-   "domanda_prec": 0.3333,
-   "quadrante_prec": "osserva"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "multimodale",
@@ -892,9 +1084,9 @@
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
    "arxiv": null,
    "github": {
-    "ultimi3": 1257,
+    "ultimi3": 1258,
     "precedenti3": 863,
-    "crescita": 0.4539,
+    "crescita": 0.4551,
     "mensile": [
      {
       "mese": "2025-09",
@@ -942,7 +1134,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 539
+      "n": 540
      },
      {
       "mese": "2026-09",
@@ -950,13 +1142,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 0.28,
+     "es": 3.5,
+     "fr": 0.19,
+     "gb": 1.08,
+     "it": 2.65,
+     "nl": 0.75,
+     "pl": 1.54,
+     "us": 2.33
+    },
+    "media": 1.54,
+    "media_ue": 1.486,
+    "usa": 2.332,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.6667,
    "domanda": 0.2,
    "quadrante": "prova",
    "slancio_prec": 0.4,
-   "domanda_prec": 0.2,
-   "quadrante_prec": "osserva"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "llmops",
@@ -1023,13 +1231,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 5.5,
+     "es": 46.47,
+     "fr": 7.86,
+     "gb": 7.55,
+     "it": 11.09,
+     "nl": 5.35,
+     "pl": 39.63,
+     "us": 14.27
+    },
+    "media": 17.214,
+    "media_ue": 19.315,
+    "usa": 14.27,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.3333,
-   "domanda": 0.2667,
-   "quadrante": "osserva",
+   "domanda": 0.7333,
+   "quadrante": "consolida",
    "slancio_prec": 0.8,
-   "domanda_prec": 0.2667,
-   "quadrante_prec": "prova"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "modelli-locali",
@@ -1096,13 +1320,29 @@
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 2.5,
+     "es": 36.47,
+     "fr": 1.31,
+     "gb": 8.67,
+     "it": 74.61,
+     "nl": 7.7,
+     "pl": 12.87,
+     "us": 11.69
+    },
+    "media": 19.479,
+    "media_ue": 22.578,
+    "usa": 11.69,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.5333,
-   "domanda": 0.5333,
+   "domanda": 0.8,
    "quadrante": "impara-ora",
    "slancio_prec": 0.6,
-   "domanda_prec": 0.6667,
-   "quadrante_prec": "impara-ora"
+   "domanda_prec": null,
+   "quadrante_prec": null
   },
   {
    "id": "robotica",
@@ -1111,9 +1351,9 @@
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "arxiv": null,
    "github": {
-    "ultimi3": 479,
+    "ultimi3": 480,
     "precedenti3": 224,
-    "crescita": 1.1135,
+    "crescita": 1.1179,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1165,17 +1405,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 182
+      "n": 183
      }
     ]
    },
-   "lavoro": null,
+   "lavoro": {
+    "ogni_10mila": {
+     "de": 0.12,
+     "es": 0.62,
+     "fr": 0.13,
+     "gb": 0.48,
+     "it": 1.72,
+     "nl": 0.21,
+     "pl": 0.31,
+     "us": 1.47
+    },
+    "media": 0.633,
+    "media_ue": 0.518,
+    "usa": 1.47,
+    "crescita": null,
+    "data": "2026-10-15"
+   },
    "slancio": 0.9333,
-   "domanda": 0.0,
+   "domanda": 0.0667,
    "quadrante": "prova",
    "slancio_prec": 0.6667,
-   "domanda_prec": 0.0,
-   "quadrante_prec": "prova"
+   "domanda_prec": null,
+   "quadrante_prec": null
   }
  ]
 }

@@ -1,0 +1,495 @@
+{
+ "fonte": "Artificial Analysis",
+ "url": "https://artificialanalysis.ai/",
+ "data": "2026-10-15",
+ "modelli": [
+  {
+   "nome": "Claude Opus 5.5 (Max, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 57.6,
+   "coding": null,
+   "prezzo": 8.0,
+   "velocita": 97.765
+  },
+  {
+   "nome": "Claude Sonnet 5.5 (Max, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 56.0,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 139.951
+  },
+  {
+   "nome": "Claude Opus 5.5 (Xhigh, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 56.0,
+   "coding": null,
+   "prezzo": 8.0,
+   "velocita": 76.378
+  },
+  {
+   "nome": "Muse Wonder Full (Max)",
+   "creatore": "Meta",
+   "indice": 55.8,
+   "coding": null,
+   "prezzo": 0.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Claude Opus 5.5 (High, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 53.6,
+   "coding": null,
+   "prezzo": 8.0,
+   "velocita": 71.373
+  },
+  {
+   "nome": "Claude Fable 5.1 (Max, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 53.4,
+   "coding": 81.6,
+   "prezzo": 20.0,
+   "velocita": 64.451
+  },
+  {
+   "nome": "Claude Fable 5.1 (Xhigh, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 53.2,
+   "coding": 80.7,
+   "prezzo": 20.0,
+   "velocita": 53.612
+  },
+  {
+   "nome": "GPT-6 Astra (Max)",
+   "creatore": "OpenAI",
+   "indice": 52.7,
+   "coding": 76.9,
+   "prezzo": 20.0,
+   "velocita": 47.852
+  },
+  {
+   "nome": "Gemini 4 Argon (High)",
+   "creatore": "Google",
+   "indice": 52.6,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Muse Wonder (Max)",
+   "creatore": "Meta",
+   "indice": 52.4,
+   "coding": null,
+   "prezzo": 8.0,
+   "velocita": 116.818
+  },
+  {
+   "nome": "GPT-6 Astra (Xhigh)",
+   "creatore": "OpenAI",
+   "indice": 52.4,
+   "coding": 75.9,
+   "prezzo": 20.0,
+   "velocita": 43.164
+  },
+  {
+   "nome": "Claude Sonnet 5.5 (Xhigh, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 51.9,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 94.139
+  },
+  {
+   "nome": "GPT-6.1 Sol (Max)",
+   "creatore": "OpenAI",
+   "indice": 51.8,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 49.24
+  },
+  {
+   "nome": "Claude Opus 5.5 (Medium, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 51.2,
+   "coding": null,
+   "prezzo": 8.0,
+   "velocita": 71.031
+  },
+  {
+   "nome": "Claude Fable 5.1 (High, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 51.2,
+   "coding": 79.1,
+   "prezzo": 20.0,
+   "velocita": 51.653
+  },
+  {
+   "nome": "GPT-6.1 Sol (Xhigh)",
+   "creatore": "OpenAI",
+   "indice": 51.0,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 49.245
+  },
+  {
+   "nome": "GPT-6 Astra (High)",
+   "creatore": "OpenAI",
+   "indice": 50.9,
+   "coding": 77.1,
+   "prezzo": 20.0,
+   "velocita": 44.338
+  },
+  {
+   "nome": "Claude Opus 5 (Max)",
+   "creatore": "Anthropic",
+   "indice": 50.8,
+   "coding": 78.0,
+   "prezzo": 10.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-6.1 Sol (High)",
+   "creatore": "OpenAI",
+   "indice": 50.2,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 49.805
+  },
+  {
+   "nome": "Claude Opus 5 (Xhigh)",
+   "creatore": "Anthropic",
+   "indice": 49.7,
+   "coding": 77.0,
+   "prezzo": 10.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Claude Fable 5 (Max, Opus 4.8 Fallback)",
+   "creatore": "Anthropic",
+   "indice": 49.6,
+   "coding": 76.5,
+   "prezzo": 20.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-6 Astra (Medium)",
+   "creatore": "OpenAI",
+   "indice": 49.6,
+   "coding": 76.7,
+   "prezzo": 20.0,
+   "velocita": 43.203
+  },
+  {
+   "nome": "Claude Fable 5.1 (Medium, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 48.9,
+   "coding": 77.1,
+   "prezzo": 20.0,
+   "velocita": 51.678
+  },
+  {
+   "nome": "Claude Opus 5 (High)",
+   "creatore": "Anthropic",
+   "indice": 48.1,
+   "coding": 76.5,
+   "prezzo": 10.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Muse Spark 1.3 (Max)",
+   "creatore": "Meta",
+   "indice": 48.1,
+   "coding": 75.8,
+   "prezzo": 2.0,
+   "velocita": 134.631
+  },
+  {
+   "nome": "GPT-6.1 Sol (Medium)",
+   "creatore": "OpenAI",
+   "indice": 47.8,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 48.71
+  },
+  {
+   "nome": "GPT-6 Sol (Max)",
+   "creatore": "OpenAI",
+   "indice": 47.6,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-5.6 Sol (Max)",
+   "creatore": "OpenAI",
+   "indice": 47.0,
+   "coding": 77.4,
+   "prezzo": 8.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Claude Fable 5.1 (Low, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 46.8,
+   "coding": 75.2,
+   "prezzo": 20.0,
+   "velocita": 51.645
+  },
+  {
+   "nome": "Claude Sonnet 5.5 (High, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 46.8,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 94.591
+  },
+  {
+   "nome": "Grok 4.7 (Xhigh)",
+   "creatore": "SpaceXAI",
+   "indice": 46.4,
+   "coding": null,
+   "prezzo": 3.0,
+   "velocita": 77.809
+  },
+  {
+   "nome": "Grok 4.7 (High)",
+   "creatore": "SpaceXAI",
+   "indice": 46.3,
+   "coding": null,
+   "prezzo": 3.0,
+   "velocita": 67.359
+  },
+  {
+   "nome": "MiMo-V2.6-Pro",
+   "creatore": "Xiaomi",
+   "indice": 46.3,
+   "coding": null,
+   "prezzo": 0.544,
+   "velocita": 47.846
+  },
+  {
+   "nome": "GPT-6 Astra (Low)",
+   "creatore": "OpenAI",
+   "indice": 45.8,
+   "coding": 75.7,
+   "prezzo": 20.0,
+   "velocita": 43.229
+  },
+  {
+   "nome": "Qwen3.8 Max (0902)",
+   "creatore": "Alibaba",
+   "indice": 45.4,
+   "coding": 76.2,
+   "prezzo": 3.0,
+   "velocita": 39.468
+  },
+  {
+   "nome": "Muse Spark 1.3 (Xhigh)",
+   "creatore": "Meta",
+   "indice": 45.1,
+   "coding": 76.5,
+   "prezzo": 2.0,
+   "velocita": 289.318
+  },
+  {
+   "nome": "Claude Opus 5 (Medium)",
+   "creatore": "Anthropic",
+   "indice": 44.8,
+   "coding": 74.3,
+   "prezzo": 10.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GLM-5.3 (Max)",
+   "creatore": "Z AI",
+   "indice": 44.8,
+   "coding": 74.8,
+   "prezzo": 2.15,
+   "velocita": 71.333
+  },
+  {
+   "nome": "Grok 4.6 (High)",
+   "creatore": "SpaceXAI",
+   "indice": 44.3,
+   "coding": 76.8,
+   "prezzo": 3.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-6 Sol (Xhigh)",
+   "creatore": "OpenAI",
+   "indice": 44.2,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Grok 4.6 (Xhigh)",
+   "creatore": "SpaceXAI",
+   "indice": 44.2,
+   "coding": 75.9,
+   "prezzo": 3.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-5.6 Sol (Xhigh)",
+   "creatore": "OpenAI",
+   "indice": 44.0,
+   "coding": 78.3,
+   "prezzo": 8.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Step 5 Preview",
+   "creatore": "StepFun",
+   "indice": 43.7,
+   "coding": null,
+   "prezzo": 1.425,
+   "velocita": 84.868
+  },
+  {
+   "nome": "Kimi K3 (Max)",
+   "creatore": "Kimi",
+   "indice": 43.6,
+   "coding": 76.2,
+   "prezzo": 6.0,
+   "velocita": 43.614
+  },
+  {
+   "nome": "Claude Haiku 5.5 (Max)",
+   "creatore": "Anthropic",
+   "indice": 43.4,
+   "coding": null,
+   "prezzo": 0.2,
+   "velocita": 240.224
+  },
+  {
+   "nome": "Grok 4.6 (Medium)",
+   "creatore": "SpaceXAI",
+   "indice": 42.8,
+   "coding": 74.4,
+   "prezzo": 3.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-6 Sol (High)",
+   "creatore": "OpenAI",
+   "indice": 42.4,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "GPT-5.6 Sol (High)",
+   "creatore": "OpenAI",
+   "indice": 42.3,
+   "coding": 77.2,
+   "prezzo": 8.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Claude Opus 5.5 (Low, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 42.3,
+   "coding": null,
+   "prezzo": 8.0,
+   "velocita": 72.162
+  },
+  {
+   "nome": "Grok 4.7 (Low)",
+   "creatore": "SpaceXAI",
+   "indice": 42.2,
+   "coding": null,
+   "prezzo": 3.0,
+   "velocita": 65.923
+  },
+  {
+   "nome": "GPT-6.1 Sol (Low)",
+   "creatore": "OpenAI",
+   "indice": 42.1,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 47.3
+  },
+  {
+   "nome": "GPT-5.6 Terra (Max)",
+   "creatore": "OpenAI",
+   "indice": 42.1,
+   "coding": 76.7,
+   "prezzo": 4.5,
+   "velocita": 107.591
+  },
+  {
+   "nome": "GLM-5.3-Flash",
+   "creatore": "Z AI",
+   "indice": 41.8,
+   "coding": 71.5,
+   "prezzo": 0.237,
+   "velocita": 63.34
+  },
+  {
+   "nome": "Claude Opus 4.8 (Max)",
+   "creatore": "Anthropic",
+   "indice": 41.8,
+   "coding": 74.3,
+   "prezzo": 10.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Claude Haiku 5.5 (Xhigh)",
+   "creatore": "Anthropic",
+   "indice": 41.2,
+   "coding": null,
+   "prezzo": 0.2,
+   "velocita": 171.097
+  },
+  {
+   "nome": "Ling 3.1 Flash",
+   "creatore": "InclusionAI",
+   "indice": 41.1,
+   "coding": null,
+   "prezzo": 0.45,
+   "velocita": 213.745
+  },
+  {
+   "nome": "Gemini 3.8 Flash (High)",
+   "creatore": "Google",
+   "indice": 40.9,
+   "coding": 76.3,
+   "prezzo": 1.5,
+   "velocita": 130.205
+  },
+  {
+   "nome": "Claude Sonnet 5.5 (Medium, Default Fallback)",
+   "creatore": "Anthropic",
+   "indice": 40.8,
+   "coding": null,
+   "prezzo": 4.0,
+   "velocita": 90.316
+  },
+  {
+   "nome": "Claude Opus 4.7 (Max)",
+   "creatore": "Anthropic",
+   "indice": 40.7,
+   "coding": 73.6,
+   "prezzo": 10.0,
+   "velocita": 0.0
+  },
+  {
+   "nome": "Qwen3.8 Max",
+   "creatore": "Alibaba",
+   "indice": 40.2,
+   "coding": 71.8,
+   "prezzo": 3.0,
+   "velocita": 0.0
+  }
+ ],
+ "storico": [
+  {
+   "data": "2026-10-15",
+   "indice_max": 57.6,
+   "modello_max": "Claude Opus 5.5 (Max, Default Fallback)",
+   "prezzo_mediano_top10": 8.0
+  }
+ ]
+}

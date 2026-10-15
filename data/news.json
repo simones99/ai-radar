@@ -62,6 +62,13 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "Teaching students to think and learn through questions",
+   "link": "https://openai.com/index/teaching-students-to-think-and-learn-through-questions",
+   "data": "2026-10-15",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "[AINews] Modal’s $1B ARR, $16B Series D makes it NYC’s newest AI Infra Decacorn, 3x usage and 3x valuation in 5 months, 15x in 1 yr",
    "link": "https://www.latent.space/p/ainews-modals-1b-arr-16b-series-d",
    "data": "2026-10-15",
@@ -358,13 +365,6 @@
   {
    "titolo": "LegalOn halves Codex costs while maintaining development speed",
    "link": "https://openai.com/index/legalon-halves-codex-costs",
-   "data": "2026-10-08",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Disrupting AI-enabled “false front” operations",
-   "link": "https://openai.com/index/disrupting-ai-enabled-false-front-operations",
    "data": "2026-10-08",
    "fonte": "OpenAI",
    "tema": "prodotti"
@@ -746,13 +746,6 @@
    "data": "2026-09-04",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "Import AI 471: Why Hugging Face worries me; space mining; FIve Eyes on AI",
-   "link": "https://jack-clark.net/2026/08/31/import-ai-471-why-hugging-face-worries-me-space-mining-five-eyes-on-ai/",
-   "data": "2026-08-31",
-   "fonte": "Import AI",
-   "tema": "ricerca"
   }
  ]
 }

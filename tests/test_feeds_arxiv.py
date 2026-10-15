@@ -103,3 +103,19 @@ def test_arxiv_waits_30_then_60_seconds_on_server_errors(tmp_path, monkeypatch):
     info = arxiv.run(s, [], date(2026, 10, 15), sleep=0, months=6)
     assert info["chiamate"] == 6
     assert [x for x in slept if x] == [30.0, 60.0]
+
+
+def test_arxiv_asks_for_one_result(tmp_path, monkeypatch):
+    # arXiv risponde 500 a max_results=0 (ottobre 2026): si chiede 1 risultato e si legge solo il totale
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    ok = Resp(200, '<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">'
+                   "<opensearch:totalResults>100</opensearch:totalResults></feed>")
+    seen = []
+
+    class S(MapSession):
+        def get(self, url, params=None, headers=None, timeout=None):
+            seen.append(params)
+            return super().get(url, params, headers, timeout)
+
+    arxiv.run(S({arxiv.API: ok}), [], date(2026, 10, 15), sleep=0, months=1)
+    assert seen and all(p["max_results"] == 1 for p in seen)

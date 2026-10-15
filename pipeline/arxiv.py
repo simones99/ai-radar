@@ -57,7 +57,8 @@ def run(s, skills: list[dict], today: date, *, sleep: float = 3.1, months: int =
         for ym in window:
             if ym in current and ym not in refresh:
                 continue
-            r = http_get(s, API, params={"search_query": build_query(phrases, ym), "start": 0, "max_results": 0},
+            # max_results=1: con 0 arXiv risponde 500; serve solo totalResults
+            r = http_get(s, API, params={"search_query": build_query(phrases, ym), "start": 0, "max_results": 1},
                          backoff=RETRY_BACKOFF)
             n = parse_total(r.text)
             if key == TOTAL_KEY and n == 0:

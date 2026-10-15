@@ -75,6 +75,24 @@ def test_feed_all_urls_fail_is_reported(tmp_path, monkeypatch):
     assert out["notizie"][0]["tema"] == "altro"
 
 
+def test_feed_same_link_in_two_feeds_is_kept_once(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    s = MapSession({
+        "https://a.example/feed": Resp(200, _rss([1, 2])),
+        "https://b.example/feed": Resp(200, _rss([1, 3])),  # "Notizia 0" con lo stesso link di a
+    })
+    info = feeds.run(s, [
+        {"name": "Uno", "url": "https://a.example/feed", "tema": "ricerca"},
+        {"name": "Due", "url": "https://b.example/feed", "tema": "prodotti"},
+    ], 45, 12)
+    out = json.loads((tmp_path / "news.json").read_text())
+    links = [n["link"] for n in out["notizie"]]
+    assert sorted(links) == ["https://example.org/0", "https://example.org/1"]
+    assert info["notizie"] == 2
+    first = next(n for n in out["notizie"] if n["link"] == "https://example.org/0")
+    assert (first["fonte"], first["tema"]) == ("Uno", "ricerca")  # resta la prima occorrenza
+
+
 def test_arxiv_waits_30_then_60_seconds_on_server_errors(tmp_path, monkeypatch):
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
     slept = []

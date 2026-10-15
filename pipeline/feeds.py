@@ -54,6 +54,10 @@ def run(s, feeds: list[dict], days: int, per_source: int) -> dict:
             log.warning("Feed %s non letto: %s", f["name"], errors[f["name"]])
     if not items:
         raise ValueError(f"nessun feed leggibile: {errors}")
+    unique: dict[str, dict] = {}  # stessa notizia in più feed: resta la prima occorrenza
+    for it in items:
+        unique.setdefault(it["link"], it)
+    items = list(unique.values())
     items.sort(key=lambda x: (x["data"], x["fonte"]), reverse=True)
     write_json(OUT, {
         "fonti": [{"nome": f["name"], "url": f["url"], "tema": f.get("tema", "altro")} for f in feeds],

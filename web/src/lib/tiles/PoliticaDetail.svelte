@@ -20,7 +20,7 @@
   <Block span={4} title="Notizie di policy">
     {#if policy.length}
       <ul class="list" aria-label="Notizie di policy">
-        {#each policy as n (n.link)}
+        {#each policy as n (n.link + '|' + n.fonte)}
           <li><a href={n.link} target="_blank" rel="noopener">{n.titolo}</a><span>{n.fonte} · {day(n.data)}</span></li>
         {/each}
       </ul>

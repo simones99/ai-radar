@@ -38,7 +38,7 @@
       </div>
     </div>
     <ul class="news" aria-label="Elenco delle notizie">
-      {#each shown as n (n.link)}
+      {#each shown as n (n.link + '|' + n.fonte)}
         <li>
           <span class="meta">{day(n.data)}</span>
           <span><a href={n.link} target="_blank" rel="noopener">{n.titolo}</a><span class="meta">{n.fonte} · {TEMI[n.tema ?? 'altro'] ?? n.tema}</span></span>

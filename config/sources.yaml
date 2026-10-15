@@ -82,3 +82,54 @@ feeds:
 # Quanti giorni di notizie tenere e quante al massimo per fonte.
 feeds_days: 45
 feeds_per_source: 12
+
+# Our World in Data: grafici del grapher (https://ourworldindata.org/grapher/<slug>).
+# colonna = nome breve della colonna nel CSV; entita = righe da tenere (assente = tutte).
+owid:
+  - id: investimenti_privati
+    slug: private-investment-in-artificial-intelligence
+    colonna: private_investment
+    entita: [World, United States, China, Europe]
+  - id: investimenti_generativa
+    slug: global-investment-in-generative-ai
+    colonna: generative_ai
+    entita: [World]
+  - id: investimenti_tipo
+    slug: corporate-investment-in-artificial-intelligence-by-type
+    colonna: corporate_investment
+  - id: imprese_ai
+    slug: share-companies-using-artificial-intelligence
+    colonna: pct_of_respondents
+  - id: uso_genai
+    slug: estimated-share-people-generative-ai
+    colonna: ai_user_share
+    entita: [World, Italy, United States, China, Germany, France, Spain, United Kingdom]
+  - id: uso_genai_ue
+    slug: share-europe-using-generative-ai
+    colonna: pct_used_genai_16_74
+  - id: uso_genai_giovani_ue
+    slug: share-of-young-people-in-european-countries-using-generative-ai-tools
+    colonna: pct_used_genai_16_24
+  - id: sviluppatori_ai
+    slug: share-of-professional-software-developers-using-ai-tools
+    colonna: yes_overall
+    entita: [World]
+  - id: annunci_ai
+    slug: share-artificial-intelligence-job-postings
+    colonna: ai_job_postings_share
+  - id: data_center_spesa
+    slug: monthly-spending-data-center-us
+    colonna: datacenter_construction_spending_real
+    entita: [United States]
+  - id: data_center_elettricita
+    slug: data-centers-share-electricity-demand
+    colonna: total_electricity_consumption__share_of_total_electricity_demand__historical
+    entita: [World, United States, China, Europe (IEA)]
+  - id: nvidia_ricavi
+    slug: nvidia-quarterly-revenue-segment
+    colonna: revenue
+    entita: [Data centers and AI, Gaming, Total]
+  - id: tsmc_ricavi
+    slug: tsmc-annual-revenue
+    colonna: revenue_usd
+    entita: [Taiwan]

@@ -134,6 +134,16 @@ def _rss(n_days_ago: list[int]):
     return f'<?xml version="1.0"?><rss version="2.0"><channel><title>T</title>{items}</channel></rss>'
 
 
+def _owid_csv(url):
+    """CSV con la colonna giusta per ogni slug configurato in sources.yaml."""
+    from pipeline.common import load_yaml
+    slug = url.rsplit("/", 1)[-1].removesuffix(".csv")
+    cfg = next(c for c in load_yaml("sources.yaml")["owid"] if c["slug"] == slug)
+    ents = cfg.get("entita") or ["World"]
+    lines = [f"entity,year,{cfg['colonna']}"] + [f'"{e}",{y},{10 + y - 2020}' for e in ents for y in (2024, 2025)]
+    return "\n".join(lines)
+
+
 class FakeSession:
     def __init__(self):
         self.headers = {}
@@ -174,6 +184,10 @@ class FakeSession:
                  "evaluations": {"artificial_analysis_intelligence_index": 70 - i},
                  "pricing": {"price_1m_blended_3_to_1": 1.5 + i}, "median_output_tokens_per_second": 80}
                 for i in range(15)]})
+        if host == "ourworldindata.org":
+            if url.endswith(".metadata.json"):
+                return FakeResponse(body={"columns": {}})
+            return FakeResponse(text=_owid_csv(url))
         if "deepmind" in url:
             return FakeResponse(status=500, text="errore")
         return FakeResponse(text=_rss([1, 3, 10, 90]))

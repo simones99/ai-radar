@@ -28,7 +28,7 @@ const seriousViolations = async (page: Page) =>
 
 test('home: tesi e 8 temi', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('quelli di un anno fa');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText("delle imprese dell'UE");
   await expect(page.locator('button.face')).toHaveCount(8);
 });
 

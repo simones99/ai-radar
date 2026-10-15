@@ -2,6 +2,8 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
 
 export const nf = (v: number, d = 0): string =>
   v.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+/** Valore come pubblicato dalla fonte: niente arrotondamenti, solo il rumore dei float oltre la 4ª cifra decimale. */
+export const exact = (v: number): string => v.toLocaleString('it-IT', { maximumFractionDigits: 4 });
 
 /** Data a mezzogiorno locale: niente salti di giorno per il fuso orario. */
 export const parseDay = (iso: string): Date => new Date(`${iso.slice(0, 10)}T12:00:00`);

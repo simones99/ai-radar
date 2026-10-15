@@ -13,7 +13,7 @@ describe('App', () => {
       return { ok: body !== undefined, json: async () => body } as Response;
     }));
     render(App);
-    expect(await screen.findByText(/quelli di un anno fa/)).toBeInTheDocument();
+    expect(await screen.findByText(/delle imprese dell'UE/)).toBeInTheDocument();
     expect(document.querySelectorAll('button.face')).toHaveLength(8);
     expect(screen.getByRole('heading', { name: 'Stato delle fonti' })).toBeInTheDocument();
     const crediti = document.getElementById('crediti')!;

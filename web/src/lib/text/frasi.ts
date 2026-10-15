@@ -2,7 +2,7 @@ import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
 } from '../data/derive';
 import type { Dataset } from '../data/types';
-import { capitalize, day, daysTo, lowerFirst, monthName, monthYear, nf } from './format';
+import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -59,23 +59,28 @@ export function headOpen(d: Dataset, _today?: Date): Head {
 }
 
 // ---------------------------------------------------------------- business
-function invest(d: Dataset) {
-  const last = owidLatest(d.owid, 'investimenti_privati', 'World');
-  const prev = owidPrev(d.owid, 'investimenti_privati', 'World');
-  return last && prev && prev.v ? { last, prev, ratio: last.v / prev.v } : null;
+// Gli investimenti AI Index sono CC BY-ND 4.0: si mostrano i valori come pubblicati, senza conversioni né rapporti.
+// Per il numero chiave e la tesi si usa Eurostat (CC BY 4.0), anche quello senza calcoli.
+function impreseUe(d: Dataset) {
+  const s = d.eurostat?.serie;
+  const ue = s?.EU27_2020;
+  if (!ue) return null;
+  const anni = Object.keys(ue).sort();
+  const t = anni[anni.length - 1];
+  const prev = anni[anni.length - 2];
+  return t ? { t, v: ue[t], prev: prev ? { t: prev, v: ue[prev] } : null, it: s?.IT?.[t] ?? null } : null;
 }
 export function faceBusiness(d: Dataset, _today?: Date): Face | null {
-  const i = invest(d);
-  return i && { fig: nf(i.last.v / 1e9), unit: 'mld $', sent: `Investimenti privati in AI nel ${i.last.t}: ${nf(i.ratio, 1)} volte il ${i.prev.t} (dollari 2021).` };
+  const e = impreseUe(d);
+  return e && { fig: exact(e.v), unit: '%', sent: `Imprese dell'UE che usano l'AI nel ${e.t}.` + (e.it != null ? ` In Italia il ${exact(e.it)}%.` : '') };
 }
 export function headBusiness(d: Dataset, _today?: Date): Head {
-  const i = invest(d);
-  if (!i) return { title: plain('Business'), deck: null };
-  const gen = owidLatest(d.owid, 'investimenti_generativa', 'World');
+  const last = owidLatest(d.owid, 'investimenti_privati', 'World');
+  if (!last) return { title: plain('Business'), deck: null };
+  const prev = owidPrev(d.owid, 'investimenti_privati', 'World');
   return {
-    title: [{ t: 'Gli investimenti privati in AI ' }, { t: `${nf(i.ratio, 1)} volte`, em: true }, { t: ' in un anno' }],
-    deck: `Nel ${i.last.t} ${nf(i.last.v / 1e9)} miliardi di dollari (a prezzi 2021) in aziende AI non quotate.` +
-      (gen && gen.t === i.last.t ? ` L'AI generativa da sola vale ${nf(gen.v / 1e9)} miliardi.` : ''),
+    title: [{ t: `Investimenti privati in AI nel ${last.t}: ` }, { t: `${exact(last.v)} dollari`, em: true }],
+    deck: 'A prezzi 2021, in aziende AI non quotate.' + (prev ? ` Nel ${prev.t}: ${exact(prev.v)} dollari.` : ''),
   };
 }
 
@@ -182,8 +187,8 @@ export function headRapporti(d: Dataset, today: Date): Head {
 // ---------------------------------------------------------------- tesi della home
 export function heroThesis(d: Dataset, today: Date): TitleParts {
   const parts: TitleParts = [];
-  const i = invest(d);
-  if (i) parts.push({ t: 'Gli investimenti privati in AI sono ' }, { t: `${nf(i.ratio, 1)} volte`, em: true }, { t: ' quelli di un anno fa.' });
+  const e = impreseUe(d);
+  if (e) parts.push({ t: "Usa l'AI il " }, { t: `${exact(e.v)}%`, em: true }, { t: " delle imprese dell'UE" + (e.prev ? `, contro il ${exact(e.prev.v)}% del ${e.prev.t}.` : '.') });
   const rows = d.radar ? radarRows(d.radar) : [];
   const { inn } = radarChanges(rows);
   if (inn.length) {

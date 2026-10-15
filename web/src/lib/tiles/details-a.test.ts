@@ -61,6 +61,11 @@ describe('Business', () => {
     expect(screen.getAllByRole('link', { name: 'Our World in Data' })[0]).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
     const inv = screen.getByRole('img', { name: 'Investimenti privati per regione' }).closest('section')!;
     expect(within(inv).getByRole('link', { name: 'CC BY-ND 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nd/4.0/');
+    // CC BY-ND: valori come pubblicati, in dollari e senza arrotondamenti
+    expect(within(inv).getByText('230.000.000.000')).toBeInTheDocument();
+    const gen = screen.getByRole('img', { name: 'Investimenti in AI generativa' }).closest('section')!;
+    expect(within(gen).getByText('143.800.000.000')).toBeInTheDocument();
+    expect(within(gen).queryByText('144')).toBeNull();
     expect(screen.getAllByText('Dati non disponibili in questo aggiornamento.').length).toBeGreaterThan(0);
     expect(within(screen.getByRole('img', { name: "Imprese europee che usano l'AI" })).getByText('Italia')).toHaveClass('hot');
   });

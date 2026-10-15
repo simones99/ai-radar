@@ -31,7 +31,7 @@
     </p>
   {/if}
   {#if table && !missing}
-    <details class="data"><summary>Vedi i dati</summary><DataTable cols={table.cols} rows={table.rows} /></details>
+    <details class="data"><summary>Vedi i dati</summary><DataTable cols={table.cols} rows={table.rows} format={table.format} /></details>
   {/if}
 </section>
 

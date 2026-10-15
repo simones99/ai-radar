@@ -2,8 +2,8 @@
   import { nf } from '../text/format';
   import type { TableData } from './types';
 
-  let { cols, rows }: TableData = $props();
-  const fmt = (v: string | number) => (typeof v === 'number' ? nf(v, Number.isInteger(v) ? 0 : 1) : v);
+  let { cols, rows, format }: TableData = $props();
+  const fmt = (v: string | number) => (typeof v === 'number' ? (format ? format(v) : nf(v, Number.isInteger(v) ? 0 : 1)) : v);
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->

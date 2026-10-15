@@ -3,12 +3,14 @@
   import { scaleBand, scaleLinear } from 'd3-scale';
   import { nf } from '../text/format';
 
-  let { data, label, height = 232, format = (v: number) => nf(v), hotLast = true }: {
+  let { data, label, height = 232, format = (v: number) => nf(v), hotLast = true, values = true }: {
     data: { k: string; v: number }[];
     label: string;
     height?: number;
     format?: (v: number) => string;
     hotLast?: boolean;
+    /** valore sopra le barre (senza, i valori stanno solo nella tabella) */
+    values?: boolean;
   } = $props();
 
   let cw = $state(0);
@@ -25,7 +27,7 @@
       {@const hot = hotLast && i === data.length - 1}
       <rect class="bar" class:hot x={x(d.k)} y={y(d.v)} width={x.bandwidth()} height={y(0) - y(d.v)} rx="6" />
       {#if hot || i % step === 0}
-        <text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>
+        {#if values}<text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>{/if}
         <text class="t10" x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={height - 8} text-anchor="middle">{d.k}</text>
       {/if}
     {/each}

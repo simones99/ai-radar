@@ -5,17 +5,21 @@
   import { nf } from '../text/format';
   import type { Series, SeriesPt } from './types';
 
-  let { series, label, height = 304, yFormat = (v: number) => nf(v), xFormat = (v: number) => String(Math.round(v)) }: {
+  let { series, label, height = 304, yFormat = (v: number) => nf(v), xFormat = (v: number) => String(Math.round(v)), left = 40, endValues = true }: {
     series: Series[];
     label: string;
     height?: number;
     yFormat?: (v: number) => string;
     xFormat?: (v: number) => string;
+    /** margine sinistro per le etichette dell'asse y */
+    left?: number;
+    /** valore accanto al nome a fine linea */
+    endValues?: boolean;
   } = $props();
 
   let cw = $state(0);
   const w = $derived(Math.max(cw, 280));
-  const m = { l: 40, r: 96, t: 16, b: 32 };
+  const m = $derived({ l: left, r: 96, t: 16, b: 32 });
   const all = $derived(series.flatMap((s) => s.pts));
   const x = $derived(scaleLinear(extent(all, (p) => p.x) as [number, number], [m.l, w - m.r]));
   const y = $derived(scaleLinear([0, max(all, (p) => p.y) ?? 1], [height - m.b, m.t]).nice());
@@ -47,7 +51,7 @@
       {/if}
     {/each}
     {#each ends as e (e.s.name)}
-      <text class={e.s.hot ? 't12b hot' : 't12'} x={w - m.r + 10} y={e.ty + 4}>{e.s.name} {yFormat(e.lp.y)}</text>
+      <text class={e.s.hot ? 't12b hot' : 't12'} x={w - m.r + 10} y={e.ty + 4}>{e.s.name}{endValues ? ` ${yFormat(e.lp.y)}` : ''}</text>
     {/each}
   </svg>
 </div>

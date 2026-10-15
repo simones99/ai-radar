@@ -4,7 +4,7 @@
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import { owidLatestByEntity, owidPoints, tNum } from '../data/derive';
-  import { nf } from '../text/format';
+  import { exact, nf } from '../text/format';
   import { barsTable, dotsTable, fmtYm, owidCite, seriesTable, MISSING } from './cite';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
@@ -14,13 +14,15 @@
   const head = $derived(tile.head(data, today));
   const o = $derived(data.owid);
   const mld = (v: number) => nf(v, v < 10 ? 1 : 0);
+  // investimenti e imprese: serie AI Index in CC BY-ND 4.0, quindi valori come pubblicati (dollari, non miliardi) e nessun calcolo
+  const ND = 'Dollari USA a prezzi 2021, come pubblicati dalla fonte.';
   const REG: [string, string][] = [['United States', 'USA'], ['China', 'Cina'], ['Europe', 'Europa']];
-  const inv = $derived(REG.map(([e, name]) => ({ name, hot: e === 'United States', pts: owidPoints(o, 'investimenti_privati', e).map((p) => ({ x: tNum(p.t), y: p.v / 1e9 })) })).filter((s) => s.pts.length));
-  const gen = $derived(owidPoints(o, 'investimenti_generativa', 'World').map((p) => ({ k: p.t, v: p.v / 1e9 })));
+  const inv = $derived(REG.map(([e, name]) => ({ name, hot: e === 'United States', pts: owidPoints(o, 'investimenti_privati', e).map((p) => ({ x: tNum(p.t), y: p.v })) })).filter((s) => s.pts.length));
+  const gen = $derived(owidPoints(o, 'investimenti_generativa', 'World').map((p) => ({ k: p.t, v: p.v })));
   const TIPI: Record<string, string> = { 'Merger/acquisition': 'Acquisizioni', 'Minority stake': 'Quote di minoranza', 'Private investment': 'Investimenti privati', 'Public offering': 'Quotazioni' };
   const byType = $derived.by(() => {
     const m = owidLatestByEntity(o, 'investimenti_tipo');
-    return Object.entries(TIPI).filter(([e]) => m.has(e)).map(([e, k]) => ({ k, v: (m.get(e)?.now.v ?? 0) / 1e9 })).sort((a, b) => a.v - b.v);
+    return Object.entries(TIPI).filter(([e]) => m.has(e)).map(([e, k]) => ({ k, v: m.get(e)?.now.v ?? 0 })).sort((a, b) => a.v - b.v);
   });
   const AREE: Record<string, string> = { 'All geographies': 'Mondo', 'Asia-Pacific': 'Asia-Pacifico', 'Developing markets': 'Paesi emergenti', Europe: 'Europa', 'Greater China': 'Cina', 'North America': 'Nord America' };
   const imprese = $derived([...owidLatestByEntity(o, 'imprese_ai')].map(([e, x]) => ({ k: AREE[e] ?? e, now: x.now.v, was: x.was?.v ?? null, hot: e === 'Europe' })).sort((a, b) => b.now - a.now));
@@ -39,24 +41,24 @@
 
 <Detail {tile} {head} {onclose}>
   <h3 class="group">Investimenti</h3>
-  <Block span={8} title="Investimenti privati per regione" note="Miliardi di dollari a prezzi 2021. Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
+  <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
     missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
-    table={seriesTable(inv, 'Anno')}>
-    <LineChart label="Investimenti privati per regione" series={inv} yFormat={mld} />
+    table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
+    <LineChart label="Investimenti privati per regione" series={inv} yFormat={exact} left={104} endValues={false} />
   </Block>
-  <Block span={4} title="Di cui AI generativa" note="Miliardi di dollari a prezzi 2021, mondo." missing={gen.length ? null : MISSING}
-    cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Miliardi $'], rows: gen.map((g) => [g.k, g.v]) }}>
-    <Bars label="Investimenti in AI generativa" data={gen} format={mld} />
+  <Block span={4} title="Di cui AI generativa" note="{ND} Mondo; i valori sono nella tabella." missing={gen.length ? null : MISSING}
+    cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
+    <Bars label="Investimenti in AI generativa" data={gen} values={false} />
   </Block>
-  <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note="Miliardi di dollari a prezzi 2021." missing={byType.length ? null : MISSING}
-    cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Miliardi $'], rows: byType.map((b) => [b.k, b.v]) }}>
-    <Bars label="Investimenti delle aziende per tipo" data={byType} format={mld} />
+  <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note="{ND} I valori sono nella tabella." missing={byType.length ? null : MISSING}
+    cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
+    <Bars label="Investimenti delle aziende per tipo" data={byType} values={false} />
   </Block>
 
   <h3 class="group">Adozione</h3>
   <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
     missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
-    table={dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima'])}>
+    table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
     <DotPlot label="Imprese che usano l'AI, per area" data={imprese} />
   </Block>
   <Block title="Imprese europee che usano l'AI, {euYear}" note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI. Punto vuoto: anno prima."

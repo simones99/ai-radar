@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { capitalize, day, daysTo, isoDay, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
+import { capitalize, day, daysTo, exact, isoDay, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
 
 describe('formati italiani', () => {
   it('numeri con separatori italiani', () => {
     expect(nf(12345.6, 1)).toBe('12.345,6');
     expect(nf(290)).toBe('290');
     expect(nf(2.216, 1)).toBe('2,2');
+  });
+  it('valori esatti, come pubblicati dalla fonte', () => {
+    expect(exact(290094148769)).toBe('290.094.148.769');
+    expect(exact(2.5554)).toBe('2,5554');
+    expect(exact(1.4890001)).toBe('1,489');
   });
   it('date brevi', () => {
     expect(day('2026-12-02')).toBe('2 dic 2026');

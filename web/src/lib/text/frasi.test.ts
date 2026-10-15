@@ -17,8 +17,9 @@ describe('numeri chiave delle card', () => {
   it('open source: tipo più frequente, senza contare "altro"', () => {
     expect(faceOpen(d, today)).toEqual({ fig: '37', unit: 'su 100', sent: 'Modelli di tendenza su Hugging Face di tipo «immagine e testo».' });
   });
-  it('business: investimenti e rapporto con l’anno prima', () => {
-    expect(faceBusiness(d, today)).toEqual({ fig: '290', unit: 'mld $', sent: 'Investimenti privati in AI nel 2025: 2,2 volte il 2024 (dollari 2021).' });
+  it('business: imprese UE che usano l’AI, valori Eurostat così come pubblicati', () => {
+    expect(faceBusiness(d, today)).toEqual({ fig: '19,95', unit: '%', sent: "Imprese dell'UE che usano l'AI nel 2025. In Italia il 16,4%." });
+    expect(faceBusiness({}, today)).toBeNull();
   });
   it('persone: mondo e Italia', () => {
     expect(facePersone(d, today)?.sent).toBe("Persone nel mondo che usano l'AI generativa. In Italia il 30,2%.");
@@ -64,11 +65,14 @@ describe('titoli e tesi', () => {
     expect(h.deck).toBe('RAG esce da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
   });
   it('business e politica', () => {
-    expect(text(headBusiness(d, today).title)).toBe('Gli investimenti privati in AI 2,2 volte in un anno');
+    // serie CC BY-ND: valori originali, senza conversioni né rapporti
+    const hb = headBusiness(d, today);
+    expect(text(hb.title)).toBe('Investimenti privati in AI nel 2025: 290.094.148.769 dollari');
+    expect(hb.deck).toBe('A prezzi 2021, in aziende AI non quotate. Nel 2024: 130.850.813.417 dollari.');
     expect(text(headPolitica(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
   });
   it('tesi della home e riserva', () => {
-    expect(text(heroThesis(d, today))).toBe('Gli investimenti privati in AI sono 2,2 volte quelli di un anno fa. MCP entra tra le competenze da imparare ora.');
+    expect(text(heroThesis(d, today))).toBe("Usa l'AI il 19,95% delle imprese dell'UE, contro il 13,48% del 2024. MCP entra tra le competenze da imparare ora.");
     expect(text(heroThesis({}, today))).toBe("Cosa succede nell'AI questa settimana.");
   });
   it('etichette dei tipi Hugging Face', () => {

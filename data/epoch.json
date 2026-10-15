@@ -1,0 +1,4254 @@
+{
+ "punti": [
+  {
+   "m": "AlphaGo Lee",
+   "o": "DeepMind",
+   "d": "2016-01-27",
+   "c": 1.9e+21,
+   "f": true,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Named Entity Recognition model",
+   "o": "Carnegie Mellon University (CMU)",
+   "d": "2016-03-04",
+   "c": 9.69408e+16,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "R-FCN",
+   "o": "Tsinghua University,Microsoft Research",
+   "d": "2016-06-21",
+   "c": 7.1935776e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ResNet-200",
+   "o": "Microsoft Research Asia",
+   "d": "2016-09-17",
+   "c": 2.9741645e+19,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Pointer Sentinel-LSTM (medium)",
+   "o": "MetaMind Inc,Salesforce",
+   "d": "2016-09-26",
+   "c": 7490000000000000.0,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GNMT",
+   "o": "Google",
+   "d": "2016-09-26",
+   "c": 6.620000000001e+21,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Xception",
+   "o": "Google",
+   "d": "2016-10-07",
+   "c": 4.36e+20,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "SPIDER2",
+   "o": "Griffith University,University of Iowa,Dezhou University",
+   "d": "2016-10-28",
+   "c": 1.822e+16,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "VD-LSTM+REAL Large",
+   "o": "Salesforce Research,Stanford University",
+   "d": "2016-11-04",
+   "c": 2.13e+16,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "NASv3 (CIFAR-10)",
+   "o": "Google Brain",
+   "d": "2016-11-05",
+   "c": 2.2e+21,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "NAS with base 8 and shared embeddings",
+   "o": "Google Brain",
+   "d": "2016-11-05",
+   "c": 1.05e+16,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "BIDAF",
+   "o": "University of Washington,Allen Institute for AI",
+   "d": "2016-11-05",
+   "c": 3.4686144e+18,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ResNeXt-101 (64Ã4d)",
+   "o": "University of California San Diego,Facebook",
+   "d": "2016-11-16",
+   "c": 1.2e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "PolyNet",
+   "o": "Chinese University of Hong Kong (CUHK)",
+   "d": "2016-11-17",
+   "c": 6.4e+19,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "HR-ResNet101",
+   "o": "Carnegie Mellon University (CMU)",
+   "d": "2016-12-13",
+   "c": 7.077e+18,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "EnhanceNet",
+   "o": "Max Planck Institute for Intelligent Systems",
+   "d": "2016-12-23",
+   "c": 1.3079231999999998e+17,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
+   "m": "DeepStack",
+   "o": "University of Alberta,Charles University,Czech Technical University",
+   "d": "2017-01-06",
+   "c": 1.446336e+19,
+   "f": false,
+   "a": "UE",
+   "open": false
+  },
+  {
+   "m": "MoE-Multi",
+   "o": "Jagiellonian University,Google Brain",
+   "d": "2017-01-23",
+   "c": 9.393905664e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Transformer",
+   "o": "Google Research,Google Brain",
+   "d": "2017-06-12",
+   "c": 7.4245248e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DeepLoc",
+   "o": "Technical University of Denmark,University of Copenhagen",
+   "d": "2017-07-07",
+   "c": 5.781024e+17,
+   "f": false,
+   "a": "UE",
+   "open": false
+  },
+  {
+   "m": "JFT",
+   "o": "Google Research,Carnegie Mellon University (CMU)",
+   "d": "2017-07-10",
+   "c": 8.43e+20,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ConvS2S (ensemble of 8 models)",
+   "o": "Meta AI",
+   "d": "2017-07-25",
+   "c": 5.64e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "RetinaNet-R101",
+   "o": "Facebook AI Research",
+   "d": "2017-08-07",
+   "c": 2.065392e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AWD-LSTM - 3-layer LSTM (tied) + continuous cache pointer (WT2)",
+   "o": "Salesforce Research",
+   "d": "2017-08-07",
+   "c": 2.97e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "OpenAI TI7 DOTA 1v1",
+   "o": "OpenAI",
+   "d": "2017-08-11",
+   "c": 6.046095222592002e+20,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "EI-REHN-1000D",
+   "o": "Korea Advanced Institute of Science and Technology (KAIST)",
+   "d": "2017-08-14",
+   "c": 1.06e+16,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "Libratus",
+   "o": "Carnegie Mellon University (CMU)",
+   "d": "2017-08-19",
+   "c": 5.51e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GL-LWGC-AWD-MoS-LSTM + dynamic evaluation (WT2)",
+   "o": "Ben-Gurion University of the Negev",
+   "d": "2017-08-29",
+   "c": 4.56e+17,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "PyramidNet",
+   "o": "Korea Advanced Institute of Science and Technology (KAIST)",
+   "d": "2017-09-06",
+   "c": 2340000000000000.0,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "ISS",
+   "o": "Duke University,Microsoft",
+   "d": "2017-09-15",
+   "c": 3400000000000000.0,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AWD-LSTM+WT+Cache+IOG (WT2)",
+   "o": "NTT Communication Science Laboratories",
+   "d": "2017-09-26",
+   "c": 3180000000000000.0,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "AlphaGo Zero",
+   "o": "DeepMind",
+   "d": "2017-10-18",
+   "c": 6.49439910290227e+20,
+   "f": true,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "AlphaGo Master",
+   "o": "DeepMind",
+   "d": "2017-10-19",
+   "c": 3.4100000001e+20,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Fraternal dropout + AWD-LSTM 3-layer (WT2)",
+   "o": "Jagiellonian University,Mila - Quebec AI (originally Montreal Institute for Learning Algorithms),University of Montreal / UniversitÃ© de MontrÃ©al",
+   "d": "2017-10-31",
+   "c": 3.06e+17,
+   "f": false,
+   "a": "UE",
+   "open": false
+  },
+  {
+   "m": "AWD-LSTM-MoS + dynamic evaluation (WT2, 2017)",
+   "o": "Carnegie Mellon University (CMU)",
+   "d": "2017-11-10",
+   "c": 3.36e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AlphaZero",
+   "o": "DeepMind",
+   "d": "2017-12-05",
+   "c": 1.0600000001e+20,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "QRNN",
+   "o": "Salesforce Research",
+   "d": "2018-02-01",
+   "c": 6.8866472e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ELMo",
+   "o": "University of Washington,Allen Institute for AI",
+   "d": "2018-02-01",
+   "c": 3300100000000010.0,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "IMPALA",
+   "o": "DeepMind",
+   "d": "2018-02-05",
+   "c": 1.68e+20,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "4 layer QRNN (h=2500)",
+   "o": "Salesforce Research",
+   "d": "2018-03-22",
+   "c": 5.9158815e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "YOLOv3",
+   "o": "University of Washington",
+   "d": "2018-04-08",
+   "c": 1.3416380824e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ResNeXt-101 32x48d",
+   "o": "Facebook",
+   "d": "2018-05-02",
+   "c": 8.74395e+21,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Dropout-LSTM+Noise(Bernoulli) (WT2)",
+   "o": "Columbia University,New York University (NYU),Princeton University",
+   "d": "2018-05-03",
+   "c": 1.27e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "aLSTM(depth-2)+RecurrentPolicy (WT2)",
+   "o": "University of Manchester,Alan Turing Institute",
+   "d": "2018-05-22",
+   "c": 7.296e+16,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "GPT-1",
+   "o": "OpenAI",
+   "d": "2018-06-01",
+   "c": 1.7578125e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "FTW (For The Win)",
+   "o": "DeepMind",
+   "d": "2018-07-03",
+   "c": 3.49e+19,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Big-Little Net (speech)",
+   "o": "IBM",
+   "d": "2018-07-10",
+   "c": 4.290048e+17,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Big-Little Net",
+   "o": "IBM",
+   "d": "2018-07-10",
+   "c": 2.46048e+17,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Big Transformer for Back-Translation",
+   "o": "Facebook AI Research,Google Brain",
+   "d": "2018-08-28",
+   "c": 4.7808e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "(ensemble): AWD-LSTM-DOC (fin) Ã 5 (WT2)",
+   "o": "NTT Communication Science Laboratories,Tohoku University",
+   "d": "2018-08-30",
+   "c": 6.66e+17,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Transformer + Simple Recurrent Unit",
+   "o": "ASAPP,Cornell University,Google,Princeton University",
+   "d": "2018-09-17",
+   "c": 1.1e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "LSTM+NeuralCache",
+   "o": "KU Leuven,ESAT - PSI,Apple",
+   "d": "2018-09-24",
+   "c": 982800000000000.0,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Transformer (Adaptive Input Embeddings) WT103",
+   "o": "Facebook AI Research",
+   "d": "2018-09-28",
+   "c": 4.47e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "BERT-Large",
+   "o": "Google",
+   "d": "2018-10-11",
+   "c": 2.85e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "TrellisNet",
+   "o": "Carnegie Mellon University (CMU),Bosch Center for Artificial Intelligence,Intel Labs",
+   "d": "2018-10-15",
+   "c": 2.78e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Mesh-TensorFlow Transformer 4.9B (language)",
+   "o": "Google Brain",
+   "d": "2018-11-05",
+   "c": 1.617408e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Mesh-TensorFlow Transformer 2.9B (translation)",
+   "o": "Google Brain",
+   "d": "2018-11-05",
+   "c": 6.84288e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Fine-tuned-AWD-LSTM-DOC (fin)",
+   "o": "Samsung R&D Institute Russia",
+   "d": "2018-11-12",
+   "c": 5.188e+16,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "Multi-cell LSTM",
+   "o": "University of Hyderabad",
+   "d": "2018-11-15",
+   "c": 2006640000000000.0,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "StyleGAN",
+   "o": "Nvidia",
+   "d": "2018-12-12",
+   "c": 3.93e+16,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Transformer-XL (257M)",
+   "o": "Carnegie Mellon University (CMU),Google Brain",
+   "d": "2019-01-09",
+   "c": 3.7832771e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Hanabi 4 player",
+   "o": "DeepMind,University of Oxford,Carnegie Mellon University (CMU),Google Brain",
+   "d": "2019-02-01",
+   "c": 4.3e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GPT-2 (1.5B)",
+   "o": "OpenAI",
+   "d": "2019-02-14",
+   "c": 1.920000000001e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "KataGo",
+   "o": "Jane Street",
+   "d": "2019-02-27",
+   "c": 2.32e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "SciBERT",
+   "o": "Allen Institute for AI",
+   "d": "2019-03-26",
+   "c": 8.926848e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Cross-lingual alignment",
+   "o": "Tel Aviv University,Massachusetts Institute of Technology (MIT)",
+   "d": "2019-04-04",
+   "c": 2.56e+18,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "WeNet (Penn Treebank)",
+   "o": "Amazon",
+   "d": "2019-04-08",
+   "c": 7.30000001e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "BERT-Large-CAS (PTB+WT2+WT103)",
+   "o": "Amazon",
+   "d": "2019-04-20",
+   "c": 1.5405e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "MuseNet",
+   "o": "OpenAI",
+   "d": "2019-04-25",
+   "c": 2.208301056e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AWD-LSTM-DRILL + dynamic evaluationâ  (WT2)",
+   "o": "IDIAP",
+   "d": "2019-05-14",
+   "c": 4.08e+17,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "DLRM-2020",
+   "o": "Facebook AI",
+   "d": "2019-05-31",
+   "c": 4e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "XLNet",
+   "o": "Carnegie Mellon University (CMU),Google Brain",
+   "d": "2019-06-01",
+   "c": 6.19e+21,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Transformer-XL Large + Phrase Induction",
+   "o": "Massachusetts Institute of Technology (MIT),University of Illinois Urbana-Champaign (UIUC)",
+   "d": "2019-06-04",
+   "c": 3.7848651e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AWD-LSTM + MoS + Partial Shuffled",
+   "o": "University of Texas at Austin",
+   "d": "2019-06-10",
+   "c": 3.15e+17,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "RoBERTa Large",
+   "o": "Facebook,University of Washington",
+   "d": "2019-07-01",
+   "c": 8.5067e+21,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Pluribus",
+   "o": "Facebook AI Research",
+   "d": "2019-07-11",
+   "c": 6.6e+16,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "trRosetta",
+   "o": "Nankai University,University of Washington,Tianjin University,Harvard University",
+   "d": "2019-08-22",
+   "c": 3.8047968e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "UDSMProt",
+   "o": "Fraunhofer Heinrich Hertz Institute",
+   "d": "2019-09-04",
+   "c": 6.37e+17,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
+   "m": "Megatron-LM (8.3B)",
+   "o": "Nvidia",
+   "d": "2019-09-17",
+   "c": 9.1e+21,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Megatron-LM (1.2B)",
+   "o": "Nvidia",
+   "d": "2019-09-17",
+   "c": 1.1304e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Megatron-BERT",
+   "o": "Nvidia",
+   "d": "2019-09-17",
+   "c": 2.2e+22,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DistilBERT",
+   "o": "Hugging Face",
+   "d": "2019-10-02",
+   "c": 1.24416e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AlphaX-1",
+   "o": "Facebook AI Research,Brown University",
+   "d": "2019-10-02",
+   "c": 8.89344e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "T5-11B",
+   "o": "Google",
+   "d": "2019-10-23",
+   "c": 3.3e+22,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "T5-3B",
+   "o": "Google",
+   "d": "2019-10-23",
+   "c": 9.0000000001e+21,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AlphaStar",
+   "o": "DeepMind",
+   "d": "2019-10-30",
+   "c": 1.0773400001e+23,
+   "f": true,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Base LM + kNN LM + Continuous Cache",
+   "o": "Stanford University,Facebook AI Research",
+   "d": "2019-11-01",
+   "c": 3.05292e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "XLM-RoBERTa",
+   "o": "Facebook AI",
+   "d": "2019-11-05",
+   "c": 2.076e+22,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Sandwich Transformer",
+   "o": "Allen Institute for AI,Facebook AI Research",
+   "d": "2019-11-10",
+   "c": 2.3504093e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "CamemBERT",
+   "o": "Facebook,INRIA,Sorbonne University",
+   "d": "2019-11-10",
+   "c": 8.3e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Noisy Student (L2)",
+   "o": "Carnegie Mellon University (CMU),Google",
+   "d": "2019-11-11",
+   "c": 2.612e+22,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "MuZero",
+   "o": "DeepMind",
+   "d": "2019-11-19",
+   "c": 4.8e+19,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Transformer-XL DeFINE (141M)",
+   "o": "University of Washington,Allen Institute for AI",
+   "d": "2019-11-27",
+   "c": 1.74276e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "MMLSTM (WT-2)",
+   "o": "Beijing University of Posts and Telecommunications,University of West London",
+   "d": "2019-12-05",
+   "c": 1.938e+17,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "MMLSTM (PTB)",
+   "o": "Beijing University of Posts and Telecommunications,University of West London",
+   "d": "2019-12-05",
+   "c": 5.8298782e+16,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "OpenAI Five Rerun",
+   "o": "OpenAI",
+   "d": "2019-12-13",
+   "c": 1.3e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "OpenAI Five",
+   "o": "OpenAI",
+   "d": "2019-12-13",
+   "c": 6.7e+22,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DD-PPO",
+   "o": "Georgia Institute of Technology,Facebook AI Research,Oregon State University,Simon Fraser University",
+   "d": "2019-12-19",
+   "c": 7.8e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AlphaFold",
+   "o": "DeepMind",
+   "d": "2020-01-15",
+   "c": 1e+20,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "ContextNet + Noisy Student",
+   "o": "Google",
+   "d": "2020-01-19",
+   "c": 8.16e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Meena",
+   "o": "Google Brain",
+   "d": "2020-01-28",
+   "c": 1.12e+23,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "TaLK Convolution",
+   "o": "Carleton University",
+   "d": "2020-02-08",
+   "c": 2.6990346e+19,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "ALBERT-xxlarge",
+   "o": "Toyota Technological Institute at Chicago,Google",
+   "d": "2020-02-09",
+   "c": 2.39e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Turing-NLG",
+   "o": "Microsoft",
+   "d": "2020-02-13",
+   "c": 1.57e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "FFN SwiGLU",
+   "o": "Google",
+   "d": "2020-02-14",
+   "c": 3.3687317e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Feedback Transformer",
+   "o": "LORIA,University of Lorraine,Facebook AI Research",
+   "d": "2020-02-21",
+   "c": 7.690547e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "TransformerXL + spectrum control",
+   "o": "University of California Los Angeles (UCLA),JD.com",
+   "d": "2020-03-11",
+   "c": 2.6289761e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Tensor-Transformer(1core)+PN (WT103)",
+   "o": "University of California (UC) Berkeley",
+   "d": "2020-03-17",
+   "c": 1.58e+18,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ELECTRA",
+   "o": "Stanford University,Google,Google Brain",
+   "d": "2020-03-23",
+   "c": 3.1e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "MetNet",
+   "o": "Google",
+   "d": "2020-03-24",
+   "c": 9.510912e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Once for All",
+   "o": "MIT-IBM Watson AI Lab,Massachusetts Institute of Technology (MIT),IBM",
+   "d": "2020-04-29",
+   "c": 6.237e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "UnifiedQA",
+   "o": "Allen Institute for AI,University of Washington",
+   "d": "2020-05-02",
+   "c": 1.65e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DETR",
+   "o": "Facebook",
+   "d": "2020-05-26",
+   "c": 4e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GPT-3 175B (davinci)",
+   "o": "OpenAI",
+   "d": "2020-05-28",
+   "c": 3.14e+23,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GShard (dense)",
+   "o": "Google",
+   "d": "2020-06-30",
+   "c": 4.765e+22,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DeLighT",
+   "o": "University of Washington,Allen Institute for AI,Facebook AI Research",
+   "d": "2020-08-03",
+   "c": 3.8016e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ERNIE-GEN (large)",
+   "o": "Baidu",
+   "d": "2020-08-06",
+   "c": 2e+20,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "ProBERTa",
+   "o": "University of Illinois Urbana-Champaign (UIUC),Reed College",
+   "d": "2020-09-01",
+   "c": 9.72e+18,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "LUKE",
+   "o": "University of Washington,National Institute of Informatics",
+   "d": "2020-10-02",
+   "c": 1.8144e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "mT5-XXL",
+   "o": "Google,Google Research",
+   "d": "2020-10-20",
+   "c": 8.2e+22,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Conformer + Wav2vec 2.0 + Noisy Student",
+   "o": "Google,Google Research,Google Brain",
+   "d": "2020-10-20",
+   "c": 7.6e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "German ELECTRA Large",
+   "o": "deepset,Bayerische Staatsbibliothek Muenchen",
+   "d": "2020-10-21",
+   "c": 1.42829568e+21,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
+   "m": "wave2vec 2.0 LARGE",
+   "o": "Facebook",
+   "d": "2020-10-22",
+   "c": 3.87072e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ViT-Huge/14",
+   "o": "Google Brain,Google Research",
+   "d": "2020-10-22",
+   "c": 4.262e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "KEPLER",
+   "o": "Tsinghua University,Mila - Quebec AI (originally Montreal Institute for Learning Algorithms),HEC,CIFAR AI Research,Princeton University,University of Montreal / UniversitÃ© de MontrÃ©al",
+   "d": "2020-11-23",
+   "c": 1.66e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AlphaFold 2",
+   "o": "DeepMind",
+   "d": "2020-11-30",
+   "c": 2.99e+21,
+   "f": false,
+   "a": "Regno Unito",
+   "open": true
+  },
+  {
+   "m": "CPM-Large",
+   "o": "Tsinghua University,Beijing Academy of Artificial Intelligence / BAAI",
+   "d": "2020-12-01",
+   "c": 2.6052e+20,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "ESM1b",
+   "o": "Facebook AI Research,New York University (NYU)",
+   "d": "2020-12-15",
+   "c": 5.1e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DensePhrases",
+   "o": "Korea University,Princeton University",
+   "d": "2020-12-23",
+   "c": 2.09952e+18,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "CT-MoS (WT2)",
+   "o": "Google,National Tsing Hua University",
+   "d": "2020-12-25",
+   "c": 5.4e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ERNIE-Doc (247M)",
+   "o": "Baidu",
+   "d": "2020-12-31",
+   "c": 3.0302798e+19,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "DALL-E",
+   "o": "OpenAI",
+   "d": "2021-01-05",
+   "c": 4.7e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "CLIP (ViT L/14@336px)",
+   "o": "OpenAI",
+   "d": "2021-01-05",
+   "c": 1.05e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Switch",
+   "o": "Google",
+   "d": "2021-01-11",
+   "c": 8.22e+22,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DeiT-B",
+   "o": "Meta AI,Sorbonne University",
+   "d": "2021-01-15",
+   "c": 7.884e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DLWP",
+   "o": "University of Washington,Microsoft Research",
+   "d": "2021-02-09",
+   "c": 5.6845152e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "MSA Transformer",
+   "o": "Facebook AI Research,University of California (UC) Berkeley,New York University (NYU)",
+   "d": "2021-02-13",
+   "c": 5.49e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "SRU++ Large",
+   "o": "ASAPP",
+   "d": "2021-02-24",
+   "c": 2.1173704e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Meta Pseudo Labels",
+   "o": "Google Brain,Google AI",
+   "d": "2021-03-01",
+   "c": 4.79e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "M6-T",
+   "o": "Alibaba",
+   "d": "2021-03-05",
+   "c": 5.5e+21,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Generative BST",
+   "o": "Facebook AI Research",
+   "d": "2021-03-05",
+   "c": 1.449e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "PLUG",
+   "o": "Alibaba",
+   "d": "2021-04-19",
+   "c": 3.5997696e+22,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "ProtT5-XL-U50",
+   "o": "Technical University of Munich,Med AI Technology,Nvidia,Oak Ridge National Laboratory,Google,Seoul National University",
+   "d": "2021-05-04",
+   "c": 1.8704498688e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ProtBERT-BFD",
+   "o": "Technical University of Munich,Nvidia,Seoul National University,Google,Oak Ridge National Laboratory,Med AI Technology",
+   "d": "2021-05-04",
+   "c": 3.9e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ADM",
+   "o": "OpenAI",
+   "d": "2021-05-11",
+   "c": 6.2e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "MedBERT",
+   "o": "Peng Cheng Laboratory,University of Texas at Houston",
+   "d": "2021-05-20",
+   "c": 9.47e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Transformer local-attention (NesT-B)",
+   "o": "Google Cloud,Google Research",
+   "d": "2021-05-26",
+   "c": 2.40576e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "CogView",
+   "o": "Tsinghua University,Alibaba DAMO Academy",
+   "d": "2021-05-26",
+   "c": 2.68e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "ByT5-XXL",
+   "o": "Google,Google Research",
+   "d": "2021-05-28",
+   "c": 8.1e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ViT-G/14",
+   "o": "Google Brain,Google Research",
+   "d": "2021-06-08",
+   "c": 5.85e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "EMDR",
+   "o": "Mila - Quebec AI (originally Montreal Institute for Learning Algorithms),McGill University,DeepMind",
+   "d": "2021-06-09",
+   "c": 1.91e+21,
+   "f": false,
+   "a": "Regno Unito",
+   "open": true
+  },
+  {
+   "m": "CoAtNet",
+   "o": "Google,Google Research,Google Brain",
+   "d": "2021-06-09",
+   "c": 4.27e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DeBERTa",
+   "o": "Microsoft",
+   "d": "2021-06-10",
+   "c": 2.588e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Denoising Diffusion Probabilistic Models (LSUN Bedroom)",
+   "o": "University of California (UC) Berkeley",
+   "d": "2021-06-11",
+   "c": 7.840125000000001e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ALIGN",
+   "o": "Google Research",
+   "d": "2021-06-11",
+   "c": 2.598670000001e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "StyleGAN3-T",
+   "o": "Nvidia,Aalto University",
+   "d": "2021-06-21",
+   "c": 1.70208e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "StyleGAN3-R",
+   "o": "Nvidia,Aalto University",
+   "d": "2021-06-21",
+   "c": 2.42784e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "EfficientNetV2-XL",
+   "o": "Google,Google Brain",
+   "d": "2021-06-23",
+   "c": 9.56e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Fold2Seq",
+   "o": "IBM,Texas A&M",
+   "d": "2021-06-24",
+   "c": 1.4e+17,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Adaptive Input Transformer + RD",
+   "o": "Microsoft Research Asia,Soochow University",
+   "d": "2021-06-28",
+   "c": 8.58e+19,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "ERNIE 3.0",
+   "o": "Baidu",
+   "d": "2021-07-05",
+   "c": 2.25e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Codex",
+   "o": "OpenAI",
+   "d": "2021-07-07",
+   "c": 7.344e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "HuBERT",
+   "o": "Facebook AI Research",
+   "d": "2021-07-27",
+   "c": 5.54e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GOAT",
+   "o": "DeepMind",
+   "d": "2021-07-27",
+   "c": 2.412e+22,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "SEER",
+   "o": "Facebook AI Research,INRIA",
+   "d": "2021-07-29",
+   "c": 1.8e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "YOLOX-X",
+   "o": "Megvii Inc",
+   "d": "2021-08-06",
+   "c": 6.34275e+20,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Zidong Taichu",
+   "o": "Chinese Academy of Sciences,Wuhan AI Computing Center",
+   "d": "2021-08-11",
+   "c": 8.016e+20,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Jurassic-1-Jumbo",
+   "o": "AI21 Labs",
+   "d": "2021-08-11",
+   "c": 3.7e+23,
+   "f": true,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "DNABERT",
+   "o": "Northeastern University",
+   "d": "2021-08-15",
+   "c": 1.07e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "XLMR-XXL",
+   "o": "Facebook AI Research",
+   "d": "2021-08-17",
+   "c": 3.366e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "FLAN 137B",
+   "o": "Google Research",
+   "d": "2021-09-03",
+   "c": 2.047e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "PermuteFormer",
+   "o": "Peking University",
+   "d": "2021-09-06",
+   "c": 2.775e+18,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "HyperCLOVA 204B",
+   "o": "NAVER",
+   "d": "2021-09-10",
+   "c": 2.0000000001e+23,
+   "f": true,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "PLATO-XL",
+   "o": "Baidu",
+   "d": "2021-09-20",
+   "c": 9.9e+21,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Turing ULRv5",
+   "o": "Microsoft",
+   "d": "2021-09-28",
+   "c": 2.8983951e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AlphaFold-Multimer",
+   "o": "Google DeepMind,DeepMind",
+   "d": "2021-10-04",
+   "c": 4.35e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Megatron-Turing NLG 530B",
+   "o": "Microsoft,Nvidia",
+   "d": "2021-10-11",
+   "c": 8.586e+23,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Yuan 1.0",
+   "o": "Inspur",
+   "d": "2021-10-12",
+   "c": 3.5380000000001e+23,
+   "f": true,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "base LM+GNN+kNN",
+   "o": "Shannon.AI,Nanjing University,Nanyang Technological University,Zhejiang University (ZJU)",
+   "d": "2021-10-17",
+   "c": 5.2587456e+19,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "S4",
+   "o": "Stanford University",
+   "d": "2021-10-31",
+   "c": 7.8328627e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Projected GAN",
+   "o": "Heidelberg University",
+   "d": "2021-11-01",
+   "c": 1.05e+19,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
+   "m": "CodeT5-base",
+   "o": "Salesforce,Nanyang Technological University",
+   "d": "2021-11-01",
+   "c": 1.56e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Masked Autoencoders ViT-H",
+   "o": "Facebook AI Research",
+   "d": "2021-11-11",
+   "c": 4.6e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Swin Transformer V2 (SwinV2-G)",
+   "o": "Microsoft Research Asia",
+   "d": "2021-11-18",
+   "c": 1.1e+21,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "BASIC-L",
+   "o": "Google",
+   "d": "2021-11-19",
+   "c": 4.12e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Florence",
+   "o": "Microsoft",
+   "d": "2021-11-22",
+   "c": 4.831e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "NÃWA",
+   "o": "Microsoft Research,Peking University",
+   "d": "2021-11-24",
+   "c": 7.24598784e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Student of Games",
+   "o": "DeepMind",
+   "d": "2021-12-06",
+   "c": 3.6679273004682866e+22,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Gopher (280B)",
+   "o": "DeepMind",
+   "d": "2021-12-08",
+   "c": 6.31e+23,
+   "f": true,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "GLaM",
+   "o": "Google",
+   "d": "2021-12-13",
+   "c": 3.6363112434e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Contriever",
+   "o": "Meta AI,University College London (UCL),PSL University,UniversitÃ© Grenoble Alpes",
+   "d": "2021-12-16",
+   "c": 1.57e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "XGLM-7.5B",
+   "o": "Meta AI,Facebook AI Research",
+   "d": "2021-12-20",
+   "c": 2.25e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ERNIE 3.0 Titan",
+   "o": "Baidu,Peng Cheng Laboratory",
+   "d": "2021-12-23",
+   "c": 1.0421e+24,
+   "f": true,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Detic",
+   "o": "Meta AI,University of Texas at Austin",
+   "d": "2022-01-07",
+   "c": 2.34399744e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "InstructGPT 175B",
+   "o": "OpenAI",
+   "d": "2022-01-27",
+   "c": 3.19181e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AlphaCode",
+   "o": "DeepMind",
+   "d": "2022-02-02",
+   "c": 2.38010000000001e+23,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "RETRO-7B",
+   "o": "DeepMind",
+   "d": "2022-02-07",
+   "c": 1.68e+22,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "GPT-NeoX-20B",
+   "o": "EleutherAI",
+   "d": "2022-02-09",
+   "c": 9.31627008e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ProteinBERT",
+   "o": "Hebrew University of Jerusalem,Ben-Gurion University of the Negev,Deep Trading",
+   "d": "2022-02-10",
+   "c": 6.5e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "LaMDA",
+   "o": "Google",
+   "d": "2022-02-10",
+   "c": 3.55e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ST-MoE",
+   "o": "Google,Google Brain,Google Research",
+   "d": "2022-02-17",
+   "c": 2.9e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "FourCastNet",
+   "o": "Nvidia,NERSC, Lawrence Berkeley National Laboratory,University of Michigan,Rice University,California Institute of Technology,Purdue University",
+   "d": "2022-02-22",
+   "c": 3.4504704e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "PolyCoder",
+   "o": "Carnegie Mellon University (CMU)",
+   "d": "2022-02-26",
+   "c": 1.1e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Statement Curriculum Learning",
+   "o": "OpenAI",
+   "d": "2022-03-02",
+   "c": 1.7901648e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ViT-G (model soup)",
+   "o": "University of Washington,Columbia University,Google,Meta AI,Tel Aviv University",
+   "d": "2022-03-10",
+   "c": 3.4e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GPT-3.5 (davinci-002)",
+   "o": "OpenAI",
+   "d": "2022-03-15",
+   "c": 2.578e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Segatron-XL large, M=384 + HCP",
+   "o": "Microsoft Research,University of Waterloo",
+   "d": "2022-03-21",
+   "c": 2.65e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Make-A-Scene",
+   "o": "Meta AI",
+   "d": "2022-03-24",
+   "c": 6.4172851e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Chinchilla",
+   "o": "DeepMind",
+   "d": "2022-03-29",
+   "c": 5.76e+23,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "PaLM (540B)",
+   "o": "Google Research",
+   "d": "2022-04-04",
+   "c": 2.5272e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DALLÂ·E 2",
+   "o": "OpenAI",
+   "d": "2022-04-06",
+   "c": 3.3695784e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "BERT-RBP",
+   "o": "Waseda University",
+   "d": "2022-04-07",
+   "c": 1.4e+20,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Stable Diffusion (LDM-KL-8-G)",
+   "o": "Runway,Ludwig Maximilian University of Munich,Heidelberg University",
+   "d": "2022-04-13",
+   "c": 5.0000000000000004e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Sparse all-MLP",
+   "o": "Meta AI",
+   "d": "2022-04-14",
+   "c": 5.32224e+20,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Flamingo",
+   "o": "DeepMind",
+   "d": "2022-04-29",
+   "c": 2.18972000000001e+23,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "OPT-175B",
+   "o": "Meta AI",
+   "d": "2022-05-02",
+   "c": 4.3e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "UL2",
+   "o": "Google Research,Google Brain",
+   "d": "2022-05-10",
+   "c": 1.2e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Gato",
+   "o": "DeepMind",
+   "d": "2022-05-12",
+   "c": 4.02e+21,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Imagen",
+   "o": "Google Brain",
+   "d": "2022-05-23",
+   "c": 1.46e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Tranception",
+   "o": "University of Oxford,Harvard Medical School,Cohere",
+   "d": "2022-05-27",
+   "c": 7.24e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GPT-2 Medium (FlashAttention)",
+   "o": "Stanford University,University at Buffalo",
+   "d": "2022-05-27",
+   "c": 8.9280922e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DITTO",
+   "o": "Tsinghua University,Apple,Westlake University,Chinese University of Hong Kong (CUHK)",
+   "d": "2022-06-06",
+   "c": 3.31776e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "CoCa",
+   "o": "Google Research",
+   "d": "2022-06-14",
+   "c": 7.3e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Parti",
+   "o": "Google Research",
+   "d": "2022-06-22",
+   "c": 5.09607936e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ProGen2-xlarge",
+   "o": "Salesforce Research,Columbia University,Johns Hopkins University",
+   "d": "2022-06-27",
+   "c": 1.35e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Minerva (540B)",
+   "o": "Google",
+   "d": "2022-06-29",
+   "c": 2.7415e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "CodeT5-large",
+   "o": "Salesforce",
+   "d": "2022-07-05",
+   "c": 2.72e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "NLLB",
+   "o": "Meta AI",
+   "d": "2022-07-06",
+   "c": 1.751113728e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "BLOOM-176B",
+   "o": "Hugging Face,BigScience",
+   "d": "2022-07-11",
+   "c": 3.65664e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ESM2-15B",
+   "o": "Meta AI,New York University (NYU),Stanford University,Massachusetts Institute of Technology (MIT)",
+   "d": "2022-07-21",
+   "c": 7.35000000001e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "OmegaPLM",
+   "o": "Massachusetts Institute of Technology (MIT),Westlake University",
+   "d": "2022-07-22",
+   "c": 1.03514112e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AlexaTM 20B",
+   "o": "Amazon",
+   "d": "2022-08-02",
+   "c": 2.04374016e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GLM-130B",
+   "o": "Tsinghua University",
+   "d": "2022-08-04",
+   "c": 3.5490054945e+23,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "BlenderBot 3",
+   "o": "McGill University,Meta AI,Mila - Quebec AI (originally Montreal Institute for Learning Algorithms)",
+   "d": "2022-08-10",
+   "c": 4.3e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "BEIT-3",
+   "o": "Microsoft",
+   "d": "2022-08-22",
+   "c": 7e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "PaLI",
+   "o": "Google",
+   "d": "2022-09-14",
+   "c": 1.69e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Whisper",
+   "o": "OpenAI",
+   "d": "2022-09-21",
+   "c": 4.2072663e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DiffDock",
+   "o": "Massachusetts Institute of Technology (MIT)",
+   "d": "2022-10-04",
+   "c": 7.2e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AlphaTensor",
+   "o": "DeepMind",
+   "d": "2022-10-05",
+   "c": 7.1414784e+20,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "GenSLM",
+   "o": "University of Chicago,Nvidia,Harvard University,Cerebras Systems,Technical University of Munich,California Institute of Technology",
+   "d": "2022-10-11",
+   "c": 1.42e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "U-PaLM (540B)",
+   "o": "Google",
+   "d": "2022-10-20",
+   "c": 2.53e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Flan-PaLM 540B",
+   "o": "Google",
+   "d": "2022-10-20",
+   "c": 2.540000000001e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "eDiff-I",
+   "o": "Nvidia",
+   "d": "2022-11-02",
+   "c": 5.46e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Mogrifier RLSTM (WT2)",
+   "o": "DeepMind",
+   "d": "2022-11-03",
+   "c": 1.4e+17,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "InternImage",
+   "o": "Shanghai AI Lab,Tsinghua University,Nanjing University,SenseTime,Chinese University of Hong Kong (CUHK)",
+   "d": "2022-11-10",
+   "c": 2.408e+21,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "EVA-01",
+   "o": "Beijing Academy of Artificial Intelligence / BAAI,Huazhong University of Science and Technology,Zhejiang University (ZJU),Beijing Institute of Technology",
+   "d": "2022-11-14",
+   "c": 1.501e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Galactica",
+   "o": "Meta AI",
+   "d": "2022-11-16",
+   "c": 3.24e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Fusion in Encoder",
+   "o": "Samsung",
+   "d": "2022-11-18",
+   "c": 1.3e+20,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "AR-LDM",
+   "o": "Alibaba,University of Waterloo,Vector Institute",
+   "d": "2022-11-20",
+   "c": 5.1e+20,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Discriminator Guidance",
+   "o": "Korea Advanced Institute of Science and Technology (KAIST),NAVER",
+   "d": "2022-11-28",
+   "c": 2.1570000001e+20,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Vega v2",
+   "o": "Wuhan University,JD Explore Academy,Shanghai AI Lab,Nanyang Technological University,Washington University in St Louis,Chongqing University of Posts and Telecommunications,University of Sydney",
+   "d": "2022-12-04",
+   "c": 7.76e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "CaLM",
+   "o": "University of Oxford",
+   "d": "2022-12-19",
+   "c": 2.9e+19,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Hybrid H3-2.7B",
+   "o": "Stanford University,University at Buffalo",
+   "d": "2022-12-28",
+   "c": 6.48e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "VALL-E",
+   "o": "Microsoft",
+   "d": "2023-01-05",
+   "c": 1.01e+19,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DreamerV3",
+   "o": "DeepMind,University of Toronto",
+   "d": "2023-01-10",
+   "c": 2.2032e+20,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "Nucleotide Transformer",
+   "o": "Nvidia,Technical University of Munich,InstaDeep",
+   "d": "2023-01-15",
+   "c": 8.08e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Ankh_large",
+   "o": "Technical University of Munich,Columbia University",
+   "d": "2023-01-16",
+   "c": 6.5e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DDPM-IP (CelebA)",
+   "o": "Utrecht University",
+   "d": "2023-01-27",
+   "c": 3.5e+20,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
+   "m": "BLIP-2 (Q-Former)",
+   "o": "Salesforce Research",
+   "d": "2023-01-30",
+   "c": 1.20000000001e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ViT-22B",
+   "o": "Google",
+   "d": "2023-02-10",
+   "c": 1.93248e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "LLaMA-65B",
+   "o": "Meta AI",
+   "d": "2023-02-24",
+   "c": 5.5e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DiT-XL/2",
+   "o": "New York University (NYU),University of California (UC) Berkeley",
+   "d": "2023-03-02",
+   "c": 6e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AudioGen",
+   "o": "Meta AI,Hebrew University of Jerusalem",
+   "d": "2023-03-05",
+   "c": 9.5e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GPT-4 (Mar 2023)",
+   "o": "OpenAI",
+   "d": "2023-03-15",
+   "c": 2.1e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Falcon-40B",
+   "o": "Technology Innovation Institute",
+   "d": "2023-03-15",
+   "c": 2.4e+23,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "PanGu-Î£",
+   "o": "Huawei Noah's Ark Lab",
+   "d": "2023-03-20",
+   "c": 4.67e+23,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "SigLIP 400M",
+   "o": "Google DeepMind",
+   "d": "2023-03-27",
+   "c": 4.9467301e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "VideoMAE V2",
+   "o": "Nanjing University,Shenzhen Institute of Advanced Technology,Shanghai AI Lab",
+   "d": "2023-03-29",
+   "c": 9.7e+21,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "BloombergGPT",
+   "o": "Bloomberg,Johns Hopkins University",
+   "d": "2023-03-30",
+   "c": 2.36e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Segment Anything Model",
+   "o": "Meta AI",
+   "d": "2023-04-05",
+   "c": 7.8e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Incoder-6.7B",
+   "o": "Facebook AI Research,University of Washington,University of California (UC) Berkeley,Carnegie Mellon University (CMU),Toyota Technological Institute at Chicago",
+   "d": "2023-04-09",
+   "c": 3.00001e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DINOv2",
+   "o": "Facebook AI Research,INRIA",
+   "d": "2023-04-14",
+   "c": 7.41851136e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "LLaVA",
+   "o": "University of Wisconsin Madison,Microsoft Research,Columbia University",
+   "d": "2023-04-17",
+   "c": 7.8049e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "StarCoder",
+   "o": "Hugging Face,ServiceNow,Northeastern University,Mila - Quebec AI (originally Montreal Institute for Learning Algorithms),Carnegie Mellon University (CMU),Johns Hopkins University,Leipzig University,ScaDS.AI,Queen Mary University of London,Roblox,Sea AI Lab,Technion - Israel Institute of Technology,Monash University,CSIRO,Data61,McGill University,Saama,University of British Columbia (UBC),Massachusetts Institute of Technology (MIT),Technical University of Munich,IBM,University of Vermont,UnfoldML,SAP,University of Notre Dame,Columbia University,New York University (NYU),University of Allahabad,Discover Dollar,Toloka,Telefonica,Stanford University,Weizmann Institute of Science,Alan Turing Institute,Wellesley College,EleutherAI,Forschungszentrum Julich",
+   "d": "2023-05-09",
+   "c": 8.46e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "PaLM 2",
+   "o": "Google",
+   "d": "2023-05-10",
+   "c": 7.34e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "InstructBLIP",
+   "o": "Salesforce Research,Hong Kong University of Science and Technology (HKUST),Nanyang Technological University",
+   "d": "2023-05-11",
+   "c": 1.94e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ONE-PEACE",
+   "o": "Alibaba,Huazhong University of Science and Technology",
+   "d": "2023-05-18",
+   "c": 1.8e+20,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "PaLI-X",
+   "o": "Google Research",
+   "d": "2023-05-29",
+   "c": 5.6e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GPT-4 (Jun 2023)",
+   "o": "OpenAI",
+   "d": "2023-06-13",
+   "c": 2.1e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "HyenaDNA",
+   "o": "Stanford University,Harvard University,Mila - Quebec AI (originally Montreal Institute for Learning Algorithms),University of Montreal / UniversitÃ© de MontrÃ©al",
+   "d": "2023-06-27",
+   "c": 1.811e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Pangu-Weather",
+   "o": "Huawei",
+   "d": "2023-07-05",
+   "c": 3.98e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "xTrimoPGLM -100B",
+   "o": "Tsinghua University,BioMap Research",
+   "d": "2023-07-06",
+   "c": 6.2e+23,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "InternLM",
+   "o": "Shanghai AI Lab,SenseTime",
+   "d": "2023-07-06",
+   "c": 9.984e+23,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Claude 2",
+   "o": "Anthropic",
+   "d": "2023-07-11",
+   "c": 3.866e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Llama 2-70B",
+   "o": "Meta AI",
+   "d": "2023-07-18",
+   "c": 8.1e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Llama 2-7B",
+   "o": "Meta AI",
+   "d": "2023-07-18",
+   "c": 8.4e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AudioLM",
+   "o": "Google Research",
+   "d": "2023-07-26",
+   "c": 3.9e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GGNN",
+   "o": "Westlake University,Tsinghua University,Toyota Technological Institute at Chicago",
+   "d": "2023-08-05",
+   "c": 7.56e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "PeptideBERT",
+   "o": "Carnegie Mellon University (CMU)",
+   "d": "2023-08-28",
+   "c": 4.9e+16,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Jais",
+   "o": "Cerebras Systems,Mohamed bin Zayed University of Artificial Intelligence (MBZUAI),Inception G42",
+   "d": "2023-08-29",
+   "c": 4.8946763e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Swift",
+   "o": "Intel Labs",
+   "d": "2023-08-30",
+   "c": 5.337e+16,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Falcon-180B",
+   "o": "Technology Innovation Institute",
+   "d": "2023-09-06",
+   "c": 3.76e+24,
+   "f": true,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Amazon Titan",
+   "o": "Amazon",
+   "d": "2023-09-28",
+   "c": 4.8e+24,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "FinGPT-13B",
+   "o": "University of California Los Angeles (UCLA),Columbia University,New York University (NYU)",
+   "d": "2023-10-07",
+   "c": 1.6e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "RoseTTAFold All-Atom (RFAA)",
+   "o": "University of Washington,Seoul National University,University of Sheffield",
+   "d": "2023-10-09",
+   "c": 2.14e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "CODEFUSION (Python)",
+   "o": "Microsoft,Microsoft Research",
+   "d": "2023-10-26",
+   "c": 7.92e+18,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ChatGLM3-6B",
+   "o": "Z.ai (Zhipu AI)",
+   "d": "2023-10-27",
+   "c": 5.04e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Skywork-13B",
+   "o": "Kunlun Inc.",
+   "d": "2023-10-30",
+   "c": 2.5e+23,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Yi-34B",
+   "o": "01.AI",
+   "d": "2023-11-02",
+   "c": 6.1e+23,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Grok-1",
+   "o": "xAI",
+   "d": "2023-11-04",
+   "c": 2.90000000001e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "LLaVA 1.5",
+   "o": "University of Wisconsin Madison,Microsoft Research",
+   "d": "2023-11-05",
+   "c": 7.807e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "CogVLM-17B",
+   "o": "Tsinghua University,Z.ai (Zhipu AI),Beihang University",
+   "d": "2023-11-06",
+   "c": 6.331e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "RoFormer",
+   "o": "Zhuiyi Technology",
+   "d": "2023-11-08",
+   "c": 2.162688e+18,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "MultiBand Diffusion",
+   "o": "Meta AI,Hebrew University of Jerusalem,LORIA",
+   "d": "2023-11-08",
+   "c": 2.6e+19,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Volcano 13B",
+   "o": "Korea University,Korea Advanced Institute of Science and Technology (KAIST),LG",
+   "d": "2023-11-13",
+   "c": 4.56e+22,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "SPHINX (Llama 2 13B)",
+   "o": "Shanghai AI Lab,Chinese University of Hong Kong (CUHK),ShanghaiTech University",
+   "d": "2023-11-13",
+   "c": 3.04e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "GraphCast",
+   "o": "Google DeepMind",
+   "d": "2023-11-14",
+   "c": 2.1000000000000002e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Nemotron-3-8B",
+   "o": "Nvidia",
+   "d": "2023-11-15",
+   "c": 1.8e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Inflection-2",
+   "o": "Inflection AI",
+   "d": "2023-11-22",
+   "c": 1.001e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Qwen-72B",
+   "o": "Alibaba",
+   "d": "2023-11-30",
+   "c": 1.3e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Gemini 1.0 Ultra",
+   "o": "Google DeepMind",
+   "d": "2023-12-06",
+   "c": 5.0000000001e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Llama Guard",
+   "o": "Meta AI",
+   "d": "2023-12-07",
+   "c": 1.6e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Mixtral 8x7B",
+   "o": "Mistral AI",
+   "d": "2023-12-11",
+   "c": 7.74e+23,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
+   "m": "VILA-13B",
+   "o": "Nvidia,Massachusetts Institute of Technology (MIT)",
+   "d": "2023-12-12",
+   "c": 2.3003136e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "FunSearch",
+   "o": "Google DeepMind",
+   "d": "2023-12-14",
+   "c": 3.87e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "CogAgent",
+   "o": "Tsinghua University,Z.ai (Zhipu AI)",
+   "d": "2023-12-14",
+   "c": 6.707e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "nekomata-14b",
+   "o": "rinna",
+   "d": "2023-12-21",
+   "c": 2.5562e+23,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "GQA-8-XXL",
+   "o": "Google Research",
+   "d": "2023-12-23",
+   "c": 3.4912896e+22,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Qwen1.5-72B",
+   "o": "Alibaba",
+   "d": "2024-02-04",
+   "c": 1.3e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Stable Diffusion 3",
+   "o": "Stability AI",
+   "d": "2024-02-22",
+   "c": 5.0000000000000004e+22,
+   "f": false,
+   "a": "Regno Unito",
+   "open": false
+  },
+  {
+   "m": "MegaScale (Production)",
+   "o": "ByteDance,Peking University",
+   "d": "2024-02-23",
+   "c": 3.9e+24,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Aramco Metabrain AI",
+   "o": "Saudi Aramco",
+   "d": "2024-03-04",
+   "c": 1.05e+25,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "Inflection-2.5",
+   "o": "Inflection AI",
+   "d": "2024-03-07",
+   "c": 8.000001e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "MM1-30B",
+   "o": "Apple",
+   "d": "2024-03-14",
+   "c": 4.86e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DBRX",
+   "o": "Databricks",
+   "d": "2024-03-27",
+   "c": 2.6e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Reka Core",
+   "o": "Reka AI",
+   "d": "2024-04-15",
+   "c": 8.400010000000001e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Llama 3-70B",
+   "o": "Meta AI",
+   "d": "2024-04-18",
+   "c": 7.861e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GenCast",
+   "o": "Google DeepMind",
+   "d": "2024-05-01",
+   "c": 8.169984e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "VILA1.5-13B",
+   "o": "Nvidia,Massachusetts Institute of Technology (MIT)",
+   "d": "2024-05-03",
+   "c": 2.3003136e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AlphaFold 3",
+   "o": "Google DeepMind,Isomorphic Labs",
+   "d": "2024-05-08",
+   "c": 4.1405645e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Yi-Large",
+   "o": "01.AI",
+   "d": "2024-05-13",
+   "c": 1.8e+24,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Octo-Base",
+   "o": "University of California (UC) Berkeley,Stanford University,Carnegie Mellon University (CMU),DeepMind",
+   "d": "2024-05-20",
+   "c": 5.85e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "ALLaMÂ adapted 70B",
+   "o": "Saudi Data and Artificial Intelligence Authority",
+   "d": "2024-05-21",
+   "c": 1.062e+24,
+   "f": false,
+   "a": "Altri",
+   "open": false
+  },
+  {
+   "m": "Qwen2-72B",
+   "o": "Alibaba",
+   "d": "2024-06-07",
+   "c": 3.02e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "OpenVLA",
+   "o": "Stanford University,University of California (UC) Berkeley,Toyota Research Institute,Google DeepMind,Massachusetts Institute of Technology (MIT),Physical Intelligence",
+   "d": "2024-06-13",
+   "c": 1.1e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Nemotron-4 340B",
+   "o": "Nvidia",
+   "d": "2024-06-14",
+   "c": 1.8e+25,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DeepSeek-Coder-V2 236B",
+   "o": "DeepSeek",
+   "d": "2024-06-17",
+   "c": 1.2852e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Claude 3.5 Sonnet",
+   "o": "Anthropic",
+   "d": "2024-06-20",
+   "c": 2.700000000000001e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "ESM3 (98B)",
+   "o": "EvolutionaryScale,University of California (UC) Berkeley",
+   "d": "2024-06-25",
+   "c": 1.07e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Llama 3.1-405B",
+   "o": "Meta AI",
+   "d": "2024-07-23",
+   "c": 3.8e+25,
+   "f": true,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "AFM-server",
+   "o": "Apple",
+   "d": "2024-07-29",
+   "c": 4.3e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "AFM-on-device",
+   "o": "Apple",
+   "d": "2024-07-29",
+   "c": 4.5126e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "LLaVA-OV-72B",
+   "o": "ByteDance,Nanyang Technological University,Chinese University of Hong Kong (CUHK),Hong Kong University of Science and Technology (HKUST)",
+   "d": "2024-08-06",
+   "c": 3.036551985824e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Grok-2",
+   "o": "xAI",
+   "d": "2024-08-13",
+   "c": 2.96e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DeepSeek-V2.5",
+   "o": "DeepSeek",
+   "d": "2024-09-06",
+   "c": 1.7892e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen2.5-32B",
+   "o": "Alibaba",
+   "d": "2024-09-17",
+   "c": 3.51e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen2.5-72B",
+   "o": "Alibaba",
+   "d": "2024-09-19",
+   "c": 7.8e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen2.5 Instruct (72B)",
+   "o": "Alibaba",
+   "d": "2024-09-19",
+   "c": 7.8516e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Telechat2-115B",
+   "o": "China Telecom",
+   "d": "2024-09-20",
+   "c": 6.9e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Llama 3.2 11B",
+   "o": "Meta AI",
+   "d": "2024-09-24",
+   "c": 5.79e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Movie Gen Video",
+   "o": "Meta AI",
+   "d": "2024-10-04",
+   "c": 1.65e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "RDT-1B",
+   "o": "Tsinghua University",
+   "d": "2024-10-10",
+   "c": 4.06e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Llama-3.1-Nemotron-70B-Instruct",
+   "o": "Nvidia,Meta AI",
+   "d": "2024-10-12",
+   "c": 7.929e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "CHAI-1",
+   "o": "Chai discovery",
+   "d": "2024-10-15",
+   "c": 7.7605724e+21,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Yi-Lightning",
+   "o": "01.AI",
+   "d": "2024-10-16",
+   "c": 1.5e+24,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "NVLM-X 72B",
+   "o": "Nvidia",
+   "d": "2024-10-22",
+   "c": 3.0398181e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "NVLM-H 72B",
+   "o": "Nvidia",
+   "d": "2024-10-22",
+   "c": 3.02e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "NVLM-D 72B",
+   "o": "Nvidia",
+   "d": "2024-10-22",
+   "c": 3.02e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Doubao-pro",
+   "o": "ByteDance",
+   "d": "2024-10-28",
+   "c": 2.505e+25,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Hunyuan-Large",
+   "o": "Tencent",
+   "d": "2024-11-06",
+   "c": 3.49237e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Amazon Nova Pro",
+   "o": "Amazon",
+   "d": "2024-12-03",
+   "c": 6.000010000000001e+24,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Llama 3.3 70B",
+   "o": "Meta AI",
+   "d": "2024-12-06",
+   "c": 6.8649768e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "EXAONE 3.5 32B",
+   "o": "LG AI Research",
+   "d": "2024-12-09",
+   "c": 1.25e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "DeepSeek-V3",
+   "o": "DeepSeek",
+   "d": "2024-12-24",
+   "c": 3.3e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Eurus-2-7B-PRIME",
+   "o": "Tsinghua University,University of Illinois Urbana-Champaign (UIUC),Shanghai AI Lab,Peking University,Shanghai Jiao Tong University,CUHK Shenzhen Research Institute",
+   "d": "2025-01-02",
+   "c": 4.01915904e+20,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Eagle 2",
+   "o": "Nvidia,Nanjing University,Tsinghua University,Hong Kong Polytechnic University,Johns Hopkins University,New York University (NYU)",
+   "d": "2025-01-20",
+   "c": 4.7156e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "DeepSeek-R1",
+   "o": "DeepSeek",
+   "d": "2025-01-20",
+   "c": 3.5e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Grok 3",
+   "o": "xAI",
+   "d": "2025-02-17",
+   "c": 3.5e+26,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Claude 3.7 Sonnet",
+   "o": "Anthropic",
+   "d": "2025-02-24",
+   "c": 3.35e+25,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GPT-4.5",
+   "o": "OpenAI",
+   "d": "2025-02-27",
+   "c": 3.8e+26,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "QwQ-32B",
+   "o": "Alibaba",
+   "d": "2025-03-06",
+   "c": 3.51e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Hunyuan-TurboS",
+   "o": "Tencent",
+   "d": "2025-03-11",
+   "c": 5.4e+24,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "EXAONE Deep 32B",
+   "o": "LG AI Research",
+   "d": "2025-03-16",
+   "c": 1.26e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "DeepSeek-V3 (Mar 2025)",
+   "o": "DeepSeek",
+   "d": "2025-03-24",
+   "c": 3.3e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Llama 4 Scout",
+   "o": "Meta AI",
+   "d": "2025-04-05",
+   "c": 4.08e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Llama 4 Maverick",
+   "o": "Meta AI",
+   "d": "2025-04-05",
+   "c": 2.244000000001e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Llama 4 Behemoth (preview)",
+   "o": "Meta AI",
+   "d": "2025-04-05",
+   "c": 5.18400000000001e+25,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Pangu Ultra",
+   "o": "Huawei",
+   "d": "2025-04-10",
+   "c": 1.0692e+25,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "Qwen3-235B-A22B",
+   "o": "Alibaba",
+   "d": "2025-04-29",
+   "c": 4.752e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Seed1.5-VL",
+   "o": "ByteDance",
+   "d": "2025-05-11",
+   "c": 1.388556e+24,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "DeepSeek-R1 (May 2025)",
+   "o": "DeepSeek",
+   "d": "2025-05-28",
+   "c": 4.020010000000001e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "FGN",
+   "o": "Google DeepMind",
+   "d": "2025-06-12",
+   "c": 9.618950880000001e+21,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Grok 4",
+   "o": "xAI",
+   "d": "2025-07-09",
+   "c": 5.0000000000001e+26,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Kimi K2",
+   "o": "Moonshot",
+   "d": "2025-07-11",
+   "c": 2.976e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "EXAONE 4.0 (32B)",
+   "o": "LG AI Research",
+   "d": "2025-07-15",
+   "c": 2.69000000000001e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Qwen3-Coder-480B-A35B",
+   "o": "Alibaba",
+   "d": "2025-07-22",
+   "c": 1.575e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen3-235B-A22B-Thinking (Jul 2025)",
+   "o": "Alibaba",
+   "d": "2025-07-25",
+   "c": 4.752e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen3-235B-A22B (Jul 2025)",
+   "o": "Alibaba",
+   "d": "2025-07-25",
+   "c": 4.752e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "GLM-4.5",
+   "o": "Z.ai (Zhipu AI),Tsinghua University",
+   "d": "2025-07-28",
+   "c": 4.42e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "gpt-oss-120b",
+   "o": "OpenAI",
+   "d": "2025-08-05",
+   "c": 4.94e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "gpt-oss-20b",
+   "o": "OpenAI",
+   "d": "2025-08-05",
+   "c": 5.49e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GPT-5",
+   "o": "OpenAI",
+   "d": "2025-08-07",
+   "c": 6.6e+25,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "LongCat-Flash",
+   "o": "Meituan Inc",
+   "d": "2025-09-01",
+   "c": 3.726e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen3-Max",
+   "o": "Alibaba",
+   "d": "2025-09-05",
+   "c": 1.512e+25,
+   "f": false,
+   "a": "Cina",
+   "open": false
+  },
+  {
+   "m": "AgentFounder-30B",
+   "o": "Alibaba",
+   "d": "2025-09-16",
+   "c": 6.5367e+23,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Qwen3-Omni-30B-A3B",
+   "o": "Alibaba",
+   "d": "2025-09-22",
+   "c": 3.6e+22,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "GLM-4.6",
+   "o": "Z.ai (Zhipu AI),Tsinghua University",
+   "d": "2025-09-30",
+   "c": 4.42e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Ling-1T",
+   "o": "Ant Group",
+   "d": "2025-10-10",
+   "c": 6.000001e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Kimi K2 Thinking",
+   "o": "Moonshot",
+   "d": "2025-11-06",
+   "c": 4.2e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Olmo 3",
+   "o": "Allen Institute for AI",
+   "d": "2025-11-20",
+   "c": 1.1e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Nemotron 3-Nano-30B-A3B",
+   "o": "Nvidia",
+   "d": "2025-12-15",
+   "c": 4.8e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "GLM-4.7",
+   "o": "Z.ai (Zhipu AI)",
+   "d": "2025-12-22",
+   "c": 4.42e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Solar Open 100B",
+   "o": "Upstage",
+   "d": "2025-12-31",
+   "c": 1.4e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "K-EXAONE",
+   "o": "LG AI Research",
+   "d": "2025-12-31",
+   "c": 1.52e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Kimi K2.5",
+   "o": "Moonshot",
+   "d": "2026-02-02",
+   "c": 5.8e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "GLM-5",
+   "o": "Z.ai (Zhipu AI)",
+   "d": "2026-02-12",
+   "c": 6.84e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Composer 2",
+   "o": "Cursor",
+   "d": "2026-03-19",
+   "c": 2.32e+25,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "MolmoAct 2",
+   "o": "Allen Institute for AI,University of Washington,National University of Singapore,University of Pennsylvania,Johns Hopkins University,Amazon,Cortex AI",
+   "d": "2026-04-05",
+   "c": 1.1e+22,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "EXAONE 4.5",
+   "o": "LG AI Research",
+   "d": "2026-04-09",
+   "c": 3.85e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "MiMo-V2.5-Pro",
+   "o": "Xiaomi Corp",
+   "d": "2026-04-23",
+   "c": 6.804e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "DeepSeek-V4-Pro",
+   "o": "DeepSeek",
+   "d": "2026-04-24",
+   "c": 9.702e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "DeepSeek-V4-Flash",
+   "o": "DeepSeek",
+   "d": "2026-04-24",
+   "c": 2.496e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Composer 2.5",
+   "o": "Cursor",
+   "d": "2026-05-18",
+   "c": 3.87e+25,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "Nemotron 3 Ultra",
+   "o": "Nvidia",
+   "d": "2026-06-04",
+   "c": 6.6e+24,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Solar Open2 250B",
+   "o": "Upstage",
+   "d": "2026-06-28",
+   "c": 1.05e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "LongCat-2.0",
+   "o": "Meituan Inc",
+   "d": "2026-06-29",
+   "c": 1.008e+25,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "Inkling",
+   "o": "Thinking Machines",
+   "d": "2026-07-15",
+   "c": 1.1e+25,
+   "f": false,
+   "a": "USA",
+   "open": true
+  },
+  {
+   "m": "Kimi K3",
+   "o": "Moonshot",
+   "d": "2026-07-16",
+   "c": 2.0001e+25,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "A.X K2",
+   "o": "SK Telecom",
+   "d": "2026-07-29",
+   "c": 1.8e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "K-EXAONE 2.0",
+   "o": "LG AI Research",
+   "d": "2026-07-31",
+   "c": 3.55e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Motif-3",
+   "o": "Motif Technologies",
+   "d": "2026-08-07",
+   "c": 1.1e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "GLM-5.3-Flash",
+   "o": "Z.ai (Zhipu AI)",
+   "d": "2026-08-20",
+   "c": 3.24e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
+   "m": "WeatherNext 3",
+   "o": "Google DeepMind,Google Research",
+   "d": "2026-09-03",
+   "c": 2.0725198384e+23,
+   "f": false,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "GPT-6 Astra",
+   "o": "OpenAI",
+   "d": "2026-09-03",
+   "c": 9.4e+26,
+   "f": true,
+   "a": "USA",
+   "open": false
+  },
+  {
+   "m": "DeepSeek V4.1 Flash",
+   "o": "DeepSeek",
+   "d": "2026-09-09",
+   "c": 4.32e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  }
+ ],
+ "per_anno": [
+  {
+   "anno": 2016,
+   "area": "USA",
+   "n": 36
+  },
+  {
+   "anno": 2016,
+   "area": "Cina",
+   "n": 6
+  },
+  {
+   "anno": 2016,
+   "area": "UE",
+   "n": 7
+  },
+  {
+   "anno": 2016,
+   "area": "Regno Unito",
+   "n": 6
+  },
+  {
+   "anno": 2016,
+   "area": "Altri",
+   "n": 3
+  },
+  {
+   "anno": 2017,
+   "area": "USA",
+   "n": 29
+  },
+  {
+   "anno": 2017,
+   "area": "Cina",
+   "n": 10
+  },
+  {
+   "anno": 2017,
+   "area": "UE",
+   "n": 8
+  },
+  {
+   "anno": 2017,
+   "area": "Regno Unito",
+   "n": 12
+  },
+  {
+   "anno": 2017,
+   "area": "Altri",
+   "n": 6
+  },
+  {
+   "anno": 2018,
+   "area": "USA",
+   "n": 27
+  },
+  {
+   "anno": 2018,
+   "area": "Cina",
+   "n": 1
+  },
+  {
+   "anno": 2018,
+   "area": "UE",
+   "n": 5
+  },
+  {
+   "anno": 2018,
+   "area": "Regno Unito",
+   "n": 5
+  },
+  {
+   "anno": 2018,
+   "area": "Altri",
+   "n": 4
+  },
+  {
+   "anno": 2019,
+   "area": "USA",
+   "n": 56
+  },
+  {
+   "anno": 2019,
+   "area": "Cina",
+   "n": 6
+  },
+  {
+   "anno": 2019,
+   "area": "UE",
+   "n": 9
+  },
+  {
+   "anno": 2019,
+   "area": "Regno Unito",
+   "n": 10
+  },
+  {
+   "anno": 2019,
+   "area": "Altri",
+   "n": 3
+  },
+  {
+   "anno": 2020,
+   "area": "USA",
+   "n": 37
+  },
+  {
+   "anno": 2020,
+   "area": "Cina",
+   "n": 8
+  },
+  {
+   "anno": 2020,
+   "area": "UE",
+   "n": 8
+  },
+  {
+   "anno": 2020,
+   "area": "Regno Unito",
+   "n": 5
+  },
+  {
+   "anno": 2020,
+   "area": "Altri",
+   "n": 1
+  },
+  {
+   "anno": 2021,
+   "area": "USA",
+   "n": 54
+  },
+  {
+   "anno": 2021,
+   "area": "Cina",
+   "n": 21
+  },
+  {
+   "anno": 2021,
+   "area": "UE",
+   "n": 17
+  },
+  {
+   "anno": 2021,
+   "area": "Regno Unito",
+   "n": 8
+  },
+  {
+   "anno": 2021,
+   "area": "Altri",
+   "n": 2
+  },
+  {
+   "anno": 2022,
+   "area": "USA",
+   "n": 68
+  },
+  {
+   "anno": 2022,
+   "area": "Cina",
+   "n": 12
+  },
+  {
+   "anno": 2022,
+   "area": "UE",
+   "n": 4
+  },
+  {
+   "anno": 2022,
+   "area": "Regno Unito",
+   "n": 13
+  },
+  {
+   "anno": 2022,
+   "area": "Altri",
+   "n": 5
+  },
+  {
+   "anno": 2023,
+   "area": "USA",
+   "n": 86
+  },
+  {
+   "anno": 2023,
+   "area": "Cina",
+   "n": 23
+  },
+  {
+   "anno": 2023,
+   "area": "UE",
+   "n": 12
+  },
+  {
+   "anno": 2023,
+   "area": "Regno Unito",
+   "n": 6
+  },
+  {
+   "anno": 2023,
+   "area": "Altri",
+   "n": 7
+  },
+  {
+   "anno": 2024,
+   "area": "USA",
+   "n": 57
+  },
+  {
+   "anno": 2024,
+   "area": "Cina",
+   "n": 31
+  },
+  {
+   "anno": 2024,
+   "area": "UE",
+   "n": 5
+  },
+  {
+   "anno": 2024,
+   "area": "Regno Unito",
+   "n": 3
+  },
+  {
+   "anno": 2024,
+   "area": "Altri",
+   "n": 6
+  },
+  {
+   "anno": 2025,
+   "area": "USA",
+   "n": 64
+  },
+  {
+   "anno": 2025,
+   "area": "Cina",
+   "n": 35
+  },
+  {
+   "anno": 2025,
+   "area": "UE",
+   "n": 1
+  },
+  {
+   "anno": 2025,
+   "area": "Regno Unito",
+   "n": 1
+  },
+  {
+   "anno": 2025,
+   "area": "Altri",
+   "n": 9
+  },
+  {
+   "anno": 2026,
+   "area": "USA",
+   "n": 49
+  },
+  {
+   "anno": 2026,
+   "area": "Cina",
+   "n": 29
+  },
+  {
+   "anno": 2026,
+   "area": "UE",
+   "n": 0
+  },
+  {
+   "anno": 2026,
+   "area": "Regno Unito",
+   "n": 0
+  },
+  {
+   "anno": 2026,
+   "area": "Altri",
+   "n": 6
+  }
+ ],
+ "pesi_aperti": [
+  {
+   "anno": 2016,
+   "aperti": 11,
+   "totale": 49
+  },
+  {
+   "anno": 2017,
+   "aperti": 1,
+   "totale": 55
+  },
+  {
+   "anno": 2018,
+   "aperti": 9,
+   "totale": 37
+  },
+  {
+   "anno": 2019,
+   "aperti": 31,
+   "totale": 68
+  },
+  {
+   "anno": 2020,
+   "aperti": 28,
+   "totale": 50
+  },
+  {
+   "anno": 2021,
+   "aperti": 41,
+   "totale": 79
+  },
+  {
+   "anno": 2022,
+   "aperti": 41,
+   "totale": 91
+  },
+  {
+   "anno": 2023,
+   "aperti": 59,
+   "totale": 119
+  },
+  {
+   "anno": 2024,
+   "aperti": 39,
+   "totale": 98
+  },
+  {
+   "anno": 2025,
+   "aperti": 45,
+   "totale": 107
+  },
+  {
+   "anno": 2026,
+   "aperti": 28,
+   "totale": 84
+  }
+ ],
+ "recenti": [
+  {
+   "m": "Gemini 4 Argon",
+   "o": "Google DeepMind",
+   "d": "2026-09-30",
+   "a": "USA",
+   "accesso": "Limited access"
+  },
+  {
+   "m": "GPT-6.1 Sol",
+   "o": "OpenAI",
+   "d": "2026-09-29",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "Claude Sonnet 5.5",
+   "o": "Anthropic",
+   "d": "2026-09-28",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "GPT-6 Sol",
+   "o": "OpenAI",
+   "d": "2026-09-22",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "GPT-6 Luna",
+   "o": "OpenAI",
+   "d": "2026-09-22",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "Claude Opus 5.5",
+   "o": "Anthropic",
+   "d": "2026-09-22",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "Grok 4.7",
+   "o": "xAI",
+   "d": "2026-09-21",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "Step 5 Preview",
+   "o": "StepFun",
+   "d": "2026-09-18",
+   "a": "Cina",
+   "accesso": "API access"
+  },
+  {
+   "m": "DeepSeek V4.1 Flash",
+   "o": "DeepSeek",
+   "d": "2026-09-09",
+   "a": "Cina",
+   "accesso": "Open weights (unrestricted)"
+  },
+  {
+   "m": "GPT-Image-2.5 Sunburst",
+   "o": "OpenAI",
+   "d": "2026-09-08",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "GPT-Image-2.5 Flare",
+   "o": "OpenAI",
+   "d": "2026-09-08",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "ChatGPT Images 2.5",
+   "o": "OpenAI",
+   "d": "2026-09-08",
+   "a": "USA",
+   "accesso": "Hosted access (no API)"
+  }
+ ],
+ "anno_in_corso": 2026,
+ "fonte": "Epoch AI, Data on AI Models (CC BY 4.0)",
+ "url": "https://epoch.ai/data/ai-models",
+ "file": "https://epoch.ai/data/notable_ai_models.csv",
+ "modelli": 1078
+}

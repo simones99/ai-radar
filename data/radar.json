@@ -1,0 +1,1117 @@
+{
+ "generato": "2026-10-15",
+ "base_domanda": "open-source",
+ "crescita_lavoro_nello_slancio": false,
+ "quadranti": {
+  "impara-ora": "Impara ora",
+  "prova": "Da provare",
+  "consolida": "Da consolidare",
+  "osserva": "Tieni d'occhio"
+ },
+ "competenze": [
+  {
+   "id": "agenti",
+   "nome": "Agenti AI",
+   "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 51344,
+    "precedenti3": 30073,
+    "crescita": 0.7072,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 654
+     },
+     {
+      "mese": "2025-10",
+      "n": 932
+     },
+     {
+      "mese": "2025-11",
+      "n": 1131
+     },
+     {
+      "mese": "2025-12",
+      "n": 1580
+     },
+     {
+      "mese": "2026-01",
+      "n": 2450
+     },
+     {
+      "mese": "2026-02",
+      "n": 4892
+     },
+     {
+      "mese": "2026-03",
+      "n": 8267
+     },
+     {
+      "mese": "2026-04",
+      "n": 8249
+     },
+     {
+      "mese": "2026-05",
+      "n": 9459
+     },
+     {
+      "mese": "2026-06",
+      "n": 12365
+     },
+     {
+      "mese": "2026-07",
+      "n": 16272
+     },
+     {
+      "mese": "2026-08",
+      "n": 17620
+     },
+     {
+      "mese": "2026-09",
+      "n": 17452
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.8,
+   "domanda": 1.0,
+   "quadrante": "impara-ora"
+  },
+  {
+   "id": "coding-agenti",
+   "nome": "Sviluppo con agenti di coding",
+   "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 3476,
+    "precedenti3": 2067,
+    "crescita": 0.68,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 22
+     },
+     {
+      "mese": "2025-10",
+      "n": 27
+     },
+     {
+      "mese": "2025-11",
+      "n": 26
+     },
+     {
+      "mese": "2025-12",
+      "n": 29
+     },
+     {
+      "mese": "2026-01",
+      "n": 86
+     },
+     {
+      "mese": "2026-02",
+      "n": 229
+     },
+     {
+      "mese": "2026-03",
+      "n": 309
+     },
+     {
+      "mese": "2026-04",
+      "n": 541
+     },
+     {
+      "mese": "2026-05",
+      "n": 694
+     },
+     {
+      "mese": "2026-06",
+      "n": 832
+     },
+     {
+      "mese": "2026-07",
+      "n": 984
+     },
+     {
+      "mese": "2026-08",
+      "n": 1354
+     },
+     {
+      "mese": "2026-09",
+      "n": 1138
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.7333,
+   "domanda": 0.6,
+   "quadrante": "impara-ora"
+  },
+  {
+   "id": "mcp",
+   "nome": "Model Context Protocol (MCP)",
+   "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 36474,
+    "precedenti3": 25412,
+    "crescita": 0.4352,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 905
+     },
+     {
+      "mese": "2025-10",
+      "n": 1028
+     },
+     {
+      "mese": "2025-11",
+      "n": 1086
+     },
+     {
+      "mese": "2025-12",
+      "n": 1419
+     },
+     {
+      "mese": "2026-01",
+      "n": 2129
+     },
+     {
+      "mese": "2026-02",
+      "n": 4154
+     },
+     {
+      "mese": "2026-03",
+      "n": 7249
+     },
+     {
+      "mese": "2026-04",
+      "n": 7656
+     },
+     {
+      "mese": "2026-05",
+      "n": 8595
+     },
+     {
+      "mese": "2026-06",
+      "n": 9161
+     },
+     {
+      "mese": "2026-07",
+      "n": 11008
+     },
+     {
+      "mese": "2026-08",
+      "n": 11531
+     },
+     {
+      "mese": "2026-09",
+      "n": 13935
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.6,
+   "domanda": 0.9333,
+   "quadrante": "impara-ora"
+  },
+  {
+   "id": "rag",
+   "nome": "RAG e ricerca semantica",
+   "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 17574,
+    "precedenti3": 14129,
+    "crescita": 0.2437,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 828
+     },
+     {
+      "mese": "2025-10",
+      "n": 954
+     },
+     {
+      "mese": "2025-11",
+      "n": 1167
+     },
+     {
+      "mese": "2025-12",
+      "n": 1331
+     },
+     {
+      "mese": "2026-01",
+      "n": 1614
+     },
+     {
+      "mese": "2026-02",
+      "n": 2138
+     },
+     {
+      "mese": "2026-03",
+      "n": 3474
+     },
+     {
+      "mese": "2026-04",
+      "n": 3694
+     },
+     {
+      "mese": "2026-05",
+      "n": 4611
+     },
+     {
+      "mese": "2026-06",
+      "n": 5824
+     },
+     {
+      "mese": "2026-07",
+      "n": 6280
+     },
+     {
+      "mese": "2026-08",
+      "n": 5776
+     },
+     {
+      "mese": "2026-09",
+      "n": 5518
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.2667,
+   "domanda": 0.8667,
+   "quadrante": "consolida"
+  },
+  {
+   "id": "valutazione",
+   "nome": "Valutazione dei modelli (eval)",
+   "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 3866,
+    "precedenti3": 1687,
+    "crescita": 1.2878,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 33
+     },
+     {
+      "mese": "2025-10",
+      "n": 51
+     },
+     {
+      "mese": "2025-11",
+      "n": 45
+     },
+     {
+      "mese": "2025-12",
+      "n": 65
+     },
+     {
+      "mese": "2026-01",
+      "n": 110
+     },
+     {
+      "mese": "2026-02",
+      "n": 140
+     },
+     {
+      "mese": "2026-03",
+      "n": 266
+     },
+     {
+      "mese": "2026-04",
+      "n": 379
+     },
+     {
+      "mese": "2026-05",
+      "n": 579
+     },
+     {
+      "mese": "2026-06",
+      "n": 729
+     },
+     {
+      "mese": "2026-07",
+      "n": 1064
+     },
+     {
+      "mese": "2026-08",
+      "n": 1378
+     },
+     {
+      "mese": "2026-09",
+      "n": 1424
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 1.0,
+   "domanda": 0.6667,
+   "quadrante": "impara-ora"
+  },
+  {
+   "id": "post-training",
+   "nome": "Fine-tuning e post-training",
+   "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 1151,
+    "precedenti3": 997,
+    "crescita": 0.1537,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 91
+     },
+     {
+      "mese": "2025-10",
+      "n": 104
+     },
+     {
+      "mese": "2025-11",
+      "n": 128
+     },
+     {
+      "mese": "2025-12",
+      "n": 115
+     },
+     {
+      "mese": "2026-01",
+      "n": 162
+     },
+     {
+      "mese": "2026-02",
+      "n": 175
+     },
+     {
+      "mese": "2026-03",
+      "n": 299
+     },
+     {
+      "mese": "2026-04",
+      "n": 281
+     },
+     {
+      "mese": "2026-05",
+      "n": 319
+     },
+     {
+      "mese": "2026-06",
+      "n": 397
+     },
+     {
+      "mese": "2026-07",
+      "n": 382
+     },
+     {
+      "mese": "2026-08",
+      "n": 381
+     },
+     {
+      "mese": "2026-09",
+      "n": 388
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.1333,
+   "domanda": 0.1333,
+   "quadrante": "osserva"
+  },
+  {
+   "id": "context-engineering",
+   "nome": "Prompt e context engineering",
+   "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 6836,
+    "precedenti3": 5893,
+    "crescita": 0.1599,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 208
+     },
+     {
+      "mese": "2025-10",
+      "n": 230
+     },
+     {
+      "mese": "2025-11",
+      "n": 271
+     },
+     {
+      "mese": "2025-12",
+      "n": 368
+     },
+     {
+      "mese": "2026-01",
+      "n": 486
+     },
+     {
+      "mese": "2026-02",
+      "n": 680
+     },
+     {
+      "mese": "2026-03",
+      "n": 1441
+     },
+     {
+      "mese": "2026-04",
+      "n": 1757
+     },
+     {
+      "mese": "2026-05",
+      "n": 1974
+     },
+     {
+      "mese": "2026-06",
+      "n": 2162
+     },
+     {
+      "mese": "2026-07",
+      "n": 2476
+     },
+     {
+      "mese": "2026-08",
+      "n": 2318
+     },
+     {
+      "mese": "2026-09",
+      "n": 2042
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.2,
+   "domanda": 0.8,
+   "quadrante": "consolida"
+  },
+  {
+   "id": "sicurezza",
+   "nome": "Sicurezza dei sistemi AI",
+   "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 2449,
+    "precedenti3": 1734,
+    "crescita": 0.4112,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 44
+     },
+     {
+      "mese": "2025-10",
+      "n": 48
+     },
+     {
+      "mese": "2025-11",
+      "n": 54
+     },
+     {
+      "mese": "2025-12",
+      "n": 118
+     },
+     {
+      "mese": "2026-01",
+      "n": 136
+     },
+     {
+      "mese": "2026-02",
+      "n": 353
+     },
+     {
+      "mese": "2026-03",
+      "n": 536
+     },
+     {
+      "mese": "2026-04",
+      "n": 484
+     },
+     {
+      "mese": "2026-05",
+      "n": 598
+     },
+     {
+      "mese": "2026-06",
+      "n": 652
+     },
+     {
+      "mese": "2026-07",
+      "n": 773
+     },
+     {
+      "mese": "2026-08",
+      "n": 806
+     },
+     {
+      "mese": "2026-09",
+      "n": 870
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.4667,
+   "domanda": 0.4,
+   "quadrante": "osserva"
+  },
+  {
+   "id": "governance",
+   "nome": "Governance e conformità AI",
+   "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 2466,
+    "precedenti3": 2305,
+    "crescita": 0.0697,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 26
+     },
+     {
+      "mese": "2025-10",
+      "n": 39
+     },
+     {
+      "mese": "2025-11",
+      "n": 61
+     },
+     {
+      "mese": "2025-12",
+      "n": 110
+     },
+     {
+      "mese": "2026-01",
+      "n": 153
+     },
+     {
+      "mese": "2026-02",
+      "n": 303
+     },
+     {
+      "mese": "2026-03",
+      "n": 490
+     },
+     {
+      "mese": "2026-04",
+      "n": 672
+     },
+     {
+      "mese": "2026-05",
+      "n": 882
+     },
+     {
+      "mese": "2026-06",
+      "n": 751
+     },
+     {
+      "mese": "2026-07",
+      "n": 784
+     },
+     {
+      "mese": "2026-08",
+      "n": 905
+     },
+     {
+      "mese": "2026-09",
+      "n": 777
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.0667,
+   "domanda": 0.4667,
+   "quadrante": "osserva"
+  },
+  {
+   "id": "dati-per-ai",
+   "nome": "Data engineering per l'AI",
+   "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 5892,
+    "precedenti3": 4281,
+    "crescita": 0.3759,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 277
+     },
+     {
+      "mese": "2025-10",
+      "n": 364
+     },
+     {
+      "mese": "2025-11",
+      "n": 416
+     },
+     {
+      "mese": "2025-12",
+      "n": 515
+     },
+     {
+      "mese": "2026-01",
+      "n": 651
+     },
+     {
+      "mese": "2026-02",
+      "n": 798
+     },
+     {
+      "mese": "2026-03",
+      "n": 1209
+     },
+     {
+      "mese": "2026-04",
+      "n": 1176
+     },
+     {
+      "mese": "2026-05",
+      "n": 1437
+     },
+     {
+      "mese": "2026-06",
+      "n": 1668
+     },
+     {
+      "mese": "2026-07",
+      "n": 1937
+     },
+     {
+      "mese": "2026-08",
+      "n": 2020
+     },
+     {
+      "mese": "2026-09",
+      "n": 1935
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.4,
+   "domanda": 0.7333,
+   "quadrante": "consolida"
+  },
+  {
+   "id": "text-to-sql",
+   "nome": "AI per analisi dati e BI",
+   "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 614,
+    "precedenti3": 348,
+    "crescita": 0.7535,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 15
+     },
+     {
+      "mese": "2025-10",
+      "n": 20
+     },
+     {
+      "mese": "2025-11",
+      "n": 19
+     },
+     {
+      "mese": "2025-12",
+      "n": 26
+     },
+     {
+      "mese": "2026-01",
+      "n": 39
+     },
+     {
+      "mese": "2026-02",
+      "n": 46
+     },
+     {
+      "mese": "2026-03",
+      "n": 97
+     },
+     {
+      "mese": "2026-04",
+      "n": 67
+     },
+     {
+      "mese": "2026-05",
+      "n": 103
+     },
+     {
+      "mese": "2026-06",
+      "n": 178
+     },
+     {
+      "mese": "2026-07",
+      "n": 198
+     },
+     {
+      "mese": "2026-08",
+      "n": 178
+     },
+     {
+      "mese": "2026-09",
+      "n": 238
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.8667,
+   "domanda": 0.0667,
+   "quadrante": "prova"
+  },
+  {
+   "id": "vector-db",
+   "nome": "Database vettoriali",
+   "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 1721,
+    "precedenti3": 1852,
+    "crescita": -0.0705,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 183
+     },
+     {
+      "mese": "2025-10",
+      "n": 216
+     },
+     {
+      "mese": "2025-11",
+      "n": 225
+     },
+     {
+      "mese": "2025-12",
+      "n": 278
+     },
+     {
+      "mese": "2026-01",
+      "n": 372
+     },
+     {
+      "mese": "2026-02",
+      "n": 429
+     },
+     {
+      "mese": "2026-03",
+      "n": 575
+     },
+     {
+      "mese": "2026-04",
+      "n": 525
+     },
+     {
+      "mese": "2026-05",
+      "n": 604
+     },
+     {
+      "mese": "2026-06",
+      "n": 723
+     },
+     {
+      "mese": "2026-07",
+      "n": 707
+     },
+     {
+      "mese": "2026-08",
+      "n": 555
+     },
+     {
+      "mese": "2026-09",
+      "n": 459
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.0,
+   "domanda": 0.3333,
+   "quadrante": "osserva"
+  },
+  {
+   "id": "multimodale",
+   "nome": "Modelli multimodali",
+   "descrizione": "Modelli che combinano testo, immagini, audio e video.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 1257,
+    "precedenti3": 863,
+    "crescita": 0.4539,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 87
+     },
+     {
+      "mese": "2025-10",
+      "n": 84
+     },
+     {
+      "mese": "2025-11",
+      "n": 76
+     },
+     {
+      "mese": "2025-12",
+      "n": 79
+     },
+     {
+      "mese": "2026-01",
+      "n": 115
+     },
+     {
+      "mese": "2026-02",
+      "n": 121
+     },
+     {
+      "mese": "2026-03",
+      "n": 272
+     },
+     {
+      "mese": "2026-04",
+      "n": 282
+     },
+     {
+      "mese": "2026-05",
+      "n": 270
+     },
+     {
+      "mese": "2026-06",
+      "n": 311
+     },
+     {
+      "mese": "2026-07",
+      "n": 317
+     },
+     {
+      "mese": "2026-08",
+      "n": 539
+     },
+     {
+      "mese": "2026-09",
+      "n": 401
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.6667,
+   "domanda": 0.2,
+   "quadrante": "prova"
+  },
+  {
+   "id": "llmops",
+   "nome": "LLMOps e messa in produzione",
+   "descrizione": "Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 1268,
+    "precedenti3": 995,
+    "crescita": 0.273,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 28
+     },
+     {
+      "mese": "2025-10",
+      "n": 37
+     },
+     {
+      "mese": "2025-11",
+      "n": 25
+     },
+     {
+      "mese": "2025-12",
+      "n": 48
+     },
+     {
+      "mese": "2026-01",
+      "n": 77
+     },
+     {
+      "mese": "2026-02",
+      "n": 103
+     },
+     {
+      "mese": "2026-03",
+      "n": 190
+     },
+     {
+      "mese": "2026-04",
+      "n": 174
+     },
+     {
+      "mese": "2026-05",
+      "n": 319
+     },
+     {
+      "mese": "2026-06",
+      "n": 502
+     },
+     {
+      "mese": "2026-07",
+      "n": 474
+     },
+     {
+      "mese": "2026-08",
+      "n": 424
+     },
+     {
+      "mese": "2026-09",
+      "n": 370
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.3333,
+   "domanda": 0.2667,
+   "quadrante": "osserva"
+  },
+  {
+   "id": "modelli-locali",
+   "nome": "Modelli piccoli e locali",
+   "descrizione": "Modelli aperti che girano su laptop o server propri, senza cloud.",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 3471,
+    "precedenti3": 2451,
+    "crescita": 0.4153,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 59
+     },
+     {
+      "mese": "2025-10",
+      "n": 57
+     },
+     {
+      "mese": "2025-11",
+      "n": 102
+     },
+     {
+      "mese": "2025-12",
+      "n": 148
+     },
+     {
+      "mese": "2026-01",
+      "n": 205
+     },
+     {
+      "mese": "2026-02",
+      "n": 268
+     },
+     {
+      "mese": "2026-03",
+      "n": 477
+     },
+     {
+      "mese": "2026-04",
+      "n": 748
+     },
+     {
+      "mese": "2026-05",
+      "n": 661
+     },
+     {
+      "mese": "2026-06",
+      "n": 1042
+     },
+     {
+      "mese": "2026-07",
+      "n": 1052
+     },
+     {
+      "mese": "2026-08",
+      "n": 1151
+     },
+     {
+      "mese": "2026-09",
+      "n": 1268
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.5333,
+   "domanda": 0.5333,
+   "quadrante": "impara-ora"
+  },
+  {
+   "id": "robotica",
+   "nome": "AI fisica e robotica",
+   "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
+   "arxiv": null,
+   "github": {
+    "ultimi3": 478,
+    "precedenti3": 224,
+    "crescita": 1.1092,
+    "mensile": [
+     {
+      "mese": "2025-09",
+      "n": 21
+     },
+     {
+      "mese": "2025-10",
+      "n": 13
+     },
+     {
+      "mese": "2025-11",
+      "n": 20
+     },
+     {
+      "mese": "2025-12",
+      "n": 25
+     },
+     {
+      "mese": "2026-01",
+      "n": 29
+     },
+     {
+      "mese": "2026-02",
+      "n": 33
+     },
+     {
+      "mese": "2026-03",
+      "n": 68
+     },
+     {
+      "mese": "2026-04",
+      "n": 48
+     },
+     {
+      "mese": "2026-05",
+      "n": 96
+     },
+     {
+      "mese": "2026-06",
+      "n": 80
+     },
+     {
+      "mese": "2026-07",
+      "n": 158
+     },
+     {
+      "mese": "2026-08",
+      "n": 139
+     },
+     {
+      "mese": "2026-09",
+      "n": 181
+     }
+    ]
+   },
+   "lavoro": null,
+   "slancio": 0.9333,
+   "domanda": 0.0,
+   "quadrante": "prova"
+  }
+ ]
+}

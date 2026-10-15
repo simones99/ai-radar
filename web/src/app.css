@@ -6,7 +6,7 @@
   --fg: #121211;
   --accent: #0068d6;
   --fg-2: color-mix(in srgb, var(--fg) 68%, var(--card));
-  --fg-3: color-mix(in srgb, var(--fg) 58%, var(--card)); /* ≥ 4,5:1 sul bianco: testo piccolo leggibile (AA) */
+  --fg-3: color-mix(in srgb, var(--fg) 66%, var(--card)); /* ≥ 4,5:1 anche sullo sfondo --bg (AA) */
   --line: color-mix(in srgb, var(--fg) 9%, var(--card));
   --line-2: color-mix(in srgb, var(--fg) 18%, var(--card));
   --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--card));
@@ -38,7 +38,7 @@ button { font: inherit; color: inherit; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.wrap { max-width: 1240px; margin-inline: auto; padding-inline: var(--s2); padding-block: var(--s3) var(--s12); display: grid; gap: var(--s6); }
+.wrap { max-width: 1240px; margin-inline: auto; padding-inline: var(--s2); padding-block: var(--s3) var(--s12); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
 @media (min-width: 720px) { .wrap { padding-inline: var(--s5); } }
 .small { font-size: 12px; line-height: 16px; }
 .muted { color: var(--fg-2); }

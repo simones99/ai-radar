@@ -22,6 +22,10 @@ scadenze:
     titolo: Obblighi di trasparenza
     descrizione: "Articolo 50: dire quando si parla con un'AI e marcare i contenuti generati."
     fonte: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+  - data: 2026-12-02
+    titolo: Vietate le app che spogliano
+    descrizione: "Nuovo divieto dell'articolo 5: sistemi che creano immagini intime non consensuali di persone reali o abusi su minori."
+    fonte: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744
   - data: 2027-12-02
     titolo: Sistemi ad alto rischio (allegato III)
     descrizione: Selezione del personale, credito, istruzione, controllo delle frontiere e altri usi.

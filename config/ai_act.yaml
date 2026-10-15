@@ -22,10 +22,6 @@ scadenze:
     titolo: Obblighi di trasparenza
     descrizione: "Articolo 50: dire quando si parla con un'AI e marcare i contenuti generati."
     fonte: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
-  - data: 2026-12-02
-    titolo: Fine della transizione per la marcatura
-    descrizione: "Articolo 50(2): anche i sistemi generativi già sul mercato devono marcare i contenuti."
-    fonte: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
   - data: 2027-12-02
     titolo: Sistemi ad alto rischio (allegato III)
     descrizione: Selezione del personale, credito, istruzione, controllo delle frontiere e altri usi.

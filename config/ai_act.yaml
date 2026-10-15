@@ -1,0 +1,36 @@
+# Scadenze dell'AI Act (Regolamento (UE) 2024/1689) e del Digital Omnibus sull'AI.
+# Ogni voce: data (AAAA-MM-GG), titolo, descrizione, fonte (https).
+# Da aggiornare a mano quando cambia il quadro normativo.
+scadenze:
+  - data: 2024-08-01
+    titolo: Entra in vigore l'AI Act
+    descrizione: Regolamento (UE) 2024/1689, pubblicato nella Gazzetta ufficiale il 12 luglio 2024.
+    fonte: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+  - data: 2025-02-02
+    titolo: Divieti e alfabetizzazione AI
+    descrizione: "Vietate le pratiche dell'articolo 5; obbligo di formazione per chi usa sistemi AI (articolo 4)."
+    fonte: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+  - data: 2025-08-02
+    titolo: Modelli per uso generale
+    descrizione: Obblighi per i fornitori di modelli GPAI, governance e sanzioni.
+    fonte: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+  - data: 2026-07-27
+    titolo: In vigore il Digital Omnibus sull'AI
+    descrizione: Rinvia le scadenze per i sistemi ad alto rischio e le fissa a date certe.
+    fonte: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744
+  - data: 2026-08-02
+    titolo: Obblighi di trasparenza
+    descrizione: "Articolo 50: dire quando si parla con un'AI e marcare i contenuti generati."
+    fonte: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+  - data: 2026-12-02
+    titolo: Fine della transizione per la marcatura
+    descrizione: "Articolo 50(2): anche i sistemi generativi già sul mercato devono marcare i contenuti."
+    fonte: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+  - data: 2027-12-02
+    titolo: Sistemi ad alto rischio (allegato III)
+    descrizione: Selezione del personale, credito, istruzione, controllo delle frontiere e altri usi.
+    fonte: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744
+  - data: 2028-08-02
+    titolo: Alto rischio nei prodotti regolati (allegato I)
+    descrizione: AI dentro dispositivi medici, macchinari, veicoli.
+    fonte: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744

@@ -17,10 +17,11 @@ import time
 import traceback
 from datetime import date
 
-from . import adzuna, artificial_analysis, arxiv, epoch, eurostat, feeds, github_signals, huggingface, owid, radar
+from . import adzuna, ai_act, artificial_analysis, arxiv, epoch, eurostat, feeds, github_signals, huggingface, owid, radar, rapporti
 from .common import load_yaml, log, now_iso, read_json, redact, session, write_json
 
-ORDER = ["epoch", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "owid", "feeds", "radar"]
+ORDER = ["epoch", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "owid",
+         "ai_act", "rapporti", "feeds", "radar"]
 SKIPPABLE = (adzuna.MissingCredentials, artificial_analysis.MissingCredentials)
 
 
@@ -45,6 +46,8 @@ def main(argv: list[str] | None = None) -> int:
         "adzuna": lambda: adzuna.run(s, skills, src["jobs_countries"], src.get("jobs_eu_countries", []), today),
         "eurostat": lambda: eurostat.run(s, src["eurostat_geo"]),
         "owid": lambda: owid.run(s, src.get("owid", [])),
+        "ai_act": ai_act.run,
+        "rapporti": rapporti.run,
         "feeds": lambda: feeds.run(s, src["feeds"], src.get("feeds_days", 45), src.get("feeds_per_source", 12)),
         "radar": lambda: radar.run(skills, today),
     }

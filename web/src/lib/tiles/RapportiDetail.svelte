@@ -1,11 +1,12 @@
 <script lang="ts">
   import Block from '../charts/Block.svelte';
   import Timeline from '../charts/Timeline.svelte';
+  import { slug } from '../router';
   import { monthYear } from '../text/format';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
-  let { data, today, tile, onclose }: DetailProps = $props();
+  let { data, today, tile, elemento, onclose }: DetailProps = $props();
 
   const head = $derived(tile.head(data, today));
   const reps = $derived(data.rapporti?.rapporti ?? []);
@@ -23,7 +24,7 @@
   <Block span={4} title="I rapporti seguiti">
     <ul class="list">
       {#each reps as r (r.nome)}
-        <li>
+        <li class:hl={elemento === slug(r.nome)} aria-current={elemento === slug(r.nome) ? 'true' : undefined}>
           <a href={r.url} target="_blank" rel="noopener">{r.nome}</a>
           <span>{r.editore} · {r.cadenza}</span>
           {#if r.prossima_prevista}<span>Prossima prevista: {monthYear(r.prossima_prevista)} (stima)</span>{/if}
@@ -39,5 +40,6 @@
   .list li + li { border-top: 1px solid var(--line); }
   .list a { font-weight: 600; text-decoration: none; }
   @media (hover: hover) { .list a:hover { text-decoration: underline; } }
+  .list li.hl { background: var(--accent-soft); border-radius: var(--r-sm); padding-inline: var(--s1); }
   .list span { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

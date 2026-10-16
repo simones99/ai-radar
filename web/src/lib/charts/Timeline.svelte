@@ -2,7 +2,7 @@
   import { day, isoDay, monthYear, ym } from '../text/format';
 
   type Item = { date: string; title: string; text?: string; href?: string };
-  let { items, today, label }: { items: Item[]; today: Date; label: string } = $props();
+  let { items, today, label, highlight = null }: { items: Item[]; today: Date; label: string; highlight?: string | null } = $props();
 
   const key = (d: string) => (d.length === 7 ? ym(today) : isoDay(today));
   const rows = $derived.by(() => {
@@ -28,7 +28,7 @@
     {#if r.kind === 'today'}
       <li class="today"><span class="when">oggi</span><span class="rail" aria-hidden="true"></span><span class="what">{day(isoDay(today))}</span></li>
     {:else}
-      <li class={r.cls}>
+      <li class={r.cls} class:hl={highlight != null && r.it.date === highlight} aria-current={highlight != null && r.it.date === highlight ? 'true' : undefined}>
         <span class="when">{when(r.it.date)}</span>
         <span class="rail" aria-hidden="true"></span>
         <span class="what">
@@ -55,6 +55,7 @@
   .what a, .what b { font-weight: 600; }
   .what span { color: var(--fg-2); font-size: 14px; }
   .future:not(.next) .what a, .future:not(.next) .what b { font-weight: 500; color: var(--fg-2); }
+  .hl { background: var(--accent-soft); border-radius: var(--r-sm); }
   .today .when, .today .what { color: var(--fg-3); font-weight: 400; font-size: 12px; }
   .today .rail::after { width: 16px; height: 2px; border-radius: 1px; left: calc(50% - 8px); top: 27px; background: var(--fg-3); }
 </style>

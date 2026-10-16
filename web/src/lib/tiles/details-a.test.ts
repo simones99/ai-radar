@@ -74,6 +74,12 @@ describe('Business', () => {
 
 describe('Norme', () => {
   const tile = mk('norme', 'Norme', headNorme, NormeDetail);
+  it('link diretto a una scadenza: è evidenziata', () => {
+    show(NormeDetail, tile, '2026-12-02');
+    const li = screen.getByRole('link', { name: 'Fine della transizione per la marcatura' }).closest('li')!;
+    expect(li).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByRole('link', { name: 'Modelli per uso generale' }).closest('li')).not.toHaveAttribute('aria-current');
+  });
   it('linea del tempo con la prossima scadenza e notizie di policy', () => {
     show(NormeDetail, tile);
     const next = screen.getByRole('link', { name: 'Fine della transizione per la marcatura' });

@@ -72,6 +72,12 @@ describe('Persone: Italia nei grafici europei', () => {
 });
 
 describe('Rapporti', () => {
+  it('link diretto a un rapporto: è evidenziato', () => {
+    render(RapportiDetail, { data, today, tile: mk('rapporti', 'Rapporti', headRapporti, RapportiDetail), elemento: 'state-of-ai-report', onclose: () => {} });
+    const li = screen.getByRole('link', { name: 'State of AI Report' }).closest('li')!;
+    expect(li).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByRole('link', { name: 'AI Index Report' }).closest('li')).not.toHaveAttribute('aria-current');
+  });
   it('uscite passate e prossime stimate, con link', () => {
     show(RapportiDetail, mk('rapporti', 'Rapporti', headRapporti, RapportiDetail));
     expect(screen.getByRole('link', { name: 'AI Index Report 2026' })).toHaveAttribute('href', 'https://hai.stanford.edu/ai-index');

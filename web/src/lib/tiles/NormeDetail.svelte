@@ -5,7 +5,7 @@
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
-  let { data, today, tile, onclose }: DetailProps = $props();
+  let { data, today, tile, elemento, onclose }: DetailProps = $props();
 
   const head = $derived(tile.head(data, today));
   const items = $derived((data.ai_act?.scadenze ?? []).map((s) => ({ date: s.data, title: s.titolo, text: s.descrizione, href: s.fonte })));
@@ -15,7 +15,7 @@
 <Detail {tile} {head} {onclose}>
   <Block span={8} title="Linea del tempo dell'AI Act" missing={items.length ? null : "Le scadenze dell'AI Act non sono disponibili in questo aggiornamento."}
     cite={[{ t: "Date dal Regolamento (UE) 2024/1689 e dal Digital Omnibus sull'AI. Ogni voce porta alla fonte ufficiale." }]}>
-    <Timeline label="Scadenze dell'AI Act" {items} {today} />
+    <Timeline label="Scadenze dell'AI Act" {items} {today} highlight={elemento} />
   </Block>
   <Block span={4} title="Notizie di policy">
     {#if policy.length}

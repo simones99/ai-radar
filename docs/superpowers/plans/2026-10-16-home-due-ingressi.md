@@ -49,7 +49,7 @@
 - Modify: `web/src/lib/text/frasi.ts:104-121`
 - Test: `web/src/lib/router.test.ts`, `web/src/lib/text/frasi.test.ts`, `web/src/lib/tiles/grid.test.ts`, `web/src/lib/tiles/shell.test.ts`, `web/src/lib/tiles/details-a.test.ts`, `web/tests/e2e/dashboard.spec.ts`
 
-- [ ] **Step 1: Test del router che falliscono**
+- [x] **Step 1: Test del router che falliscono**
 
 In `web/src/lib/router.test.ts` sostituisci il test `scrive gli hash` e aggiungi il test dell'alias:
 
@@ -65,12 +65,12 @@ In `web/src/lib/router.test.ts` sostituisci il test `scrive gli hash` e aggiungi
   });
 ```
 
-- [ ] **Step 2: Verifica che fallisca**
+- [x] **Step 2: Verifica che fallisca**
 
 Run: `npx vitest run src/lib/router.test.ts`
 Expected: FAIL (`'norme'` non è un `TileId`; `parseHash('#politica')` restituisce `tema: 'politica'`).
 
-- [ ] **Step 3: Router con Norme e alias**
+- [x] **Step 3: Router con Norme e alias**
 
 Sostituisci le prime righe di `web/src/lib/router.ts` (fino a `parseHash` compreso) con:
 
@@ -103,7 +103,7 @@ export function parseHash(hash: string): { tema: TileId; elemento: string | null
 
 `toHash` e `slug` restano come sono.
 
-- [ ] **Step 4: Foto, dettaglio, frasi e registro**
+- [x] **Step 4: Foto, dettaglio, frasi e registro**
 
 In `web/src/lib/photos.ts` rinomina solo la chiave del record (gli import della foto restano `politica`):
 
@@ -136,7 +136,7 @@ In `web/src/lib/tiles/registry.ts`:
   { id: 'norme', label: 'Norme', source: 'ai_act', eager: false, face: faceNorme, head: headNorme, Detail: NormeDetail },
 ```
 
-- [ ] **Step 5: Aggiorna i test esistenti al nuovo nome**
+- [x] **Step 5: Aggiorna i test esistenti al nuovo nome**
 
 `web/src/lib/text/frasi.test.ts`: nell'import sostituisci `facePolitica` → `faceNorme`, `headPolitica` → `headNorme`; nel corpo sostituisci ogni `facePolitica(` con `faceNorme(` e ogni `headPolitica(` con `headNorme(`.
 
@@ -169,12 +169,12 @@ describe('Norme', () => {
 - test `indietro chiude; dopo un cambio di card…`: `getByRole('button', { name: 'Norme' })` e `toHaveURL(/#norme$/)`;
 - test `riduci movimento`: `#tile-norme .face` e `#detail-norme`.
 
-- [ ] **Step 6: Verifica**
+- [x] **Step 6: Verifica**
 
 Run: `npx vitest run && npm run check`
 Expected: tutti i test PASS, `0 ERRORS`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A src tests
@@ -192,7 +192,7 @@ git commit -m "Politica diventa Norme; i link #politica aprono ancora la card"
 - Modify: `web/src/lib/tiles/Pills.svelte`
 - Test: `web/src/lib/tiles/grid.test.ts`, `web/src/lib/tiles/shell.test.ts`
 
-- [ ] **Step 1: Test che falliscono**
+- [x] **Step 1: Test che falliscono**
 
 In `web/src/lib/tiles/grid.test.ts`, dentro `describe('TileGrid', …)`, aggiungi:
 
@@ -228,12 +228,12 @@ In `web/src/lib/tiles/shell.test.ts`, nella funzione `tile`, aggiungi `testa: 'i
   id: 'business', label: 'Business', source: 'owid', eager: true, testa: 'italia',
 ```
 
-- [ ] **Step 2: Verifica che falliscano**
+- [x] **Step 2: Verifica che falliscano**
 
 Run: `npx vitest run src/lib/tiles/grid.test.ts`
 Expected: FAIL (nessun `h2` "Su cosa formarti"; nessun `group`).
 
-- [ ] **Step 3: Tipo `Testa` e registro**
+- [x] **Step 3: Tipo `Testa` e registro**
 
 In `web/src/lib/tiles/types.ts` aggiungi il tipo e il campo:
 
@@ -273,7 +273,7 @@ export const TILES: TileDef[] = [
 ];
 ```
 
-- [ ] **Step 4: Griglia in due sezioni**
+- [x] **Step 4: Griglia in due sezioni**
 
 In `web/src/lib/tiles/TileGrid.svelte`, nello `<script>` cambia l'import del registro in `import { TESTE, TILES } from './registry';`. Sostituisci il blocco `<div class="tiles" …>…</div>` con:
 
@@ -317,7 +317,7 @@ Sostituisci il blocco `<style>` con:
 </style>
 ```
 
-- [ ] **Step 5: Pillole in due gruppi**
+- [x] **Step 5: Pillole in due gruppi**
 
 Sostituisci `web/src/lib/tiles/Pills.svelte` con:
 
@@ -367,12 +367,12 @@ Sostituisci `web/src/lib/tiles/Pills.svelte` con:
 </style>
 ```
 
-- [ ] **Step 6: Verifica**
+- [x] **Step 6: Verifica**
 
 Run: `npx vitest run && npm run check`
 Expected: tutti i test PASS (compresi i due nuovi), `0 ERRORS`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src
@@ -387,7 +387,7 @@ git commit -m "Card divise in due teste: Su cosa formarti e L'AI in Italia, anch
 - Modify: `web/src/lib/text/frasi.ts` (blocchi `business` e `persone`, import da `./format`)
 - Test: `web/src/lib/text/frasi.test.ts`, `web/src/lib/tiles/details-b.test.ts`
 
-- [ ] **Step 1: Test che falliscono**
+- [x] **Step 1: Test che falliscono**
 
 In `web/src/lib/text/frasi.test.ts` sostituisci i test `business: …` e `persone: mondo e Italia` con:
 
@@ -423,12 +423,12 @@ In `web/src/lib/tiles/details-b.test.ts`, test `Persone`, sostituisci l'attesa s
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("Usa l'AI generativa il 30% degli italiani");
 ```
 
-- [ ] **Step 2: Verifica che falliscano**
+- [x] **Step 2: Verifica che falliscano**
 
 Run: `npx vitest run src/lib/text/frasi.test.ts src/lib/tiles/details-b.test.ts`
 Expected: FAIL sui test Business e Persone.
 
-- [ ] **Step 3: Implementa**
+- [x] **Step 3: Implementa**
 
 In `web/src/lib/text/frasi.ts`:
 
@@ -512,12 +512,12 @@ export function headPersone(d: Dataset, _today?: Date): Head {
 }
 ```
 
-- [ ] **Step 4: Verifica**
+- [x] **Step 4: Verifica**
 
 Run: `npx vitest run && npm run check`
 Expected: tutti PASS, `0 ERRORS`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src
@@ -532,7 +532,7 @@ git commit -m "Business e Persone: prima il dato italiano, confronto con UE e mo
 - Modify: `web/src/lib/text/frasi.ts` (import e nuovo blocco in fondo)
 - Create: `web/src/lib/text/doors.test.ts`
 
-- [ ] **Step 1: Test che falliscono**
+- [x] **Step 1: Test che falliscono**
 
 Crea `web/src/lib/text/doors.test.ts`:
 
@@ -604,12 +604,12 @@ describe('porta Per te', () => {
 });
 ```
 
-- [ ] **Step 2: Verifica che falliscano**
+- [x] **Step 2: Verifica che falliscano**
 
 Run: `npx vitest run src/lib/text/doors.test.ts`
 Expected: FAIL (`doorPerTe` non esportata).
 
-- [ ] **Step 3: Implementa**
+- [x] **Step 3: Implementa**
 
 In `web/src/lib/text/frasi.ts`:
 
@@ -685,12 +685,12 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
 }
 ```
 
-- [ ] **Step 4: Verifica**
+- [x] **Step 4: Verifica**
 
 Run: `npx vitest run src/lib/text/doors.test.ts && npm run check`
 Expected: 8 PASS, `0 ERRORS`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/text
@@ -706,7 +706,7 @@ git commit -m "Porta Per te: la notizia della settimana scritta dal radar"
 - Modify: `web/src/lib/text/frasi.ts` (import da `./format` e `../router`, nuova funzione in fondo)
 - Modify: `web/src/lib/text/doors.test.ts`
 
-- [ ] **Step 1: Test che falliscono**
+- [x] **Step 1: Test che falliscono**
 
 In `web/src/lib/text/doors.test.ts` cambia l'import in `import { doorItalia, doorPerTe } from './frasi';` e aggiungi in fondo:
 
@@ -760,12 +760,12 @@ describe('porta L’AI in Italia', () => {
 });
 ```
 
-- [ ] **Step 2: Verifica che falliscano**
+- [x] **Step 2: Verifica che falliscano**
 
 Run: `npx vitest run src/lib/text/doors.test.ts`
 Expected: FAIL (`doorItalia` non esportata).
 
-- [ ] **Step 3: Tipo Eurostat**
+- [x] **Step 3: Tipo Eurostat**
 
 In `web/src/lib/data/types.ts` aggiungi il campo (la pipeline lo scrive già in `data/eurostat.json`):
 
@@ -779,7 +779,7 @@ export interface Eurostat {
 }
 ```
 
-- [ ] **Step 4: Implementa**
+- [x] **Step 4: Implementa**
 
 In `web/src/lib/text/frasi.ts`:
 
@@ -861,12 +861,12 @@ export function doorItalia(d: Dataset, today: Date): Door {
 }
 ```
 
-- [ ] **Step 5: Verifica**
+- [x] **Step 5: Verifica**
 
 Run: `npx vitest run src/lib/text/doors.test.ts && npm run check`
 Expected: 15 PASS, `0 ERRORS`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/lib/text src/lib/data/types.ts
@@ -883,7 +883,7 @@ git commit -m "Porta L'AI in Italia: scadenze, dati italiani nuovi, rapporti in 
 - Modify: `web/src/lib/tiles/RapportiDetail.svelte`
 - Test: `web/src/lib/tiles/details-a.test.ts`, `web/src/lib/tiles/details-b.test.ts`
 
-- [ ] **Step 1: Test che falliscono**
+- [x] **Step 1: Test che falliscono**
 
 In `web/src/lib/tiles/details-a.test.ts`, dentro `describe('Norme', …)`, aggiungi:
 
@@ -907,12 +907,12 @@ In `web/src/lib/tiles/details-b.test.ts`, dentro `describe('Rapporti', …)`, ag
   });
 ```
 
-- [ ] **Step 2: Verifica che falliscano**
+- [x] **Step 2: Verifica che falliscano**
 
 Run: `npx vitest run src/lib/tiles/details-a.test.ts src/lib/tiles/details-b.test.ts`
 Expected: FAIL (nessun `aria-current`).
 
-- [ ] **Step 3: Timeline con `highlight`**
+- [x] **Step 3: Timeline con `highlight`**
 
 In `web/src/lib/charts/Timeline.svelte`:
 
@@ -934,7 +934,7 @@ Nello `<style>` aggiungi:
   .hl { background: var(--accent-soft); border-radius: var(--r-sm); }
 ```
 
-- [ ] **Step 4: Norme passa l'elemento alla linea del tempo**
+- [x] **Step 4: Norme passa l'elemento alla linea del tempo**
 
 In `web/src/lib/tiles/NormeDetail.svelte`:
 
@@ -948,7 +948,7 @@ e
     <Timeline label="Scadenze dell'AI Act" {items} {today} highlight={elemento} />
 ```
 
-- [ ] **Step 5: Rapporti evidenzia il rapporto**
+- [x] **Step 5: Rapporti evidenzia il rapporto**
 
 In `web/src/lib/tiles/RapportiDetail.svelte`:
 
@@ -974,12 +974,12 @@ Nello `<style>` aggiungi:
   .list li.hl { background: var(--accent-soft); border-radius: var(--r-sm); padding-inline: var(--s1); }
 ```
 
-- [ ] **Step 6: Verifica**
+- [x] **Step 6: Verifica**
 
 Run: `npx vitest run && npm run check`
 Expected: tutti PASS, `0 ERRORS`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src
@@ -997,7 +997,7 @@ git commit -m "Norme e Rapporti: il link diretto evidenzia la scadenza o il rapp
 - Modify: `web/src/lib/text/frasi.ts` (togli `heroThesis`)
 - Test: `web/src/app.test.ts`, `web/src/lib/text/frasi.test.ts`
 
-- [ ] **Step 1: Test che falliscono**
+- [x] **Step 1: Test che falliscono**
 
 Crea `web/src/lib/tiles/doors-ui.test.ts`:
 
@@ -1038,12 +1038,12 @@ e rinomina il test in `'carica i dati e mostra le due porte'`.
 
 In `web/src/lib/text/frasi.test.ts` togli `heroThesis` dall'import e cancella il test `'tesi della home e riserva'`.
 
-- [ ] **Step 2: Verifica che falliscano**
+- [x] **Step 2: Verifica che falliscano**
 
 Run: `npx vitest run src/lib/tiles/doors-ui.test.ts src/app.test.ts`
 Expected: FAIL (`Doors.svelte` non esiste; la home non ha le porte).
 
-- [ ] **Step 3: Componente `Doors.svelte`**
+- [x] **Step 3: Componente `Doors.svelte`**
 
 Crea `web/src/lib/tiles/Doors.svelte`:
 
@@ -1095,7 +1095,7 @@ Crea `web/src/lib/tiles/Doors.svelte`:
 </style>
 ```
 
-- [ ] **Step 4: Home senza tesi, con le porte**
+- [x] **Step 4: Home senza tesi, con le porte**
 
 In `web/src/App.svelte`:
 
@@ -1130,12 +1130,12 @@ In `web/src/lib/text/frasi.ts` cancella il blocco `// ---- tesi della home` con 
 import { capitalize, day, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
 ```
 
-- [ ] **Step 5: Verifica**
+- [x] **Step 5: Verifica**
 
 Run: `npx vitest run && npm run check`
 Expected: tutti PASS, `0 ERRORS`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src
@@ -1149,7 +1149,7 @@ git commit -m "Home a due ingressi: le porte Per te e L'AI in Italia al posto de
 **Files:**
 - Modify: `web/tests/e2e/dashboard.spec.ts`
 
-- [ ] **Step 1: Aggiorna e aggiungi i test**
+- [x] **Step 1: Aggiorna e aggiungi i test**
 
 Sostituisci il test `'home: tesi e 8 temi'` con:
 
@@ -1189,7 +1189,7 @@ test('i vecchi link #politica aprono Norme', async ({ page }) => {
 
 Il test di accessibilità aspetta già 8 `button.face` e controlla la home: le porte entrano nel controllo senza modifiche. I cicli su `TEMI` usano già `norme` (Task 1).
 
-- [ ] **Step 2: Lancia tutto**
+- [x] **Step 2: Lancia tutto**
 
 Run (da `web/`):
 
@@ -1203,7 +1203,7 @@ Expected: `0 ERRORS`; tutti i test di unità PASS; tutti i test end-to-end PASS 
 
 Se un test di 320/360 px segnala scorrimento orizzontale, la causa probabile è il titolo lungo di una porta: verifica che `.news` abbia `overflow-wrap: anywhere` e aggiungilo se serve.
 
-- [ ] **Step 3: Controllo a occhio con i dati veri**
+- [x] **Step 3: Controllo a occhio con i dati veri**
 
 Da `web/`:
 
@@ -1215,7 +1215,7 @@ npx vite preview --port 4173 --strictPort
 
 Apri `http://localhost:4173/` (non `/ai-radar/`: `base` è `./`). Controlla a 1280 px che le due porte siano sopra la piega, poi a 360 px che stiano una sotto l'altra. Ferma il server.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tests

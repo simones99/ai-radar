@@ -211,3 +211,15 @@ test('360px: all’apertura il titolo della card è nella finestra, sotto le pil
     return pills && det ? det.y >= pills.y + pills.height : false;
   }).toBe(true);
 });
+
+test('Esc due volte di fila dalla pagina di una competenza: un solo salto, si resta nel sito', async ({ page }) => {
+  await page.goto('/?esterna');
+  await page.goto('/');
+  await page.getByRole('button', { name: /^Competenze/ }).click();
+  await page.evaluate(() => document.dispatchEvent(new CustomEvent('ai-radar:apri', { detail: { tema: 'competenze', elemento: 'mcp' } })));
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#detail-competenze')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+});

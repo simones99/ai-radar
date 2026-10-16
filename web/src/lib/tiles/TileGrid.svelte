@@ -16,7 +16,15 @@
   let lastOpened: TileId | null = start?.tema ?? null;
   let currentEl: string | null = start?.elemento ?? null; // sincrono, come current
   let depth = 0; // passi aggiunti alla cronologia da quando la card è aperta (0: aperta da un link diretto)
-  let closing = false; // chiusura in corso: history.go(-depth), poi onPop chiude
+  let jumping: 'close' | 'back' | null = null; // salto nella cronologia in corso: finché non arriva popstate, niente altri salti
+  let jumpTimer: ReturnType<typeof setTimeout> | undefined;
+
+  function jump(kind: 'close' | 'back', n: number) {
+    jumping = kind;
+    clearTimeout(jumpTimer);
+    jumpTimer = setTimeout(() => (jumping = null), 1000); // ripiego: se popstate non arriva, non resta appeso
+    history.go(-n);
+  }
   let riapri = $state(0); // cresce a ogni link alla card già aperta: la scheda si ricrea come a una nuova apertura
   setTitle(start?.tema ?? null);
 
@@ -65,14 +73,15 @@
   }
 
   function openTile(id: TileId, el: string | null = null) {
+    if (jumping) return;
     if (current === null) {
       depth = 1;
       history.pushState({ tema: id, depth }, '', toHash(id, el));
     } else if (current === id && el !== null && el !== currentEl) {
       depth += 1; // dentro la card, verso un elemento: Indietro torna a dove si era
-      history.pushState({ tema: id, depth }, '', toHash(id, el));
-    } else if (current === id && el === null && currentEl !== null && depth > 1) {
-      history.back(); // «Tutte le competenze» dopo esserci entrati dalla card: come Indietro
+      history.pushState({ tema: id, depth, daRadar: currentEl === null }, '', toHash(id, el));
+    } else if (current === id && el === null && currentEl !== null && history.state?.daRadar) {
+      jump('back', 1); // «Tutte le competenze» dopo esserci entrati dal radar: come Indietro
       return;
     } else {
       history.replaceState(history.state, '', toHash(id, el));
@@ -91,10 +100,9 @@
   }
 
   function closeTile() {
-    if (current === null) return;
+    if (current === null || jumping) return;
     if (depth > 0) {
-      closing = true;
-      history.go(-depth); // onPop chiude e riporta il focus
+      jump('close', depth); // onPop chiude e riporta il focus
       return;
     }
     history.replaceState(null, '', location.pathname + location.search);
@@ -103,8 +111,10 @@
 
   function onPop() {
     const h = parseHash(location.hash);
-    if (closing) {
-      closing = false;
+    const kind = jumping;
+    jumping = null;
+    clearTimeout(jumpTimer);
+    if (kind === 'close') {
       depth = 0;
       if (h) history.replaceState(null, '', location.pathname + location.search); // aperta da un link diretto: si chiude davvero
       refocus(show(null));

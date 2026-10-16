@@ -80,7 +80,6 @@ describe('TileGrid', () => {
     history.replaceState(null, '', '/#competenze/mcp');
     render(TileGrid, { data, today });
     expect(document.getElementById('detail-competenze')).not.toBeNull();
-    expect(document.getElementById('detail-competenze')).not.toBeNull();
   });
 
   it('link alla card già aperta sullo stesso elemento: lo rimette in evidenza, scorre e porta il focus al titolo', async () => {
@@ -151,6 +150,36 @@ describe('TileGrid', () => {
       await fireEvent.keyDown(window, { key: 'Escape' });
       await waitFor(() => expect(details()).toHaveLength(0));
       expect(location.hash).toBe('');
+    } finally {
+      a.remove();
+    }
+  });
+
+  it('due Esc di fila dalla card su un elemento: un solo salto, la card si chiude', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Competenze'));
+    apri('competenze', 'mcp');
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp'));
+    void fireEvent.keyDown(window, { key: 'Escape' });
+    void fireEvent.keyDown(window, { key: 'Escape' });
+    await waitFor(() => expect(details()).toHaveLength(0));
+    expect(location.hash).toBe('');
+  });
+
+  it('«Tutte le competenze» cliccato due volte di fila: un solo passo indietro, resta sul radar', async () => {
+    const a = document.body.appendChild(document.createElement('a'));
+    a.setAttribute('href', '#competenze');
+    try {
+      render(TileGrid, { data, today });
+      await fireEvent.click(face('Competenze'));
+      apri('competenze', 'mcp');
+      await waitFor(() => expect(location.hash).toBe('#competenze/mcp'));
+      void fireEvent.click(a);
+      void fireEvent.click(a);
+      await waitFor(() => expect(location.hash).toBe('#competenze'));
+      await new Promise((r) => setTimeout(r, 100));
+      expect(location.hash).toBe('#competenze');
+      expect(details()).toHaveLength(1);
     } finally {
       a.remove();
     }

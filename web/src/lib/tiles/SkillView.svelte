@@ -93,7 +93,7 @@
     {#each row.in_crescita ?? [] as r (r.url)}
       <li>
         <a href={r.url} target="_blank" rel="noopener">{r.nome}</a>
-        <span class="meta">{String(r.stelle).replace(/\B(?=(\d{3})+$)/g, '.')} stelle · creato {dayWith('il', r.creato)}</span>
+        <span class="meta">{nf(r.stelle)} stelle · creato {dayWith('il', r.creato)}</span>
         {#if r.descrizione}<span class="desc">{r.descrizione}</span>{/if}
       </li>
     {/each}

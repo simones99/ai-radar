@@ -25,7 +25,7 @@ describe('SkillView', () => {
     expect(screen.getByText('documentazione · in inglese')).toBeInTheDocument();
     expect(screen.getByText('corso')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'acme/mcp-kit' })).toHaveAttribute('href', 'https://github.com/acme/mcp-kit');
-    expect(screen.getByText(/1\.200 stelle · creato il 2 ago 2026/)).toBeInTheDocument();
+    expect(screen.getByText(/1200 stelle · creato il 2 ago 2026/)).toBeInTheDocument();
     const path = screen.getByRole('list', { name: 'Il percorso sul radar' });
     expect(path.querySelectorAll('li')).toHaveLength(3);
     expect(path.lastElementChild).toHaveTextContent('set 2026Impara ora');

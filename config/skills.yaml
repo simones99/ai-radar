@@ -12,6 +12,9 @@
 #           Niente "AI" nella frase: nell'indice italiano "ai" è una preposizione
 #           e viene ignorata, quindi "AI governance" diventa "governance".
 #           Se cambi una frase, la crescita della domanda riparte da zero per quella competenza.
+#   risorse: 2-4 link «Per iniziare», gratuiti, controllati a mano.
+#            tipo: documentazione, corso, guida o repository; lingua: it se in italiano (altrimenti en).
+#            La pipeline controlla i link ogni settimana e nasconde quelli che non rispondono per due giri di fila.
 #
 # Per aggiungere o togliere una competenza basta modificare questo file:
 # al prossimo aggiornamento la pipeline recupera lo storico che manca.
@@ -25,6 +28,10 @@ skills:
     arxiv: ["LLM agent", "LLM agents", "agentic"]
     github: ai-agents
     jobs: {what_phrase: "agentic AI"}
+    risorse:
+      - {titolo: "Corso gratuito di Hugging Face sugli agenti", url: "https://huggingface.co/learn/agents-course/en/unit0/introduction", tipo: corso}
+      - {titolo: "Guida Anthropic: costruire agenti efficaci", url: "https://www.anthropic.com/engineering/building-effective-agents", tipo: guida}
+      - {titolo: "Documentazione OpenAI sugli agenti", url: "https://developers.openai.com/api/docs/guides/agents", tipo: documentazione}
 
   - id: coding-agenti
     nome: Sviluppo con agenti di coding
@@ -34,6 +41,10 @@ skills:
     arxiv: ["coding agent", "software engineering agent", "SWE-bench"]
     github: coding-agent
     jobs: {what_phrase: "coding agent"}
+    risorse:
+      - {titolo: "Documentazione ufficiale di Claude Code", url: "https://code.claude.com/docs/en/overview", tipo: documentazione}
+      - {titolo: "Buone pratiche per lavorare con Claude Code", url: "https://code.claude.com/docs/en/best-practices", tipo: guida}
+      - {titolo: "Repository di Codex CLI (OpenAI)", url: "https://github.com/openai/codex", tipo: repository}
 
   - id: mcp
     nome: Model Context Protocol (MCP)
@@ -42,6 +53,10 @@ skills:
     arxiv: ["Model Context Protocol"]
     github: mcp
     jobs: {what_phrase: "Model Context Protocol"}
+    risorse:
+      - {titolo: "Documentazione ufficiale di MCP: introduzione", url: "https://modelcontextprotocol.io/docs/getting-started/intro", tipo: documentazione}
+      - {titolo: "Corso gratuito di Hugging Face su MCP", url: "https://huggingface.co/learn/mcp-course/unit0/introduction", tipo: corso}
+      - {titolo: "Repository dei server MCP di riferimento", url: "https://github.com/modelcontextprotocol/servers", tipo: repository}
 
   - id: rag
     nome: RAG e ricerca semantica
@@ -50,6 +65,11 @@ skills:
     arxiv: ["retrieval-augmented generation", "retrieval augmented generation"]
     github: rag
     jobs: {what_phrase: "retrieval augmented generation"}
+    risorse:
+      - {titolo: "Introduzione al RAG nella documentazione LlamaIndex", url: "https://developers.llamaindex.ai/python/framework/understanding/rag/", tipo: guida}
+      - {titolo: "Corso gratuito DeepLearning.AI sul RAG avanzato", url: "https://www.deeplearning.ai/courses/building-evaluating-advanced-rag", tipo: corso}
+      - {titolo: "Ricetta Hugging Face: RAG avanzato", url: "https://huggingface.co/learn/cookbook/advanced_rag", tipo: guida}
+      - {titolo: "Guida OpenAI al retrieval", url: "https://developers.openai.com/api/docs/guides/retrieval", tipo: documentazione}
 
   - id: valutazione
     nome: Valutazione dei modelli (eval)
@@ -58,6 +78,11 @@ skills:
     arxiv: ["LLM evaluation", "evaluating large language models", "LLM-as-a-judge"]
     github: llm-evaluation
     jobs: {what_phrase: "LLM evaluation"}
+    risorse:
+      - {titolo: "Anthropic: definire criteri di successo e valutazioni", url: "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests", tipo: guida}
+      - {titolo: "Guida OpenAI alle valutazioni (evals)", url: "https://developers.openai.com/api/docs/guides/evals", tipo: documentazione}
+      - {titolo: "Repository lm-evaluation-harness di EleutherAI", url: "https://github.com/EleutherAI/lm-evaluation-harness", tipo: repository}
+      - {titolo: "Documentazione di Hugging Face Evaluate", url: "https://huggingface.co/docs/evaluate/index", tipo: documentazione}
 
   - id: post-training
     nome: Fine-tuning e post-training
@@ -66,6 +91,10 @@ skills:
     arxiv: ["fine-tuning large language models", "post-training", "parameter-efficient fine-tuning"]
     github: fine-tuning
     jobs: {what_phrase: "LLM fine-tuning"}
+    risorse:
+      - {titolo: "Corso Hugging Face: supervised fine-tuning", url: "https://huggingface.co/learn/llm-course/chapter11/1", tipo: corso}
+      - {titolo: "Documentazione di PEFT (LoRA e simili)", url: "https://huggingface.co/docs/peft/index", tipo: documentazione}
+      - {titolo: "Documentazione di TRL per il post-training", url: "https://huggingface.co/docs/trl/index", tipo: documentazione}
 
   - id: context-engineering
     nome: Prompt e context engineering
@@ -74,6 +103,11 @@ skills:
     arxiv: ["prompt engineering", "context engineering"]
     github: prompt-engineering
     jobs: {what_phrase: "prompt engineering"}
+    risorse:
+      - {titolo: "Guida al prompt engineering (Prompt Engineering Guide)", url: "https://www.promptingguide.ai/it", tipo: guida, lingua: it}
+      - {titolo: "Anthropic: panoramica sul prompt engineering", url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview", tipo: documentazione}
+      - {titolo: "Anthropic: context engineering per agenti", url: "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents", tipo: guida}
+      - {titolo: "Guida OpenAI al prompt engineering", url: "https://developers.openai.com/api/docs/guides/prompt-engineering", tipo: documentazione}
 
   - id: sicurezza
     nome: Sicurezza dei sistemi AI
@@ -82,6 +116,10 @@ skills:
     arxiv: ["prompt injection", "jailbreak", "AI security"]
     github: ai-security
     jobs: {what_phrase: "LLM security"}
+    risorse:
+      - {titolo: "OWASP Top 10 per applicazioni LLM", url: "https://genai.owasp.org/llm-top-10/", tipo: guida}
+      - {titolo: "MITRE ATLAS: tattiche e tecniche contro l'AI", url: "https://atlas.mitre.org/", tipo: documentazione}
+      - {titolo: "NIST AI Risk Management Framework", url: "https://www.nist.gov/itl/ai-risk-management-framework", tipo: documentazione}
 
   - id: governance
     nome: Governance e conformità AI
@@ -90,6 +128,10 @@ skills:
     arxiv: ["AI governance", "AI Act", "AI regulation"]
     github: ai-governance
     jobs: {what_phrase: "model governance"}
+    risorse:
+      - {titolo: "Commissione europea: quadro normativo sull'AI", url: "https://digital-strategy.ec.europa.eu/it/policies/regulatory-framework-ai", tipo: guida, lingua: it}
+      - {titolo: "Commissione europea: governance dell'AI Act", url: "https://digital-strategy.ec.europa.eu/it/policies/ai-act-governance-and-enforcement", tipo: guida, lingua: it}
+      - {titolo: "NIST AI Risk Management Framework", url: "https://www.nist.gov/itl/ai-risk-management-framework", tipo: documentazione}
 
   - id: dati-per-ai
     nome: Data engineering per l'AI
@@ -98,6 +140,10 @@ skills:
     arxiv: ["data curation", "data quality for machine learning", "synthetic data generation"]
     github: data-engineering
     jobs: {what_phrase: "training data"}
+    risorse:
+      - {titolo: "Data Engineering Zoomcamp (corso gratuito)", url: "https://github.com/DataTalksClub/data-engineering-zoomcamp", tipo: corso}
+      - {titolo: "Documentazione di Hugging Face Datasets", url: "https://huggingface.co/docs/datasets/index", tipo: documentazione}
+      - {titolo: "Tutorial ufficiali di Apache Airflow", url: "https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html", tipo: guida}
 
   - id: text-to-sql
     nome: AI per analisi dati e BI
@@ -106,6 +152,11 @@ skills:
     arxiv: ["text-to-SQL", "table question answering"]
     github: text-to-sql
     jobs: {what_phrase: "text-to-SQL"}
+    risorse:
+      - {titolo: "Spider: benchmark di riferimento per text-to-SQL", url: "https://yale-lily.github.io/spider", tipo: documentazione}
+      - {titolo: "BIRD: benchmark text-to-SQL su database reali", url: "https://bird-bench.github.io/", tipo: documentazione}
+      - {titolo: "Guida LangChain: costruire un agente SQL", url: "https://docs.langchain.com/oss/python/langchain/sql-agent", tipo: guida}
+      - {titolo: "Repository sql-eval per valutare il text-to-SQL", url: "https://github.com/defog-ai/sql-eval", tipo: repository}
 
   - id: vector-db
     nome: Database vettoriali
@@ -115,6 +166,11 @@ skills:
     arxiv: ["vector database", "approximate nearest neighbor search"]
     github: vector-database
     jobs: {what_phrase: "vector database"}
+    risorse:
+      - {titolo: "Wiki ufficiale di FAISS", url: "https://github.com/facebookresearch/faiss/wiki", tipo: documentazione}
+      - {titolo: "Repository di pgvector per PostgreSQL", url: "https://github.com/pgvector/pgvector", tipo: repository}
+      - {titolo: "Documentazione di Sentence Transformers (embedding)", url: "https://www.sbert.net/", tipo: documentazione}
+      - {titolo: "Repository di Chroma, database vettoriale open source", url: "https://github.com/chroma-core/chroma", tipo: repository}
 
   - id: multimodale
     nome: Modelli multimodali
@@ -124,6 +180,11 @@ skills:
     arxiv: ["vision-language model", "multimodal large language model"]
     github: multimodal
     jobs: {what_phrase: "multimodal"}
+    risorse:
+      - {titolo: "Corso Hugging Face: introduzione ai modelli visione-linguaggio", url: "https://huggingface.co/learn/computer-vision-course/unit4/multimodal-models/vlm-intro", tipo: corso}
+      - {titolo: "Hugging Face: i Vision Language Model spiegati", url: "https://huggingface.co/blog/vlms", tipo: guida}
+      - {titolo: "Documentazione Anthropic sulla visione", url: "https://platform.claude.com/docs/en/build-with-claude/vision", tipo: documentazione}
+      - {titolo: "Documentazione Gemini sulla comprensione delle immagini", url: "https://ai.google.dev/gemini-api/docs/image-understanding", tipo: documentazione}
 
   - id: llmops
     nome: LLMOps e messa in produzione
@@ -132,6 +193,11 @@ skills:
     arxiv: ["LLMOps", "LLM serving", "inference optimization"]
     github: llmops
     jobs: {what_phrase: "MLOps"}
+    risorse:
+      - {titolo: "LLM Zoomcamp (corso gratuito)", url: "https://github.com/DataTalksClub/llm-zoomcamp", tipo: corso}
+      - {titolo: "MLOps Zoomcamp (corso gratuito)", url: "https://github.com/DataTalksClub/mlops-zoomcamp", tipo: corso}
+      - {titolo: "Documentazione di vLLM per il serving", url: "https://docs.vllm.ai/en/latest/", tipo: documentazione}
+      - {titolo: "Documentazione MLflow per LLM e agenti", url: "https://mlflow.org/docs/latest/genai/", tipo: documentazione}
 
   - id: modelli-locali
     nome: Modelli piccoli e locali
@@ -141,6 +207,10 @@ skills:
     arxiv: ["small language model", "on-device inference", "quantization"]
     github: local-llm
     jobs: {what_phrase: "on-device AI"}
+    risorse:
+      - {titolo: "Repository di llama.cpp", url: "https://github.com/ggml-org/llama.cpp", tipo: repository}
+      - {titolo: "Repository di Ollama", url: "https://github.com/ollama/ollama", tipo: repository}
+      - {titolo: "Guida Hugging Face alla quantizzazione", url: "https://huggingface.co/docs/transformers/quantization/overview", tipo: documentazione}
 
   - id: robotica
     nome: AI fisica e robotica
@@ -149,3 +219,7 @@ skills:
     arxiv: ["vision-language-action", "world model", "robot learning"]
     github: embodied-ai
     jobs: {what_phrase: "robot learning"}
+    risorse:
+      - {titolo: "Corso gratuito di Hugging Face sulla robotica", url: "https://huggingface.co/learn/robotics-course/unit0/1", tipo: corso}
+      - {titolo: "Repository LeRobot di Hugging Face", url: "https://github.com/huggingface/lerobot", tipo: repository}
+      - {titolo: "Repository di OpenVLA (modello visione-linguaggio-azione)", url: "https://github.com/openvla/openvla", tipo: repository}

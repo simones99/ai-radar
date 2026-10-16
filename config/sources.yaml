@@ -41,6 +41,10 @@ github_repos:
   - ggml-org/llama.cpp
   - unslothai/unsloth
 
+# Base dell'AI su GitHub per lo slancio del radar: nuovi repository al mese con questi topic, sommati.
+# Uno solo sarebbe fragile: tra marzo e settembre 2026 «llm» è cresciuto del 56%, «ai» è calato dell'11%.
+github_base_topics: [llm, ai, artificial-intelligence, generative-ai]
+
 # Feed per le notizie. tema: politica, ricerca, prodotti, business.
 # alternativi: indirizzi provati in ordine se il primo non risponde
 # (alcuni Substack rispondono 403 da GitHub Actions).

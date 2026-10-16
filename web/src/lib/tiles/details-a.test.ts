@@ -45,6 +45,23 @@ describe('Competenze', () => {
     await fireEvent(link, ev);
     expect(container.querySelectorAll('g.pt.dim').length).toBeGreaterThan(0);
   });
+  it('elenco: ogni competenza porta alla sua pagina', () => {
+    show(CompetenzeDetail, tile);
+    const blk = screen.getByRole('heading', { name: 'Le competenze una per una' }).closest('section')!;
+    expect(within(blk).getByRole('link', { name: 'Model Context Protocol (MCP)' })).toHaveAttribute('href', '#competenze/mcp');
+    expect(within(blk).getByText('Da provare · incerto')).toBeInTheDocument();
+  });
+  it('link diretto a una competenza: la sua pagina al posto del radar', () => {
+    show(CompetenzeDetail, tile, 'mcp');
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Model Context Protocol (MCP)');
+    expect(screen.getByText('Impara ora. Lo standard per collegare strumenti.')).toBeInTheDocument();
+    expect(screen.queryByRole('img', { name: /Radar delle competenze/ })).toBeNull();
+  });
+  it('radar.json della pipeline vecchia: avviso', () => {
+    const old = { ...data, radar: { ...data.radar!, versione: undefined } } as Dataset;
+    render(CompetenzeDetail, { data: old, today, tile, elemento: null, onclose: () => {} });
+    expect(screen.getByText('Il radar si aggiorna al prossimo giro della pipeline.')).toBeInTheDocument();
+  });
   it('link diretto a una competenza che non esiste: il radar, nessun errore', () => {
     show(CompetenzeDetail, tile, 'inesistente');
     expect(screen.getByRole('img', { name: /Radar delle competenze/ })).toBeInTheDocument();

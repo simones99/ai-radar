@@ -80,6 +80,7 @@ describe('TileGrid', () => {
     history.replaceState(null, '', '/#competenze/mcp');
     render(TileGrid, { data, today });
     expect(document.getElementById('detail-competenze')).not.toBeNull();
+    expect(screen.getByRole('heading', { level: 2, name: 'Model Context Protocol (MCP)' })).toBeInTheDocument();
   });
 
   it('link alla card già aperta sullo stesso elemento: lo rimette in evidenza, scorre e porta il focus al titolo', async () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
-import { doorPerTe } from './frasi';
+import { doorItalia, doorPerTe } from './frasi';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -69,5 +69,53 @@ describe('porta Per te', () => {
   });
   it('senza radar: porta vuota e non cliccabile', () => {
     expect(doorPerTe({}, today)).toEqual({ title: [], meta: 'Dati non ancora disponibili', target: null });
+  });
+});
+
+describe('porta L’AI in Italia', () => {
+  const at = (iso: string) => new Date(`${iso}T10:00:00`);
+  it('1. scadenza entro 30 giorni, con Oggi e Domani', () => {
+    const p = doorItalia(d, at('2026-11-20'));
+    expect(text(p.title)).toBe('Tra 12 giorni: fine della transizione per la marcatura');
+    expect(p.title[0]).toEqual({ t: 'Tra 12 giorni', em: true });
+    expect(p.meta).toBe('AI Act · scadenza del 2 dic 2026');
+    expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });
+    expect(text(doorItalia(d, at('2026-12-01')).title)).toBe('Domani: fine della transizione per la marcatura');
+    expect(text(doorItalia(d, at('2026-12-02')).title)).toBe('Oggi: fine della transizione per la marcatura');
+  });
+  it('2. dato Eurostat italiano aggiornato negli ultimi 30 giorni', () => {
+    const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
+    const p = doorItalia(e, today);
+    expect(text(p.title)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
+    expect(p.title[0]).toEqual({ t: '16% delle imprese italiane', em: true });
+    expect(p.meta).toBe('Eurostat · aggiornato il 1 ott 2026');
+    expect(p.target).toEqual({ tema: 'business', elemento: null });
+  });
+  it('2. Eurostat aggiornato ma senza Italia: si passa oltre', () => {
+    const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01', serie: { EU27_2020: d.eurostat!.serie.EU27_2020 } } };
+    expect(doorItalia(e, today).target?.tema).toBe('rapporti');
+  });
+  it('2. uso dell’AI generativa in Italia aggiornato negli ultimi 30 giorni', () => {
+    const o = { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, aggiornato_owid: '2026-10-01' } } };
+    const p = doorItalia({ ...d, owid: o }, today);
+    expect(text(p.title)).toBe("30% degli italiani usa l'AI generativa (mondo: 18%)");
+    expect(p.meta).toBe('Microsoft via Our World in Data · aggiornato il 1 ott 2026');
+    expect(p.target).toEqual({ tema: 'persone', elemento: null });
+  });
+  it('3. rapporto previsto entro 30 giorni', () => {
+    const p = doorItalia(d, today);
+    expect(text(p.title)).toBe('A ottobre esce State of AI Report');
+    expect(p.title[1]).toEqual({ t: 'State of AI Report', em: true });
+    expect(p.meta).toBe('Data stimata, dai rapporti degli anni scorsi');
+    expect(p.target).toEqual({ tema: 'rapporti', elemento: 'state-of-ai-report' });
+  });
+  it('4. riserva: la prossima scadenza, anche lontana', () => {
+    const p = doorItalia({ ...d, rapporti: undefined }, today);
+    expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
+    expect(p.meta).toBe('AI Act · Fine della transizione per la marcatura');
+    expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });
+  });
+  it('senza dati: porta vuota e non cliccabile', () => {
+    expect(doorItalia({}, today)).toEqual({ title: [], meta: 'Dati non ancora disponibili', target: null });
   });
 });

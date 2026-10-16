@@ -105,6 +105,7 @@ export interface Jobs {
 export interface Eurostat {
   indicatore: string;
   url: string;
+  aggiornato_eurostat?: string; // ultimo aggiornamento della serie da parte di Eurostat
   nomi: Record<string, string>;
   serie: Record<string, Record<string, number>>;
 }

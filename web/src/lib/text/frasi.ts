@@ -3,8 +3,8 @@ import {
   type RadarRowM,
 } from '../data/derive';
 import type { Dataset } from '../data/types';
-import type { TileId } from '../router';
-import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf, short } from './format';
+import { slug, type TileId } from '../router';
+import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -284,4 +284,66 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   // 4. riserva
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
   return { title: [{ t: `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length}`, em: true }, { t: ' da imparare ora' }], meta, target: to(null) };
+}
+
+const SOON = 30; // giorni: scadenze vicine, dati appena usciti, rapporti in arrivo
+
+export function doorItalia(d: Dataset, today: Date): Door {
+  const ahead = (iso: string) => daysTo(iso, today);
+  const recent = (iso: string | null | undefined) => !!iso && ahead(iso) <= 0 && ahead(iso) >= -SOON;
+  const scad = (d.ai_act?.scadenze ?? []).slice().sort((a, b) => a.data.localeCompare(b.data));
+
+  // 1. una scadenza entro 30 giorni (anche oggi)
+  const near = scad.find((s) => ahead(s.data) >= 0 && ahead(s.data) <= SOON);
+  if (near) {
+    const n = ahead(near.data);
+    return {
+      title: [{ t: n === 0 ? 'Oggi' : n === 1 ? 'Domani' : `Tra ${n} giorni`, em: true }, { t: `: ${lowerFirst(near.titolo)}` }],
+      meta: `AI Act · scadenza del ${day(near.data)}`,
+      target: { tema: 'norme', elemento: near.data },
+    };
+  }
+
+  // 2. un dato italiano uscito negli ultimi 30 giorni: Eurostat, poi uso dell'AI generativa (OWID)
+  const e = impreseUe(d);
+  const euAgg = d.eurostat?.aggiornato_eurostat;
+  if (e?.it != null && recent(euAgg)) {
+    return {
+      title: [{ t: `${nf(e.it, 0)}% delle imprese italiane`, em: true }, { t: ` usa l'AI (UE: ${nf(e.v, 0)}%)` }],
+      meta: `Eurostat · aggiornato il ${day(euAgg as string)}`,
+      target: { tema: 'business', elemento: null },
+    };
+  }
+  const genAgg = d.owid?.serie?.uso_genai?.aggiornato_owid;
+  const it = owidLatest(d.owid, 'uso_genai', 'Italy');
+  if (it && recent(genAgg)) {
+    const w = owidLatest(d.owid, 'uso_genai', 'World');
+    return {
+      title: [{ t: `${nf(it.v, 0)}% degli italiani`, em: true }, { t: ` usa l'AI generativa${w ? ` (mondo: ${nf(w.v, 0)}%)` : ''}` }],
+      meta: `Microsoft via Our World in Data · aggiornato il ${day(genAgg as string)}`,
+      target: { tema: 'persone', elemento: null },
+    };
+  }
+
+  // 3. un rapporto previsto entro 30 giorni (le date dei rapporti sono mesi stimati)
+  const r = nextReport(d.rapporti, today);
+  if (r && r.ym <= ym(new Date(today.getTime() + SOON * 864e5))) {
+    return {
+      title: [{ t: `A ${monthName(r.ym)} esce ` }, { t: r.report.nome, em: true }],
+      meta: 'Data stimata, dai rapporti degli anni scorsi',
+      target: { tema: 'rapporti', elemento: slug(r.report.nome) },
+    };
+  }
+
+  // 4. riserva: la prossima scadenza, anche lontana
+  const next = scad.find((s) => ahead(s.data) > 0);
+  if (next) {
+    const n = ahead(next.data);
+    return {
+      title: [{ t: `${n} ${n === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }],
+      meta: `AI Act · ${next.titolo}`,
+      target: { tema: 'norme', elemento: next.data },
+    };
+  }
+  return NO_DATA;
 }

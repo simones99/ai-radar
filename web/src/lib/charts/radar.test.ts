@@ -114,5 +114,9 @@ describe('MovesPanel', () => {
     render(MovesPanel, { rows, quadranti: radar.quadranti });
     expect(screen.getAllByRole('link')[0]).toHaveTextContent('slancio +15%');
     expect(screen.getAllByRole('link')[0]).toHaveTextContent('annunci ogni 10mila');
+    expect(screen.getAllByRole('link')[0]).toHaveTextContent('in aumento');
+    expect(screen.getAllByRole('link')[0]).not.toHaveTextContent(' , in aumento');
+    const arrows = [...screen.getAllByRole('link')[0].querySelectorAll('[aria-hidden="true"]')].filter((e) => e.textContent === '↑');
+    expect(arrows.length).toBeGreaterThan(0);
   });
 });

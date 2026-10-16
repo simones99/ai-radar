@@ -34,8 +34,8 @@
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
             onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
             <span class="n">{r.breve}</span>
-            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}{#if arrow(cs)}{" "}<span aria-hidden="true">{arrow(cs)}</span><span class="sr">{verso(cs)}</span>{/if}</span>
-            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span>{#if arrow(cd)}{" "}<span aria-hidden="true">{arrow(cd)}</span><span class="sr">{verso(cd)}</span>{/if}</span>
+            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}<span class="ar" aria-hidden="true">{arrow(cs)}</span>{#if arrow(cs)}<span class="sr">{verso(cs)}</span>{/if}</span>
+            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span><span class="ar" aria-hidden="true">{arrow(cd)}</span>{#if arrow(cd)}<span class="sr">{verso(cd)}</span>{/if}</span>
             {#if r.changed && r.qp}<span class="chip">{quadranti[r.qp]} → {quadranti[r.quadrante]}</span>{/if}
             {#if r.moving}<span class="chip">in movimento verso {quadranti[r.moving]}</span>{/if}
           </a>
@@ -53,19 +53,19 @@
   .sum div { background: var(--bg); border-radius: var(--r-md); padding: var(--s2); display: grid; gap: 4px; }
   .sum b { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .sum span { font-size: 12px; line-height: 16px; color: var(--fg-2); }
-  .head { display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 0 var(--s1); padding-inline: var(--s1); font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); font-size: 12px; line-height: 16px; color: var(--fg-3); }
   .head span + span { text-align: right; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; }
   li + li { border-top: 1px solid var(--line); }
-  .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 0 var(--s1); padding-inline: var(--s1); }
+  .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); }
   .row:focus-visible { background: var(--accent-soft); outline: 2px solid var(--accent); }
   @media (hover: hover) { .row:hover { background: var(--accent-soft); } }
   .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-  .v { text-align: right; }
+  .v { text-align: right; position: relative; white-space: nowrap; }
+  .ar { display: inline-block; width: 1em; text-align: right; }
   .up { color: var(--accent); font-weight: 600; }
   .down { color: var(--fg-2); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .v { position: relative; }
   .flat { color: var(--fg-3); }
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); }

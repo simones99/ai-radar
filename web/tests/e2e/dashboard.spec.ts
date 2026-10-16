@@ -36,6 +36,12 @@ test('home: due porte, due sezioni, 8 temi', async ({ page }) => {
   await expect(page.locator('button.face')).toHaveCount(8);
 });
 
+test('la settimana dell’8: articolo eliso nella data in testa', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-08T10:00:00'));
+  await page.goto('/');
+  await expect(page.getByText('Settimana dell’8 ott 2026')).toBeVisible();
+});
+
 test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();

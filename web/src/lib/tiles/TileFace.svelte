@@ -34,7 +34,7 @@
       <span class="sent">{st.motivo}</span>
     {/if}
     {#if st.state === 'vecchio' && st.fallito && st.aggiornato}
-      <span class="stale">Aggiornamento non riuscito il {day(st.fallito)}. Dati aggiornati {dayWith('al', st.aggiornato)}.</span>
+      <span class="stale">Aggiornamento non riuscito {dayWith('il', st.fallito)}. Dati aggiornati {dayWith('al', st.aggiornato)}.</span>
     {/if}
   </span>
 </button>

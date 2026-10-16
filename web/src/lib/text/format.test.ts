@@ -32,6 +32,16 @@ describe('formati italiani', () => {
     expect(dayWith('il', '2027-02-11')).toBe('l’11 feb 2027');
     expect(dayWith('il', '2027-02-16')).toBe('il 16 feb 2027');
   });
+  it('date con «del» e con «Il» a inizio frase', () => {
+    expect(dayWith('del', '2027-03-01')).toBe('dell’1 mar 2027');
+    expect(dayWith('del', '2027-03-08')).toBe('dell’8 mar 2027');
+    expect(dayWith('del', '2027-03-11')).toBe('dell’11 mar 2027');
+    expect(dayWith('del', '2027-03-16')).toBe('del 16 mar 2027');
+    expect(dayWith('Il', '2027-04-01')).toBe('L’1 apr 2027');
+    expect(dayWith('Il', '2027-04-08')).toBe('L’8 apr 2027');
+    expect(dayWith('Il', '2027-04-11')).toBe('L’11 apr 2027');
+    expect(dayWith('Il', '2027-04-16')).toBe('Il 16 apr 2027');
+  });
   it('mesi', () => {
     expect(monthName('2026-10')).toBe('ottobre');
     expect(monthYear('2027-04')).toBe('aprile 2027');

@@ -18,10 +18,11 @@ export const day = (iso: string): string => {
   const d = parseDay(iso);
   return `${d.getDate()} ${MESI[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
 };
-/** Data dopo «al» o «il», con l’elisione davanti a 1, 8 e 11: «al 16 gen 2027», «all’11 gen 2027», «l’8 feb 2027». */
-export const dayWith = (art: 'al' | 'il', iso: string): string => {
+const ELISO = { al: 'all’', il: 'l’', Il: 'L’', del: 'dell’' } as const;
+/** Data dopo l’articolo, con l’elisione davanti a 1, 8 e 11: «al 16 gen 2027», «all’11 gen 2027», «l’8 feb 2027», «dell’1 mar 2027». «Il» a inizio frase. */
+export const dayWith = (art: keyof typeof ELISO, iso: string): string => {
   const d = day(iso);
-  return /^(1|8|11) /.test(d) ? `${art === 'al' ? 'all’' : 'l’'}${d}` : `${art} ${d}`;
+  return /^(1|8|11) /.test(d) ? `${ELISO[art]}${d}` : `${art} ${d}`;
 };
 
 export const monthName = (ymStr: string): string => MESI[Number(ymStr.slice(5, 7)) - 1];

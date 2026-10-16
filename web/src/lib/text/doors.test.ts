@@ -88,6 +88,10 @@ describe('porta L’AI in Italia', () => {
     expect(text(doorItalia(d, at('2026-12-01')).title)).toBe('Domani: fine della transizione per la marcatura');
     expect(text(doorItalia(d, at('2026-12-02')).title)).toBe('Oggi: fine della transizione per la marcatura');
   });
+  it('1. scadenza dell’11: «scadenza dell’11»', () => {
+    const e = { ...d, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-12-11' }] } };
+    expect(doorItalia(e, at('2026-11-20')).meta).toBe('AI Act · scadenza dell’11 dic 2026');
+  });
   it('2. dato Eurostat italiano aggiornato negli ultimi 30 giorni', () => {
     const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
     const p = doorItalia(e, today);

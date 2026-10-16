@@ -3,7 +3,7 @@ import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
-  headBusiness, headCompetenze, headNotizie, headNorme, tipoLabel,
+  headBusiness, headCompetenze, headNotizie, headNorme, headPersone, tipoLabel,
 } from './frasi';
 
 const d = FIXTURE as Dataset;
@@ -57,6 +57,25 @@ describe('numeri chiave delle card', () => {
   it('rapporti: prossimo previsto', () => {
     expect(faceRapporti(d, today)).toEqual({ fig: 'Ottobre', unit: '2026', sent: 'Prossimo rapporto previsto: State of AI Report.' });
     expect(faceRapporti(d, new Date(2028, 0, 1))?.sent).toBe('Nessun rapporto previsto nei prossimi mesi.');
+  });
+});
+
+describe('articolo prima del giorno', () => {
+  const genai = (punti: { entita: string; t: string; v: number }[]): Dataset =>
+    ({ owid: { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, punti } } } });
+  const scad = (data: string): Dataset => ({ ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data }] } });
+  it('persone: «al 31», «all’8»', () => {
+    expect(headPersone(d, today).deck).toBe('Nel mondo il 18%. Stima di Microsoft al 31 mar 2026.');
+    expect(headPersone(genai([{ entita: 'World', t: '2026-04-08', v: 17.8 }, { entita: 'Italy', t: '2026-04-08', v: 30.2 }]), today).deck)
+      .toBe('Nel mondo il 18%. Stima di Microsoft all’8 apr 2026.');
+    expect(headPersone(genai([{ entita: 'World', t: '2026-04-11', v: 17.8 }]), today).deck)
+      .toBe('Manca il dato italiano. Stima di Microsoft all’11 apr 2026.');
+  });
+  it('norme: «il 2», «l’11», e «L’11» a inizio frase', () => {
+    expect(faceNorme(scad('2026-12-11'), today)?.sent).toBe("Alla prossima scadenza dell'AI Act, l’11 dic 2026: fine della transizione per la marcatura.");
+    expect(headNorme(d, today).deck).toBe('Il 2 dic 2026: fine della transizione per la marcatura. Articolo 50(2).');
+    expect(headNorme(scad('2026-12-11'), today).deck).toBe('L’11 dic 2026: fine della transizione per la marcatura. Articolo 50(2).');
+    expect(headNorme(scad('2026-12-08'), today).deck).toBe('L’8 dic 2026: fine della transizione per la marcatura. Articolo 50(2).');
   });
 });
 

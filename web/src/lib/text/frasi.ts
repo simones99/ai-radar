@@ -4,7 +4,7 @@ import {
 } from '../data/derive';
 import type { Dataset } from '../data/types';
 import { slug, type TileId } from '../router';
-import { capitalize, day, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
+import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -118,13 +118,13 @@ export function headPersone(d: Dataset, _today?: Date): Head {
   if (it) {
     return {
       title: [{ t: "Usa l'AI generativa il " }, { t: `${nf(it.v, 0)}%`, em: true }, { t: ' degli italiani' }],
-      deck: `${w ? `Nel mondo ${art(w.v)}${nf(w.v, 0)}%. ` : ''}Stima di Microsoft al ${day(it.t)}.`,
+      deck: `${w ? `Nel mondo ${art(w.v)}${nf(w.v, 0)}%. ` : ''}Stima di Microsoft ${dayWith('al', it.t)}.`,
     };
   }
   if (!w) return { title: plain('Persone e lavoro'), deck: null };
   return {
     title: [{ t: "Usa l'AI generativa il " }, { t: `${nf(w.v, 0)}%`, em: true }, { t: ' delle persone nel mondo' }],
-    deck: `Manca il dato italiano. Stima di Microsoft al ${day(w.t)}.`,
+    deck: `Manca il dato italiano. Stima di Microsoft ${dayWith('al', w.t)}.`,
   };
 }
 
@@ -134,7 +134,7 @@ export function faceNorme(d: Dataset, today: Date): Face | null {
   const n = nextDeadline(d.ai_act.scadenze, today);
   if (!n) return { fig: '0', unit: 'scadenze in arrivo', sent: "Nessuna scadenza dell'AI Act in arrivo." };
   const days = daysTo(n.data, today);
-  return { fig: String(days), unit: days === 1 ? 'giorno' : 'giorni', sent: `Alla prossima scadenza dell'AI Act, il ${day(n.data)}: ${lowerFirst(n.titolo)}.` };
+  return { fig: String(days), unit: days === 1 ? 'giorno' : 'giorni', sent: `Alla prossima scadenza dell'AI Act, ${dayWith('il', n.data)}: ${lowerFirst(n.titolo)}.` };
 }
 export function headNorme(d: Dataset, today: Date): Head {
   const n = nextDeadline(d.ai_act?.scadenze, today);
@@ -142,7 +142,7 @@ export function headNorme(d: Dataset, today: Date): Head {
   const days = daysTo(n.data, today);
   return {
     title: [{ t: `${days} ${days === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }],
-    deck: `Il ${day(n.data)}: ${lowerFirst(n.titolo)}. ${n.descrizione}`,
+    deck: `${dayWith('Il', n.data)}: ${lowerFirst(n.titolo)}. ${n.descrizione}`,
   };
 }
 
@@ -279,7 +279,7 @@ export function doorItalia(d: Dataset, today: Date): Door {
     const n = ahead(near.data);
     return {
       title: [{ t: n === 0 ? 'Oggi' : n === 1 ? 'Domani' : `Tra ${n} giorni`, em: true }, { t: `: ${lowerFirst(near.titolo)}` }],
-      meta: `AI Act · scadenza del ${day(near.data)}`,
+      meta: `AI Act · scadenza ${dayWith('del', near.data)}`,
       target: { tema: 'norme', elemento: near.data },
     };
   }

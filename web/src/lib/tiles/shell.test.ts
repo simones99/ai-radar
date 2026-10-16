@@ -38,6 +38,13 @@ describe('TileFace', () => {
     render(TileFace, { tile: tile({ source: 'arxiv' }), data: FIXTURE as Dataset, today, expanded: false, onopen: () => {} });
     expect(screen.getByText('Aggiornamento non riuscito il 15 ott 2026. Dati aggiornati all’8 ott 2026.')).toBeInTheDocument();
   });
+  it('giro fallito l’11: «non riuscito l’11»', () => {
+    const f = FIXTURE as Dataset;
+    const arxiv = { ...f.status!.fonti.arxiv, ultimo_tentativo: '2026-10-11T08:00:00+00:00' };
+    const data = { ...f, status: { ...f.status!, fonti: { ...f.status!.fonti, arxiv } } } as Dataset;
+    render(TileFace, { tile: tile({ source: 'arxiv' }), data, today, expanded: false, onopen: () => {} });
+    expect(screen.getByText('Aggiornamento non riuscito l’11 ott 2026. Dati aggiornati all’8 ott 2026.')).toBeInTheDocument();
+  });
   it('foto che non carica: riquadro con il testo alternativo', async () => {
     const { container } = render(TileFace, { tile: tile(), data: FIXTURE as Dataset, today, expanded: false, onopen: () => {} });
     await fireEvent.error(container.querySelector('img')!);

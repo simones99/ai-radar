@@ -14,7 +14,7 @@ beforeEach(() => {
 });
 
 describe('TileGrid', () => {
-  it('due sezioni da 4 card, nell’ordine delle teste', () => {
+  it('due sezioni da 4 card, nellâ€™ordine delle teste', () => {
     render(TileGrid, { data, today });
     const sezione = (name: string) => screen.getByRole('heading', { level: 2, name }).closest('section')!;
     const ids = (s: Element) => [...s.querySelectorAll('article.tile')].map((a) => a.id);

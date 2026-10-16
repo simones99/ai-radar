@@ -5,6 +5,7 @@ import json
 from datetime import date
 
 import pytest
+import requests
 
 from pipeline import common, github_signals, risorse, tendenza
 from test_pipeline import FakeResponse
@@ -159,3 +160,56 @@ def test_link_check_falls_back_to_get(tmp_path, monkeypatch):
     risorse.run(fake, SK, date(2026, 10, 12))
     assert fake.calls == [("head", "https://x.example"), ("get", "https://x.example")]
     assert _link(tmp_path)["stato"] == 200
+
+
+def test_risorse_survives_corrupt_state(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    (tmp_path / "risorse.json").write_text("{non è json", encoding="utf-8")
+    risorse.run(LinkFake(200), SK, date(2026, 10, 12))
+    assert _link(tmp_path)["stato"] == 200
+
+
+def test_link_without_date_is_rechecked(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    (tmp_path / "risorse.json").write_text(
+        json.dumps({"link": {"https://x.example": {"stato": 200, "errori": 0, "ok": True}}}), encoding="utf-8")
+    fake = LinkFake(200)
+    risorse.run(fake, SK, date(2026, 10, 12))
+    assert fake.calls == [("head", "https://x.example")]
+
+
+class HeadRaises(LinkFake):
+    def __init__(self, get_status=None, get_raises=False):
+        super().__init__(200, get_status)
+        self.get_raises = get_raises
+
+    def head(self, url, allow_redirects=True, timeout=None):
+        raise requests.ConnectionError("chiusa")
+
+    def get(self, url, params=None, headers=None, timeout=None):
+        if self.get_raises:
+            raise requests.ConnectionError("chiusa")
+        return super().get(url, params=params, headers=headers, timeout=timeout)
+
+
+def test_link_check_head_exception_falls_back_to_get(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    risorse.run(HeadRaises(get_status=200), SK, date(2026, 10, 12))
+    assert _link(tmp_path)["stato"] == 200
+
+
+def test_link_check_both_raise_counts_as_error(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    risorse.run(HeadRaises(get_raises=True), SK, date(2026, 10, 12))
+    assert _link(tmp_path) == {"stato": None, "errori": 1, "ok": True, "controllato": "2026-10-12"}
+
+
+def test_link_403_counts_as_alive(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    risorse.run(LinkFake(403), SK, date(2026, 10, 12))
+    assert _link(tmp_path) == {"stato": 403, "errori": 0, "ok": True, "controllato": "2026-10-12"}

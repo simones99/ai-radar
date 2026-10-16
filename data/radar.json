@@ -149,18 +149,18 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 18.28,
-     "es": 136.63,
-     "fr": 11.46,
-     "gb": 335.02,
-     "it": 37.04,
-     "nl": 18.6,
-     "pl": 83.18,
-     "us": 339.17
+     "de": 9.91,
+     "es": 54.41,
+     "fr": 4.14,
+     "gb": 19.51,
+     "it": 37.05,
+     "nl": 6.5,
+     "pl": 37.71,
+     "us": 41.86
     },
-    "media": 122.421,
-    "media_ue": 50.863,
-    "usa": 339.169,
+    "media": 26.386,
+    "media_ue": 24.953,
+    "usa": 41.861,
     "crescita": null,
     "data": "2026-10-16"
    },
@@ -315,18 +315,18 @@
      "fr": 0.6,
      "gb": 2.86,
      "it": 0.28,
-     "nl": 1.46,
+     "nl": 1.4,
      "pl": 0.21,
      "us": 4.22
     },
-    "media": 1.922,
-    "media_ue": 1.382,
-    "usa": 4.218,
+    "media": 1.913,
+    "media_ue": 1.371,
+    "usa": 4.22,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.8666,
-   "domanda": 0.3333,
+   "domanda": 0.4,
    "quadrante": "prova",
    "slancio_prec": 0.9,
    "domanda_prec": null,
@@ -411,7 +411,7 @@
     ]
    },
    "github": {
-    "ultimi3": 36542,
+    "ultimi3": 36543,
     "precedenti3": 25412,
     "crescita": 0.4379,
     "mensile": [
@@ -465,29 +465,29 @@
      },
      {
       "mese": "2026-09",
-      "n": 13982
+      "n": 13983
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.73,
+     "de": 0.74,
      "es": 6.97,
      "fr": 1.26,
      "gb": 2.11,
      "it": 2.63,
-     "nl": 0.42,
-     "pl": 7.19,
+     "nl": 0.4,
+     "pl": 7.09,
      "us": 5.79
     },
-    "media": 3.387,
-    "media_ue": 3.199,
-    "usa": 5.794,
+    "media": 3.373,
+    "media_ue": 3.181,
+    "usa": 5.787,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.6666,
-   "domanda": 0.5333,
+   "domanda": 0.6,
    "quadrante": "impara-ora",
    "slancio_prec": 0.3667,
    "domanda_prec": null,
@@ -635,20 +635,20 @@
      "de": 1.65,
      "es": 18.88,
      "fr": 1.69,
-     "gb": 4.9,
-     "it": 6.11,
-     "nl": 1.78,
-     "pl": 11.78,
-     "us": 17.2
+     "gb": 4.88,
+     "it": 6.12,
+     "nl": 1.7,
+     "pl": 11.71,
+     "us": 17.21
     },
-    "media": 8.0,
-    "media_ue": 6.983,
-    "usa": 17.2,
+    "media": 7.98,
+    "media_ue": 6.959,
+    "usa": 17.209,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.2334,
-   "domanda": 0.6667,
+   "domanda": 0.7333,
    "quadrante": "consolida",
    "slancio_prec": 0.3667,
    "domanda_prec": null,
@@ -799,17 +799,17 @@
      "gb": 0.75,
      "it": 0.0,
      "nl": 0.0,
-     "pl": 1.36,
+     "pl": 1.34,
      "us": 2.29
     },
-    "media": 0.888,
-    "media_ue": 0.676,
-    "usa": 2.292,
+    "media": 0.885,
+    "media_ue": 0.673,
+    "usa": 2.29,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.6666,
-   "domanda": 0.2667,
+   "domanda": 0.3333,
    "quadrante": "prova",
    "slancio_prec": 0.7,
    "domanda_prec": null,
@@ -963,14 +963,14 @@
      "pl": 0.31,
      "us": 0.44
     },
-    "media": 0.268,
-    "media_ue": 0.254,
+    "media": 0.267,
+    "media_ue": 0.253,
     "usa": 0.441,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.4,
-   "domanda": 0.1333,
+   "domanda": 0.2,
    "quadrante": "osserva",
    "slancio_prec": 0.3666,
    "domanda_prec": null,
@@ -1055,9 +1055,9 @@
     ]
    },
    "github": {
-    "ultimi3": 6845,
+    "ultimi3": 6846,
     "precedenti3": 5893,
-    "crescita": 0.1614,
+    "crescita": 0.1616,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1109,29 +1109,29 @@
      },
      {
       "mese": "2026-09",
-      "n": 2050
+      "n": 2051
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
      "de": 17.7,
-     "es": 31.51,
+     "es": 31.5,
      "fr": 4.97,
-     "gb": 7.99,
+     "gb": 7.96,
      "it": 10.17,
-     "nl": 3.55,
-     "pl": 20.01,
+     "nl": 3.4,
+     "pl": 19.83,
      "us": 17.74
     },
-    "media": 14.204,
-    "media_ue": 14.651,
-    "usa": 17.739,
+    "media": 14.157,
+    "media_ue": 14.594,
+    "usa": 17.736,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.1333,
-   "domanda": 0.8,
+   "domanda": 0.8667,
    "quadrante": "consolida",
    "slancio_prec": 0.1333,
    "domanda_prec": null,
@@ -1285,14 +1285,14 @@
      "pl": 0.21,
      "us": 0.49
     },
-    "media": 0.353,
+    "media": 0.352,
     "media_ue": 0.348,
-    "usa": 0.488,
+    "usa": 0.487,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.3667,
-   "domanda": 0.2,
+   "domanda": 0.2667,
    "quadrante": "osserva",
    "slancio_prec": 0.3333,
    "domanda_prec": null,
@@ -1442,18 +1442,18 @@
      "fr": 0.18,
      "gb": 4.08,
      "it": 0.64,
-     "nl": 1.78,
-     "pl": 2.4,
+     "nl": 1.7,
+     "pl": 2.36,
      "us": 8.27
     },
-    "media": 2.666,
-    "media_ue": 1.497,
-    "usa": 8.265,
+    "media": 2.653,
+    "media_ue": 1.478,
+    "usa": 8.273,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.2334,
-   "domanda": 0.4,
+   "domanda": 0.4667,
    "quadrante": "osserva",
    "slancio_prec": 0.1,
    "domanda_prec": null,
@@ -1603,22 +1603,22 @@
      "fr": 0.64,
      "gb": 2.82,
      "it": 1.49,
-     "nl": 1.99,
-     "pl": 1.77,
+     "nl": 1.9,
+     "pl": 1.75,
      "us": 4.34
     },
-    "media": 3.047,
-    "media_ue": 2.871,
-    "usa": 4.336,
+    "media": 3.033,
+    "media_ue": 2.852,
+    "usa": 4.34,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.2666,
-   "domanda": 0.4667,
-   "quadrante": "osserva",
+   "domanda": 0.5333,
+   "quadrante": "consolida",
    "slancio_prec": 0.2334,
    "domanda_prec": null,
-   "quadrante_prec": "osserva"
+   "quadrante_prec": "consolida"
   },
   {
    "id": "text-to-sql",
@@ -1769,7 +1769,7 @@
      "us": 0.18
     },
     "media": 0.125,
-    "media_ue": 0.123,
+    "media_ue": 0.122,
     "usa": 0.176,
     "crescita": null,
     "data": "2026-10-16"
@@ -1925,18 +1925,18 @@
      "fr": 0.93,
      "gb": 4.92,
      "it": 3.06,
-     "nl": 0.21,
-     "pl": 0.83,
-     "us": 11.49
+     "nl": 0.2,
+     "pl": 0.82,
+     "us": 11.48
     },
-    "media": 5.328,
-    "media_ue": 4.368,
-    "usa": 11.486,
+    "media": 5.324,
+    "media_ue": 4.364,
+    "usa": 11.483,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.0,
-   "domanda": 0.6,
+   "domanda": 0.6667,
    "quadrante": "consolida",
    "slancio_prec": 0.3333,
    "domanda_prec": null,
@@ -2081,23 +2081,23 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 10.25,
-     "es": 33.22,
+     "de": 10.19,
+     "es": 33.21,
      "fr": 8.58,
      "gb": 5.63,
      "it": 2.7,
-     "nl": 4.81,
-     "pl": 5.94,
-     "us": 10.99
+     "nl": 4.6,
+     "pl": 5.86,
+     "us": 11.0
     },
-    "media": 10.266,
-    "media_ue": 10.916,
-    "usa": 10.993,
+    "media": 10.221,
+    "media_ue": 10.856,
+    "usa": 10.998,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.5667,
-   "domanda": 0.7333,
+   "domanda": 0.8,
    "quadrante": "impara-ora",
    "slancio_prec": 0.3334,
    "domanda_prec": null,
@@ -2242,23 +2242,23 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 5.3,
-     "es": 44.63,
+     "de": 5.32,
+     "es": 44.62,
      "fr": 7.46,
      "gb": 7.65,
      "it": 10.45,
-     "nl": 5.22,
-     "pl": 38.36,
+     "nl": 5.0,
+     "pl": 37.91,
      "us": 12.72
     },
-    "media": 16.475,
-    "media_ue": 18.571,
-    "usa": 12.721,
+    "media": 16.392,
+    "media_ue": 18.46,
+    "usa": 12.722,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.6,
-   "domanda": 0.8667,
+   "domanda": 0.9333,
    "quadrante": "impara-ora",
    "slancio_prec": 0.7667,
    "domanda_prec": null,
@@ -2403,27 +2403,27 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.25,
-     "es": 1.62,
-     "fr": 0.14,
-     "gb": 211.95,
+     "de": 0.06,
+     "es": 0.4,
+     "fr": 0.0,
+     "gb": 0.11,
      "it": 0.21,
-     "nl": 0.42,
-     "pl": 1.25,
-     "us": 468.5
+     "nl": 0.0,
+     "pl": 0.0,
+     "us": 0.35
     },
-    "media": 85.541,
-    "media_ue": 0.648,
-    "usa": 468.498,
+    "media": 0.142,
+    "media_ue": 0.113,
+    "usa": 0.345,
     "crescita": null,
     "data": "2026-10-16"
    },
    "slancio": 0.5666,
-   "domanda": 0.9333,
-   "quadrante": "impara-ora",
+   "domanda": 0.0667,
+   "quadrante": "prova",
    "slancio_prec": 0.5666,
    "domanda_prec": null,
-   "quadrante_prec": "impara-ora"
+   "quadrante_prec": "prova"
   },
   {
    "id": "robotica",
@@ -2580,7 +2580,7 @@
     "data": "2026-10-16"
    },
    "slancio": 0.9333,
-   "domanda": 0.0667,
+   "domanda": 0.1333,
    "quadrante": "prova",
    "slancio_prec": 0.7667,
    "domanda_prec": null,
@@ -3080,39 +3080,39 @@
     },
     "coding-agenti": {
      "slancio": 0.8666,
-     "domanda": 0.3333
+     "domanda": 0.4
     },
     "mcp": {
      "slancio": 0.6666,
-     "domanda": 0.5333
+     "domanda": 0.6
     },
     "rag": {
      "slancio": 0.2334,
-     "domanda": 0.6667
+     "domanda": 0.7333
     },
     "valutazione": {
      "slancio": 0.6666,
-     "domanda": 0.2667
+     "domanda": 0.3333
     },
     "post-training": {
      "slancio": 0.4,
-     "domanda": 0.1333
+     "domanda": 0.2
     },
     "context-engineering": {
      "slancio": 0.1333,
-     "domanda": 0.8
+     "domanda": 0.8667
     },
     "sicurezza": {
      "slancio": 0.3667,
-     "domanda": 0.2
+     "domanda": 0.2667
     },
     "governance": {
      "slancio": 0.2334,
-     "domanda": 0.4
+     "domanda": 0.4667
     },
     "dati-per-ai": {
      "slancio": 0.2666,
-     "domanda": 0.4667
+     "domanda": 0.5333
     },
     "text-to-sql": {
      "slancio": 0.7,
@@ -3120,23 +3120,23 @@
     },
     "vector-db": {
      "slancio": 0.0,
-     "domanda": 0.6
+     "domanda": 0.6667
     },
     "multimodale": {
      "slancio": 0.5667,
-     "domanda": 0.7333
+     "domanda": 0.8
     },
     "llmops": {
      "slancio": 0.6,
-     "domanda": 0.8667
+     "domanda": 0.9333
     },
     "modelli-locali": {
      "slancio": 0.5666,
-     "domanda": 0.9333
+     "domanda": 0.0667
     },
     "robotica": {
      "slancio": 0.9333,
-     "domanda": 0.0667
+     "domanda": 0.1333
     }
    }
   }

@@ -8,9 +8,9 @@
    "url": "https://huggingface.co/google/embeddinggemma-2",
    "tipo": "feature-extraction",
    "libreria": "transformers",
-   "like": 2445,
+   "like": 2446,
    "download": 144280,
-   "trending": 979,
+   "trending": 980,
    "creato": "2026-09-14"
   },
   {
@@ -18,9 +18,9 @@
    "url": "https://huggingface.co/jialinyyzz/humanizer",
    "tipo": "text-generation",
    "libreria": "gguf",
-   "like": 1776,
+   "like": 1777,
    "download": 75253,
-   "trending": 859,
+   "trending": 858,
    "creato": "2026-09-11"
   },
   {
@@ -28,9 +28,9 @@
    "url": "https://huggingface.co/Qwen/Qwen-Image-2.1-Turbo",
    "tipo": "text-to-image",
    "libreria": "diffusers",
-   "like": 903,
+   "like": 904,
    "download": 15315,
-   "trending": 773,
+   "trending": 774,
    "creato": "2026-10-09"
   },
   {
@@ -58,7 +58,7 @@
    "url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
    "tipo": "text-to-image",
    "libreria": "gguf",
-   "like": 4405,
+   "like": 4407,
    "download": 2415278,
    "trending": 484,
    "creato": "2026-09-20"
@@ -68,7 +68,7 @@
    "url": "https://huggingface.co/Lightricks/LTX-2.5",
    "tipo": "image-to-video",
    "libreria": "diffusion-single-file",
-   "like": 7985,
+   "like": 7986,
    "download": 1866657,
    "trending": 442,
    "creato": "2026-07-23"
@@ -88,9 +88,9 @@
    "url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 398,
+   "like": 399,
    "download": 6286,
-   "trending": 392,
+   "trending": 393,
    "creato": "2026-10-12"
   },
   {
@@ -98,8 +98,8 @@
    "url": "https://huggingface.co/baidu/Unlimited-OCR",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 4723,
-   "download": 1163009,
+   "like": 4724,
+   "download": 1262307,
    "trending": 340,
    "creato": "2026-06-19"
   },
@@ -108,7 +108,7 @@
    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 17813,
+   "like": 17814,
    "download": 7363968,
    "trending": 332,
    "creato": "2026-08-05"
@@ -118,9 +118,9 @@
    "url": "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 347,
+   "like": 348,
    "download": 402,
-   "trending": 329,
+   "trending": 330,
    "creato": "2026-09-15"
   },
   {
@@ -130,7 +130,7 @@
    "libreria": "gguf",
    "like": 505,
    "download": 344177,
-   "trending": 326,
+   "trending": 325,
    "creato": "2026-10-08"
   },
   {
@@ -138,39 +138,39 @@
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein",
    "tipo": "image-to-image",
    "libreria": "diffusers",
-   "like": 316,
+   "like": 320,
    "download": 3241,
-   "trending": 306,
+   "trending": 310,
    "creato": "2026-10-13"
-  },
-  {
-   "id": "nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
-   "url": "https://huggingface.co/nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
-   "tipo": "image-text-to-text",
-   "libreria": null,
-   "like": 379,
-   "download": 148660,
-   "trending": 291,
-   "creato": "2026-10-04"
   },
   {
    "id": "black-forest-labs/flux-3-image-klein-comfy",
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
    "tipo": "image-to-image",
    "libreria": "diffusion-single-file",
-   "like": 311,
+   "like": 315,
    "download": 39,
-   "trending": 287,
+   "trending": 290,
    "creato": "2026-10-14"
+  },
+  {
+   "id": "nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
+   "url": "https://huggingface.co/nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2",
+   "tipo": "image-text-to-text",
+   "libreria": null,
+   "like": 380,
+   "download": 148660,
+   "trending": 289,
+   "creato": "2026-10-04"
   },
   {
    "id": "openbmb/MiniCPM-V-4.7-1B",
    "url": "https://huggingface.co/openbmb/MiniCPM-V-4.7-1B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 362,
+   "like": 363,
    "download": 5274,
-   "trending": 269,
+   "trending": 270,
    "creato": "2026-10-06"
   },
   {
@@ -218,9 +218,9 @@
    "url": "https://huggingface.co/pablodawson/MiniMax-H3-360-Orbit-LoRA",
    "tipo": "image-text-to-video",
    "libreria": "minimax-h3",
-   "like": 477,
+   "like": 478,
    "download": 18202,
-   "trending": 181,
+   "trending": 182,
    "creato": "2026-09-27"
   },
   {
@@ -234,24 +234,24 @@
    "creato": "2026-10-05"
   },
   {
-   "id": "Cactus-Compute/whistle",
-   "url": "https://huggingface.co/Cactus-Compute/whistle",
-   "tipo": "automatic-speech-recognition",
-   "libreria": "cactus-needle",
-   "like": 423,
-   "download": 38794,
-   "trending": 177,
-   "creato": "2026-09-30"
-  },
-  {
    "id": "convaiinnovations/laya",
    "url": "https://huggingface.co/convaiinnovations/laya",
    "tipo": "text-classification",
    "libreria": "transformers",
-   "like": 5639,
+   "like": 5640,
    "download": 48894,
-   "trending": 176,
+   "trending": 177,
    "creato": "2026-09-18"
+  },
+  {
+   "id": "Cactus-Compute/whistle",
+   "url": "https://huggingface.co/Cactus-Compute/whistle",
+   "tipo": "automatic-speech-recognition",
+   "libreria": "cactus-needle",
+   "like": 424,
+   "download": 38794,
+   "trending": 177,
+   "creato": "2026-09-30"
   }
  ],
  "tipi_top100": {

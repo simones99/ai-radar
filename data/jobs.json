@@ -47,28 +47,28 @@
   {
    "data": "2026-10-16",
    "paese": "us",
-   "totale": 4079764,
+   "totale": 4083318,
    "competenze": {
-    "agenti": 138373,
-    "coding-agenti": 1721,
-    "mcp": 2364,
-    "rag": 7017,
+    "agenti": 17093,
+    "coding-agenti": 1723,
+    "mcp": 2363,
+    "rag": 7027,
     "valutazione": 935,
     "post-training": 180,
-    "context-engineering": 7237,
+    "context-engineering": 7242,
     "sicurezza": 199,
-    "governance": 3372,
-    "dati-per-ai": 1769,
+    "governance": 3378,
+    "dati-per-ai": 1772,
     "text-to-sql": 72,
-    "vector-db": 4686,
-    "multimodale": 4485,
-    "llmops": 5190,
-    "modelli-locali": 191136,
+    "vector-db": 4689,
+    "multimodale": 4491,
+    "llmops": 5195,
+    "modelli-locali": 141,
     "robotica": 131
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -110,7 +110,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -143,15 +143,15 @@
   {
    "data": "2026-10-16",
    "paese": "gb",
-   "totale": 450777,
+   "totale": 451056,
    "competenze": {
-    "agenti": 15102,
+    "agenti": 880,
     "coding-agenti": 129,
     "mcp": 95,
-    "rag": 221,
+    "rag": 220,
     "valutazione": 34,
     "post-training": 8,
-    "context-engineering": 360,
+    "context-engineering": 359,
     "sicurezza": 11,
     "governance": 184,
     "dati-per-ai": 127,
@@ -159,12 +159,12 @@
     "vector-db": 222,
     "multimodale": 254,
     "llmops": 345,
-    "modelli-locali": 9554,
+    "modelli-locali": 5,
     "robotica": 1
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -206,7 +206,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -239,11 +239,11 @@
   {
    "data": "2026-10-16",
    "paese": "de",
-   "totale": 671281,
+   "totale": 671245,
    "competenze": {
-    "agenti": 1227,
+    "agenti": 665,
     "coding-agenti": 202,
-    "mcp": 49,
+    "mcp": 50,
     "rag": 111,
     "valutazione": 9,
     "post-training": 5,
@@ -253,14 +253,14 @@
     "dati-per-ai": 49,
     "text-to-sql": 0,
     "vector-db": 73,
-    "multimodale": 688,
-    "llmops": 356,
-    "modelli-locali": 17,
+    "multimodale": 684,
+    "llmops": 357,
+    "modelli-locali": 4,
     "robotica": 7
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -302,7 +302,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -335,9 +335,9 @@
   {
    "data": "2026-10-16",
    "paese": "fr",
-   "totale": 732247,
+   "totale": 732208,
    "competenze": {
-    "agenti": 839,
+    "agenti": 303,
     "coding-agenti": 44,
     "mcp": 92,
     "rag": 124,
@@ -351,12 +351,12 @@
     "vector-db": 68,
     "multimodale": 628,
     "llmops": 546,
-    "modelli-locali": 10,
+    "modelli-locali": 0,
     "robotica": 2
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -398,7 +398,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -431,7 +431,7 @@
   {
    "data": "2026-10-16",
    "paese": "it",
-   "totale": 140671,
+   "totale": 140612,
    "competenze": {
     "agenti": 521,
     "coding-agenti": 4,
@@ -452,7 +452,7 @@
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -494,7 +494,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -527,9 +527,9 @@
   {
    "data": "2026-10-16",
    "paese": "es",
-   "totale": 99030,
+   "totale": 99061,
    "competenze": {
-    "agenti": 1353,
+    "agenti": 539,
     "coding-agenti": 27,
     "mcp": 69,
     "rag": 187,
@@ -543,12 +543,12 @@
     "vector-db": 199,
     "multimodale": 329,
     "llmops": 442,
-    "modelli-locali": 16,
+    "modelli-locali": 4,
     "robotica": 6
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -590,7 +590,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -623,9 +623,9 @@
   {
    "data": "2026-10-16",
    "paese": "nl",
-   "totale": 95712,
+   "totale": 100011,
    "competenze": {
-    "agenti": 178,
+    "agenti": 65,
     "coding-agenti": 14,
     "mcp": 4,
     "rag": 17,
@@ -639,12 +639,12 @@
     "vector-db": 2,
     "multimodale": 46,
     "llmops": 50,
-    "modelli-locali": 4,
+    "modelli-locali": 0,
     "robotica": 0
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -686,7 +686,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"
@@ -719,28 +719,28 @@
   {
    "data": "2026-10-16",
    "paese": "pl",
-   "totale": 95936,
+   "totale": 97326,
    "competenze": {
-    "agenti": 798,
+    "agenti": 367,
     "coding-agenti": 2,
     "mcp": 69,
-    "rag": 113,
+    "rag": 114,
     "valutazione": 13,
     "post-training": 3,
-    "context-engineering": 192,
+    "context-engineering": 193,
     "sicurezza": 2,
     "governance": 23,
     "dati-per-ai": 17,
     "text-to-sql": 2,
     "vector-db": 8,
     "multimodale": 57,
-    "llmops": 368,
-    "modelli-locali": 12,
+    "llmops": 369,
+    "modelli-locali": 0,
     "robotica": 0
    },
    "query": {
     "agenti": {
-     "what_phrase": "agentic"
+     "what_phrase": "agentic AI"
     },
     "coding-agenti": {
      "what_phrase": "coding agent"
@@ -782,7 +782,7 @@
      "what_phrase": "MLOps"
     },
     "modelli-locali": {
-     "what_phrase": "on-device"
+     "what_phrase": "on-device AI"
     },
     "robotica": {
      "what_phrase": "robot learning"

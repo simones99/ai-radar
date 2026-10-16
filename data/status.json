@@ -1,44 +1,44 @@
 {
- "aggiornato": "2026-10-16T09:43:35+00:00",
+ "aggiornato": "2026-10-16T10:03:42+00:00",
  "fonti": {
   "epoch": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:41:53+00:00",
+   "ultimo_successo": "2026-10-16T09:53:13+00:00",
    "dettagli": {
     "modelli": 1078
    },
-   "secondi": 0.3
+   "secondi": 0.5
   },
   "artificial_analysis": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:41:53+00:00",
+   "ultimo_successo": "2026-10-16T09:53:13+00:00",
    "dettagli": {
     "modelli": 693
    },
-   "secondi": 0.5
+   "secondi": 0.2
   },
   "arxiv": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:41:53+00:00",
+   "ultimo_successo": "2026-10-16T09:53:13+00:00",
    "dettagli": {
     "chiamate": 0,
     "serie": 17
    },
-   "secondi": 0.1
+   "secondi": 0.0
   },
   "github": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:21+00:00",
+   "ultimo_successo": "2026-10-16T09:54:44+00:00",
    "dettagli": {
     "chiamate": 44,
     "topic": 16,
     "repository": 12
    },
-   "secondi": 88.1
+   "secondi": 90.2
   },
   "huggingface": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:21+00:00",
+   "ultimo_successo": "2026-10-16T09:54:44+00:00",
    "dettagli": {
     "modelli": 100
    },
@@ -46,33 +46,32 @@
   },
   "adzuna": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:21+00:00",
+   "ultimo_successo": "2026-10-16T10:02:47+00:00",
    "dettagli": {
-    "chiamate": 0,
-    "rilevazione": "2026-10-16"
+    "chiamate": 136
    },
-   "secondi": 0.0
+   "secondi": 482.8
   },
   "eurostat": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:22+00:00",
+   "ultimo_successo": "2026-10-16T10:02:47+00:00",
    "dettagli": {
     "paesi": 10
    },
-   "secondi": 0.4
+   "secondi": 0.8
   },
   "feeds": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:35+00:00",
+   "ultimo_successo": "2026-10-16T10:03:42+00:00",
    "dettagli": {
     "notizie": 99,
     "feed_non_letti": 0
    },
-   "secondi": 3.8
+   "secondi": 40.5
   },
   "radar": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:35+00:00",
+   "ultimo_successo": "2026-10-16T10:03:42+00:00",
    "dettagli": {
     "competenze": 16,
     "posizionate": 16,
@@ -82,16 +81,16 @@
   },
   "owid": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:31+00:00",
+   "ultimo_successo": "2026-10-16T10:03:01+00:00",
    "dettagli": {
     "serie": 13,
     "errori": 0
    },
-   "secondi": 9.0
+   "secondi": 13.8
   },
   "ai_act": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:31+00:00",
+   "ultimo_successo": "2026-10-16T10:03:01+00:00",
    "dettagli": {
     "scadenze": 8
    },
@@ -99,7 +98,7 @@
   },
   "rapporti": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-16T09:43:31+00:00",
+   "ultimo_successo": "2026-10-16T10:03:01+00:00",
    "dettagli": {
     "rapporti": 4
    },

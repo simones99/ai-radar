@@ -78,7 +78,7 @@
    "2026-06": 9161,
    "2026-07": 11008,
    "2026-08": 11552,
-   "2026-09": 13982
+   "2026-09": 13983
   },
   "rag": {
    "2025-09": 828,
@@ -138,7 +138,7 @@
    "2026-06": 2162,
    "2026-07": 2476,
    "2026-08": 2319,
-   "2026-09": 2050
+   "2026-09": 2051
   },
   "sicurezza": {
    "2025-09": 44,
@@ -305,7 +305,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 93916
+     "stelle": 93917
     }
    ]
   },
@@ -321,7 +321,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 183404
+     "stelle": 183406
     }
    ]
   },
@@ -337,7 +337,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 43352
+     "stelle": 43353
     }
    ]
   },
@@ -433,7 +433,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 151154
+     "stelle": 151157
     }
    ]
   },
@@ -441,7 +441,7 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-10-16T09:40:18Z",
+   "ultimo_push": "2026-10-16T09:52:19Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -457,7 +457,7 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-10-16T09:41:46Z",
+   "ultimo_push": "2026-10-16T09:53:50Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -465,7 +465,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 78101
+     "stelle": 78102
     }
    ]
   }

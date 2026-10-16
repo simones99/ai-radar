@@ -1,7 +1,9 @@
 import {
-  computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
+  MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
+  type RadarRowM,
 } from '../data/derive';
 import type { Dataset } from '../data/types';
+import type { TileId } from '../router';
 import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf, short } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
@@ -227,4 +229,59 @@ export function heroThesis(d: Dataset, today: Date): TitleParts {
   }
   void today;
   return parts.length ? parts : plain("Cosa succede nell'AI questa settimana.");
+}
+
+// ---------------------------------------------------------------- porte della home
+// Ogni porta mostra la prima notizia che i dati permettono, in ordine di priorità (spec, sezione 5).
+export interface Door {
+  title: TitleParts; // vuoto se non ci sono dati
+  meta: string; // fonte e data del dato
+  target: { tema: TileId; elemento: string | null } | null; // null: porta non cliccabile
+}
+const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: null };
+
+/** "A", "A e B", "A, B e C", con i nomi in evidenza. */
+const names = (rows: RadarRowM[]): TitleParts =>
+  rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
+
+export function doorPerTe(d: Dataset, _today?: Date): Door {
+  const rows = d.radar ? radarRows(d.radar) : [];
+  if (!d.radar || !rows.length) return NO_DATA;
+  const meta = `Radar delle competenze · dati al ${day(d.radar.generato)}`;
+  const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null });
+
+  // 1. entrate e uscite da Impara ora
+  const { inn, out } = radarChanges(rows);
+  if (inn.length || out.length) {
+    const title: TitleParts = [];
+    if (inn.length) title.push(...names(inn), { t: ` ${inn.length > 1 ? 'entrano' : 'entra'} tra le competenze da imparare ora` });
+    if (out.length) {
+      if (inn.length) title.push({ t: '; ' });
+      title.push(...names(out), { t: ` ${out.length > 1 ? 'escono' : 'esce'}${inn.length ? '' : ' da Impara ora'}` });
+    }
+    return { title, meta, target: to(inn[0] ?? out[0]) };
+  }
+
+  // 2. altri cambi di quadrante
+  const changed = rows.filter((r) => r.changed).sort((a, b) => b.move - a.move);
+  if (changed.length) {
+    const dest = changed[0].quadrante;
+    const who = changed.every((r) => r.quadrante === dest) ? changed : [changed[0]];
+    return { title: [...names(who), { t: ` ${who.length > 1 ? 'passano' : 'passa'} a ${d.radar.quadranti[dest]}` }], meta, target: to(who[0]) };
+  }
+
+  // 3. lo spostamento più grande, se almeno MOVE_MIN
+  const big = rows.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
+  if (big) {
+    const onSlancio = Math.abs(big.dS) >= Math.abs(big.dD);
+    const v = onSlancio ? big.dS : big.dD;
+    return {
+      title: [{ t: big.breve, em: true }, { t: ` ${v > 0 ? 'guadagna' : 'perde'} ${Math.round(Math.abs(v) * 100)} punti di ${onSlancio ? 'slancio' : 'domanda'}` }],
+      meta, target: to(big),
+    };
+  }
+
+  // 4. riserva
+  const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
+  return { title: [{ t: `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length}`, em: true }, { t: ' da imparare ora' }], meta, target: to(null) };
 }

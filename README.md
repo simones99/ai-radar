@@ -65,7 +65,7 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 
 ## Personalizzare
 
-- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e i parametri di ricerca per gli annunci. Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato.
+- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
 - **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
 - **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).

@@ -72,7 +72,8 @@ describe('titoli e tesi', () => {
     expect(text(headPolitica(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
   });
   it('tesi della home e riserva', () => {
-    expect(text(heroThesis(d, today))).toBe("Usa l'AI il 19,95% delle imprese dell'UE, contro il 13,48% del 2024. MCP entra tra le competenze da imparare ora.");
+    expect(text(heroThesis(d, today))).toBe('Il modello più seguito della settimana su Hugging Face è embeddinggemma-2 di google. MCP entra tra le competenze da imparare ora.');
+    expect(text(heroThesis({ ...d, radar: undefined }, today))).not.toMatch(/\d,\d/);
     expect(text(heroThesis({}, today))).toBe("Cosa succede nell'AI questa settimana.");
   });
   it('etichette dei tipi Hugging Face', () => {

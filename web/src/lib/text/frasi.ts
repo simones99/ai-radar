@@ -185,10 +185,15 @@ export function headRapporti(d: Dataset, today: Date): Head {
 }
 
 // ---------------------------------------------------------------- tesi della home
+// Solo dati che cambiano ogni settimana (i modelli di tendenza su Hugging Face) o quasi (il radar),
+// mai un valore annuale: la home racconta la settimana.
 export function heroThesis(d: Dataset, today: Date): TitleParts {
   const parts: TitleParts = [];
-  const e = impreseUe(d);
-  if (e) parts.push({ t: "Usa l'AI il " }, { t: `${exact(e.v)}%`, em: true }, { t: " delle imprese dell'UE" + (e.prev ? `, contro il ${exact(e.prev.v)}% del ${e.prev.t}.` : '.') });
+  const top = d.huggingface?.top[0];
+  if (top) {
+    const [org, name] = top.id.includes('/') ? top.id.split('/', 2) : ['', top.id];
+    parts.push({ t: 'Il modello più seguito della settimana su Hugging Face è ' }, { t: name, em: true }, { t: org ? ` di ${org}.` : '.' });
+  }
   const rows = d.radar ? radarRows(d.radar) : [];
   const { inn } = radarChanges(rows);
   if (inn.length) {

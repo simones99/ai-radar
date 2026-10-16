@@ -10,3 +10,5 @@ web/node_modules/
 web/public/data/
 web/test-results/
 web/playwright-report/
+.superpowers/
+.playwright-mcp/

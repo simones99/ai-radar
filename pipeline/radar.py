@@ -14,7 +14,12 @@ I ranghi sono relativi alle competenze del radar: 0 = la più bassa, 1 = la più
 Per mostrare il movimento si calcola anche la posizione di un mese prima
 (slancio_prec, domanda_prec, quadrante_prec): stesse formule e stessa base della
 domanda, con le serie mensili fermate al mese precedente e le rilevazioni del
-lavoro di almeno 28 giorni prima.
+lavoro di almeno 28 giorni prima. Se manca una rilevazione così vecchia,
+domanda_prec resta vuota e il quadrante di un mese fa usa la domanda di oggi
+(domanda_prec_attuale = true): il movimento è solo sullo slancio.
+
+"storico" ripete il calcolo dello slancio per ogni mese in cui le serie
+bastano (due finestre di 3 mesi), con la domanda di allora se c'era.
 """
 from __future__ import annotations
 
@@ -135,13 +140,15 @@ def jobs_signal(jobs: dict, sid: str, today: date) -> dict | None:
         vals = list(vals)
         return round(sum(vals) / len(vals), 3) if vals else None
 
-    # Crescita: confronto con la rilevazione più recente di almeno 28 giorni prima.
+    # Crescita: confronto con la rilevazione più recente di almeno 28 giorni prima,
+    # solo se la ricerca della competenza era la stessa (una query cambiata non è confrontabile).
     growth = None
     newest = max(x["data"] for x in latest.values())
     cutoff = date.fromisoformat(newest).toordinal() - 28
     older = _latest_by_country(snaps, before=date.fromordinal(cutoff).isoformat())
     then = shares(older)
-    common = [c for c in now if c in then]
+    q = lambda x: x.get("query", {}).get(sid)  # noqa: E731
+    common = [c for c in now if c in then and q(older[c]) == q(latest[c])]
     if common:
         a, b = mean(now[c] for c in common), mean(then[c] for c in common)
         if b:
@@ -209,15 +216,35 @@ def _place(rows: list[dict], basis: str | None = None, use_jobs_growth: bool | N
     return basis, use_jobs_growth, pos
 
 
-def _month_before(arx: dict, gh: dict, jobs: dict) -> tuple[dict, dict, dict]:
-    """I dati come erano un mese prima: serie senza l'ultimo mese, rilevazioni di almeno 28 giorni prima."""
-    arx_p = {**arx, "mesi": arx.get("mesi", [])[:-1]}
-    gh_p = {**gh, "mesi": gh.get("mesi", [])[:-1]}
+def _months_before(arx: dict, gh: dict, jobs: dict, k: int) -> tuple[dict, dict, dict]:
+    """I dati come erano k mesi prima: serie senza gli ultimi k mesi, rilevazioni di almeno 28 x k giorni prima."""
+    if k == 0:
+        return arx, gh, jobs
+    arx_p = {**arx, "mesi": arx.get("mesi", [])[:-k]}
+    gh_p = {**gh, "mesi": gh.get("mesi", [])[:-k]}
     snaps = jobs.get("snapshots", [])
     if snaps:
-        cutoff = date.fromordinal(date.fromisoformat(max(x["data"] for x in snaps)).toordinal() - 28).isoformat()
+        cutoff = date.fromordinal(date.fromisoformat(max(x["data"] for x in snaps)).toordinal() - 28 * k).isoformat()
         snaps = [x for x in snaps if x["data"] <= cutoff]
     return arx_p, gh_p, {**jobs, "snapshots": snaps}
+
+
+def _history(skills: list[dict], arx: dict, gh: dict, jobs: dict, today: date,
+             basis: str, use_jobs_growth: bool) -> list[dict]:
+    """Slancio (e domanda, se c'era) mese per mese, finché le serie hanno due finestre intere."""
+    out = []
+    k = 0
+    while True:
+        a, g, j = _months_before(arx, gh, jobs, k)
+        months = max(a.get("mesi", []), g.get("mesi", []), key=len)
+        if not _windows(months):
+            break
+        _, _, pos = _place(_signals(skills, a, g, j, today), basis, use_jobs_growth)
+        if all(s is None for s, _ in pos.values()):
+            break
+        out.append({"mese": months[-1], "competenze": {sid: {"slancio": s, "domanda": d} for sid, (s, d) in pos.items()}})
+        k += 1
+    return out[::-1]
 
 
 def run(skills: list[dict], today: date) -> dict:
@@ -229,20 +256,25 @@ def run(skills: list[dict], today: date) -> dict:
 
     rows = _signals(skills, arx, gh, jobs, today)
     basis, use_jobs_growth, pos = _place(rows)
-    _, _, prev = _place(_signals(skills, *_month_before(arx, gh, jobs), today), basis, use_jobs_growth)
+    _, _, prev = _place(_signals(skills, *_months_before(arx, gh, jobs, 1), today), basis, use_jobs_growth)
+    # Nessuna domanda di un mese fa (serve una rilevazione del lavoro di almeno 28 giorni prima):
+    # il quadrante di allora si calcola con la domanda di oggi.
+    demand_now = all(d is None for _, d in prev.values()) and any(d is not None for _, d in pos.values())
 
     for r in rows:
         r["slancio"], r["domanda"] = pos[r["id"]]
         r["quadrante"] = quadrant(r["slancio"], r["domanda"])
         r["slancio_prec"], r["domanda_prec"] = prev[r["id"]]
-        r["quadrante_prec"] = quadrant(r["slancio_prec"], r["domanda_prec"])
+        r["quadrante_prec"] = quadrant(r["slancio_prec"], r["domanda"] if demand_now else r["domanda_prec"])
 
     out = {
         "generato": today.isoformat(),
         "base_domanda": basis,
         "crescita_lavoro_nello_slancio": use_jobs_growth,
+        "domanda_prec_attuale": demand_now,
         "quadranti": QUADRANTS,
         "competenze": rows,
+        "storico": _history(skills, arx, gh, jobs, today, basis, use_jobs_growth),
     }
     write_json(OUT, out)
     placed = sum(1 for r in rows if r["quadrante"])

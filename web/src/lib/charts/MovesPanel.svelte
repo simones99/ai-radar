@@ -32,7 +32,7 @@
             onclick={() => (highlight = highlight === r.id ? null : r.id)}>
             <span class="n">{r.breve}</span>
             <span class="v {cls(r.dS)}">{signedPts(r.dS)}</span>
-            <span class="v {cls(r.dD)}">{signedPts(r.dD)}</span>
+            {#if r.dp == null}<span class="v flat" title="Domanda di un mese fa non ancora rilevata">—</span>{:else}<span class="v {cls(r.dD)}">{signedPts(r.dD)}</span>{/if}
             {#if r.changed && r.qp}<span class="chip">{quadranti[r.qp]} → {quadranti[r.quadrante]}</span>{/if}
           </button>
         </li>

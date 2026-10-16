@@ -138,6 +138,46 @@ def test_arxiv_keeps_progress_when_rate_limited(tmp_path, monkeypatch):
     assert saved["series"]["a"] and saved["series"]["b"] == {} and saved["completo"] is False
 
     info = arxiv.run(MapSession({arxiv.API: ok}), skills, date(2026, 10, 15), sleep=0, months=3)
-    # b per intero (3 mesi) + gli ultimi 2 mesi di _totale e a, che si ricontano sempre
-    assert info["chiamate"] == 3 + 2 + 2
+    # solo b, per intero: _totale e a sono stati contati oggi
+    assert info["chiamate"] == 3
     assert json.loads((tmp_path / "arxiv.json").read_text())["completo"] is True
+
+
+def _ok(n=100):
+    return Resp(200, '<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">'
+                     f"<opensearch:totalResults>{n}</opensearch:totalResults></feed>")
+
+
+def test_arxiv_rerun_within_a_week_makes_no_calls(tmp_path, monkeypatch):
+    # i push ravvicinati non ricontano nulla: i mesi recenti si ricontano al massimo una volta a settimana
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    skills = [{"id": "a", "arxiv": ["x"]}]
+    assert arxiv.run(MapSession({arxiv.API: _ok()}), skills, date(2026, 10, 15), sleep=0, months=3)["chiamate"] == 6
+    s = MapSession({arxiv.API: _ok()})
+    assert arxiv.run(s, skills, date(2026, 10, 21), sleep=0, months=3)["chiamate"] == 0
+    assert s.calls == []
+    saved = json.loads((tmp_path / "arxiv.json").read_text())
+    assert saved["completo"] is True and saved["ricontato"] == {"_totale": "2026-10-15", "a": "2026-10-15"}
+
+
+def test_arxiv_recounts_recent_months_after_a_week(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    skills = [{"id": "a", "arxiv": ["x"]}]
+    arxiv.run(MapSession({arxiv.API: _ok(100)}), skills, date(2026, 10, 15), sleep=0, months=3)
+    info = arxiv.run(MapSession({arxiv.API: _ok(120)}), skills, date(2026, 10, 22), sleep=0, months=3)
+    assert info["chiamate"] == 2 + 2
+    saved = json.loads((tmp_path / "arxiv.json").read_text())
+    assert saved["series"]["a"] == {"2026-07": 100, "2026-08": 120, "2026-09": 120}
+    assert saved["ricontato"]["a"] == "2026-10-22"
+
+
+def test_arxiv_new_month_is_fetched_even_within_a_week(tmp_path, monkeypatch):
+    # a inizio mese entra un mese nuovo: si scarica subito, senza ricontare gli altri
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    skills = [{"id": "a", "arxiv": ["x"]}]
+    arxiv.run(MapSession({arxiv.API: _ok()}), skills, date(2026, 10, 29), sleep=0, months=3)
+    info = arxiv.run(MapSession({arxiv.API: _ok()}), skills, date(2026, 11, 2), sleep=0, months=3)
+    assert info["chiamate"] == 1 + 1
+    saved = json.loads((tmp_path / "arxiv.json").read_text())
+    assert saved["mesi"] == ["2026-08", "2026-09", "2026-10"]
+    assert saved["ricontato"]["a"] == "2026-10-29"

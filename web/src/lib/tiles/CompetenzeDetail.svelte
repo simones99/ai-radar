@@ -35,8 +35,8 @@
     'Repository: nuovi repository GitHub con il topic della competenza, ultimi 3 mesi rispetto ai 3 precedenti.',
     'Lavoro: annunci attivi che citano la competenza ogni 10.000 annunci del Paese, media tra i Paesi.',
     "Quadranti: sopra la mediana su entrambe le misure = Impara ora; solo slancio = Da provare; solo domanda = Da consolidare; nessuna delle due = Tieni d'occhio.",
-    'La posizione di un mese fa usa le stesse formule sulle serie fermate al mese precedente.',
-    'Le parole cercate per ogni competenza sono in config/skills.yaml.',
+    'La posizione di un mese fa usa le stesse formule sulle serie fermate al mese precedente. Finché manca una rilevazione del lavoro di almeno 4 settimane prima, il quadrante di allora usa la domanda di oggi.',
+    'Le parole cercate per ogni competenza sono in config/skills.yaml. Negli annunci si cerca per tutte una frase esatta in inglese, così le competenze sono confrontabili.',
   ];
 </script>
 
@@ -51,7 +51,8 @@
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], pct(r.slancio), pct(r.domanda), r.hasPrev ? `${pct(r.sp)} / ${pct(r.dp)}` : '—']) }}>
       <Radar {rows} {quadranti} highlight={hovered ?? highlight} onpick={(id) => (highlight = highlight === id ? null : id)} />
     </Block>
-    <Block span={4} title="Movimenti del mese" cite={sources}>
+    <Block span={4} title="Movimenti del mese" cite={sources}
+      note={data.radar?.domanda_prec_attuale ? 'Per ora si muove solo lo slancio: la domanda di un mese fa arriva con una rilevazione del lavoro di almeno 4 settimane prima.' : null}>
       <MovesPanel {rows} {quadranti} bind:highlight bind:hovered />
     </Block>
     <Block span={12} title="Le competenze una per una">

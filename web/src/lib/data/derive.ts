@@ -25,9 +25,10 @@ export function radarRows(r: Radar): RadarRowM[] {
     .map((c) => {
       const s = c.slancio as number, d = c.domanda as number;
       const sp = c.slancio_prec ?? null, dp = c.domanda_prec ?? null, qp = c.quadrante_prec ?? null;
-      const hasPrev = sp != null && dp != null;
+      // Senza domanda di un mese fa (una sola rilevazione del lavoro) il movimento è solo sullo slancio.
+      const hasPrev = sp != null;
       const dS = hasPrev ? s - (sp as number) : 0;
-      const dD = hasPrev ? d - (dp as number) : 0;
+      const dD = hasPrev && dp != null ? d - dp : 0;
       return {
         ...c, breve: c.breve || c.nome, slancio: s, domanda: d, quadrante: c.quadrante as Quadrant,
         sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,

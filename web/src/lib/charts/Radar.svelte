@@ -69,7 +69,7 @@
       <g class="pt" class:dim={dim(r.id)}>
         {#if r.hasPrev && r.move >= MOVE_MIN}
           {@const x0 = x(r.sp as number)}
-          {@const y0 = y(r.dp as number)}
+          {@const y0 = y(r.dp ?? r.domanda)}
           {@const len = Math.hypot(x(r.slancio) - x0, y(r.domanda) - y0) || 1}
           {@const k = (len - 9) / len}
           <circle class="prev" class:hot cx={x0} cy={y0} r="3.5" />

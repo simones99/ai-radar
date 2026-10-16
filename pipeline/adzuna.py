@@ -48,9 +48,11 @@ def run(s, skills: list[dict], countries: dict, eu: list[str], today: date) -> d
     old = read_json(OUT, {}) or {}
     # Una rilevazione a settimana (ISO), non a ogni push: la chiave può essere condivisa con altri progetti
     # e un giro costa (competenze + 1) x Paesi chiamate sul limite di 250 al giorno e 1.000 a settimana.
+    # Una rilevazione fatta con ricerche diverse da quelle in configurazione non conta: si rifà.
     week = today.isocalendar()[:2]
+    queries = {sk["id"]: sk["jobs"] for sk in skills if sk.get("jobs")}
     done = {x["paese"]: x["data"] for x in old.get("snapshots", [])
-            if date.fromisoformat(x["data"]).isocalendar()[:2] == week}
+            if date.fromisoformat(x["data"]).isocalendar()[:2] == week and x.get("query") == queries}
     if set(countries) <= set(done):
         last = max(done[c] for c in countries)
         log.info("Adzuna: rilevazione della settimana già fatta il %s, nessuna chiamata", last)
@@ -70,7 +72,7 @@ def run(s, skills: list[dict], countries: dict, eu: list[str], today: date) -> d
             per_skill[sk["id"]] = count(s, code, sk["jobs"], app_id, app_key)
             calls += 1
             time.sleep(SLEEP)
-        snaps.append({"data": stamp, "paese": code, "totale": total, "competenze": per_skill})
+        snaps.append({"data": stamp, "paese": code, "totale": total, "competenze": per_skill, "query": queries})
         log.info("Adzuna %s: %d annunci totali", code, total)
 
     kept = []

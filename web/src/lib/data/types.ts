@@ -28,8 +28,11 @@ export interface RadarRow {
 export interface Radar {
   generato: string;
   base_domanda: 'lavoro' | 'open-source';
+  /** true: la domanda di un mese fa non c'è ancora, il quadrante di allora usa quella di oggi. */
+  domanda_prec_attuale?: boolean;
   quadranti: Record<Quadrant, string>;
   competenze: RadarRow[];
+  storico?: { mese: string; competenze: Record<string, { slancio: number | null; domanda: number | null }> }[];
 }
 
 export interface OwidPoint { entita: string; t: string; v: number }

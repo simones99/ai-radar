@@ -17,7 +17,8 @@ CATS = ["cs.AI", "cs.CL", "cs.LG", "cs.CV", "cs.MA", "cs.RO", "cs.IR", "cs.CR", 
 NS = {"os": "http://a9.com/-/spec/opensearch/1.1/"}
 TOTAL_KEY = "_totale"
 MONTHS = 13          # storico mantenuto per i grafici
-REFRESH_LAST = 2     # mesi recenti ricontati a ogni giro (arrivano invii in ritardo)
+REFRESH_LAST = 2     # mesi recenti da ricontare (arrivano invii in ritardo)
+REFRESH_DAYS = 7     # ...al massimo una volta a settimana: i push ravvicinati scaricano solo i mesi mancanti
 OUT = "arxiv.json"
 RETRY_BACKOFF = 30.0  # dopo un 429/500 si attende 30, 60, 90, 120 s prima di arrendersi
 RETRIES = 5
@@ -53,6 +54,8 @@ def run(s, skills: list[dict], today: date, *, sleep: float = SLEEP, months: int
     # il giro dopo continua da lì. Il radar usa il file solo quando "completo" è vero.
     series: dict[str, dict[str, int]] = {k: v for k, v in old_series.items() if k in dict(targets)}
     queries: dict[str, list[str]] = {k: p for k, p in old.get("queries", {}).items() if k in dict(targets)}
+    # Giorno dell'ultimo riconto dei mesi recenti, per serie.
+    recounted: dict[str, str] = {k: d for k, d in old.get("ricontato", {}).items() if k in dict(targets)}
     calls = 0
 
     def save() -> None:
@@ -64,6 +67,7 @@ def run(s, skills: list[dict], today: date, *, sleep: float = SLEEP, months: int
             "mesi": window,
             "queries": queries,
             "series": series,
+            "ricontato": recounted,
             "completo": done,
         })
 
@@ -72,8 +76,10 @@ def run(s, skills: list[dict], today: date, *, sleep: float = SLEEP, months: int
         # Se le frasi di ricerca sono cambiate, lo storico va ricalcolato.
         if old.get("queries", {}).get(key) != phrases:
             current = {}
+        last = recounted.get(key)
+        stale = not current or last is None or (today - date.fromisoformat(last)).days >= REFRESH_DAYS
         for ym in window:
-            if ym in current and ym not in refresh:
+            if ym in current and not (stale and ym in refresh):
                 continue
             # max_results=1: con 0 arXiv risponde 500; serve solo totalResults
             try:
@@ -91,6 +97,8 @@ def run(s, skills: list[dict], today: date, *, sleep: float = SLEEP, months: int
             time.sleep(sleep)
         series[key] = {m: current[m] for m in sorted(current) if m in window}
         queries[key] = phrases
+        if stale:
+            recounted[key] = today.isoformat()
         save()
 
     log.info("arXiv: %d chiamate, %d serie", calls, len(series))

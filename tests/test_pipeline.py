@@ -231,12 +231,10 @@ def test_full_run(env):
     gh = json.loads((tmp / "github.json").read_text())
     assert "anthropics/claude-code" not in {r["repo"] for r in gh["repos"]}
 
-    # Secondo giro: lo storico non viene richiesto di nuovo, solo gli ultimi 2 mesi.
+    # Secondo giro lo stesso giorno: nessun mese da scaricare, nessuna richiesta ad arXiv.
     n_before = sum("export.arxiv.org" in u for u in fake.calls)
     assert run.main(["--only", "arxiv", "--months", "8"]) == 0
-    n_after = sum("export.arxiv.org" in u for u in fake.calls)
-    targets = 1 + sum(1 for s in common.load_yaml("skills.yaml")["skills"] if s.get("arxiv"))
-    assert n_after - n_before == 2 * targets
+    assert sum("export.arxiv.org" in u for u in fake.calls) == n_before
 
 
 def test_missing_keys_are_not_errors(env, monkeypatch):
@@ -329,8 +327,9 @@ def test_radar_ignores_incomplete_arxiv(tmp_path, monkeypatch):
     assert slancio() != base
 
 
-def test_radar_previous_demand_needs_old_job_snapshot(tmp_path, monkeypatch):
-    # Domanda dal lavoro con una sola rilevazione: la posizione precedente non si può calcolare.
+def test_radar_previous_demand_without_old_job_snapshot(tmp_path, monkeypatch):
+    # Domanda dal lavoro con una sola rilevazione: la domanda di un mese fa manca,
+    # il quadrante di un mese fa si calcola con la domanda di oggi (si muove solo lo slancio).
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
     months = [f"2026-{m:02d}" for m in range(3, 10)]
     common.write_json("github.json", {"mesi": months, "topics": {k: dict.fromkeys(months, 10 + i) for i, k in enumerate("ab")}})
@@ -339,10 +338,54 @@ def test_radar_previous_demand_needs_old_job_snapshot(tmp_path, monkeypatch):
     radar.run([{"id": "a", "nome": "A"}, {"id": "b", "nome": "B"}], date(2026, 10, 15))
     out = json.loads((tmp_path / "radar.json").read_text())
     assert out["base_domanda"] == "lavoro"
+    assert out["domanda_prec_attuale"] is True
     for r in out["competenze"]:
         assert r["slancio_prec"] is not None
-        assert r["domanda_prec"] is None and r["quadrante_prec"] is None
+        assert r["domanda_prec"] is None
+        assert r["quadrante_prec"] == radar.quadrant(r["slancio_prec"], r["domanda"])
         assert r["breve"] == r["nome"]
+
+
+def test_radar_history_from_monthly_series(tmp_path, monkeypatch):
+    # Storico dello slancio ricalcolato dalle serie mensili: un punto per ogni mese con due finestre di 3 mesi.
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    months = [f"2026-{m:02d}" for m in range(1, 10)]  # 9 mesi: 4 punti (giu, lug, ago, set)
+    counts = {"x": [10, 10, 10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0, 0, 0], "z": [40] * 9}
+    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
+    skills = [{"id": k, "nome": k} for k in counts]
+    radar.run(skills, date(2026, 10, 15))
+    out = json.loads((tmp_path / "radar.json").read_text())
+    st = out["storico"]
+    assert [p["mese"] for p in st] == ["2026-06", "2026-07", "2026-08", "2026-09"]
+    rows = {r["id"]: r for r in out["competenze"]}
+    assert {k: v["slancio"] for k, v in st[-1]["competenze"].items()} == {k: r["slancio"] for k, r in rows.items()}
+    assert {k: v["slancio"] for k, v in st[-2]["competenze"].items()} == {k: r["slancio_prec"] for k, r in rows.items()}
+    assert st[0]["competenze"]["y"]["slancio"] == 1.0  # a giugno y era la più in crescita
+
+
+def test_adzuna_new_query_runs_again_in_same_week(env, monkeypatch):
+    # query cambiata in configurazione: la rilevazione della settimana non vale più, si rifà
+    from pipeline import adzuna
+    monkeypatch.setenv("ADZUNA_APP_ID", "x")
+    monkeypatch.setenv("ADZUNA_APP_KEY", "y")
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    monkeypatch.setattr(adzuna, "count", lambda *_: 10)
+    countries = {"it": "Italia"}
+    assert adzuna.run(None, [{"id": "rag", "jobs": {"what": "rag"}}], countries, ["it"], date(2026, 10, 12))["chiamate"] == 2
+    skills = [{"id": "rag", "jobs": {"what_phrase": "retrieval augmented generation"}}]
+    assert adzuna.run(None, skills, countries, ["it"], date(2026, 10, 15))["chiamate"] == 2
+    assert adzuna.run(None, skills, countries, ["it"], date(2026, 10, 16))["chiamate"] == 0
+    snaps = json.loads((env[0] / "jobs.json").read_text())["snapshots"]
+    assert snaps[-1]["query"] == {"rag": {"what_phrase": "retrieval augmented generation"}}
+
+
+def test_radar_job_growth_only_between_same_queries(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    old = {"data": "2026-09-01", "paese": "it", "totale": 1000, "competenze": {"a": 5}, "query": {"a": {"what": "a"}}}
+    new = {"data": "2026-10-12", "paese": "it", "totale": 1000, "competenze": {"a": 10}, "query": {"a": {"what_phrase": "a"}}}
+    assert radar.jobs_signal({"snapshots": [old, new]}, "a", date(2026, 10, 15))["crescita"] is None
+    same = {**old, "query": new["query"]}
+    assert radar.jobs_signal({"snapshots": [same, new]}, "a", date(2026, 10, 15))["crescita"] == 1.0
 
 
 def test_adzuna_runs_once_per_week(env, monkeypatch):

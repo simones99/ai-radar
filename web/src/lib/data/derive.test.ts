@@ -30,6 +30,11 @@ describe('radarRows', () => {
     const rows = radarRows(radar([{ slancio: 0.7, domanda: 0.7 }]));
     expect(rows[0]).toMatchObject({ hasPrev: false, changed: false, move: 0, dS: 0, sp: null, breve: 'Competenza 0' });
   });
+  it('senza domanda di un mese fa: movimento solo sullo slancio', () => {
+    const rows = radarRows(radar([{ slancio: 0.8, domanda: 0.6, quadrante: 'impara-ora', slancio_prec: 0.3, domanda_prec: null, quadrante_prec: 'consolida' }]));
+    expect(rows[0]).toMatchObject({ hasPrev: true, changed: true, dp: null, dD: 0 });
+    expect(rows[0].dS).toBeCloseTo(0.5);
+  });
   it('scarta le competenze senza posizione', () => {
     expect(radarRows(radar([{ slancio: null }, {}]))).toHaveLength(1);
   });

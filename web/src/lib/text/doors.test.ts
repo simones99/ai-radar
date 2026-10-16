@@ -109,6 +109,24 @@ describe('porta L’AI in Italia', () => {
     expect(p.meta).toBe('Data stimata, dai rapporti degli anni scorsi');
     expect(p.target).toEqual({ tema: 'rapporti', elemento: 'state-of-ai-report' });
   });
+  it('2. dati vecchi di mesi: la regola 2 non scatta', () => {
+    const o = { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, aggiornato_owid: '2026-06-12' } } };
+    const e = { ...d, owid: o, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-06-15T11:00:00+0200' } };
+    const tema = doorItalia(e, today).target?.tema;
+    expect(tema).not.toBe('business');
+    expect(tema).not.toBe('persone');
+    expect(tema).toBe('rapporti');
+  });
+  it('3. rapporto lontano: la regola 3 non scatta, resta la riserva', () => {
+    const r = { rapporti: [{ ...d.rapporti!.rapporti[0], prossima_prevista: '2027-10' }] };
+    const p = doorItalia({ ...d, rapporti: r }, today);
+    expect(p.target?.tema).toBe('norme');
+    expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
+  });
+  it('3. davanti ad aprile si scrive «Ad»', () => {
+    const p = doorItalia(d, at('2027-03-20'));
+    expect(text(p.title)).toBe('Ad aprile esce AI Index Report');
+  });
   it('4. riserva: la prossima scadenza, anche lontana', () => {
     const p = doorItalia({ ...d, rapporti: undefined }, today);
     expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");

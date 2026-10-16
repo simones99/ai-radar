@@ -328,8 +328,9 @@ export function doorItalia(d: Dataset, today: Date): Door {
   // 3. un rapporto previsto entro 30 giorni (le date dei rapporti sono mesi stimati)
   const r = nextReport(d.rapporti, today);
   if (r && r.ym <= ym(new Date(today.getTime() + SOON * 864e5))) {
+    const mese = monthName(r.ym);
     return {
-      title: [{ t: `A ${monthName(r.ym)} esce ` }, { t: r.report.nome, em: true }],
+      title: [{ t: `${mese.startsWith('a') ? 'Ad' : 'A'} ${mese} esce ` }, { t: r.report.nome, em: true }],
       meta: 'Data stimata, dai rapporti degli anni scorsi',
       target: { tema: 'rapporti', elemento: slug(r.report.nome) },
     };

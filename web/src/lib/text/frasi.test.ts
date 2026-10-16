@@ -3,7 +3,7 @@ import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
-  cambio, headBusiness, headCompetenze, headNotizie, headNorme, headPersone, tipoLabel,
+  cambio, headBusiness, headCompetenze, headNotizie, headNorme, headPersone, headSkill, tipoLabel,
 } from './frasi';
 import { radarRows } from '../data/derive';
 
@@ -43,7 +43,7 @@ describe('numeri chiave delle card', () => {
     expect(faceCompetenze(pl, today)).toEqual({ fig: 'Multimodali', unit: '', sent: 'Entrano tra le competenze da imparare ora; DB vettoriali escono.' });
     const h = headCompetenze(pl, today);
     expect(text(h.title)).toBe('Multimodali entrano tra le competenze da imparare ora');
-    expect(h.deck).toBe('DB vettoriali escono da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
+    expect(h.deck).toBe("DB vettoriali escono da Impara ora. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
   });
   it('competenze: etichetta del cambio sul radar, al plurale con i nomi plurali', () => {
     const q = d.radar!.quadranti;
@@ -57,9 +57,20 @@ describe('numeri chiave delle card', () => {
     expect(cambio(passa, q)).toBe('passano a Da provare');
     expect(cambio({ ...passa, plurale: false }, q)).toBe('passa a Da provare');
   });
-  it('competenze: radar vecchio senza posizione precedente', () => {
-    const old: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, breve, ...r }) => r) } };
-    expect(faceCompetenze(old, today)).toEqual({ fig: '2', unit: 'su 5', sent: 'Competenze da imparare ora: sopra la mediana sia per slancio sia per domanda.' });
+  it('competenze: senza posizione precedente, e radar della pipeline vecchia', () => {
+    const noPrev: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, breve, ...r }) => r) } };
+    expect(faceCompetenze(noPrev, today)).toEqual({ fig: '2', unit: 'su 5', sent: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." });
+    expect(faceCompetenze({ radar: { ...d.radar!, versione: undefined } }, today)).toBeNull();
+  });
+  it('competenze: una sola da imparare ora, verbo al singolare', () => {
+    const one: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.filter((r) => r.id !== 'agenti') } };
+    expect(headCompetenze(one, today).deck).toBe("RAG esce da Impara ora. Oggi 1 competenza su 4 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
+  });
+  it('pagina di una competenza: nome nel titolo, quadrante e movimento nel sottotitolo', () => {
+    const rows = radarRows(d.radar!);
+    const by = (id: string) => rows.find((r) => r.id === id)!;
+    expect(headSkill(by('mcp'), d.radar!.quadranti)).toEqual({ title: [{ t: 'Model Context Protocol (MCP)' }], deck: 'Impara ora. Lo standard per collegare strumenti.' });
+    expect(headSkill(by('vector-db'), d.radar!.quadranti).deck).toBe("Tieni d'occhio, in movimento verso Da provare. Indici.");
   });
   it('notizie: settimana e settimana vuota', () => {
     expect(faceNotizie(d, today)).toEqual({ fig: '2', unit: '', sent: 'Notizie negli ultimi 7 giorni da 2 fonti.' });
@@ -105,7 +116,7 @@ describe('titoli', () => {
     const h = headCompetenze(d, today);
     expect(text(h.title)).toBe('MCP entra tra le competenze da imparare ora');
     expect(h.title[0]).toEqual({ t: 'MCP', em: true });
-    expect(h.deck).toBe('RAG esce da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
+    expect(h.deck).toBe("RAG esce da Impara ora. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
   });
   it('business e norme', () => {
     const hb = headBusiness(d, today);

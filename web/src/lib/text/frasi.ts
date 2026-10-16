@@ -4,7 +4,7 @@ import {
 } from '../data/derive';
 import type { Dataset, Quadrant } from '../data/types';
 import { slug, type TileId } from '../router';
-import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
+import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -162,7 +162,7 @@ export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
     };
   }
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  return { fig: String(n), unit: `su ${rows.length}`, sent: 'Competenze da imparare ora: sopra la mediana sia per slancio sia per domanda.' };
+  return { fig: String(n), unit: `su ${rows.length}`, sent: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." };
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
@@ -174,12 +174,20 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   if (!rows.length) return { title: plain('Competenze'), deck: null };
   const { inn, out } = radarChanges(rows);
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  const tail = `Oggi ${n} competenze su ${rows.length} sono sopra la mediana sia per slancio sia per domanda.`;
+  const tail = n === 1
+    ? `Oggi 1 competenza su ${rows.length} cresce più dell'AI e ha almeno 3 annunci ogni 10mila.`
+    : `Oggi ${n} competenze su ${rows.length} crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.`;
   if (!inn.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` }],
     deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + tail,
   };
+}
+
+/** Titolo della pagina di una competenza: il nome; sotto, quadrante, eventuale movimento e descrizione. */
+export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>): Head {
+  const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
+  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}` };
 }
 
 // ---------------------------------------------------------------- notizie
@@ -236,10 +244,11 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!d.radar || !rows.length) return NO_DATA;
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
+  const sure = rows.filter((r) => !r.incerto); // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null });
 
   // 1. entrate e uscite da Impara ora
-  const { inn, out } = radarChanges(rows);
+  const { inn, out } = radarChanges(sure);
   if (inn.length || out.length) {
     const title: TitleParts = [];
     if (inn.length) title.push(...names(inn), { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` });
@@ -251,23 +260,21 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   }
 
   // 2. altri cambi di quadrante
-  const changed = rows.filter((r) => r.changed).sort((a, b) => b.move - a.move);
+  const changed = sure.filter((r) => r.changed).sort((a, b) => b.move - a.move);
   if (changed.length) {
     const dest = changed[0].quadrante;
     const who = changed.every((r) => r.quadrante === dest) ? changed : [changed[0]];
     return { title: [...names(who), { t: ` ${verbo(who, 'passa', 'passano')} a ${d.radar.quadranti[dest]}` }], meta, target: to(who[0]) };
   }
 
-  // 3. lo spostamento più grande, se almeno MOVE_MIN
-  const big = rows.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
+  // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse)
+  const big = sure.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
   if (big) {
     const onSlancio = Math.abs(big.dS) >= Math.abs(big.dD);
-    const v = onSlancio ? big.dS : big.dD;
-    const verb = v > 0 ? verbo([big], 'guadagna', 'guadagnano') : verbo([big], 'perde', 'perdono');
-    return {
-      title: [{ t: big.breve, em: true }, { t: ` ${verb} ${Math.round(Math.abs(v) * 100)} punti di ${onSlancio ? 'slancio' : 'domanda'}` }],
-      meta, target: to(big),
-    };
+    const title: TitleParts = onSlancio
+      ? [{ t: 'Slancio di ' }, { t: big.breve, em: true }, { t: ` da ${signedPct(big.sp as number)} a ${signedPct(big.slancio)}` }]
+      : [{ t: 'Domanda di ' }, { t: big.breve, em: true }, { t: ` da ${per10k(big.dp as number)} a ${per10k(big.domanda)} annunci ogni 10mila` }];
+    return { title, meta, target: to(big) };
   }
 
   // 4. riserva

@@ -55,17 +55,22 @@ describe('porta Per te', () => {
     expect(text(p.title)).toBe("C1 passa a Tieni d'occhio");
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1' });
   });
-  it('3. nessun cambio: lo spostamento più grande, se almeno 10 punti', () => {
+  it('3. nessun cambio: lo spostamento più grande, se almeno un decimo dell’asse, in unità vere', () => {
     const p = doorPerTe(radar([
       { quadrante: 'osserva', slancio: 0.0, domanda: 0.3, slancio_prec: 0.33, domanda_prec: 0.3, quadrante_prec: 'osserva' },
       { quadrante: 'prova', slancio: 0.9, domanda: 0.1, slancio_prec: 0.8, domanda_prec: 0.1, quadrante_prec: 'prova' },
     ]), today);
-    expect(text(p.title)).toBe('C0 perde 33 punti di slancio');
+    expect(text(p.title)).toBe('Slancio di C0 da −21% a −50%');
+    expect(p.title[1]).toEqual({ t: 'C0', em: true });
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
   it('3. spostamento sulla domanda', () => {
     const p = doorPerTe(radar([{ quadrante: 'impara-ora', slancio: 0.6, domanda: 0.9, slancio_prec: 0.6, domanda_prec: 0.6, quadrante_prec: 'impara-ora' }]), today);
-    expect(text(p.title)).toBe('C0 guadagna 30 punti di domanda');
+    expect(text(p.title)).toBe('Domanda di C0 da 5,9 a 46 annunci ogni 10mila');
+  });
+  it('le competenze incerte non fanno notizia: si passa alla riserva', () => {
+    const p = doorPerTe(radar([{ quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida', incerto: true }]), today);
+    expect(text(p.title)).toBe('1 competenza su 1 da imparare ora');
   });
   describe('nomi plurali: il verbo al plurale anche con una sola competenza', () => {
     const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
@@ -80,11 +85,11 @@ describe('porta Per te', () => {
       const p = doorPerTe(radar([{ breve: 'Multimodali', plurale: true, quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' }]), today);
       expect(text(p.title)).toBe('Multimodali passano a Da provare');
     });
-    it('3. perdono, guadagnano', () => {
+    it('3. regola 3 senza accordo del verbo', () => {
       const perde = doorPerTe(radar([{ breve: 'DB vettoriali', plurale: true, quadrante: 'osserva', slancio: 0.0, domanda: 0.3, slancio_prec: 0.33, domanda_prec: 0.3, quadrante_prec: 'osserva' }]), today);
-      expect(text(perde.title)).toBe('DB vettoriali perdono 33 punti di slancio');
+      expect(text(perde.title)).toBe('Slancio di DB vettoriali da −21% a −50%');
       const guadagna = doorPerTe(radar([{ breve: 'Agenti AI', plurale: true, slancio: 0.6, domanda: 0.9, slancio_prec: 0.6, domanda_prec: 0.6, quadrante_prec: 'impara-ora' }]), today);
-      expect(text(guadagna.title)).toBe('Agenti AI guadagnano 30 punti di domanda');
+      expect(text(guadagna.title)).toBe('Domanda di Agenti AI da 5,9 a 46 annunci ogni 10mila');
     });
   });
   it('4. riserva: quante competenze da imparare ora', () => {

@@ -25,6 +25,14 @@ describe('porta Per te', () => {
     expect(text(p.title)).toBe('C0 esce da Impara ora');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
+  it('1. più competenze che entrano, nessuna esce', () => {
+    const p = doorPerTe(radar([
+      { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' },
+      { quadrante: 'impara-ora', slancio: 0.6, domanda: 0.8, slancio_prec: 0.6, domanda_prec: 0.45, quadrante_prec: 'consolida' },
+    ]), today);
+    expect(text(p.title)).toBe('C0 e C1 entrano tra le competenze da imparare ora');
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
+  });
   it('2. altri cambi verso lo stesso quadrante: tutti i nomi', () => {
     const p = doorPerTe(radar([
       { quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' },

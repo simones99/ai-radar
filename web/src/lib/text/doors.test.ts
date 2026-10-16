@@ -25,6 +25,11 @@ describe('porta Per te', () => {
     expect(text(p.title)).toBe('C0 esce da Impara ora');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
+  it('1. radar dell’11: «dati all’11»', () => {
+    const r = radar([{ quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' }]);
+    const p = doorPerTe({ radar: { ...r.radar!, generato: '2026-10-11' } }, today);
+    expect(p.meta).toBe('Radar delle competenze · dati all’11 ott 2026');
+  });
   it('1. più competenze che entrano, nessuna esce', () => {
     const p = doorPerTe(radar([
       { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' },
@@ -88,7 +93,7 @@ describe('porta L’AI in Italia', () => {
     const p = doorItalia(e, today);
     expect(text(p.title)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
     expect(p.title[0]).toEqual({ t: '16% delle imprese italiane', em: true });
-    expect(p.meta).toBe('Eurostat · aggiornato il 1 ott 2026');
+    expect(p.meta).toBe('Eurostat · aggiornato l’1 ott 2026');
     expect(p.target).toEqual({ tema: 'business', elemento: null });
   });
   it('2. Eurostat aggiornato ma senza Italia: si passa oltre', () => {
@@ -99,7 +104,7 @@ describe('porta L’AI in Italia', () => {
     const o = { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, aggiornato_owid: '2026-10-01' } } };
     const p = doorItalia({ ...d, owid: o }, today);
     expect(text(p.title)).toBe("30% degli italiani usa l'AI generativa (mondo: 18%)");
-    expect(p.meta).toBe('Microsoft via Our World in Data · aggiornato il 1 ott 2026');
+    expect(p.meta).toBe('Microsoft via Our World in Data · aggiornato l’1 ott 2026');
     expect(p.target).toEqual({ tema: 'persone', elemento: null });
   });
   it('3. rapporto previsto entro 30 giorni', () => {

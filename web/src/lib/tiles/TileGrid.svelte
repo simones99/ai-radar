@@ -9,12 +9,18 @@
   let { data, today }: { data: Dataset; today: Date } = $props();
 
   const start = parseHash(location.hash);
+  canonical(start);
   let openId = $state<TileId | null>(start?.tema ?? null);
   let elemento = $state<string | null>(start?.elemento ?? null);
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
   let pushed = false; // la card aperta ha aggiunto un passo alla cronologia
   setTitle(start?.tema ?? null);
+
+  // I vecchi link (#politica) si aprono e l'indirizzo diventa quello di oggi (#norme): «Copia link» copia quello.
+  function canonical(h: ReturnType<typeof parseHash>) {
+    if (h && location.hash !== toHash(h.tema, h.elemento)) history.replaceState(history.state, '', toHash(h.tema, h.elemento));
+  }
 
   function setTitle(id: TileId | null) {
     document.title = id ? `${TILES.find((t) => t.id === id)?.label} · AI Radar` : 'AI Radar';
@@ -48,15 +54,29 @@
     if (lastOpened) document.querySelector<HTMLButtonElement>(`#tile-${lastOpened} .face`)?.focus();
   }
 
-  function openTile(id: TileId) {
-    if (current === id) return closeTile();
+  function toggleTile(id: TileId) {
+    if (current === id) closeTile();
+    else openTile(id);
+  }
+
+  function openTile(id: TileId, el: string | null = null) {
     if (current === null) {
-      history.pushState({ tema: id }, '', toHash(id));
+      history.pushState({ tema: id }, '', toHash(id, el));
       pushed = true;
     } else {
-      history.replaceState(history.state, '', toHash(id));
+      history.replaceState(history.state, '', toHash(id, el));
     }
-    show(id);
+    show(id, el);
+  }
+
+  // Link a una card (le porte): stessa cronologia del clic su una card. Clic centrale, Ctrl e Maiusc restano al browser.
+  function onLink(e: MouseEvent) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const href = (e.target as Element | null)?.closest?.('a[href^="#"]')?.getAttribute('href');
+    const h = href ? parseHash(href) : null;
+    if (!h) return;
+    e.preventDefault();
+    openTile(h.tema, h.elemento);
   }
 
   function closeTile() {
@@ -74,6 +94,7 @@
     const h = parseHash(location.hash);
     if (!h && current === null) return;
     pushed = history.state?.tema != null;
+    canonical(h);
     if (!h && location.hash) {
       show(null); // ancora interna (#stato, #crediti, #temi): chiude la card e lascia la pagina dove va il link
       return;
@@ -91,9 +112,10 @@
 </script>
 
 <svelte:window onpopstate={onPop} onkeydown={onKey} />
+<svelte:document onclick={onLink} />
 
 {#if openId}
-  <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={openTile} onclose={closeTile} />
+  <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={(id) => openTile(id)} onclose={closeTile} />
 {/if}
 
 <div class="groups" class:has-open={openId !== null} id="temi">
@@ -104,7 +126,7 @@
       <div class="tiles">
         {#each tiles as t (t.id)}
           <article class="tile" class:open={openId === t.id} class:hidden={openId !== null && openId !== t.id} id="tile-{t.id}">
-            <TileFace tile={t} {data} {today} expanded={openId === t.id} onopen={() => openTile(t.id)} />
+            <TileFace tile={t} {data} {today} expanded={openId === t.id} onopen={() => toggleTile(t.id)} />
             {#if openId === t.id}
               {@const D = t.Detail}
               <D {data} {today} tile={t} {elemento} onclose={closeTile} />

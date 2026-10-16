@@ -4,7 +4,7 @@ import {
 } from '../data/derive';
 import type { Dataset } from '../data/types';
 import { slug, type TileId } from '../router';
-import { capitalize, day, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
+import { capitalize, day, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -227,7 +227,7 @@ const names = (rows: RadarRowM[]): TitleParts =>
 export function doorPerTe(d: Dataset, _today?: Date): Door {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!d.radar || !rows.length) return NO_DATA;
-  const meta = `Radar delle competenze · dati al ${day(d.radar.generato)}`;
+  const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
   const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null });
 
   // 1. entrate e uscite da Impara ora
@@ -290,7 +290,7 @@ export function doorItalia(d: Dataset, today: Date): Door {
   if (e?.it != null && recent(euAgg)) {
     return {
       title: [{ t: `${nf(e.it, 0)}% delle imprese italiane`, em: true }, { t: ` usa l'AI (UE: ${nf(e.v, 0)}%)` }],
-      meta: `Eurostat · aggiornato il ${day(euAgg as string)}`,
+      meta: `Eurostat · aggiornato ${dayWith('il', euAgg as string)}`,
       target: { tema: 'business', elemento: null },
     };
   }
@@ -300,7 +300,7 @@ export function doorItalia(d: Dataset, today: Date): Door {
     const w = owidLatest(d.owid, 'uso_genai', 'World');
     return {
       title: [{ t: `${nf(it.v, 0)}% degli italiani`, em: true }, { t: ` usa l'AI generativa${w ? ` (mondo: ${nf(w.v, 0)}%)` : ''}` }],
-      meta: `Microsoft via Our World in Data · aggiornato il ${day(genAgg as string)}`,
+      meta: `Microsoft via Our World in Data · aggiornato ${dayWith('il', genAgg as string)}`,
       target: { tema: 'persone', elemento: null },
     };
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { capitalize, day, daysTo, exact, isoDay, short, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
+import { capitalize, day, dayWith, daysTo, exact, isoDay, short, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
 
 describe('formati italiani', () => {
   it('numeri con separatori italiani', () => {
@@ -21,6 +21,16 @@ describe('formati italiani', () => {
   it('date brevi', () => {
     expect(day('2026-12-02')).toBe('2 dic 2026');
     expect(day('2026-10-15T08:49:44+00:00')).toBe('15 ott 2026');
+  });
+  it('date con «al» e «il»: elisione davanti a 1, 8 e 11', () => {
+    expect(dayWith('al', '2027-01-01')).toBe('all’1 gen 2027');
+    expect(dayWith('al', '2027-01-08')).toBe('all’8 gen 2027');
+    expect(dayWith('al', '2027-01-11')).toBe('all’11 gen 2027');
+    expect(dayWith('al', '2027-01-16')).toBe('al 16 gen 2027');
+    expect(dayWith('il', '2027-02-01')).toBe('l’1 feb 2027');
+    expect(dayWith('il', '2027-02-08')).toBe('l’8 feb 2027');
+    expect(dayWith('il', '2027-02-11')).toBe('l’11 feb 2027');
+    expect(dayWith('il', '2027-02-16')).toBe('il 16 feb 2027');
   });
   it('mesi', () => {
     expect(monthName('2026-10')).toBe('ottobre');

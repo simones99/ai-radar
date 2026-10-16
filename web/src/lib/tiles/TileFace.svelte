@@ -2,7 +2,7 @@
   import type { Dataset } from '../data/types';
   import { tileState } from '../data/freshness';
   import { PHOTOS } from '../photos';
-  import { day } from '../text/format';
+  import { day, dayWith } from '../text/format';
   import type { TileDef } from './types';
 
   let { tile, data, today, expanded, onopen }: { tile: TileDef; data: Dataset; today: Date; expanded: boolean; onopen: () => void } = $props();
@@ -11,7 +11,6 @@
   const st = $derived(tileState(tile.source, data.status, face !== null));
   const photo = $derived(PHOTOS[tile.id]);
   let imgFailed = $state(false);
-  const dataDay = (iso: string) => { const d = day(iso); return /^(1|8|11) /.test(d) ? `all’${d}` : `al ${d}`; };
 </script>
 
 <button type="button" class="face" aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name="t-{tile.id}" onclick={onopen}>
@@ -35,7 +34,7 @@
       <span class="sent">{st.motivo}</span>
     {/if}
     {#if st.state === 'vecchio' && st.fallito && st.aggiornato}
-      <span class="stale">Aggiornamento non riuscito il {day(st.fallito)}. Dati aggiornati {dataDay(st.aggiornato)}.</span>
+      <span class="stale">Aggiornamento non riuscito il {day(st.fallito)}. Dati aggiornati {dayWith('al', st.aggiornato)}.</span>
     {/if}
   </span>
 </button>

@@ -53,9 +53,37 @@ test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza'
   await expect(page.locator('#detail-norme li[aria-current="true"]')).toContainText('Fine della transizione per la marcatura');
 });
 
-test('i vecchi link #politica aprono Norme', async ({ page }) => {
+test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await expect(page.locator('#detail-competenze')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+  await page.goForward();
+  await expect(page.locator('#detail-competenze')).toBeVisible();
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await page.goBack();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+});
+
+test('porta con una card aperta: come una pillola, un solo indietro torna alla home', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#tile-business .face').click();
+  await expect(page.locator('#detail-business')).toBeVisible();
+  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await expect(page.locator('#detail-competenze')).toBeVisible();
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await page.goBack();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+});
+
+test('i vecchi link #politica aprono Norme e diventano #norme', async ({ page }) => {
   await page.goto('/#politica');
   await expect(page.locator('#detail-norme')).toBeVisible();
+  await expect(page).toHaveURL(/#norme$/);
 });
 
 for (const id of TEMI) {

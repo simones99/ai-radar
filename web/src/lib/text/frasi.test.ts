@@ -28,7 +28,7 @@ describe('numeri chiave delle card', () => {
     const senzaIt = { owid: { ...d.owid!, serie: { uso_genai: { ...d.owid!.serie.uso_genai, punti: d.owid!.serie.uso_genai.punti.filter((p) => p.entita === 'World') } } } };
     expect(facePersone(senzaIt, today)).toEqual({ fig: '18', unit: '%', sent: "Persone nel mondo che usano l'AI generativa; manca il dato italiano." });
   });
-  it('politica: giorni alla prossima scadenza, e nessuna scadenza', () => {
+  it('norme: giorni alla prossima scadenza, e nessuna scadenza', () => {
     expect(faceNorme(d, today)).toEqual({ fig: '48', unit: 'giorni', sent: "Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura." });
     const late = new Date(2029, 0, 1);
     expect(faceNorme(d, late)).toEqual({ fig: '0', unit: 'scadenze in arrivo', sent: "Nessuna scadenza dell'AI Act in arrivo." });
@@ -67,7 +67,7 @@ describe('titoli', () => {
     expect(h.title[0]).toEqual({ t: 'MCP', em: true });
     expect(h.deck).toBe('RAG esce da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
   });
-  it('business e politica', () => {
+  it('business e norme', () => {
     const hb = headBusiness(d, today);
     expect(text(hb.title)).toBe("16% delle imprese italiane usa l'AI");
     expect(hb.title[0]).toEqual({ t: '16%', em: true });

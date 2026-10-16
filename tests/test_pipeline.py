@@ -159,6 +159,9 @@ class FakeSession:
             n = 20000 + 100 * month if "abs:" not in q else (len(q) * 7) % 400 + 10 * month
             return FakeResponse(text=f'<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">'
                                      f'<opensearch:totalResults>{n}</opensearch:totalResults></feed>')
+        if host == "api.github.com" and p.get("sort") == "stars":
+            return FakeResponse(body={"items": [{"full_name": "o/r1", "html_url": "https://github.com/o/r1", "description": "d",
+                                                 "stargazers_count": 50, "created_at": "2026-09-01T00:00:00Z"}]})
         if host == "api.github.com" and "/search/" in url:
             month = int(re.search(r"created:\d{4}-(\d{2})", p["q"]).group(1))
             return FakeResponse(body={"total_count": (len(p["q"]) * 3) % 90 + month})

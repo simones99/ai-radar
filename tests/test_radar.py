@@ -1,9 +1,13 @@
 """Radar 2.0: tendenza, segnali, quadranti, prudenza, GitHub, risorse e configurazione."""
 from __future__ import annotations
 
+import json
+from datetime import date
+
 import pytest
 
-from pipeline import common, tendenza
+from pipeline import common, github_signals, tendenza
+from test_pipeline import FakeResponse
 
 
 def test_config_base_topics_and_resources():
@@ -64,3 +68,45 @@ def test_combine_caps_with_three_signals():
     trends = [{"pendenza": 0.1, "errore": e} for e in (0.001, 0.1, 0.2)]
     _, w = tendenza.combine(trends)
     assert w == pytest.approx([2 / 3, 1 / 3 * 0.8, 1 / 3 * 0.2])
+
+
+# ------------------------------------------------------------------ GitHub
+
+class GhFake:
+    """API di ricerca di GitHub: 100 repository al mese con il topic llm, 10 con gli altri."""
+
+    def __init__(self, fail_top: bool = False):
+        self.headers: dict = {}
+        self.calls: list[str] = []
+        self.fail_top = fail_top
+
+    def get(self, url, params=None, headers=None, timeout=None):
+        q = (params or {}).get("q", "")
+        self.calls.append(q or url)
+        if (params or {}).get("sort") == "stars":
+            if self.fail_top:
+                return FakeResponse(status=422, body={"message": "Validation Failed"})
+            return FakeResponse(body={"items": [{
+                "full_name": "o/new", "html_url": "https://github.com/o/new", "description": "x" * 300,
+                "stargazers_count": 42, "created_at": "2026-09-20T10:00:00Z"}]})
+        return FakeResponse(body={"total_count": 100 if q.startswith("topic:llm ") else 10})
+
+
+def test_github_base_and_new_repos(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    skills = [{"id": "mcp", "github": "mcp"}]
+    github_signals.run(GhFake(), skills, [], date(2026, 10, 15), months=3, base_topics=["llm", "ai"])
+    gh = json.loads((tmp_path / "github.json").read_text(encoding="utf-8"))
+    assert gh["base_topics"] == ["llm", "ai"]
+    assert gh["base"] == {"2026-07": 110, "2026-08": 110, "2026-09": 110}
+    assert gh["in_crescita"]["mcp"] == [{"nome": "o/new", "url": "https://github.com/o/new", "descrizione": "x" * 200,
+                                         "stelle": 42, "creato": "2026-09-20"}]
+
+    # Secondo giro: base ricontata solo negli ultimi 2 mesi; la ricerca dei nuovi fallisce e resta la lista di prima.
+    fake = GhFake(fail_top=True)
+    github_signals.run(fake, skills, [], date(2026, 10, 15), months=3, base_topics=["llm", "ai"])
+    gh = json.loads((tmp_path / "github.json").read_text(encoding="utf-8"))
+    assert gh["in_crescita"]["mcp"][0]["nome"] == "o/new"
+    assert sum(c.startswith("topic:llm created:2026") for c in fake.calls) == 2
+    assert "topic:mcp created:>=2026-07-17" in fake.calls

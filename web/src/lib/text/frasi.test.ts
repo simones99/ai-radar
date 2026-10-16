@@ -60,7 +60,7 @@ describe('numeri chiave delle card', () => {
   });
 });
 
-describe('titoli e tesi', () => {
+describe('titoli', () => {
   it('competenze', () => {
     const h = headCompetenze(d, today);
     expect(text(h.title)).toBe('MCP entra tra le competenze da imparare ora');

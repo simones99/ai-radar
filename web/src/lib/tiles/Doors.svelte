@@ -39,7 +39,7 @@
   @media (hover: hover) { a.door:hover { box-shadow: var(--shadow-up); transform: translateY(-2px); } }
   .eyebrow { font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
   .name { font-size: 14px; line-height: 24px; color: var(--fg-2); }
-  .news { font-weight: 500; font-size: clamp(24px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+  .news { font-weight: 500; font-size: clamp(24px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; overflow-wrap: anywhere; }
   .news em { font-style: normal; color: var(--accent); font-weight: 700; }
   .meta { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

@@ -17,11 +17,11 @@ import time
 import traceback
 from datetime import date
 
-from . import adzuna, ai_act, artificial_analysis, arxiv, epoch, eurostat, feeds, github_signals, huggingface, owid, radar, rapporti
+from . import adzuna, ai_act, artificial_analysis, arxiv, epoch, eurostat, feeds, github_signals, huggingface, owid, radar, rapporti, risorse
 from .common import load_yaml, log, now_iso, read_json, redact, session, write_json
 
 ORDER = ["epoch", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "owid",
-         "ai_act", "rapporti", "feeds", "radar"]
+         "ai_act", "rapporti", "feeds", "risorse", "radar"]
 SKIPPABLE = (adzuna.MissingCredentials, artificial_analysis.MissingCredentials)
 
 
@@ -50,6 +50,7 @@ def main(argv: list[str] | None = None) -> int:
         "ai_act": ai_act.run,
         "rapporti": rapporti.run,
         "feeds": lambda: feeds.run(s, src["feeds"], src.get("feeds_days", 45), src.get("feeds_per_source", 12)),
+        "risorse": lambda: risorse.run(s, skills, today),
         "radar": lambda: radar.run(skills, today),
     }
     selected = args.only.split(",") if args.only else ORDER

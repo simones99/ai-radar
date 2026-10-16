@@ -6,7 +6,7 @@ from datetime import date
 
 import pytest
 
-from pipeline import common, github_signals, tendenza
+from pipeline import common, github_signals, risorse, tendenza
 from test_pipeline import FakeResponse
 
 
@@ -110,3 +110,52 @@ def test_github_base_and_new_repos(tmp_path, monkeypatch):
     assert gh["in_crescita"]["mcp"][0]["nome"] == "o/new"
     assert sum(c.startswith("topic:llm created:2026") for c in fake.calls) == 2
     assert "topic:mcp created:>=2026-07-17" in fake.calls
+
+
+# ------------------------------------------------------------------ risorse
+
+class LinkFake:
+    """Risponde `status` a HEAD; a GET risponde `get_status` (di default lo stesso)."""
+
+    def __init__(self, status: int, get_status: int | None = None):
+        self.status, self.get_status = status, status if get_status is None else get_status
+        self.headers: dict = {}
+        self.calls: list[tuple[str, str]] = []
+
+    def head(self, url, allow_redirects=True, timeout=None):
+        self.calls.append(("head", url))
+        return FakeResponse(status=self.status, text="")
+
+    def get(self, url, params=None, headers=None, timeout=None):
+        self.calls.append(("get", url))
+        return FakeResponse(status=self.get_status, text="")
+
+
+SK = [{"id": "a", "risorse": [{"titolo": "T", "url": "https://x.example", "tipo": "guida"}]}]
+
+
+def _link(tmp_path):
+    return json.loads((tmp_path / "risorse.json").read_text(encoding="utf-8"))["link"]["https://x.example"]
+
+
+def test_link_is_down_only_after_two_failed_weeks(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    risorse.run(LinkFake(404), SK, date(2026, 10, 12))
+    assert _link(tmp_path) == {"stato": 404, "errori": 1, "ok": True, "controllato": "2026-10-12"}
+    same_week = LinkFake(404)
+    risorse.run(same_week, SK, date(2026, 10, 15))  # stessa settimana: nessuna richiesta
+    assert same_week.calls == []
+    info = risorse.run(LinkFake(404), SK, date(2026, 10, 19))
+    assert _link(tmp_path)["ok"] is False and info["non_raggiungibili"] == 1
+    risorse.run(LinkFake(200), SK, date(2026, 10, 26))
+    assert _link(tmp_path) == {"stato": 200, "errori": 0, "ok": True, "controllato": "2026-10-26"}
+
+
+def test_link_check_falls_back_to_get(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    monkeypatch.setattr("time.sleep", lambda *_: None)
+    fake = LinkFake(405, get_status=200)  # alcuni siti rifiutano HEAD
+    risorse.run(fake, SK, date(2026, 10, 12))
+    assert fake.calls == [("head", "https://x.example"), ("get", "https://x.example")]
+    assert _link(tmp_path)["stato"] == 200

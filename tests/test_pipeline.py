@@ -149,6 +149,10 @@ class FakeSession:
         self.headers = {}
         self.calls = []
 
+    def head(self, url, allow_redirects=True, timeout=None):
+        self.calls.append(url)
+        return FakeResponse(text="")
+
     def get(self, url, params=None, headers=None, timeout=None):
         self.calls.append(url)
         p = params if isinstance(params, dict) else {}

@@ -50,8 +50,8 @@ test('indietro chiude; dopo un cambio di card un solo indietro torna alla home',
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await page.locator('#tile-business .face').click();
-  await page.getByRole('navigation', { name: 'Altri temi' }).getByRole('button', { name: 'Politica' }).click();
-  await expect(page).toHaveURL(/#politica$/);
+  await page.getByRole('navigation', { name: 'Altri temi' }).getByRole('button', { name: 'Norme' }).click();
+  await expect(page).toHaveURL(/#norme$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -94,8 +94,8 @@ test('tema scuro', async ({ page }) => {
 test('riduci movimento: nessuna animazione all’apertura', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  await page.locator('#tile-politica .face').click();
-  await expect(page.locator('#detail-politica')).toBeVisible();
+  await page.locator('#tile-norme .face').click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
 });
 

@@ -49,8 +49,8 @@ describe('TileGrid', () => {
   it('cambio di card con le pillole: un solo indietro torna alla home', async () => {
     render(TileGrid, { data, today });
     await fireEvent.click(face('Business'));
-    await fireEvent.click(screen.getByRole('button', { name: 'Politica' }));
-    expect(location.hash).toBe('#politica');
+    await fireEvent.click(screen.getByRole('button', { name: 'Norme' }));
+    expect(location.hash).toBe('#norme');
     expect(details()).toHaveLength(1);
     history.back();
     await waitFor(() => expect(details()).toHaveLength(0));

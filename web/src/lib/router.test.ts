@@ -15,8 +15,13 @@ describe('router', () => {
     expect(parseHash('#competenze/')).toEqual({ tema: 'competenze', elemento: null });
   });
   it('scrive gli hash', () => {
-    expect(toHash('politica')).toBe('#politica');
+    expect(toHash('norme')).toBe('#norme');
     expect(toHash('competenze', 'mcp')).toBe('#competenze/mcp');
+  });
+  it('i vecchi link a Politica aprono Norme', () => {
+    expect(parseHash('#politica')).toEqual({ tema: 'norme', elemento: null });
+    expect(parseHash('#politica/2026-12-02')).toEqual({ tema: 'norme', elemento: '2026-12-02' });
+    expect(parseHash('#norme/2026-12-02')).toEqual({ tema: 'norme', elemento: '2026-12-02' });
   });
   it('slug per i nomi delle fonti', () => {
     expect(slug('The Decoder')).toBe('the-decoder');

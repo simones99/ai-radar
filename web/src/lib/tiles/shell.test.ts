@@ -56,7 +56,7 @@ describe('Detail', () => {
     expect(screen.getByRole('link', { name: 'Foto' })).toHaveAttribute('href', expect.stringContaining('commons.wikimedia.org'));
   });
   it('licenza della foto: link al testo quando esiste, solo scritta per il pubblico dominio', () => {
-    const { unmount } = render(Detail, { tile: tile({ id: 'politica', label: 'Politica' }), head: tile().head({}, today), onclose: () => {}, children: blocks });
+    const { unmount } = render(Detail, { tile: tile({ id: 'norme', label: 'Norme' }), head: tile().head({}, today), onclose: () => {}, children: blocks });
     expect(screen.getByRole('link', { name: 'CC BY 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
     unmount();
     render(Detail, { tile: tile(), head: tile().head({}, today), onclose: () => {}, children: blocks });
@@ -89,9 +89,9 @@ describe('Detail', () => {
 describe('Pills', () => {
   it('sceglie un altro tema o chiude', async () => {
     const onpick = vi.fn(), onclose = vi.fn();
-    render(Pills, { tiles: [tile(), tile({ id: 'politica', label: 'Politica' })], onpick, onclose });
-    await fireEvent.click(screen.getByRole('button', { name: 'Politica' }));
-    expect(onpick).toHaveBeenCalledWith('politica');
+    render(Pills, { tiles: [tile(), tile({ id: 'norme', label: 'Norme' })], onpick, onclose });
+    await fireEvent.click(screen.getByRole('button', { name: 'Norme' }));
+    expect(onpick).toHaveBeenCalledWith('norme');
     await fireEvent.click(screen.getByRole('button', { name: 'Chiudi' }));
     expect(onclose).toHaveBeenCalledOnce();
   });

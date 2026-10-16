@@ -101,15 +101,15 @@ export function headPersone(d: Dataset, _today?: Date): Head {
   };
 }
 
-// ---------------------------------------------------------------- politica
-export function facePolitica(d: Dataset, today: Date): Face | null {
+// ---------------------------------------------------------------- norme
+export function faceNorme(d: Dataset, today: Date): Face | null {
   if (!d.ai_act?.scadenze?.length) return null;
   const n = nextDeadline(d.ai_act.scadenze, today);
   if (!n) return { fig: '0', unit: 'scadenze in arrivo', sent: "Nessuna scadenza dell'AI Act in arrivo." };
   const days = daysTo(n.data, today);
   return { fig: String(days), unit: days === 1 ? 'giorno' : 'giorni', sent: `Alla prossima scadenza dell'AI Act, il ${day(n.data)}: ${lowerFirst(n.titolo)}.` };
 }
-export function headPolitica(d: Dataset, today: Date): Head {
+export function headNorme(d: Dataset, today: Date): Head {
   const n = nextDeadline(d.ai_act?.scadenze, today);
   if (!n) return { title: plain("Nessuna scadenza dell'AI Act in arrivo"), deck: null };
   const days = daysTo(n.data, today);

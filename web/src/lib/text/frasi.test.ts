@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
-  faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, facePolitica, faceRapporti,
-  headBusiness, headCompetenze, headNotizie, headPolitica, heroThesis, tipoLabel,
+  faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
+  headBusiness, headCompetenze, headNotizie, headNorme, heroThesis, tipoLabel,
 } from './frasi';
 
 const d = FIXTURE as Dataset;
@@ -26,9 +26,9 @@ describe('numeri chiave delle card', () => {
     expect(facePersone(d, today)?.fig).toBe('17,8');
   });
   it('politica: giorni alla prossima scadenza, e nessuna scadenza', () => {
-    expect(facePolitica(d, today)).toEqual({ fig: '48', unit: 'giorni', sent: "Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura." });
+    expect(faceNorme(d, today)).toEqual({ fig: '48', unit: 'giorni', sent: "Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura." });
     const late = new Date(2029, 0, 1);
-    expect(facePolitica(d, late)).toEqual({ fig: '0', unit: 'scadenze in arrivo', sent: "Nessuna scadenza dell'AI Act in arrivo." });
+    expect(faceNorme(d, late)).toEqual({ fig: '0', unit: 'scadenze in arrivo', sent: "Nessuna scadenza dell'AI Act in arrivo." });
   });
   it('competenze: chi entra e chi esce', () => {
     expect(faceCompetenze(d, today)).toEqual({ fig: 'MCP', unit: '', sent: 'Entra tra le competenze da imparare ora; RAG esce.' });
@@ -69,7 +69,7 @@ describe('titoli e tesi', () => {
     const hb = headBusiness(d, today);
     expect(text(hb.title)).toBe('Investimenti privati in AI nel 2025: 290 B $');
     expect(hb.deck).toBe('A prezzi 2021, in aziende AI non quotate. Nel 2024: 131 B $. B = miliardi.');
-    expect(text(headPolitica(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
+    expect(text(headNorme(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
   });
   it('tesi della home e riserva', () => {
     expect(text(heroThesis(d, today))).toBe('Il modello più seguito della settimana su Hugging Face è embeddinggemma-2 di google. MCP entra tra le competenze da imparare ora.');

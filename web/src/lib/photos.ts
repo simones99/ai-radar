@@ -37,7 +37,7 @@ export const PHOTOS: Record<TileId, Photo> = {
   persone: { src: persone, srcset: personeSet, alt: 'Persona al lavoro in un ufficio open space',
     titolo: 'Working in open office space (Unsplash)', autore: 'Crew crew', licenza: 'CC0', licenzaUrl: CC0,
     pagina: `${C}Working_in_open_office_space_(Unsplash).jpg` },
-  politica: { src: politica, srcset: politicaSet, alt: "L'emiciclo del Parlamento europeo a Strasburgo",
+  norme: { src: politica, srcset: politicaSet, alt: "L'emiciclo del Parlamento europeo a Strasburgo",
     titolo: 'Hemicycle of the European Parliament, Strasbourg 2023 003', autore: 'Sebastian Wallroth', licenza: 'CC BY 4.0', licenzaUrl: BY,
     pagina: `${C}Hemicycle_of_the_European_Parliament,_Strasbourg_2023_003.jpg` },
   competenze: { src: competenze, srcset: competenzeSet, alt: 'Studentessa che spiega il suo lavoro al portatile',

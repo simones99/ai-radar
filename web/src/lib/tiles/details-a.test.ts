@@ -4,11 +4,11 @@ import { describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import type { TileId } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
-import { headBusiness, headCompetenze, headNotizie, headPolitica, type Head } from '../text/frasi';
+import { headBusiness, headCompetenze, headNotizie, headNorme, type Head } from '../text/frasi';
 import BusinessDetail from './BusinessDetail.svelte';
 import CompetenzeDetail from './CompetenzeDetail.svelte';
 import NotizieDetail from './NotizieDetail.svelte';
-import PoliticaDetail from './PoliticaDetail.svelte';
+import NormeDetail from './NormeDetail.svelte';
 import type { DetailProps, TileDef } from './types';
 
 const data = FIXTURE as Dataset;
@@ -72,10 +72,10 @@ describe('Business', () => {
   });
 });
 
-describe('Politica', () => {
-  const tile = mk('politica', 'Politica', headPolitica, PoliticaDetail);
+describe('Norme', () => {
+  const tile = mk('norme', 'Norme', headNorme, NormeDetail);
   it('linea del tempo con la prossima scadenza e notizie di policy', () => {
-    show(PoliticaDetail, tile);
+    show(NormeDetail, tile);
     const next = screen.getByRole('link', { name: 'Fine della transizione per la marcatura' });
     expect(next.closest('li')).toHaveClass('next');
     expect(screen.getByRole('link', { name: 'AI Act: le linee guida sulla trasparenza' })).toBeInTheDocument();

@@ -7,7 +7,7 @@ from datetime import date
 import pytest
 import requests
 
-from pipeline import common, github_signals, risorse, tendenza
+from pipeline import common, github_signals, radar, risorse, tendenza
 from test_pipeline import FakeResponse
 
 
@@ -213,3 +213,138 @@ def test_link_403_counts_as_alive(tmp_path, monkeypatch):
     monkeypatch.setattr("time.sleep", lambda *_: None)
     risorse.run(LinkFake(403), SK, date(2026, 10, 12))
     assert _link(tmp_path) == {"stato": 403, "errori": 0, "ok": True, "controllato": "2026-10-12"}
+
+
+# ------------------------------------------------------------------ radar
+
+MONTHS = [f"2025-{m:02d}" for m in range(10, 13)] + [f"2026-{m:02d}" for m in range(1, 10)]  # 12 mesi, fino a settembre
+TODAY = date(2026, 10, 15)
+
+
+def grow(n0: float, g: float, n: int = 12) -> list[int]:
+    return [round(n0 * g ** i) for i in range(n)]
+
+
+def write_inputs(tmp_path, monkeypatch, arxiv: dict, github: dict, jobs: dict | None = None):
+    """arXiv con 10.000 paper AI al mese, GitHub con 20.000 repository AI al mese."""
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    common.write_json("arxiv.json", {"mesi": MONTHS, "completo": True, "series": {
+        "_totale": dict.fromkeys(MONTHS, 10000), **{k: dict(zip(MONTHS, v)) for k, v in arxiv.items()}}})
+    common.write_json("github.json", {"mesi": MONTHS, "base": dict.fromkeys(MONTHS, 20000), "in_crescita": {},
+                                      "topics": {k: dict(zip(MONTHS, v)) for k, v in github.items()}})
+    common.write_json("jobs.json", jobs or {"snapshots": []})
+
+
+def snap(day: str, paese: str, n: int, totale: int = 100000, q: str = "x") -> dict:
+    return {"data": day, "paese": paese, "totale": totale, "competenze": {"a": n}, "query": {"a": {"what_phrase": q}}}
+
+
+def run_radar(skills: list[dict]) -> dict:
+    radar.run(skills, TODAY)
+    return json.loads((common.data_dir() / "radar.json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("s,d,q", [(0.01, 3.0, "impara-ora"), (0.0, 3.0, "consolida"), (0.01, 2.99, "prova"),
+                                   (-0.2, 1.0, "osserva"), (None, 5.0, None), (0.3, None, None)])
+def test_quadrant_fixed_thresholds(s, d, q):
+    assert radar.quadrant(s, d) == q
+
+
+def test_published_changes_after_two_months():
+    assert radar.published(["prova", "impara-ora", "prova", "prova"]) == ["prova"] * 4
+    assert radar.published(["osserva", "prova", "prova"]) == ["osserva", "osserva", "prova"]
+    assert radar.published([None, "prova", "impara-ora", "impara-ora"]) == [None, "prova", "prova", "impara-ora"]
+
+
+def test_run_writes_version_2(tmp_path, monkeypatch):
+    jobs = {"paesi_ue": ["it"], "snapshots": [snap("2026-10-12", "it", 50), snap("2026-10-12", "us", 20)]}
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, jobs)
+    gh = json.loads((tmp_path / "github.json").read_text(encoding="utf-8"))
+    gh["in_crescita"] = {"a": [{"nome": "o/r", "url": "https://github.com/o/r", "descrizione": "", "stelle": 9, "creato": "2026-09-01"}]}
+    common.write_json("github.json", gh)
+    common.write_json("risorse.json", {"link": {"https://morto.example": {"ok": False}}})
+    skills = [{"id": "a", "nome": "A", "risorse": [
+        {"titolo": "Doc", "url": "https://doc.example", "tipo": "documentazione"},
+        {"titolo": "Corso", "url": "https://morto.example", "tipo": "corso", "lingua": "it"}]}]
+
+    out = run_radar(skills)
+    assert out["versione"] == 2
+    assert out["soglie"] == {"slancio": 0.0, "domanda": 3.0, "rapporto_max": radar.RAPPORTO_MAX}
+    r = out["competenze"][0]
+    assert r["slancio"] == pytest.approx(1.05 ** 6 - 1, abs=0.02)
+    lo, hi = r["slancio_margine"]
+    assert lo < r["slancio"] < hi
+    assert r["domanda"] == pytest.approx(3.5)  # media tra 5 (it) e 2 (us) ogni 10mila
+    assert r["domanda_it"] == pytest.approx(5.0)
+    assert r["quadrante"] == r["quadrante_calcolato"] == "impara-ora"
+    assert (r["incerto"], r["incerto_perche"]) == (False, None)
+    seg = r["segnali"]
+    assert seg["arxiv"]["peso"] + seg["github"]["peso"] == pytest.approx(1)
+    assert seg["lavoro"]["variazione"] is None  # una sola rilevazione: niente tendenza del lavoro
+    assert seg["lavoro"]["rilevazioni"] == [{"data": "2026-10-12", "media": 3.5, "it": 5.0}]
+    assert len(seg["github"]["mensile"]) == 12 and seg["github"]["mensile"][0]["base"] == 20000
+    assert r["per_iniziare"] == [{"lingua": "en", "titolo": "Doc", "url": "https://doc.example", "tipo": "documentazione"}]
+    assert r["in_crescita"][0]["nome"] == "o/r"
+    assert r["quadrante_prec"] == "impara-ora" and r["domanda_prec"] is None  # nessuna rilevazione di 28 giorni prima
+    st = out["storico"]
+    assert [p["mese"] for p in st] == MONTHS[5:]  # un punto per ogni mese con 6 mesi di serie
+    assert st[-1]["competenze"]["a"] == {"slancio": r["slancio"], "domanda": 3.5, "calcolato": "impara-ora",
+                                         "pubblicato": "impara-ora", "incerto": False}
+
+
+def test_adding_a_skill_does_not_change_the_others(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05), "b": grow(50, 0.9)},
+                 {"a": grow(2000, 1.05), "b": grow(300, 0.95)}, {"snapshots": [snap("2026-10-12", "it", 50)]})
+    one = run_radar([{"id": "a", "nome": "A"}])
+    two = run_radar([{"id": "a", "nome": "A"}, {"id": "b", "nome": "B"}])
+    assert one["competenze"][0] == two["competenze"][0]
+    assert [p["competenze"]["a"] for p in one["storico"]] == [p["competenze"]["a"] for p in two["storico"]]
+
+
+def test_small_noisy_counts_are_uncertain(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {"a": [3, 9, 2, 12, 4, 10, 3, 14, 2, 11, 5, 15]},
+                 {"a": [20, 45, 15, 60, 18, 70, 25, 80, 22, 90, 30, 85]})
+    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    assert r["incerto"] is True
+    assert "pochi paper (8 al mese)" in r["incerto_perche"]
+    assert r["quadrante"] is None  # senza lavoro niente domanda, quindi niente quadrante
+
+
+def test_job_trend_needs_eight_weeks_with_the_same_query():
+    weeks = ["2026-08-03", "2026-08-10", "2026-08-17", "2026-08-24", "2026-08-31", "2026-09-07",
+             "2026-09-14", "2026-09-21", "2026-09-28", "2026-10-05", "2026-10-12"]
+    rising = radar.jobs_signal({"snapshots": [snap(d, "it", 50 + 5 * i) for i, d in enumerate(weeks)]}, "a")
+    assert rising["tendenza"]["pendenza"] > 0
+    changed = [snap(d, "it", 50, q="vecchia") for d in weeks[:-4]] + [snap(d, "it", 50) for d in weeks[-4:]]
+    sig = radar.jobs_signal({"snapshots": changed}, "a")
+    assert sig["tendenza"] is None  # con la ricerca nuova ci sono solo 3 settimane
+    assert [x["data"] for x in sig["rilevazioni"]] == weeks[-4:]
+
+
+def test_incomplete_arxiv_is_ignored(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.3)}, {"a": grow(2000, 1.0)})
+    with_arxiv = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]["slancio"]
+    arx = json.loads((tmp_path / "arxiv.json").read_text(encoding="utf-8"))
+    common.write_json("arxiv.json", {**arx, "completo": False})
+    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    assert r["segnali"]["arxiv"] is None
+    assert r["slancio"] != with_arxiv
+
+
+def test_github_without_base_is_ignored(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {}, {"a": grow(2000, 1.1)})
+    gh = json.loads((tmp_path / "github.json").read_text(encoding="utf-8"))
+    del gh["base"]
+    common.write_json("github.json", gh)
+    with pytest.raises(ValueError, match="radar vuoto"):
+        run_radar([{"id": "a", "nome": "A"}])
+
+
+def test_corrupt_risorse_file_keeps_all_resources(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)})
+    (tmp_path / "risorse.json").write_text("non è JSON {", encoding="utf-8")
+    skills = [{"id": "a", "nome": "A", "risorse": [
+        {"titolo": "Doc", "url": "https://doc.example", "tipo": "documentazione"},
+        {"titolo": "Corso", "url": "https://corso.example", "tipo": "corso"}]}]
+    r = run_radar(skills)["competenze"][0]
+    assert [x["url"] for x in r["per_iniziare"]] == ["https://doc.example", "https://corso.example"]

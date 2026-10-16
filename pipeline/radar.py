@@ -1,35 +1,42 @@
-"""Radar delle competenze: combina ricerca, open source e lavoro in due assi.
+"""Radar delle competenze, versione 2: unità vere, soglie fisse, margine d'errore.
 
-- Slancio (asse x): quanto cresce l'attenzione su una competenza negli ultimi
-  3 mesi rispetto ai 3 precedenti. Media dei ranghi percentili di:
-    * crescita della quota di paper AI su arXiv che ne parlano;
-    * crescita dei nuovi repository GitHub con il suo topic;
-    * crescita della quota di annunci di lavoro (quando c'è almeno un mese di storico).
-- Domanda (asse y): rango percentile della quota di annunci di lavoro che la citano
-  (media dei Paesi). Senza dati sul lavoro si usa il numero di nuovi repository
-  degli ultimi 3 mesi come misura di adozione.
+Slancio: variazione negli ultimi 6 mesi interi della quota della competenza sul totale
+dell'AI, stimata come tendenza (pipeline/tendenza.py) e combinando i segnali:
+  * arXiv: paper che la citano / paper AI del mese;
+  * GitHub: nuovi repository con il suo topic / nuovi repository AI del mese (la base è
+    la somma dei topic github_base_topics di sources.yaml);
+  * lavoro: annunci che la citano / annunci del Paese, se ci sono almeno 8 settimane di
+    rilevazioni fatte con la stessa ricerca.
+Domanda: annunci ogni 10mila, media tra i Paesi della rilevazione più recente.
 
-I ranghi sono relativi alle competenze del radar: 0 = la più bassa, 1 = la più alta.
+Quadranti a soglie fisse: slancio > 0 (cresce più dell'AI), domanda >= 3 annunci ogni 10mila.
+Il quadrante pubblicato cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo.
+Una competenza è incerta se il margine all'80% dello slancio è largo:
+(1 + alto) / (1 + basso) > RAPPORTO_MAX.
 
-Per mostrare il movimento si calcola anche la posizione di un mese prima
-(slancio_prec, domanda_prec, quadrante_prec): stesse formule e stessa base della
-domanda, con le serie mensili fermate al mese precedente e le rilevazioni del
-lavoro di almeno 28 giorni prima. Se manca una rilevazione così vecchia,
-domanda_prec resta vuota e il quadrante di un mese fa usa la domanda di oggi
-(domanda_prec_attuale = true): il movimento è solo sullo slancio.
-
-"storico" ripete il calcolo dello slancio per ogni mese in cui le serie
-bastano (due finestre di 3 mesi), con la domanda di allora se c'era.
+Lo storico si ricalcola ogni volta: il punto di k mesi fa usa le serie fermate a k mesi prima
+e le rilevazioni del lavoro di almeno 28 x k giorni prima. Dove la domanda manca (prima della
+prima rilevazione) il quadrante usa la domanda del primo punto successivo che ce l'ha.
 """
 from __future__ import annotations
 
 from datetime import date
 
 from .common import read_json, write_json
+from .tendenza import combine, margine, rapporto, trend, variazione
 
 OUT = "radar.json"
-SMOOTH = 5  # sommato ai conteggi per non premiare i salti tra numeri piccoli
-WINDOW = 3
+VERSIONE = 2
+FINESTRA = 6            # mesi della tendenza
+SOGLIA_SLANCIO = 0.0    # cresce più dell'AI nel suo complesso
+SOGLIA_DOMANDA = 3.0    # annunci ogni 10mila, circa 1 su 3.300
+# Tarato il 16/10/2026 su arXiv e GitHub con la base AI vera: incerte text-to-SQL 1,66, robotica 1,65,
+# LLMOps 1,64, Governance 1,64; solide MCP 1,46, multimodali 1,46, RAG 1,20, agenti 1,10.
+RAPPORTO_MAX = 1.55
+MIN_GIORNI_LAVORO = 56  # 8 settimane di rilevazioni con la stessa ricerca
+GIORNI_MESE = 30.44
+POCHI = 100             # sotto questa media al mese il motivo dell'incertezza dice «pochi»
+MAX_STORICO = 24
 
 QUADRANTS = {
     "impara-ora": "Impara ora",
@@ -37,185 +44,175 @@ QUADRANTS = {
     "consolida": "Da consolidare",
     "osserva": "Tieni d'occhio",
 }
+ETICHETTE = {"arxiv": "paper", "github": "repository nuovi", "lavoro": "annunci"}
 
 
-def pct_ranks(values: dict[str, float | None]) -> dict[str, float | None]:
-    """Rango percentile in [0, 1], con i pari merito alla media dei loro ranghi."""
-    valid = sorted((v, k) for k, v in values.items() if v is not None)
-    n = len(valid)
-    out: dict[str, float | None] = {k: None for k in values}
-    if n == 0:
-        return out
-    if n == 1:
-        out[valid[0][1]] = 0.5
-        return out
-    i = 0
-    while i < n:
-        j = i
-        while j + 1 < n and valid[j + 1][0] == valid[i][0]:
-            j += 1
-        r = ((i + j) / 2) / (n - 1)
-        for t in range(i, j + 1):
-            out[valid[t][1]] = round(r, 4)
-        i = j + 1
+def quadrant(slancio: float | None, domanda: float | None) -> str | None:
+    if slancio is None or domanda is None:
+        return None
+    up, high = slancio > SOGLIA_SLANCIO, domanda >= SOGLIA_DOMANDA
+    return "impara-ora" if up and high else "prova" if up else "consolida" if high else "osserva"
+
+
+def published(calcolati: list[str | None]) -> list[str | None]:
+    """Quadrante pubblicato mese per mese: cambia solo se il calcolato è lo stesso per due mesi di fila."""
+    out: list[str | None] = []
+    for i, q in enumerate(calcolati):
+        if q is None or i == 0 or calcolati[i - 1] is None or out[i - 1] is None:
+            out.append(q)
+        else:
+            out.append(q if q == calcolati[i - 1] else out[i - 1])
     return out
 
 
-def _sum(series: dict[str, int], months: list[str]) -> int:
-    return sum(series.get(m, 0) for m in months)
-
-
-def _windows(months: list[str]) -> tuple[list[str], list[str]] | None:
-    if len(months) < 2 * WINDOW:
-        return None
-    return months[-2 * WINDOW:-WINDOW], months[-WINDOW:]
-
+# ------------------------------------------------------------------ segnali
 
 def arxiv_signal(arx: dict, sid: str) -> dict | None:
     series, months = arx.get("series", {}), arx.get("mesi", [])
-    w = _windows(months)
-    if not w or sid not in series:
+    if sid not in series or len(months) < FINESTRA:
         return None
-    prev, last = w
     tot = series.get("_totale", {})
-    tp, tl = _sum(tot, prev), _sum(tot, last)
-    p, l = _sum(series[sid], prev), _sum(series[sid], last)
-    if not tp or not tl:
-        return None
-    share_prev, share_last = (p + SMOOTH) / tp, (l + SMOOTH) / tl
+    last = months[-FINESTRA:]
+    ns = [series[sid].get(m, 0) for m in last]
     return {
-        "ultimi3": l,
-        "precedenti3": p,
-        "per_mille": round(1000 * l / tl, 2),
-        "crescita": round(share_last / share_prev - 1, 4),
+        "tendenza": trend(list(range(FINESTRA)), ns, [tot.get(m, 0) for m in last]),
+        "media_mese": sum(ns) / FINESTRA,
         "mensile": [{"mese": m, "n": series[sid].get(m, 0), "totale": tot.get(m, 0)} for m in months],
     }
 
 
 def github_signal(gh: dict, sid: str) -> dict | None:
-    series, months = gh.get("topics", {}).get(sid), gh.get("mesi", [])
-    w = _windows(months)
-    if not w or series is None:
-        return None
-    prev, last = w
-    p, l = _sum(series, prev), _sum(series, last)
+    series, months, base = gh.get("topics", {}).get(sid), gh.get("mesi", []), gh.get("base", {})
+    if series is None or not base or len(months) < FINESTRA:
+        return None  # senza base dell'AI il conteggio grezzo non si confronta con gli altri segnali
+    last = months[-FINESTRA:]
+    ns = [series.get(m, 0) for m in last]
     return {
-        "ultimi3": l,
-        "precedenti3": p,
-        "crescita": round((l + SMOOTH) / (p + SMOOTH) - 1, 4),
-        "mensile": [{"mese": m, "n": series.get(m, 0)} for m in months],
+        "tendenza": trend(list(range(FINESTRA)), ns, [base.get(m, 0) for m in last]),
+        "media_mese": sum(ns) / FINESTRA,
+        "mensile": [{"mese": m, "n": series.get(m, 0), "base": base.get(m, 0)} for m in months],
     }
 
 
-def _latest_by_country(snaps: list[dict], before: str | None = None) -> dict[str, dict]:
+def _latest_by_country(snaps: list[dict]) -> dict[str, dict]:
     out: dict[str, dict] = {}
     for x in sorted(snaps, key=lambda x: x["data"]):
-        if before and x["data"] > before:
-            continue
         out[x["paese"]] = x
     return out
 
 
-def jobs_signal(jobs: dict, sid: str, today: date) -> dict | None:
+def _days(a: str, b: str) -> int:
+    return (date.fromisoformat(b) - date.fromisoformat(a)).days
+
+
+def jobs_signal(jobs: dict, sid: str) -> dict | None:
+    """Domanda di oggi, tendenza (se le rilevazioni bastano) e rilevazioni da disegnare.
+
+    Valgono solo le rilevazioni fatte con la stessa ricerca della più recente del Paese:
+    una ricerca cambiata non è confrontabile.
+    """
     snaps = jobs.get("snapshots", [])
-    if not snaps:
-        return None
-    eu = set(jobs.get("paesi_ue", []))
     latest = _latest_by_country(snaps)
-
-    def shares(by_country: dict[str, dict]) -> dict[str, float]:
-        res = {}
-        for c, x in by_country.items():
-            n = x.get("competenze", {}).get(sid)
-            if n is None or not x.get("totale"):
-                continue
-            res[c] = 10000 * n / x["totale"]
-        return res
-
-    now = shares(latest)
-    if not now:
-        return None
-
-    def mean(vals):
-        vals = list(vals)
-        return round(sum(vals) / len(vals), 3) if vals else None
-
-    # Crescita: confronto con la rilevazione più recente di almeno 28 giorni prima,
-    # solo se la ricerca della competenza era la stessa (una query cambiata non è confrontabile).
-    growth = None
-    newest = max(x["data"] for x in latest.values())
-    cutoff = date.fromisoformat(newest).toordinal() - 28
-    older = _latest_by_country(snaps, before=date.fromordinal(cutoff).isoformat())
-    then = shares(older)
     q = lambda x: x.get("query", {}).get(sid)  # noqa: E731
-    common = [c for c in now if c in then and q(older[c]) == q(latest[c])]
-    if common:
-        a, b = mean(now[c] for c in common), mean(then[c] for c in common)
-        if b:
-            growth = round(a / b - 1, 4)
+    shares = {c: 10000 * x["competenze"][sid] / x["totale"] for c, x in latest.items()
+              if x.get("competenze", {}).get(sid) is not None and x.get("totale")}
+    if not shares:
+        return None
+    newest = max(latest[c]["data"] for c in shares)
+    same = [x for x in snaps if x["paese"] in shares and q(x) == q(latest[x["paese"]])
+            and x.get("totale") and x.get("competenze", {}).get(sid) is not None
+            and _days(x["data"], newest) <= FINESTRA * GIORNI_MESE]
+
+    trends = []
+    for c in shares:
+        own = sorted((x for x in same if x["paese"] == c), key=lambda x: x["data"])
+        if len(own) < 2 or _days(own[0]["data"], own[-1]["data"]) < MIN_GIORNI_LAVORO:
+            continue
+        t = trend([_days(own[0]["data"], x["data"]) / GIORNI_MESE for x in own],
+                  [x["competenze"][sid] for x in own], [x["totale"] for x in own])
+        if t:
+            trends.append(t)
+    comb = combine(trends)
+
+    by_day: dict[str, dict[str, float]] = {}
+    for x in same:
+        by_day.setdefault(x["data"], {})[x["paese"]] = 10000 * x["competenze"][sid] / x["totale"]
     return {
-        "ogni_10mila": {c: round(v, 2) for c, v in sorted(now.items())},
-        "media": mean(now.values()),
-        "media_ue": mean(v for c, v in now.items() if c in eu),
-        "usa": round(now["us"], 3) if "us" in now else None,
-        "crescita": growth,
+        "tendenza": comb[0] if comb else None,
+        "media": round(sum(shares.values()) / len(shares), 3),
+        "it": round(shares["it"], 3) if "it" in shares else None,
+        "ogni_10mila": {c: round(v, 2) for c, v in sorted(shares.items())},
         "data": newest,
+        "rilevazioni": [{"data": d, "media": round(sum(v.values()) / len(v), 3), "it": round(v["it"], 3) if "it" in v else None}
+                        for d, v in sorted(by_day.items())],
     }
 
 
-def quadrant(m: float | None, d: float | None) -> str | None:
-    if m is None or d is None:
+# ------------------------------------------------------------------ una competenza in un mese
+
+def _summary(t: dict | None) -> dict:
+    if t is None:
+        return {"variazione": None, "margine": None}
+    lo, hi = margine(t, FINESTRA)
+    return {"variazione": round(variazione(t, FINESTRA), 4), "margine": [round(lo, 4), round(hi, 4)]}
+
+
+def _out_signal(kind: str, s: dict | None, peso: float) -> dict | None:
+    if s is None:
         return None
-    if m >= 0.5 and d >= 0.5:
-        return "impara-ora"
-    if m >= 0.5:
-        return "prova"
-    if d >= 0.5:
-        return "consolida"
-    return "osserva"
+    out = {**_summary(s["tendenza"]), "peso": round(peso, 3)}
+    if kind == "lavoro":
+        out.update({"rilevazioni": s["rilevazioni"], "ogni_10mila": s["ogni_10mila"], "data": s["data"]})
+    else:
+        out["mensile"] = s["mensile"]
+    return out
 
 
-def _signals(skills: list[dict], arx: dict, gh: dict, jobs: dict, today: date) -> list[dict]:
-    rows = []
-    for sk in skills:
-        sid = sk["id"]
-        rows.append({
-            "id": sid,
-            "nome": sk["nome"],
-            "breve": sk.get("breve", sk["nome"]),
-            "plurale": bool(sk.get("plurale", False)),  # per accordare il verbo: «Multimodali entrano»
-            "descrizione": sk.get("descrizione", ""),
-            "arxiv": arxiv_signal(arx, sid),
-            "github": github_signal(gh, sid),
-            "lavoro": jobs_signal(jobs, sid, today),
-        })
-    return rows
+def _perche(sig: dict, used: list[tuple[str, dict]]) -> str:
+    """Il motivo dell'incertezza, dai segnali che da soli hanno un margine largo."""
+    parts = []
+    for kind, t in used:
+        if rapporto(t, FINESTRA) <= RAPPORTO_MAX:
+            continue
+        n = sig[kind].get("media_mese")
+        parts.append(f"pochi {ETICHETTE[kind]} ({round(n)} al mese)" if n is not None and n < POCHI
+                     else f"{ETICHETTE[kind]} con andamento irregolare")
+    return " e ".join(parts) if parts else "segnali con andamento irregolare"
 
 
-def _place(rows: list[dict], basis: str | None = None, use_jobs_growth: bool | None = None):
-    """Slancio e domanda di ogni competenza. basis e use_jobs_growth, se dati, sono imposti
-    (serve alla posizione precedente, che deve usare le stesse misure di quella attuale)."""
-    def pick(fn):
-        return {r["id"]: fn(r) for r in rows}
+def _alive(links: dict, url: str) -> bool:
+    v = links.get(url)
+    return v.get("ok", True) if isinstance(v, dict) else True
 
-    r_arx = pct_ranks(pick(lambda r: r["arxiv"]["crescita"] if r["arxiv"] else None))
-    r_gh = pct_ranks(pick(lambda r: r["github"]["crescita"] if r["github"] else None))
-    r_jg = pct_ranks(pick(lambda r: r["lavoro"]["crescita"] if r["lavoro"] else None))
-    if use_jobs_growth is None:
-        use_jobs_growth = sum(v is not None for v in r_jg.values()) >= len(rows) / 2
 
-    job_level = pick(lambda r: r["lavoro"]["media"] if r["lavoro"] else None)
-    if basis is None:
-        basis = "lavoro" if sum(v is not None for v in job_level.values()) >= len(rows) / 2 else "open-source"
-    r_dem = pct_ranks(job_level) if basis == "lavoro" else pct_ranks(pick(lambda r: r["github"]["ultimi3"] if r["github"] else None))
+def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
+    sid = sk["id"]
+    sig = {"arxiv": arxiv_signal(arx, sid), "github": github_signal(gh, sid), "lavoro": jobs_signal(jobs, sid)}
+    used = [(k, s["tendenza"]) for k, s in sig.items() if s and s["tendenza"]]
+    comb = combine([t for _, t in used])
+    pesi = dict(zip([k for k, _ in used], comb[1])) if comb else {}
+    slancio = lo_hi = perche = None
+    incerto = False
+    if comb:
+        t = comb[0]
+        slancio = round(variazione(t, FINESTRA), 4)
+        lo, hi = margine(t, FINESTRA)
+        lo_hi = [round(lo, 4), round(hi, 4)]
+        incerto = rapporto(t, FINESTRA) > RAPPORTO_MAX
+        perche = _perche(sig, used) if incerto else None
+    lav = sig["lavoro"]
+    return {
+        "slancio": slancio,
+        "slancio_margine": lo_hi,
+        "domanda": lav["media"] if lav else None,
+        "domanda_it": lav["it"] if lav else None,
+        "incerto": incerto,
+        "incerto_perche": perche,
+        "segnali": {k: _out_signal(k, s, pesi.get(k, 0.0)) for k, s in sig.items()},
+    }
 
-    pos = {}
-    for r in rows:
-        parts = [r_arx[r["id"]], r_gh[r["id"]]] + ([r_jg[r["id"]]] if use_jobs_growth else [])
-        parts = [p for p in parts if p is not None]
-        pos[r["id"]] = (round(sum(parts) / len(parts), 4) if parts else None, r_dem[r["id"]])
-    return basis, use_jobs_growth, pos
 
+# ------------------------------------------------------------------ storico e uscita
 
 def _months_before(arx: dict, gh: dict, jobs: dict, k: int) -> tuple[dict, dict, dict]:
     """I dati come erano k mesi prima: serie senza gli ultimi k mesi, rilevazioni di almeno 28 x k giorni prima."""
@@ -230,55 +227,83 @@ def _months_before(arx: dict, gh: dict, jobs: dict, k: int) -> tuple[dict, dict,
     return arx_p, gh_p, {**jobs, "snapshots": snaps}
 
 
-def _history(skills: list[dict], arx: dict, gh: dict, jobs: dict, today: date,
-             basis: str, use_jobs_growth: bool) -> list[dict]:
-    """Slancio (e domanda, se c'era) mese per mese, finché le serie hanno due finestre intere."""
-    out = []
-    k = 0
-    while True:
-        a, g, j = _months_before(arx, gh, jobs, k)
-        months = max(a.get("mesi", []), g.get("mesi", []), key=len)
-        if not _windows(months):
-            break
-        _, _, pos = _place(_signals(skills, a, g, j, today), basis, use_jobs_growth)
-        if all(s is None for s, _ in pos.values()):
-            break
-        out.append({"mese": months[-1], "competenze": {sid: {"slancio": s, "domanda": d} for sid, (s, d) in pos.items()}})
-        k += 1
-    return out[::-1]
+def _publish(points: list[tuple[str, dict]], ids: list[str]) -> None:
+    """Quadrante calcolato e pubblicato di ogni punto, dal più vecchio al più recente."""
+    for sid in ids:
+        later = None
+        for _, rows in reversed(points):  # domanda mancante: quella del primo punto successivo che ce l'ha
+            r = rows[sid]
+            if r["domanda"] is not None:
+                later = r["domanda"]
+            r["calcolato"] = quadrant(r["slancio"], r["domanda"] if r["domanda"] is not None else later)
+        for (_, rows), q in zip(points, published([rows[sid]["calcolato"] for _, rows in points])):
+            rows[sid]["pubblicato"] = q
 
 
 def run(skills: list[dict], today: date) -> dict:
     arx = read_json("arxiv.json", {}) or {}
-    if arx.get("completo") is False:  # giro interrotto: con poche serie i ranghi sarebbero falsati
+    if arx.get("completo") is False:  # giro interrotto: con poche serie i confronti sarebbero falsati
         arx = {}
     gh = read_json("github.json", {}) or {}
     jobs = read_json("jobs.json", {}) or {}
+    try:
+        links = (read_json("risorse.json", {}) or {}).get("link", {})
+    except (ValueError, AttributeError):
+        links = {}
+    if not isinstance(links, dict):
+        links = {}
 
-    rows = _signals(skills, arx, gh, jobs, today)
-    basis, use_jobs_growth, pos = _place(rows)
-    _, _, prev = _place(_signals(skills, *_months_before(arx, gh, jobs, 1), today), basis, use_jobs_growth)
-    # Nessuna domanda di un mese fa (serve una rilevazione del lavoro di almeno 28 giorni prima):
-    # il quadrante di allora si calcola con la domanda di oggi.
-    demand_now = all(d is None for _, d in prev.values()) and any(d is not None for _, d in pos.values())
-
-    for r in rows:
-        r["slancio"], r["domanda"] = pos[r["id"]]
-        r["quadrante"] = quadrant(r["slancio"], r["domanda"])
-        r["slancio_prec"], r["domanda_prec"] = prev[r["id"]]
-        r["quadrante_prec"] = quadrant(r["slancio_prec"], r["domanda"] if demand_now else r["domanda_prec"])
-
-    out = {
-        "generato": today.isoformat(),
-        "base_domanda": basis,
-        "crescita_lavoro_nello_slancio": use_jobs_growth,
-        "domanda_prec_attuale": demand_now,
-        "quadranti": QUADRANTS,
-        "competenze": rows,
-        "storico": _history(skills, arx, gh, jobs, today, basis, use_jobs_growth),
-    }
-    write_json(OUT, out)
-    placed = sum(1 for r in rows if r["quadrante"])
-    if placed == 0:
+    points: list[tuple[str, dict]] = []  # dal più recente al più vecchio, poi girati
+    for k in range(MAX_STORICO):
+        a, g, j = _months_before(arx, gh, jobs, k)
+        months = max(a.get("mesi", []), g.get("mesi", []), key=len)
+        if len(months) < FINESTRA:
+            break
+        rows = {sk["id"]: _row(sk, a, g, j) for sk in skills}
+        if all(r["slancio"] is None for r in rows.values()):
+            break
+        points.append((months[-1], rows))
+    if not points:
         raise ValueError("radar vuoto: mancano sia arXiv sia GitHub")
-    return {"competenze": len(rows), "posizionate": placed, "base_domanda": basis}
+    points.reverse()
+    _publish(points, [sk["id"] for sk in skills])
+
+    now = points[-1][1]
+    prev = points[-2][1] if len(points) > 1 else {}
+    out_rows = []
+    for sk in skills:
+        sid = sk["id"]
+        r, p = now[sid], prev.get(sid, {})
+        out_rows.append({
+            "id": sid,
+            "nome": sk["nome"],
+            "breve": sk.get("breve", sk["nome"]),
+            "plurale": bool(sk.get("plurale", False)),  # per accordare il verbo: «Multimodali entrano»
+            "descrizione": sk.get("descrizione", ""),
+            "slancio": r["slancio"],
+            "slancio_margine": r["slancio_margine"],
+            "domanda": r["domanda"],
+            "domanda_it": r["domanda_it"],
+            "quadrante": r["pubblicato"],
+            "quadrante_calcolato": r["calcolato"],
+            "incerto": r["incerto"],
+            "incerto_perche": r["incerto_perche"],
+            "slancio_prec": p.get("slancio"),
+            "domanda_prec": p.get("domanda"),
+            "quadrante_prec": p.get("pubblicato"),
+            "segnali": r["segnali"],
+            "per_iniziare": [{"lingua": "en", **x} for x in sk.get("risorse", []) if _alive(links, x["url"])],
+            "in_crescita": gh.get("in_crescita", {}).get(sid, []),
+        })
+
+    write_json(OUT, {
+        "versione": VERSIONE,
+        "generato": today.isoformat(),
+        "soglie": {"slancio": SOGLIA_SLANCIO, "domanda": SOGLIA_DOMANDA, "rapporto_max": RAPPORTO_MAX},
+        "quadranti": QUADRANTS,
+        "competenze": out_rows,
+        "storico": [{"mese": m, "competenze": {sid: {k: r[k] for k in ("slancio", "domanda", "calcolato", "pubblicato", "incerto")}
+                                                for sid, r in rows.items()}} for m, rows in points],
+    })
+    return {"competenze": len(out_rows), "posizionate": sum(1 for r in out_rows if r["quadrante"]),
+            "incerte": sum(1 for r in out_rows if r["incerto"])}

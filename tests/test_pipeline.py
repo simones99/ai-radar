@@ -80,20 +80,6 @@ def test_epoch_regions(field, expected):
     assert epoch.regions_of(field) == expected
 
 
-def test_pct_ranks_with_ties_and_none():
-    r = radar.pct_ranks({"a": 1.0, "b": 2.0, "c": 2.0, "d": 3.0, "e": None})
-    assert r == {"a": 0.0, "b": 0.5, "c": 0.5, "d": 1.0, "e": None}
-    assert radar.pct_ranks({"solo": 7.0}) == {"solo": 0.5}
-
-
-def test_quadrants():
-    assert radar.quadrant(0.9, 0.9) == "impara-ora"
-    assert radar.quadrant(0.9, 0.1) == "prova"
-    assert radar.quadrant(0.1, 0.9) == "consolida"
-    assert radar.quadrant(0.1, 0.1) == "osserva"
-    assert radar.quadrant(None, 0.9) is None
-
-
 # --------------------------------------------------------------- end-to-end
 
 class FakeResponse:
@@ -223,7 +209,7 @@ def test_full_run(env):
     assert states == {k: "ok" for k in run.ORDER}, states
 
     rad = json.loads((tmp / "radar.json").read_text())
-    assert rad["base_domanda"] == "lavoro"
+    assert rad["versione"] == 2
     assert all(r["quadrante"] for r in rad["competenze"])
     assert {r["quadrante"] for r in rad["competenze"]} <= set(radar.QUADRANTS)
 
@@ -254,7 +240,8 @@ def test_missing_keys_are_not_errors(env, monkeypatch):
     assert status["adzuna"]["stato"] == "non configurata"
     assert status["artificial_analysis"]["stato"] == "non configurata"
     rad = json.loads((tmp / "radar.json").read_text())
-    assert rad["base_domanda"] == "open-source"
+    # senza Adzuna niente domanda: lo slancio c'è, il quadrante no
+    assert all(r["slancio"] is not None and r["quadrante"] is None for r in rad["competenze"])
 
 
 def test_error_messages_do_not_leak_keys(env, monkeypatch):
@@ -294,85 +281,6 @@ def test_network_error_log_does_not_leak_keys(monkeypatch, caplog):
     assert "id-0123456789" not in caplog.text and "key-abcdef0123456789" not in caplog.text
 
 
-def test_radar_previous_positions(tmp_path, monkeypatch):
-    # Tre competenze solo GitHub, 7 mesi. Oggi le finestre sono apr-giu contro lug-set;
-    # un mese prima erano mar-mag contro giu-ago. x cresce solo a settembre, y cresceva prima.
-    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    months = [f"2026-{m:02d}" for m in range(3, 10)]
-    counts = {"x": [10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0], "z": [40, 40, 40, 20, 20, 20, 20]}
-    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
-    skills = [{"id": k, "nome": f"Competenza {k}", "breve": k.upper()} for k in counts]
-    skills[0]["plurale"] = True
-    radar.run(skills, date(2026, 10, 15))
-    rows = {r["id"]: r for r in json.loads((tmp_path / "radar.json").read_text())["competenze"]}
-
-    assert (rows["x"]["slancio"], rows["x"]["domanda"], rows["x"]["quadrante"]) == (1.0, 1.0, "impara-ora")
-    assert (rows["x"]["slancio_prec"], rows["x"]["domanda_prec"], rows["x"]["quadrante_prec"]) == (0.5, 0.0, "prova")
-    assert (rows["y"]["slancio_prec"], rows["y"]["domanda_prec"], rows["y"]["quadrante_prec"]) == (1.0, 1.0, "impara-ora")
-    assert (rows["z"]["slancio_prec"], rows["z"]["domanda_prec"], rows["z"]["quadrante_prec"]) == (0.0, 0.5, "consolida")
-    assert rows["z"]["quadrante"] == "osserva"
-    assert rows["x"]["breve"] == "X"
-    assert (rows["x"]["plurale"], rows["y"]["plurale"]) == (True, False)
-
-
-def test_radar_ignores_incomplete_arxiv(tmp_path, monkeypatch):
-    # arxiv.json a metà (giro interrotto da un 429): il radar non lo usa, altrimenti confronterebbe poche competenze
-    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    months = [f"2026-{m:02d}" for m in range(3, 10)]
-    counts = {"x": [10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0], "z": [40, 40, 40, 20, 20, 20, 20]}
-    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
-    skills = [{"id": k, "nome": f"Competenza {k}", "breve": k.upper()} for k in counts]
-
-    def slancio():
-        radar.run(skills, date(2026, 10, 15))
-        return {r["id"]: r["slancio"] for r in json.loads((tmp_path / "radar.json").read_text())["competenze"]}
-
-    base = slancio()
-    arx = {"mesi": months, "series": {"_totale": dict.fromkeys(months, 1000),
-                                       "z": dict(zip(months, [1, 1, 1, 1, 1, 1, 900]))}}
-    common.write_json("arxiv.json", {**arx, "completo": False})
-    assert slancio() == base
-    common.write_json("arxiv.json", {**arx, "completo": True})
-    assert slancio() != base
-
-
-def test_radar_previous_demand_without_old_job_snapshot(tmp_path, monkeypatch):
-    # Domanda dal lavoro con una sola rilevazione: la domanda di un mese fa manca,
-    # il quadrante di un mese fa si calcola con la domanda di oggi (si muove solo lo slancio).
-    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    months = [f"2026-{m:02d}" for m in range(3, 10)]
-    common.write_json("github.json", {"mesi": months, "topics": {k: dict.fromkeys(months, 10 + i) for i, k in enumerate("ab")}})
-    common.write_json("jobs.json", {"paesi_ue": ["it"], "snapshots": [
-        {"data": "2026-10-12", "paese": "it", "totale": 1000, "competenze": {"a": 5, "b": 9}}]})
-    radar.run([{"id": "a", "nome": "A"}, {"id": "b", "nome": "B"}], date(2026, 10, 15))
-    out = json.loads((tmp_path / "radar.json").read_text())
-    assert out["base_domanda"] == "lavoro"
-    assert out["domanda_prec_attuale"] is True
-    for r in out["competenze"]:
-        assert r["slancio_prec"] is not None
-        assert r["domanda_prec"] is None
-        assert r["quadrante_prec"] == radar.quadrant(r["slancio_prec"], r["domanda"])
-        assert r["breve"] == r["nome"]
-        assert r["plurale"] is False
-
-
-def test_radar_history_from_monthly_series(tmp_path, monkeypatch):
-    # Storico dello slancio ricalcolato dalle serie mensili: un punto per ogni mese con due finestre di 3 mesi.
-    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    months = [f"2026-{m:02d}" for m in range(1, 10)]  # 9 mesi: 4 punti (giu, lug, ago, set)
-    counts = {"x": [10, 10, 10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0, 0, 0], "z": [40] * 9}
-    common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
-    skills = [{"id": k, "nome": k} for k in counts]
-    radar.run(skills, date(2026, 10, 15))
-    out = json.loads((tmp_path / "radar.json").read_text())
-    st = out["storico"]
-    assert [p["mese"] for p in st] == ["2026-06", "2026-07", "2026-08", "2026-09"]
-    rows = {r["id"]: r for r in out["competenze"]}
-    assert {k: v["slancio"] for k, v in st[-1]["competenze"].items()} == {k: r["slancio"] for k, r in rows.items()}
-    assert {k: v["slancio"] for k, v in st[-2]["competenze"].items()} == {k: r["slancio_prec"] for k, r in rows.items()}
-    assert st[0]["competenze"]["y"]["slancio"] == 1.0  # a giugno y era la più in crescita
-
-
 def test_adzuna_new_query_runs_again_in_same_week(env, monkeypatch):
     # query cambiata in configurazione: la rilevazione della settimana non vale più, si rifà
     from pipeline import adzuna
@@ -387,15 +295,6 @@ def test_adzuna_new_query_runs_again_in_same_week(env, monkeypatch):
     assert adzuna.run(None, skills, countries, ["it"], date(2026, 10, 16))["chiamate"] == 0
     snaps = json.loads((env[0] / "jobs.json").read_text())["snapshots"]
     assert snaps[-1]["query"] == {"rag": {"what_phrase": "retrieval augmented generation"}}
-
-
-def test_radar_job_growth_only_between_same_queries(tmp_path, monkeypatch):
-    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    old = {"data": "2026-09-01", "paese": "it", "totale": 1000, "competenze": {"a": 5}, "query": {"a": {"what": "a"}}}
-    new = {"data": "2026-10-12", "paese": "it", "totale": 1000, "competenze": {"a": 10}, "query": {"a": {"what_phrase": "a"}}}
-    assert radar.jobs_signal({"snapshots": [old, new]}, "a", date(2026, 10, 15))["crescita"] is None
-    same = {**old, "query": new["query"]}
-    assert radar.jobs_signal({"snapshots": [same, new]}, "a", date(2026, 10, 15))["crescita"] == 1.0
 
 
 def test_adzuna_runs_once_per_week(env, monkeypatch):

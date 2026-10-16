@@ -101,7 +101,7 @@ def test_github_base_and_new_repos(tmp_path, monkeypatch):
     gh = json.loads((tmp_path / "github.json").read_text(encoding="utf-8"))
     assert gh["base_topics"] == ["llm", "ai"]
     assert gh["base"] == {"2026-07": 110, "2026-08": 110, "2026-09": 110}
-    assert gh["in_crescita"]["mcp"] == [{"nome": "o/new", "url": "https://github.com/o/new", "descrizione": "x" * 200,
+    assert gh["in_crescita"]["mcp"] == [{"nome": "o/new", "url": "https://github.com/o/new", "descrizione": "x" * 199 + "…",
                                          "stelle": 42, "creato": "2026-09-20"}]
 
     # Secondo giro: base ricontata solo negli ultimi 2 mesi; la ricerca dei nuovi fallisce e resta la lista di prima.

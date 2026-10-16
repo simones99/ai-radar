@@ -38,6 +38,8 @@ describe('SkillView', () => {
     expect(screen.getByText('Nessuna risorsa disponibile.')).toBeInTheDocument();
     expect(screen.getByText('Nessun repository nuovo con questo topic negli ultimi 90 giorni.')).toBeInTheDocument();
     expect(screen.getByText('Serve un mese di rilevazioni.')).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'The Adzuna API' }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('link', { name: 'vedi il metodo' })).toHaveAttribute('href', '#competenze');
     expect(screen.getByText('Lo storico arriva con i prossimi aggiornamenti.')).toBeInTheDocument();
   });
 });

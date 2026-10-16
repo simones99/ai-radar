@@ -34,6 +34,10 @@ def new_repos(s, topic: str, ym: str) -> int:
     return int(data["total_count"])
 
 
+def _corta(t: str, n: int = 200) -> str:
+    return t if len(t) <= n else t[: n - 1] + "…"
+
+
 def top_new(s, topic: str, since: date) -> list[dict]:
     """I repository del topic creati da `since` in poi, i più stellati per primi."""
     q = f"topic:{topic} created:>={since.isoformat()}"
@@ -42,7 +46,7 @@ def top_new(s, topic: str, since: date) -> list[dict]:
     return [{
         "nome": r["full_name"],
         "url": r["html_url"],
-        "descrizione": (r.get("description") or "")[:200],
+        "descrizione": _corta(r.get("description") or ""),
         "stelle": int(r["stargazers_count"]),
         "creato": r["created_at"][:10],
     } for r in data.get("items", [])[:NEW_TOP]]

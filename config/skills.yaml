@@ -22,7 +22,7 @@ skills:
     descrizione: Sistemi che pianificano e usano strumenti per completare compiti in più passi.
     arxiv: ["LLM agent", "LLM agents", "agentic"]
     github: ai-agents
-    jobs: {what_phrase: "agentic"}
+    jobs: {what_phrase: "agentic AI"}
 
   - id: coding-agenti
     nome: Sviluppo con agenti di coding
@@ -134,7 +134,7 @@ skills:
     descrizione: Modelli aperti che girano su laptop o server propri, senza cloud.
     arxiv: ["small language model", "on-device inference", "quantization"]
     github: local-llm
-    jobs: {what_phrase: "on-device"}
+    jobs: {what_phrase: "on-device AI"}
 
   - id: robotica
     nome: AI fisica e robotica

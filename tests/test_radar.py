@@ -353,7 +353,9 @@ def test_corrupt_risorse_file_keeps_all_resources(tmp_path, monkeypatch):
 def test_months_aligned_between_sources(tmp_path, monkeypatch):
     write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)})
     arx = json.loads((tmp_path / "arxiv.json").read_text(encoding="utf-8"))
-    arx["mesi"] = MONTHS[:-1]  # arXiv finisce ad agosto, GitHub a settembre
+    arx["mesi"] = ["2025-09"] + MONTHS[:-1]  # stessa lunghezza di GitHub ma un mese prima: ad agosto
+    arx["series"]["_totale"]["2025-09"] = 10000
+    arx["series"]["a"]["2025-09"] = 500
     common.write_json("arxiv.json", arx)
     st = run_radar([{"id": "a", "nome": "A"}])["storico"]
     assert [p["mese"] for p in st[-2:]] == ["2026-08", "2026-09"]
@@ -381,6 +383,6 @@ def test_weekly_jobs_give_previous_demand_and_history(tmp_path, monkeypatch):
     write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, jobs)
     out = run_radar([{"id": "a", "nome": "A"}])
     r = out["competenze"][0]
-    assert r["domanda_prec"] is not None
+    assert r["domanda_prec"] == pytest.approx(5.9)  # ultima rilevazione 5/10, limite 7/9: 59 annunci su 100mila
     assert out["storico"][-1]["competenze"]["a"]["domanda"] is not None
     assert out["storico"][-2]["competenze"]["a"]["domanda"] is not None

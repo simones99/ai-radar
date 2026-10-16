@@ -4,6 +4,7 @@ import { radarRows } from '../data/derive';
 import type { Radar as RadarT } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
 import MovesPanel from './MovesPanel.svelte';
+import { placeLabels } from './labels';
 import Radar from './Radar.svelte';
 
 const radar = FIXTURE.radar as RadarT;
@@ -37,12 +38,33 @@ describe('Radar', () => {
   it('punto vuoto per i dati incerti', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     expect(container.querySelectorAll('circle.dot.hollow')).toHaveLength(1); // Robotica
-    expect(container.querySelector('g.pt:nth-of-type(4) circle.hit > title')?.textContent).toMatch(/Dato incerto/);
+    const unc = [...container.querySelectorAll('circle.hit > title')].filter((t) => /Dato incerto/.test(t.textContent ?? ''));
+    expect(unc).toHaveLength(1);
+    expect(unc[0].textContent).toMatch(/^AI fisica e robotica/);
+  });
+  it('tacche 0 e 3: etichetta sì, linea piena no; marcatore di un mese fa tratteggiato', () => {
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti });
+    expect(container.querySelectorAll('line.tick')).toHaveLength(8);
   });
   it('radar senza posizione precedente: nessuna freccia', () => {
     const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) });
     const { container } = render(Radar, { rows: old, quadranti: radar.quadranti });
     expect(container.querySelectorAll('line.arrow')).toHaveLength(0);
+  });
+});
+
+describe('placeLabels opzionali', () => {
+  const bounds = { x0: 0, y0: 0, x1: 100, y1: 40 };
+  it('senza posto libero l’etichetta opzionale salta, le altre ripiegano', () => {
+    const obstacles = [{ x0: 0, y0: 0, x1: 100, y1: 40 }];
+    const items = [{ id: 'a', x: 50, y: 20, w: 30, h: 16 }, { id: 'b', x: 50, y: 20, w: 30, h: 16 }];
+    const out = placeLabels(items, bounds, obstacles, 10, (id) => id === 'a');
+    expect(out.has('a')).toBe(false);
+    expect(out.has('b')).toBe(true);
+  });
+  it('con posto libero l’etichetta opzionale si disegna', () => {
+    const out = placeLabels([{ id: 'a', x: 20, y: 20, w: 30, h: 16 }], bounds, [], 10, () => true);
+    expect(out.has('a')).toBe(true);
   });
 });
 

@@ -47,8 +47,10 @@
       const wd = Math.max(...lines.map((t, i) => measureText(t, `${i === 0 && r.quadrante === 'impara-ora' ? 600 : 400} 12px sans-serif`)));
       return { id: r.id, x: x(r.x), y: y(r.y), w: wd, h: lines.length * LH, lines, r };
     });
-    const boxes = placeLabels(items, { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, obstacles);
-    return items.map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
+    // Sul telefono un'etichetta senza posto libero, se non è di Impara ora, non si disegna: resta il suggerimento sul punto.
+    const skip = (id: string) => narrow && rows.find((r) => r.id === id)?.quadrante !== 'impara-ora';
+    const boxes = placeLabels(items, { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, obstacles, 10, skip);
+    return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });
   const dim = (id: string) => highlight != null && highlight !== id;
 </script>
@@ -61,11 +63,11 @@
     </defs>
     <rect class="quad" x={x(0.5)} y={y(1.04)} width={x(1.04) - x(0.5)} height={y(0.5) - y(1.04)} rx="12" />
     {#each XT as v (v)}
-      <line class="tick" x1={x(nx(v))} x2={x(nx(v))} y1={y(1.04)} y2={y(-0.04)} />
+      {#if v !== 0}<line class="tick" x1={x(nx(v))} x2={x(nx(v))} y1={y(1.04)} y2={y(-0.04)} />{/if}
       <text class="t10" x={x(nx(v))} y={H - m.b + 34} text-anchor="middle">{xLabel(v)}</text>
     {/each}
     {#each YT as v (v)}
-      <line class="tick" x1={x(-0.04)} x2={x(1.04)} y1={y(ny(v))} y2={y(ny(v))} />
+      {#if v !== 3}<line class="tick" x1={x(-0.04)} x2={x(1.04)} y1={y(ny(v))} y2={y(ny(v))} />{/if}
       <text class="t10" x={m.l - 6} y={y(ny(v)) + 3} text-anchor="end">{yLabel(v)}</text>
     {/each}
     <line class="soglia" x1={x(0.5)} x2={x(0.5)} y1={y(1.04)} y2={y(-0.04)} />
@@ -120,7 +122,7 @@
   .dot { fill: var(--fg-3); stroke: var(--card); stroke-width: 2; } .dot.hot { fill: var(--accent); }
   .dot.hollow { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.5; } .dot.hollow.hot { stroke: var(--accent); }
   .hit { fill: transparent; cursor: pointer; }
-  .prev { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.25; } .prev.hot { stroke: var(--accent); }
+  .prev { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.25; stroke-dasharray: 2 2; } .prev.hot { stroke: var(--accent); }
   .arrow { stroke: var(--fg-3); stroke-width: 1.5; } .arrow.hot { stroke: var(--accent); }
   .mk { fill: var(--fg-3); } .mk.hot { fill: var(--accent); }
   .leader { stroke: var(--line-2); }

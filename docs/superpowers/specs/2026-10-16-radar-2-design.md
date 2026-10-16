@@ -91,7 +91,7 @@ Con soglie fisse un quadrante può svuotarsi (per esempio se l'AI rallenta in ge
 
 ### 4.5 Incertezza
 
-Una competenza è **incerta** se il rapporto tra gli estremi del margine all'80% dello slancio combinato, `(1 + alto) / (1 + basso)`, supera `RAPPORTO_MAX = 1,55`. Si usa il rapporto e non la differenza perché la differenza cresce con la crescita stessa: +140% con margine da +87% a +208% non è meno preciso di +10% da −9% a +33%. Taratura del 16 ottobre 2026 (arXiv e GitHub, base AI vera): incerte text-to-SQL 1,66, robotica 1,65, LLMOps 1,64, Governance 1,64; solide MCP 1,46, multimodali 1,46, agenti di coding 1,46, RAG 1,20, agenti 1,10.
+Una competenza è **incerta** se il rapporto tra gli estremi del margine all'80% dello slancio combinato, `(1 + alto) / (1 + basso)`, supera `RAPPORTO_MAX = 1,55`. Si usa il rapporto e non la differenza perché la differenza cresce con la crescita stessa: +140% con margine da +87% a +208% non è meno preciso di +10% da −9% a +33%. Taratura del 16 ottobre 2026 (arXiv e GitHub, base AI vera): incerte text-to-SQL 1,66, robotica 1,65, LLMOps 1,63, Governance 1,63, DB vettoriali 1,60; solide MCP 1,46, multimodali 1,46, agenti di coding 1,46, RAG 1,20, agenti 1,10.
 
 La domanda bassa con pochi annunci **non** rende incerti: "pochi la chiedono" è un dato vero.
 

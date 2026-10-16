@@ -47,7 +47,7 @@ test('porta Per te: apre Competenze sulla competenza della notizia', async ({ pa
   await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
   await expect(page).toHaveURL(/#competenze\/mcp$/);
-  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
 });
 
 test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza', async ({ page }) => {
@@ -86,21 +86,18 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
   await expect(page).toHaveURL(/\/$/);
 });
 
-test('porta verso la card già aperta: rimette in evidenza la competenza e porta il focus al titolo', async ({ page }) => {
+test('porta verso la card già aperta: riapre la competenza e porta il focus al titolo', async ({ page }) => {
   await page.goto('/');
   const porta = page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ });
   await porta.click();
-  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
-  await page.getByRole('button', { name: /^RAG/ }).click();
-  await expect(page.getByRole('button', { name: /^RAG/, pressed: true })).toBeVisible();
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await page.getByRole('link', { name: '← Tutte le competenze' }).click();
+  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
   await porta.click();
-  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await expect(page.locator('#h-competenze')).toBeFocused();
   await scrollSettled(page);
   await expect(page.locator('#h-competenze')).toBeInViewport();
-  await page.goBack();
-  await expect(page.locator('section.detail')).toHaveCount(0);
-  await expect(page).toHaveURL(/\/$/);
 });
 
 test('i vecchi link #politica aprono Norme e diventano #norme', async ({ page }) => {
@@ -143,9 +140,27 @@ test('tastiera: Invio apre e porta il focus al titolo, Esc chiude e lo riporta',
   await expect(page.locator('#tile-modelli .face')).toBeFocused();
 });
 
-test('link diretto a una competenza la evidenzia', async ({ page }) => {
+test('link diretto a una competenza: la sua pagina', async ({ page }) => {
   await page.goto('/#competenze/mcp');
-  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page.getByRole('heading', { name: 'Per iniziare' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Cosa si muove adesso' })).toBeVisible();
+});
+
+test('dal radar alla competenza e ritorno: clic sul punto, Indietro, Esc', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#tile-competenze .face').click();
+  await page.locator('#detail-competenze g.pt').nth(1).locator('circle.hit').click(); // MCP
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await page.goBack();
+  await expect(page).toHaveURL(/#competenze$/);
+  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await page.getByRole('link', { name: /^RAG/ }).first().click(); // movimenti del mese ed elenco portano alla stessa pagina
+  await expect(page.locator('#h-competenze')).toHaveText('RAG e ricerca semantica');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
 });
 
 for (const width of [320, 360]) {
@@ -159,6 +174,10 @@ for (const width of [320, 360]) {
       await expect(page.locator(`#detail-${id}`)).toBeVisible();
       expect(await noHorizontalScroll(page), id).toBe(true);
     }
+    await page.goto('/#competenze/mcp');
+    await page.reload();
+    await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+    expect(await noHorizontalScroll(page), 'competenze/mcp').toBe(true);
   });
 }
 
@@ -186,6 +205,10 @@ test('accessibilità: nessuna violazione grave in home e nelle card', async ({ p
     await expect(page.locator(`#detail-${id}`)).toBeVisible();
     expect(await seriousViolations(page), id).toEqual([]);
   }
+  await page.goto('/#competenze/mcp');
+  await page.reload();
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  expect(await seriousViolations(page), 'competenze/mcp').toEqual([]);
 });
 
 test('ancora interna con una card aperta: la pagina va all’ancora, non alle card', async ({ page }) => {

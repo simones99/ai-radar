@@ -40,23 +40,29 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Sv
 | `AA_API_KEY` | Grafico capacità/prezzo e modello più capace | Gratuita su [artificialanalysis.ai](https://artificialanalysis.ai/documentation) (1.000 richieste al giorno; qui ne serve una a settimana) |
 | `ADZUNA_APP_ID` e `ADZUNA_APP_KEY` | Domanda di competenze nel lavoro, Europa e USA | Gratuite su [developer.adzuna.com](https://developer.adzuna.com) |
 
-**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (un giro qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Prima di renderla pubblica conviene chiedere conferma scritta ad Adzuna dal loro modulo di contatto. Senza queste chiavi il radar usa l'adozione open source al posto della domanda di lavoro.
+**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (un giro qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Prima di renderla pubblica conviene chiedere conferma scritta ad Adzuna dal loro modulo di contatto. Senza queste chiavi il radar ha lo slancio ma non la domanda, quindi nessun quadrante.
 
 `GITHUB_TOKEN` non va creato: GitHub lo fornisce in automatico al workflow.
 
 ## Come si legge il radar
 
-Ogni competenza ha due coordinate, entrambe ranghi percentili da 0 a 100 rispetto alle altre competenze del radar:
+Ogni competenza ha due coordinate in unità vere:
 
-- **Slancio**: crescita degli ultimi 3 mesi interi rispetto ai 3 precedenti, come media di
-  - quota di paper AI su arXiv che la citano nell'abstract,
-  - nuovi repository GitHub con il suo topic,
-  - quota di annunci di lavoro, quando c'è almeno un mese di storico.
-- **Domanda**: annunci di lavoro che la citano ogni 10.000 annunci attivi, in media tra i Paesi. Senza Adzuna si usano i nuovi repository degli ultimi 3 mesi.
+- **Slancio**: quanto è cambiata negli ultimi 6 mesi interi la sua quota sul totale dell'AI, per esempio "+25% in 6 mesi". Si stima con una retta sui dati di ogni mese, combinando
+  - la quota di paper AI su arXiv che la citano nell'abstract,
+  - la quota di nuovi repository GitHub con il suo topic sui nuovi repository AI (somma dei topic `llm`, `ai`, `artificial-intelligence`, `generative-ai`),
+  - la quota di annunci di lavoro che la citano, quando ci sono almeno 8 settimane di rilevazioni con la stessa ricerca.
 
-I quadranti: **Impara ora** (sopra la mediana su entrambe), **Da provare** (cresce ma il mercato non la chiede ancora molto), **Da consolidare** (richiesta ma meno in crescita), **Tieni d'occhio** (sotto la mediana su entrambe).
+  I segnali più precisi pesano di più, nessuno più di due terzi.
+- **Domanda**: annunci di lavoro che la citano ogni 10.000 annunci attivi, in media tra i Paesi.
 
-Il radar è una **classifica relativa**, non un giudizio assoluto: dice quali competenze si muovono più delle altre tra quelle scelte. Altri limiti da tenere a mente:
+I quadranti hanno **soglie fisse**: slancio sopra 0 (cresce più dell'AI nel suo complesso) e almeno 3 annunci ogni 10mila. **Impara ora** (entrambe), **Da provare** (solo lo slancio), **Da consolidare** (solo la domanda), **Tieni d'occhio** (nessuna delle due). Aggiungere o togliere una competenza non sposta le altre.
+
+Il radar è **prudente**: il quadrante cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo; nel frattempo la competenza è "in movimento verso" il quadrante nuovo. Una competenza è **incerta** (punto vuoto) quando il margine d'errore dello slancio è largo, di solito per pochi paper o repository: resta sul radar ma non finisce nelle notizie della home.
+
+Ogni competenza ha una sua pagina (`#competenze/mcp`) con l'andamento dei tre segnali, il percorso sul radar, le risorse per iniziare scelte a mano e i repository nuovi più stellati.
+
+Limiti da tenere a mente:
 
 - le ricerche sono per parole chiave, quindi un termine ambiguo può gonfiare o sgonfiare un conteggio;
 - i topic GitHub li sceglie chi crea il repository;
@@ -66,7 +72,7 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 
 ## Personalizzare
 
-- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato.
+- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato. Ogni competenza ha anche 2-4 `risorse` «Per iniziare»: la pipeline controlla i link ogni settimana e nasconde quelli che non rispondono per due settimane di fila.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
 - **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
 - **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).

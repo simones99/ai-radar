@@ -78,35 +78,24 @@ describe('Radar onpick', () => {
 });
 
 describe('MovesPanel', () => {
-  it('passaggio del mouse e poi clic: la riga resta selezionata', async () => {
+  it('righe come link alla pagina della competenza, con i valori di oggi', () => {
     render(MovesPanel, { rows, quadranti: radar.quadranti });
-    const b = screen.getAllByRole('button')[0];
-    const ev = new Event('pointerenter');
-    Object.defineProperty(ev, 'pointerType', { value: 'mouse' });
-    await fireEvent(b, ev);
-    await fireEvent.click(b);
-    expect(b).toHaveAttribute('aria-pressed', 'true');
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(5);
+    expect(links[0]).toHaveAttribute('href', '#competenze/mcp');
+    expect(links[0]).toHaveTextContent('MCP');
+    expect(links[0]).toHaveTextContent('+15%');
+    expect(links[0]).toHaveTextContent('3,4');
   });
-  it('riepilogo e righe ordinate per spostamento', () => {
+  it('riepilogo: cambi di quadrante e competenze in movimento', () => {
     render(MovesPanel, { rows, quadranti: radar.quadranti });
     expect(screen.getByText('cambi di quadrante').previousElementSibling).toHaveTextContent('2');
-    expect(screen.getByText('spostamenti di almeno 10 punti').previousElementSibling).toHaveTextContent('3');
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(5);
-    expect(buttons[0]).toHaveTextContent('MCP');
-    expect(buttons[0]).toHaveTextContent('+33');
-    expect(screen.getByText("Da consolidare → Impara ora")).toBeInTheDocument();
+    expect(screen.getByText('in movimento verso un altro quadrante').previousElementSibling).toHaveTextContent('1');
+    expect(screen.getByText('Da consolidare → Impara ora')).toBeInTheDocument();
+    expect(screen.getByText('in movimento verso Da provare')).toBeInTheDocument();
   });
-  it('tocco su una riga: la evidenzia, secondo tocco: la toglie', async () => {
-    render(MovesPanel, { rows, quadranti: radar.quadranti });
-    const b = screen.getAllByRole('button')[0];
-    await fireEvent.click(b);
-    expect(b).toHaveAttribute('aria-pressed', 'true');
-    await fireEvent.click(b);
-    expect(b).toHaveAttribute('aria-pressed', 'false');
-  });
-  it('senza posizione precedente: avviso', () => {
-    const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, ...r }) => r) });
+  it('senza posizione precedente né movimenti: avviso', () => {
+    const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, quadrante_calcolato, ...r }) => r) });
     render(MovesPanel, { rows: old, quadranti: radar.quadranti });
     expect(screen.getByText('Il movimento sarà disponibile dal prossimo aggiornamento.')).toBeInTheDocument();
   });

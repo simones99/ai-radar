@@ -36,14 +36,9 @@ describe('Competenze', () => {
       expect(within(blk).getByRole('link', { name: 'The Adzuna API' })).toHaveAttribute('href', 'https://www.adzuna.co.uk');
     }
   });
-  it('link diretto a una competenza: è evidenziata', async () => {
-    show(CompetenzeDetail, tile, 'mcp');
-    const row = await screen.findByRole('button', { name: /^MCP/ });
-    expect(row).toHaveAttribute('aria-pressed', 'true');
-  });
-  it('link diretto a una competenza che non esiste: nessun errore, niente evidenziato', () => {
+  it('link diretto a una competenza che non esiste: il radar, nessun errore', () => {
     show(CompetenzeDetail, tile, 'inesistente');
-    expect(screen.queryAllByRole('button', { pressed: true })).toHaveLength(0);
+    expect(screen.getByRole('img', { name: /Radar delle competenze/ })).toBeInTheDocument();
   });
 });
 

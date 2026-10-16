@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { MOVE_MIN, type RadarRowM } from '../data/derive';
+  import type { RadarRowM } from '../data/derive';
   import type { Quadrant } from '../data/types';
-  import { signedPts } from '../text/format';
+  import { toHash } from '../router';
+  import { per10k, signedPct } from '../text/format';
 
-  let { rows, quadranti, highlight = $bindable(null), hovered = $bindable(null) }: {
+  let { rows, quadranti, hovered = $bindable(null) }: {
     rows: RadarRowM[];
     quadranti: Record<Quadrant, string>;
-    highlight?: string | null;
-    hovered?: string | null;
+    hovered?: string | null; // anteprima nel grafico al passaggio del mouse
   } = $props();
 
-  const moved = $derived(rows.filter((r) => r.hasPrev).sort((a, b) => Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
+  const moved = $derived(rows.filter((r) => r.hasPrev || r.moving).sort((a, b) => Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
   const cls = (v: number) => (v > 0.005 ? 'up' : v < -0.005 ? 'down' : 'flat');
 </script>
 
@@ -20,25 +20,25 @@
   <div class="panel">
     <div class="sum">
       <div><b>{rows.filter((r) => r.changed).length}</b><span>cambi di quadrante</span></div>
-      <div><b>{rows.filter((r) => r.hasPrev && r.move >= MOVE_MIN).length}</b><span>spostamenti di almeno 10 punti</span></div>
+      <div><b>{rows.filter((r) => r.moving).length}</b><span>in movimento verso un altro quadrante</span></div>
     </div>
-    <div class="head" aria-hidden="true"><span>Competenza</span><span>slancio</span><span>domanda</span></div>
+    <div class="head" aria-hidden="true"><span>Competenza</span><span>slancio</span><span>annunci</span></div>
     <ul>
       {#each moved as r (r.id)}
         <li>
-          <button type="button" class="row" aria-pressed={highlight === r.id} title={r.nome}
+          <a class="row" href={toHash('competenze', r.id)} title={r.nome}
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
-            onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}
-            onclick={() => (highlight = highlight === r.id ? null : r.id)}>
+            onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
             <span class="n">{r.breve}</span>
-            <span class="v {cls(r.dS)}">{signedPts(r.dS)}</span>
-            {#if r.dp == null}<span class="v flat" title="Domanda di un mese fa non ancora rilevata">—</span>{:else}<span class="v {cls(r.dD)}">{signedPts(r.dD)}</span>{/if}
+            <span class="v {cls(r.dS)}">{signedPct(r.slancio)}</span>
+            <span class="v {r.dp == null ? 'flat' : cls(r.dD)}">{per10k(r.domanda)}</span>
             {#if r.changed && r.qp}<span class="chip">{quadranti[r.qp]} → {quadranti[r.quadrante]}</span>{/if}
-          </button>
+            {#if r.moving}<span class="chip">in movimento verso {quadranti[r.moving]}</span>{/if}
+          </a>
         </li>
       {/each}
     </ul>
-    <p class="cite">In blu ciò che sale. Passa sopra una riga, o toccala, per trovarla nel grafico.</p>
+    <p class="cite">Valori di oggi; in blu ciò che è salito nell’ultimo mese. Passa sopra una riga per trovarla nel grafico, toccala per aprire la competenza.</p>
   </div>
 {/if}
 
@@ -49,15 +49,13 @@
   .sum div { background: var(--bg); border-radius: var(--r-md); padding: var(--s2); display: grid; gap: 4px; }
   .sum b { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .sum span { font-size: 12px; line-height: 16px; color: var(--fg-2); }
-  .head, .row { display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 0 var(--s1); padding-inline: var(--s1); }
-  .head { font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 0 var(--s1); padding-inline: var(--s1); font-size: 12px; line-height: 16px; color: var(--fg-3); }
   .head span + span { text-align: right; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; }
   li + li { border-top: 1px solid var(--line); }
   .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 56px 56px; gap: 0 var(--s1); padding-inline: var(--s1); }
-  .row[aria-pressed='true'], .row:focus-visible { background: var(--accent-soft); }
+  .row:focus-visible { background: var(--accent-soft); outline: 2px solid var(--accent); }
   @media (hover: hover) { .row:hover { background: var(--accent-soft); } }
-  .row:focus-visible { outline: 2px solid var(--accent); }
   .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
   .v { text-align: right; }
   .up { color: var(--accent); font-weight: 600; }

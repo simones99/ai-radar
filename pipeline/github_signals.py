@@ -95,12 +95,12 @@ def run(s, skills: list[dict], repos: list[str], today: date, *, months: int = M
     for sk in skills:
         if not sk.get("github"):
             continue
+        calls += 1
         try:
             in_crescita[sk["id"]] = top_new(s, sk["github"], since)
-            calls += 1
         except Exception as exc:  # noqa: BLE001 — una lista in meno non deve fermare GitHub
             log.warning("GitHub: repository nuovi di %s non aggiornati (%s)", sk["github"], exc)
-            in_crescita[sk["id"]] = old_new.get(sk["id"], [])
+            in_crescita[sk["id"]] = old_new.get(sk["id"], []) if old_names.get(sk["id"]) == sk["github"] else []
         time.sleep(sleep)
 
     # Stelle dei repository seguiti: una fotografia per giro.

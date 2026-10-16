@@ -91,7 +91,7 @@ Con soglie fisse un quadrante può svuotarsi (per esempio se l'AI rallenta in ge
 
 ### 4.5 Incertezza
 
-Una competenza è **incerta** se l'ampiezza del margine all'80% dello slancio combinato (estremo alto meno estremo basso, in variazione sui 6 mesi: da −10% a +30% fa 0,40) supera una soglia `MARGINE_MAX`. Il valore si tara nel piano sui dati veri, con un criterio fisso: text-to-SQL deve risultare incerto, agenti, MCP e RAG no. Il valore scelto va scritto in `radar.py` con il dato da cui viene.
+Una competenza è **incerta** se il rapporto tra gli estremi del margine all'80% dello slancio combinato, `(1 + alto) / (1 + basso)`, supera `RAPPORTO_MAX = 1,55`. Si usa il rapporto e non la differenza perché la differenza cresce con la crescita stessa: +140% con margine da +87% a +208% non è meno preciso di +10% da −9% a +33%. Taratura del 16 ottobre 2026 (arXiv e GitHub, base AI vera): incerte text-to-SQL 1,66, robotica 1,65, LLMOps 1,64, Governance 1,64; solide MCP 1,46, multimodali 1,46, agenti di coding 1,46, RAG 1,20, agenti 1,10.
 
 La domanda bassa con pochi annunci **non** rende incerti: "pochi la chiedono" è un dato vero.
 
@@ -107,7 +107,7 @@ Si calcola il quadrante mese per mese (lo storico, come oggi, ricalcolato a ogni
 
 Quando pubblicato e calcolato differiscono, la competenza è "in movimento verso" il quadrante calcolato.
 
-La domanda del mese `t` nello storico usa le rilevazioni del lavoro fino a fine mese `t`. Prima della prima rilevazione non c'è domanda: lo storico ha slancio ma non quadrante.
+Il punto `k` mesi fa dello storico usa le serie fermate a `k` mesi prima e le rilevazioni del lavoro di almeno `28 × k` giorni prima, come la posizione di un mese fa. Dove la domanda manca (prima della prima rilevazione), il quadrante calcolato usa la domanda del primo punto successivo che ce l'ha: come oggi per il quadrante di un mese fa, il movimento è solo sullo slancio.
 
 ### 4.7 Un mese fa e movimenti
 
@@ -161,7 +161,7 @@ Riscritto sul metodo della sezione 4. Funzioni pure, testabili una per una:
 {
   "versione": 2,
   "generato": "2026-10-19",
-  "soglie": { "slancio": 0, "domanda": 3, "margine_max": 0.4 },
+  "soglie": { "slancio": 0, "domanda": 3, "rapporto_max": 1.55 },
   "quadranti": { "impara-ora": "Impara ora", ... },
   "competenze": [{
     "id": "mcp", "nome": "...", "breve": "MCP", "plurale": false, "descrizione": "...",

@@ -348,3 +348,39 @@ def test_corrupt_risorse_file_keeps_all_resources(tmp_path, monkeypatch):
         {"titolo": "Corso", "url": "https://corso.example", "tipo": "corso"}]}]
     r = run_radar(skills)["competenze"][0]
     assert [x["url"] for x in r["per_iniziare"]] == ["https://doc.example", "https://corso.example"]
+
+
+def test_months_aligned_between_sources(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)})
+    arx = json.loads((tmp_path / "arxiv.json").read_text(encoding="utf-8"))
+    arx["mesi"] = MONTHS[:-1]  # arXiv finisce ad agosto, GitHub a settembre
+    common.write_json("arxiv.json", arx)
+    st = run_radar([{"id": "a", "nome": "A"}])["storico"]
+    assert [p["mese"] for p in st[-2:]] == ["2026-08", "2026-09"]
+
+
+def test_old_country_is_not_in_demand(tmp_path, monkeypatch):
+    jobs = {"snapshots": [snap("2025-10-10", "de", 90), snap("2026-10-12", "it", 50)]}
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, jobs)
+    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    assert r["domanda"] == pytest.approx(5.0)
+    assert list(r["segnali"]["lavoro"]["ogni_10mila"]) == ["it"]
+
+
+def test_breve_and_plurale_in_output(tmp_path, monkeypatch):
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05), "b": grow(500, 1.05)}, {"a": grow(2000, 1.05), "b": grow(2000, 1.05)})
+    rows = run_radar([{"id": "a", "nome": "Alfa"}, {"id": "b", "nome": "Beta", "breve": "B", "plurale": True}])["competenze"]
+    assert (rows[0]["breve"], rows[0]["plurale"]) == ("Alfa", False)
+    assert (rows[1]["breve"], rows[1]["plurale"]) == ("B", True)
+
+
+def test_weekly_jobs_give_previous_demand_and_history(tmp_path, monkeypatch):
+    start = date(2026, 7, 6)
+    days = [(start.toordinal() + 7 * i) for i in range(14)]
+    jobs = {"snapshots": [snap(date.fromordinal(d).isoformat(), "it", 50 + i) for i, d in enumerate(days)]}
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, jobs)
+    out = run_radar([{"id": "a", "nome": "A"}])
+    r = out["competenze"][0]
+    assert r["domanda_prec"] is not None
+    assert out["storico"][-1]["competenze"]["a"]["domanda"] is not None
+    assert out["storico"][-2]["competenze"]["a"]["domanda"] is not None

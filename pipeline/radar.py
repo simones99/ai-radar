@@ -31,7 +31,7 @@ FINESTRA = 6            # mesi della tendenza
 SOGLIA_SLANCIO = 0.0    # cresce più dell'AI nel suo complesso
 SOGLIA_DOMANDA = 3.0    # annunci ogni 10mila, circa 1 su 3.300
 # Tarato il 16/10/2026 su arXiv e GitHub con la base AI vera: incerte text-to-SQL 1,66, robotica 1,65,
-# LLMOps 1,64, Governance 1,64; solide MCP 1,46, multimodali 1,46, RAG 1,20, agenti 1,10.
+# LLMOps 1,63, Governance 1,63, DB vettoriali 1,60; solide MCP 1,46, multimodali 1,46, RAG 1,20, agenti 1,10.
 RAPPORTO_MAX = 1.55
 MIN_GIORNI_LAVORO = 56  # 8 settimane di rilevazioni con la stessa ricerca
 GIORNI_MESE = 30.44
@@ -113,6 +113,9 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
     """
     snaps = jobs.get("snapshots", [])
     latest = _latest_by_country(snaps)
+    if latest:  # un Paese tolto dalla configurazione non resta nella media per sempre
+        recente = max(x["data"] for x in latest.values())
+        latest = {c: x for c, x in latest.items() if _days(x["data"], recente) <= FINESTRA * GIORNI_MESE}
     q = lambda x: x.get("query", {}).get(sid)  # noqa: E731
     shares = {c: 10000 * x["competenze"][sid] / x["totale"] for c, x in latest.items()
               if x.get("competenze", {}).get(sid) is not None and x.get("totale")}
@@ -214,17 +217,23 @@ def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
 
 # ------------------------------------------------------------------ storico e uscita
 
-def _months_before(arx: dict, gh: dict, jobs: dict, k: int) -> tuple[dict, dict, dict]:
-    """I dati come erano k mesi prima: serie senza gli ultimi k mesi, rilevazioni di almeno 28 x k giorni prima."""
+def _meno_mesi(ym: str, k: int) -> str:
+    n = int(ym[:4]) * 12 + int(ym[5:7]) - 1 - k
+    return f"{n // 12:04d}-{n % 12 + 1:02d}"
+
+
+def _months_before(arx: dict, gh: dict, jobs: dict, k: int, ultimo: str) -> tuple[dict, dict, dict, str]:
+    """I dati come erano k mesi prima di `ultimo`: serie fino a quel mese, rilevazioni di almeno 28 x k giorni prima."""
+    etichetta = _meno_mesi(ultimo, k)
     if k == 0:
-        return arx, gh, jobs
-    arx_p = {**arx, "mesi": arx.get("mesi", [])[:-k]}
-    gh_p = {**gh, "mesi": gh.get("mesi", [])[:-k]}
+        return arx, gh, jobs, etichetta
+    arx_p = {**arx, "mesi": [m for m in arx.get("mesi", []) if m <= etichetta]}
+    gh_p = {**gh, "mesi": [m for m in gh.get("mesi", []) if m <= etichetta]}
     snaps = jobs.get("snapshots", [])
     if snaps:
         cutoff = date.fromordinal(date.fromisoformat(max(x["data"] for x in snaps)).toordinal() - 28 * k).isoformat()
         snaps = [x for x in snaps if x["data"] <= cutoff]
-    return arx_p, gh_p, {**jobs, "snapshots": snaps}
+    return arx_p, gh_p, {**jobs, "snapshots": snaps}, etichetta
 
 
 def _publish(points: list[tuple[str, dict]], ids: list[str]) -> None:
@@ -254,15 +263,16 @@ def run(skills: list[dict], today: date) -> dict:
         links = {}
 
     points: list[tuple[str, dict]] = []  # dal più recente al più vecchio, poi girati
-    for k in range(MAX_STORICO):
-        a, g, j = _months_before(arx, gh, jobs, k)
-        months = max(a.get("mesi", []), g.get("mesi", []), key=len)
-        if len(months) < FINESTRA:
+    ultimi = [x["mesi"][-1] for x in (arx, gh) if x.get("mesi")]
+    ultimo = max(ultimi) if ultimi else None
+    for k in range(MAX_STORICO if ultimo else 0):
+        a, g, j, etichetta = _months_before(arx, gh, jobs, k, ultimo)
+        if max(len(a.get("mesi", [])), len(g.get("mesi", []))) < FINESTRA:
             break
         rows = {sk["id"]: _row(sk, a, g, j) for sk in skills}
         if all(r["slancio"] is None for r in rows.values()):
             break
-        points.append((months[-1], rows))
+        points.append((etichetta, rows))
     if not points:
         raise ValueError("radar vuoto: mancano sia arXiv sia GitHub")
     points.reverse()

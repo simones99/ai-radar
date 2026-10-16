@@ -49,7 +49,7 @@ describe('Open source', () => {
 describe('Persone', () => {
   it('uso dell’AI generativa con l’Italia in evidenza, lavoro senza chiave', () => {
     show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('17,8%');
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("Usa l'AI generativa il 30% degli italiani");
     expect(screen.getByText(/Italia 30/)).toHaveClass('hot');
     expect(screen.getByText(/Serve la chiave gratuita di Adzuna/)).toBeInTheDocument();
   });

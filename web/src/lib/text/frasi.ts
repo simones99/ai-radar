@@ -59,8 +59,15 @@ export function headOpen(d: Dataset, _today?: Date): Head {
 }
 
 // ---------------------------------------------------------------- business
-// Gli investimenti AI Index sono CC BY-ND 4.0: importi in forma breve (M/B), nessun rapporto tra anni.
-// Per il numero chiave e la tesi si usa Eurostat (CC BY 4.0), anche quello senza calcoli.
+// Numero chiave e titolo: imprese italiane che usano l'AI (Eurostat, CC BY 4.0), interi.
+// Senza Eurostat il titolo resta sugli investimenti AI Index (CC BY-ND 4.0): importi brevi, nessun rapporto tra anni.
+
+/** Articolo davanti a una percentuale intera: "l'8%", "l'11%", "l'80%", "il 16%". */
+const art = (v: number): string => {
+  const n = Math.round(v);
+  return n === 1 || n === 8 || n === 11 || (n >= 80 && n <= 89) ? "l'" : 'il ';
+};
+
 function impreseUe(d: Dataset) {
   const s = d.eurostat?.serie;
   const ue = s?.EU27_2020;
@@ -68,13 +75,24 @@ function impreseUe(d: Dataset) {
   const anni = Object.keys(ue).sort();
   const t = anni[anni.length - 1];
   const prev = anni[anni.length - 2];
-  return t ? { t, v: ue[t], prev: prev ? { t: prev, v: ue[prev] } : null, it: s?.IT?.[t] ?? null } : null;
+  if (!t) return null;
+  return { t, v: ue[t], prev: prev ? { t: prev, v: ue[prev], it: s?.IT?.[prev] ?? null } : null, it: s?.IT?.[t] ?? null };
 }
 export function faceBusiness(d: Dataset, _today?: Date): Face | null {
   const e = impreseUe(d);
-  return e && { fig: exact(e.v), unit: '%', sent: `Imprese dell'UE che usano l'AI nel ${e.t}.` + (e.it != null ? ` In Italia il ${exact(e.it)}%.` : '') };
+  if (!e) return null;
+  if (e.it == null) return { fig: nf(e.v, 0), unit: '%', sent: `Imprese dell'UE che usano l'AI nel ${e.t}; manca il dato italiano.` };
+  return { fig: nf(e.it, 0), unit: '%', sent: `Imprese italiane che usano l'AI nel ${e.t}. UE: ${nf(e.v, 0)}%.` };
 }
 export function headBusiness(d: Dataset, _today?: Date): Head {
+  const e = impreseUe(d);
+  if (e?.it != null) {
+    return {
+      title: [{ t: `${nf(e.it, 0)}%`, em: true }, { t: " delle imprese italiane usa l'AI" }],
+      deck: `Nel ${e.t}, imprese con almeno 10 addetti. UE: ${nf(e.v, 0)}%.` +
+        (e.prev?.it != null ? ` Nel ${e.prev.t} in Italia ${art(e.prev.it)}${nf(e.prev.it, 0)}%.` : ''),
+    };
+  }
   const last = owidLatest(d.owid, 'investimenti_privati', 'World');
   if (!last) return { title: plain('Business'), deck: null };
   const prev = owidPrev(d.owid, 'investimenti_privati', 'World');
@@ -87,17 +105,24 @@ export function headBusiness(d: Dataset, _today?: Date): Head {
 // ---------------------------------------------------------------- persone
 export function facePersone(d: Dataset, _today?: Date): Face | null {
   const w = owidLatest(d.owid, 'uso_genai', 'World');
-  if (!w) return null;
   const it = owidLatest(d.owid, 'uso_genai', 'Italy');
-  return { fig: nf(w.v, 1), unit: '%', sent: "Persone nel mondo che usano l'AI generativa." + (it ? ` In Italia il ${nf(it.v, 1)}%.` : '') };
+  if (it) return { fig: nf(it.v, 0), unit: '%', sent: "Italiani che usano l'AI generativa." + (w ? ` Mondo: ${nf(w.v, 0)}%.` : '') };
+  if (w) return { fig: nf(w.v, 0), unit: '%', sent: "Persone nel mondo che usano l'AI generativa; manca il dato italiano." };
+  return null;
 }
 export function headPersone(d: Dataset, _today?: Date): Head {
   const w = owidLatest(d.owid, 'uso_genai', 'World');
-  if (!w) return { title: plain('Persone e lavoro'), deck: null };
   const it = owidLatest(d.owid, 'uso_genai', 'Italy');
+  if (it) {
+    return {
+      title: [{ t: "Usa l'AI generativa il " }, { t: `${nf(it.v, 0)}%`, em: true }, { t: ' degli italiani' }],
+      deck: `${w ? `Nel mondo ${art(w.v)}${nf(w.v, 0)}%. ` : ''}Stima di Microsoft al ${day(it.t)}.`,
+    };
+  }
+  if (!w) return { title: plain('Persone e lavoro'), deck: null };
   return {
-    title: [{ t: "Usa l'AI generativa il " }, { t: `${nf(w.v, 1)}%`, em: true }, { t: ' delle persone nel mondo' }],
-    deck: `${it ? `In Italia il ${nf(it.v, 1)}%. ` : ''}Stima di Microsoft al ${day(w.t)}.`,
+    title: [{ t: "Usa l'AI generativa il " }, { t: `${nf(w.v, 0)}%`, em: true }, { t: ' delle persone nel mondo' }],
+    deck: `Manca il dato italiano. Stima di Microsoft al ${day(w.t)}.`,
   };
 }
 

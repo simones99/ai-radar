@@ -17,13 +17,16 @@ describe('numeri chiave delle card', () => {
   it('open source: tipo più frequente, senza contare "altro"', () => {
     expect(faceOpen(d, today)).toEqual({ fig: '37', unit: 'su 100', sent: 'Modelli di tendenza su Hugging Face di tipo «immagine e testo».' });
   });
-  it('business: imprese UE che usano l’AI, valori Eurostat così come pubblicati', () => {
-    expect(faceBusiness(d, today)).toEqual({ fig: '19,95', unit: '%', sent: "Imprese dell'UE che usano l'AI nel 2025. In Italia il 16,4%." });
+  it('business: prima l’Italia, numeri interi, UE nella frase', () => {
+    expect(faceBusiness(d, today)).toEqual({ fig: '16', unit: '%', sent: "Imprese italiane che usano l'AI nel 2025. UE: 20%." });
+    const senzaIt = { eurostat: { ...d.eurostat!, serie: { EU27_2020: d.eurostat!.serie.EU27_2020 } } };
+    expect(faceBusiness(senzaIt, today)).toEqual({ fig: '20', unit: '%', sent: "Imprese dell'UE che usano l'AI nel 2025; manca il dato italiano." });
     expect(faceBusiness({}, today)).toBeNull();
   });
-  it('persone: mondo e Italia', () => {
-    expect(facePersone(d, today)?.sent).toBe("Persone nel mondo che usano l'AI generativa. In Italia il 30,2%.");
-    expect(facePersone(d, today)?.fig).toBe('17,8');
+  it('persone: prima l’Italia, mondo nella frase', () => {
+    expect(facePersone(d, today)).toEqual({ fig: '30', unit: '%', sent: "Italiani che usano l'AI generativa. Mondo: 18%." });
+    const senzaIt = { owid: { ...d.owid!, serie: { uso_genai: { ...d.owid!.serie.uso_genai, punti: d.owid!.serie.uso_genai.punti.filter((p) => p.entita === 'World') } } } };
+    expect(facePersone(senzaIt, today)).toEqual({ fig: '18', unit: '%', sent: "Persone nel mondo che usano l'AI generativa; manca il dato italiano." });
   });
   it('politica: giorni alla prossima scadenza, e nessuna scadenza', () => {
     expect(faceNorme(d, today)).toEqual({ fig: '48', unit: 'giorni', sent: "Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura." });
@@ -65,10 +68,13 @@ describe('titoli e tesi', () => {
     expect(h.deck).toBe('RAG esce da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
   });
   it('business e politica', () => {
-    // serie CC BY-ND: importi brevi, nessun rapporto tra anni
     const hb = headBusiness(d, today);
-    expect(text(hb.title)).toBe('Investimenti privati in AI nel 2025: 290 B $');
-    expect(hb.deck).toBe('A prezzi 2021, in aziende AI non quotate. Nel 2024: 131 B $. B = miliardi.');
+    expect(text(hb.title)).toBe("16% delle imprese italiane usa l'AI");
+    expect(hb.title[0]).toEqual({ t: '16%', em: true });
+    expect(hb.deck).toBe("Nel 2025, imprese con almeno 10 addetti. UE: 20%. Nel 2024 in Italia l'8%.");
+    // senza Eurostat resta il titolo sugli investimenti (serie CC BY-ND: importi brevi)
+    const senzaEu = { ...d, eurostat: undefined };
+    expect(text(headBusiness(senzaEu, today).title)).toBe('Investimenti privati in AI nel 2025: 290 B $');
     expect(text(headNorme(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
   });
   it('tesi della home e riserva', () => {

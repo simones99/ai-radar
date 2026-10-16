@@ -23,8 +23,9 @@ def test_config_base_topics_and_resources():
 def test_trend_recovers_known_growth():
     t = tendenza.trend(list(range(6)), [1000 * 1.1 ** i for i in range(6)], [10000] * 6)
     assert tendenza.variazione(t, 6) == pytest.approx(1.1 ** 6 - 1, rel=0.01)
+    assert tendenza.rapporto(t, 6) < 1.15
     lo, hi = tendenza.margine(t, 6)
-    assert lo < tendenza.variazione(t, 6) < hi
+    assert tendenza.rapporto(t, 6) == pytest.approx((1 + hi) / (1 + lo))
 
 
 def test_trend_small_counts_have_wider_margin():
@@ -50,9 +51,16 @@ def test_combine_weights_and_cap():
     t, w = tendenza.combine([a, b])
     assert w == pytest.approx([2 / 3, 1 / 3])  # senza tetto sarebbe 0,99 e 0,01
     assert t["pendenza"] == pytest.approx(2 / 3 * 0.10)
+    assert t["errore"] == pytest.approx(((2 / 3 * 0.01) ** 2 + (1 / 3 * 0.10) ** 2) ** 0.5)
     t1, w1 = tendenza.combine([a])
     assert w1 == [1.0]
     assert (t1["pendenza"], t1["errore"]) == pytest.approx((0.10, 0.01))
     c = {"pendenza": 0.05, "errore": 0.05}
     assert tendenza.combine([c, c])[1] == pytest.approx([0.5, 0.5])
     assert tendenza.combine([]) is None
+
+
+def test_combine_caps_with_three_signals():
+    trends = [{"pendenza": 0.1, "errore": e} for e in (0.001, 0.1, 0.2)]
+    _, w = tendenza.combine(trends)
+    assert w == pytest.approx([2 / 3, 1 / 3 * 0.8, 1 / 3 * 0.2])

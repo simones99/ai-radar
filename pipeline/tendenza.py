@@ -19,7 +19,7 @@ def trend(xs: list[float], ns: list[float], totali: list[float]) -> dict | None:
 
     I punti con totale 0 non entrano; con meno di MIN_PUNTI punti validi non c'è tendenza.
     """
-    pts = [(x, n + 0.5, t) for x, n, t in zip(xs, ns, totali) if t]
+    pts = [(x, n + 0.5, t) for x, n, t in zip(xs, ns, totali, strict=True) if t]
     if len(pts) < MIN_PUNTI:
         return None
     ys = [math.log(w / t) for _, w, t in pts]

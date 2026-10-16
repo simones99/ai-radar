@@ -3,7 +3,7 @@ import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
-  headBusiness, headCompetenze, headNotizie, headNorme, heroThesis, tipoLabel,
+  headBusiness, headCompetenze, headNotizie, headNorme, tipoLabel,
 } from './frasi';
 
 const d = FIXTURE as Dataset;
@@ -76,11 +76,6 @@ describe('titoli e tesi', () => {
     const senzaEu = { ...d, eurostat: undefined };
     expect(text(headBusiness(senzaEu, today).title)).toBe('Investimenti privati in AI nel 2025: 290 B $');
     expect(text(headNorme(d, today).title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
-  });
-  it('tesi della home e riserva', () => {
-    expect(text(heroThesis(d, today))).toBe('Il modello più seguito della settimana su Hugging Face è embeddinggemma-2 di google. MCP entra tra le competenze da imparare ora.');
-    expect(text(heroThesis({ ...d, radar: undefined }, today))).not.toMatch(/\d,\d/);
-    expect(text(heroThesis({}, today))).toBe("Cosa succede nell'AI questa settimana.");
   });
   it('etichette dei tipi Hugging Face', () => {
     expect(tipoLabel('text-generation')).toBe('generazione di testo');

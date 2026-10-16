@@ -6,14 +6,15 @@ import { FIXTURE } from './lib/test/fixtures';
 afterEach(() => vi.unstubAllGlobals());
 
 describe('App', () => {
-  it('carica i dati e mostra la tesi della settimana', async () => {
+  it('carica i dati e mostra le due porte', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => {
       const k = url.split('/').pop()!.replace('.json', '');
       const body = (FIXTURE as Record<string, unknown>)[k];
       return { ok: body !== undefined, json: async () => body } as Response;
     }));
     render(App);
-    expect(await screen.findByText(/modello più seguito della settimana/)).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toHaveAttribute('href', '#competenze/mcp');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Su cosa formarti e cosa succede all'AI in Italia");
     expect(document.querySelectorAll('button.face')).toHaveLength(8);
     expect(screen.getByRole('heading', { name: 'Stato delle fonti' })).toBeInTheDocument();
     const crediti = document.getElementById('crediti')!;

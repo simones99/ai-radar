@@ -4,7 +4,7 @@
   import type { Dataset } from './lib/data/types';
   import { PHOTOS } from './lib/photos';
   import { day, isoDay } from './lib/text/format';
-  import { heroThesis } from './lib/text/frasi';
+  import Doors from './lib/tiles/Doors.svelte';
   import SourcesStatus from './lib/tiles/SourcesStatus.svelte';
   import { TILES } from './lib/tiles/registry';
   import TileGrid from './lib/tiles/TileGrid.svelte';
@@ -21,7 +21,6 @@
   }
   onMount(load);
 
-  const thesis = $derived(heroThesis(data, today));
   const FONTI = [
     ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['Artificial Analysis', 'https://artificialanalysis.ai/'], ['arXiv', 'https://arxiv.org'],
     ['GitHub', 'https://github.com'], ['Hugging Face', 'https://huggingface.co'], ['The Adzuna API', 'https://www.adzuna.co.uk'],
@@ -44,12 +43,12 @@
   {:else}
     <section class="hero">
       <p class="small muted">Settimana del {day(isoDay(today))}</p>
-      <h1>{#each thesis as p, i (i)}{#if p.em}<em>{p.t}</em>{:else}{p.t}{/if}{/each}</h1>
-      <p class="intro">Otto temi, aggiornati ogni lunedì da fonti pubbliche. Apri una card per vedere i dati e da dove vengono.</p>
+      <h1>Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
     </section>
   {/if}
 
   {#if phase === 'ready'}
+    <Doors {data} {today} />
     <TileGrid {data} {today} />
   {:else if phase === 'loading'}
     <p class="muted">Caricamento dei dati…</p>
@@ -81,9 +80,7 @@
   nav a { text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
   @media (hover: hover) { nav a:hover { color: var(--fg); } }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
-  h1 { font-weight: 500; font-size: clamp(32px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
-  h1 em { font-style: normal; color: var(--accent); font-weight: 700; }
-  .intro { font-size: 18px; line-height: 32px; color: var(--fg-2); max-width: 60ch; }
+  h1 { font-weight: 400; font-size: 20px; line-height: 32px; color: var(--fg-2); max-width: 60ch; }
   .alert { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s3); }
   .alert button { border: 0; border-radius: 999px; background: var(--fg); color: var(--card); padding: var(--s1) var(--s3); min-height: 40px; cursor: pointer; }
   .credits { display: grid; gap: var(--s3); border-top: 1px solid var(--line-2); padding-top: var(--s3); }

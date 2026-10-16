@@ -4,7 +4,7 @@ import {
 } from '../data/derive';
 import type { Dataset } from '../data/types';
 import { slug, type TileId } from '../router';
-import { capitalize, day, daysTo, exact, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
+import { capitalize, day, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -209,26 +209,6 @@ export function headRapporti(d: Dataset, today: Date): Head {
     title: [{ t: 'Prossimo rapporto: ' }, { t: n.report.nome, em: true }],
     deck: `Previsto per ${monthYear(n.ym)}: è una stima. Qui trovi solo link e date, nessuna sintesi.`,
   };
-}
-
-// ---------------------------------------------------------------- tesi della home
-// Solo dati che cambiano ogni settimana (i modelli di tendenza su Hugging Face) o quasi (il radar),
-// mai un valore annuale: la home racconta la settimana.
-export function heroThesis(d: Dataset, today: Date): TitleParts {
-  const parts: TitleParts = [];
-  const top = d.huggingface?.top[0];
-  if (top) {
-    const [org, name] = top.id.includes('/') ? top.id.split('/', 2) : ['', top.id];
-    parts.push({ t: 'Il modello più seguito della settimana su Hugging Face è ' }, { t: name, em: true }, { t: org ? ` di ${org}.` : '.' });
-  }
-  const rows = d.radar ? radarRows(d.radar) : [];
-  const { inn } = radarChanges(rows);
-  if (inn.length) {
-    if (parts.length) parts.push({ t: ' ' });
-    parts.push({ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${inn.length > 1 ? 'entrano' : 'entra'} tra le competenze da imparare ora.` });
-  }
-  void today;
-  return parts.length ? parts : plain("Cosa succede nell'AI questa settimana.");
 }
 
 // ---------------------------------------------------------------- porte della home

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import TileGrid from './TileGrid.svelte';
@@ -80,6 +80,33 @@ describe('TileGrid', () => {
     render(TileGrid, { data, today });
     expect(document.getElementById('detail-competenze')).not.toBeNull();
     expect(await screen.findByRole('button', { name: /^MCP/, pressed: true })).toBeInTheDocument();
+  });
+
+  it('link alla card già aperta sullo stesso elemento: lo rimette in evidenza, scorre e porta il focus al titolo', async () => {
+    const a = document.body.appendChild(document.createElement('a'));
+    a.setAttribute('href', '#competenze/mcp');
+    a.textContent = 'Porta';
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    try {
+      render(TileGrid, { data, today });
+      await fireEvent.click(a);
+      expect(await screen.findByRole('button', { name: /^MCP/, pressed: true })).toBeInTheDocument();
+      await fireEvent.click(screen.getByRole('button', { name: /^RAG/ }));
+      expect(screen.getByRole('button', { name: /^RAG/, pressed: true })).toBeInTheDocument();
+      a.focus();
+      scroll.mockClear();
+      await fireEvent.click(a);
+      await waitFor(() => expect(screen.getByRole('button', { name: /^MCP/, pressed: true })).toBeInTheDocument());
+      expect(screen.getByRole('button', { name: /^RAG/, pressed: false })).toBeInTheDocument();
+      await waitFor(() => expect(document.activeElement).toBe(document.getElementById('h-competenze')));
+      expect(scroll).toHaveBeenCalled();
+      expect(location.hash).toBe('#competenze/mcp');
+      expect(details()).toHaveLength(1);
+    } finally {
+      a.remove();
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
   });
 
   it('doppio clic rapido: stato coerente', async () => {

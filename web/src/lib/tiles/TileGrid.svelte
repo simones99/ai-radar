@@ -15,6 +15,7 @@
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
   let pushed = false; // la card aperta ha aggiunto un passo alla cronologia
+  let riapri = $state(0); // cresce a ogni link alla card già aperta: la scheda si ricrea come a una nuova apertura
   setTitle(start?.tema ?? null);
 
   // I vecchi link (#politica) si aprono e l'indirizzo diventa quello di oggi (#norme): «Copia link» copia quello.
@@ -37,12 +38,13 @@
     return Promise.resolve();
   }
 
-  function show(id: TileId | null, el: string | null = null): Promise<void> {
+  function show(id: TileId | null, el: string | null = null, again = false): Promise<void> {
     current = id;
     if (id) lastOpened = id;
     const p = withTransition(() => {
       openId = id;
       elemento = el;
+      if (again) riapri++;
     });
     setTitle(id);
     return p;
@@ -66,7 +68,7 @@
     } else {
       history.replaceState(history.state, '', toHash(id, el));
     }
-    show(id, el);
+    show(id, el, current === id); // la stessa card: di nuovo evidenza, scorrimento e focus sul titolo
   }
 
   // Link a una card (le porte): stessa cronologia del clic su una card. Clic centrale, Ctrl e Maiusc restano al browser.
@@ -129,7 +131,7 @@
             <TileFace tile={t} {data} {today} expanded={openId === t.id} onopen={() => toggleTile(t.id)} />
             {#if openId === t.id}
               {@const D = t.Detail}
-              <D {data} {today} tile={t} {elemento} onclose={closeTile} />
+              {#key riapri}<D {data} {today} tile={t} {elemento} onclose={closeTile} />{/key}
             {/if}
           </article>
         {/each}

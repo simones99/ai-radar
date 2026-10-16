@@ -80,6 +80,23 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
   await expect(page).toHaveURL(/\/$/);
 });
 
+test('porta verso la card già aperta: rimette in evidenza la competenza e porta il focus al titolo', async ({ page }) => {
+  await page.goto('/');
+  const porta = page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ });
+  await porta.click();
+  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
+  await page.getByRole('button', { name: /^RAG/ }).click();
+  await expect(page.getByRole('button', { name: /^RAG/, pressed: true })).toBeVisible();
+  await porta.click();
+  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
+  await expect(page.locator('#h-competenze')).toBeFocused();
+  await scrollSettled(page);
+  await expect(page.locator('#h-competenze')).toBeInViewport();
+  await page.goBack();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+});
+
 test('i vecchi link #politica aprono Norme e diventano #norme', async ({ page }) => {
   await page.goto('/#politica');
   await expect(page.locator('#detail-norme')).toBeVisible();

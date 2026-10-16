@@ -47,8 +47,8 @@
    "2026-05": 9459,
    "2026-06": 12365,
    "2026-07": 16272,
-   "2026-08": 17627,
-   "2026-09": 17485
+   "2026-08": 17656,
+   "2026-09": 17529
   },
   "coding-agenti": {
    "2025-09": 22,
@@ -62,8 +62,8 @@
    "2026-05": 694,
    "2026-06": 832,
    "2026-07": 984,
-   "2026-08": 1356,
-   "2026-09": 1139
+   "2026-08": 1360,
+   "2026-09": 1140
   },
   "mcp": {
    "2025-09": 905,
@@ -77,8 +77,8 @@
    "2026-05": 8595,
    "2026-06": 9161,
    "2026-07": 11008,
-   "2026-08": 11525,
-   "2026-09": 13956
+   "2026-08": 11551,
+   "2026-09": 13982
   },
   "rag": {
    "2025-09": 828,
@@ -92,8 +92,8 @@
    "2026-05": 4611,
    "2026-06": 5824,
    "2026-07": 6280,
-   "2026-08": 5781,
-   "2026-09": 5534
+   "2026-08": 5789,
+   "2026-09": 5545
   },
   "valutazione": {
    "2025-09": 33,
@@ -107,8 +107,8 @@
    "2026-05": 579,
    "2026-06": 729,
    "2026-07": 1064,
-   "2026-08": 1381,
-   "2026-09": 1427
+   "2026-08": 1382,
+   "2026-09": 1430
   },
   "post-training": {
    "2025-09": 91,
@@ -137,8 +137,8 @@
    "2026-05": 1974,
    "2026-06": 2162,
    "2026-07": 2476,
-   "2026-08": 2317,
-   "2026-09": 2045
+   "2026-08": 2319,
+   "2026-09": 2049
   },
   "sicurezza": {
    "2025-09": 44,
@@ -152,8 +152,8 @@
    "2026-05": 598,
    "2026-06": 652,
    "2026-07": 773,
-   "2026-08": 807,
-   "2026-09": 871
+   "2026-08": 808,
+   "2026-09": 872
   },
   "governance": {
    "2025-09": 26,
@@ -167,8 +167,8 @@
    "2026-05": 882,
    "2026-06": 751,
    "2026-07": 784,
-   "2026-08": 903,
-   "2026-09": 778
+   "2026-08": 905,
+   "2026-09": 779
   },
   "dati-per-ai": {
    "2025-09": 277,
@@ -182,8 +182,8 @@
    "2026-05": 1437,
    "2026-06": 1668,
    "2026-07": 1937,
-   "2026-08": 2021,
-   "2026-09": 1938
+   "2026-08": 2025,
+   "2026-09": 1942
   },
   "text-to-sql": {
    "2025-09": 15,
@@ -198,7 +198,7 @@
    "2026-06": 178,
    "2026-07": 198,
    "2026-08": 180,
-   "2026-09": 239
+   "2026-09": 242
   },
   "vector-db": {
    "2025-09": 183,
@@ -212,8 +212,8 @@
    "2026-05": 604,
    "2026-06": 723,
    "2026-07": 707,
-   "2026-08": 555,
-   "2026-09": 461
+   "2026-08": 556,
+   "2026-09": 462
   },
   "multimodale": {
    "2025-09": 87,
@@ -243,7 +243,7 @@
    "2026-06": 502,
    "2026-07": 474,
    "2026-08": 424,
-   "2026-09": 372
+   "2026-09": 373
   },
   "modelli-locali": {
    "2025-09": 59,
@@ -258,7 +258,7 @@
    "2026-06": 1042,
    "2026-07": 1052,
    "2026-08": 1150,
-   "2026-09": 1270
+   "2026-09": 1271
   },
   "robotica": {
    "2025-09": 21,
@@ -281,11 +281,15 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-10-15T15:23:19Z",
+   "ultimo_push": "2026-10-16T09:11:34Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 167714
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 167756
     }
    ]
   },
@@ -293,11 +297,15 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-10-15T15:12:39Z",
+   "ultimo_push": "2026-10-16T09:07:05Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 93860
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 93913
     }
    ]
   },
@@ -305,11 +313,15 @@
    "repo": "ollama/ollama",
    "url": "https://github.com/ollama/ollama",
    "descrizione": "Get up and running with Kimi, GLM, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
-   "ultimo_push": "2026-10-15T14:29:31Z",
+   "ultimo_push": "2026-10-16T01:09:43Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 183254
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 183402
     }
    ]
   },
@@ -317,11 +329,15 @@
    "repo": "langchain-ai/langgraph",
    "url": "https://github.com/langchain-ai/langgraph",
    "descrizione": "Build resilient agents.",
-   "ultimo_push": "2026-10-15T15:31:03Z",
+   "ultimo_push": "2026-10-16T06:47:51Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 43310
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 43348
     }
    ]
   },
@@ -334,6 +350,10 @@
     {
      "data": "2026-10-15",
      "stelle": 52508
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 52519
     }
    ]
   },
@@ -346,6 +366,10 @@
     {
      "data": "2026-10-15",
      "stelle": 91283
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 91303
     }
    ]
   },
@@ -358,6 +382,10 @@
     {
      "data": "2026-10-15",
      "stelle": 30057
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 30077
     }
    ]
   },
@@ -370,6 +398,10 @@
     {
      "data": "2026-10-15",
      "stelle": 61423
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 61440
     }
    ]
   },
@@ -377,11 +409,15 @@
    "repo": "crewAIInc/crewAI",
    "url": "https://github.com/crewAIInc/crewAI",
    "descrizione": "Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.",
-   "ultimo_push": "2026-10-15T15:31:36Z",
+   "ultimo_push": "2026-10-16T09:17:48Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 59735
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 59759
     }
    ]
   },
@@ -389,11 +425,15 @@
    "repo": "anthropics/claude-code",
    "url": "https://github.com/anthropics/claude-code",
    "descrizione": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows ",
-   "ultimo_push": "2026-10-14T18:24:25Z",
+   "ultimo_push": "2026-10-15T19:22:05Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 151018
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 151151
     }
    ]
   },
@@ -401,11 +441,15 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-10-15T15:25:55Z",
+   "ultimo_push": "2026-10-16T09:01:45Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 131266
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 131351
     }
    ]
   },
@@ -413,11 +457,15 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-10-15T15:37:30Z",
+   "ultimo_push": "2026-10-16T09:16:09Z",
    "storico": [
     {
      "data": "2026-10-15",
      "stelle": 78055
+    },
+    {
+     "data": "2026-10-16",
+     "stelle": 78100
     }
    ]
   }

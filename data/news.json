@@ -55,6 +55,48 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "[AINews] Agents disprove Polysemanticity; greatly improve Interpretability & Alignment",
+   "link": "https://www.latent.space/p/ainews-agents-disprove-polysemanticity",
+   "data": "2026-10-16",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Scaling Indic Pretraining: 2.8 Trillion Tokens and an Open Data Generation Pipeline",
+   "link": "https://huggingface.co/blog/nvidia/scaling-indic-pretraining",
+   "data": "2026-10-16",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Muse Spark Open is Meta's answer to Qwen, GLM, and Kimi in the open-weight race",
+   "link": "https://the-decoder.com/muse-spark-open-is-metas-answer-to-qwen-glm-and-kimi-in-the-open-weight-race/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Black Forest Labs' open-weights image model FLUX 3 Image Klein runs on consumer GPUs with just 8 GB of VRAM",
+   "link": "https://the-decoder.com/black-forest-labs-open-weights-image-model-flux-3-image-klein-runs-on-consumer-gpus-with-just-8-gb-of-vram/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Google wants Gemini 4 Argon to be the only AI model robots need",
+   "link": "https://the-decoder.com/google-wants-gemini-4-argon-to-be-the-only-ai-model-robots-need/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Nvidia's Nemotron 3.5 Super VL is an open model built to run enterprise AI agents nonstop",
+   "link": "https://the-decoder.com/nvidias-nemotron-3-5-super-vl-is-an-open-model-built-to-run-enterprise-ai-agents-nonstop/",
+   "data": "2026-10-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Bank of America puts 4,000 people on fixing vulnerabilities uncovered by Anthropic's Mythos and other AI models",
    "link": "https://the-decoder.com/bank-of-america-puts-4000-people-on-fixing-vulnerabilities-uncovered-by-anthropics-mythos-and-other-ai-models/",
    "data": "2026-10-15",
@@ -76,8 +118,22 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "Bringing GPT-Rosalind to academic research labs",
+   "link": "https://openai.com/index/introducing-the-rosalind-academic-plan",
+   "data": "2026-10-15",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Teaching students to think and learn through questions",
    "link": "https://openai.com/index/teaching-students-to-think-and-learn-through-questions",
+   "data": "2026-10-15",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Sullivan & Cromwell brings legal expertise into agreement review",
+   "link": "https://openai.com/index/sullivan-cromwell",
    "data": "2026-10-15",
    "fonte": "OpenAI",
    "tema": "prodotti"
@@ -90,8 +146,15 @@
    "tema": "business"
   },
   {
-   "titolo": "Apertus 1.5 Release Notes",
-   "link": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
+   "titolo": "Granite Switch 4.1: Chat, Decisions, and Speech from One Endpoint",
+   "link": "https://huggingface.co/blog/ibm-granite/granite-switch-4-1",
+   "data": "2026-10-15",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Welcome Muse Spark Open: open-weight frontier multimodal mixture-of-experts model from Meta",
+   "link": "https://huggingface.co/blog/meta-muse-spark-open",
    "data": "2026-10-15",
    "fonte": "Hugging Face",
    "tema": "ricerca"
@@ -101,6 +164,13 @@
    "link": "https://huggingface.co/blog/flux-3",
    "data": "2026-10-15",
    "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Accelerating the search for antimicrobial peptides with Google Antigravity",
+   "link": "https://deepmind.google/blog/accelerating-antimicrobial-discovery/",
+   "data": "2026-10-15",
+   "fonte": "Google DeepMind",
    "tema": "ricerca"
   },
   {
@@ -120,27 +190,6 @@
   {
    "titolo": "OpenAI will reportedly ship at least one model this year but its flagship still needs alignment work",
    "link": "https://the-decoder.com/openai-will-reportedly-ship-at-least-one-model-this-year-but-its-flagship-still-needs-alignment-work/",
-   "data": "2026-10-14",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Nvidia's Jensen Huang pledges $2 billion for Europe, $250 million in compute for UK safety labs",
-   "link": "https://the-decoder.com/nvidias-jensen-huang-pledges-2-billion-for-europe-250-million-in-compute-for-uk-safety-labs/",
-   "data": "2026-10-14",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI guardrails designed to stop hackers are now blocking defenders, and Orion-1 aims to fill the gap",
-   "link": "https://the-decoder.com/ai-guardrails-designed-to-stop-hackers-are-now-blocking-defenders-and-orion-1-aims-to-fill-the-gap/",
-   "data": "2026-10-14",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Alleged OpenAI spy vibe-coded a surveillance device using his wife's chatbot account",
-   "link": "https://the-decoder.com/alleged-openai-spy-vibe-coded-a-surveillance-device-using-his-wifes-chatbot-account/",
    "data": "2026-10-14",
    "fonte": "The Decoder",
    "tema": "prodotti"
@@ -216,18 +265,11 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "How well can AI play Slay the Spire?",
+   "titolo": "AI systems are improving rapidly at Slay the Spire and its sequel",
    "link": "https://epoch.ai/publications/ai-systems-are-improving-rapidly-at-slay-the-spire-and-its-sequel",
    "data": "2026-10-14",
    "fonte": "Epoch AI",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "406 scientists demand AI models be cut off from the internet immediately",
-   "link": "https://the-decoder.com/406-scientists-demand-ai-models-be-cut-off-from-the-internet-immediately/",
-   "data": "2026-10-13",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
   },
   {
    "titolo": "Higgsfield takes AI video from 1 minute to over 10",
@@ -363,27 +405,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Pollo AI turns creative ideas into campaigns with OpenAI",
-   "link": "https://openai.com/index/pollo-ai",
-   "data": "2026-10-08",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "LegalOn halves Codex costs while maintaining development speed",
-   "link": "https://openai.com/index/legalon-halves-codex-costs",
-   "data": "2026-10-08",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "[AINews] not much happened today",
-   "link": "https://www.latent.space/p/ainews-not-much-happened-today-60f",
-   "data": "2026-10-08",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
    "titolo": "The model that didn't exist, so you made it yourself",
    "link": "https://huggingface.co/blog/building-with-ml-intern",
    "data": "2026-10-08",
@@ -407,13 +428,6 @@
   {
    "titolo": "Introducing Falcon ASR",
    "link": "https://huggingface.co/blog/tiiuae/falcon-asr",
-   "data": "2026-10-07",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "One Model Family, Two Gold-Level Results: Fine-Tuning Nemotron for IOI and IMO",
-   "link": "https://huggingface.co/blog/nvidia/nemotron-ioi-and-imo-2026",
    "data": "2026-10-07",
    "fonte": "Hugging Face",
    "tema": "ricerca"
@@ -454,7 +468,7 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "Who is most exposed to a chip supply shock?",
+   "titolo": "China is more exposed to semiconductor supply-chain disruptions than the US",
    "link": "https://epoch.ai/publications/china-us-semiconductor-supply-chain-exposure",
    "data": "2026-10-06",
    "fonte": "Epoch AI",
@@ -475,7 +489,7 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "Coding-agent use at OpenAI is doubling roughly every month",
+   "titolo": "Coding-agent spending by OpenAI researchers is doubling roughly every month",
    "link": "https://epoch.ai/data-insights/openai-coding-agent-spending",
    "data": "2026-10-05",
    "fonte": "Epoch AI",
@@ -510,14 +524,14 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "How many AI agents could we run?",
+   "titolo": "How many AI agents could run on the AI chips shipped through 2027?",
    "link": "https://epoch.ai/publications/estimating-the-agent-population",
    "data": "2026-10-02",
    "fonte": "Epoch AI",
    "tema": "ricerca"
   },
   {
-   "titolo": "How do people actually use ChatGPT?",
+   "titolo": "Introducing the ChatGPT usage explorer",
    "link": "https://epoch.ai/latest/introducing-the-chatgpt-usage-explorer",
    "data": "2026-10-01",
    "fonte": "Epoch AI",
@@ -566,13 +580,6 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "Holo4: powering generalist computer-use agents",
-   "link": "https://huggingface.co/blog/Hcompany/holo4",
-   "data": "2026-09-28",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "Watch the winning trailer from the Future Vision XPRIZE, The Gifted.",
    "link": "https://blog.google/innovation-and-ai/technology/ai/winner-future-vision-xprize/",
    "data": "2026-09-28",
@@ -615,7 +622,7 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Can AI spot mistakes in IKEA assembly?",
+   "titolo": "AI has improved significantly at reasoning about IKEA furniture assembly",
    "link": "https://epoch.ai/publications/furniture-assembly",
    "data": "2026-09-23",
    "fonte": "Epoch AI",
@@ -725,13 +732,6 @@
    "data": "2026-09-08",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "AlphaGenome Atlas: A predictive map of every possible DNA letter change in the human genome",
-   "link": "https://deepmind.google/blog/alphagenome-atlas-a-predictive-map-of-every-possible-dna-letter-change-in-the-human-genome/",
-   "data": "2026-09-08",
-   "fonte": "Google DeepMind",
-   "tema": "ricerca"
   },
   {
    "titolo": "Import AI 472: DeepMind’s cheating math agents; populist AI policies; and Forethought theorizes a nightwatchman",

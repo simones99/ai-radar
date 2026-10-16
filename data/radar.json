@@ -1,7 +1,8 @@
 {
- "generato": "2026-10-15",
+ "generato": "2026-10-16",
  "base_domanda": "lavoro",
  "crescita_lavoro_nello_slancio": false,
+ "domanda_prec_attuale": true,
  "quadranti": {
   "impara-ora": "Impara ora",
   "prova": "Da provare",
@@ -15,10 +16,10 @@
    "breve": "Agenti AI",
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
    "arxiv": {
-    "ultimi3": 7629,
+    "ultimi3": 7631,
     "precedenti3": 7442,
-    "per_mille": 184.95,
-    "crescita": 0.0697,
+    "per_mille": 184.96,
+    "crescita": 0.0698,
     "mensile": [
      {
       "mese": "2025-09",
@@ -82,15 +83,15 @@
      },
      {
       "mese": "2026-09",
-      "n": 3035,
-      "totale": 16246
+      "n": 3037,
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 51384,
+    "ultimi3": 51457,
     "precedenti3": 30073,
-    "crescita": 0.7085,
+    "crescita": 0.711,
     "mensile": [
      {
       "mese": "2025-09",
@@ -138,37 +139,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 17627
+      "n": 17656
      },
      {
       "mese": "2026-09",
-      "n": 17485
+      "n": 17529
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 12.54,
-     "es": 18.24,
-     "fr": 6.07,
-     "gb": 24.77,
-     "it": 189.06,
-     "nl": 18.08,
-     "pl": 7.93,
-     "us": 46.59
+     "de": 18.28,
+     "es": 136.63,
+     "fr": 11.46,
+     "gb": 335.02,
+     "it": 37.04,
+     "nl": 18.6,
+     "pl": 83.18,
+     "us": 339.17
     },
-    "media": 40.41,
-    "media_ue": 41.986,
-    "usa": 46.594,
+    "media": 122.421,
+    "media_ue": 50.863,
+    "usa": 339.169,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.8,
    "domanda": 1.0,
    "quadrante": "impara-ora",
    "slancio_prec": 0.7667,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "coding-agenti",
@@ -179,7 +180,7 @@
     "ultimi3": 644,
     "precedenti3": 480,
     "per_mille": 15.61,
-    "crescita": 0.3964,
+    "crescita": 0.3961,
     "mensile": [
      {
       "mese": "2025-09",
@@ -244,14 +245,14 @@
      {
       "mese": "2026-09",
       "n": 250,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 3479,
+    "ultimi3": 3484,
     "precedenti3": 2067,
-    "crescita": 0.6815,
+    "crescita": 0.6839,
     "mensile": [
      {
       "mese": "2025-09",
@@ -299,37 +300,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 1356
+      "n": 1360
      },
      {
       "mese": "2026-09",
-      "n": 1139
+      "n": 1140
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 1.64,
-     "es": 6.59,
-     "fr": 0.45,
-     "gb": 3.67,
-     "it": 2.36,
-     "nl": 1.18,
-     "pl": 5.46,
-     "us": 8.72
+     "de": 3.01,
+     "es": 2.73,
+     "fr": 0.6,
+     "gb": 2.86,
+     "it": 0.28,
+     "nl": 1.46,
+     "pl": 0.21,
+     "us": 4.22
     },
-    "media": 3.757,
-    "media_ue": 2.945,
-    "usa": 8.718,
+    "media": 1.922,
+    "media_ue": 1.382,
+    "usa": 4.218,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.8666,
-   "domanda": 0.4,
+   "domanda": 0.3333,
    "quadrante": "prova",
    "slancio_prec": 0.9,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "prova"
   },
   {
    "id": "mcp",
@@ -340,7 +341,7 @@
     "ultimi3": 117,
     "precedenti3": 116,
     "per_mille": 2.84,
-    "crescita": 0.0521,
+    "crescita": 0.0519,
     "mensile": [
      {
       "mese": "2025-09",
@@ -405,14 +406,14 @@
      {
       "mese": "2026-09",
       "n": 44,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 36489,
+    "ultimi3": 36541,
     "precedenti3": 25412,
-    "crescita": 0.4358,
+    "crescita": 0.4379,
     "mensile": [
      {
       "mese": "2025-09",
@@ -460,37 +461,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 11525
+      "n": 11551
      },
      {
       "mese": "2026-09",
-      "n": 13956
+      "n": 13982
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.72,
-     "es": 6.9,
-     "fr": 1.09,
+     "de": 0.73,
+     "es": 6.97,
+     "fr": 1.26,
      "gb": 2.11,
-     "it": 2.58,
-     "nl": 0.53,
-     "pl": 7.31,
-     "us": 5.68
+     "it": 2.63,
+     "nl": 0.42,
+     "pl": 7.19,
+     "us": 5.79
     },
-    "media": 3.364,
-    "media_ue": 3.188,
-    "usa": 5.676,
+    "media": 3.387,
+    "media_ue": 3.199,
+    "usa": 5.794,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.6666,
-   "domanda": 0.3333,
-   "quadrante": "prova",
+   "domanda": 0.5333,
+   "quadrante": "impara-ora",
    "slancio_prec": 0.3667,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "consolida"
   },
   {
    "id": "rag",
@@ -498,10 +499,10 @@
    "breve": "RAG",
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
    "arxiv": {
-    "ultimi3": 565,
+    "ultimi3": 566,
     "precedenti3": 740,
-    "per_mille": 13.7,
-    "crescita": -0.2016,
+    "per_mille": 13.72,
+    "crescita": -0.2004,
     "mensile": [
      {
       "mese": "2025-09",
@@ -565,15 +566,15 @@
      },
      {
       "mese": "2026-09",
-      "n": 195,
-      "totale": 16246
+      "n": 196,
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 17595,
+    "ultimi3": 17614,
     "precedenti3": 14129,
-    "crescita": 0.2452,
+    "crescita": 0.2466,
     "mensile": [
      {
       "mese": "2025-09",
@@ -621,37 +622,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 5781
+      "n": 5789
      },
      {
       "mese": "2026-09",
-      "n": 5534
+      "n": 5545
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 2.3,
-     "es": 12.57,
-     "fr": 6.31,
-     "gb": 2.77,
-     "it": 5.58,
-     "nl": 2.03,
-     "pl": 12.56,
-     "us": 4.7
+     "de": 1.65,
+     "es": 18.88,
+     "fr": 1.69,
+     "gb": 4.9,
+     "it": 6.11,
+     "nl": 1.78,
+     "pl": 11.78,
+     "us": 17.2
     },
-    "media": 6.102,
-    "media_ue": 6.891,
-    "usa": 4.698,
+    "media": 8.0,
+    "media_ue": 6.983,
+    "usa": 17.2,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.2334,
-   "domanda": 0.5333,
+   "domanda": 0.6667,
    "quadrante": "consolida",
    "slancio_prec": 0.3667,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "consolida"
   },
   {
    "id": "valutazione",
@@ -662,7 +663,7 @@
     "ultimi3": 317,
     "precedenti3": 373,
     "per_mille": 7.68,
-    "crescita": -0.1111,
+    "crescita": -0.1113,
     "mensile": [
      {
       "mese": "2025-09",
@@ -727,14 +728,14 @@
      {
       "mese": "2026-09",
       "n": 115,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 3872,
+    "ultimi3": 3876,
     "precedenti3": 1687,
-    "crescita": 1.2914,
+    "crescita": 1.2937,
     "mensile": [
      {
       "mese": "2025-09",
@@ -782,37 +783,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 1381
+      "n": 1382
      },
      {
       "mese": "2026-09",
-      "n": 1427
+      "n": 1430
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.38,
-     "es": 5.77,
-     "fr": 1.53,
-     "gb": 3.16,
-     "it": 1.36,
-     "nl": 0.32,
-     "pl": 4.32,
-     "us": 6.12
+     "de": 0.13,
+     "es": 2.32,
+     "fr": 0.25,
+     "gb": 0.75,
+     "it": 0.0,
+     "nl": 0.0,
+     "pl": 1.36,
+     "us": 2.29
     },
-    "media": 2.871,
-    "media_ue": 2.281,
-    "usa": 6.116,
+    "media": 0.888,
+    "media_ue": 0.676,
+    "usa": 2.292,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.6666,
    "domanda": 0.2667,
    "quadrante": "prova",
    "slancio_prec": 0.7,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "prova"
   },
   {
    "id": "post-training",
@@ -820,10 +821,10 @@
    "breve": "Fine-tuning",
    "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
    "arxiv": {
-    "ultimi3": 1163,
+    "ultimi3": 1165,
     "precedenti3": 1169,
-    "per_mille": 28.19,
-    "crescita": 0.0382,
+    "per_mille": 28.24,
+    "crescita": 0.0398,
     "mensile": [
      {
       "mese": "2025-09",
@@ -882,13 +883,13 @@
      },
      {
       "mese": "2026-08",
-      "n": 362,
+      "n": 363,
       "totale": 13156
      },
      {
       "mese": "2026-09",
-      "n": 508,
-      "totale": 16246
+      "n": 509,
+      "totale": 16254
      }
     ]
    },
@@ -953,27 +954,27 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.06,
-     "es": 1.55,
-     "fr": 0.71,
-     "gb": 0.53,
-     "it": 1.86,
-     "nl": 0.21,
-     "pl": 1.65,
-     "us": 0.93
+     "de": 0.07,
+     "es": 0.61,
+     "fr": 0.25,
+     "gb": 0.18,
+     "it": 0.28,
+     "nl": 0.0,
+     "pl": 0.31,
+     "us": 0.44
     },
-    "media": 0.937,
-    "media_ue": 1.007,
-    "usa": 0.926,
+    "media": 0.268,
+    "media_ue": 0.254,
+    "usa": 0.441,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.4,
    "domanda": 0.1333,
    "quadrante": "osserva",
    "slancio_prec": 0.3666,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "osserva"
   },
   {
    "id": "context-engineering",
@@ -984,7 +985,7 @@
     "ultimi3": 125,
     "precedenti3": 195,
     "per_mille": 3.03,
-    "crescita": -0.3217,
+    "crescita": -0.3218,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1049,14 +1050,14 @@
      {
       "mese": "2026-09",
       "n": 35,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 6838,
+    "ultimi3": 6844,
     "precedenti3": 5893,
-    "crescita": 0.1602,
+    "crescita": 0.1612,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1104,37 +1105,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 2317
+      "n": 2319
      },
      {
       "mese": "2026-09",
-      "n": 2045
+      "n": 2049
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 17.65,
-     "es": 31.42,
-     "fr": 4.88,
-     "gb": 7.91,
-     "it": 10.16,
-     "nl": 3.53,
-     "pl": 20.59,
-     "us": 18.16
+     "de": 17.7,
+     "es": 31.51,
+     "fr": 4.97,
+     "gb": 7.99,
+     "it": 10.17,
+     "nl": 3.55,
+     "pl": 20.01,
+     "us": 17.74
     },
-    "media": 14.287,
-    "media_ue": 14.706,
-    "usa": 18.158,
+    "media": 14.204,
+    "media_ue": 14.651,
+    "usa": 17.739,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.1333,
-   "domanda": 0.6667,
+   "domanda": 0.8,
    "quadrante": "consolida",
    "slancio_prec": 0.1333,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "consolida"
   },
   {
    "id": "sicurezza",
@@ -1142,10 +1143,10 @@
    "breve": "Sicurezza AI",
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
    "arxiv": {
-    "ultimi3": 375,
+    "ultimi3": 374,
     "precedenti3": 480,
-    "per_mille": 9.09,
-    "crescita": -0.1824,
+    "per_mille": 9.06,
+    "crescita": -0.1847,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1209,15 +1210,15 @@
      },
      {
       "mese": "2026-09",
-      "n": 147,
-      "totale": 16246
+      "n": 146,
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 2451,
+    "ultimi3": 2453,
     "precedenti3": 1734,
-    "crescita": 0.4123,
+    "crescita": 0.4135,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1265,37 +1266,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 807
+      "n": 808
      },
      {
       "mese": "2026-09",
-      "n": 871
+      "n": 872
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 1.87,
-     "es": 11.85,
-     "fr": 0.37,
-     "gb": 5.16,
-     "it": 221.89,
-     "nl": 2.89,
-     "pl": 6.38,
-     "us": 9.56
+     "de": 0.09,
+     "es": 0.3,
+     "fr": 0.07,
+     "gb": 0.24,
+     "it": 1.42,
+     "nl": 0.0,
+     "pl": 0.21,
+     "us": 0.49
     },
-    "media": 32.497,
-    "media_ue": 40.876,
-    "usa": 9.557,
+    "media": 0.353,
+    "media_ue": 0.348,
+    "usa": 0.488,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.3667,
-   "domanda": 0.8667,
-   "quadrante": "consolida",
+   "domanda": 0.2,
+   "quadrante": "osserva",
    "slancio_prec": 0.3333,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "osserva"
   },
   {
    "id": "governance",
@@ -1306,7 +1307,7 @@
     "ultimi3": 94,
     "precedenti3": 109,
     "per_mille": 2.28,
-    "crescita": -0.0938,
+    "crescita": -0.094,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1371,14 +1372,14 @@
      {
       "mese": "2026-09",
       "n": 31,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 2465,
+    "ultimi3": 2468,
     "precedenti3": 2305,
-    "crescita": 0.0693,
+    "crescita": 0.0706,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1426,37 +1427,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 903
+      "n": 905
      },
      {
       "mese": "2026-09",
-      "n": 778
+      "n": 779
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 3.61,
-     "es": 25.14,
-     "fr": 1.06,
-     "gb": 10.52,
-     "it": 187.92,
-     "nl": 2.78,
-     "pl": 15.24,
-     "us": 14.15
+     "de": 1.16,
+     "es": 2.83,
+     "fr": 0.18,
+     "gb": 4.08,
+     "it": 0.64,
+     "nl": 1.78,
+     "pl": 2.4,
+     "us": 8.27
     },
-    "media": 32.551,
-    "media_ue": 39.29,
-    "usa": 14.151,
+    "media": 2.666,
+    "media_ue": 1.497,
+    "usa": 8.265,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.2334,
-   "domanda": 0.9333,
-   "quadrante": "consolida",
+   "domanda": 0.4,
+   "quadrante": "osserva",
    "slancio_prec": 0.1,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "osserva"
   },
   {
    "id": "dati-per-ai",
@@ -1467,7 +1468,7 @@
     "ultimi3": 162,
     "precedenti3": 242,
     "per_mille": 3.93,
-    "crescita": -0.2945,
+    "crescita": -0.2946,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1532,14 +1533,14 @@
      {
       "mese": "2026-09",
       "n": 76,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 5896,
+    "ultimi3": 5904,
     "precedenti3": 4281,
-    "crescita": 0.3768,
+    "crescita": 0.3787,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1587,37 +1588,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 2021
+      "n": 2025
      },
      {
       "mese": "2026-09",
-      "n": 1938
+      "n": 1942
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 1.71,
-     "es": 14.84,
-     "fr": 1.12,
-     "gb": 8.41,
-     "it": 33.48,
-     "nl": 7.81,
-     "pl": 5.35,
-     "us": 16.26
+     "de": 0.73,
+     "es": 10.6,
+     "fr": 0.64,
+     "gb": 2.82,
+     "it": 1.49,
+     "nl": 1.99,
+     "pl": 1.77,
+     "us": 4.34
     },
-    "media": 11.122,
-    "media_ue": 10.717,
-    "usa": 16.259,
+    "media": 3.047,
+    "media_ue": 2.871,
+    "usa": 4.336,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.2666,
-   "domanda": 0.6,
-   "quadrante": "consolida",
+   "domanda": 0.4667,
+   "quadrante": "osserva",
    "slancio_prec": 0.2334,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "osserva"
   },
   {
    "id": "text-to-sql",
@@ -1628,7 +1629,7 @@
     "ultimi3": 72,
     "precedenti3": 76,
     "per_mille": 1.75,
-    "crescita": -0.008,
+    "crescita": -0.0082,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1693,14 +1694,14 @@
      {
       "mese": "2026-09",
       "n": 22,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 617,
+    "ultimi3": 620,
     "precedenti3": 348,
-    "crescita": 0.762,
+    "crescita": 0.7705,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1752,33 +1753,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 239
+      "n": 242
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
      "de": 0.0,
-     "es": 0.0,
-     "fr": 0.0,
-     "gb": 0.0,
-     "it": 0.0,
+     "es": 0.3,
+     "fr": 0.08,
+     "gb": 0.09,
+     "it": 0.14,
      "nl": 0.0,
-     "pl": 0.0,
-     "us": 0.0
+     "pl": 0.21,
+     "us": 0.18
     },
-    "media": 0.0,
-    "media_ue": 0.0,
-    "usa": 0.002,
+    "media": 0.125,
+    "media_ue": 0.123,
+    "usa": 0.176,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.7,
    "domanda": 0.0,
    "quadrante": "prova",
    "slancio_prec": 0.9667,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "prova"
   },
   {
    "id": "vector-db",
@@ -1789,7 +1790,7 @@
     "ultimi3": 33,
     "precedenti3": 58,
     "per_mille": 0.8,
-    "crescita": -0.3706,
+    "crescita": -0.3707,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1854,14 +1855,14 @@
      {
       "mese": "2026-09",
       "n": 8,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 1723,
+    "ultimi3": 1725,
     "precedenti3": 1852,
-    "crescita": -0.0695,
+    "crescita": -0.0684,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1909,37 +1910,37 @@
      },
      {
       "mese": "2026-08",
-      "n": 555
+      "n": 556
      },
      {
       "mese": "2026-09",
-      "n": 461
+      "n": 462
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 1.02,
-     "es": 19.99,
-     "fr": 0.85,
-     "gb": 4.79,
-     "it": 3.08,
+     "de": 1.09,
+     "es": 20.09,
+     "fr": 0.93,
+     "gb": 4.92,
+     "it": 3.06,
      "nl": 0.21,
-     "pl": 0.82,
-     "us": 11.6
+     "pl": 0.83,
+     "us": 11.49
     },
-    "media": 5.294,
-    "media_ue": 4.328,
-    "usa": 11.596,
+    "media": 5.328,
+    "media_ue": 4.368,
+    "usa": 11.486,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.0,
-   "domanda": 0.4667,
-   "quadrante": "osserva",
+   "domanda": 0.6,
+   "quadrante": "consolida",
    "slancio_prec": 0.3333,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "consolida"
   },
   {
    "id": "multimodale",
@@ -1947,10 +1948,10 @@
    "breve": "Multimodali",
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
    "arxiv": {
-    "ultimi3": 2177,
+    "ultimi3": 2178,
     "precedenti3": 2318,
-    "per_mille": 52.78,
-    "crescita": -0.0198,
+    "per_mille": 52.79,
+    "crescita": -0.0196,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2014,8 +2015,8 @@
      },
      {
       "mese": "2026-09",
-      "n": 775,
-      "totale": 16246
+      "n": 776,
+      "totale": 16254
      }
     ]
    },
@@ -2080,27 +2081,27 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.28,
-     "es": 3.5,
-     "fr": 0.19,
-     "gb": 1.08,
-     "it": 2.65,
-     "nl": 0.75,
-     "pl": 1.54,
-     "us": 2.33
+     "de": 10.25,
+     "es": 33.22,
+     "fr": 8.58,
+     "gb": 5.63,
+     "it": 2.7,
+     "nl": 4.81,
+     "pl": 5.94,
+     "us": 10.99
     },
-    "media": 1.54,
-    "media_ue": 1.486,
-    "usa": 2.332,
+    "media": 10.266,
+    "media_ue": 10.916,
+    "usa": 10.993,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.5667,
-   "domanda": 0.2,
-   "quadrante": "prova",
+   "domanda": 0.7333,
+   "quadrante": "impara-ora",
    "slancio_prec": 0.3334,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "consolida"
   },
   {
    "id": "llmops",
@@ -2111,7 +2112,7 @@
     "ultimi3": 118,
     "precedenti3": 110,
     "per_mille": 2.86,
-    "crescita": 0.1161,
+    "crescita": 0.1159,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2176,14 +2177,14 @@
      {
       "mese": "2026-09",
       "n": 46,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 1270,
+    "ultimi3": 1271,
     "precedenti3": 995,
-    "crescita": 0.275,
+    "crescita": 0.276,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2235,33 +2236,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 372
+      "n": 373
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 5.5,
-     "es": 46.47,
-     "fr": 7.86,
-     "gb": 7.55,
-     "it": 11.09,
-     "nl": 5.35,
-     "pl": 39.63,
-     "us": 14.27
+     "de": 5.3,
+     "es": 44.63,
+     "fr": 7.46,
+     "gb": 7.65,
+     "it": 10.45,
+     "nl": 5.22,
+     "pl": 38.36,
+     "us": 12.72
     },
-    "media": 17.214,
-    "media_ue": 19.315,
-    "usa": 14.27,
+    "media": 16.475,
+    "media_ue": 18.571,
+    "usa": 12.721,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.6,
-   "domanda": 0.7333,
+   "domanda": 0.8667,
    "quadrante": "impara-ora",
    "slancio_prec": 0.7667,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "modelli-locali",
@@ -2272,7 +2273,7 @@
     "ultimi3": 913,
     "precedenti3": 954,
     "per_mille": 22.13,
-    "crescita": -0.0011,
+    "crescita": -0.0013,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2337,14 +2338,14 @@
      {
       "mese": "2026-09",
       "n": 370,
-      "totale": 16246
+      "totale": 16254
      }
     ]
    },
    "github": {
-    "ultimi3": 3472,
+    "ultimi3": 3473,
     "precedenti3": 2451,
-    "crescita": 0.4157,
+    "crescita": 0.4161,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2396,33 +2397,33 @@
      },
      {
       "mese": "2026-09",
-      "n": 1270
+      "n": 1271
      }
     ]
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 2.5,
-     "es": 36.47,
-     "fr": 1.31,
-     "gb": 8.67,
-     "it": 74.61,
-     "nl": 7.7,
-     "pl": 12.87,
-     "us": 11.69
+     "de": 0.25,
+     "es": 1.62,
+     "fr": 0.14,
+     "gb": 211.95,
+     "it": 0.21,
+     "nl": 0.42,
+     "pl": 1.25,
+     "us": 468.5
     },
-    "media": 19.479,
-    "media_ue": 22.578,
-    "usa": 11.69,
+    "media": 85.541,
+    "media_ue": 0.648,
+    "usa": 468.498,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.5666,
-   "domanda": 0.8,
+   "domanda": 0.9333,
    "quadrante": "impara-ora",
    "slancio_prec": 0.5666,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "impara-ora"
   },
   {
    "id": "robotica",
@@ -2430,10 +2431,10 @@
    "breve": "Robotica",
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "arxiv": {
-    "ultimi3": 1430,
+    "ultimi3": 1429,
     "precedenti3": 1187,
-    "per_mille": 34.67,
-    "crescita": 0.2562,
+    "per_mille": 34.64,
+    "crescita": 0.2551,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2497,8 +2498,8 @@
      },
      {
       "mese": "2026-09",
-      "n": 677,
-      "totale": 16246
+      "n": 676,
+      "totale": 16254
      }
     ]
    },
@@ -2563,27 +2564,581 @@
    },
    "lavoro": {
     "ogni_10mila": {
-     "de": 0.12,
-     "es": 0.62,
-     "fr": 0.13,
-     "gb": 0.48,
-     "it": 1.72,
-     "nl": 0.21,
-     "pl": 0.31,
-     "us": 1.47
+     "de": 0.1,
+     "es": 0.61,
+     "fr": 0.03,
+     "gb": 0.02,
+     "it": 0.28,
+     "nl": 0.0,
+     "pl": 0.0,
+     "us": 0.32
     },
-    "media": 0.633,
-    "media_ue": 0.518,
-    "usa": 1.47,
+    "media": 0.171,
+    "media_ue": 0.17,
+    "usa": 0.321,
     "crescita": null,
-    "data": "2026-10-15"
+    "data": "2026-10-16"
    },
    "slancio": 0.9333,
    "domanda": 0.0667,
    "quadrante": "prova",
    "slancio_prec": 0.7667,
    "domanda_prec": null,
-   "quadrante_prec": null
+   "quadrante_prec": "prova"
+  }
+ ],
+ "storico": [
+  {
+   "mese": "2026-02",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.6666,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 1.0,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.8,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.6,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.3333,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.3,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.6667,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.8333,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.1666,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.2334,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.5667,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.4334,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.5333,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.4667,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-03",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.8,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 1.0,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.8,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.5333,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.3666,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.2667,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.7333,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.9,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.1333,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.3333,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.3334,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.4667,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.4333,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.5,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-04",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.8,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 1.0,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.8,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.2334,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.4,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.2667,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.3333,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.7,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.9333,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.4,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.1666,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.1666,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.3334,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.5667,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.4667,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.4333,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-05",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.6333,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 1.0,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.6333,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.6,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.2666,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.4667,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.5667,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.8667,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.1667,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.0,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.4334,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.7667,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.6333,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.5666,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-06",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.6333,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 1.0,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.3667,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.4334,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.7,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.3,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.3667,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.4334,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.5666,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.0667,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.6667,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.1,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.2,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.8334,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.7,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.6333,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-07",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.6,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 0.9334,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.3334,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.4334,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.7333,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.4333,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.3334,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.4,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.2666,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.1666,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.8334,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.0667,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.1666,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.8667,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.6,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.8333,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-08",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.7667,
+     "domanda": null
+    },
+    "coding-agenti": {
+     "slancio": 0.9,
+     "domanda": null
+    },
+    "mcp": {
+     "slancio": 0.3667,
+     "domanda": null
+    },
+    "rag": {
+     "slancio": 0.3667,
+     "domanda": null
+    },
+    "valutazione": {
+     "slancio": 0.7,
+     "domanda": null
+    },
+    "post-training": {
+     "slancio": 0.3666,
+     "domanda": null
+    },
+    "context-engineering": {
+     "slancio": 0.1333,
+     "domanda": null
+    },
+    "sicurezza": {
+     "slancio": 0.3333,
+     "domanda": null
+    },
+    "governance": {
+     "slancio": 0.1,
+     "domanda": null
+    },
+    "dati-per-ai": {
+     "slancio": 0.2334,
+     "domanda": null
+    },
+    "text-to-sql": {
+     "slancio": 0.9667,
+     "domanda": null
+    },
+    "vector-db": {
+     "slancio": 0.3333,
+     "domanda": null
+    },
+    "multimodale": {
+     "slancio": 0.3334,
+     "domanda": null
+    },
+    "llmops": {
+     "slancio": 0.7667,
+     "domanda": null
+    },
+    "modelli-locali": {
+     "slancio": 0.5666,
+     "domanda": null
+    },
+    "robotica": {
+     "slancio": 0.7667,
+     "domanda": null
+    }
+   }
+  },
+  {
+   "mese": "2026-09",
+   "competenze": {
+    "agenti": {
+     "slancio": 0.8,
+     "domanda": 1.0
+    },
+    "coding-agenti": {
+     "slancio": 0.8666,
+     "domanda": 0.3333
+    },
+    "mcp": {
+     "slancio": 0.6666,
+     "domanda": 0.5333
+    },
+    "rag": {
+     "slancio": 0.2334,
+     "domanda": 0.6667
+    },
+    "valutazione": {
+     "slancio": 0.6666,
+     "domanda": 0.2667
+    },
+    "post-training": {
+     "slancio": 0.4,
+     "domanda": 0.1333
+    },
+    "context-engineering": {
+     "slancio": 0.1333,
+     "domanda": 0.8
+    },
+    "sicurezza": {
+     "slancio": 0.3667,
+     "domanda": 0.2
+    },
+    "governance": {
+     "slancio": 0.2334,
+     "domanda": 0.4
+    },
+    "dati-per-ai": {
+     "slancio": 0.2666,
+     "domanda": 0.4667
+    },
+    "text-to-sql": {
+     "slancio": 0.7,
+     "domanda": 0.0
+    },
+    "vector-db": {
+     "slancio": 0.0,
+     "domanda": 0.6
+    },
+    "multimodale": {
+     "slancio": 0.5667,
+     "domanda": 0.7333
+    },
+    "llmops": {
+     "slancio": 0.6,
+     "domanda": 0.8667
+    },
+    "modelli-locali": {
+     "slancio": 0.5666,
+     "domanda": 0.9333
+    },
+    "robotica": {
+     "slancio": 0.9333,
+     "domanda": 0.0667
+    }
+   }
   }
  ]
 }

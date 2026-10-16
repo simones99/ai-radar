@@ -8,7 +8,7 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `epoch.json` | Modelli AI notevoli: calcolo di addestramento, area, pesi aperti | Epoch AI (CC BY 4.0) |
 | `artificial_analysis.json` | Indice di intelligenza, prezzo e velocità dei modelli linguistici | Artificial Analysis |
 | `arxiv.json` | Paper AI al mese, totali e per competenza | arXiv (metadati CC0) |
-| `github.json` | Nuovi repository al mese per topic; stelle dei progetti seguiti | GitHub |
+| `github.json` | Nuovi repository al mese per topic; serie `base` (nuovi repository AI al mese, somma dei topic di base); `in_crescita` (repository nuovi più stellati per competenza); stelle dei progetti seguiti | GitHub |
 | `huggingface.json` | Modelli di tendenza e tipi di compito | Hugging Face |
 | `jobs.json` | Annunci di lavoro per competenza e Paese | The Adzuna API |
 | `eurostat.json` | Imprese UE che usano l'AI | Eurostat, isoc_eb_ai |
@@ -16,7 +16,8 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `owid.json` | Investimenti, adozione, uso dell'AI generativa, data center | Our World in Data (dati dei produttori citati) |
 | `ai_act.json` | Scadenze dell'AI Act | `config/ai_act.yaml`, a mano |
 | `rapporti.json` | Rapporti periodici: edizioni e prossime uscite | `config/rapporti.yaml`, a mano |
-| `radar.json` | Radar delle competenze, calcolato dai file sopra | Calcolo della pipeline |
+| `risorse.json` | Stato settimanale dei link «Per iniziare» delle competenze | Controllo della pipeline |
+| `radar.json` | Radar delle competenze (versione 2: unità vere, soglie fisse, incertezza), calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
 
 I file con storico (arXiv, GitHub, Hugging Face, Adzuna, Artificial Analysis) si

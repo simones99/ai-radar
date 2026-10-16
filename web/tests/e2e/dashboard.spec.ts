@@ -98,6 +98,12 @@ test('porta verso la card già aperta: riapre la competenza e porta il focus al 
   await expect(page.locator('#h-competenze')).toBeFocused();
   await scrollSettled(page);
   await expect(page.locator('#h-competenze')).toBeInViewport();
+  await page.goBack();
+  await expect(page).toHaveURL(/#competenze$/);
+  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await page.goBack();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
 });
 
 test('i vecchi link #politica aprono Norme e diventano #norme', async ({ page }) => {

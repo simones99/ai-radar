@@ -9,7 +9,7 @@
    "indice": 57.6,
    "coding": null,
    "prezzo": 8.0,
-   "velocita": 97.765
+   "velocita": 97.868
   },
   {
    "nome": "Claude Sonnet 5.5 (Max, Default Fallback)",
@@ -17,7 +17,7 @@
    "indice": 56.0,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 143.207
+   "velocita": 143.235
   },
   {
    "nome": "Claude Opus 5.5 (Xhigh, Default Fallback)",
@@ -25,7 +25,7 @@
    "indice": 56.0,
    "coding": null,
    "prezzo": 8.0,
-   "velocita": 80.285
+   "velocita": 80.593
   },
   {
    "nome": "Muse Wonder Full (Max)",
@@ -41,7 +41,7 @@
    "indice": 53.6,
    "coding": null,
    "prezzo": 8.0,
-   "velocita": 77.999
+   "velocita": 79.136
   },
   {
    "nome": "Claude Fable 5.1 (Max, Default Fallback)",
@@ -49,7 +49,7 @@
    "indice": 53.4,
    "coding": 81.6,
    "prezzo": 20.0,
-   "velocita": 66.221
+   "velocita": 66.524
   },
   {
    "nome": "Claude Fable 5.1 (Xhigh, Default Fallback)",
@@ -57,7 +57,7 @@
    "indice": 53.2,
    "coding": 80.7,
    "prezzo": 20.0,
-   "velocita": 57.278
+   "velocita": 57.912
   },
   {
    "nome": "GPT-6 Astra (Max)",
@@ -65,7 +65,7 @@
    "indice": 52.7,
    "coding": 76.9,
    "prezzo": 20.0,
-   "velocita": 50.532
+   "velocita": 53.968
   },
   {
    "nome": "Gemini 4 Argon (High)",
@@ -81,7 +81,7 @@
    "indice": 52.4,
    "coding": null,
    "prezzo": 8.0,
-   "velocita": 184.259
+   "velocita": 184.343
   },
   {
    "nome": "GPT-6 Astra (Xhigh)",
@@ -89,7 +89,7 @@
    "indice": 52.4,
    "coding": 75.9,
    "prezzo": 20.0,
-   "velocita": 48.622
+   "velocita": 50.074
   },
   {
    "nome": "Claude Sonnet 5.5 (Xhigh, Default Fallback)",
@@ -113,7 +113,7 @@
    "indice": 51.2,
    "coding": null,
    "prezzo": 8.0,
-   "velocita": 78.052
+   "velocita": 79.38
   },
   {
    "nome": "Claude Fable 5.1 (High, Default Fallback)",
@@ -129,7 +129,7 @@
    "indice": 51.0,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 52.743
+   "velocita": 55.915
   },
   {
    "nome": "GPT-6 Astra (High)",
@@ -137,7 +137,7 @@
    "indice": 50.9,
    "coding": 77.1,
    "prezzo": 20.0,
-   "velocita": 45.741
+   "velocita": 47.867
   },
   {
    "nome": "Claude Opus 5 (Max)",
@@ -153,7 +153,7 @@
    "indice": 50.2,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 52.846
+   "velocita": 56.106
   },
   {
    "nome": "Claude Opus 5 (Xhigh)",
@@ -177,7 +177,7 @@
    "indice": 49.6,
    "coding": 76.7,
    "prezzo": 20.0,
-   "velocita": 48.909
+   "velocita": 50.237
   },
   {
    "nome": "Claude Fable 5.1 (Medium, Default Fallback)",
@@ -201,7 +201,7 @@
    "indice": 48.1,
    "coding": 75.8,
    "prezzo": 2.0,
-   "velocita": 130.129
+   "velocita": 134.067
   },
   {
    "nome": "GPT-6.1 Sol (Medium)",
@@ -209,7 +209,7 @@
    "indice": 47.8,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 53.956
+   "velocita": 57.216
   },
   {
    "nome": "GPT-6 Sol (Max)",
@@ -241,7 +241,7 @@
    "indice": 46.8,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 103.784
+   "velocita": 107.612
   },
   {
    "nome": "Grok 4.7 (Xhigh)",
@@ -273,7 +273,7 @@
    "indice": 45.8,
    "coding": 75.7,
    "prezzo": 20.0,
-   "velocita": 46.506
+   "velocita": 48.203
   },
   {
    "nome": "Qwen3.8 Max (0902)",
@@ -345,7 +345,7 @@
    "indice": 43.7,
    "coding": null,
    "prezzo": 1.425,
-   "velocita": 87.193
+   "velocita": 87.71
   },
   {
    "nome": "Kimi K3 (Max)",
@@ -361,7 +361,7 @@
    "indice": 43.4,
    "coding": null,
    "prezzo": 0.2,
-   "velocita": 240.273
+   "velocita": 241.13
   },
   {
    "nome": "Grok 4.6 (Medium)",
@@ -409,7 +409,7 @@
    "indice": 42.1,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 55.406
+   "velocita": 56.01
   },
   {
    "nome": "GPT-5.6 Terra (Max)",
@@ -449,7 +449,7 @@
    "indice": 41.1,
    "coding": null,
    "prezzo": 0.45,
-   "velocita": 217.187
+   "velocita": 217.334
   },
   {
    "nome": "Gemini 3.8 Flash (High)",
@@ -465,7 +465,7 @@
    "indice": 40.8,
    "coding": null,
    "prezzo": 4.0,
-   "velocita": 100.359
+   "velocita": 104.966
   },
   {
    "nome": "Claude Opus 4.7 (Max)",

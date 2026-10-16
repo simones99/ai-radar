@@ -14,6 +14,7 @@
    "id": "agenti",
    "nome": "Agenti AI",
    "breve": "Agenti AI",
+   "plurale": true,
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
    "arxiv": {
     "ultimi3": 7631,
@@ -89,9 +90,9 @@
     ]
    },
    "github": {
-    "ultimi3": 51461,
+    "ultimi3": 51479,
     "precedenti3": 30073,
-    "crescita": 0.7111,
+    "crescita": 0.7117,
     "mensile": [
      {
       "mese": "2025-09",
@@ -139,11 +140,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 17658
+      "n": 17665
      },
      {
       "mese": "2026-09",
-      "n": 17531
+      "n": 17542
      }
     ]
    },
@@ -175,6 +176,7 @@
    "id": "coding-agenti",
    "nome": "Sviluppo con agenti di coding",
    "breve": "Agenti di coding",
+   "plurale": true,
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
    "arxiv": {
     "ultimi3": 644,
@@ -250,9 +252,9 @@
     ]
    },
    "github": {
-    "ultimi3": 3484,
+    "ultimi3": 3486,
     "precedenti3": 2067,
-    "crescita": 0.6839,
+    "crescita": 0.6848,
     "mensile": [
      {
       "mese": "2025-09",
@@ -300,11 +302,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 1360
+      "n": 1361
      },
      {
       "mese": "2026-09",
-      "n": 1140
+      "n": 1141
      }
     ]
    },
@@ -336,6 +338,7 @@
    "id": "mcp",
    "nome": "Model Context Protocol (MCP)",
    "breve": "MCP",
+   "plurale": false,
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
    "arxiv": {
     "ultimi3": 117,
@@ -411,9 +414,9 @@
     ]
    },
    "github": {
-    "ultimi3": 36543,
+    "ultimi3": 36554,
     "precedenti3": 25412,
-    "crescita": 0.4379,
+    "crescita": 0.4384,
     "mensile": [
      {
       "mese": "2025-09",
@@ -461,11 +464,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 11552
+      "n": 11557
      },
      {
       "mese": "2026-09",
-      "n": 13983
+      "n": 13989
      }
     ]
    },
@@ -497,6 +500,7 @@
    "id": "rag",
    "nome": "RAG e ricerca semantica",
    "breve": "RAG",
+   "plurale": false,
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
    "arxiv": {
     "ultimi3": 566,
@@ -572,9 +576,9 @@
     ]
    },
    "github": {
-    "ultimi3": 17614,
+    "ultimi3": 17619,
     "precedenti3": 14129,
-    "crescita": 0.2466,
+    "crescita": 0.2469,
     "mensile": [
      {
       "mese": "2025-09",
@@ -622,11 +626,11 @@
      },
      {
       "mese": "2026-08",
-      "n": 5789
+      "n": 5790
      },
      {
       "mese": "2026-09",
-      "n": 5545
+      "n": 5549
      }
     ]
    },
@@ -658,6 +662,7 @@
    "id": "valutazione",
    "nome": "Valutazione dei modelli (eval)",
    "breve": "Eval",
+   "plurale": false,
    "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
    "arxiv": {
     "ultimi3": 317,
@@ -819,6 +824,7 @@
    "id": "post-training",
    "nome": "Fine-tuning e post-training",
    "breve": "Fine-tuning",
+   "plurale": false,
    "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
    "arxiv": {
     "ultimi3": 1165,
@@ -894,9 +900,9 @@
     ]
    },
    "github": {
-    "ultimi3": 1152,
+    "ultimi3": 1153,
     "precedenti3": 997,
-    "crescita": 0.1547,
+    "crescita": 0.1557,
     "mensile": [
      {
       "mese": "2025-09",
@@ -948,7 +954,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 388
+      "n": 389
      }
     ]
    },
@@ -980,6 +986,7 @@
    "id": "context-engineering",
    "nome": "Prompt e context engineering",
    "breve": "Context engineering",
+   "plurale": false,
    "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
    "arxiv": {
     "ultimi3": 125,
@@ -1055,9 +1062,9 @@
     ]
    },
    "github": {
-    "ultimi3": 6846,
+    "ultimi3": 6845,
     "precedenti3": 5893,
-    "crescita": 0.1616,
+    "crescita": 0.1614,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1109,7 +1116,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 2051
+      "n": 2050
      }
     ]
    },
@@ -1141,6 +1148,7 @@
    "id": "sicurezza",
    "nome": "Sicurezza dei sistemi AI",
    "breve": "Sicurezza AI",
+   "plurale": false,
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
    "arxiv": {
     "ultimi3": 374,
@@ -1302,6 +1310,7 @@
    "id": "governance",
    "nome": "Governance e conformità AI",
    "breve": "Governance",
+   "plurale": false,
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
    "arxiv": {
     "ultimi3": 94,
@@ -1377,9 +1386,9 @@
     ]
    },
    "github": {
-    "ultimi3": 2469,
+    "ultimi3": 2472,
     "precedenti3": 2305,
-    "crescita": 0.071,
+    "crescita": 0.0723,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1431,7 +1440,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 779
+      "n": 782
      }
     ]
    },
@@ -1463,6 +1472,7 @@
    "id": "dati-per-ai",
    "nome": "Data engineering per l'AI",
    "breve": "Data engineering",
+   "plurale": false,
    "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
    "arxiv": {
     "ultimi3": 162,
@@ -1624,6 +1634,7 @@
    "id": "text-to-sql",
    "nome": "AI per analisi dati e BI",
    "breve": "AI per BI",
+   "plurale": false,
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
    "arxiv": {
     "ultimi3": 72,
@@ -1699,9 +1710,9 @@
     ]
    },
    "github": {
-    "ultimi3": 620,
+    "ultimi3": 621,
     "precedenti3": 348,
-    "crescita": 0.7705,
+    "crescita": 0.7734,
     "mensile": [
      {
       "mese": "2025-09",
@@ -1749,7 +1760,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 180
+      "n": 181
      },
      {
       "mese": "2026-09",
@@ -1785,6 +1796,7 @@
    "id": "vector-db",
    "nome": "Database vettoriali",
    "breve": "DB vettoriali",
+   "plurale": true,
    "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
    "arxiv": {
     "ultimi3": 33,
@@ -1946,6 +1958,7 @@
    "id": "multimodale",
    "nome": "Modelli multimodali",
    "breve": "Multimodali",
+   "plurale": true,
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
    "arxiv": {
     "ultimi3": 2178,
@@ -2021,9 +2034,9 @@
     ]
    },
    "github": {
-    "ultimi3": 1258,
+    "ultimi3": 1260,
     "precedenti3": 863,
-    "crescita": 0.4551,
+    "crescita": 0.4574,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2075,7 +2088,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 401
+      "n": 403
      }
     ]
    },
@@ -2107,6 +2120,7 @@
    "id": "llmops",
    "nome": "LLMOps e messa in produzione",
    "breve": "LLMOps",
+   "plurale": false,
    "descrizione": "Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.",
    "arxiv": {
     "ultimi3": 118,
@@ -2268,6 +2282,7 @@
    "id": "modelli-locali",
    "nome": "Modelli piccoli e locali",
    "breve": "Modelli locali",
+   "plurale": true,
    "descrizione": "Modelli aperti che girano su laptop o server propri, senza cloud.",
    "arxiv": {
     "ultimi3": 913,
@@ -2343,9 +2358,9 @@
     ]
    },
    "github": {
-    "ultimi3": 3473,
+    "ultimi3": 3474,
     "precedenti3": 2451,
-    "crescita": 0.4161,
+    "crescita": 0.4165,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2397,7 +2412,7 @@
      },
      {
       "mese": "2026-09",
-      "n": 1271
+      "n": 1272
      }
     ]
    },
@@ -2429,6 +2444,7 @@
    "id": "robotica",
    "nome": "AI fisica e robotica",
    "breve": "Robotica",
+   "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "arxiv": {
     "ultimi3": 1429,
@@ -2504,9 +2520,9 @@
     ]
    },
    "github": {
-    "ultimi3": 480,
+    "ultimi3": 481,
     "precedenti3": 224,
-    "crescita": 1.1179,
+    "crescita": 1.1223,
     "mensile": [
      {
       "mese": "2025-09",
@@ -2554,7 +2570,7 @@
      },
      {
       "mese": "2026-08",
-      "n": 139
+      "n": 140
      },
      {
       "mese": "2026-09",

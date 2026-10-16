@@ -1,8 +1,11 @@
 {
+ "versione": 2,
  "generato": "2026-10-16",
- "base_domanda": "lavoro",
- "crescita_lavoro_nello_slancio": false,
- "domanda_prec_attuale": true,
+ "soglie": {
+  "slancio": 0.0,
+  "domanda": 3.0,
+  "rapporto_max": 1.55
+ },
  "quadranti": {
   "impara-ora": "Impara ora",
   "prova": "Da provare",
@@ -16,161 +19,238 @@
    "breve": "Agenti AI",
    "plurale": true,
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
-   "arxiv": {
-    "ultimi3": 7631,
-    "precedenti3": 7442,
-    "per_mille": 184.96,
-    "crescita": 0.0698,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 1264,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 1560,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 1207,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 1147,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 1437,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 1754,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 2010,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 2048,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 2903,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 2491,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 2131,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 2463,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 3037,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 51479,
-    "precedenti3": 30073,
-    "crescita": 0.7117,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 654
-     },
-     {
-      "mese": "2025-10",
-      "n": 932
-     },
-     {
-      "mese": "2025-11",
-      "n": 1131
-     },
-     {
-      "mese": "2025-12",
-      "n": 1580
-     },
-     {
-      "mese": "2026-01",
-      "n": 2450
-     },
-     {
-      "mese": "2026-02",
-      "n": 4892
-     },
-     {
-      "mese": "2026-03",
-      "n": 8267
-     },
-     {
-      "mese": "2026-04",
-      "n": 8249
-     },
-     {
-      "mese": "2026-05",
-      "n": 9459
-     },
-     {
-      "mese": "2026-06",
-      "n": 12365
-     },
-     {
-      "mese": "2026-07",
-      "n": 16272
-     },
-     {
-      "mese": "2026-08",
-      "n": 17665
-     },
-     {
-      "mese": "2026-09",
-      "n": 17542
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 9.91,
-     "es": 54.41,
-     "fr": 4.14,
-     "gb": 19.51,
-     "it": 37.05,
-     "nl": 6.5,
-     "pl": 37.71,
-     "us": 41.86
-    },
-    "media": 26.386,
-    "media_ue": 24.953,
-    "usa": 41.861,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.8,
-   "domanda": 1.0,
+   "slancio": 0.4265,
+   "slancio_margine": [
+    0.3569,
+    0.4997
+   ],
+   "domanda": 26.386,
+   "domanda_it": 37.052,
    "quadrante": "impara-ora",
-   "slancio_prec": 0.7667,
+   "quadrante_calcolato": "impara-ora",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.4639,
    "domanda_prec": null,
-   "quadrante_prec": "impara-ora"
+   "quadrante_prec": "impara-ora",
+   "segnali": {
+    "arxiv": {
+     "variazione": 0.1486,
+     "margine": [
+      0.1076,
+      0.1911
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 1264,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 1560,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 1207,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 1147,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 1437,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 1754,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 2010,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 2048,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 2903,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 2491,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 2131,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 2463,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 3037,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 1.2003,
+     "margine": [
+      0.9295,
+      1.5091
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 654,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 932,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 1131,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 1580,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 2450,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 4892,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 8267,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 8249,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 9459,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 12365,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 16272,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 17675,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 17564,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 26.386,
+       "it": 37.052
+      }
+     ],
+     "ogni_10mila": {
+      "de": 9.91,
+      "es": 54.41,
+      "fr": 4.14,
+      "gb": 19.51,
+      "it": 37.05,
+      "nl": 6.5,
+      "pl": 37.71,
+      "us": 41.86
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Corso gratuito di Hugging Face sugli agenti",
+     "url": "https://huggingface.co/learn/agents-course/en/unit0/introduction",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Guida Anthropic: costruire agenti efficaci",
+     "url": "https://www.anthropic.com/engineering/building-effective-agents",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione OpenAI sugli agenti",
+     "url": "https://developers.openai.com/api/docs/guides/agents",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "deepseek-ai/deepseek-harness",
+     "url": "https://github.com/deepseek-ai/deepseek-harness",
+     "descrizione": "DeepSeek Harness: Everything is a Plugin.",
+     "stelle": 251142,
+     "creato": "2026-08-13"
+    },
+    {
+     "nome": "hypit-ai/hypit",
+     "url": "https://github.com/hypit-ai/hypit",
+     "descrizione": "Clone any viral video with AI agents. Not just a script, the whole workflow: swap the face, the words, the B-roll, ship 100 variants in one command, and get your 100M views.",
+     "stelle": 22833,
+     "creato": "2026-07-29"
+    },
+    {
+     "nome": "Ebony-Vinyl/dsh-our-free-model",
+     "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
+     "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
+     "stelle": 19252,
+     "creato": "2026-09-24"
+    }
+   ]
   },
   {
    "id": "coding-agenti",
@@ -178,161 +258,238 @@
    "breve": "Agenti di coding",
    "plurale": true,
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
-   "arxiv": {
-    "ultimi3": 644,
-    "precedenti3": 480,
-    "per_mille": 15.61,
-    "crescita": 0.3961,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 27,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 45,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 31,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 37,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 57,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 75,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 89,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 122,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 194,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 164,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 204,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 190,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 250,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 3486,
-    "precedenti3": 2067,
-    "crescita": 0.6848,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 22
-     },
-     {
-      "mese": "2025-10",
-      "n": 27
-     },
-     {
-      "mese": "2025-11",
-      "n": 26
-     },
-     {
-      "mese": "2025-12",
-      "n": 29
-     },
-     {
-      "mese": "2026-01",
-      "n": 86
-     },
-     {
-      "mese": "2026-02",
-      "n": 229
-     },
-     {
-      "mese": "2026-03",
-      "n": 309
-     },
-     {
-      "mese": "2026-04",
-      "n": 541
-     },
-     {
-      "mese": "2026-05",
-      "n": 694
-     },
-     {
-      "mese": "2026-06",
-      "n": 832
-     },
-     {
-      "mese": "2026-07",
-      "n": 984
-     },
-     {
-      "mese": "2026-08",
-      "n": 1361
-     },
-     {
-      "mese": "2026-09",
-      "n": 1141
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 3.01,
-     "es": 2.73,
-     "fr": 0.6,
-     "gb": 2.86,
-     "it": 0.28,
-     "nl": 1.4,
-     "pl": 0.21,
-     "us": 4.22
-    },
-    "media": 1.913,
-    "media_ue": 1.371,
-    "usa": 4.22,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.8666,
-   "domanda": 0.4,
+   "slancio": 0.8739,
+   "slancio_margine": [
+    0.5448,
+    1.2732
+   ],
+   "domanda": 1.913,
+   "domanda_it": 0.284,
    "quadrante": "prova",
-   "slancio_prec": 0.9,
+   "quadrante_calcolato": "prova",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 1.6992,
    "domanda_prec": null,
-   "quadrante_prec": "prova"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": 0.6786,
+     "margine": [
+      0.3133,
+      1.1454
+     ],
+     "peso": 0.62,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 27,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 45,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 31,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 37,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 57,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 75,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 89,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 122,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 194,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 164,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 204,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 190,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 250,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 1.242,
+     "margine": [
+      0.6391,
+      2.0665
+     ],
+     "peso": 0.38,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 22,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 27,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 26,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 29,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 86,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 229,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 309,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 541,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 694,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 832,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 984,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 1360,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 1140,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 1.913,
+       "it": 0.284
+      }
+     ],
+     "ogni_10mila": {
+      "de": 3.01,
+      "es": 2.73,
+      "fr": 0.6,
+      "gb": 2.86,
+      "it": 0.28,
+      "nl": 1.4,
+      "pl": 0.21,
+      "us": 4.22
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Documentazione ufficiale di Claude Code",
+     "url": "https://code.claude.com/docs/en/overview",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Buone pratiche per lavorare con Claude Code",
+     "url": "https://code.claude.com/docs/en/best-practices",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository di Codex CLI (OpenAI)",
+     "url": "https://github.com/openai/codex",
+     "tipo": "repository"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "ccch1mneyyy/dsh-TUI",
+     "url": "https://github.com/ccch1mneyyy/dsh-TUI",
+     "descrizione": "DSH's officially top-recommended TUI plugin — high performance, low overhead, cute pixel whale, smooth mouse interaction. One-command install via npm. / DSH 官方首推的 TUI 插件，高性能低占用，可爱像素鲸鱼，流畅鼠标交互，npm 一键安装",
+     "stelle": 4675,
+     "creato": "2026-08-13"
+    },
+    {
+     "nome": "fuxicodex/Fuxi",
+     "url": "https://github.com/fuxicodex/Fuxi",
+     "descrizione": "FuXi is a fast, self-contained AI coding agent that lives in your terminal — edit code, run commands, and drive tools, with cost-aware routing across LLM providers.",
+     "stelle": 3340,
+     "creato": "2026-08-04"
+    },
+    {
+     "nome": "zeronsh/zeron",
+     "url": "https://github.com/zeronsh/zeron",
+     "descrizione": "A native control plane for Claude Code, Codex, Cursor, Devin and other coding agents.",
+     "stelle": 3266,
+     "creato": "2026-07-20"
+    }
+   ]
   },
   {
    "id": "mcp",
@@ -340,161 +497,238 @@
    "breve": "MCP",
    "plurale": false,
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
-   "arxiv": {
-    "ultimi3": 117,
-    "precedenti3": 116,
-    "per_mille": 2.84,
-    "crescita": 0.0519,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 20,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 30,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 14,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 25,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 26,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 31,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 40,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 39,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 42,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 35,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 36,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 37,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 44,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 36554,
-    "precedenti3": 25412,
-    "crescita": 0.4384,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 905
-     },
-     {
-      "mese": "2025-10",
-      "n": 1028
-     },
-     {
-      "mese": "2025-11",
-      "n": 1086
-     },
-     {
-      "mese": "2025-12",
-      "n": 1419
-     },
-     {
-      "mese": "2026-01",
-      "n": 2129
-     },
-     {
-      "mese": "2026-02",
-      "n": 4154
-     },
-     {
-      "mese": "2026-03",
-      "n": 7249
-     },
-     {
-      "mese": "2026-04",
-      "n": 7656
-     },
-     {
-      "mese": "2026-05",
-      "n": 8595
-     },
-     {
-      "mese": "2026-06",
-      "n": 9161
-     },
-     {
-      "mese": "2026-07",
-      "n": 11008
-     },
-     {
-      "mese": "2026-08",
-      "n": 11557
-     },
-     {
-      "mese": "2026-09",
-      "n": 13989
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.74,
-     "es": 6.97,
-     "fr": 1.26,
-     "gb": 2.11,
-     "it": 2.63,
-     "nl": 0.4,
-     "pl": 7.09,
-     "us": 5.79
-    },
-    "media": 3.373,
-    "media_ue": 3.181,
-    "usa": 5.787,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.6666,
-   "domanda": 0.6,
+   "slancio": 0.3078,
+   "slancio_margine": [
+    0.0811,
+    0.582
+   ],
+   "domanda": 3.373,
+   "domanda_it": 2.631,
    "quadrante": "impara-ora",
-   "slancio_prec": 0.3667,
+   "quadrante_calcolato": "impara-ora",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.1308,
    "domanda_prec": null,
-   "quadrante_prec": "consolida"
+   "quadrante_prec": "impara-ora",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.0391,
+     "margine": [
+      -0.2781,
+      0.2791
+     ],
+     "peso": 0.443,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 20,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 30,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 14,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 25,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 26,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 31,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 40,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 39,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 42,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 35,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 36,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 37,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 44,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.6709,
+     "margine": [
+      0.2948,
+      1.1563
+     ],
+     "peso": 0.557,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 905,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 1028,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 1086,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 1419,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 2129,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 4154,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 7249,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 7656,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 8595,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 9161,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 11008,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 11562,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 14003,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 3.373,
+       "it": 2.631
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.74,
+      "es": 6.97,
+      "fr": 1.26,
+      "gb": 2.11,
+      "it": 2.63,
+      "nl": 0.4,
+      "pl": 7.09,
+      "us": 5.79
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Documentazione ufficiale di MCP: introduzione",
+     "url": "https://modelcontextprotocol.io/docs/getting-started/intro",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Corso gratuito di Hugging Face su MCP",
+     "url": "https://huggingface.co/learn/mcp-course/unit0/introduction",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository dei server MCP di riferimento",
+     "url": "https://github.com/modelcontextprotocol/servers",
+     "tipo": "repository"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "miuuyy/codex-chatgpt-web",
+     "url": "https://github.com/miuuyy/codex-chatgpt-web",
+     "descrizione": "Use ChatGPT Web (including Pro) as a native model in Codex — with context, tools, streaming and images, without using Codex quota.",
+     "stelle": 14402,
+     "creato": "2026-07-26"
+    },
+    {
+     "nome": "DuarteSantos8/openGym",
+     "url": "https://github.com/DuarteSantos8/openGym",
+     "descrizione": "Self-hosted gym & body-weight tracker — plan routines, log workouts (supersets, warm-ups, cardio), see which muscles are trained, fatigued or detrained, import from FitNotes/Strong/Hevy, passkey logi…",
+     "stelle": 12836,
+     "creato": "2026-07-18"
+    },
+    {
+     "nome": "rehan-remade/universal-modder",
+     "url": "https://github.com/rehan-remade/universal-modder",
+     "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
+     "stelle": 8067,
+     "creato": "2026-09-30"
+    }
+   ]
   },
   {
    "id": "rag",
@@ -502,161 +736,244 @@
    "breve": "RAG",
    "plurale": false,
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
-   "arxiv": {
-    "ultimi3": 566,
-    "precedenti3": 740,
-    "per_mille": 13.72,
-    "crescita": -0.2004,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 188,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 259,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 172,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 160,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 244,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 185,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 220,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 261,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 263,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 216,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 163,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 207,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 196,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 17619,
-    "precedenti3": 14129,
-    "crescita": 0.2469,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 828
-     },
-     {
-      "mese": "2025-10",
-      "n": 954
-     },
-     {
-      "mese": "2025-11",
-      "n": 1167
-     },
-     {
-      "mese": "2025-12",
-      "n": 1331
-     },
-     {
-      "mese": "2026-01",
-      "n": 1614
-     },
-     {
-      "mese": "2026-02",
-      "n": 2138
-     },
-     {
-      "mese": "2026-03",
-      "n": 3474
-     },
-     {
-      "mese": "2026-04",
-      "n": 3694
-     },
-     {
-      "mese": "2026-05",
-      "n": 4611
-     },
-     {
-      "mese": "2026-06",
-      "n": 5824
-     },
-     {
-      "mese": "2026-07",
-      "n": 6280
-     },
-     {
-      "mese": "2026-08",
-      "n": 5790
-     },
-     {
-      "mese": "2026-09",
-      "n": 5549
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 1.65,
-     "es": 18.88,
-     "fr": 1.69,
-     "gb": 4.88,
-     "it": 6.12,
-     "nl": 1.7,
-     "pl": 11.71,
-     "us": 17.21
-    },
-    "media": 7.98,
-    "media_ue": 6.959,
-    "usa": 17.209,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.2334,
-   "domanda": 0.7333,
-   "quadrante": "consolida",
-   "slancio_prec": 0.3667,
+   "slancio": -0.0253,
+   "slancio_margine": [
+    -0.1114,
+    0.0692
+   ],
+   "domanda": 7.98,
+   "domanda_it": 6.116,
+   "quadrante": "impara-ora",
+   "quadrante_calcolato": "consolida",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.1441,
    "domanda_prec": null,
-   "quadrante_prec": "consolida"
+   "quadrante_prec": "impara-ora",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.3941,
+     "margine": [
+      -0.5073,
+      -0.2549
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 188,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 259,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 172,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 160,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 244,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 185,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 220,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 261,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 263,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 216,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 163,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 207,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 196,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.2363,
+     "margine": [
+      0.127,
+      0.3561
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 828,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 954,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 1167,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 1331,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 1614,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 2138,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 3474,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 3694,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 4611,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 5824,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 6280,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 5800,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 5552,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 7.98,
+       "it": 6.116
+      }
+     ],
+     "ogni_10mila": {
+      "de": 1.65,
+      "es": 18.88,
+      "fr": 1.69,
+      "gb": 4.88,
+      "it": 6.12,
+      "nl": 1.7,
+      "pl": 11.71,
+      "us": 17.21
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Introduzione al RAG nella documentazione LlamaIndex",
+     "url": "https://developers.llamaindex.ai/python/framework/understanding/rag/",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Corso gratuito DeepLearning.AI sul RAG avanzato",
+     "url": "https://www.deeplearning.ai/courses/building-evaluating-advanced-rag",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Ricetta Hugging Face: RAG avanzato",
+     "url": "https://huggingface.co/learn/cookbook/advanced_rag",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Guida OpenAI al retrieval",
+     "url": "https://developers.openai.com/api/docs/guides/retrieval",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "deeplethe/utopia",
+     "url": "https://github.com/deeplethe/utopia",
+     "descrizione": "World's first open-source enterprise world model.",
+     "stelle": 8388,
+     "creato": "2026-08-07"
+    },
+    {
+     "nome": "yuezhiai/jonex",
+     "url": "https://github.com/yuezhiai/jonex",
+     "descrizione": "All-in-One Multimodal Parsing Engine + Ontology-Powered, LLM Wiki-Driven AI-Ready Knowledge Engine",
+     "stelle": 1385,
+     "creato": "2026-07-19"
+    },
+    {
+     "nome": "youngyangyang04/llm-master",
+     "url": "https://github.com/youngyangyang04/llm-master",
+     "descrizione": "大模型（LLM）全栈学习路线与中文教程🔥：覆盖 Prompt Engineering、RAG、AI Agent、MCP、微调、模型部署、Transformer、AI 编程与大厂面试，从入门到生产实践。",
+     "stelle": 1314,
+     "creato": "2026-09-12"
+    }
+   ]
   },
   {
    "id": "valutazione",
@@ -664,161 +981,244 @@
    "breve": "Eval",
    "plurale": false,
    "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
-   "arxiv": {
-    "ultimi3": 317,
-    "precedenti3": 373,
-    "per_mille": 7.68,
-    "crescita": -0.1113,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 81,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 90,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 73,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 77,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 105,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 91,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 93,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 111,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 153,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 109,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 88,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 114,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 115,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 3876,
-    "precedenti3": 1687,
-    "crescita": 1.2937,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 33
-     },
-     {
-      "mese": "2025-10",
-      "n": 51
-     },
-     {
-      "mese": "2025-11",
-      "n": 45
-     },
-     {
-      "mese": "2025-12",
-      "n": 65
-     },
-     {
-      "mese": "2026-01",
-      "n": 110
-     },
-     {
-      "mese": "2026-02",
-      "n": 140
-     },
-     {
-      "mese": "2026-03",
-      "n": 266
-     },
-     {
-      "mese": "2026-04",
-      "n": 379
-     },
-     {
-      "mese": "2026-05",
-      "n": 579
-     },
-     {
-      "mese": "2026-06",
-      "n": 729
-     },
-     {
-      "mese": "2026-07",
-      "n": 1064
-     },
-     {
-      "mese": "2026-08",
-      "n": 1382
-     },
-     {
-      "mese": "2026-09",
-      "n": 1430
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.13,
-     "es": 2.32,
-     "fr": 0.25,
-     "gb": 0.75,
-     "it": 0.0,
-     "nl": 0.0,
-     "pl": 1.34,
-     "us": 2.29
-    },
-    "media": 0.885,
-    "media_ue": 0.673,
-    "usa": 2.29,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.6666,
-   "domanda": 0.3333,
+   "slancio": 0.4703,
+   "slancio_margine": [
+    0.2868,
+    0.68
+   ],
+   "domanda": 0.885,
+   "domanda_it": 0.0,
    "quadrante": "prova",
-   "slancio_prec": 0.7,
+   "quadrante_calcolato": "prova",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 1.268,
    "domanda_prec": null,
-   "quadrante_prec": "prova"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.2179,
+     "margine": [
+      -0.3396,
+      -0.0737
+     ],
+     "peso": 0.621,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 81,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 90,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 73,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 77,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 105,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 91,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 93,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 111,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 153,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 109,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 88,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 114,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 115,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 3.1359,
+     "margine": [
+      2.3306,
+      4.1358
+     ],
+     "peso": 0.379,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 33,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 51,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 45,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 65,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 110,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 140,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 266,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 379,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 579,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 729,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 1064,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 1384,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 1437,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 0.885,
+       "it": 0.0
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.13,
+      "es": 2.32,
+      "fr": 0.25,
+      "gb": 0.75,
+      "it": 0.0,
+      "nl": 0.0,
+      "pl": 1.34,
+      "us": 2.29
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Anthropic: definire criteri di successo e valutazioni",
+     "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Guida OpenAI alle valutazioni (evals)",
+     "url": "https://developers.openai.com/api/docs/guides/evals",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository lm-evaluation-harness di EleutherAI",
+     "url": "https://github.com/EleutherAI/lm-evaluation-harness",
+     "tipo": "repository"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione di Hugging Face Evaluate",
+     "url": "https://huggingface.co/docs/evaluate/index",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "xinxuxin/keystone-bench",
+     "url": "https://github.com/xinxuxin/keystone-bench",
+     "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
+     "stelle": 757,
+     "creato": "2026-09-07"
+    },
+    {
+     "nome": "v-modal/awesome-jev-tools",
+     "url": "https://github.com/v-modal/awesome-jev-tools",
+     "descrizione": "A curated list of tools  built for Jev — TypeSafe AI's System One model for typed decisions.",
+     "stelle": 743,
+     "creato": "2026-09-19"
+    },
+    {
+     "nome": "superwesleyhys-ux/factcircuit",
+     "url": "https://github.com/superwesleyhys-ux/factcircuit",
+     "descrizione": "FactCircuit: an auditable claim-and-evidence verification loop with immutable provenance, staged checks, bounded retrieval, and reproducible evaluation.",
+     "stelle": 713,
+     "creato": "2026-09-06"
+    }
+   ]
   },
   {
    "id": "post-training",
@@ -826,161 +1226,238 @@
    "breve": "Fine-tuning",
    "plurale": false,
    "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
-   "arxiv": {
-    "ultimi3": 1165,
-    "precedenti3": 1169,
-    "per_mille": 28.24,
-    "crescita": 0.0398,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 232,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 285,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 193,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 189,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 263,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 314,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 287,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 293,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 512,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 364,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 293,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 363,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 509,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 1153,
-    "precedenti3": 997,
-    "crescita": 0.1557,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 91
-     },
-     {
-      "mese": "2025-10",
-      "n": 104
-     },
-     {
-      "mese": "2025-11",
-      "n": 128
-     },
-     {
-      "mese": "2025-12",
-      "n": 115
-     },
-     {
-      "mese": "2026-01",
-      "n": 162
-     },
-     {
-      "mese": "2026-02",
-      "n": 175
-     },
-     {
-      "mese": "2026-03",
-      "n": 299
-     },
-     {
-      "mese": "2026-04",
-      "n": 281
-     },
-     {
-      "mese": "2026-05",
-      "n": 319
-     },
-     {
-      "mese": "2026-06",
-      "n": 397
-     },
-     {
-      "mese": "2026-07",
-      "n": 382
-     },
-     {
-      "mese": "2026-08",
-      "n": 382
-     },
-     {
-      "mese": "2026-09",
-      "n": 389
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.07,
-     "es": 0.61,
-     "fr": 0.25,
-     "gb": 0.18,
-     "it": 0.28,
-     "nl": 0.0,
-     "pl": 0.31,
-     "us": 0.44
-    },
-    "media": 0.267,
-    "media_ue": 0.253,
-    "usa": 0.441,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.4,
-   "domanda": 0.2,
-   "quadrante": "osserva",
-   "slancio_prec": 0.3666,
+   "slancio": 0.1401,
+   "slancio_margine": [
+    0.0112,
+    0.2855
+   ],
+   "domanda": 0.267,
+   "domanda_it": 0.284,
+   "quadrante": "prova",
+   "quadrante_calcolato": "prova",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.0702,
    "domanda_prec": null,
-   "quadrante_prec": "osserva"
+   "quadrante_prec": "osserva",
+   "segnali": {
+    "arxiv": {
+     "variazione": 0.1684,
+     "margine": [
+      -0.0489,
+      0.4353
+     ],
+     "peso": 0.34,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 232,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 285,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 193,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 189,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 263,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 314,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 287,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 293,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 512,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 364,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 293,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 363,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 509,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.1259,
+     "margine": [
+      -0.0287,
+      0.305
+     ],
+     "peso": 0.66,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 91,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 104,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 128,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 115,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 162,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 175,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 299,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 281,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 319,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 397,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 382,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 383,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 389,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 0.267,
+       "it": 0.284
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.07,
+      "es": 0.61,
+      "fr": 0.25,
+      "gb": 0.18,
+      "it": 0.28,
+      "nl": 0.0,
+      "pl": 0.31,
+      "us": 0.44
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Corso Hugging Face: supervised fine-tuning",
+     "url": "https://huggingface.co/learn/llm-course/chapter11/1",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione di PEFT (LoRA e simili)",
+     "url": "https://huggingface.co/docs/peft/index",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione di TRL per il post-training",
+     "url": "https://huggingface.co/docs/trl/index",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "whitecircle/halo",
+     "url": "https://github.com/whitecircle/halo",
+     "descrizione": "Halo is an open-source framework built by White Circle for training large language and multimodal models",
+     "stelle": 824,
+     "creato": "2026-08-26"
+    },
+    {
+     "nome": "calmrocks/ai-engineer-notebooks",
+     "url": "https://github.com/calmrocks/ai-engineer-notebooks",
+     "descrizione": "Hands-on, framework-free Colab notebooks for the AI Engineer / Forward Deployed Engineer (FDE) skill set — model APIs, structured output, tool calling, RAG, evals-as-the-spine, agents (loop from scra…",
+     "stelle": 700,
+     "creato": "2026-08-11"
+    },
+    {
+     "nome": "modelscope/ms-cookbook",
+     "url": "https://github.com/modelscope/ms-cookbook",
+     "descrizione": "魔搭紫皮书｜ModelScope Cookbook：面向开发者的开源模型应用实战指南，覆盖模型选型、推理、微调、评测、RAG、Agent 与 AIGC，从跑通第一个模型到构建实际应用。",
+     "stelle": 484,
+     "creato": "2026-09-11"
+    }
+   ]
   },
   {
    "id": "context-engineering",
@@ -988,161 +1465,244 @@
    "breve": "Context engineering",
    "plurale": false,
    "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
-   "arxiv": {
-    "ultimi3": 125,
-    "precedenti3": 195,
-    "per_mille": 3.03,
-    "crescita": -0.3218,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 72,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 84,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 56,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 55,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 64,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 47,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 65,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 68,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 71,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 56,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 46,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 44,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 35,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 6845,
-    "precedenti3": 5893,
-    "crescita": 0.1614,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 208
-     },
-     {
-      "mese": "2025-10",
-      "n": 230
-     },
-     {
-      "mese": "2025-11",
-      "n": 271
-     },
-     {
-      "mese": "2025-12",
-      "n": 368
-     },
-     {
-      "mese": "2026-01",
-      "n": 486
-     },
-     {
-      "mese": "2026-02",
-      "n": 680
-     },
-     {
-      "mese": "2026-03",
-      "n": 1441
-     },
-     {
-      "mese": "2026-04",
-      "n": 1757
-     },
-     {
-      "mese": "2026-05",
-      "n": 1974
-     },
-     {
-      "mese": "2026-06",
-      "n": 2162
-     },
-     {
-      "mese": "2026-07",
-      "n": 2476
-     },
-     {
-      "mese": "2026-08",
-      "n": 2319
-     },
-     {
-      "mese": "2026-09",
-      "n": 2050
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 17.7,
-     "es": 31.5,
-     "fr": 4.97,
-     "gb": 7.96,
-     "it": 10.17,
-     "nl": 3.4,
-     "pl": 19.83,
-     "us": 17.74
-    },
-    "media": 14.157,
-    "media_ue": 14.594,
-    "usa": 17.736,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.1333,
-   "domanda": 0.8667,
+   "slancio": -0.2565,
+   "slancio_margine": [
+    -0.3343,
+    -0.1694
+   ],
+   "domanda": 14.157,
+   "domanda_it": 10.17,
    "quadrante": "consolida",
-   "slancio_prec": 0.1333,
+   "quadrante_calcolato": "consolida",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": -0.0482,
    "domanda_prec": null,
-   "quadrante_prec": "consolida"
+   "quadrante_prec": "impara-ora",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.5832,
+     "margine": [
+      -0.6781,
+      -0.4604
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 72,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 84,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 56,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 55,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 64,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 47,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 65,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 68,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 71,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 56,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 46,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 44,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 35,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": -0.0069,
+     "margine": [
+      -0.1052,
+      0.1023
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 208,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 230,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 271,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 368,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 486,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 680,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 1441,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 1757,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 1974,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 2162,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 2476,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 2319,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 2052,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 14.157,
+       "it": 10.17
+      }
+     ],
+     "ogni_10mila": {
+      "de": 17.7,
+      "es": 31.5,
+      "fr": 4.97,
+      "gb": 7.96,
+      "it": 10.17,
+      "nl": 3.4,
+      "pl": 19.83,
+      "us": 17.74
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "it",
+     "titolo": "Guida al prompt engineering (Prompt Engineering Guide)",
+     "url": "https://www.promptingguide.ai/it",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Anthropic: panoramica sul prompt engineering",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Anthropic: context engineering per agenti",
+     "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Guida OpenAI al prompt engineering",
+     "url": "https://developers.openai.com/api/docs/guides/prompt-engineering",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "Leonxlnx/unlazy",
+     "url": "https://github.com/Leonxlnx/unlazy",
+     "descrizione": "Anti-laziness skill for AI agents. Core: the Depth Tree method, which splits a task N layers deep and gives every leaf the full time budget of the whole task, so effort multiplies with depth. Grounde…",
+     "stelle": 3963,
+     "creato": "2026-08-09"
+    },
+    {
+     "nome": "yanliudesign/mono-color-skill",
+     "url": "https://github.com/yanliudesign/mono-color-skill",
+     "descrizione": "One-ink editorial print image skill — warm paper, halftone photography, active negative space, and restrained typography.",
+     "stelle": 3443,
+     "creato": "2026-08-19"
+    },
+    {
+     "nome": "Nanako0129/sepia",
+     "url": "https://github.com/Nanako0129/sepia",
+     "descrizione": "De-AI writing skill for any Agent Skills-compatible agent (77+ via the Skills CLI), with native plugins for Claude Code, Codex, Grok Build, and Antigravity. Narrative-architecture repair for fiction,…",
+     "stelle": 3197,
+     "creato": "2026-08-28"
+    }
+   ]
   },
   {
    "id": "sicurezza",
@@ -1150,161 +1710,238 @@
    "breve": "Sicurezza AI",
    "plurale": false,
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
-   "arxiv": {
-    "ultimi3": 374,
-    "precedenti3": 480,
-    "per_mille": 9.06,
-    "crescita": -0.1847,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 91,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 114,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 81,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 77,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 103,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 115,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 117,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 135,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 189,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 156,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 102,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 126,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 146,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 2453,
-    "precedenti3": 1734,
-    "crescita": 0.4135,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 44
-     },
-     {
-      "mese": "2025-10",
-      "n": 48
-     },
-     {
-      "mese": "2025-11",
-      "n": 54
-     },
-     {
-      "mese": "2025-12",
-      "n": 118
-     },
-     {
-      "mese": "2026-01",
-      "n": 136
-     },
-     {
-      "mese": "2026-02",
-      "n": 353
-     },
-     {
-      "mese": "2026-03",
-      "n": 536
-     },
-     {
-      "mese": "2026-04",
-      "n": 484
-     },
-     {
-      "mese": "2026-05",
-      "n": 598
-     },
-     {
-      "mese": "2026-06",
-      "n": 652
-     },
-     {
-      "mese": "2026-07",
-      "n": 773
-     },
-     {
-      "mese": "2026-08",
-      "n": 808
-     },
-     {
-      "mese": "2026-09",
-      "n": 872
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.09,
-     "es": 0.3,
-     "fr": 0.07,
-     "gb": 0.24,
-     "it": 1.42,
-     "nl": 0.0,
-     "pl": 0.21,
-     "us": 0.49
-    },
-    "media": 0.352,
-    "media_ue": 0.348,
-    "usa": 0.487,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.3667,
-   "domanda": 0.2667,
-   "quadrante": "osserva",
-   "slancio_prec": 0.3333,
+   "slancio": 0.0374,
+   "slancio_margine": [
+    -0.075,
+    0.1636
+   ],
+   "domanda": 0.352,
+   "domanda_it": 1.422,
+   "quadrante": "prova",
+   "quadrante_calcolato": "prova",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.1466,
    "domanda_prec": null,
-   "quadrante_prec": "osserva"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.2586,
+     "margine": [
+      -0.3638,
+      -0.1361
+     ],
+     "peso": 0.563,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 91,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 114,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 81,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 77,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 103,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 115,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 117,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 135,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 189,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 156,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 102,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 126,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 146,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.5991,
+     "margine": [
+      0.3443,
+      0.9023
+     ],
+     "peso": 0.437,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 44,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 48,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 54,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 118,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 136,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 353,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 536,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 484,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 598,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 652,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 773,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 808,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 876,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 0.352,
+       "it": 1.422
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.09,
+      "es": 0.3,
+      "fr": 0.07,
+      "gb": 0.24,
+      "it": 1.42,
+      "nl": 0.0,
+      "pl": 0.21,
+      "us": 0.49
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "OWASP Top 10 per applicazioni LLM",
+     "url": "https://genai.owasp.org/llm-top-10/",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "MITRE ATLAS: tattiche e tecniche contro l'AI",
+     "url": "https://atlas.mitre.org/",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "NIST AI Risk Management Framework",
+     "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "Kritt-ai/open-kritt",
+     "url": "https://github.com/Kritt-ai/open-kritt",
+     "descrizione": "Open-source, self-hosted AI vulnerability research tool that orchestrates agents to find and validate security issues in code.",
+     "stelle": 2298,
+     "creato": "2026-07-20"
+    },
+    {
+     "nome": "DrHazemAli/enterprise-system-design",
+     "url": "https://github.com/DrHazemAli/enterprise-system-design",
+     "descrizione": "A source-grounded course and architectural reference for engineers designing systems that must survive real traffic, partial failure, security review, and changing requirements, spanning enterprise s…",
+     "stelle": 642,
+     "creato": "2026-08-12"
+    },
+    {
+     "nome": "0sec-labs/0",
+     "url": "https://github.com/0sec-labs/0",
+     "descrizione": "The multiplayer AI offensive security OS - open, self-improving, extensible. Find, verify, and fix vulnerabilities.",
+     "stelle": 512,
+     "creato": "2026-08-19"
+    }
+   ]
   },
   {
    "id": "governance",
@@ -1312,161 +1949,238 @@
    "breve": "Governance",
    "plurale": false,
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
-   "arxiv": {
-    "ultimi3": 94,
-    "precedenti3": 109,
-    "per_mille": 2.28,
-    "crescita": -0.094,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 26,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 22,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 13,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 22,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 23,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 26,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 36,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 44,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 38,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 27,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 34,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 29,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 31,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 2472,
-    "precedenti3": 2305,
-    "crescita": 0.0723,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 26
-     },
-     {
-      "mese": "2025-10",
-      "n": 39
-     },
-     {
-      "mese": "2025-11",
-      "n": 61
-     },
-     {
-      "mese": "2025-12",
-      "n": 110
-     },
-     {
-      "mese": "2026-01",
-      "n": 153
-     },
-     {
-      "mese": "2026-02",
-      "n": 303
-     },
-     {
-      "mese": "2026-03",
-      "n": 490
-     },
-     {
-      "mese": "2026-04",
-      "n": 672
-     },
-     {
-      "mese": "2026-05",
-      "n": 882
-     },
-     {
-      "mese": "2026-06",
-      "n": 751
-     },
-     {
-      "mese": "2026-07",
-      "n": 784
-     },
-     {
-      "mese": "2026-08",
-      "n": 906
-     },
-     {
-      "mese": "2026-09",
-      "n": 782
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 1.16,
-     "es": 2.83,
-     "fr": 0.18,
-     "gb": 4.08,
-     "it": 0.64,
-     "nl": 1.7,
-     "pl": 2.36,
-     "us": 8.27
-    },
-    "media": 2.653,
-    "media_ue": 1.478,
-    "usa": 8.273,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.2334,
-   "domanda": 0.4667,
+   "slancio": -0.2414,
+   "slancio_margine": [
+    -0.4062,
+    -0.0309
+   ],
+   "domanda": 2.653,
+   "domanda_it": 0.64,
    "quadrante": "osserva",
-   "slancio_prec": 0.1,
+   "quadrante_calcolato": "osserva",
+   "incerto": true,
+   "incerto_perche": "pochi paper (34 al mese) e repository nuovi con andamento irregolare",
+   "slancio_prec": -0.1044,
    "domanda_prec": null,
-   "quadrante_prec": "osserva"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.4026,
+     "margine": [
+      -0.5911,
+      -0.1273
+     ],
+     "peso": 0.418,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 26,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 22,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 13,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 22,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 23,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 26,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 36,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 44,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 38,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 27,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 34,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 29,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 31,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": -0.0997,
+     "margine": [
+      -0.3469,
+      0.2412
+     ],
+     "peso": 0.582,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 26,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 39,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 61,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 110,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 153,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 303,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 490,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 672,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 882,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 751,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 784,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 906,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 783,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 2.653,
+       "it": 0.64
+      }
+     ],
+     "ogni_10mila": {
+      "de": 1.16,
+      "es": 2.83,
+      "fr": 0.18,
+      "gb": 4.08,
+      "it": 0.64,
+      "nl": 1.7,
+      "pl": 2.36,
+      "us": 8.27
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "it",
+     "titolo": "Commissione europea: quadro normativo sull'AI",
+     "url": "https://digital-strategy.ec.europa.eu/it/policies/regulatory-framework-ai",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "it",
+     "titolo": "Commissione europea: governance dell'AI Act",
+     "url": "https://digital-strategy.ec.europa.eu/it/policies/ai-act-governance-and-enforcement",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "NIST AI Risk Management Framework",
+     "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "decionis/agent-safe-pipeline",
+     "url": "https://github.com/decionis/agent-safe-pipeline",
+     "descrizione": "An execution-authority gateway for AI agents and APIs. It intercepts consequential HTTP actions, asks Decionis whether they are authorized, and forwards exactly the authorized request once on a singl…",
+     "stelle": 688,
+     "creato": "2026-08-13"
+    },
+    {
+     "nome": "DrHazemAli/enterprise-system-design",
+     "url": "https://github.com/DrHazemAli/enterprise-system-design",
+     "descrizione": "A source-grounded course and architectural reference for engineers designing systems that must survive real traffic, partial failure, security review, and changing requirements, spanning enterprise s…",
+     "stelle": 642,
+     "creato": "2026-08-12"
+    },
+    {
+     "nome": "agents-universe/agents-universe",
+     "url": "https://github.com/agents-universe/agents-universe",
+     "descrizione": "不是问答机器人，而是能真正干活的数字分身。共享智能体，共享项目上下文，让项目所有成员一起协同工作。同时智能体会像人一样通过资料或者工作抽象和总结经验到项目上下文中",
+     "stelle": 627,
+     "creato": "2026-09-10"
+    }
+   ]
   },
   {
    "id": "dati-per-ai",
@@ -1474,161 +2188,238 @@
    "breve": "Data engineering",
    "plurale": false,
    "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
-   "arxiv": {
-    "ultimi3": 162,
-    "precedenti3": 242,
-    "per_mille": 3.93,
-    "crescita": -0.2946,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 86,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 90,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 73,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 53,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 54,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 78,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 90,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 87,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 70,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 85,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 45,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 41,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 76,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 5904,
-    "precedenti3": 4281,
-    "crescita": 0.3787,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 277
-     },
-     {
-      "mese": "2025-10",
-      "n": 364
-     },
-     {
-      "mese": "2025-11",
-      "n": 416
-     },
-     {
-      "mese": "2025-12",
-      "n": 515
-     },
-     {
-      "mese": "2026-01",
-      "n": 651
-     },
-     {
-      "mese": "2026-02",
-      "n": 798
-     },
-     {
-      "mese": "2026-03",
-      "n": 1209
-     },
-     {
-      "mese": "2026-04",
-      "n": 1176
-     },
-     {
-      "mese": "2026-05",
-      "n": 1437
-     },
-     {
-      "mese": "2026-06",
-      "n": 1668
-     },
-     {
-      "mese": "2026-07",
-      "n": 1937
-     },
-     {
-      "mese": "2026-08",
-      "n": 2025
-     },
-     {
-      "mese": "2026-09",
-      "n": 1942
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.73,
-     "es": 10.6,
-     "fr": 0.64,
-     "gb": 2.82,
-     "it": 1.49,
-     "nl": 1.9,
-     "pl": 1.75,
-     "us": 4.34
-    },
-    "media": 3.033,
-    "media_ue": 2.852,
-    "usa": 4.34,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.2666,
-   "domanda": 0.5333,
+   "slancio": 0.0912,
+   "slancio_margine": [
+    -0.0844,
+    0.3005
+   ],
+   "domanda": 3.033,
+   "domanda_it": 1.493,
    "quadrante": "consolida",
-   "slancio_prec": 0.2334,
+   "quadrante_calcolato": "impara-ora",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": -0.0494,
    "domanda_prec": null,
-   "quadrante_prec": "consolida"
+   "quadrante_prec": "consolida",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.4079,
+     "margine": [
+      -0.6259,
+      -0.0626
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 86,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 90,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 73,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 53,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 54,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 78,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 90,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 87,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 70,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 85,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 45,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 41,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 76,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.4812,
+     "margine": [
+      0.3025,
+      0.6845
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 277,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 364,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 416,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 515,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 651,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 798,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 1209,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 1176,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 1437,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 1668,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 1937,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 2026,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 1945,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 3.033,
+       "it": 1.493
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.73,
+      "es": 10.6,
+      "fr": 0.64,
+      "gb": 2.82,
+      "it": 1.49,
+      "nl": 1.9,
+      "pl": 1.75,
+      "us": 4.34
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Data Engineering Zoomcamp (corso gratuito)",
+     "url": "https://github.com/DataTalksClub/data-engineering-zoomcamp",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione di Hugging Face Datasets",
+     "url": "https://huggingface.co/docs/datasets/index",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Tutorial ufficiali di Apache Airflow",
+     "url": "https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html",
+     "tipo": "guida"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "Hebbian-Robotics/hflow",
+     "url": "https://github.com/Hebbian-Robotics/hflow",
+     "descrizione": "SDK for robotics teams to verify the quality of their data used for AI model training.",
+     "stelle": 298,
+     "creato": "2026-08-18"
+    },
+    {
+     "nome": "schumannx/full-stack-data-engineering",
+     "url": "https://github.com/schumannx/full-stack-data-engineering",
+     "descrizione": "End-to-end streaming data platform on AWS: Kafka → Iceberg lake → Kimball model → Athena, orchestrated with Airflow 3. Terraform, Glue PySpark, dbt.",
+     "stelle": 145,
+     "creato": "2026-08-17"
+    },
+    {
+     "nome": "ashishsinha1602/schemagate",
+     "url": "https://github.com/ashishsinha1602/schemagate",
+     "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
+     "stelle": 104,
+     "creato": "2026-09-06"
+    }
+   ]
   },
   {
    "id": "text-to-sql",
@@ -1636,161 +2427,244 @@
    "breve": "AI per BI",
    "plurale": false,
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
-   "arxiv": {
-    "ultimi3": 72,
-    "precedenti3": 76,
-    "per_mille": 1.75,
-    "crescita": -0.0082,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 17,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 30,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 17,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 13,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 21,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 13,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 14,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 20,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 24,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 32,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 17,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 33,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 22,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 621,
-    "precedenti3": 348,
-    "crescita": 0.7734,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 15
-     },
-     {
-      "mese": "2025-10",
-      "n": 20
-     },
-     {
-      "mese": "2025-11",
-      "n": 19
-     },
-     {
-      "mese": "2025-12",
-      "n": 26
-     },
-     {
-      "mese": "2026-01",
-      "n": 39
-     },
-     {
-      "mese": "2026-02",
-      "n": 46
-     },
-     {
-      "mese": "2026-03",
-      "n": 97
-     },
-     {
-      "mese": "2026-04",
-      "n": 67
-     },
-     {
-      "mese": "2026-05",
-      "n": 103
-     },
-     {
-      "mese": "2026-06",
-      "n": 178
-     },
-     {
-      "mese": "2026-07",
-      "n": 198
-     },
-     {
-      "mese": "2026-08",
-      "n": 181
-     },
-     {
-      "mese": "2026-09",
-      "n": 242
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.0,
-     "es": 0.3,
-     "fr": 0.08,
-     "gb": 0.09,
-     "it": 0.14,
-     "nl": 0.0,
-     "pl": 0.21,
-     "us": 0.18
-    },
-    "media": 0.125,
-    "media_ue": 0.122,
-    "usa": 0.176,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.7,
-   "domanda": 0.0,
+   "slancio": 1.1142,
+   "slancio_margine": [
+    0.6384,
+    1.7281
+   ],
+   "domanda": 0.125,
+   "domanda_it": 0.142,
    "quadrante": "prova",
-   "slancio_prec": 0.9667,
+   "quadrante_calcolato": "prova",
+   "incerto": true,
+   "incerto_perche": "pochi paper (25 al mese) e repository nuovi con andamento irregolare",
+   "slancio_prec": 1.1191,
    "domanda_prec": null,
-   "quadrante_prec": "prova"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": 0.1287,
+     "margine": [
+      -0.3675,
+      1.0142
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 17,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 30,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 17,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 13,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 21,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 13,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 14,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 20,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 24,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 32,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 17,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 33,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 22,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 1.8935,
+     "margine": [
+      1.2539,
+      2.7145
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 15,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 20,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 19,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 26,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 39,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 46,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 97,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 67,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 103,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 178,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 198,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 181,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 242,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 0.125,
+       "it": 0.142
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.0,
+      "es": 0.3,
+      "fr": 0.08,
+      "gb": 0.09,
+      "it": 0.14,
+      "nl": 0.0,
+      "pl": 0.21,
+      "us": 0.18
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Spider: benchmark di riferimento per text-to-SQL",
+     "url": "https://yale-lily.github.io/spider",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "BIRD: benchmark text-to-SQL su database reali",
+     "url": "https://bird-bench.github.io/",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Guida LangChain: costruire un agente SQL",
+     "url": "https://docs.langchain.com/oss/python/langchain/sql-agent",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository sql-eval per valutare il text-to-SQL",
+     "url": "https://github.com/defog-ai/sql-eval",
+     "tipo": "repository"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "Sheltercosmo/jev4pg",
+     "url": "https://github.com/Sheltercosmo/jev4pg",
+     "descrizione": "Established strong JEV based natural language to SQL performance and well-covered semantic operators for PostgreSQL(PG) with optimized cost and latency. Reusable evidence, with native execution, para…",
+     "stelle": 278,
+     "creato": "2026-09-23"
+    },
+    {
+     "nome": "apowerb/apowerb",
+     "url": "https://github.com/apowerb/apowerb",
+     "descrizione": "The open-source agentic framework to build, orchestrate, and operate production AI agents.",
+     "stelle": 121,
+     "creato": "2026-07-29"
+    },
+    {
+     "nome": "ashishsinha1602/schemagate",
+     "url": "https://github.com/ashishsinha1602/schemagate",
+     "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
+     "stelle": 104,
+     "creato": "2026-09-06"
+    }
+   ]
   },
   {
    "id": "vector-db",
@@ -1798,161 +2672,244 @@
    "breve": "DB vettoriali",
    "plurale": true,
    "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
-   "arxiv": {
-    "ultimi3": 33,
-    "precedenti3": 58,
-    "per_mille": 0.8,
-    "crescita": -0.3707,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 17,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 15,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 11,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 14,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 17,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 24,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 10,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 24,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 14,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 20,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 15,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 10,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 8,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 1725,
-    "precedenti3": 1852,
-    "crescita": -0.0684,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 183
-     },
-     {
-      "mese": "2025-10",
-      "n": 216
-     },
-     {
-      "mese": "2025-11",
-      "n": 225
-     },
-     {
-      "mese": "2025-12",
-      "n": 278
-     },
-     {
-      "mese": "2026-01",
-      "n": 372
-     },
-     {
-      "mese": "2026-02",
-      "n": 429
-     },
-     {
-      "mese": "2026-03",
-      "n": 575
-     },
-     {
-      "mese": "2026-04",
-      "n": 525
-     },
-     {
-      "mese": "2026-05",
-      "n": 604
-     },
-     {
-      "mese": "2026-06",
-      "n": 723
-     },
-     {
-      "mese": "2026-07",
-      "n": 707
-     },
-     {
-      "mese": "2026-08",
-      "n": 556
-     },
-     {
-      "mese": "2026-09",
-      "n": 462
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 1.09,
-     "es": 20.09,
-     "fr": 0.93,
-     "gb": 4.92,
-     "it": 3.06,
-     "nl": 0.2,
-     "pl": 0.82,
-     "us": 11.48
-    },
-    "media": 5.324,
-    "media_ue": 4.364,
-    "usa": 11.483,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.0,
-   "domanda": 0.6667,
+   "slancio": -0.4839,
+   "slancio_margine": [
+    -0.5918,
+    -0.3474
+   ],
+   "domanda": 5.324,
+   "domanda_it": 3.058,
    "quadrante": "consolida",
-   "slancio_prec": 0.3333,
+   "quadrante_calcolato": "consolida",
+   "incerto": true,
+   "incerto_perche": "pochi paper (15 al mese)",
+   "slancio_prec": -0.2252,
    "domanda_prec": null,
-   "quadrante_prec": "consolida"
+   "quadrante_prec": "consolida",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.6904,
+     "margine": [
+      -0.8362,
+      -0.4149
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 17,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 15,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 11,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 14,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 17,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 24,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 10,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 24,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 14,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 20,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 15,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 10,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 8,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": -0.3336,
+     "margine": [
+      -0.4265,
+      -0.2257
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 183,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 216,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 225,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 278,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 372,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 429,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 575,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 525,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 604,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 723,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 707,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 557,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 461,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 5.324,
+       "it": 3.058
+      }
+     ],
+     "ogni_10mila": {
+      "de": 1.09,
+      "es": 20.09,
+      "fr": 0.93,
+      "gb": 4.92,
+      "it": 3.06,
+      "nl": 0.2,
+      "pl": 0.82,
+      "us": 11.48
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Wiki ufficiale di FAISS",
+     "url": "https://github.com/facebookresearch/faiss/wiki",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository di pgvector per PostgreSQL",
+     "url": "https://github.com/pgvector/pgvector",
+     "tipo": "repository"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione di Sentence Transformers (embedding)",
+     "url": "https://www.sbert.net/",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository di Chroma, database vettoriale open source",
+     "url": "https://github.com/chroma-core/chroma",
+     "tipo": "repository"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "MaxFreedomPollard/Compartment",
+     "url": "https://github.com/MaxFreedomPollard/Compartment",
+     "descrizione": "Encrypted, fully offline agentic memory. One click install, GUI w/ memory map, all OS and agents. Superior memory creation, storage and retrieval.",
+     "stelle": 582,
+     "creato": "2026-07-20"
+    },
+    {
+     "nome": "chenkanglin198904/Personal_External_Brain",
+     "url": "https://github.com/chenkanglin198904/Personal_External_Brain",
+     "descrizione": "Not another ChatGPT wrapper. This is a local-first tool that turns your notes, web pages, PDFs and audio/video into a personal knowledge graph — running entirely on your own machine.",
+     "stelle": 200,
+     "creato": "2026-09-23"
+    },
+    {
+     "nome": "deepmemteam/deepmem",
+     "url": "https://github.com/deepmemteam/deepmem",
+     "descrizione": "Drop-in AI memory layer with 2x faster retrieval and 10x lower cost. Fully compatible with Mem0 API. Migrate in 5 minutes without any code changes. Self-host for free.",
+     "stelle": 114,
+     "creato": "2026-08-02"
+    }
+   ]
   },
   {
    "id": "multimodale",
@@ -1960,161 +2917,244 @@
    "breve": "Multimodali",
    "plurale": true,
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
-   "arxiv": {
-    "ultimi3": 2178,
-    "precedenti3": 2318,
-    "per_mille": 52.79,
-    "crescita": -0.0196,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 591,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 619,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 612,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 529,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 565,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 647,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 882,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 735,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 865,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 718,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 636,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 766,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 776,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 1260,
-    "precedenti3": 863,
-    "crescita": 0.4574,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 87
-     },
-     {
-      "mese": "2025-10",
-      "n": 84
-     },
-     {
-      "mese": "2025-11",
-      "n": 76
-     },
-     {
-      "mese": "2025-12",
-      "n": 79
-     },
-     {
-      "mese": "2026-01",
-      "n": 115
-     },
-     {
-      "mese": "2026-02",
-      "n": 121
-     },
-     {
-      "mese": "2026-03",
-      "n": 272
-     },
-     {
-      "mese": "2026-04",
-      "n": 282
-     },
-     {
-      "mese": "2026-05",
-      "n": 270
-     },
-     {
-      "mese": "2026-06",
-      "n": 311
-     },
-     {
-      "mese": "2026-07",
-      "n": 317
-     },
-     {
-      "mese": "2026-08",
-      "n": 540
-     },
-     {
-      "mese": "2026-09",
-      "n": 403
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 10.19,
-     "es": 33.21,
-     "fr": 8.58,
-     "gb": 5.63,
-     "it": 2.7,
-     "nl": 4.6,
-     "pl": 5.86,
-     "us": 11.0
-    },
-    "media": 10.221,
-    "media_ue": 10.856,
-    "usa": 10.998,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.5667,
-   "domanda": 0.8,
+   "slancio": 0.0972,
+   "slancio_margine": [
+    -0.0938,
+    0.3285
+   ],
+   "domanda": 10.221,
+   "domanda_it": 2.702,
    "quadrante": "impara-ora",
-   "slancio_prec": 0.3334,
+   "quadrante_calcolato": "impara-ora",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.0295,
    "domanda_prec": null,
-   "quadrante_prec": "consolida"
+   "quadrante_prec": "consolida",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.1081,
+     "margine": [
+      -0.2325,
+      0.0364
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 591,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 619,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 612,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 529,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 565,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 647,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 882,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 735,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 865,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 718,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 636,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 766,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 776,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.6605,
+     "margine": [
+      0.0184,
+      1.7076
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 87,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 84,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 76,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 79,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 115,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 121,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 272,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 282,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 270,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 311,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 317,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 539,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 403,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 10.221,
+       "it": 2.702
+      }
+     ],
+     "ogni_10mila": {
+      "de": 10.19,
+      "es": 33.21,
+      "fr": 8.58,
+      "gb": 5.63,
+      "it": 2.7,
+      "nl": 4.6,
+      "pl": 5.86,
+      "us": 11.0
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Corso Hugging Face: introduzione ai modelli visione-linguaggio",
+     "url": "https://huggingface.co/learn/computer-vision-course/unit4/multimodal-models/vlm-intro",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Hugging Face: i Vision Language Model spiegati",
+     "url": "https://huggingface.co/blog/vlms",
+     "tipo": "guida"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione Anthropic sulla visione",
+     "url": "https://platform.claude.com/docs/en/build-with-claude/vision",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione Gemini sulla comprensione delle immagini",
+     "url": "https://ai.google.dev/gemini-api/docs/image-understanding",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "ARahim3/DigUp",
+     "url": "https://github.com/ARahim3/DigUp",
+     "descrizione": "Search your computer by what's in your files: photos, PDFs, documents, recordings, videos and code. On-device on Mac, Windows and Linux, built on Google DeepMind's EmbeddingGemma 2.",
+     "stelle": 4303,
+     "creato": "2026-10-08"
+    },
+    {
+     "nome": "Tencent/WeMM-Embedding",
+     "url": "https://github.com/Tencent/WeMM-Embedding",
+     "descrizione": "WeMM-Embedding is a family of universal multimodal embedding models by the WeChat Vision Team at Tencent, supporting multimodal understanding and retrieval.",
+     "stelle": 1765,
+     "creato": "2026-08-25"
+    },
+    {
+     "nome": "Anionex/agent-vision-toolkit",
+     "url": "https://github.com/Anionex/agent-vision-toolkit",
+     "descrizione": "为纯文本模型\"看图“设计更好的视觉工具箱和技能，支持多图理解，图片问答，前端UI还原、GUI 自动化等，并可选无缝接入多个主流agent，直接识别粘贴图片｜ A vision toolkit and skill designed for text-only llms — image Q&A, long-screenshot OCR, frontend UI restoration, and GU…",
+     "stelle": 1234,
+     "creato": "2026-08-01"
+    }
+   ]
   },
   {
    "id": "llmops",
@@ -2122,161 +3162,244 @@
    "breve": "LLMOps",
    "plurale": false,
    "descrizione": "Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.",
-   "arxiv": {
-    "ultimi3": 118,
-    "precedenti3": 110,
-    "per_mille": 2.86,
-    "crescita": 0.1159,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 13,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 28,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 19,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 15,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 21,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 21,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 29,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 30,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 47,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 33,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 33,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 39,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 46,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 1271,
-    "precedenti3": 995,
-    "crescita": 0.276,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 28
-     },
-     {
-      "mese": "2025-10",
-      "n": 37
-     },
-     {
-      "mese": "2025-11",
-      "n": 25
-     },
-     {
-      "mese": "2025-12",
-      "n": 48
-     },
-     {
-      "mese": "2026-01",
-      "n": 77
-     },
-     {
-      "mese": "2026-02",
-      "n": 103
-     },
-     {
-      "mese": "2026-03",
-      "n": 190
-     },
-     {
-      "mese": "2026-04",
-      "n": 174
-     },
-     {
-      "mese": "2026-05",
-      "n": 319
-     },
-     {
-      "mese": "2026-06",
-      "n": 502
-     },
-     {
-      "mese": "2026-07",
-      "n": 474
-     },
-     {
-      "mese": "2026-08",
-      "n": 424
-     },
-     {
-      "mese": "2026-09",
-      "n": 373
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 5.32,
-     "es": 44.62,
-     "fr": 7.46,
-     "gb": 7.65,
-     "it": 10.45,
-     "nl": 5.0,
-     "pl": 37.91,
-     "us": 12.72
-    },
-    "media": 16.392,
-    "media_ue": 18.46,
-    "usa": 12.722,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.6,
-   "domanda": 0.9333,
+   "slancio": 0.2407,
+   "slancio_margine": [
+    -0.0295,
+    0.5861
+   ],
+   "domanda": 16.392,
+   "domanda_it": 10.454,
    "quadrante": "impara-ora",
-   "slancio_prec": 0.7667,
+   "quadrante_calcolato": "impara-ora",
+   "incerto": true,
+   "incerto_perche": "pochi paper (38 al mese) e repository nuovi con andamento irregolare",
+   "slancio_prec": 0.5753,
    "domanda_prec": null,
-   "quadrante_prec": "impara-ora"
+   "quadrante_prec": "impara-ora",
+   "segnali": {
+    "arxiv": {
+     "variazione": 0.1753,
+     "margine": [
+      -0.1229,
+      0.5749
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 13,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 28,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 19,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 15,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 21,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 21,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 29,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 30,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 47,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 33,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 33,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 39,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 46,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.3825,
+     "margine": [
+      -0.1162,
+      1.1627
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 28,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 37,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 25,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 48,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 77,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 103,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 190,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 174,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 319,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 502,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 474,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 425,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 373,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 16.392,
+       "it": 10.454
+      }
+     ],
+     "ogni_10mila": {
+      "de": 5.32,
+      "es": 44.62,
+      "fr": 7.46,
+      "gb": 7.65,
+      "it": 10.45,
+      "nl": 5.0,
+      "pl": 37.91,
+      "us": 12.72
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "LLM Zoomcamp (corso gratuito)",
+     "url": "https://github.com/DataTalksClub/llm-zoomcamp",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "MLOps Zoomcamp (corso gratuito)",
+     "url": "https://github.com/DataTalksClub/mlops-zoomcamp",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione di vLLM per il serving",
+     "url": "https://docs.vllm.ai/en/latest/",
+     "tipo": "documentazione"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Documentazione MLflow per LLM e agenti",
+     "url": "https://mlflow.org/docs/latest/genai/",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "mikehasa/agentacct",
+     "url": "https://github.com/mikehasa/agentacct",
+     "descrizione": "See what your coding agents did and what it cost. Breaks each task down into work steps — tools used, files changed, tests run, time and tokens spent. Local-first dashboard for Claude Code, Codex, Op…",
+     "stelle": 766,
+     "creato": "2026-07-24"
+    },
+    {
+     "nome": "calmrocks/ai-engineer-notebooks",
+     "url": "https://github.com/calmrocks/ai-engineer-notebooks",
+     "descrizione": "Hands-on, framework-free Colab notebooks for the AI Engineer / Forward Deployed Engineer (FDE) skill set — model APIs, structured output, tool calling, RAG, evals-as-the-spine, agents (loop from scra…",
+     "stelle": 700,
+     "creato": "2026-08-11"
+    },
+    {
+     "nome": "heaven999b/hello-agent-system",
+     "url": "https://github.com/heaven999b/hello-agent-system",
+     "descrizione": "👋 Hello Agent System — learn enterprise AI agent system design by building every production layer from scratch. 17 bilingual lessons (EN/中文) with tested exercises: tools, architectures, reliability, …",
+     "stelle": 214,
+     "creato": "2026-09-27"
+    }
+   ]
   },
   {
    "id": "modelli-locali",
@@ -2284,161 +3407,238 @@
    "breve": "Modelli locali",
    "plurale": true,
    "descrizione": "Modelli aperti che girano su laptop o server propri, senza cloud.",
-   "arxiv": {
-    "ultimi3": 913,
-    "precedenti3": 954,
-    "per_mille": 22.13,
-    "crescita": -0.0013,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 209,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 241,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 196,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 165,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 207,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 245,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 251,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 282,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 374,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 298,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 262,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 281,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 370,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 3474,
-    "precedenti3": 2451,
-    "crescita": 0.4165,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 59
-     },
-     {
-      "mese": "2025-10",
-      "n": 57
-     },
-     {
-      "mese": "2025-11",
-      "n": 102
-     },
-     {
-      "mese": "2025-12",
-      "n": 148
-     },
-     {
-      "mese": "2026-01",
-      "n": 205
-     },
-     {
-      "mese": "2026-02",
-      "n": 268
-     },
-     {
-      "mese": "2026-03",
-      "n": 477
-     },
-     {
-      "mese": "2026-04",
-      "n": 748
-     },
-     {
-      "mese": "2026-05",
-      "n": 661
-     },
-     {
-      "mese": "2026-06",
-      "n": 1042
-     },
-     {
-      "mese": "2026-07",
-      "n": 1052
-     },
-     {
-      "mese": "2026-08",
-      "n": 1150
-     },
-     {
-      "mese": "2026-09",
-      "n": 1272
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.06,
-     "es": 0.4,
-     "fr": 0.0,
-     "gb": 0.11,
-     "it": 0.21,
-     "nl": 0.0,
-     "pl": 0.0,
-     "us": 0.35
-    },
-    "media": 0.142,
-    "media_ue": 0.113,
-    "usa": 0.345,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.5666,
-   "domanda": 0.0667,
+   "slancio": 0.1772,
+   "slancio_margine": [
+    0.0607,
+    0.3064
+   ],
+   "domanda": 0.142,
+   "domanda_it": 0.213,
    "quadrante": "prova",
-   "slancio_prec": 0.5666,
+   "quadrante_calcolato": "prova",
+   "incerto": false,
+   "incerto_perche": null,
+   "slancio_prec": 0.2545,
    "domanda_prec": null,
-   "quadrante_prec": "prova"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": -0.0108,
+     "margine": [
+      -0.1067,
+      0.0953
+     ],
+     "peso": 0.667,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 209,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 241,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 196,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 165,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 207,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 245,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 251,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 282,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 374,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 298,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 262,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 281,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 370,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 0.6671,
+     "margine": [
+      0.3154,
+      1.113
+     ],
+     "peso": 0.333,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 59,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 57,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 102,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 148,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 205,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 268,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 477,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 748,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 661,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 1042,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 1052,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 1151,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 1271,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 0.142,
+       "it": 0.213
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.06,
+      "es": 0.4,
+      "fr": 0.0,
+      "gb": 0.11,
+      "it": 0.21,
+      "nl": 0.0,
+      "pl": 0.0,
+      "us": 0.35
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Repository di llama.cpp",
+     "url": "https://github.com/ggml-org/llama.cpp",
+     "tipo": "repository"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository di Ollama",
+     "url": "https://github.com/ollama/ollama",
+     "tipo": "repository"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Guida Hugging Face alla quantizzazione",
+     "url": "https://huggingface.co/docs/transformers/quantization/overview",
+     "tipo": "documentazione"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "syv-ai/HyperQwen",
+     "url": "https://github.com/syv-ai/HyperQwen",
+     "descrizione": "Serve large Qwen models fast on the GPUs you actually own. Qwen3.8-27B on a single 24 GB card with vLLM: 127 tok/s single-user (381 when the answer quotes the prompt), ~1,035 tok/s at 64 concurrent, …",
+     "stelle": 2036,
+     "creato": "2026-08-15"
+    },
+    {
+     "nome": "StayLameBro/backburner",
+     "url": "https://github.com/StayLameBro/backburner",
+     "descrizione": "Your iPhone helps your Mac run a 27B model: faster prompt reading and more context over a USB-C cable",
+     "stelle": 1020,
+     "creato": "2026-10-01"
+    },
+    {
+     "nome": "peonist-ai/halogen-flash-server",
+     "url": "https://github.com/peonist-ai/halogen-flash-server",
+     "descrizione": "The fastest way to run Qwen3.8-Flash-Next on Strix Halo (gfx1151)",
+     "stelle": 1006,
+     "creato": "2026-08-26"
+    }
+   ]
   },
   {
    "id": "robotica",
@@ -2446,161 +3646,238 @@
    "breve": "Robotica",
    "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
-   "arxiv": {
-    "ultimi3": 1429,
-    "precedenti3": 1187,
-    "per_mille": 34.64,
-    "crescita": 0.2551,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 152,
-      "totale": 11217
-     },
-     {
-      "mese": "2025-10",
-      "n": 198,
-      "totale": 12170
-     },
-     {
-      "mese": "2025-11",
-      "n": 187,
-      "totale": 10288
-     },
-     {
-      "mese": "2025-12",
-      "n": 204,
-      "totale": 9111
-     },
-     {
-      "mese": "2026-01",
-      "n": 154,
-      "totale": 10323
-     },
-     {
-      "mese": "2026-02",
-      "n": 267,
-      "totale": 11303
-     },
-     {
-      "mese": "2026-03",
-      "n": 337,
-      "totale": 13138
-     },
-     {
-      "mese": "2026-04",
-      "n": 231,
-      "totale": 12389
-     },
-     {
-      "mese": "2026-05",
-      "n": 438,
-      "totale": 16700
-     },
-     {
-      "mese": "2026-06",
-      "n": 518,
-      "totale": 13956
-     },
-     {
-      "mese": "2026-07",
-      "n": 346,
-      "totale": 11848
-     },
-     {
-      "mese": "2026-08",
-      "n": 407,
-      "totale": 13156
-     },
-     {
-      "mese": "2026-09",
-      "n": 676,
-      "totale": 16254
-     }
-    ]
-   },
-   "github": {
-    "ultimi3": 481,
-    "precedenti3": 224,
-    "crescita": 1.1223,
-    "mensile": [
-     {
-      "mese": "2025-09",
-      "n": 21
-     },
-     {
-      "mese": "2025-10",
-      "n": 13
-     },
-     {
-      "mese": "2025-11",
-      "n": 20
-     },
-     {
-      "mese": "2025-12",
-      "n": 25
-     },
-     {
-      "mese": "2026-01",
-      "n": 29
-     },
-     {
-      "mese": "2026-02",
-      "n": 33
-     },
-     {
-      "mese": "2026-03",
-      "n": 68
-     },
-     {
-      "mese": "2026-04",
-      "n": 48
-     },
-     {
-      "mese": "2026-05",
-      "n": 96
-     },
-     {
-      "mese": "2026-06",
-      "n": 80
-     },
-     {
-      "mese": "2026-07",
-      "n": 158
-     },
-     {
-      "mese": "2026-08",
-      "n": 140
-     },
-     {
-      "mese": "2026-09",
-      "n": 183
-     }
-    ]
-   },
-   "lavoro": {
-    "ogni_10mila": {
-     "de": 0.1,
-     "es": 0.61,
-     "fr": 0.03,
-     "gb": 0.02,
-     "it": 0.28,
-     "nl": 0.0,
-     "pl": 0.0,
-     "us": 0.32
-    },
-    "media": 0.171,
-    "media_ue": 0.17,
-    "usa": 0.321,
-    "crescita": null,
-    "data": "2026-10-16"
-   },
-   "slancio": 0.9333,
-   "domanda": 0.1333,
+   "slancio": 1.4027,
+   "slancio_margine": [
+    0.8733,
+    2.0817
+   ],
+   "domanda": 0.171,
+   "domanda_it": 0.284,
    "quadrante": "prova",
-   "slancio_prec": 0.7667,
+   "quadrante_calcolato": "prova",
+   "incerto": true,
+   "incerto_perche": "paper con andamento irregolare e repository nuovi con andamento irregolare",
+   "slancio_prec": 0.808,
    "domanda_prec": null,
-   "quadrante_prec": "prova"
+   "quadrante_prec": "prova",
+   "segnali": {
+    "arxiv": {
+     "variazione": 0.9268,
+     "margine": [
+      0.3761,
+      1.6979
+     ],
+     "peso": 0.547,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 152,
+       "totale": 11217
+      },
+      {
+       "mese": "2025-10",
+       "n": 198,
+       "totale": 12170
+      },
+      {
+       "mese": "2025-11",
+       "n": 187,
+       "totale": 10288
+      },
+      {
+       "mese": "2025-12",
+       "n": 204,
+       "totale": 9111
+      },
+      {
+       "mese": "2026-01",
+       "n": 154,
+       "totale": 10323
+      },
+      {
+       "mese": "2026-02",
+       "n": 267,
+       "totale": 11303
+      },
+      {
+       "mese": "2026-03",
+       "n": 337,
+       "totale": 13138
+      },
+      {
+       "mese": "2026-04",
+       "n": 231,
+       "totale": 12389
+      },
+      {
+       "mese": "2026-05",
+       "n": 438,
+       "totale": 16700
+      },
+      {
+       "mese": "2026-06",
+       "n": 518,
+       "totale": 13956
+      },
+      {
+       "mese": "2026-07",
+       "n": 346,
+       "totale": 11848
+      },
+      {
+       "mese": "2026-08",
+       "n": 407,
+       "totale": 13156
+      },
+      {
+       "mese": "2026-09",
+       "n": 676,
+       "totale": 16254
+      }
+     ]
+    },
+    "github": {
+     "variazione": 2.1358,
+     "margine": [
+      1.1667,
+      3.5384
+     ],
+     "peso": 0.453,
+     "mensile": [
+      {
+       "mese": "2025-09",
+       "n": 21,
+       "base": 6181
+      },
+      {
+       "mese": "2025-10",
+       "n": 13,
+       "base": 6954
+      },
+      {
+       "mese": "2025-11",
+       "n": 20,
+       "base": 7565
+      },
+      {
+       "mese": "2025-12",
+       "n": 25,
+       "base": 9080
+      },
+      {
+       "mese": "2026-01",
+       "n": 29,
+       "base": 11413
+      },
+      {
+       "mese": "2026-02",
+       "n": 33,
+       "base": 16150
+      },
+      {
+       "mese": "2026-03",
+       "n": 68,
+       "base": 26148
+      },
+      {
+       "mese": "2026-04",
+       "n": 48,
+       "base": 25243
+      },
+      {
+       "mese": "2026-05",
+       "n": 96,
+       "base": 27497
+      },
+      {
+       "mese": "2026-06",
+       "n": 80,
+       "base": 33107
+      },
+      {
+       "mese": "2026-07",
+       "n": 158,
+       "base": 37241
+      },
+      {
+       "mese": "2026-08",
+       "n": 141,
+       "base": 31395
+      },
+      {
+       "mese": "2026-09",
+       "n": 183,
+       "base": 30536
+      }
+     ]
+    },
+    "lavoro": {
+     "variazione": null,
+     "margine": null,
+     "peso": 0.0,
+     "rilevazioni": [
+      {
+       "data": "2026-10-16",
+       "media": 0.171,
+       "it": 0.284
+      }
+     ],
+     "ogni_10mila": {
+      "de": 0.1,
+      "es": 0.61,
+      "fr": 0.03,
+      "gb": 0.02,
+      "it": 0.28,
+      "nl": 0.0,
+      "pl": 0.0,
+      "us": 0.32
+     },
+     "data": "2026-10-16"
+    }
+   },
+   "per_iniziare": [
+    {
+     "lingua": "en",
+     "titolo": "Corso gratuito di Hugging Face sulla robotica",
+     "url": "https://huggingface.co/learn/robotics-course/unit0/1",
+     "tipo": "corso"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository LeRobot di Hugging Face",
+     "url": "https://github.com/huggingface/lerobot",
+     "tipo": "repository"
+    },
+    {
+     "lingua": "en",
+     "titolo": "Repository di OpenVLA (modello visione-linguaggio-azione)",
+     "url": "https://github.com/openvla/openvla",
+     "tipo": "repository"
+    }
+   ],
+   "in_crescita": [
+    {
+     "nome": "cobanov/awesome-fly",
+     "url": "https://github.com/cobanov/awesome-fly",
+     "descrizione": "A curated list of fruit fly connectome projects: MaleCNS, FlyWire, brain simulations, embodied models, games, and research tools.",
+     "stelle": 706,
+     "creato": "2026-09-12"
+    },
+    {
+     "nome": "RealXiaoze/humanoid-motion-intelligence",
+     "url": "https://github.com/RealXiaoze/humanoid-motion-intelligence",
+     "descrizione": "人形机器人运动智能论文、开源项目、产业与求职知识库",
+     "stelle": 652,
+     "creato": "2026-07-19"
+    },
+    {
+     "nome": "muellerberndt/cadence",
+     "url": "https://github.com/muellerberndt/cadence",
+     "descrizione": "A brain that learns from live experience. System 1 by default: perception, memory, plasticity and action. Optional System 2 for self-observation and slow corrections.",
+     "stelle": 449,
+     "creato": "2026-09-07"
+    }
+   ]
   }
  ],
  "storico": [
@@ -2608,68 +3885,116 @@
    "mese": "2026-02",
    "competenze": {
     "agenti": {
-     "slancio": 0.6666,
-     "domanda": null
+     "slancio": 0.9121,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.0,
-     "domanda": null
+     "slancio": 3.1517,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "mcp": {
-     "slancio": 0.8,
-     "domanda": null
+     "slancio": 0.9447,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": -0.0163,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.6,
-     "domanda": null
+     "slancio": 0.4862,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.3333,
-     "domanda": null
+     "slancio": 0.0212,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.3,
-     "domanda": null
+     "slancio": 0.0958,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.6667,
-     "domanda": null
+     "slancio": 0.968,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.8333,
-     "domanda": null
+     "slancio": 2.259,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "dati-per-ai": {
-     "slancio": 0.1666,
-     "domanda": null
+     "slancio": -0.0774,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.2334,
-     "domanda": null
+     "slancio": 0.0055,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.5667,
-     "domanda": null
+     "slancio": 0.1068,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "multimodale": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": -0.1372,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.4334,
-     "domanda": null
+     "slancio": 0.4437,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.5333,
-     "domanda": null
+     "slancio": 0.4,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.4667,
-     "domanda": null
+     "slancio": 0.1367,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   },
@@ -2677,68 +4002,116 @@
    "mese": "2026-03",
    "competenze": {
     "agenti": {
-     "slancio": 0.8,
-     "domanda": null
+     "slancio": 0.7789,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.0,
-     "domanda": null
+     "slancio": 2.2048,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "mcp": {
-     "slancio": 0.8,
-     "domanda": null
+     "slancio": 1.1252,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": -0.141,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.5333,
-     "domanda": null
+     "slancio": 0.428,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.3666,
-     "domanda": null
+     "slancio": -0.2146,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.2667,
-     "domanda": null
+     "slancio": 0.3006,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.7333,
-     "domanda": null
+     "slancio": 0.6541,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.9,
-     "domanda": null
+     "slancio": 1.6307,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.1333,
-     "domanda": null
+     "slancio": -0.1669,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": -0.0539,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.3333,
-     "domanda": null
+     "slancio": -0.1922,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.3334,
-     "domanda": null
+     "slancio": 0.1155,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.4667,
-     "domanda": null
+     "slancio": 0.4057,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.4333,
-     "domanda": null
+     "slancio": 0.2316,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.5,
-     "domanda": null
+     "slancio": 0.3673,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     }
    }
   },
@@ -2746,68 +4119,116 @@
    "mese": "2026-04",
    "competenze": {
     "agenti": {
-     "slancio": 0.8,
-     "domanda": null
+     "slancio": 0.7541,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.0,
-     "domanda": null
+     "slancio": 3.571,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "mcp": {
-     "slancio": 0.8,
-     "domanda": null
+     "slancio": 1.2651,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.2334,
-     "domanda": null
+     "slancio": -0.006,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.4,
-     "domanda": null
+     "slancio": 0.7255,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.2667,
-     "domanda": null
+     "slancio": -0.2014,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "osserva",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.3333,
-     "domanda": null
+     "slancio": 0.615,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.7,
-     "domanda": null
+     "slancio": 0.5846,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.9333,
-     "domanda": null
+     "slancio": 2.0618,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "dati-per-ai": {
-     "slancio": 0.4,
-     "domanda": null
+     "slancio": -0.1477,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.1666,
-     "domanda": null
+     "slancio": -0.0573,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "osserva",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.1666,
-     "domanda": null
+     "slancio": -0.2443,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.3334,
-     "domanda": null
+     "slancio": 0.148,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.5667,
-     "domanda": null
+     "slancio": 0.5674,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.4667,
-     "domanda": null
+     "slancio": 0.5385,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.4333,
-     "domanda": null
+     "slancio": -0.1213,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   },
@@ -2815,68 +4236,116 @@
    "mese": "2026-05",
    "competenze": {
     "agenti": {
-     "slancio": 0.6333,
-     "domanda": null
+     "slancio": 0.545,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.0,
-     "domanda": null
+     "slancio": 3.0097,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "mcp": {
-     "slancio": 0.6333,
-     "domanda": null
+     "slancio": 0.6038,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": 0.0881,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.6,
-     "domanda": null
+     "slancio": 0.6756,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.2666,
-     "domanda": null
+     "slancio": -0.0196,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "osserva",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.4667,
-     "domanda": null
+     "slancio": 0.5594,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.5667,
-     "domanda": null
+     "slancio": 0.3962,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.8667,
-     "domanda": null
+     "slancio": 1.4359,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "dati-per-ai": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": -0.1262,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.1667,
-     "domanda": null
+     "slancio": 0.0414,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "osserva",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.0,
-     "domanda": null
+     "slancio": -0.4042,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.4334,
-     "domanda": null
+     "slancio": 0.0383,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.7667,
-     "domanda": null
+     "slancio": 1.0625,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.6333,
-     "domanda": null
+     "slancio": 0.4461,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.5666,
-     "domanda": null
+     "slancio": 0.3308,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   },
@@ -2884,68 +4353,116 @@
    "mese": "2026-06",
    "competenze": {
     "agenti": {
-     "slancio": 0.6333,
-     "domanda": null
+     "slancio": 0.3954,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.0,
-     "domanda": null
+     "slancio": 1.8873,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "mcp": {
-     "slancio": 0.3667,
-     "domanda": null
+     "slancio": 0.1611,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.4334,
-     "domanda": null
+     "slancio": 0.1479,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.7,
-     "domanda": null
+     "slancio": 0.6699,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.3,
-     "domanda": null
+     "slancio": -0.0011,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "osserva",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.3667,
-     "domanda": null
+     "slancio": 0.087,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.4334,
-     "domanda": null
+     "slancio": 0.2011,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.5666,
-     "domanda": null
+     "slancio": 0.3116,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.0667,
-     "domanda": null
+     "slancio": -0.0628,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.6667,
-     "domanda": null
+     "slancio": 0.6925,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.1,
-     "domanda": null
+     "slancio": -0.3351,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.2,
-     "domanda": null
+     "slancio": -0.0865,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.8334,
-     "domanda": null
+     "slancio": 1.2471,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.7,
-     "domanda": null
+     "slancio": 0.3863,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.6333,
-     "domanda": null
+     "slancio": 0.7568,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   },
@@ -2953,68 +4470,116 @@
    "mese": "2026-07",
    "competenze": {
     "agenti": {
-     "slancio": 0.6,
-     "domanda": null
+     "slancio": 0.3435,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 0.9334,
-     "domanda": null
+     "slancio": 1.8132,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "mcp": {
-     "slancio": 0.3334,
-     "domanda": null
+     "slancio": 0.0356,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.4334,
-     "domanda": null
+     "slancio": 0.172,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.7333,
-     "domanda": null
+     "slancio": 1.2221,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.4333,
-     "domanda": null
+     "slancio": -0.0118,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "osserva",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.3334,
-     "domanda": null
+     "slancio": 0.0362,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.4,
-     "domanda": null
+     "slancio": -0.0108,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.2666,
-     "domanda": null
+     "slancio": 0.0005,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.1666,
-     "domanda": null
+     "slancio": -0.1071,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.8334,
-     "domanda": null
+     "slancio": 1.1012,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.0667,
-     "domanda": null
+     "slancio": -0.2843,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.1666,
-     "domanda": null
+     "slancio": -0.1831,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.8667,
-     "domanda": null
+     "slancio": 0.9245,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.6,
-     "domanda": null
+     "slancio": 0.2661,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.8333,
-     "domanda": null
+     "slancio": 0.8089,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   },
@@ -3022,68 +4587,116 @@
    "mese": "2026-08",
    "competenze": {
     "agenti": {
-     "slancio": 0.7667,
-     "domanda": null
+     "slancio": 0.4639,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 0.9,
-     "domanda": null
+     "slancio": 1.6992,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "mcp": {
-     "slancio": 0.3667,
-     "domanda": null
+     "slancio": 0.1308,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.3667,
-     "domanda": null
+     "slancio": 0.1441,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.7,
-     "domanda": null
+     "slancio": 1.268,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.3666,
-     "domanda": null
+     "slancio": 0.0702,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "osserva",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.1333,
-     "domanda": null
+     "slancio": -0.0482,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.3333,
-     "domanda": null
+     "slancio": 0.1466,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.1,
-     "domanda": null
+     "slancio": -0.1044,
+     "domanda": null,
+     "calcolato": "osserva",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.2334,
-     "domanda": null
+     "slancio": -0.0494,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.9667,
-     "domanda": null
+     "slancio": 1.1191,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.3333,
-     "domanda": null
+     "slancio": -0.2252,
+     "domanda": null,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.3334,
-     "domanda": null
+     "slancio": 0.0295,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.7667,
-     "domanda": null
+     "slancio": 0.5753,
+     "domanda": null,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.5666,
-     "domanda": null
+     "slancio": 0.2545,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.7667,
-     "domanda": null
+     "slancio": 0.808,
+     "domanda": null,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   },
@@ -3091,68 +4704,116 @@
    "mese": "2026-09",
    "competenze": {
     "agenti": {
-     "slancio": 0.8,
-     "domanda": 1.0
+     "slancio": 0.4265,
+     "domanda": 26.386,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "coding-agenti": {
-     "slancio": 0.8666,
-     "domanda": 0.4
+     "slancio": 0.8739,
+     "domanda": 1.913,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "mcp": {
-     "slancio": 0.6666,
-     "domanda": 0.6
+     "slancio": 0.3078,
+     "domanda": 3.373,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "rag": {
-     "slancio": 0.2334,
-     "domanda": 0.7333
+     "slancio": -0.0253,
+     "domanda": 7.98,
+     "calcolato": "consolida",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "valutazione": {
-     "slancio": 0.6666,
-     "domanda": 0.3333
+     "slancio": 0.4703,
+     "domanda": 0.885,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "post-training": {
-     "slancio": 0.4,
-     "domanda": 0.2
+     "slancio": 0.1401,
+     "domanda": 0.267,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "context-engineering": {
-     "slancio": 0.1333,
-     "domanda": 0.8667
+     "slancio": -0.2565,
+     "domanda": 14.157,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.3667,
-     "domanda": 0.2667
+     "slancio": 0.0374,
+     "domanda": 0.352,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "governance": {
-     "slancio": 0.2334,
-     "domanda": 0.4667
+     "slancio": -0.2414,
+     "domanda": 2.653,
+     "calcolato": "osserva",
+     "pubblicato": "osserva",
+     "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.2666,
-     "domanda": 0.5333
+     "slancio": 0.0912,
+     "domanda": 3.033,
+     "calcolato": "impara-ora",
+     "pubblicato": "consolida",
+     "incerto": false
     },
     "text-to-sql": {
-     "slancio": 0.7,
-     "domanda": 0.0
+     "slancio": 1.1142,
+     "domanda": 0.125,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     },
     "vector-db": {
-     "slancio": 0.0,
-     "domanda": 0.6667
+     "slancio": -0.4839,
+     "domanda": 5.324,
+     "calcolato": "consolida",
+     "pubblicato": "consolida",
+     "incerto": true
     },
     "multimodale": {
-     "slancio": 0.5667,
-     "domanda": 0.8
+     "slancio": 0.0972,
+     "domanda": 10.221,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": false
     },
     "llmops": {
-     "slancio": 0.6,
-     "domanda": 0.9333
+     "slancio": 0.2407,
+     "domanda": 16.392,
+     "calcolato": "impara-ora",
+     "pubblicato": "impara-ora",
+     "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.5666,
-     "domanda": 0.0667
+     "slancio": 0.1772,
+     "domanda": 0.142,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": false
     },
     "robotica": {
-     "slancio": 0.9333,
-     "domanda": 0.1333
+     "slancio": 1.4027,
+     "domanda": 0.171,
+     "calcolato": "prova",
+     "pubblicato": "prova",
+     "incerto": true
     }
    }
   }

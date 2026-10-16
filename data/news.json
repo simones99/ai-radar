@@ -55,6 +55,55 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "ChatGPT becomes a full Chrome browser assistant that reads and acts on your open tabs",
+   "link": "https://the-decoder.com/chatgpt-becomes-a-full-chrome-browser-assistant-that-reads-and-acts-on-your-open-tabs/",
+   "data": "2026-10-16",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "China plans to tighten export controls on open-weight models and 23 key AI technologies",
+   "link": "https://the-decoder.com/china-plans-to-tighten-export-controls-on-open-weight-models-and-23-key-ai-technologies/",
+   "data": "2026-10-16",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Google's Gemini 4 Argon is closer to the AI frontier than any Google model in months",
+   "link": "https://the-decoder.com/googles-gemini-4-argon-is-closer-to-the-ai-frontier-than-any-google-model-in-months/",
+   "data": "2026-10-16",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Is AI interpretability close to a breakthrough? A new essay has researchers divided",
+   "link": "https://the-decoder.com/is-ai-interpretability-close-to-a-breakthrough-a-new-essay-has-researchers-divided/",
+   "data": "2026-10-16",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "OpenAI's new Rosalind Academic Plan gives research labs up to 30 free seats for a year",
+   "link": "https://the-decoder.com/openais-new-rosalind-academic-plan-gives-research-labs-up-to-30-free-seats-for-a-year/",
+   "data": "2026-10-16",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic gives METR inside access to audit its AI models and safety practices",
+   "link": "https://the-decoder.com/anthropic-gives-metr-inside-access-to-audit-its-ai-models-and-safety-practices/",
+   "data": "2026-10-16",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Stack Overflow for Agents triples signups with ChatGPT plugin",
+   "link": "https://openai.com/index/stack-overflow-chatgpt-plugin",
+   "data": "2026-10-16",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "[AINews] Agents disprove Polysemanticity; greatly improve Interpretability & Alignment",
    "link": "https://www.latent.space/p/ainews-agents-disprove-polysemanticity",
    "data": "2026-10-16",
@@ -66,6 +115,20 @@
    "link": "https://huggingface.co/blog/nvidia/scaling-indic-pretraining",
    "data": "2026-10-16",
    "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Welcome Beam: a 501B open model you can own, customize, and scale",
+   "link": "https://huggingface.co/blog/reflection-beam",
+   "data": "2026-10-16",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Open-weight models trail closed models in cyber capabilities by 6–7 months",
+   "link": "https://epoch.ai/data-insights/open-closed-cyber-eci-gap",
+   "data": "2026-10-16",
+   "fonte": "Epoch AI",
    "tema": "ricerca"
   },
   {
@@ -92,27 +155,6 @@
   {
    "titolo": "Nvidia's Nemotron 3.5 Super VL is an open model built to run enterprise AI agents nonstop",
    "link": "https://the-decoder.com/nvidias-nemotron-3-5-super-vl-is-an-open-model-built-to-run-enterprise-ai-agents-nonstop/",
-   "data": "2026-10-15",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Bank of America puts 4,000 people on fixing vulnerabilities uncovered by Anthropic's Mythos and other AI models",
-   "link": "https://the-decoder.com/bank-of-america-puts-4000-people-on-fixing-vulnerabilities-uncovered-by-anthropics-mythos-and-other-ai-models/",
-   "data": "2026-10-15",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "GPT-6-Astra solves 49 of 50 physics research problems at $2.40 apiece",
-   "link": "https://the-decoder.com/gpt-6-astra-solves-49-of-50-physics-research-problems-at-2-40-apiece/",
-   "data": "2026-10-15",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Anthropic's Q3 revenue hits $16.8B but growth slows ahead of planned November IPO",
-   "link": "https://the-decoder.com/anthropics-q3-revenue-hits-16-8b-but-growth-slows-ahead-of-planned-november-ipo/",
    "data": "2026-10-15",
    "fonte": "The Decoder",
    "tema": "prodotti"
@@ -172,27 +214,6 @@
    "data": "2026-10-15",
    "fonte": "Google DeepMind",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "Google says self-improving AI isn't anywhere close",
-   "link": "https://the-decoder.com/google-says-self-improving-ai-isnt-anywhere-close/",
-   "data": "2026-10-14",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Researchers tracked down a rogue fleet of Chinese AI agents in the wild and actually talked to it",
-   "link": "https://the-decoder.com/researchers-tracked-down-a-rogue-fleet-of-chinese-ai-agents-in-the-wild-and-actually-talked-to-it/",
-   "data": "2026-10-14",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI will reportedly ship at least one model this year but its flagship still needs alignment work",
-   "link": "https://the-decoder.com/openai-will-reportedly-ship-at-least-one-model-this-year-but-its-flagship-still-needs-alignment-work/",
-   "data": "2026-10-14",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
   },
   {
    "titolo": "Amp puts AI agents to work beyond code with OpenAI models",
@@ -335,7 +356,7 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "How Anthropic’s Dynamic Workflows Coordinate Claude Agents",
+   "titolo": "How Anthropic’s Dynamic Workflows Coordinate Claude Agents (Updated with video!)",
    "link": "https://www.latent.space/p/claude-dynamic-workflows",
    "data": "2026-10-12",
    "fonte": "Latent Space",
@@ -384,13 +405,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Asana cuts model costs 76x in browser tests with GPT-6.1 Sol",
-   "link": "https://openai.com/index/asana-browser-agent",
-   "data": "2026-10-09",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "Sophos cuts threat investigation time by 96% with OpenAI Daybreak",
    "link": "https://openai.com/index/sophos",
    "data": "2026-10-09",
@@ -398,9 +412,9 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "How Oracle turns days of work into minutes with ChatGPT and Codex",
-   "link": "https://openai.com/index/oracle",
-   "data": "2026-10-08",
+   "titolo": "Asana cuts model costs 76x in browser tests with GPT-6.1 Sol",
+   "link": "https://openai.com/index/asana-browser-agent",
+   "data": "2026-10-09",
    "fonte": "OpenAI",
    "tema": "prodotti"
   },
@@ -566,13 +580,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Getting the Source Right, Not Just the Fact: Source-Aware Verification for MCP Agents",
-   "link": "https://huggingface.co/blog/MultiverseComputingCAI/getting-the-source-right-not-just-the-fact-source",
-   "data": "2026-09-29",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "Import AI 474: Platonic mindspace; TPUs in space; Zhipu starts an outer RSI loop",
    "link": "https://jack-clark.net/2026/09/28/import-ai-474-platonic-mindspace-tpus-in-space-zhipu-starts-an-outer-rsi-loop/",
    "data": "2026-09-28",
@@ -634,13 +641,6 @@
    "data": "2026-09-22",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "The plunging price of thought",
-   "link": "https://epoch.ai/publications/the-plunging-price-of-thought",
-   "data": "2026-09-22",
-   "fonte": "Epoch AI",
-   "tema": "ricerca"
   },
   {
    "titolo": "Jev introduces a new shape of LLM - System One, aka Decision Models",

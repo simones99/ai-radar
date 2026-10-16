@@ -26,10 +26,36 @@ const scrollSettled = (page: Page) =>
 const seriousViolations = async (page: Page) =>
   (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
 
-test('home: tesi e 8 temi', async ({ page }) => {
+test('home: due porte, due sezioni, 8 temi', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('modello più seguito della settimana');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText("Su cosa formarti e cosa succede all'AI in Italia");
+  await expect(page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /A ottobre esce State of AI Report/ })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Su cosa formarti' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: "L'AI in Italia" })).toBeVisible();
   await expect(page.locator('button.face')).toHaveCount(8);
+});
+
+test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await expect(page.locator('#detail-competenze')).toBeVisible();
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page.getByRole('button', { name: /^MCP/, pressed: true })).toBeVisible();
+});
+
+test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
+  await page.goto('/');
+  await page.getByRole('link', { name: /Tra 12 giorni/ }).click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await expect(page).toHaveURL(/#norme\/2026-12-02$/);
+  await expect(page.locator('#detail-norme li[aria-current="true"]')).toContainText('Fine della transizione per la marcatura');
+});
+
+test('i vecchi link #politica aprono Norme', async ({ page }) => {
+  await page.goto('/#politica');
+  await expect(page.locator('#detail-norme')).toBeVisible();
 });
 
 for (const id of TEMI) {

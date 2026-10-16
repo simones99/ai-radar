@@ -10,6 +10,10 @@ export interface SourceStatus {
 }
 export interface Status { aggiornato: string; fonti: Record<string, SourceStatus> }
 
+export interface Risorsa { titolo: string; url: string; tipo: 'documentazione' | 'corso' | 'guida' | 'repository'; lingua: string }
+export interface RepoNuovo { nome: string; url: string; descrizione: string; stelle: number; creato: string }
+/** Un segnale dello slancio: variazione della quota in 6 mesi, margine all'80%, peso nella combinazione. */
+export interface Segnale { variazione: number | null; margine: [number, number] | null; peso: number }
 export interface RadarRow {
   id: string;
   nome: string;
@@ -17,24 +21,36 @@ export interface RadarRow {
   /** true se breve è al plurale: il verbo si accorda («Multimodali entrano»). */
   plurale?: boolean;
   descrizione: string;
+  /** Variazione in 6 mesi della quota sul totale dell'AI: 0,25 = +25%. */
   slancio: number | null;
+  slancio_margine?: [number, number] | null;
+  /** Annunci ogni 10mila, media dei Paesi. */
   domanda: number | null;
+  domanda_it?: number | null;
+  /** Quadrante pubblicato: cambia dopo due mesi di fila nel quadrante nuovo. */
   quadrante: Quadrant | null;
+  quadrante_calcolato?: Quadrant | null;
+  incerto?: boolean;
+  incerto_perche?: string | null;
   slancio_prec?: number | null;
   domanda_prec?: number | null;
   quadrante_prec?: Quadrant | null;
-  arxiv?: { crescita: number } | null;
-  github?: { crescita: number; ultimi3: number; precedenti3: number } | null;
-  lavoro?: { media: number | null; media_ue: number | null; usa: number | null } | null;
+  segnali?: {
+    arxiv?: (Segnale & { mensile: { mese: string; n: number; totale: number }[] }) | null;
+    github?: (Segnale & { mensile: { mese: string; n: number; base: number }[] }) | null;
+    lavoro?: (Segnale & { rilevazioni: { data: string; media: number; it: number | null }[]; ogni_10mila: Record<string, number>; data: string }) | null;
+  };
+  per_iniziare?: Risorsa[];
+  in_crescita?: RepoNuovo[];
 }
 export interface Radar {
+  /** 2: unità vere e soglie fisse. Senza versione è un radar.json della pipeline vecchia e l'app non lo usa. */
+  versione?: number;
   generato: string;
-  base_domanda: 'lavoro' | 'open-source';
-  /** true: la domanda di un mese fa non c'è ancora, il quadrante di allora usa quella di oggi. */
-  domanda_prec_attuale?: boolean;
+  soglie?: { slancio: number; domanda: number; rapporto_max: number };
   quadranti: Record<Quadrant, string>;
   competenze: RadarRow[];
-  storico?: { mese: string; competenze: Record<string, { slancio: number | null; domanda: number | null }> }[];
+  storico?: { mese: string; competenze: Record<string, { slancio: number | null; domanda: number | null; calcolato: Quadrant | null; pubblicato: Quadrant | null; incerto: boolean }> }[];
 }
 
 export interface OwidPoint { entita: string; t: string; v: number }

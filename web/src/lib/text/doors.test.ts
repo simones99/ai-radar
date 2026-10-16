@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
-import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
+import { FIXTURE, FIXTURE_TODAY as today, fromNorm } from '../test/fixtures';
 import { doorItalia, doorPerTe } from './frasi';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
+// Le righe si scrivono pensando alla posizione sul grafico (0–1): fromNorm la porta in valori veri.
 const radar = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({
   radar: {
-    generato: '2026-10-15', base_domanda: 'open-source', quadranti: d.radar!.quadranti,
-    competenze: rows.map((r, i) => ({ id: `c${i}`, nome: `Competenza ${i}`, breve: `C${i}`, descrizione: '', slancio: 0.5, domanda: 0.5, quadrante: 'impara-ora', ...r })),
+    versione: 2, generato: '2026-10-15', quadranti: d.radar!.quadranti,
+    competenze: rows.map((r, i) => fromNorm({ id: `c${i}`, nome: `Competenza ${i}`, breve: `C${i}`, descrizione: '', slancio: 0.5, domanda: 0.5, quadrante: 'impara-ora', ...r })),
   },
 });
 

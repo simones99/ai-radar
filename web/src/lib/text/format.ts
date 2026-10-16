@@ -43,3 +43,10 @@ export function signedPts(v: number): string {
 
 export const capitalize = (s: string): string => (s ? s[0].toUpperCase() + s.slice(1) : s);
 export const lowerFirst = (s: string): string => (s ? s[0].toLowerCase() + s.slice(1) : s);
+
+/** Variazione in percentuale con il segno: «+25%», «−8%», «±0%». */
+export const signedPct = (v: number): string => `${signedPts(v)}%`;
+/** Annunci ogni 10mila: una cifra decimale sotto 10 («3,4»), interi da 10 in su («26»). */
+export const per10k = (v: number): string => nf(v, v < 10 ? 1 : 0);
+/** Mese breve da "2026-09": «set». */
+export const monthShort = (ymStr: string): string => monthName(ymStr).slice(0, 3);

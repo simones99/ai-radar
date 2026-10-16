@@ -1,13 +1,30 @@
 import { daysTo, ym } from '../text/format';
 import type { AiActItem, EpochPoint, News, NewsItem, Owid, OwidPoint, Quadrant, Radar, RadarRow, Rapporti, Report } from './types';
 
-export const MOVE_MIN = 0.1; // spostamento minimo per disegnare una freccia: 10 punti percentili
+export const MOVE_MIN = 0.1; // spostamento minimo per disegnare una freccia: un decimo dell'asse
+/** Domini fissi degli assi, simmetrici attorno alle soglie: slancio 0 e 3 annunci ogni 10mila stanno al centro. */
+export const SLANCIO_DOM: [number, number] = [-0.5, 1];
+export const DOMANDA_DOM: [number, number] = [0.1, 90];
+const unit = (v: number) => Math.min(1, Math.max(0, v));
+const lin = (v: number, [a, b]: [number, number]) => (v - a) / (b - a);
+/** Posizione 0–1 sull'asse dello slancio: scala logaritmica di 1 + slancio. */
+export const nx = (s: number): number =>
+  unit(lin(Math.log(1 + s), [Math.log(1 + SLANCIO_DOM[0]), Math.log(1 + SLANCIO_DOM[1])]));
+/** Posizione 0–1 sull'asse della domanda: scala logaritmica. */
+export const ny = (d: number): number => unit(lin(Math.log(d), [Math.log(DOMANDA_DOM[0]), Math.log(DOMANDA_DOM[1])]));
 
 export interface RadarRowM extends RadarRow {
   breve: string;
   slancio: number;
   domanda: number;
   quadrante: Quadrant;
+  incerto: boolean;
+  /** Il quadrante calcolato, se diverso da quello pubblicato: la competenza ci si sta muovendo. */
+  moving: Quadrant | null;
+  x: number; // posizione sul grafico, 0–1
+  y: number;
+  px: number | null; // posizione di un mese fa (senza la domanda di allora si usa quella di oggi)
+  py: number | null;
   sp: number | null;
   dp: number | null;
   qp: Quadrant | null;
@@ -20,18 +37,24 @@ export interface RadarRowM extends RadarRow {
 }
 
 export function radarRows(r: Radar): RadarRowM[] {
+  if (r.versione !== 2) return []; // radar.json della pipeline vecchia: ranghi, non unità vere
   return r.competenze
     .filter((c) => c.slancio != null && c.domanda != null && c.quadrante != null)
     .map((c) => {
       const s = c.slancio as number, d = c.domanda as number;
       const sp = c.slancio_prec ?? null, dp = c.domanda_prec ?? null, qp = c.quadrante_prec ?? null;
-      // Senza domanda di un mese fa (una sola rilevazione del lavoro) il movimento è solo sullo slancio.
       const hasPrev = sp != null;
-      const dS = hasPrev ? s - (sp as number) : 0;
-      const dD = hasPrev && dp != null ? d - dp : 0;
+      const x = nx(s), y = ny(d);
+      const px = hasPrev ? nx(sp as number) : null;
+      const py = hasPrev ? ny(dp ?? d) : null;
+      // Senza domanda di un mese fa il movimento è solo sullo slancio.
+      const dS = px != null ? x - px : 0;
+      const dD = hasPrev && dp != null ? y - ny(dp) : 0;
+      const calc = c.quadrante_calcolato ?? null;
       return {
         ...c, breve: c.breve || c.nome, slancio: s, domanda: d, quadrante: c.quadrante as Quadrant,
-        sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
+        incerto: !!c.incerto, moving: calc && calc !== c.quadrante ? calc : null,
+        x, y, px, py, sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
         changed: hasPrev && qp != null && qp !== c.quadrante, hasPrev,
       };
     });

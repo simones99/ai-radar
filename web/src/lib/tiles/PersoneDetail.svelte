@@ -33,8 +33,8 @@
   const giovani = $derived(dots('uso_genai_giovani_ue'));
   const dev = $derived(owidPoints(o, 'sviluppatori_ai', 'World').map((p) => ({ k: p.t, v: p.v })));
   const annunci = $derived(lines('annunci_ai', ['United States', 'Italy', 'Germany', 'France', 'Spain', 'United Kingdom']));
-  const jobs = $derived(data.radar?.base_domanda === 'lavoro'
-    ? radarRows(data.radar).filter((r) => r.lavoro?.media != null).sort((a, b) => (a.lavoro?.media ?? 0) - (b.lavoro?.media ?? 0)).slice(-10).map((r) => ({ k: r.breve, v: r.lavoro?.media ?? 0 }))
+  const jobs = $derived(data.radar
+    ? radarRows(data.radar).sort((a, b) => a.domanda - b.domanda).slice(-10).map((r) => ({ k: r.breve, v: r.domanda }))
     : []);
 </script>
 

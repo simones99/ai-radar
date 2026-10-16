@@ -1,16 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidLatestByEntity, owidPoints, owidPrev,
-  radarChanges, radarRows, tNum,
+  radarChanges, radarRows, tNum, nx, ny,
 } from './derive';
 import type { EpochPoint, News, Owid, Radar } from './types';
+import { fromNorm } from '../test/fixtures';
 
 const today = new Date(2026, 9, 15, 10);
 
+// Le righe si scrivono pensando alla posizione sul grafico (0–1): fromNorm la porta in valori veri.
 const radar = (rows: Partial<Radar['competenze'][number]>[]): Radar => ({
-  generato: '2026-10-15', base_domanda: 'open-source',
+  versione: 2, generato: '2026-10-15',
   quadranti: { 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" },
-  competenze: rows.map((r, i) => ({ id: `c${i}`, nome: `Competenza ${i}`, descrizione: '', slancio: 0.5, domanda: 0.5, quadrante: 'impara-ora', ...r })),
+  competenze: rows.map((r, i) => fromNorm({ id: `c${i}`, nome: `Competenza ${i}`, descrizione: '', slancio: 0.5, domanda: 0.5, quadrante: 'impara-ora', ...r })),
 });
 
 describe('radarRows', () => {
@@ -26,9 +28,17 @@ describe('radarRows', () => {
     expect(radarChanges(rows).inn.map((r) => r.id)).toEqual(['c0']);
     expect(radarChanges(rows).out).toEqual([]);
   });
-  it('radar.json della pipeline vecchia: niente movimento, nessun errore', () => {
+  it('senza posizione precedente: niente movimento', () => {
     const rows = radarRows(radar([{ slancio: 0.7, domanda: 0.7 }]));
-    expect(rows[0]).toMatchObject({ hasPrev: false, changed: false, move: 0, dS: 0, sp: null, breve: 'Competenza 0' });
+    expect(rows[0]).toMatchObject({ hasPrev: false, changed: false, move: 0, dS: 0, sp: null, px: null, breve: 'Competenza 0' });
+  });
+  it('radar.json della pipeline vecchia (senza versione 2): nessuna riga', () => {
+    expect(radarRows({ ...radar([{}]), versione: undefined })).toEqual([]);
+  });
+  it('incerto e in movimento verso un altro quadrante', () => {
+    const [r] = radarRows(radar([{ quadrante: 'osserva', quadrante_calcolato: 'prova', incerto: true }]));
+    expect(r).toMatchObject({ incerto: true, moving: 'prova' });
+    expect(radarRows(radar([{ quadrante_calcolato: 'impara-ora' }]))[0].moving).toBeNull();
   });
   it('senza domanda di un mese fa: movimento solo sullo slancio', () => {
     const rows = radarRows(radar([{ slancio: 0.8, domanda: 0.6, quadrante: 'impara-ora', slancio_prec: 0.3, domanda_prec: null, quadrante_prec: 'consolida' }]));
@@ -110,5 +120,19 @@ describe('scadenze, notizie, rapporti', () => {
     ] };
     expect(nextReport(r, today)).toEqual({ report: r.rapporti[1], ym: '2026-10' });
     expect(nextReport({ rapporti: [r.rapporti[2]] }, today)).toBeNull();
+  });
+});
+
+describe('coordinate del radar', () => {
+  it('soglie al centro, domini fissi, valori fuori dominio sul bordo', () => {
+    expect(nx(0)).toBeCloseTo(0.5);
+    expect(nx(-0.5)).toBeCloseTo(0);
+    expect(nx(1)).toBeCloseTo(1);
+    expect(nx(4)).toBe(1);
+    expect(nx(-1)).toBe(0);
+    expect(ny(3)).toBeCloseTo(0.5);
+    expect(ny(0.1)).toBeCloseTo(0);
+    expect(ny(90)).toBeCloseTo(1);
+    expect(ny(0)).toBe(0);
   });
 });

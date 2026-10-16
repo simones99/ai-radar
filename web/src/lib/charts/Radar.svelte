@@ -2,7 +2,7 @@
   import { scaleLinear } from 'd3-scale';
   import { MOVE_MIN, type RadarRowM } from '../data/derive';
   import type { Quadrant } from '../data/types';
-  import { signedPts } from '../text/format';
+  import { per10k, signedPct } from '../text/format';
   import { cambio } from '../text/frasi';
   import { leader, measureText, placeLabels, type Box } from './labels';
 
@@ -35,12 +35,12 @@
       const x0 = q.a === 'end' ? q.x - tw : q.x;
       return { x0: x0 - 4, y0: q.y - 14, x1: x0 + tw + 4, y1: q.y + 4 };
     });
-    rows.forEach((r) => obstacles.push({ x0: x(r.slancio) - 7, y0: y(r.domanda) - 7, x1: x(r.slancio) + 7, y1: y(r.domanda) + 7 }));
+    rows.forEach((r) => obstacles.push({ x0: x(r.x) - 7, y0: y(r.y) - 7, x1: x(r.x) + 7, y1: y(r.y) + 7 }));
     const order = (r: RadarRowM) => (r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
       const lines = [r.breve, ...(r.changed && !narrow ? [cambio(r, quadranti)] : [])];
       const wd = Math.max(...lines.map((t, i) => measureText(t, `${i === 0 && r.quadrante === 'impara-ora' ? 600 : 400} 12px sans-serif`)));
-      return { id: r.id, x: x(r.slancio), y: y(r.domanda), w: wd, h: lines.length * LH, lines, r };
+      return { id: r.id, x: x(r.x), y: y(r.y), w: wd, h: lines.length * LH, lines, r };
     });
     const boxes = placeLabels(items, { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, obstacles);
     return items.map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
@@ -67,19 +67,19 @@
       {@const hot = r.quadrante === 'impara-ora'}
       <g class="pt" class:dim={dim(r.id)}>
         {#if r.hasPrev && r.move >= MOVE_MIN}
-          {@const x0 = x(r.sp as number)}
-          {@const y0 = y(r.dp ?? r.domanda)}
-          {@const len = Math.hypot(x(r.slancio) - x0, y(r.domanda) - y0) || 1}
+          {@const x0 = x(r.px as number)}
+          {@const y0 = y(r.py as number)}
+          {@const len = Math.hypot(x(r.x) - x0, y(r.y) - y0) || 1}
           {@const k = (len - 9) / len}
           <circle class="prev" class:hot cx={x0} cy={y0} r="3.5" />
-          <line class="arrow" class:hot x1={x0} y1={y0} x2={x0 + (x(r.slancio) - x0) * k} y2={y0 + (y(r.domanda) - y0) * k}
+          <line class="arrow" class:hot x1={x0} y1={y0} x2={x0 + (x(r.x) - x0) * k} y2={y0 + (y(r.y) - y0) * k}
             marker-end="url(#{uid}-{hot ? 'hot' : 'cold'})" />
         {/if}
-        <circle class="dot" class:hot cx={x(r.slancio)} cy={y(r.domanda)} r={hot ? 6 : 4.5} />
+        <circle class="dot" class:hot cx={x(r.x)} cy={y(r.y)} r={hot ? 6 : 4.5} />
         <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
         <!-- la tastiera usa il pannello dei movimenti; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
-        <circle class="hit" cx={x(r.slancio)} cy={y(r.domanda)} r="20" onclick={() => onpick?.(r.id)}>
-          <title>{r.nome}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {Math.round(r.slancio * 100)} ({signedPts(r.dS)}), domanda {Math.round(r.domanda * 100)} ({signedPts(r.dD)}).</title>
+        <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" onclick={() => onpick?.(r.id)}>
+          <title>{r.nome}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}.</title>
         </circle>
       </g>
     {/each}

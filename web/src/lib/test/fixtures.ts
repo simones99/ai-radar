@@ -1,9 +1,26 @@
-import type { Dataset } from '../data/types';
+import type { Dataset, Quadrant } from '../data/types';
 
 export const FIXTURE_TODAY = new Date(2026, 9, 15, 10);
 
 const q = { 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" } as const;
 const ok = { stato: 'ok' as const, ultimo_successo: '2026-10-15T08:00:00+00:00' };
+
+const MESI = ['2025-09', '2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09'];
+const paper = (n0: number, g: number) => MESI.map((mese, i) => ({ mese, n: Math.round(n0 * g ** i), totale: 12000 }));
+const repo = (n0: number, g: number) => MESI.map((mese, i) => ({ mese, n: Math.round(n0 * g ** i), base: Math.round(6000 * 1.15 ** i) }));
+const lavoro = (rilevazioni: { data: string; media: number; it: number | null }[]) => {
+  const last = rilevazioni[rilevazioni.length - 1];
+  return { variazione: null, margine: null, peso: 0, data: last.data, ogni_10mila: { it: last.it ?? 0, us: last.media }, rilevazioni };
+};
+const pt = (slancio: number, domanda: number, pub: Quadrant, incerto = false, calcolato: Quadrant = pub) =>
+  ({ slancio, domanda, calcolato, pubblicato: pub, incerto });
+
+/** Valori veri da posizioni 0–1 sul grafico (l'inverso di nx e ny), per scrivere i test pensando alla posizione. */
+export function fromNorm<T extends { slancio?: number | null; domanda?: number | null; slancio_prec?: number | null; domanda_prec?: number | null }>(r: T): T {
+  const s = (x: number | null | undefined) => (x == null ? x : 2 ** (2 * x - 1) - 1);
+  const d = (y: number | null | undefined) => (y == null ? y : 0.1 * 900 ** y);
+  return { ...r, slancio: s(r.slancio), domanda: d(r.domanda), slancio_prec: s(r.slancio_prec), domanda_prec: d(r.domanda_prec) } as T;
+}
 
 export const FIXTURE: Dataset & Record<string, unknown> = {
   status: {
@@ -16,13 +33,49 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     },
   },
   radar: {
-    generato: '2026-10-15', base_domanda: 'open-source', quadranti: q,
+    versione: 2, generato: '2026-10-15', quadranti: q,
+    soglie: { slancio: 0, domanda: 3, rapporto_max: 1.55 },
     competenze: [
-      { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', plurale: true, descrizione: 'Sistemi che pianificano.', slancio: 0.8, domanda: 1, quadrante: 'impara-ora', slancio_prec: 0.73, domanda_prec: 1, quadrante_prec: 'impara-ora', github: { crescita: 0.7, ultimi3: 51344, precedenti3: 30073 } },
-      { id: 'mcp', nome: 'Model Context Protocol (MCP)', breve: 'MCP', descrizione: 'Lo standard per collegare strumenti.', slancio: 0.6, domanda: 0.93, quadrante: 'impara-ora', slancio_prec: 0.27, domanda_prec: 0.93, quadrante_prec: 'consolida', github: { crescita: 0.43, ultimi3: 36474, precedenti3: 25412 } },
-      { id: 'rag', nome: 'RAG e ricerca semantica', breve: 'RAG', descrizione: 'Recupero di informazioni.', slancio: 0.27, domanda: 0.87, quadrante: 'consolida', slancio_prec: 0.53, domanda_prec: 0.87, quadrante_prec: 'impara-ora', github: { crescita: 0.24, ultimi3: 17574, precedenti3: 14129 } },
-      { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.', slancio: 0.93, domanda: 0, quadrante: 'prova', slancio_prec: 0.67, domanda_prec: 0, quadrante_prec: 'prova', github: { crescita: 1.1, ultimi3: 478, precedenti3: 224 } },
-      { id: 'vector-db', nome: 'Database vettoriali', breve: 'DB vettoriali', plurale: true, descrizione: 'Indici.', slancio: 0, domanda: 0.33, quadrante: 'osserva', slancio_prec: 0, domanda_prec: 0.33, quadrante_prec: 'osserva', github: { crescita: -0.07, ultimi3: 1721, precedenti3: 1852 } },
+      { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', plurale: true, descrizione: 'Sistemi che pianificano.',
+        slancio: 0.52, slancio_margine: [0.45, 0.6], domanda: 26.4, domanda_it: 37.1, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
+        incerto: false, incerto_perche: null, slancio_prec: 0.38, domanda_prec: 26.4, quadrante_prec: 'impara-ora',
+        segnali: { arxiv: { variazione: 0.3, margine: [0.2, 0.4], peso: 0.5, mensile: paper(1200, 1.07) }, github: { variazione: 0.8, margine: [0.6, 1], peso: 0.5, mensile: repo(650, 1.3) },
+          lavoro: lavoro([{ data: '2026-10-12', media: 26.4, it: 37.1 }]) },
+        per_iniziare: [{ titolo: 'Corso gratuito di Hugging Face sugli agenti', url: 'https://huggingface.co/learn/agents-course/en/unit0/introduction', tipo: 'corso', lingua: 'en' }],
+        in_crescita: [] },
+      { id: 'mcp', nome: 'Model Context Protocol (MCP)', breve: 'MCP', descrizione: 'Lo standard per collegare strumenti.',
+        slancio: 0.15, slancio_margine: [0.05, 0.27], domanda: 3.4, domanda_it: 2.6, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
+        incerto: false, incerto_perche: null, slancio_prec: -0.27, domanda_prec: 3.4, quadrante_prec: 'consolida',
+        segnali: { arxiv: { variazione: -0.04, margine: [-0.3, 0.3], peso: 0.33, mensile: paper(20, 1.07) }, github: { variazione: 0.4, margine: [0.2, 0.6], peso: 0.67, mensile: repo(900, 1.25) },
+          lavoro: lavoro([{ data: '2026-09-14', media: 3.1, it: 2.4 }, { data: '2026-10-12', media: 3.4, it: 2.6 }]) },
+        per_iniziare: [
+          { titolo: 'Documentazione ufficiale di MCP: introduzione', url: 'https://modelcontextprotocol.io/docs/getting-started/intro', tipo: 'documentazione', lingua: 'en' },
+          { titolo: 'Corso in italiano di prova', url: 'https://example.org/corso-mcp', tipo: 'corso', lingua: 'it' },
+        ],
+        in_crescita: [{ nome: 'acme/mcp-kit', url: 'https://github.com/acme/mcp-kit', descrizione: 'Kit per server MCP.', stelle: 1200, creato: '2026-08-02' }] },
+      { id: 'rag', nome: 'RAG e ricerca semantica', breve: 'RAG', descrizione: 'Recupero di informazioni.',
+        slancio: -0.27, slancio_margine: [-0.35, -0.18], domanda: 8, domanda_it: 6.1, quadrante: 'consolida', quadrante_calcolato: 'consolida',
+        incerto: false, incerto_perche: null, slancio_prec: 0.04, domanda_prec: 8, quadrante_prec: 'impara-ora',
+        segnali: { arxiv: { variazione: -0.39, margine: [-0.5, -0.25], peso: 0.33, mensile: paper(300, 0.97) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(1400, 1.1) },
+          lavoro: lavoro([{ data: '2026-10-12', media: 8, it: 6.1 }]) },
+        per_iniziare: [], in_crescita: [] },
+      { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.',
+        slancio: 0.82, slancio_margine: [0.3, 1.6], domanda: 0.17, domanda_it: 0.28, quadrante: 'prova', quadrante_calcolato: 'prova',
+        incerto: true, incerto_perche: 'pochi paper (45 al mese)', slancio_prec: 0.27, domanda_prec: 0.17, quadrante_prec: 'prova',
+        segnali: { arxiv: { variazione: 0.9, margine: [0.2, 2], peso: 0.55, mensile: paper(30, 1.05) }, github: { variazione: 1.1, margine: [0.4, 2.2], peso: 0.45, mensile: repo(20, 1.3) },
+          lavoro: lavoro([{ data: '2026-10-12', media: 0.17, it: 0.28 }]) },
+        per_iniziare: [], in_crescita: [] },
+      { id: 'vector-db', nome: 'Database vettoriali', breve: 'DB vettoriali', plurale: true, descrizione: 'Indici.',
+        slancio: 0.05, slancio_margine: [-0.05, 0.16], domanda: 0.9, domanda_it: 0.4, quadrante: 'osserva', quadrante_calcolato: 'prova',
+        incerto: false, incerto_perche: null, slancio_prec: 0, domanda_prec: 0.9, quadrante_prec: 'osserva',
+        segnali: { arxiv: { variazione: -0.1, margine: [-0.3, 0.1], peso: 0.33, mensile: paper(15, 1) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(180, 1.08) },
+          lavoro: lavoro([{ data: '2026-10-12', media: 0.9, it: 0.4 }]) },
+        per_iniziare: [], in_crescita: [] },
+    ],
+    storico: [
+      { mese: '2026-07', competenze: { agenti: pt(0.4, 26, 'impara-ora'), mcp: pt(-0.3, 3.1, 'consolida'), rag: pt(0.05, 8, 'impara-ora'), robotica: pt(0.3, 0.2, 'prova', true), 'vector-db': pt(-0.1, 0.9, 'osserva') } },
+      { mese: '2026-08', competenze: { agenti: pt(0.38, 26.4, 'impara-ora'), mcp: pt(-0.27, 3.4, 'consolida'), rag: pt(0.04, 8, 'impara-ora'), robotica: pt(0.27, 0.17, 'prova', true), 'vector-db': pt(0, 0.9, 'osserva') } },
+      { mese: '2026-09', competenze: { agenti: pt(0.52, 26.4, 'impara-ora'), mcp: pt(0.15, 3.4, 'impara-ora'), rag: pt(-0.27, 8, 'consolida'), robotica: pt(0.82, 0.17, 'prova', true), 'vector-db': pt(0.05, 0.9, 'osserva', false, 'prova') } },
     ],
   },
   owid: {

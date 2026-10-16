@@ -51,7 +51,8 @@ describe('Persone', () => {
     show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("Usa l'AI generativa il 30% degli italiani");
     expect(screen.getByText(/Italia 30/)).toHaveClass('hot');
-    expect(screen.getByText(/Serve la chiave gratuita di Adzuna/)).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Competenze più chieste negli annunci' })).toBeInTheDocument();
+    expect(screen.queryByText(/Serve la chiave gratuita di Adzuna/)).toBeNull();
   });
 });
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { flushSync, tick } from 'svelte';
   import type { Dataset } from '../data/types';
-  import { parseHash, toHash, type TileId } from '../router';
+  import { APRI, parseHash, toHash, type TileId } from '../router';
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
   import TileFace from './TileFace.svelte';
@@ -14,7 +14,9 @@
   let elemento = $state<string | null>(start?.elemento ?? null);
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
-  let pushed = false; // la card aperta ha aggiunto un passo alla cronologia
+  let currentEl: string | null = start?.elemento ?? null; // sincrono, come current
+  let depth = 0; // passi aggiunti alla cronologia da quando la card è aperta (0: aperta da un link diretto)
+  let closing = false; // chiusura in corso: history.go(-depth), poi onPop chiude
   let riapri = $state(0); // cresce a ogni link alla card già aperta: la scheda si ricrea come a una nuova apertura
   setTitle(start?.tema ?? null);
 
@@ -40,6 +42,7 @@
 
   function show(id: TileId | null, el: string | null = null, again = false): Promise<void> {
     current = id;
+    currentEl = el;
     if (id) lastOpened = id;
     const p = withTransition(() => {
       openId = id;
@@ -63,8 +66,14 @@
 
   function openTile(id: TileId, el: string | null = null) {
     if (current === null) {
-      history.pushState({ tema: id }, '', toHash(id, el));
-      pushed = true;
+      depth = 1;
+      history.pushState({ tema: id, depth }, '', toHash(id, el));
+    } else if (current === id && el !== null && el !== currentEl) {
+      depth += 1; // dentro la card, verso un elemento: Indietro torna a dove si era
+      history.pushState({ tema: id, depth }, '', toHash(id, el));
+    } else if (current === id && el === null && currentEl !== null && depth > 1) {
+      history.back(); // «Tutte le competenze» dopo esserci entrati dalla card: come Indietro
+      return;
     } else {
       history.replaceState(history.state, '', toHash(id, el));
     }
@@ -83,9 +92,9 @@
 
   function closeTile() {
     if (current === null) return;
-    if (pushed) {
-      pushed = false;
-      history.back(); // onPop chiude e riporta il focus
+    if (depth > 0) {
+      closing = true;
+      history.go(-depth); // onPop chiude e riporta il focus
       return;
     }
     history.replaceState(null, '', location.pathname + location.search);
@@ -94,16 +103,34 @@
 
   function onPop() {
     const h = parseHash(location.hash);
+    if (closing) {
+      closing = false;
+      depth = 0;
+      if (h) history.replaceState(null, '', location.pathname + location.search); // aperta da un link diretto: si chiude davvero
+      refocus(show(null));
+      return;
+    }
     if (!h && current === null) return;
-    pushed = history.state?.tema != null;
+    depth = history.state?.depth ?? (history.state?.tema != null ? 1 : 0);
     canonical(h);
     if (!h && location.hash) {
       show(null); // ancora interna (#stato, #crediti, #temi): chiude la card e lascia la pagina dove va il link
       return;
     }
-    const p = show(h?.tema ?? null, h?.elemento ?? null);
+    const again = h != null && current === h.tema && currentEl !== h.elemento; // stessa card, altro elemento: scheda ricreata
+    const p = show(h?.tema ?? null, h?.elemento ?? null, again);
     if (!h) refocus(p);
   }
+
+  // Aperture chieste dal codice (il clic su un punto del radar): come un link.
+  $effect(() => {
+    const onApri = (e: Event) => {
+      const { tema, elemento } = (e as CustomEvent<{ tema: TileId; elemento: string | null }>).detail;
+      openTile(tema, elemento);
+    };
+    document.addEventListener(APRI, onApri);
+    return () => document.removeEventListener(APRI, onApri);
+  });
 
   function onKey(e: KeyboardEvent) {
     if (e.key === 'Escape' && current) {

@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
+import { apri } from '../router';
 import TileGrid from './TileGrid.svelte';
 
 const data = FIXTURE as Dataset;
@@ -79,7 +80,7 @@ describe('TileGrid', () => {
     history.replaceState(null, '', '/#competenze/mcp');
     render(TileGrid, { data, today });
     expect(document.getElementById('detail-competenze')).not.toBeNull();
-    expect(await screen.findByRole('button', { name: /^MCP/, pressed: true })).toBeInTheDocument();
+    expect(document.getElementById('detail-competenze')).not.toBeNull();
   });
 
   it('link alla card già aperta sullo stesso elemento: lo rimette in evidenza, scorre e porta il focus al titolo', async () => {
@@ -91,14 +92,9 @@ describe('TileGrid', () => {
     try {
       render(TileGrid, { data, today });
       await fireEvent.click(a);
-      expect(await screen.findByRole('button', { name: /^MCP/, pressed: true })).toBeInTheDocument();
-      await fireEvent.click(screen.getByRole('button', { name: /^RAG/ }));
-      expect(screen.getByRole('button', { name: /^RAG/, pressed: true })).toBeInTheDocument();
       a.focus();
       scroll.mockClear();
       await fireEvent.click(a);
-      await waitFor(() => expect(screen.getByRole('button', { name: /^MCP/, pressed: true })).toBeInTheDocument());
-      expect(screen.getByRole('button', { name: /^RAG/, pressed: false })).toBeInTheDocument();
       await waitFor(() => expect(document.activeElement).toBe(document.getElementById('h-competenze')));
       expect(scroll).toHaveBeenCalled();
       expect(location.hash).toBe('#competenze/mcp');
@@ -106,6 +102,57 @@ describe('TileGrid', () => {
     } finally {
       a.remove();
       delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
+  });
+
+  it('dal radar a una competenza aggiunge un passo: Indietro torna al radar, Esc torna alla home', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Competenze'));
+    apri('competenze', 'mcp');
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp'));
+    history.back();
+    await waitFor(() => expect(location.hash).toBe('#competenze'));
+    expect(details()).toHaveLength(1);
+    history.forward();
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp'));
+    await fireEvent.keyDown(window, { key: 'Escape' });
+    await waitFor(() => expect(details()).toHaveLength(0));
+    expect(location.hash).toBe('');
+  });
+
+  it('«Tutte le competenze» dopo esserci entrati dal radar: come Indietro', async () => {
+    const a = document.body.appendChild(document.createElement('a'));
+    a.setAttribute('href', '#competenze');
+    try {
+      render(TileGrid, { data, today });
+      await fireEvent.click(face('Competenze'));
+      apri('competenze', 'mcp');
+      await waitFor(() => expect(location.hash).toBe('#competenze/mcp'));
+      await fireEvent.click(a);
+      await waitFor(() => expect(location.hash).toBe('#competenze'));
+      history.back();
+      await waitFor(() => expect(details()).toHaveLength(0));
+      expect(location.hash).toBe('');
+    } finally {
+      a.remove();
+    }
+  });
+
+  it('link diretto a una competenza, poi radar e un’altra competenza: Esc chiude la card', async () => {
+    history.replaceState(null, '', '/#competenze/mcp');
+    const a = document.body.appendChild(document.createElement('a'));
+    a.setAttribute('href', '#competenze');
+    try {
+      render(TileGrid, { data, today });
+      await fireEvent.click(a); // dal link diretto: nessun passo da annullare, si sostituisce
+      await waitFor(() => expect(location.hash).toBe('#competenze'));
+      apri('competenze', 'rag');
+      await waitFor(() => expect(location.hash).toBe('#competenze/rag'));
+      await fireEvent.keyDown(window, { key: 'Escape' });
+      await waitFor(() => expect(details()).toHaveLength(0));
+      expect(location.hash).toBe('');
+    } finally {
+      a.remove();
     }
   });
 

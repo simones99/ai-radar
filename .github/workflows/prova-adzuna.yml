@@ -1,0 +1,42 @@
+name: Prova frasi Adzuna
+
+# Solo a mano, dalla scheda Actions. Conta le frasi candidate senza toccare data/.
+# Chiamate: Paesi x (frasi + 1), sulla stessa chiave del radar (1.000 a settimana).
+on:
+  workflow_dispatch:
+    inputs:
+      frasi:
+        description: "Frasi da provare, separate da punto e virgola"
+        required: true
+        default: "agentic AI;AI agents;LLM agents;multi-agent;on-device AI;edge AI;local LLM;small language models"
+      paesi:
+        description: "Paesi Adzuna, separati da virgola"
+        required: true
+        default: "us,gb,it,de"
+
+permissions:
+  contents: read
+
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installa le dipendenze
+        run: pip install -r requirements.txt
+
+      - name: Conta le frasi
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          AI_RADAR_USER_AGENT: "ai-radar (+https://github.com/${{ github.repository }})"
+          FRASI: ${{ inputs.frasi }}
+          PAESI: ${{ inputs.paesi }}
+        run: python scripts/adzuna_probe.py --elenco "$FRASI" --paesi "$PAESI"

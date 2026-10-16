@@ -36,6 +36,15 @@ describe('Competenze', () => {
       expect(within(blk).getByRole('link', { name: 'The Adzuna API' })).toHaveAttribute('href', 'https://www.adzuna.co.uk');
     }
   });
+  it('passando il mouse su una riga del pannello, nel radar le altre si attenuano', async () => {
+    const { container } = show(CompetenzeDetail, tile);
+    expect(container.querySelectorAll('g.pt.dim')).toHaveLength(0);
+    const link = within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getAllByRole('link')[0];
+    const ev = new Event('pointerenter');
+    Object.defineProperty(ev, 'pointerType', { value: 'mouse' });
+    await fireEvent(link, ev);
+    expect(container.querySelectorAll('g.pt.dim').length).toBeGreaterThan(0);
+  });
   it('link diretto a una competenza che non esiste: il radar, nessun errore', () => {
     show(CompetenzeDetail, tile, 'inesistente');
     expect(screen.getByRole('img', { name: /Radar delle competenze/ })).toBeInTheDocument();

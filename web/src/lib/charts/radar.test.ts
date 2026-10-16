@@ -99,4 +99,20 @@ describe('MovesPanel', () => {
     render(MovesPanel, { rows: old, quadranti: radar.quadranti });
     expect(screen.getByText('Il movimento sarà disponibile dal prossimo aggiornamento.')).toBeInTheDocument();
   });
+  it('più di 8 righe: chi è in movimento compare anche con spostamento nullo', () => {
+    const many = Array.from({ length: 12 }, (_, i) => {
+      const base = rows[i % rows.length];
+      const still = i === 11;
+      return { ...base, id: `x${i}`, nome: `Comp ${i}`, breve: `Comp ${i}`, changed: false, moving: still ? ('prova' as const) : null,
+        hasPrev: true, dS: still ? 0 : 0.2, dD: still ? 0 : 0.2, dC: still ? 0 : 0.2, move: still ? 0 : 0.2 };
+    });
+    render(MovesPanel, { rows: many, quadranti: radar.quadranti });
+    expect(screen.getAllByRole('link')).toHaveLength(8);
+    expect(screen.getByText('Comp 11')).toBeInTheDocument();
+  });
+  it('freccia e testo per i lettori di schermo accanto ai valori', () => {
+    render(MovesPanel, { rows, quadranti: radar.quadranti });
+    expect(screen.getAllByRole('link')[0]).toHaveTextContent('slancio +15%');
+    expect(screen.getAllByRole('link')[0]).toHaveTextContent('annunci ogni 10mila');
+  });
 });

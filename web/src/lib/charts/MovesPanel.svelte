@@ -10,8 +10,10 @@
     hovered?: string | null; // anteprima nel grafico al passaggio del mouse
   } = $props();
 
-  const moved = $derived(rows.filter((r) => r.hasPrev || r.moving).sort((a, b) => Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
+  const moved = $derived(rows.filter((r) => r.hasPrev || r.moving).sort((a, b) => Number(b.changed || !!b.moving) - Number(a.changed || !!a.moving) || Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
   const cls = (v: number) => (v > 0.005 ? 'up' : v < -0.005 ? 'down' : 'flat');
+  const arrow = (c: string) => (c === 'up' ? '↑' : c === 'down' ? '↓' : '');
+  const verso = (c: string) => (c === 'up' ? ', in aumento' : c === 'down' ? ', in calo' : '');
 </script>
 
 {#if moved.length === 0}
@@ -25,20 +27,22 @@
     <div class="head" aria-hidden="true"><span>Competenza</span><span>slancio</span><span>annunci</span></div>
     <ul>
       {#each moved as r (r.id)}
+        {@const cs = cls(r.dS)}
+        {@const cd = r.dp == null ? 'flat' : cls(r.dD)}
         <li>
           <a class="row" href={toHash('competenze', r.id)} title={r.nome}
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
             onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
             <span class="n">{r.breve}</span>
-            <span class="v {cls(r.dS)}">{signedPct(r.slancio)}</span>
-            <span class="v {r.dp == null ? 'flat' : cls(r.dD)}">{per10k(r.domanda)}</span>
+            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}{#if arrow(cs)}{" "}<span aria-hidden="true">{arrow(cs)}</span><span class="sr">{verso(cs)}</span>{/if}</span>
+            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span>{#if arrow(cd)}{" "}<span aria-hidden="true">{arrow(cd)}</span><span class="sr">{verso(cd)}</span>{/if}</span>
             {#if r.changed && r.qp}<span class="chip">{quadranti[r.qp]} → {quadranti[r.quadrante]}</span>{/if}
             {#if r.moving}<span class="chip">in movimento verso {quadranti[r.moving]}</span>{/if}
           </a>
         </li>
       {/each}
     </ul>
-    <p class="cite">Valori di oggi; in blu ciò che è salito nell’ultimo mese. Passa sopra una riga per trovarla nel grafico, toccala per aprire la competenza.</p>
+    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese. Passa sopra una riga per trovarla nel grafico; aprila con un clic.</p>
   </div>
 {/if}
 
@@ -59,6 +63,9 @@
   .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
   .v { text-align: right; }
   .up { color: var(--accent); font-weight: 600; }
+  .down { color: var(--fg-2); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .v { position: relative; }
   .flat { color: var(--fg-3); }
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); }

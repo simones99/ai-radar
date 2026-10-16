@@ -54,7 +54,7 @@
   .sum b { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .sum span { font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .head { display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); font-size: 12px; line-height: 16px; color: var(--fg-3); }
-  .head span + span { text-align: right; }
+  .head span + span { text-align: right; padding-right: 1em; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; }
   li + li { border-top: 1px solid var(--line); }
   .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); }

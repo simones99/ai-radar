@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
@@ -14,6 +14,24 @@ beforeEach(() => {
 });
 
 describe('TileGrid', () => {
+  it('due sezioni da 4 card, nell’ordine delle teste', () => {
+    render(TileGrid, { data, today });
+    const sezione = (name: string) => screen.getByRole('heading', { level: 2, name }).closest('section')!;
+    const ids = (s: Element) => [...s.querySelectorAll('article.tile')].map((a) => a.id);
+    expect(ids(sezione('Su cosa formarti'))).toEqual(['tile-competenze', 'tile-modelli', 'tile-open', 'tile-notizie']);
+    expect(ids(sezione("L'AI in Italia"))).toEqual(['tile-business', 'tile-persone', 'tile-norme', 'tile-rapporti']);
+  });
+
+  it('pillole in due gruppi con il nome della testa', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Business'));
+    const nav = screen.getByRole('navigation', { name: 'Altri temi' });
+    const perTe = within(nav).getByRole('group', { name: 'Su cosa formarti' });
+    const italia = within(nav).getByRole('group', { name: "L'AI in Italia" });
+    expect(within(perTe).getAllByRole('button').map((b) => b.textContent)).toEqual(['Competenze', 'Modelli e ricerca', 'Open source', 'Notizie']);
+    expect(within(italia).getAllByRole('button').map((b) => b.textContent)).toEqual(['Persone e lavoro', 'Norme', 'Rapporti']);
+  });
+
   it('8 card chiuse', () => {
     render(TileGrid, { data, today });
     expect(document.querySelectorAll('button.face')).toHaveLength(8);

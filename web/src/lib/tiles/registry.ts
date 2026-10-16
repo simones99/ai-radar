@@ -10,15 +10,20 @@ import OpenDetail from './OpenDetail.svelte';
 import PersoneDetail from './PersoneDetail.svelte';
 import NormeDetail from './NormeDetail.svelte';
 import RapportiDetail from './RapportiDetail.svelte';
-import type { TileDef } from './types';
+import type { Testa, TileDef } from './types';
+
+export const TESTE: readonly { id: Testa; eyebrow: string; label: string }[] = [
+  { id: 'per-te', eyebrow: 'Per te', label: 'Su cosa formarti' },
+  { id: 'italia', eyebrow: 'Per la tua organizzazione', label: "L'AI in Italia" },
+];
 
 export const TILES: TileDef[] = [
-  { id: 'modelli', label: 'Modelli e ricerca', source: 'epoch', eager: true, face: faceModelli, head: headModelli, Detail: ModelliDetail },
-  { id: 'open', label: 'Open source', source: 'huggingface', eager: true, face: faceOpen, head: headOpen, Detail: OpenDetail },
-  { id: 'business', label: 'Business', source: 'owid', eager: true, face: faceBusiness, head: headBusiness, Detail: BusinessDetail },
-  { id: 'persone', label: 'Persone e lavoro', source: 'owid', eager: true, face: facePersone, head: headPersone, Detail: PersoneDetail },
-  { id: 'norme', label: 'Norme', source: 'ai_act', eager: false, face: faceNorme, head: headNorme, Detail: NormeDetail },
-  { id: 'competenze', label: 'Competenze', source: 'radar', eager: false, face: faceCompetenze, head: headCompetenze, Detail: CompetenzeDetail },
-  { id: 'notizie', label: 'Notizie', source: 'feeds', eager: false, face: faceNotizie, head: headNotizie, Detail: NotizieDetail },
-  { id: 'rapporti', label: 'Rapporti', source: 'rapporti', eager: false, face: faceRapporti, head: headRapporti, Detail: RapportiDetail },
+  { id: 'competenze', label: 'Competenze', source: 'radar', eager: true, testa: 'per-te', face: faceCompetenze, head: headCompetenze, Detail: CompetenzeDetail },
+  { id: 'modelli', label: 'Modelli e ricerca', source: 'epoch', eager: true, testa: 'per-te', face: faceModelli, head: headModelli, Detail: ModelliDetail },
+  { id: 'open', label: 'Open source', source: 'huggingface', eager: true, testa: 'per-te', face: faceOpen, head: headOpen, Detail: OpenDetail },
+  { id: 'notizie', label: 'Notizie', source: 'feeds', eager: true, testa: 'per-te', face: faceNotizie, head: headNotizie, Detail: NotizieDetail },
+  { id: 'business', label: 'Business', source: 'owid', eager: false, testa: 'italia', face: faceBusiness, head: headBusiness, Detail: BusinessDetail },
+  { id: 'persone', label: 'Persone e lavoro', source: 'owid', eager: false, testa: 'italia', face: facePersone, head: headPersone, Detail: PersoneDetail },
+  { id: 'norme', label: 'Norme', source: 'ai_act', eager: false, testa: 'italia', face: faceNorme, head: headNorme, Detail: NormeDetail },
+  { id: 'rapporti', label: 'Rapporti', source: 'rapporti', eager: false, testa: 'italia', face: faceRapporti, head: headRapporti, Detail: RapportiDetail },
 ];

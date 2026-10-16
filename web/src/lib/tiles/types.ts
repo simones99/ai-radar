@@ -3,11 +3,15 @@ import type { Dataset } from '../data/types';
 import type { TileId } from '../router';
 import type { Face, Head } from '../text/frasi';
 
+/** Le due teste della home: le persone (radar) e le organizzazioni (Italia). */
+export type Testa = 'per-te' | 'italia';
+
 export interface TileDef {
   id: TileId;
   label: string;
   source: string;
   eager: boolean;
+  testa: Testa;
   face: (d: Dataset, today: Date) => Face | null;
   head: (d: Dataset, today: Date) => Head;
   Detail: Component<DetailProps>;

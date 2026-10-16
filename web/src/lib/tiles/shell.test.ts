@@ -9,7 +9,7 @@ import TileFace from './TileFace.svelte';
 import type { DetailProps, TileDef } from './types';
 
 const tile = (over: Partial<TileDef> = {}): TileDef => ({
-  id: 'business', label: 'Business', source: 'owid', eager: true,
+  id: 'business', label: 'Business', source: 'owid', eager: true, testa: 'italia',
   face: () => ({ fig: '290', unit: 'mld $', sent: 'Investimenti privati.' }),
   head: () => ({ title: [{ t: 'Titolo ' }, { t: 'in blu', em: true }], deck: 'Sottotitolo.' }),
   Detail: (() => {}) as unknown as Component<DetailProps>,

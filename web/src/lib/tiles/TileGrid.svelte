@@ -3,7 +3,7 @@
   import type { Dataset } from '../data/types';
   import { parseHash, toHash, type TileId } from '../router';
   import Pills from './Pills.svelte';
-  import { TILES } from './registry';
+  import { TESTE, TILES } from './registry';
   import TileFace from './TileFace.svelte';
 
   let { data, today }: { data: Dataset; today: Date } = $props();
@@ -96,24 +96,36 @@
   <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={openTile} onclose={closeTile} />
 {/if}
 
-<div class="tiles" class:has-open={openId !== null} id="temi">
-  {#each TILES as t (t.id)}
-    <article class="tile" class:open={openId === t.id} class:hidden={openId !== null && openId !== t.id} id="tile-{t.id}">
-      <TileFace tile={t} {data} {today} expanded={openId === t.id} onopen={() => openTile(t.id)} />
-      {#if openId === t.id}
-        {@const D = t.Detail}
-        <D {data} {today} tile={t} {elemento} onclose={closeTile} />
-      {/if}
-    </article>
+<div class="groups" class:has-open={openId !== null} id="temi">
+  {#each TESTE as g (g.id)}
+    {@const tiles = TILES.filter((t) => t.testa === g.id)}
+    <section class="group" class:hidden={openId !== null && !tiles.some((t) => t.id === openId)} aria-labelledby="g-{g.id}">
+      <h2 id="g-{g.id}" class="g-h" class:hidden={openId !== null}>{g.label}</h2>
+      <div class="tiles">
+        {#each tiles as t (t.id)}
+          <article class="tile" class:open={openId === t.id} class:hidden={openId !== null && openId !== t.id} id="tile-{t.id}">
+            <TileFace tile={t} {data} {today} expanded={openId === t.id} onopen={() => openTile(t.id)} />
+            {#if openId === t.id}
+              {@const D = t.Detail}
+              <D {data} {today} tile={t} {elemento} onclose={closeTile} />
+            {/if}
+          </article>
+        {/each}
+      </div>
+    </section>
   {/each}
 </div>
 
 <style>
+  .groups { display: grid; gap: var(--s4); }
+  .group { display: grid; gap: var(--s2); }
+  .g-h { font-weight: 600; font-size: 20px; line-height: 24px; }
   .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); }
   @media (max-width: 1040px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); } }
   .tile { min-width: 0; }
-  .has-open { grid-template-columns: minmax(0, 1fr); }
+  .has-open .tiles { grid-template-columns: minmax(0, 1fr); }
+  .has-open { gap: 0; }
   .hidden { display: none; }
   .open :global(.face) { display: none; }
 </style>

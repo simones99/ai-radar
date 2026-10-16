@@ -13,7 +13,7 @@ import type { DetailProps, TileDef } from './types';
 
 const data = FIXTURE as Dataset;
 const mk = (id: TileId, label: string, head: (d: Dataset, t: Date) => Head, Detail: Component<DetailProps>): TileDef =>
-  ({ id, label, source: 'owid', eager: false, face: () => null, head, Detail });
+  ({ id, label, source: 'owid', eager: false, testa: 'italia', face: () => null, head, Detail });
 const show = (Detail: Component<DetailProps>, tile: TileDef, elemento: string | null = null) =>
   render(Detail, { data, today, tile, elemento, onclose: () => {} });
 

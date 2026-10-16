@@ -24,9 +24,20 @@ describe('Radar', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     const pts = container.querySelectorAll('g.pt');
     for (const g of pts) {
-      expect(g.querySelector('circle.hit > title')?.textContent).toMatch(/Slancio \d+/);
+      expect(g.querySelector('circle.hit > title')?.textContent).toMatch(/Slancio [+−±]\d+% in 6 mesi, [\d,]+ annunci ogni 10mila/);
       expect(g.querySelector('circle.dot > title')).toBeNull();
     }
+  });
+  it('assi con le tacche in unità vere e le soglie al centro', () => {
+    render(Radar, { rows, quadranti: radar.quadranti });
+    for (const t of ['−50%', '0', '+100%', '0,1', '3', '90']) expect(screen.getByText(t)).toBeInTheDocument();
+    expect(screen.getByText('Slancio in 6 mesi, rispetto all’AI →')).toBeInTheDocument();
+    expect(screen.getByText('Annunci ogni 10mila →')).toBeInTheDocument();
+  });
+  it('punto vuoto per i dati incerti', () => {
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti });
+    expect(container.querySelectorAll('circle.dot.hollow')).toHaveLength(1); // Robotica
+    expect(container.querySelector('g.pt:nth-of-type(4) circle.hit > title')?.textContent).toMatch(/Dato incerto/);
   });
   it('radar senza posizione precedente: nessuna freccia', () => {
     const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) });

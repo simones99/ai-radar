@@ -1,8 +1,8 @@
 <script lang="ts">
   import { scaleLinear } from 'd3-scale';
-  import { MOVE_MIN, type RadarRowM } from '../data/derive';
+  import { MOVE_MIN, nx, ny, type RadarRowM } from '../data/derive';
   import type { Quadrant } from '../data/types';
-  import { per10k, signedPct } from '../text/format';
+  import { nf, per10k, signedPct } from '../text/format';
   import { cambio } from '../text/frasi';
   import { leader, measureText, placeLabels, type Box } from './labels';
 
@@ -19,9 +19,14 @@
   const w = $derived(Math.max(cw, 300));
   const narrow = $derived(w < 520);
   const H = $derived(Math.round(Math.max(384, Math.min(w * 0.72, 544))));
-  const m = { l: 24, r: 8, t: 24, b: 40 };
+  const m = { l: 48, r: 8, t: 24, b: 64 };
   const x = $derived(scaleLinear([-0.04, 1.04], [m.l, w - m.r]));
   const y = $derived(scaleLinear([-0.04, 1.04], [H - m.b, m.t]));
+  // Tacche in unità vere sugli assi logaritmici (domini e soglie in derive.ts).
+  const XT = [-0.5, -0.25, 0, 0.5, 1];
+  const YT = [0.1, 1, 3, 10, 90];
+  const xLabel = (v: number) => (v === 0 ? '0' : signedPct(v));
+  const yLabel = (v: number) => nf(v, v < 1 ? 1 : 0);
   const QL = $derived([
     { id: 'consolida' as Quadrant, x: m.l, y: m.t - 8, a: 'start' },
     { id: 'impara-ora' as Quadrant, x: w - m.r, y: m.t - 8, a: 'end' },
@@ -55,13 +60,21 @@
       <marker id="{uid}-cold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="mk" /></marker>
     </defs>
     <rect class="quad" x={x(0.5)} y={y(1.04)} width={x(1.04) - x(0.5)} height={y(0.5) - y(1.04)} rx="12" />
-    <line class="median" x1={x(0.5)} x2={x(0.5)} y1={y(1.04)} y2={y(-0.04)} />
-    <line class="median" x1={x(-0.04)} x2={x(1.04)} y1={y(0.5)} y2={y(0.5)} />
+    {#each XT as v (v)}
+      <line class="tick" x1={x(nx(v))} x2={x(nx(v))} y1={y(1.04)} y2={y(-0.04)} />
+      <text class="t10" x={x(nx(v))} y={H - m.b + 34} text-anchor="middle">{xLabel(v)}</text>
+    {/each}
+    {#each YT as v (v)}
+      <line class="tick" x1={x(-0.04)} x2={x(1.04)} y1={y(ny(v))} y2={y(ny(v))} />
+      <text class="t10" x={m.l - 6} y={y(ny(v)) + 3} text-anchor="end">{yLabel(v)}</text>
+    {/each}
+    <line class="soglia" x1={x(0.5)} x2={x(0.5)} y1={y(1.04)} y2={y(-0.04)} />
+    <line class="soglia" x1={x(-0.04)} x2={x(1.04)} y1={y(0.5)} y2={y(0.5)} />
     {#each QL as q (q.id)}
       <text class="ql" class:hot={q.id === 'impara-ora'} x={q.x} y={q.y} text-anchor={q.a}>{quadranti[q.id]}</text>
     {/each}
-    <text class="t12" x={(x(0) + x(1)) / 2} y={H - 4} text-anchor="middle">Slancio: crescita negli ultimi 3 mesi →</text>
-    <text class="t12" transform="translate({m.l - 10},{(y(0) + y(1)) / 2}) rotate(-90)" text-anchor="middle">Domanda →</text>
+    <text class="t12" x={(x(0) + x(1)) / 2} y={H - 4} text-anchor="middle">Slancio in 6 mesi, rispetto all’AI →</text>
+    <text class="t12" transform="translate(12,{(y(0) + y(1)) / 2}) rotate(-90)" text-anchor="middle">Annunci ogni 10mila →</text>
 
     {#each rows as r (r.id)}
       {@const hot = r.quadrante === 'impara-ora'}
@@ -75,7 +88,7 @@
           <line class="arrow" class:hot x1={x0} y1={y0} x2={x0 + (x(r.x) - x0) * k} y2={y0 + (y(r.y) - y0) * k}
             marker-end="url(#{uid}-{hot ? 'hot' : 'cold'})" />
         {/if}
-        <circle class="dot" class:hot cx={x(r.x)} cy={y(r.y)} r={hot ? 6 : 4.5} />
+        <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={hot ? 6 : 4.5} />
         <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
         <!-- la tastiera usa il pannello dei movimenti; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
         <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" onclick={() => onpick?.(r.id)}>
@@ -101,9 +114,11 @@
 <style>
   svg { display: block; width: 100%; height: auto; overflow: visible; }
   .quad { fill: var(--accent-soft); }
-  .median { stroke: var(--line-2); stroke-dasharray: 2 4; }
+  .soglia { stroke: var(--line-2); stroke-dasharray: 2 4; }
+  .tick { stroke: var(--line); }
   .ql { font: 500 12px var(--font); fill: var(--fg-3); } .ql.hot { fill: var(--accent); font-weight: 600; }
   .dot { fill: var(--fg-3); stroke: var(--card); stroke-width: 2; } .dot.hot { fill: var(--accent); }
+  .dot.hollow { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.5; } .dot.hollow.hot { stroke: var(--accent); }
   .hit { fill: transparent; cursor: pointer; }
   .prev { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.25; } .prev.hot { stroke: var(--accent); }
   .arrow { stroke: var(--fg-3); stroke-width: 1.5; } .arrow.hot { stroke: var(--accent); }

@@ -28,3 +28,9 @@ export const toHash = (tema: TileId, elemento?: string | null): string =>
 
 export const slug = (s: string): string =>
   s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+/** Apre una card, o un suo elemento, con la stessa cronologia dei link: TileGrid ascolta l'evento. */
+export const APRI = 'ai-radar:apri';
+export function apri(tema: TileId, elemento: string | null = null): void {
+  document.dispatchEvent(new CustomEvent(APRI, { detail: { tema, elemento } }));
+}

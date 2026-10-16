@@ -1,10 +1,11 @@
 # AI Radar
 
-Una dashboard pubblica che risponde a tre domande, con dati aperti che si aggiornano da soli ogni settimana:
+Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli ogni settimana:
 
-1. **Dove va l'AI?** Calcolo usato per addestrare i modelli, capacità contro prezzo, volume della ricerca, diffusione dei modelli con pesi aperti.
-2. **Come stare al passo?** Notizie dai laboratori e dalle newsletter di riferimento, modelli di tendenza su Hugging Face, progetti open source più seguiti.
-3. **Su cosa formarsi?** Un radar di 16 competenze che incrocia ricerca (arXiv), open source (GitHub) e mercato del lavoro (Adzuna), con un confronto tra Europa e USA.
+1. **Su cosa formarti**, per le persone. Un radar di 16 competenze che incrocia ricerca (arXiv), open source (GitHub) e mercato del lavoro (Adzuna), con un confronto tra Europa e USA. Accanto, i temi che lo alimentano: modelli e ricerca, open source, notizie dai laboratori e dalle newsletter di riferimento.
+2. **L'AI in Italia**, per le organizzazioni. Un osservatorio con l'Italia in primo piano: imprese che usano l'AI, persone e lavoro, scadenze dell'AI Act, rapporti in arrivo.
+
+In home due porte, *Per te* e *Per la tua organizzazione*, danno la notizia della settimana di ciascuna testa e con un clic aprono la card da cui viene. Sotto ci sono le card, 4 per testa: Competenze, Modelli e ricerca, Open source, Notizie; Business, Persone e lavoro, Norme, Rapporti.
 
 Tutto gira gratis su GitHub: GitHub Actions raccoglie i dati ogni lunedì e GitHub Pages pubblica la pagina.
 
@@ -96,7 +97,7 @@ Le chiavi si passano come variabili d'ambiente: `AA_API_KEY`, `ADZUNA_APP_ID`, `
 config/      competenze, fonti, scadenze AI Act, rapporti (da modificare)
 pipeline/    un modulo per fonte + radar.py (calcolo) + run.py (orchestrazione)
 data/        dati raccolti e storico (scritti dalla pipeline)
-web/         app Svelte: card, grafici, foto, test
+web/         app Svelte: porte, card, grafici, foto, test
 scripts/     build_site.py (costruisce _site/), fetch_photos.py (foto da Commons)
 tests/       test della pipeline con risposte HTTP simulate
 .github/     workflow settimanale

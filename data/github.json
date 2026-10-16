@@ -47,8 +47,8 @@
    "2026-05": 9459,
    "2026-06": 12365,
    "2026-07": 16272,
-   "2026-08": 17656,
-   "2026-09": 17529
+   "2026-08": 17658,
+   "2026-09": 17531
   },
   "coding-agenti": {
    "2025-09": 22,
@@ -77,7 +77,7 @@
    "2026-05": 8595,
    "2026-06": 9161,
    "2026-07": 11008,
-   "2026-08": 11551,
+   "2026-08": 11552,
    "2026-09": 13982
   },
   "rag": {
@@ -122,7 +122,7 @@
    "2026-05": 319,
    "2026-06": 397,
    "2026-07": 382,
-   "2026-08": 381,
+   "2026-08": 382,
    "2026-09": 388
   },
   "context-engineering": {
@@ -138,7 +138,7 @@
    "2026-06": 2162,
    "2026-07": 2476,
    "2026-08": 2319,
-   "2026-09": 2049
+   "2026-09": 2050
   },
   "sicurezza": {
    "2025-09": 44,
@@ -167,7 +167,7 @@
    "2026-05": 882,
    "2026-06": 751,
    "2026-07": 784,
-   "2026-08": 905,
+   "2026-08": 906,
    "2026-09": 779
   },
   "dati-per-ai": {
@@ -281,7 +281,7 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-10-16T09:11:34Z",
+   "ultimo_push": "2026-10-16T09:39:02Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -305,7 +305,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 93913
+     "stelle": 93916
     }
    ]
   },
@@ -321,7 +321,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 183402
+     "stelle": 183404
     }
    ]
   },
@@ -337,7 +337,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 43348
+     "stelle": 43352
     }
    ]
   },
@@ -401,7 +401,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 61440
+     "stelle": 61441
     }
    ]
   },
@@ -417,7 +417,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 59759
+     "stelle": 59760
     }
    ]
   },
@@ -433,7 +433,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 151151
+     "stelle": 151154
     }
    ]
   },
@@ -441,7 +441,7 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-10-16T09:01:45Z",
+   "ultimo_push": "2026-10-16T09:40:18Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -449,7 +449,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 131351
+     "stelle": 131353
     }
    ]
   },
@@ -457,7 +457,7 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-10-16T09:16:09Z",
+   "ultimo_push": "2026-10-16T09:41:46Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -465,7 +465,7 @@
     },
     {
      "data": "2026-10-16",
-     "stelle": 78100
+     "stelle": 78101
     }
    ]
   }

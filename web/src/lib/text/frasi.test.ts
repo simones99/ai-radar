@@ -3,8 +3,9 @@ import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
-  headBusiness, headCompetenze, headNotizie, headNorme, headPersone, tipoLabel,
+  cambio, headBusiness, headCompetenze, headNotizie, headNorme, headPersone, tipoLabel,
 } from './frasi';
+import { radarRows } from '../data/derive';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -35,6 +36,26 @@ describe('numeri chiave delle card', () => {
   });
   it('competenze: chi entra e chi esce', () => {
     expect(faceCompetenze(d, today)).toEqual({ fig: 'MCP', unit: '', sent: 'Entra tra le competenze da imparare ora; RAG esce.' });
+  });
+  it('competenze: nomi plurali, verbo al plurale anche da soli', () => {
+    const comp = d.radar!.competenze.map((r) => (r.id === 'mcp' ? { ...r, breve: 'Multimodali', plurale: true } : r.id === 'rag' ? { ...r, breve: 'DB vettoriali', plurale: true } : r));
+    const pl: Dataset = { radar: { ...d.radar!, competenze: comp } };
+    expect(faceCompetenze(pl, today)).toEqual({ fig: 'Multimodali', unit: '', sent: 'Entrano tra le competenze da imparare ora; DB vettoriali escono.' });
+    const h = headCompetenze(pl, today);
+    expect(text(h.title)).toBe('Multimodali entrano tra le competenze da imparare ora');
+    expect(h.deck).toBe('DB vettoriali escono da Impara ora. Oggi 2 competenze su 5 sono sopra la mediana sia per slancio sia per domanda.');
+  });
+  it('competenze: etichetta del cambio sul radar, al plurale con i nomi plurali', () => {
+    const q = d.radar!.quadranti;
+    const rows = radarRows(d.radar!);
+    const by = (id: string) => rows.find((r) => r.id === id)!;
+    expect(cambio(by('mcp'), q)).toBe('entra in Impara ora');
+    expect(cambio(by('rag'), q)).toBe('esce da Impara ora');
+    expect(cambio({ ...by('mcp'), plurale: true }, q)).toBe('entrano in Impara ora');
+    expect(cambio({ ...by('rag'), plurale: true }, q)).toBe('escono da Impara ora');
+    const passa = { ...by('vector-db'), quadrante: 'prova' as const, qp: 'osserva' as const };
+    expect(cambio(passa, q)).toBe('passano a Da provare');
+    expect(cambio({ ...passa, plurale: false }, q)).toBe('passa a Da provare');
   });
   it('competenze: radar vecchio senza posizione precedente', () => {
     const old: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, breve, ...r }) => r) } };

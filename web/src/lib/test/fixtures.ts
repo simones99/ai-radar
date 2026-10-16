@@ -18,11 +18,11 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
   radar: {
     generato: '2026-10-15', base_domanda: 'open-source', quadranti: q,
     competenze: [
-      { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', descrizione: 'Sistemi che pianificano.', slancio: 0.8, domanda: 1, quadrante: 'impara-ora', slancio_prec: 0.73, domanda_prec: 1, quadrante_prec: 'impara-ora', github: { crescita: 0.7, ultimi3: 51344, precedenti3: 30073 } },
+      { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', plurale: true, descrizione: 'Sistemi che pianificano.', slancio: 0.8, domanda: 1, quadrante: 'impara-ora', slancio_prec: 0.73, domanda_prec: 1, quadrante_prec: 'impara-ora', github: { crescita: 0.7, ultimi3: 51344, precedenti3: 30073 } },
       { id: 'mcp', nome: 'Model Context Protocol (MCP)', breve: 'MCP', descrizione: 'Lo standard per collegare strumenti.', slancio: 0.6, domanda: 0.93, quadrante: 'impara-ora', slancio_prec: 0.27, domanda_prec: 0.93, quadrante_prec: 'consolida', github: { crescita: 0.43, ultimi3: 36474, precedenti3: 25412 } },
       { id: 'rag', nome: 'RAG e ricerca semantica', breve: 'RAG', descrizione: 'Recupero di informazioni.', slancio: 0.27, domanda: 0.87, quadrante: 'consolida', slancio_prec: 0.53, domanda_prec: 0.87, quadrante_prec: 'impara-ora', github: { crescita: 0.24, ultimi3: 17574, precedenti3: 14129 } },
       { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.', slancio: 0.93, domanda: 0, quadrante: 'prova', slancio_prec: 0.67, domanda_prec: 0, quadrante_prec: 'prova', github: { crescita: 1.1, ultimi3: 478, precedenti3: 224 } },
-      { id: 'vector-db', nome: 'Database vettoriali', breve: 'DB vettoriali', descrizione: 'Indici.', slancio: 0, domanda: 0.33, quadrante: 'osserva', slancio_prec: 0, domanda_prec: 0.33, quadrante_prec: 'osserva', github: { crescita: -0.07, ultimi3: 1721, precedenti3: 1852 } },
+      { id: 'vector-db', nome: 'Database vettoriali', breve: 'DB vettoriali', plurale: true, descrizione: 'Indici.', slancio: 0, domanda: 0.33, quadrante: 'osserva', slancio_prec: 0, domanda_prec: 0.33, quadrante_prec: 'osserva', github: { crescita: -0.07, ultimi3: 1721, precedenti3: 1852 } },
     ],
   },
   owid: {

@@ -183,6 +183,7 @@ def _signals(skills: list[dict], arx: dict, gh: dict, jobs: dict, today: date) -
             "id": sid,
             "nome": sk["nome"],
             "breve": sk.get("breve", sk["nome"]),
+            "plurale": bool(sk.get("plurale", False)),  # per accordare il verbo: «Multimodali entrano»
             "descrizione": sk.get("descrizione", ""),
             "arxiv": arxiv_signal(arx, sid),
             "github": github_signal(gh, sid),

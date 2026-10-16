@@ -3,6 +3,7 @@
   import { MOVE_MIN, type RadarRowM } from '../data/derive';
   import type { Quadrant } from '../data/types';
   import { signedPts } from '../text/format';
+  import { cambio } from '../text/frasi';
   import { leader, measureText, placeLabels, type Box } from './labels';
 
   let { rows, quadranti, highlight = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', onpick }: {
@@ -27,8 +28,6 @@
     { id: 'osserva' as Quadrant, x: m.l, y: H - m.b + 16, a: 'start' },
     { id: 'prova' as Quadrant, x: w - m.r, y: H - m.b + 16, a: 'end' },
   ]);
-  const transition = (r: RadarRowM) =>
-    r.quadrante === 'impara-ora' ? 'entra in Impara ora' : r.qp === 'impara-ora' ? 'esce da Impara ora' : `passa a ${quadranti[r.quadrante]}`;
   const LH = 16;
   const layout = $derived.by(() => {
     const obstacles: Box[] = QL.map((q) => {
@@ -39,7 +38,7 @@
     rows.forEach((r) => obstacles.push({ x0: x(r.slancio) - 7, y0: y(r.domanda) - 7, x1: x(r.slancio) + 7, y1: y(r.domanda) + 7 }));
     const order = (r: RadarRowM) => (r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
-      const lines = [r.breve, ...(r.changed && !narrow ? [transition(r)] : [])];
+      const lines = [r.breve, ...(r.changed && !narrow ? [cambio(r, quadranti)] : [])];
       const wd = Math.max(...lines.map((t, i) => measureText(t, `${i === 0 && r.quadrante === 'impara-ora' ? 600 : 400} 12px sans-serif`)));
       return { id: r.id, x: x(r.slancio), y: y(r.domanda), w: wd, h: lines.length * LH, lines, r };
     });

@@ -14,6 +14,8 @@ export interface RadarRow {
   id: string;
   nome: string;
   breve?: string;
+  /** true se breve è al plurale: il verbo si accorda («Multimodali entrano»). */
+  plurale?: boolean;
   descrizione: string;
   slancio: number | null;
   domanda: number | null;

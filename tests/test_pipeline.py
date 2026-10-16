@@ -295,6 +295,7 @@ def test_radar_previous_positions(tmp_path, monkeypatch):
     counts = {"x": [10, 10, 10, 10, 10, 10, 300], "y": [0, 0, 0, 50, 50, 50, 0], "z": [40, 40, 40, 20, 20, 20, 20]}
     common.write_json("github.json", {"mesi": months, "topics": {k: dict(zip(months, v)) for k, v in counts.items()}})
     skills = [{"id": k, "nome": f"Competenza {k}", "breve": k.upper()} for k in counts]
+    skills[0]["plurale"] = True
     radar.run(skills, date(2026, 10, 15))
     rows = {r["id"]: r for r in json.loads((tmp_path / "radar.json").read_text())["competenze"]}
 
@@ -304,6 +305,7 @@ def test_radar_previous_positions(tmp_path, monkeypatch):
     assert (rows["z"]["slancio_prec"], rows["z"]["domanda_prec"], rows["z"]["quadrante_prec"]) == (0.0, 0.5, "consolida")
     assert rows["z"]["quadrante"] == "osserva"
     assert rows["x"]["breve"] == "X"
+    assert (rows["x"]["plurale"], rows["y"]["plurale"]) == (True, False)
 
 
 def test_radar_ignores_incomplete_arxiv(tmp_path, monkeypatch):
@@ -344,6 +346,7 @@ def test_radar_previous_demand_without_old_job_snapshot(tmp_path, monkeypatch):
         assert r["domanda_prec"] is None
         assert r["quadrante_prec"] == radar.quadrant(r["slancio_prec"], r["domanda"])
         assert r["breve"] == r["nome"]
+        assert r["plurale"] is False
 
 
 def test_radar_history_from_monthly_series(tmp_path, monkeypatch):

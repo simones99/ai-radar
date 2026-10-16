@@ -2,7 +2,7 @@ import {
   MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
   type RadarRowM,
 } from '../data/derive';
-import type { Dataset } from '../data/types';
+import type { Dataset, Quadrant } from '../data/types';
 import { slug, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, short, ym } from './format';
 
@@ -26,6 +26,9 @@ const TIPI: Record<string, string> = {
 export const tipoLabel = (k: string): string => TIPI[k] ?? k;
 const joinE = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} e ${xs[xs.length - 1]}`);
 const plain = (t: string): TitleParts => [{ t }];
+/** Verbo accordato ai nomi brevi: plurale con più competenze o con un nome plurale («Multimodali entrano»). */
+const verbo = (rows: { plurale?: boolean }[], sing: string, plur: string): string =>
+  rows.length > 1 || rows[0]?.plurale ? plur : sing;
 
 // ---------------------------------------------------------------- modelli
 export function faceModelli(d: Dataset, _today?: Date): Face | null {
@@ -154,13 +157,18 @@ export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
   if (inn.length) {
     return {
       fig: inn.map((r) => r.breve).join(', '), unit: '',
-      sent: `${inn.length > 1 ? 'Entrano' : 'Entra'} tra le competenze da imparare ora` +
-        (out.length ? `; ${out.map((r) => r.breve).join(', ')} ${out.length > 1 ? 'escono' : 'esce'}.` : '.'),
+      sent: `${verbo(inn, 'Entra', 'Entrano')} tra le competenze da imparare ora` +
+        (out.length ? `; ${out.map((r) => r.breve).join(', ')} ${verbo(out, 'esce', 'escono')}.` : '.'),
     };
   }
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
   return { fig: String(n), unit: `su ${rows.length}`, sent: 'Competenze da imparare ora: sopra la mediana sia per slancio sia per domanda.' };
 }
+/** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
+export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
+  r.quadrante === 'impara-ora' ? `${verbo([r], 'entra', 'entrano')} in Impara ora`
+    : r.qp === 'impara-ora' ? `${verbo([r], 'esce', 'escono')} da Impara ora`
+      : `${verbo([r], 'passa', 'passano')} a ${quadranti[r.quadrante]}`;
 export function headCompetenze(d: Dataset, _today?: Date): Head {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };
@@ -169,8 +177,8 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   const tail = `Oggi ${n} competenze su ${rows.length} sono sopra la mediana sia per slancio sia per domanda.`;
   if (!inn.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   return {
-    title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${inn.length > 1 ? 'entrano' : 'entra'} tra le competenze da imparare ora` }],
-    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${out.length > 1 ? 'escono' : 'esce'} da Impara ora. ` : '') + tail,
+    title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` }],
+    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + tail,
   };
 }
 
@@ -234,10 +242,10 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   const { inn, out } = radarChanges(rows);
   if (inn.length || out.length) {
     const title: TitleParts = [];
-    if (inn.length) title.push(...names(inn), { t: ` ${inn.length > 1 ? 'entrano' : 'entra'} tra le competenze da imparare ora` });
+    if (inn.length) title.push(...names(inn), { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` });
     if (out.length) {
       if (inn.length) title.push({ t: '; ' });
-      title.push(...names(out), { t: ` ${out.length > 1 ? 'escono' : 'esce'}${inn.length ? '' : ' da Impara ora'}` });
+      title.push(...names(out), { t: ` ${verbo(out, 'esce', 'escono')}${inn.length ? '' : ' da Impara ora'}` });
     }
     return { title, meta, target: to(inn[0] ?? out[0]) };
   }
@@ -247,7 +255,7 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   if (changed.length) {
     const dest = changed[0].quadrante;
     const who = changed.every((r) => r.quadrante === dest) ? changed : [changed[0]];
-    return { title: [...names(who), { t: ` ${who.length > 1 ? 'passano' : 'passa'} a ${d.radar.quadranti[dest]}` }], meta, target: to(who[0]) };
+    return { title: [...names(who), { t: ` ${verbo(who, 'passa', 'passano')} a ${d.radar.quadranti[dest]}` }], meta, target: to(who[0]) };
   }
 
   // 3. lo spostamento più grande, se almeno MOVE_MIN
@@ -255,8 +263,9 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   if (big) {
     const onSlancio = Math.abs(big.dS) >= Math.abs(big.dD);
     const v = onSlancio ? big.dS : big.dD;
+    const verb = v > 0 ? verbo([big], 'guadagna', 'guadagnano') : verbo([big], 'perde', 'perdono');
     return {
-      title: [{ t: big.breve, em: true }, { t: ` ${v > 0 ? 'guadagna' : 'perde'} ${Math.round(Math.abs(v) * 100)} punti di ${onSlancio ? 'slancio' : 'domanda'}` }],
+      title: [{ t: big.breve, em: true }, { t: ` ${verb} ${Math.round(Math.abs(v) * 100)} punti di ${onSlancio ? 'slancio' : 'domanda'}` }],
       meta, target: to(big),
     };
   }

@@ -1,7 +1,8 @@
 # Competenze monitorate dal radar "Su cosa formarsi".
 #
 # nome è il nome completo (tabella, tooltip); breve è l'etichetta sul grafico
-# (facoltativa, se manca si usa nome).
+# (facoltativa, se manca si usa nome). plurale: true se breve è al plurale,
+# così le frasi accordano il verbo («DB vettoriali perdono», non «perde»).
 #
 # Ogni competenza ha tre segnali, tutti opzionali:
 #   arxiv:  frasi cercate negli abstract dei paper (OR tra le frasi)
@@ -19,6 +20,7 @@ skills:
   - id: agenti
     nome: Agenti AI
     breve: Agenti AI
+    plurale: true
     descrizione: Sistemi che pianificano e usano strumenti per completare compiti in più passi.
     arxiv: ["LLM agent", "LLM agents", "agentic"]
     github: ai-agents
@@ -27,6 +29,7 @@ skills:
   - id: coding-agenti
     nome: Sviluppo con agenti di coding
     breve: Agenti di coding
+    plurale: true
     descrizione: Scrivere e mantenere software delegando a agenti come Claude Code o Codex.
     arxiv: ["coding agent", "software engineering agent", "SWE-bench"]
     github: coding-agent
@@ -107,6 +110,7 @@ skills:
   - id: vector-db
     nome: Database vettoriali
     breve: DB vettoriali
+    plurale: true
     descrizione: Archivi di embedding per ricerca semantica e memoria degli agenti.
     arxiv: ["vector database", "approximate nearest neighbor search"]
     github: vector-database
@@ -115,6 +119,7 @@ skills:
   - id: multimodale
     nome: Modelli multimodali
     breve: Multimodali
+    plurale: true
     descrizione: Modelli che combinano testo, immagini, audio e video.
     arxiv: ["vision-language model", "multimodal large language model"]
     github: multimodal
@@ -131,6 +136,7 @@ skills:
   - id: modelli-locali
     nome: Modelli piccoli e locali
     breve: Modelli locali
+    plurale: true
     descrizione: Modelli aperti che girano su laptop o server propri, senza cloud.
     arxiv: ["small language model", "on-device inference", "quantization"]
     github: local-llm

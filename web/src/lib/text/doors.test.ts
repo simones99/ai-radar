@@ -66,6 +66,26 @@ describe('porta Per te', () => {
     const p = doorPerTe(radar([{ quadrante: 'impara-ora', slancio: 0.6, domanda: 0.9, slancio_prec: 0.6, domanda_prec: 0.6, quadrante_prec: 'impara-ora' }]), today);
     expect(text(p.title)).toBe('C0 guadagna 30 punti di domanda');
   });
+  describe('nomi plurali: il verbo al plurale anche con una sola competenza', () => {
+    const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
+    const esce = { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' } as const;
+    it('1. entrano, escono', () => {
+      expect(text(doorPerTe(radar([{ ...entra, breve: 'Multimodali', plurale: true }]), today).title)).toBe('Multimodali entrano tra le competenze da imparare ora');
+      expect(text(doorPerTe(radar([{ ...esce, breve: 'DB vettoriali', plurale: true }]), today).title)).toBe('DB vettoriali escono da Impara ora');
+      expect(text(doorPerTe(radar([{ ...entra, breve: 'Multimodali', plurale: true }, esce]), today).title))
+        .toBe('Multimodali entrano tra le competenze da imparare ora; C1 esce');
+    });
+    it('2. passano', () => {
+      const p = doorPerTe(radar([{ breve: 'Multimodali', plurale: true, quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' }]), today);
+      expect(text(p.title)).toBe('Multimodali passano a Da provare');
+    });
+    it('3. perdono, guadagnano', () => {
+      const perde = doorPerTe(radar([{ breve: 'DB vettoriali', plurale: true, quadrante: 'osserva', slancio: 0.0, domanda: 0.3, slancio_prec: 0.33, domanda_prec: 0.3, quadrante_prec: 'osserva' }]), today);
+      expect(text(perde.title)).toBe('DB vettoriali perdono 33 punti di slancio');
+      const guadagna = doorPerTe(radar([{ breve: 'Agenti AI', plurale: true, slancio: 0.6, domanda: 0.9, slancio_prec: 0.6, domanda_prec: 0.6, quadrante_prec: 'impara-ora' }]), today);
+      expect(text(guadagna.title)).toBe('Agenti AI guadagnano 30 punti di domanda');
+    });
+  });
   it('4. riserva: quante competenze da imparare ora', () => {
     const p = doorPerTe(radar([{}, { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }]), today);
     expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');

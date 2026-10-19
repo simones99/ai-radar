@@ -4,325 +4,325 @@
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://atlas.mitre.org/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://bird-bench.github.io/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://code.claude.com/docs/en/best-practices": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://code.claude.com/docs/en/overview": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://developers.llamaindex.ai/python/framework/understanding/rag/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://developers.openai.com/api/docs/guides/agents": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://developers.openai.com/api/docs/guides/evals": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://developers.openai.com/api/docs/guides/prompt-engineering": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://developers.openai.com/api/docs/guides/retrieval": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://digital-strategy.ec.europa.eu/it/policies/ai-act-governance-and-enforcement": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://digital-strategy.ec.europa.eu/it/policies/regulatory-framework-ai": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://docs.langchain.com/oss/python/langchain/sql-agent": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://docs.vllm.ai/en/latest/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://genai.owasp.org/llm-top-10/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/DataTalksClub/data-engineering-zoomcamp": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/DataTalksClub/llm-zoomcamp": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/DataTalksClub/mlops-zoomcamp": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/EleutherAI/lm-evaluation-harness": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/chroma-core/chroma": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/defog-ai/sql-eval": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/facebookresearch/faiss/wiki": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/ggml-org/llama.cpp": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/huggingface/lerobot": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/modelcontextprotocol/servers": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/ollama/ollama": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/openai/codex": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/openvla/openvla": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://github.com/pgvector/pgvector": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/blog/vlms": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/docs/datasets/index": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/docs/evaluate/index": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/docs/peft/index": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/docs/transformers/quantization/overview": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/docs/trl/index": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/learn/agents-course/en/unit0/introduction": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/learn/computer-vision-course/unit4/multimodal-models/vlm-intro": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/learn/cookbook/advanced_rag": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/learn/llm-course/chapter11/1": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/learn/mcp-course/unit0/introduction": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://huggingface.co/learn/robotics-course/unit0/1": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://mlflow.org/docs/latest/genai/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://modelcontextprotocol.io/docs/getting-started/intro": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://platform.claude.com/docs/en/build-with-claude/vision": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://www.anthropic.com/engineering/building-effective-agents": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://www.deeplearning.ai/courses/building-evaluating-advanced-rag": {
    "stato": 403,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://www.nist.gov/itl/ai-risk-management-framework": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://www.promptingguide.ai/it": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://www.sbert.net/": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   },
   "https://yale-lily.github.io/spider": {
    "stato": 200,
    "errori": 0,
    "ok": true,
-   "controllato": "2026-10-16"
+   "controllato": "2026-10-19"
   }
  }
 }

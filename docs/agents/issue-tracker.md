@@ -20,6 +20,10 @@ Create a new file under `.scratch/<feature-slug>/` (creating the directory if ne
 
 Read the file at the referenced path. The user will normally pass the path or the issue number directly.
 
+## When a ticket is done
+
+Once the work is committed, close the ticket in its file: tick every acceptance criterion (`- [x]`) and set the status line to `**Status:** done`. A ticket dropped instead of built gets `**Status:** wontfix`.
+
 ## Wayfinding operations
 
 Used by `/wayfinder`. The **map** is a file with one **child** file per ticket.

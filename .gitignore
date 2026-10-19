@@ -11,4 +11,5 @@ web/public/data/
 web/test-results/
 web/playwright-report/
 .superpowers/
+.scratch/
 .playwright-mcp/

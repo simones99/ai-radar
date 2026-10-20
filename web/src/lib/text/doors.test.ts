@@ -103,6 +103,53 @@ describe('porta Per te', () => {
   });
 });
 
+describe('porta Per te con un ruolo', () => {
+  const RUOLI = [{ id: 'prodotto', nome: 'Prodotto' }, { id: 'dati', nome: 'Dati e analisi' }];
+  const conRuoli = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({ radar: { ...radar(rows).radar!, ruoli: RUOLI } });
+  const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
+  const passa = { quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' } as const;
+
+  it('le regole si provano prima sulle competenze del ruolo; etichetta e link dicono il ruolo', () => {
+    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['dati'] }, { ...passa, ruoli: ['prodotto'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C1 passa a Da provare');
+    expect(p.ruolo).toBe('Prodotto');
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1', params: { ruolo: 'prodotto' } });
+  });
+  it('1. sul ruolo: solo le entrate e uscite delle sue competenze', () => {
+    const esce = { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' } as const;
+    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['prodotto'] }, { ...esce, ruoli: ['dati'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
+  });
+  it('nessuna regola scatta sul ruolo: le stesse regole su tutte le competenze, con il ruolo nell’etichetta e nel link', () => {
+    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['dati'] }, { ruoli: ['prodotto'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
+    expect(p.ruolo).toBe('Prodotto');
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0', params: { ruolo: 'prodotto' } });
+  });
+  it('le competenze incerte del ruolo non fanno notizia: si passa a tutte', () => {
+    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['prodotto'], incerto: true }, { ...passa, ruoli: ['dati'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C1 passa a Da provare');
+  });
+  it('senza ruolo («Tutti») o con un ruolo che non c’è: la porta di oggi', () => {
+    for (const r of [null, 'boh']) {
+      const p = doorPerTe(d, today, r);
+      expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
+      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: 'mcp' });
+      expect(p).not.toHaveProperty('ruolo');
+    }
+  });
+  it('riserva: conta le competenze del ruolo da imparare ora', () => {
+    const fuori = { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 } as const;
+    const p = doorPerTe(conRuoli([{ ruoli: ['prodotto'] }, { ruoli: ['prodotto'] }, { ...fuori, ruoli: ['prodotto'] }, { ruoli: ['dati'] }, { ...fuori, ruoli: ['prodotto'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('2 delle 4 competenze di Prodotto da imparare ora');
+    expect(p.title[0]).toEqual({ t: '2 delle 4 competenze di Prodotto', em: true });
+    expect(p.ruolo).toBe('Prodotto');
+    expect(p.target).toEqual({ tema: 'competenze', elemento: null, params: { ruolo: 'prodotto' } });
+    const una = doorPerTe(conRuoli([{ ruoli: ['dati'] }, { ...fuori, ruoli: ['dati'] }, { ...fuori, ruoli: ['dati'] }, { ...fuori, ruoli: ['dati'] }]), today, 'dati');
+    expect(text(una.title)).toBe('1 delle 4 competenze di Dati e analisi da imparare ora');
+  });
+});
+
 describe('porta L’AI in Italia', () => {
   const at = (iso: string) => new Date(`${iso}T10:00:00`);
   it('1. scadenza entro 30 giorni, con Oggi e Domani', () => {

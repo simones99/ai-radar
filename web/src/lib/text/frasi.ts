@@ -3,7 +3,7 @@ import {
   type RadarRowM,
 } from '../data/derive';
 import type { Dataset, Quadrant } from '../data/types';
-import { slug, type TileId } from '../router';
+import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
@@ -232,7 +232,8 @@ export function headRapporti(d: Dataset, today: Date): Head {
 export interface Door {
   title: TitleParts; // vuoto se non ci sono dati
   meta: string; // fonte e data del dato
-  target: { tema: TileId; elemento: string | null } | null; // null: porta non cliccabile
+  target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
+  ruolo?: string; // nome del ruolo ricordato, per l'etichetta (Per te · Prodotto)
 }
 const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: null };
 
@@ -240,13 +241,8 @@ const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: 
 const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
 
-export function doorPerTe(d: Dataset, _today?: Date): Door {
-  const rows = d.radar ? radarRows(d.radar) : [];
-  if (!d.radar || !rows.length) return NO_DATA;
-  const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
-  const sure = rows.filter((r) => !r.incerto); // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
-  const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null });
-
+// Regole 1-3 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
+function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM } | null {
   // 1. entrate e uscite da Impara ora
   const { inn, out } = radarChanges(sure);
   if (inn.length || out.length) {
@@ -256,7 +252,7 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
       if (inn.length) title.push({ t: '; ' });
       title.push(...names(out), { t: ` ${verbo(out, 'esce', 'escono')}${inn.length ? '' : ' da Impara ora'}` });
     }
-    return { title, meta, target: to(inn[0] ?? out[0]) };
+    return { title, competenza: inn[0] ?? out[0] };
   }
 
   // 2. altri cambi di quadrante
@@ -264,7 +260,7 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
   if (changed.length) {
     const dest = changed[0].quadrante;
     const who = changed.every((r) => r.quadrante === dest) ? changed : [changed[0]];
-    return { title: [...names(who), { t: ` ${verbo(who, 'passa', 'passano')} a ${d.radar.quadranti[dest]}` }], meta, target: to(who[0]) };
+    return { title: [...names(who), { t: ` ${verbo(who, 'passa', 'passano')} a ${quadranti[dest]}` }], competenza: who[0] };
   }
 
   // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse)
@@ -274,12 +270,29 @@ export function doorPerTe(d: Dataset, _today?: Date): Door {
     const title: TitleParts = onSlancio
       ? [{ t: 'Slancio di ' }, { t: big.breve, em: true }, { t: ` da ${signedPct(big.sp as number)} a ${signedPct(big.slancio)}` }]
       : [{ t: 'Domanda di ' }, { t: big.breve, em: true }, { t: ` da ${per10k(big.dp as number)} a ${per10k(big.domanda)} annunci ogni 10mila` }];
-    return { title, meta, target: to(big) };
+    return { title, competenza: big };
   }
+  return null;
+}
 
-  // 4. riserva
-  const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  return { title: [{ t: `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length}`, em: true }, { t: ' da imparare ora' }], meta, target: to(null) };
+/** Con un ruolo ricordato le regole si provano prima sulle sue competenze, poi su tutte (spec Ruoli, sezione 6). */
+export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = null): Door {
+  const rows = d.radar ? radarRows(d.radar) : [];
+  if (!d.radar || !rows.length) return NO_DATA;
+  const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
+  const sure = rows.filter((r) => !r.incerto); // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
+  const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza
+  const conRuolo = ruolo ? { ruolo: ruolo.nome } : {};
+  const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...(ruolo && { params: { ruolo: ruolo.id } }) });
+
+  const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
+  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo };
+
+  // 4. riserva: con un ruolo, quante delle sue competenze
+  const base = ruolo ? rows.filter((r) => r.ruoli?.includes(ruolo.id)) : rows;
+  const daImparare = base.filter((r) => r.quadrante === 'impara-ora').length;
+  const quante = ruolo ? `${daImparare} delle ${base.length} competenze di ${ruolo.nome}` : `${daImparare} ${daImparare === 1 ? 'competenza' : 'competenze'} su ${rows.length}`;
+  return { title: [{ t: quante, em: true }, { t: ' da imparare ora' }], meta, target: to(null), ...conRuolo };
 }
 
 const SOON = 30; // giorni: scadenze vicine, dati appena usciti, rapporti in arrivo

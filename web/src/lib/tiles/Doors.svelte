@@ -1,19 +1,20 @@
 <script lang="ts">
   import type { Dataset } from '../data/types';
   import { toHash } from '../router';
+  import { ricordato } from '../ruolo.svelte';
   import { doorItalia, doorPerTe, type Door } from '../text/frasi';
   import { TESTE } from './registry';
 
   let { data, today }: { data: Dataset; today: Date } = $props();
 
   const doors = $derived([
-    { g: TESTE[0], d: doorPerTe(data, today) },
+    { g: TESTE[0], d: doorPerTe(data, today, ricordato()) },
     { g: TESTE[1], d: doorItalia(data, today) },
   ]);
 </script>
 
 {#snippet body(g: (typeof TESTE)[number], d: Door)}
-  <span class="eyebrow">{g.eyebrow}</span>
+  <span class="eyebrow">{g.eyebrow}{d.ruolo ? ` · ${d.ruolo}` : ''}</span>
   <span class="name">{g.label}</span>
   {#if d.title.length}
     <span class="news">{#each d.title as p, i (i)}{#if p.em}<em>{p.t}</em>{:else}{p.t}{/if}{/each}</span>
@@ -24,7 +25,7 @@
 <div class="doors">
   {#each doors as { g, d } (g.id)}
     {#if d.target}
-      <a class="door" href={toHash(d.target.tema, d.target.elemento)}>{@render body(g, d)}</a>
+      <a class="door" href={toHash(d.target.tema, d.target.elemento, d.target.params)}>{@render body(g, d)}</a>
     {:else}
       <div class="door">{@render body(g, d)}</div>
     {/if}

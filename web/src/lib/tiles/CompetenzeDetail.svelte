@@ -7,7 +7,7 @@
   import { radarRows } from '../data/derive';
   import type { Quadrant } from '../data/types';
   import { apri, imposta, toHash } from '../router';
-  import { ricorda, ricordato } from '../ruolo';
+  import { ricorda, ricordato } from '../ruolo.svelte';
   import { per10k, signedPct } from '../text/format';
   import { headSkill } from '../text/frasi';
   import Detail from './Detail.svelte';

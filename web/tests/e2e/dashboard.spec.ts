@@ -208,6 +208,19 @@ test('ruolo da tastiera: Tab tra i pulsanti, Invio sceglie; «Tutti» toglie il 
   await expect(page).toHaveURL(/#competenze$/);
 });
 
+test('porta Per te: scelto un ruolo nella card, la home lo mostra e la porta riapre la card con il ruolo', async ({ page }) => {
+  await page.goto('/#competenze');
+  await ruoli(page).getByRole('button', { name: 'Prodotto' }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  const porta = page.getByRole('link', { name: /Per te · Prodotto/ });
+  await expect(porta).toContainText('RAG esce da Impara ora');
+  await porta.click();
+  await expect(page).toHaveURL(/#competenze\/rag\?ruolo=prodotto$/);
+  await page.getByRole('link', { name: '← Tutte le competenze' }).click();
+  await expect(premuto(page)).toHaveText('Prodotto');
+});
+
 test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#competenze?ruolo=dati');

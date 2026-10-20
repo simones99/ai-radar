@@ -1,4 +1,5 @@
 import type { Cite, Series, TableData } from '../charts/types';
+import type { RigaItUe } from '../data/derive';
 import type { OwidSeries } from '../data/types';
 
 export const MISSING = 'Dati non disponibili in questo aggiornamento.';
@@ -33,5 +34,8 @@ export function seriesTable(series: Series[], xLabel: string, fmtX: (x: number) 
   return { cols: [xLabel, ...series.map((s) => s.name)], rows: xs.map((x) => [fmtX(x), ...series.map((s) => s.pts.find((p) => p.x === x)?.y ?? '—')]) };
 }
 export const barsTable = (data: { k: string; v: number }[], cols: [string, string]): TableData => ({ cols, rows: data.map((d) => [d.k, d.v]) });
-export const dotsTable = (data: { k: string; now: number; was?: number | null }[], cols: [string, string, string]): TableData =>
+/** Tabella Italia contro UE: un valore mancante si scrive «non affidabile», non «—» (spec Settori 5.4). */
+export const itUeTable = (righe: RigaItUe[], first: string): TableData =>
+  ({ cols: [first, 'Italia', 'UE'], rows: righe.map((r) => [r.k, r.it ?? 'non affidabile', r.eu ?? 'non affidabile']) });
+export const dotsTable =(data: { k: string; now: number; was?: number | null }[], cols: [string, string, string]): TableData =>
   ({ cols, rows: data.map((d) => [d.k, d.now, d.was ?? '—']) });

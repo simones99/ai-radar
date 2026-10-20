@@ -289,6 +289,25 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
+const SETTORI = ['Adozione per settore, Italia e UE', "A cosa serve l'AI, Italia e UE", 'Cosa frena chi non la usa, Italia e UE'];
+
+test('Business in tema scuro: i grafici dei settori senza violazioni gravi', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/#business');
+  await page.reload();
+  for (const name of SETTORI) await expect(page.getByRole('img', { name })).toBeVisible();
+  expect(await seriousViolations(page)).toEqual([]);
+});
+
+test('Business a 320px: i grafici dei settori senza scorrimento orizzontale', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#business');
+  await page.reload();
+  for (const name of SETTORI) await expect(page.getByRole('img', { name })).toBeVisible();
+  await expect(page.getByText(/^Eurostat non rileva finanza/)).toBeVisible();
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
 test('ancora interna con una card aperta: la pagina va all’ancora, non alle card', async ({ page }) => {
   await page.goto('/');
   await page.locator('#tile-business .face').click();

@@ -3,9 +3,9 @@
   import Block from '../charts/Block.svelte';
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
-  import { owidLatestByEntity, owidPoints, tNum } from '../data/derive';
+  import { adozionePerSettore, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, tNum, type ConfrontoItUe } from '../data/derive';
   import { exact, nf, short } from '../text/format';
-  import { barsTable, dotsTable, fmtYm, owidCite, seriesTable, MISSING } from './cite';
+  import { barsTable, dotsTable, fmtYm, itUeTable, owidCite, seriesTable, MISSING } from './cite';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
@@ -37,7 +37,21 @@
   const nvidia = $derived(owidPoints(o, 'nvidia_ricavi', 'Data centers and AI').slice(-8).map((p) => ({ k: p.t.replace('-', ' '), v: p.v / 1e9 })));
   const tsmc = $derived(owidPoints(o, 'tsmc_ricavi', 'Taiwan').slice(-8).map((p) => ({ k: p.t, v: p.v / 1e9 })));
   const s = (id: string) => o?.serie?.[id];
+  // settori (Eurostat isoc_eb_ain2): Italia punto pieno, UE punto vuoto
+  const es = $derived(data.eurostat_settori);
+  const perSettore = $derived(es ? adozionePerSettore(es) : null);
+  const scopi = $derived(es ? scopiItUe(es) : null);
+  const barriere = $derived(es ? barriereItUe(es) : null);
+  const conAnno = (t: string, anno: string | undefined) => (anno ? `${t}, ${anno}` : t);
+  const esCite = (anno: string) => (es ? [{ t: 'Fonte: ' }, { t: es.fonte, href: es.url }, { t: `. Dati ${anno}.` }] : null);
+  const ITUE = 'Punto pieno: Italia; vuoto: UE.';
+  const NON_RILEVATI = 'Eurostat non rileva finanza e assicurazioni, agricoltura, estrazione, pubblica amministrazione, istruzione, sanità, attività artistiche e altri servizi.';
 </script>
+
+{#snippet itUe(label: string, c: ConfrontoItUe)}
+  <DotPlot {label} data={c.righe.map((r) => ({ k: r.k, now: r.it, was: r.eu }))} />
+  {#if c.nonAffidabili.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {c.nonAffidabili.join(', ')}.</p>{/if}
+{/snippet}
 
 <Detail {tile} {head} {onclose}>
   <h3 class="group">Investimenti</h3>
@@ -56,6 +70,20 @@
   </Block>
 
   <h3 class="group">Adozione</h3>
+  <p class="group-note">{NON_RILEVATI} «Tutti» non comprende la finanza.</p>
+  <Block title={conAnno('Adozione per settore', perSettore?.anno)} note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI, %. {ITUE}"
+    missing={perSettore?.righe.length ? null : MISSING} cite={perSettore ? esCite(perSettore.anno) : null}
+    table={perSettore ? itUeTable(perSettore.righe, 'Settore') : null}>
+    {#if perSettore}{@render itUe('Adozione per settore, Italia e UE', perSettore)}{/if}
+  </Block>
+  <Block title={conAnno("A cosa serve l'AI", es?.anno)} note="Tutti i settori rilevati, in % delle imprese che usano l'AI. {ITUE}"
+    missing={scopi?.righe.length ? null : MISSING} cite={es ? esCite(es.anno) : null} table={scopi ? itUeTable(scopi.righe, 'Scopo') : null}>
+    {#if scopi}{@render itUe("A cosa serve l'AI, Italia e UE", scopi)}{/if}
+  </Block>
+  <Block title={conAnno('Cosa frena chi non la usa', es?.anno)} note="Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla. {ITUE}"
+    missing={barriere?.righe.length ? null : MISSING} cite={es ? esCite(es.anno) : null} table={barriere ? itUeTable(barriere.righe, 'Barriera') : null}>
+    {#if barriere}{@render itUe('Cosa frena chi non la usa, Italia e UE', barriere)}{/if}
+  </Block>
   <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
     missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
     table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
@@ -86,4 +114,6 @@
 
 <style>
   .group { grid-column: 1 / -1; font-weight: 600; font-size: 14px; line-height: 24px; color: var(--fg-2); padding-top: var(--s2); }
+  .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); }
 </style>

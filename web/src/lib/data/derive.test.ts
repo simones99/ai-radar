@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidLatestByEntity, owidPoints, owidPrev,
-  radarChanges, radarRows, tNum, nx, ny,
+  radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, barriereItUe, scopiItUe,
 } from './derive';
-import type { EpochPoint, News, Owid, Radar } from './types';
-import { fromNorm } from '../test/fixtures';
+import type { EpochPoint, EurostatSettori, News, Owid, Radar } from './types';
+import { FIXTURE, fromNorm } from '../test/fixtures';
 
 const today = new Date(2026, 9, 15, 10);
 
@@ -134,5 +134,46 @@ describe('coordinate del radar', () => {
     expect(ny(0.1)).toBeCloseTo(0);
     expect(ny(90)).toBeCloseTo(1);
     expect(ny(0)).toBe(0);
+  });
+});
+
+describe('settori: Italia contro UE', () => {
+  const es = FIXTURE.eurostat_settori as EurostatSettori;
+
+  it("adozione: i settori (senza «Tutti») ordinati per valore italiano dell'ultimo anno", () => {
+    const a = adozionePerSettore(es);
+    expect(a.anno).toBe('2025');
+    expect(a.righe).toEqual([
+      { id: 'ict', k: 'Informazione e comunicazione', it: 51.28, eu: 62.52 },
+      { id: 'manifattura', k: 'Manifattura', it: 14.73, eu: 17.27 },
+      { id: 'immobiliare', k: 'Immobiliare', it: 13.96, eu: 24.76 },
+    ]);
+  });
+
+  it('un valore italiano mancante resta null, mai 0, va in fondo e il nome finisce nella nota', () => {
+    const x = structuredClone(es);
+    x.adozione.ict.IT['2025'] = null;
+    delete x.adozione.manifattura.IT['2025'];
+    const a = adozionePerSettore(x);
+    expect(a.righe.map((r) => [r.k, r.it])).toEqual([['Immobiliare', 13.96], ['Informazione e comunicazione', null], ['Manifattura', null]]);
+    expect(a.righe[1].eu).toBe(62.52);
+    expect(a.nonAffidabili).toEqual(['Informazione e comunicazione', 'Manifattura']);
+    expect(adozionePerSettore(es).nonAffidabili).toEqual([]);
+  });
+
+  it('scopi e barriere di un settore, con i nomi italiani, ordinati per valore italiano', () => {
+    const b = barriereItUe(es);
+    expect(b.righe.map((r) => r.k)).toEqual([
+      'Mancano le competenze', 'Conseguenze legali poco chiare', 'Dati scarsi o di bassa qualità', 'Timori per privacy e protezione dei dati',
+      'Costi troppo alti', 'Incompatibile con i sistemi esistenti', 'Questioni etiche', "L'AI non serve all'impresa",
+    ]);
+    expect(b.righe[0]).toEqual({ id: 'E_AI_BLE', k: 'Mancano le competenze', it: 58.61, eu: 70.31 });
+    expect(b.nonAffidabili).toEqual([]);
+    // immobiliare, Italia, logistica: riservato (c)
+    const s = scopiItUe(es, 'immobiliare');
+    expect(s.righe.map((r) => r.it)).toEqual([46.75, 42.37, 35.26, 19.32, 17.72, 4.36, null]);
+    expect(s.righe.at(-1)).toEqual({ id: 'E_AI_PLOG', k: 'Logistica', it: null, eu: 2.67 });
+    expect(s.nonAffidabili).toEqual(['Logistica']);
+    expect(scopiItUe(es).righe[0]).toMatchObject({ k: 'Marketing e vendite', it: 33.1, eu: 34.7 });
   });
 });

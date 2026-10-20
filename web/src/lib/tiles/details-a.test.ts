@@ -164,6 +164,67 @@ describe('Business', () => {
     expect(screen.getAllByText('Dati non disponibili in questo aggiornamento.').length).toBeGreaterThan(0);
     expect(within(screen.getByRole('img', { name: "Imprese europee che usano l'AI" })).getByText('Italia')).toHaveClass('hot');
   });
+
+  describe('Adozione per settore, con «Tutti»', () => {
+    const blk = (title: string) => screen.getByRole('heading', { name: title }).closest('section')!;
+    const righe = (title: string) => within(blk(title)).getAllByRole('row').slice(1).map((r) => [...r.querySelectorAll('th, td')].map((c) => c.textContent));
+
+    it('tre grafici Italia contro UE, con fonte Eurostat, anno e base scritta', () => {
+      show(BusinessDetail, tile);
+      for (const [title, img] of [
+        ['Adozione per settore, 2025', "Adozione per settore, Italia e UE"],
+        ["A cosa serve l'AI, 2025", "A cosa serve l'AI, Italia e UE"],
+        ['Cosa frena chi non la usa, 2025', 'Cosa frena chi non la usa, Italia e UE'],
+      ]) {
+        const b = blk(title);
+        expect(within(b).getByRole('img', { name: img })).toBeInTheDocument();
+        expect(within(b).getByRole('link', { name: 'Eurostat, isoc_eb_ain2' })).toHaveAttribute('href', 'https://ec.europa.eu/eurostat/databrowser/view/isoc_eb_ain2/default/table');
+        expect(b).toHaveTextContent('Dati 2025');
+        expect(b).toHaveTextContent('Punto pieno: Italia; vuoto: UE.');
+      }
+      expect(blk("A cosa serve l'AI, 2025")).toHaveTextContent("% delle imprese che usano l'AI");
+      expect(blk('Cosa frena chi non la usa, 2025')).toHaveTextContent("% delle imprese che hanno considerato l'AI senza usarla");
+      // ordinati per valore italiano; le tabelle danno Italia e UE
+      expect(righe('Adozione per settore, 2025')).toEqual([
+        ['Informazione e comunicazione', '51,3', '62,5'], ['Manifattura', '14,7', '17,3'], ['Immobiliare', '14,0', '24,8'],
+      ]);
+      expect(righe("A cosa serve l'AI, 2025")[0]).toEqual(['Marketing e vendite', '33,1', '34,7']);
+      expect(righe('Cosa frena chi non la usa, 2025')).toHaveLength(8);
+      expect(screen.queryByText(/Dato italiano non affidabile/)).toBeNull();
+    });
+
+    it('una riga dice quali settori Eurostat non rileva e che «Tutti» esclude la finanza', () => {
+      show(BusinessDetail, tile);
+      expect(screen.getByText(/Eurostat non rileva finanza e assicurazioni, agricoltura, estrazione, pubblica amministrazione, istruzione, sanità, attività artistiche e altri servizi\./))
+        .toHaveTextContent(/«Tutti» non comprende la finanza/);
+    });
+
+    it('valore italiano mancante: resta il punto UE, la nota sotto il grafico, «non affidabile» nella tabella', () => {
+      const x = structuredClone(data);
+      x.eurostat_settori!.adozione.ict.IT['2025'] = null;
+      x.eurostat_settori!.scopi.tutti.IT.E_AI_PLOG = null;
+      render(BusinessDetail, { data: x, today, tile, elemento: null, params: {}, onclose: () => {} });
+      const ad = blk('Adozione per settore, 2025');
+      expect(within(ad).getByText('Dato italiano non affidabile secondo Eurostat per: Informazione e comunicazione.')).toBeInTheDocument();
+      expect(righe('Adozione per settore, 2025').at(-1)).toEqual(['Informazione e comunicazione', 'non affidabile', '62,5']);
+      expect(ad.querySelectorAll('svg circle')).toHaveLength(5); // 3 punti UE, 2 italiani
+      expect(within(blk("A cosa serve l'AI, 2025")).getByText('Dato italiano non affidabile secondo Eurostat per: Logistica.')).toBeInTheDocument();
+      expect(righe("A cosa serve l'AI, 2025").at(-1)).toEqual(['Logistica', 'non affidabile', '6,1']);
+    });
+
+    it('il resto della card non cambia: titolo, frase in testa e gli altri grafici', () => {
+      show(BusinessDetail, tile);
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("16% delle imprese italiane usa l'AI");
+      expect(screen.getByText("Nel 2025, imprese con almeno 10 addetti. UE: 20%. Nel 2024 in Italia l'8%.")).toBeInTheDocument();
+      for (const name of ["Imprese che usano l'AI, per area", "Imprese europee che usano l'AI, 2025", 'Investimenti privati per regione', 'Ricavi di TSMC'])
+        expect(screen.getByRole('heading', { name })).toBeInTheDocument();
+    });
+
+    it('senza i dati dei settori i tre grafici dicono che mancano', () => {
+      render(BusinessDetail, { data: { ...data, eurostat_settori: undefined }, today, tile, elemento: null, params: {}, onclose: () => {} });
+      expect(within(blk("A cosa serve l'AI")).getByText('Dati non disponibili in questo aggiornamento.')).toBeInTheDocument();
+    });
+  });
 });
 
 describe('Norme', () => {

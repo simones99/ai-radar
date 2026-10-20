@@ -212,6 +212,36 @@ describe('Business', () => {
       expect(righe("A cosa serve l'AI, 2025").at(-1)).toEqual(['Logistica', 'non affidabile', '6,1']);
     });
 
+    it('nel grafico il numero accanto al punto UE è scritto come valore UE', () => {
+      show(BusinessDetail, tile);
+      const img = screen.getByRole('img', { name: 'Adozione per settore, Italia e UE' });
+      expect(within(img).getByText('51 · UE 63')).toBeInTheDocument();
+      expect(within(img).queryByText('51')).toBeNull();
+    });
+
+    it('valore UE mancante: la tabella scrive «—», «non affidabile» è solo per il dato italiano', () => {
+      const x = structuredClone(data);
+      x.eurostat_settori!.adozione.manifattura.EU27_2020['2025'] = null;
+      render(BusinessDetail, { data: x, today, tile, elemento: null, params: {}, onclose: () => {} });
+      expect(righe('Adozione per settore, 2025')).toContainEqual(['Manifattura', '14,7', '—']);
+      expect(screen.queryByText(/Dato italiano non affidabile/)).toBeNull();
+    });
+
+    it('adozione senza nessun valore: il titolo resta senza anno e il blocco dice che i dati mancano', () => {
+      const x = structuredClone(data);
+      for (const g of Object.values(x.eurostat_settori!.adozione)) { g.IT = {}; g.EU27_2020 = {}; }
+      render(BusinessDetail, { data: x, today, tile, elemento: null, params: {}, onclose: () => {} });
+      expect(within(blk('Adozione per settore')).getByText('Dati non disponibili in questo aggiornamento.')).toBeInTheDocument();
+      expect(screen.queryByText(/Infinity/)).toBeNull();
+    });
+
+    it('i blocchi stanno nella loro sezione: «Adozione per settore» è nel gruppo «Adozione»', () => {
+      show(BusinessDetail, tile);
+      const adozione = screen.getByRole('group', { name: 'Adozione' });
+      expect(within(adozione).getByRole('heading', { name: 'Adozione per settore, 2025' })).toBeInTheDocument();
+      expect(within(screen.getByRole('group', { name: 'Investimenti' })).queryByRole('heading', { name: 'Adozione per settore, 2025' })).toBeNull();
+    });
+
     it('il resto della card non cambia: titolo, frase in testa e gli altri grafici', () => {
       show(BusinessDetail, tile);
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("16% delle imprese italiane usa l'AI");

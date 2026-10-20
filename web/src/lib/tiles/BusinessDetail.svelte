@@ -3,7 +3,7 @@
   import Block from '../charts/Block.svelte';
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
-  import { adozionePerSettore, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, tNum, type ConfrontoItUe } from '../data/derive';
+  import { adozionePerSettore, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, tNum, ultimoAnno, type ConfrontoItUe } from '../data/derive';
   import { exact, nf, short } from '../text/format';
   import { barsTable, dotsTable, fmtYm, itUeTable, owidCite, seriesTable, MISSING } from './cite';
   import Detail from './Detail.svelte';
@@ -27,7 +27,7 @@
   const AREE: Record<string, string> = { 'All geographies': 'Mondo', 'Asia-Pacific': 'Asia-Pacifico', 'Developing markets': 'Paesi emergenti', Europe: 'Europa', 'Greater China': 'Cina', 'North America': 'Nord America' };
   const imprese = $derived([...owidLatestByEntity(o, 'imprese_ai')].map(([e, x]) => ({ k: AREE[e] ?? e, now: x.now.v, was: x.was?.v ?? null, hot: e === 'Europe' })).sort((a, b) => b.now - a.now));
   const eu = $derived(data.eurostat);
-  const euYear = $derived(eu ? String(Math.max(...Object.values(eu.serie).flatMap((s) => Object.keys(s).map(Number)))) : '');
+  const euYear = $derived((eu && ultimoAnno(Object.values(eu.serie))) ?? '');
   const euRows = $derived(eu ? Object.entries(eu.serie)
     .map(([k, s]) => ({ k: eu.nomi[k] ?? k, now: s[euYear], was: s[String(Number(euYear) - 1)] ?? null, hot: k === 'IT' || k === 'EU27_2020' }))
     .filter((r) => r.now != null).sort((a, b) => b.now - a.now) : []);
@@ -42,77 +42,81 @@
   const perSettore = $derived(es ? adozionePerSettore(es) : null);
   const scopi = $derived(es ? scopiItUe(es) : null);
   const barriere = $derived(es ? barriereItUe(es) : null);
-  const conAnno = (t: string, anno: string | undefined) => (anno ? `${t}, ${anno}` : t);
+  const conAnno = (t: string, anno: string | null | undefined) => (anno ? `${t}, ${anno}` : t);
   const esCite = (anno: string) => (es ? [{ t: 'Fonte: ' }, { t: es.fonte, href: es.url }, { t: `. Dati ${anno}.` }] : null);
   const ITUE = 'Punto pieno: Italia; vuoto: UE.';
   const NON_RILEVATI = 'Eurostat non rileva finanza e assicurazioni, agricoltura, estrazione, pubblica amministrazione, istruzione, sanità, attività artistiche e altri servizi.';
 </script>
 
-{#snippet itUe(label: string, c: ConfrontoItUe)}
-  <DotPlot {label} data={c.righe.map((r) => ({ k: r.k, now: r.it, was: r.eu }))} />
-  {#if c.nonAffidabili.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {c.nonAffidabili.join(', ')}.</p>{/if}
+{#snippet bloccoItUe(titolo: string, anno: string | null | undefined, note: string, c: ConfrontoItUe | null, prima: string)}
+  <Block title={conAnno(titolo, anno)} note="{note} {ITUE}" missing={c?.righe.length ? null : MISSING}
+    cite={c && anno ? esCite(anno) : null} table={c ? itUeTable(c.righe, prima) : null}>
+    {#if c}
+      <DotPlot label="{titolo}, Italia e UE" altro="UE" data={c.righe.map((r) => ({ k: r.k, now: r.it, was: r.eu }))} />
+      {#if c.senzaItalia.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {c.senzaItalia.join(', ')}.</p>{/if}
+    {/if}
+  </Block>
 {/snippet}
 
 <Detail {tile} {head} {onclose}>
-  <h3 class="group">Investimenti</h3>
-  <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
-    missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
-    table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
-    <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
-  </Block>
-  <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
-    cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
-    <Bars label="Investimenti in AI generativa" data={gen} format={short} />
-  </Block>
-  <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
-    cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
-    <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
-  </Block>
+  <!-- ogni sezione è una sottogriglia: da 1200px il riempimento «dense» non porta i blocchi fuori dalla loro sezione -->
+  <div class="sezione" role="group" aria-labelledby="bz-investimenti">
+    <h3 class="group" id="bz-investimenti">Investimenti</h3>
+    <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
+      missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
+      table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
+      <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
+    </Block>
+    <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
+      cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
+      <Bars label="Investimenti in AI generativa" data={gen} format={short} />
+    </Block>
+    <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
+      cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
+      <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
+    </Block>
+  </div>
 
-  <h3 class="group">Adozione</h3>
-  <p class="group-note">{NON_RILEVATI} «Tutti» non comprende la finanza.</p>
-  <Block title={conAnno('Adozione per settore', perSettore?.anno)} note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI, %. {ITUE}"
-    missing={perSettore?.righe.length ? null : MISSING} cite={perSettore ? esCite(perSettore.anno) : null}
-    table={perSettore ? itUeTable(perSettore.righe, 'Settore') : null}>
-    {#if perSettore}{@render itUe('Adozione per settore, Italia e UE', perSettore)}{/if}
-  </Block>
-  <Block title={conAnno("A cosa serve l'AI", es?.anno)} note="Tutti i settori rilevati, in % delle imprese che usano l'AI. {ITUE}"
-    missing={scopi?.righe.length ? null : MISSING} cite={es ? esCite(es.anno) : null} table={scopi ? itUeTable(scopi.righe, 'Scopo') : null}>
-    {#if scopi}{@render itUe("A cosa serve l'AI, Italia e UE", scopi)}{/if}
-  </Block>
-  <Block title={conAnno('Cosa frena chi non la usa', es?.anno)} note="Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla. {ITUE}"
-    missing={barriere?.righe.length ? null : MISSING} cite={es ? esCite(es.anno) : null} table={barriere ? itUeTable(barriere.righe, 'Barriera') : null}>
-    {#if barriere}{@render itUe('Cosa frena chi non la usa, Italia e UE', barriere)}{/if}
-  </Block>
-  <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
-    missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
-    table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
-    <DotPlot label="Imprese che usano l'AI, per area" data={imprese} />
-  </Block>
-  <Block title="Imprese europee che usano l'AI, {euYear}" note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI. Punto vuoto: anno prima."
-    missing={euRows.length ? null : MISSING} cite={eu ? [{ t: 'Fonte: ' }, { t: 'Eurostat, isoc_eb_ai', href: eu.url }, { t: '.' }] : null}
-    table={{ cols: ['Paese', euYear, String(Number(euYear) - 1)], rows: euRows.map((r) => [r.k, r.now, r.was ?? '—']) }}>
-    <DotPlot label="Imprese europee che usano l'AI" data={euRows} />
-  </Block>
+  <div class="sezione" role="group" aria-labelledby="bz-adozione">
+    <h3 class="group" id="bz-adozione">Adozione</h3>
+    <p class="group-note">{NON_RILEVATI} «Tutti» non comprende la finanza.</p>
+    {@render bloccoItUe('Adozione per settore', perSettore?.anno, 'Imprese con almeno 10 addetti che usano almeno una tecnologia AI, %.', perSettore, 'Settore')}
+    {@render bloccoItUe("A cosa serve l'AI", es?.anno, "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}
+    {@render bloccoItUe('Cosa frena chi non la usa', es?.anno, "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
+    <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
+      missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
+      table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
+      <DotPlot label="Imprese che usano l'AI, per area" data={imprese} />
+    </Block>
+    <Block title="Imprese europee che usano l'AI, {euYear}" note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI. Punto vuoto: anno prima."
+      missing={euRows.length ? null : MISSING} cite={eu ? [{ t: 'Fonte: ' }, { t: 'Eurostat, isoc_eb_ai', href: eu.url }, { t: '.' }] : null}
+      table={{ cols: ['Paese', euYear, String(Number(euYear) - 1)], rows: euRows.map((r) => [r.k, r.now, r.was ?? '—']) }}>
+      <DotPlot label="Imprese europee che usano l'AI" data={euRows} />
+    </Block>
+  </div>
 
-  <h3 class="group">Infrastruttura</h3>
-  <Block title="Spesa per costruire data center negli USA" note="Miliardi di dollari al mese, prezzi costanti, ultimi 3 anni." missing={dc.length ? null : MISSING}
-    cite={owidCite(s('data_center_spesa'))} table={seriesTable([{ name: 'Miliardi $', pts: dc }], 'Mese', fmtYm)}>
-    <LineChart label="Spesa per data center negli USA" series={[{ name: 'USA', hot: true, pts: dc }]} yFormat={mld} />
-  </Block>
-  <Block title="Elettricità consumata dai data center" note="Quota della domanda totale di elettricità, %." missing={ele.length ? null : MISSING}
-    cite={owidCite(s('data_center_elettricita'))} table={seriesTable(ele, 'Anno')}>
-    <LineChart label="Elettricità consumata dai data center" series={ele} yFormat={(v) => `${nf(v, 1)}%`} />
-  </Block>
-  <Block title="Ricavi di Nvidia da data center e AI" note="Miliardi di dollari per trimestre." missing={nvidia.length ? null : MISSING} cite={owidCite(s('nvidia_ricavi'))} table={barsTable(nvidia, ['Trimestre', 'Miliardi $'])}>
-    <Bars label="Ricavi trimestrali di Nvidia da data center" data={nvidia} format={mld} />
-  </Block>
-  <Block title="Ricavi di TSMC" note="Miliardi di dollari all'anno: il principale produttore di chip per l'AI." missing={tsmc.length ? null : MISSING} cite={owidCite(s('tsmc_ricavi'))} table={barsTable(tsmc, ['Anno', 'Miliardi $'])}>
-    <Bars label="Ricavi annui di TSMC" data={tsmc} format={mld} />
-  </Block>
+  <div class="sezione" role="group" aria-labelledby="bz-infrastruttura">
+    <h3 class="group" id="bz-infrastruttura">Infrastruttura</h3>
+    <Block title="Spesa per costruire data center negli USA" note="Miliardi di dollari al mese, prezzi costanti, ultimi 3 anni." missing={dc.length ? null : MISSING}
+      cite={owidCite(s('data_center_spesa'))} table={seriesTable([{ name: 'Miliardi $', pts: dc }], 'Mese', fmtYm)}>
+      <LineChart label="Spesa per data center negli USA" series={[{ name: 'USA', hot: true, pts: dc }]} yFormat={mld} />
+    </Block>
+    <Block title="Elettricità consumata dai data center" note="Quota della domanda totale di elettricità, %." missing={ele.length ? null : MISSING}
+      cite={owidCite(s('data_center_elettricita'))} table={seriesTable(ele, 'Anno')}>
+      <LineChart label="Elettricità consumata dai data center" series={ele} yFormat={(v) => `${nf(v, 1)}%`} />
+    </Block>
+    <Block title="Ricavi di Nvidia da data center e AI" note="Miliardi di dollari per trimestre." missing={nvidia.length ? null : MISSING} cite={owidCite(s('nvidia_ricavi'))} table={barsTable(nvidia, ['Trimestre', 'Miliardi $'])}>
+      <Bars label="Ricavi trimestrali di Nvidia da data center" data={nvidia} format={mld} />
+    </Block>
+    <Block title="Ricavi di TSMC" note="Miliardi di dollari all'anno: il principale produttore di chip per l'AI." missing={tsmc.length ? null : MISSING} cite={owidCite(s('tsmc_ricavi'))} table={barsTable(tsmc, ['Anno', 'Miliardi $'])}>
+      <Bars label="Ricavi annui di TSMC" data={tsmc} format={mld} />
+    </Block>
+  </div>
 </Detail>
 
 <style>
+  .sezione { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; gap: var(--s2); }
+  @media (min-width: 1200px) { .sezione { grid-auto-flow: dense; } }
   .group { grid-column: 1 / -1; font-weight: 600; font-size: 14px; line-height: 24px; color: var(--fg-2); padding-top: var(--s2); }
   .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
   .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); }

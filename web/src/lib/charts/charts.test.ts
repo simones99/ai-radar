@@ -87,6 +87,23 @@ describe('grafici', () => {
     expect(container.querySelectorAll('circle.was')).toHaveLength(1);
     expect(screen.getByText('Europa')).toHaveClass('hot');
   });
+  it('DotPlot: il valore di oggi sta accanto al suo punto, anche quando quello dell’anno prima è più a destra', () => {
+    const { container } = render(DotPlot, { label: 'Imprese', data: [{ k: 'Europa', now: 50, was: 60 }] });
+    const was = Number(container.querySelector('circle.was')!.getAttribute('cx'));
+    const now = Number(container.querySelector('circle.now')!.getAttribute('cx'));
+    const x = Number(screen.getByText('50').getAttribute('x'));
+    expect(x).toBeGreaterThan(now);
+    expect(x).toBeLessThan(was);
+  });
+  it('DotPlot Italia–UE: il numero accanto al punto UE dice che è il valore UE', () => {
+    const { container } = render(DotPlot, { label: 'Settori', altro: 'UE', data: [
+      { k: 'Informazione e comunicazione', now: 51.28, was: 62.52 }, { k: 'Manifattura', now: null, was: 17.27 },
+    ] });
+    const texts = [...container.querySelectorAll('svg text')].map((t) => t.textContent);
+    expect(texts).toContain('51 · UE 63');
+    expect(texts).toContain('UE 17'); // senza il dato italiano resta il solo valore UE, scritto come tale
+    expect(texts).not.toContain('51');
+  });
   it('Scatter: un punto per dato, scala logaritmica', () => {
     const { container } = render(Scatter, { label: 'Calcolo', xTitle: 'anno', yTitle: 'FLOP', yLog: true,
       pts: [{ x: 2020, y: 1e22 }, { x: 2025, y: 1e26, hot: true, label: 'Ultimo' }] });

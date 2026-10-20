@@ -131,25 +131,35 @@ export function nextReport(r: Rapporti | undefined, today: Date): { report: Repo
 export interface RigaItUe { id: string; k: string; it: number | null; eu: number | null }
 
 /** Righe Italia contro UE e nomi delle voci senza valore italiano, per la nota sotto il grafico. */
-export interface ConfrontoItUe { righe: RigaItUe[]; nonAffidabili: string[] }
+export interface ConfrontoItUe { righe: RigaItUe[]; senzaItalia: string[] }
+
+/** Il settore che vale per tutti quelli rilevati (finanza esclusa). */
+const TUTTI = 'tutti';
+
+/** L'anno più recente fra le chiavi delle serie (anche con valore null); null se non ce n'è nessuno. */
+export function ultimoAnno(serie: Record<string, unknown>[]): string | null {
+  const anni = serie.flatMap((s) => Object.keys(s).map(Number));
+  return anni.length ? String(Math.max(...anni)) : null;
+}
 
 /** Dalla più alta alla più bassa per valore italiano. Senza valore italiano (null, mai 0) si va in fondo, per valore UE. */
 function itUe(voci: [string, string][], it: (id: string) => number | null | undefined, eu: (id: string) => number | null | undefined): ConfrontoItUe {
   const righe = voci.map(([id, k]) => ({ id, k, it: it(id) ?? null, eu: eu(id) ?? null }));
   righe.sort((a, b) => (a.it == null) !== (b.it == null) ? (a.it == null ? 1 : -1) : (b.it ?? b.eu ?? -1) - (a.it ?? a.eu ?? -1));
-  return { righe, nonAffidabili: righe.filter((r) => r.it == null).map((r) => r.k) };
+  return { righe, senzaItalia: righe.filter((r) => r.it == null).map((r) => r.k) };
 }
 
-/** Adozione dei settori rilevati («Tutti» escluso) nell'ultimo anno con valori. */
-export function adozionePerSettore(es: EurostatSettori): ConfrontoItUe & { anno: string } {
-  const anno = String(Math.max(...Object.values(es.adozione).flatMap((g) => [...Object.keys(g.IT), ...Object.keys(g.EU27_2020)].map(Number))));
-  const voci = es.settori.filter((s) => s.id !== 'tutti').map((s): [string, string] => [s.id, s.nome]);
+/** Adozione dei settori rilevati («Tutti» escluso) nell'ultimo anno con valori; senza anni, nessuna riga. */
+export function adozionePerSettore(es: EurostatSettori): ConfrontoItUe & { anno: string | null } {
+  const anno = ultimoAnno(Object.values(es.adozione).flatMap((g) => [g.IT, g.EU27_2020]));
+  if (anno == null) return { anno, righe: [], senzaItalia: [] };
+  const voci = es.settori.filter((s) => s.id !== TUTTI).map((s): [string, string] => [s.id, s.nome]);
   return { anno, ...itUe(voci, (id) => es.adozione[id]?.IT[anno], (id) => es.adozione[id]?.EU27_2020[anno]) };
 }
 
 const perVoce = (nomi: Record<string, string>, g: PerGeo | undefined): ConfrontoItUe =>
   itUe(Object.entries(nomi), (id) => g?.IT[id], (id) => g?.EU27_2020[id]);
 /** Scopi di un settore, ultimo anno: % delle imprese che usano l'AI. */
-export const scopiItUe = (es: EurostatSettori, settore = 'tutti'): ConfrontoItUe => perVoce(es.nomi_scopi, es.scopi[settore]);
+export const scopiItUe = (es: EurostatSettori, settore = TUTTI): ConfrontoItUe => perVoce(es.nomi_scopi, es.scopi[settore]);
 /** Barriere di un settore, ultimo anno: % delle imprese che hanno considerato l'AI senza usarla. */
-export const barriereItUe = (es: EurostatSettori, settore = 'tutti'): ConfrontoItUe => perVoce(es.nomi_barriere, es.barriere[settore]);
+export const barriereItUe = (es: EurostatSettori, settore = TUTTI): ConfrontoItUe => perVoce(es.nomi_barriere, es.barriere[settore]);

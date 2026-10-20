@@ -53,6 +53,12 @@ describe('TileFace', () => {
 });
 
 describe('Detail', () => {
+  it('la nota della testata sta sotto il sottotitolo, prima di «Copia link»', () => {
+    render(Detail, { tile: tile(), head: { title: [{ t: 'RAG' }], deck: 'Impara ora. Recupero.', nota: 'Conta per: Prodotto' }, onclose: () => {}, children: blocks });
+    const nota = screen.getByText('Conta per: Prodotto');
+    expect(screen.getByText('Impara ora. Recupero.').compareDocumentPosition(nota) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(nota.compareDocumentPosition(screen.getByRole('button', { name: 'Copia link' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
   it('titolo con parte in evidenza, focus sul titolo, credito della foto', () => {
     render(Detail, { tile: tile(), head: tile().head(FIXTURE as Dataset, today), onclose: () => {}, children: blocks });
     const h2 = screen.getByRole('heading', { level: 2 });

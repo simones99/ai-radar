@@ -22,7 +22,7 @@
   const ruolo = $derived(ruoli.find((r) => r.id === params.ruolo) ?? null); // un ruolo sconosciuto nel link si ignora
   onMount(() => ruoloRicordato.allinea(params.ruolo, ruoli.map((r) => r.id)));
   const skill = $derived(rows.find((r) => r.id === elemento) ?? null);
-  const head = $derived(skill ? headSkill(skill, quadranti) : tile.head(data, today));
+  const head = $derived(skill ? headSkill(skill, quadranti, ruoli) : tile.head(data, today));
   const old = $derived(!!data.radar && data.radar.versione !== 2);
   const all = $derived(data.radar?.versione === 2 ? data.radar.competenze : []);
   const placed = $derived(new Set(rows.map((r) => r.id)));
@@ -49,7 +49,7 @@
 
 <Detail {tile} {head} {onclose}>
   {#if skill}
-    <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} {ruoli} />
+    <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} />
   {:else if !rows.length}
     <Block span={12} title="Radar delle competenze"
       missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar si calcola dopo il primo aggiornamento di arXiv, GitHub e Adzuna.'} />

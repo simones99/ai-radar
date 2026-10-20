@@ -27,12 +27,12 @@ def test_config_roles_match_the_approved_table():
     """Tabella approvata il 20/10/2026 (.scratch/ruoli/spec.md, sezione 4.3)."""
     cfg = common.load_yaml("skills.yaml")
     assert cfg["ruoli"] == [{"id": "sviluppo", "nome": "Sviluppo software"}, {"id": "prodotto", "nome": "Prodotto"},
-                            {"id": "dati", "nome": "Dati e analisi"}, {"id": "legale", "nome": "Legale e compliance"}]
+                            {"id": "dati", "nome": "Dati e analisi"}, {"id": "compliance", "nome": "Legale e compliance"}]
     approvata = {
         "agenti": {"sviluppo", "prodotto"}, "coding-agenti": {"sviluppo"}, "mcp": {"sviluppo"},
-        "rag": {"sviluppo", "prodotto", "dati"}, "valutazione": {"sviluppo", "prodotto", "dati", "legale"},
-        "post-training": {"sviluppo", "dati"}, "context-engineering": {"sviluppo", "prodotto", "dati", "legale"},
-        "sicurezza": {"sviluppo", "legale"}, "governance": {"prodotto", "legale"}, "dati-per-ai": {"dati", "legale"},
+        "rag": {"sviluppo", "prodotto", "dati"}, "valutazione": {"sviluppo", "prodotto", "dati", "compliance"},
+        "post-training": {"sviluppo", "dati"}, "context-engineering": {"sviluppo", "prodotto", "dati", "compliance"},
+        "sicurezza": {"sviluppo", "compliance"}, "governance": {"prodotto", "compliance"}, "dati-per-ai": {"dati", "compliance"},
         "text-to-sql": {"dati"}, "vector-db": {"sviluppo", "dati"}, "multimodale": {"sviluppo", "prodotto"},
         "llmops": {"sviluppo"}, "modelli-locali": {"sviluppo"}, "robotica": set(),
     }

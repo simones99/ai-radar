@@ -286,9 +286,9 @@ describe('TileGrid: parametri nel link', () => {
   });
 
   it('i vecchi link a Politica diventano Norme e tengono i parametri', () => {
-    history.replaceState(null, '', '/#politica?ruolo=legale');
+    history.replaceState(null, '', '/#politica?ruolo=compliance');
     render(TileGrid, { data, today });
-    expect(location.hash).toBe('#norme?ruolo=legale');
+    expect(location.hash).toBe('#norme?ruolo=compliance');
   });
 
   it('dal radar a una competenza e indietro: i parametri restano', async () => {
@@ -315,10 +315,10 @@ describe('TileGrid: parametri nel link', () => {
     render(TileGrid, { data, today });
     await fireEvent.click(link('#business?settore=ict'));
     expect(location.hash).toBe('#business?ruolo=dati&settore=ict');
-    await fireEvent.click(link('#competenze/mcp?ruolo=legale'));
-    expect(location.hash).toBe('#competenze/mcp?ruolo=legale&settore=ict');
+    await fireEvent.click(link('#competenze/mcp?ruolo=compliance'));
+    expect(location.hash).toBe('#competenze/mcp?ruolo=compliance&settore=ict');
     await fireEvent.click(link('#norme'));
-    expect(location.hash).toBe('#norme?ruolo=legale&settore=ict');
+    expect(location.hash).toBe('#norme?ruolo=compliance&settore=ict');
   });
 
   it('chiudere la card azzera il link, e la card riaperta dalla home non ha parametri', async () => {

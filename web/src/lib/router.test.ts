@@ -26,8 +26,8 @@ describe('router', () => {
   it('legge i parametri dopo il punto di domanda', () => {
     expect(parseHash('#competenze?ruolo=dati')).toEqual({ tema: 'competenze', elemento: null, params: { ruolo: 'dati' } });
     expect(parseHash('#competenze/rag?ruolo=dati')).toEqual({ tema: 'competenze', elemento: 'rag', params: { ruolo: 'dati' } });
-    expect(parseHash('#business?settore=ict&ruolo=legale')).toEqual({ tema: 'business', elemento: null, params: { settore: 'ict', ruolo: 'legale' } });
-    expect(parseHash('#politica/2026-12-02?ruolo=legale')).toEqual({ tema: 'norme', elemento: '2026-12-02', params: { ruolo: 'legale' } });
+    expect(parseHash('#business?settore=ict&ruolo=compliance')).toEqual({ tema: 'business', elemento: null, params: { settore: 'ict', ruolo: 'compliance' } });
+    expect(parseHash('#politica/2026-12-02?ruolo=compliance')).toEqual({ tema: 'norme', elemento: '2026-12-02', params: { ruolo: 'compliance' } });
   });
   it('senza punto di domanda i parametri sono vuoti', () => {
     expect(parseHash('#competenze/mcp')?.params).toEqual({});

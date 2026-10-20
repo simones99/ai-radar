@@ -28,7 +28,7 @@ ruoli:
   - {id: sviluppo, nome: Sviluppo software}   # chi scrive software, ML incluso
   - {id: prodotto, nome: Prodotto}
   - {id: dati, nome: Dati e analisi}           # analisti dei dati, non di business
-  - {id: legale, nome: Legale e compliance}
+  - {id: compliance, nome: Legale e compliance}
 
 skills:
   - id: agenti
@@ -90,7 +90,7 @@ skills:
     nome: Valutazione dei modelli (eval)
     breve: Eval
     descrizione: Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.
-    ruoli: [sviluppo, prodotto, dati, legale]
+    ruoli: [sviluppo, prodotto, dati, compliance]
     arxiv: ["LLM evaluation", "evaluating large language models", "LLM-as-a-judge"]
     github: llm-evaluation
     jobs: {what_phrase: "LLM evaluation"}
@@ -117,7 +117,7 @@ skills:
     nome: Prompt e context engineering
     breve: Context engineering
     descrizione: Progettare istruzioni, contesto e memoria che rendono affidabile un modello.
-    ruoli: [sviluppo, prodotto, dati, legale]
+    ruoli: [sviluppo, prodotto, dati, compliance]
     arxiv: ["prompt engineering", "context engineering"]
     github: prompt-engineering
     jobs: {what_phrase: "prompt engineering"}
@@ -131,7 +131,7 @@ skills:
     nome: Sicurezza dei sistemi AI
     breve: Sicurezza AI
     descrizione: Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.
-    ruoli: [sviluppo, legale]
+    ruoli: [sviluppo, compliance]
     arxiv: ["prompt injection", "jailbreak", "AI security"]
     github: ai-security
     jobs: {what_phrase: "LLM security"}
@@ -144,7 +144,7 @@ skills:
     nome: Governance e conformità AI
     breve: Governance
     descrizione: AI Act, gestione del rischio, audit e documentazione dei sistemi AI.
-    ruoli: [prodotto, legale]
+    ruoli: [prodotto, compliance]
     arxiv: ["AI governance", "AI Act", "AI regulation"]
     github: ai-governance
     jobs: {what_phrase: "model governance"}
@@ -157,7 +157,7 @@ skills:
     nome: Data engineering per l'AI
     breve: Data engineering
     descrizione: Pipeline, qualità e governance dei dati che alimentano modelli e agenti.
-    ruoli: [dati, legale]
+    ruoli: [dati, compliance]
     arxiv: ["data curation", "data quality for machine learning", "synthetic data generation"]
     github: data-engineering
     jobs: {what_phrase: "training data"}

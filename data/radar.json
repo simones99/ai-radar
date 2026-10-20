@@ -26,7 +26,7 @@
    "nome": "Dati e analisi"
   },
   {
-   "id": "legale",
+   "id": "compliance",
    "nome": "Legale e compliance"
   }
  ],
@@ -1038,7 +1038,7 @@
     "sviluppo",
     "prodotto",
     "dati",
-    "legale"
+    "compliance"
    ],
    "slancio": 0.4859,
    "slancio_margine": [
@@ -1542,7 +1542,7 @@
     "sviluppo",
     "prodotto",
     "dati",
-    "legale"
+    "compliance"
    ],
    "slancio": -0.2581,
    "slancio_margine": [
@@ -1796,7 +1796,7 @@
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
    "ruoli": [
     "sviluppo",
-    "legale"
+    "compliance"
    ],
    "slancio": 0.039,
    "slancio_margine": [
@@ -2044,7 +2044,7 @@
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
    "ruoli": [
     "prodotto",
-    "legale"
+    "compliance"
    ],
    "slancio": -0.2386,
    "slancio_margine": [
@@ -2292,7 +2292,7 @@
    "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
    "ruoli": [
     "dati",
-    "legale"
+    "compliance"
    ],
    "slancio": 0.0947,
    "slancio_margine": [

@@ -35,7 +35,7 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
   radar: {
     versione: 2, generato: '2026-10-15', quadranti: q,
     soglie: { slancio: 0, domanda: 3, rapporto_max: 1.55 },
-    ruoli: [{ id: 'sviluppo', nome: 'Sviluppo software' }, { id: 'prodotto', nome: 'Prodotto' }, { id: 'dati', nome: 'Dati e analisi' }, { id: 'legale', nome: 'Legale e compliance' }],
+    ruoli: [{ id: 'sviluppo', nome: 'Sviluppo software' }, { id: 'prodotto', nome: 'Prodotto' }, { id: 'dati', nome: 'Dati e analisi' }, { id: 'compliance', nome: 'Legale e compliance' }],
     competenze: [
       { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', plurale: true, descrizione: 'Sistemi che pianificano.',
         slancio: 0.52, slancio_margine: [0.45, 0.6], domanda: 26.4, domanda_it: 37.1, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',

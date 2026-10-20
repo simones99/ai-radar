@@ -172,6 +172,52 @@ test('dal radar alla competenza e ritorno: clic sul punto, Indietro, Esc', async
   await expect(page).toHaveURL(/\/$/);
 });
 
+const ruoli = (page: Page) => page.getByRole('group', { name: 'Il tuo ruolo' });
+const premuto = (page: Page) => ruoli(page).locator('button[aria-pressed="true"]');
+
+test('ruolo: il link lo sceglie, il ricaricamento lo tiene, un link con un altro ruolo vince sul ricordo', async ({ page }) => {
+  await page.goto('/#competenze?ruolo=compliance');
+  await page.reload();
+  await expect(premuto(page)).toHaveText('Legale e compliance');
+  await expect(page.locator('#detail-competenze g.pt.altro')).not.toHaveCount(0);
+  await page.goto('about:blank');
+  await page.goto('/#competenze'); // senza ruolo nel link: vale il ricordo, che entra nel link
+  await expect(premuto(page)).toHaveText('Legale e compliance');
+  await expect(page).toHaveURL(/#competenze\?ruolo=compliance$/);
+  await page.goto('about:blank');
+  await page.goto('/#competenze?ruolo=dati');
+  await expect(premuto(page)).toHaveText('Dati e analisi');
+  await page.goto('about:blank');
+  await page.goto('/#competenze');
+  await expect(premuto(page)).toHaveText('Dati e analisi');
+});
+
+test('ruolo da tastiera: Tab tra i pulsanti, Invio sceglie; «Tutti» toglie il ruolo dal link', async ({ page }) => {
+  await page.goto('/#competenze');
+  await ruoli(page).getByRole('button', { name: 'Tutti' }).focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await expect(ruoli(page).getByRole('button', { name: 'Prodotto' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(premuto(page)).toHaveText('Prodotto');
+  await expect(page).toHaveURL(/#competenze\?ruolo=prodotto$/);
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Space');
+  await expect(premuto(page)).toHaveText('Tutti');
+  await expect(page).toHaveURL(/#competenze$/);
+});
+
+test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#competenze?ruolo=dati');
+  await page.reload();
+  await expect(premuto(page)).toHaveText('Dati e analisi');
+  const tops = await ruoli(page).getByRole('button').evaluateAll((bs) => new Set(bs.map((b) => b.getBoundingClientRect().top)).size);
+  expect(tops).toBeGreaterThan(1);
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
 for (const width of [320, 360]) {
   test(`${width}px: nessuno scorrimento orizzontale`, async ({ page }) => {
     await page.setViewportSize({ width, height: 780 });
@@ -219,6 +265,16 @@ test('accessibilità: nessuna violazione grave in home e nelle card', async ({ p
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   expect(await seriousViolations(page), 'competenze/mcp').toEqual([]);
 });
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`accessibilità con un ruolo scelto, tema ${colorScheme}: le competenze attenuate restano leggibili`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.goto('/#competenze?ruolo=dati');
+    await page.reload();
+    await expect(page.locator('#detail-competenze .altro').first()).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+}
 
 test('ancora interna con una card aperta: la pagina va all’ancora, non alle card', async ({ page }) => {
   await page.goto('/');

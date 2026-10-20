@@ -1,26 +1,46 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Block from '../charts/Block.svelte';
   import type { Cite } from '../charts/types';
   import MovesPanel from '../charts/MovesPanel.svelte';
   import Radar from '../charts/Radar.svelte';
   import { radarRows } from '../data/derive';
   import type { Quadrant } from '../data/types';
-  import { apri, toHash } from '../router';
+  import { apri, imposta, toHash } from '../router';
+  import { ricorda, ricordato } from '../ruolo';
   import { per10k, signedPct } from '../text/format';
   import { headSkill } from '../text/frasi';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
   import type { DetailProps } from './types';
 
-  let { data, today, tile, elemento, onclose }: DetailProps = $props();
+  let { data, today, tile, elemento, params, onclose }: DetailProps = $props();
 
   const rows = $derived(data.radar ? radarRows(data.radar) : []);
   const quadranti = $derived(data.radar?.quadranti ?? ({ 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" } as Record<Quadrant, string>));
+  const ruoli = $derived(data.radar?.ruoli ?? []);
+  const ruolo = $derived(ruoli.find((r) => r.id === params.ruolo) ?? null); // un ruolo sconosciuto nel link si ignora
+  // All'apertura il ruolo del link vince e diventa il ricordato; senza (o sconosciuto) vale il ricordo, che entra nel link.
+  onMount(() => {
+    if (ruolo) {
+      ricorda(ruolo.id);
+    } else {
+      const mem = ruoli.find((r) => r.id === ricordato())?.id ?? null; // un ricordo di un ruolo che non c'è più si ignora
+      if (mem || params.ruolo) imposta('ruolo', mem);
+    }
+  });
+  function scegli(id: string | null) {
+    ricorda(id);
+    imposta('ruolo', id);
+  }
   const skill = $derived(rows.find((r) => r.id === elemento) ?? null);
   const head = $derived(skill ? headSkill(skill, quadranti) : tile.head(data, today));
   const old = $derived(!!data.radar && data.radar.versione !== 2);
   const all = $derived(data.radar?.versione === 2 ? data.radar.competenze : []);
   const placed = $derived(new Set(rows.map((r) => r.id)));
+  const delRuolo = $derived(ruolo ? all.filter((c) => c.ruoli?.includes(ruolo.id)).map((c) => c.id) : null);
+  const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
+  const elenco = $derived(delRuolo ? [...all.filter((c) => !altro(c.id)), ...all.filter((c) => altro(c.id))] : all); // prima il ruolo, l'ordine resta
   let hovered = $state<string | null>(null); // anteprima al passaggio del mouse sui movimenti
   const arxivDown = $derived(data.status?.fonti?.arxiv?.stato === 'errore' ? 'In questo giro arXiv non ha risposto: lo slancio viene dagli altri segnali. ' : '');
   const sources: Cite = [
@@ -41,21 +61,28 @@
 
 <Detail {tile} {head} {onclose}>
   {#if skill}
-    <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} ruoli={data.radar?.ruoli ?? []} />
+    <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} {ruoli} />
   {:else if !rows.length}
     <Block span={12} title="Radar delle competenze"
       missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar si calcola dopo il primo aggiornamento di arXiv, GitHub e Adzuna.'} />
   {:else}
+    {#if ruoli.length}
+      <div class="chips" role="group" aria-label="Il tuo ruolo">
+        <button type="button" aria-pressed={ruolo === null} onclick={() => scegli(null)}>Tutti</button>
+        {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => scegli(r.id)}>{r.nome}</button>{/each}
+      </div>
+    {/if}
     <Block span={8} title="Radar delle competenze"
       note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Le frecce partono da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprire la competenza."
       cite={arxivDown ? [{ t: arxivDown }, ...sources] : sources}
-      table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)'],
+      table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)', ...(delRuolo ? ['Per il tuo ruolo'] : [])],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], signedPct(r.slancio), per10k(r.domanda),
-                                      r.hasPrev ? `${signedPct(r.sp as number)} · ${r.dp != null ? per10k(r.dp) : '—'}` : '—']) }}>
-      <Radar {rows} {quadranti} highlight={hovered} onpick={(id) => apri('competenze', id)} />
+                                      r.hasPrev ? `${signedPct(r.sp as number)} · ${r.dp != null ? per10k(r.dp) : '—'}` : '—',
+                                      ...(delRuolo ? [delRuolo.includes(r.id) ? 'sì' : 'no'] : [])]) }}>
+      <Radar {rows} {quadranti} highlight={hovered} {delRuolo} onpick={(id) => apri('competenze', id)} />
     </Block>
     <Block span={4} title="Movimenti del mese" cite={sources}>
-      <MovesPanel {rows} {quadranti} bind:hovered />
+      <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
     </Block>
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
@@ -63,8 +90,8 @@
         <table>
           <thead><tr><th scope="col">Competenza</th><th scope="col">Cosa è</th><th scope="col">Quadrante</th><th scope="col">Slancio</th><th scope="col">Annunci ogni 10mila</th></tr></thead>
           <tbody>
-            {#each all as c (c.id)}
-              <tr>
+            {#each elenco as c (c.id)}
+              <tr class:altro={altro(c.id)}>
                 <th scope="row">{#if placed.has(c.id)}<a href={toHash('competenze', c.id)}>{c.nome}</a>{:else}{c.nome}{/if}</th>
                 <td class="desc">{c.descrizione}</td>
                 <td>{c.quadrante ? quadranti[c.quadrante] : 'dati insufficienti'}{c.incerto ? ' · incerto' : ''}</td>
@@ -83,6 +110,9 @@
 </Detail>
 
 <style>
+  .chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
+  .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
   .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: 80ch; }
   .tw { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; }
@@ -91,4 +121,6 @@
   tbody th { font-weight: 500; }
   td.desc { white-space: normal; min-width: 24ch; color: var(--fg-2); }
   td.num { text-align: right; }
+  /* altri ruoli: colore più chiaro invece dell'opacità, il contrasto resta AA */
+  tr.altro :is(th, td, a) { color: var(--fg-3); font-weight: 400; }
 </style>

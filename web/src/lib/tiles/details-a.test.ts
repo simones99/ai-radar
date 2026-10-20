@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import type { Component } from 'svelte';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
-import type { TileId } from '../router';
+import type { Params, TileId } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import { headBusiness, headCompetenze, headNotizie, headNorme, type Head } from '../text/frasi';
 import BusinessDetail from './BusinessDetail.svelte';
@@ -14,8 +14,8 @@ import type { DetailProps, TileDef } from './types';
 const data = FIXTURE as Dataset;
 const mk = (id: TileId, label: string, head: (d: Dataset, t: Date) => Head, Detail: Component<DetailProps>): TileDef =>
   ({ id, label, source: 'owid', eager: false, testa: 'italia', face: () => null, head, Detail });
-const show = (Detail: Component<DetailProps>, tile: TileDef, elemento: string | null = null) =>
-  render(Detail, { data, today, tile, elemento, onclose: () => {} });
+const show = (Detail: Component<DetailProps>, tile: TileDef, elemento: string | null = null, params: Params = {}) =>
+  render(Detail, { data, today, tile, elemento, params, onclose: () => {} });
 
 describe('Competenze', () => {
   const tile = mk('competenze', 'Competenze', headCompetenze, CompetenzeDetail);
@@ -59,12 +59,91 @@ describe('Competenze', () => {
   });
   it('radar.json della pipeline vecchia: avviso', () => {
     const old = { ...data, radar: { ...data.radar!, versione: undefined } } as Dataset;
-    render(CompetenzeDetail, { data: old, today, tile, elemento: null, onclose: () => {} });
+    render(CompetenzeDetail, { data: old, today, tile, elemento: null, params: {}, onclose: () => {} });
     expect(screen.getByText('Il radar si aggiorna al prossimo giro della pipeline.')).toBeInTheDocument();
   });
   it('link diretto a una competenza che non esiste: il radar, nessun errore', () => {
     show(CompetenzeDetail, tile, 'inesistente');
     expect(screen.getByRole('img', { name: /Radar delle competenze/ })).toBeInTheDocument();
+  });
+});
+
+describe('Competenze: il ruolo', () => {
+  const tile = mk('competenze', 'Competenze', headCompetenze, CompetenzeDetail);
+  const ruoli = () => screen.getByRole('group', { name: 'Il tuo ruolo' });
+  beforeEach(() => localStorage.clear());
+
+  it('fila di pulsanti sopra il radar: il ruolo del link è il solo premuto', () => {
+    show(CompetenzeDetail, tile, null, { ruolo: 'compliance' });
+    const btns = within(ruoli()).getAllByRole('button');
+    expect(btns.map((b) => b.textContent)).toEqual(['Tutti', 'Sviluppo software', 'Prodotto', 'Dati e analisi', 'Legale e compliance']);
+    expect(btns.filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent)).toEqual(['Legale e compliance']);
+  });
+
+  it('radar: le competenze degli altri ruoli attenuate; la tabella dei dati dice quali sono del ruolo', () => {
+    const { container } = show(CompetenzeDetail, tile, null, { ruolo: 'dati' });
+    expect(container.querySelectorAll('g.pt.altro')).toHaveLength(3);
+    const tab = within(screen.getByRole('heading', { name: 'Radar delle competenze' }).closest('section')!).getByRole('table');
+    expect(within(tab).getAllByRole('columnheader').at(-1)).toHaveTextContent('Per il tuo ruolo');
+    const riga = (nome: string) => within(tab).getByRole('rowheader', { name: nome }).closest('tr')!;
+    expect(riga('RAG e ricerca semantica').lastElementChild).toHaveTextContent('sì');
+    expect(riga('Model Context Protocol (MCP)').lastElementChild).toHaveTextContent('no');
+  });
+  it('con «Tutti» la tabella dei dati non ha la colonna del ruolo e niente è attenuato', () => {
+    const { container } = show(CompetenzeDetail, tile);
+    expect(container.querySelectorAll('.altro')).toHaveLength(0);
+    const tab = within(screen.getByRole('heading', { name: 'Radar delle competenze' }).closest('section')!).getByRole('table');
+    expect(within(tab).queryByRole('columnheader', { name: 'Per il tuo ruolo' })).toBeNull();
+  });
+
+  it('Movimenti del mese: prima le competenze del ruolo, poi le altre attenuate, ognuna nell’ordine di «Tutti»', () => {
+    const movimenti = () => within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getAllByRole('link').filter((a) => a.matches('a.row'));
+    const nomi = (as: HTMLElement[]) => as.map((a) => a.getAttribute('title'));
+    const { unmount } = show(CompetenzeDetail, tile);
+    const tutti = nomi(movimenti());
+    unmount();
+    show(CompetenzeDetail, tile, null, { ruolo: 'dati' });
+    const conRuolo = movimenti();
+    expect(nomi(conRuolo).slice(0, 2)).toEqual(['RAG e ricerca semantica', 'Database vettoriali']);
+    expect(nomi(conRuolo).slice(2)).toEqual(tutti.filter((n) => n !== 'RAG e ricerca semantica' && n !== 'Database vettoriali'));
+    expect(conRuolo.map((a) => a.closest('li')!.classList.contains('altro'))).toEqual(conRuolo.map((_, i) => i >= 2));
+  });
+  it('Le competenze una per una: prima le righe del ruolo, poi le altre attenuate; i numeri non cambiano', () => {
+    const tabella = () => within(screen.getByRole('heading', { name: 'Le competenze una per una' }).closest('section')!).getByRole('table');
+    const { unmount } = show(CompetenzeDetail, tile);
+    const numeri = (t: HTMLElement) => Object.fromEntries([...t.querySelectorAll('tbody tr')].map((tr) => [tr.querySelector('th')!.textContent, [...tr.querySelectorAll('td')].slice(1).map((td) => td.textContent)]));
+    const prima = numeri(tabella());
+    unmount();
+    show(CompetenzeDetail, tile, null, { ruolo: 'dati' });
+    const righe = [...tabella().querySelectorAll('tbody tr')];
+    expect(righe.map((tr) => tr.querySelector('th')!.textContent)).toEqual(['RAG e ricerca semantica', 'Database vettoriali', 'Agenti AI', 'Model Context Protocol (MCP)', 'AI fisica e robotica']);
+    expect(righe.map((tr) => tr.classList.contains('altro'))).toEqual([false, false, true, true, true]);
+    expect(numeri(tabella())).toEqual(prima);
+  });
+
+  it('il titolo e la frase in testa alla card non cambiano con il ruolo', () => {
+    const { unmount } = show(CompetenzeDetail, tile);
+    const testa = () => screen.getByRole('heading', { level: 2 }).closest('.d-text')!.textContent;
+    const tutti = testa();
+    unmount();
+    show(CompetenzeDetail, tile, null, { ruolo: 'compliance' });
+    expect(testa()).toBe(tutti);
+  });
+
+  describe('senza storage del browser', () => {
+    beforeEach(() => {
+      for (const m of ['getItem', 'setItem', 'removeItem'] as const) vi.spyOn(Storage.prototype, m).mockImplementation(() => { throw new Error('SecurityError'); });
+    });
+    afterEach(() => vi.restoreAllMocks());
+    it('la card funziona, con e senza ruolo nel link, e i pulsanti rispondono', async () => {
+      show(CompetenzeDetail, tile);
+      expect(within(ruoli()).getByRole('button', { name: 'Tutti' })).toHaveAttribute('aria-pressed', 'true');
+      await fireEvent.click(within(ruoli()).getByRole('button', { name: 'Prodotto' }));
+      await fireEvent.click(within(ruoli()).getByRole('button', { name: 'Tutti' }));
+      document.body.innerHTML = '';
+      show(CompetenzeDetail, tile, null, { ruolo: 'dati' });
+      expect(within(ruoli()).getByRole('button', { name: 'Dati e analisi' })).toHaveAttribute('aria-pressed', 'true');
+    });
   });
 });
 

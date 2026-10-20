@@ -15,7 +15,7 @@ import type { DetailProps, TileDef } from './types';
 const data = FIXTURE as Dataset;
 const mk = (id: TileId, label: string, head: (d: Dataset, t: Date) => Head, Detail: Component<DetailProps>): TileDef =>
   ({ id, label, source: 'epoch', eager: false, testa: 'italia', face: () => null, head, Detail });
-const show = (Detail: Component<DetailProps>, tile: TileDef) => render(Detail, { data, today, tile, elemento: null, onclose: () => {} });
+const show = (Detail: Component<DetailProps>, tile: TileDef) => render(Detail, { data, today, tile, elemento: null, params: {}, onclose: () => {} });
 
 describe('paesi', () => {
   it('traduce i nomi più comuni', () => {
@@ -64,7 +64,7 @@ describe('Persone: Italia nei grafici europei', () => {
     const ue = { titolo: '', unita: '%', citazione: 'Eurostat (2026)', url: 'https://ourworldindata.org/grapher/share-europe-using-generative-ai', aggiornato_owid: null, punti };
     const d = { ...data, owid: { ...base, serie: { ...base.serie, uso_genai_ue: ue } } } as Dataset;
     const tile = mk('persone', 'Persone e lavoro', headPersone, PersoneDetail);
-    render(PersoneDetail, { data: d, today, tile, elemento: null, onclose: () => {} });
+    render(PersoneDetail, { data: d, today, tile, elemento: null, params: {}, onclose: () => {} });
     const chart = screen.getByRole('img', { name: "Uso dell'AI generativa in Europa" });
     expect(within(chart).getByText('Italia')).toHaveClass('hot');
     expect(within(chart).getByText('Paese A')).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('Persone: Italia nei grafici europei', () => {
 
 describe('Rapporti', () => {
   it('link diretto a un rapporto: è evidenziato', () => {
-    render(RapportiDetail, { data, today, tile: mk('rapporti', 'Rapporti', headRapporti, RapportiDetail), elemento: 'state-of-ai-report', onclose: () => {} });
+    render(RapportiDetail, { data, today, tile: mk('rapporti', 'Rapporti', headRapporti, RapportiDetail), elemento: 'state-of-ai-report', params: {}, onclose: () => {} });
     const li = screen.getByRole('link', { name: 'State of AI Report' }).closest('li')!;
     expect(li).toHaveAttribute('aria-current', 'true');
     expect(screen.getByRole('link', { name: 'AI Index Report' }).closest('li')).not.toHaveAttribute('aria-current');

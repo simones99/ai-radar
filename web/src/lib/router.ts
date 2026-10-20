@@ -45,3 +45,9 @@ export const APRI = 'ai-radar:apri';
 export function apri(tema: TileId, elemento: string | null = null): void {
   document.dispatchEvent(new CustomEvent(APRI, { detail: { tema, elemento } }));
 }
+
+/** Cambia un parametro del link (null lo toglie) senza aggiungere passi alla cronologia: TileGrid ascolta l'evento. */
+export const IMPOSTA = 'ai-radar:imposta';
+export function imposta(chiave: string, valore: string | null): void {
+  document.dispatchEvent(new CustomEvent(IMPOSTA, { detail: { chiave, valore } }));
+}

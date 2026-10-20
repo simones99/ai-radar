@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
-import { apri } from '../router';
+import { apri, imposta } from '../router';
 import TileGrid from './TileGrid.svelte';
 
 const data = FIXTURE as Dataset;
@@ -13,6 +13,7 @@ const card = (id: string) => document.querySelector<HTMLButtonElement>(`#tile-${
 
 beforeEach(() => {
   history.replaceState(null, '', '/');
+  localStorage.clear();
   document.title = 'AI Radar';
 });
 
@@ -341,6 +342,106 @@ describe('TileGrid: parametri nel link', () => {
     expect(location.hash).toMatch(/^#notizie\/[a-z0-9-]+\?ruolo=dati$/);
     await fireEvent.click(tutte);
     expect(location.hash).toBe('#notizie?ruolo=dati');
+  });
+
+  it('imposta cambia o toglie un parametro senza aggiungere passi alla cronologia', async () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati&settore=ict');
+    render(TileGrid, { data, today });
+    const passi = history.length;
+    imposta('ruolo', 'prodotto');
+    expect(location.hash).toBe('#competenze?ruolo=prodotto&settore=ict');
+    imposta('ruolo', null);
+    expect(location.hash).toBe('#competenze?settore=ict');
+    expect(history.length).toBe(passi);
+    await fireEvent.click(card('norme'));
+    expect(location.hash).toBe('#norme?settore=ict');
+  });
+
+  it('scegliere un ruolo lo mette nel link e lo ricorda; «Tutti» toglie l’uno e l’altro', async () => {
+    history.replaceState(null, '', '/#competenze');
+    render(TileGrid, { data, today });
+    const passi = history.length;
+    const ruoli = () => screen.getByRole('group', { name: 'Il tuo ruolo' });
+    await fireEvent.click(within(ruoli()).getByRole('button', { name: 'Prodotto' }));
+    expect(location.hash).toBe('#competenze?ruolo=prodotto');
+    expect(localStorage.getItem('ai-radar:ruolo')).toBe('prodotto');
+    expect(within(ruoli()).getByRole('button', { name: 'Prodotto' })).toHaveAttribute('aria-pressed', 'true');
+    await fireEvent.click(within(ruoli()).getByRole('button', { name: 'Tutti' }));
+    expect(location.hash).toBe('#competenze');
+    expect(localStorage.getItem('ai-radar:ruolo')).toBeNull();
+    expect(within(ruoli()).getByRole('button', { name: 'Tutti' })).toHaveAttribute('aria-pressed', 'true');
+    expect(history.length).toBe(passi);
+  });
+
+  it('il ruolo ricordato, senza ruolo nel link, entra nel link all’apertura della card', async () => {
+    localStorage.setItem('ai-radar:ruolo', 'dati');
+    render(TileGrid, { data, today });
+    await fireEvent.click(card('competenze'));
+    await waitFor(() => expect(location.hash).toBe('#competenze?ruolo=dati'));
+    expect(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Dati e analisi' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('link diretto con un ruolo: vince sul ricordo e diventa il ricordato', () => {
+    localStorage.setItem('ai-radar:ruolo', 'dati');
+    history.replaceState(null, '', '/#competenze?ruolo=compliance');
+    render(TileGrid, { data, today });
+    expect(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Legale e compliance' })).toHaveAttribute('aria-pressed', 'true');
+    expect(location.hash).toBe('#competenze?ruolo=compliance');
+    expect(localStorage.getItem('ai-radar:ruolo')).toBe('compliance');
+  });
+
+  it('link diretto con un ruolo sconosciuto: vale il ricordo, o «Tutti»', async () => {
+    localStorage.setItem('ai-radar:ruolo', 'dati');
+    history.replaceState(null, '', '/#competenze?ruolo=boh');
+    const { unmount } = render(TileGrid, { data, today });
+    await waitFor(() => expect(location.hash).toBe('#competenze?ruolo=dati'));
+    unmount();
+    localStorage.clear();
+    history.replaceState(null, '', '/#competenze?ruolo=boh');
+    render(TileGrid, { data, today });
+    await waitFor(() => expect(location.hash).toBe('#competenze'));
+    expect(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Tutti' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('il ruolo scelto resta andando alla pagina di una competenza e tornando al radar', async () => {
+    history.replaceState(null, '', '/#competenze');
+    render(TileGrid, { data, today });
+    await fireEvent.click(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Prodotto' }));
+    apri('competenze', 'mcp');
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp?ruolo=prodotto'));
+    await fireEvent.click(screen.getByRole('link', { name: '← Tutte le competenze' }));
+    await waitFor(() => expect(location.hash).toBe('#competenze?ruolo=prodotto'));
+    expect(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Prodotto' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('Indietro e Avanti non rimettono un ruolo cambiato nel frattempo: il ruolo è una lente, non un passo', async () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati');
+    render(TileGrid, { data, today });
+    apri('competenze', 'mcp');
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp?ruolo=dati'));
+    history.back();
+    await waitFor(() => expect(location.hash).toBe('#competenze?ruolo=dati'));
+    await fireEvent.click(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Tutti' }));
+    history.forward();
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp'));
+    history.back();
+    await waitFor(() => expect(location.hash).toBe('#competenze'));
+    expect(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Tutti' })).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('ai-radar:ruolo')).toBeNull();
+  });
+
+  it('senza storage del browser il ruolo si sceglie lo stesso e va nel link', async () => {
+    for (const m of ['getItem', 'setItem', 'removeItem'] as const) vi.spyOn(Storage.prototype, m).mockImplementation(() => { throw new Error('SecurityError'); });
+    try {
+      history.replaceState(null, '', '/#competenze');
+      render(TileGrid, { data, today });
+      const ruoli = () => screen.getByRole('group', { name: 'Il tuo ruolo' });
+      await fireEvent.click(within(ruoli()).getByRole('button', { name: 'Prodotto' }));
+      expect(location.hash).toBe('#competenze?ruolo=prodotto');
+      expect(within(ruoli()).getByRole('button', { name: 'Prodotto' })).toHaveAttribute('aria-pressed', 'true');
+    } finally {
+      vi.restoreAllMocks();
+    }
   });
 
   it('elemento, poi un’altra card, poi Indietro: si torna al radar con i parametri', async () => {

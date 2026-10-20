@@ -6,10 +6,11 @@
   import { cambio } from '../text/frasi';
   import { FONT, leader, measureText, placeLabels, type Box } from './labels';
 
-  let { rows, quadranti, highlight = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', onpick }: {
+  let { rows, quadranti, highlight = null, delRuolo = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', onpick }: {
     rows: RadarRowM[];
     quadranti: Record<Quadrant, string>;
     highlight?: string | null;
+    delRuolo?: string[] | null; // competenze del ruolo scelto: le altre si attenuano; null con «Tutti»
     label?: string;
     onpick?: (id: string) => void; // tocco o clic su un punto
   } = $props();
@@ -53,6 +54,7 @@
     return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });
   const dim = (id: string) => highlight != null && highlight !== id;
+  const altro = (id: string) => highlight == null && delRuolo != null && !delRuolo.includes(id); // durante l'anteprima conta solo quella
 </script>
 
 <div class="chart" bind:clientWidth={cw}>
@@ -80,7 +82,7 @@
 
     {#each rows as r (r.id)}
       {@const hot = r.quadrante === 'impara-ora'}
-      <g class="pt" class:dim={dim(r.id)}>
+      <g class="pt" class:dim={dim(r.id)} class:altro={altro(r.id)}>
         {#if r.hasPrev && r.move >= MOVE_MIN}
           {@const x0 = x(r.px as number)}
           {@const y0 = y(r.py as number)}
@@ -94,7 +96,7 @@
         <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
         <!-- la tastiera usa il pannello dei movimenti; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
         <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" onclick={() => onpick?.(r.id)}>
-          <title>{r.nome}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}.</title>
+          <title>{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}.</title>
         </circle>
       </g>
     {/each}
@@ -102,8 +104,8 @@
     <g class="lbls">
       {#each layout as it (it.id)}
         {@const l = leader(it, it.box)}
-        {#if l}<line class="leader" class:dim={dim(it.id)} x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
-        <text class:dim={dim(it.id)} x={it.box.x0} y={it.box.y0 + LH - 4}>
+        {#if l}<line class="leader" class:dim={dim(it.id)} class:altro={altro(it.id)} x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
+        <text class:dim={dim(it.id)} class:altro={altro(it.id)} x={it.box.x0} y={it.box.y0 + LH - 4}>
           {#each it.lines as t, i (i)}
             <tspan x={it.box.x0} dy={i ? LH : 0} class="halo {i === 0 ? (it.r.quadrante === 'impara-ora' ? 't12b' : 't12') : 'note'}">{t}</tspan>
           {/each}
@@ -128,5 +130,8 @@
   .leader { stroke: var(--line-2); }
   .note { font: 400 12px var(--font); fill: var(--fg-3); }
   .pt, .lbls text, .leader { transition: opacity .15s; }
+  /* altri ruoli: i segni si attenuano con l'opacità, il testo con il colore, che resta AA */
+  .pt.altro, .leader.altro { opacity: .35; }
+  .lbls text.altro tspan { fill: var(--fg-3); font-weight: 400; }
   .dim { opacity: .18; }
 </style>

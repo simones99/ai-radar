@@ -4,13 +4,15 @@
   import { toHash } from '../router';
   import { per10k, signedPct } from '../text/format';
 
-  let { rows, quadranti, hovered = $bindable(null) }: {
+  let { rows, quadranti, hovered = $bindable(null), delRuolo = null }: {
     rows: RadarRowM[];
     quadranti: Record<Quadrant, string>;
     hovered?: string | null; // anteprima nel grafico al passaggio del mouse
+    delRuolo?: string[] | null; // competenze del ruolo scelto: in testa, prima del taglio a 8; le altre attenuate
   } = $props();
 
-  const moved = $derived(rows.filter((r) => r.hasPrev || r.moving).sort((a, b) => Number(b.changed || !!b.moving) - Number(a.changed || !!a.moving) || Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
+  const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
+  const moved = $derived(rows.filter((r) => r.hasPrev || r.moving).sort((a, b) => Number(altro(a.id)) - Number(altro(b.id)) || Number(b.changed || !!b.moving) - Number(a.changed || !!a.moving) || Math.abs(b.dC) - Math.abs(a.dC) || b.move - a.move).slice(0, 8));
   const cls = (v: number) => (v > 0.005 ? 'up' : v < -0.005 ? 'down' : 'flat');
   const arrow = (c: string) => (c === 'up' ? '↑' : c === 'down' ? '↓' : '');
   const verso = (c: string) => (c === 'up' ? ', in aumento' : c === 'down' ? ', in calo' : '');
@@ -29,7 +31,7 @@
       {#each moved as r (r.id)}
         {@const cs = cls(r.dS)}
         {@const cd = r.dp == null ? 'flat' : cls(r.dD)}
-        <li>
+        <li class:altro={altro(r.id)}>
           <a class="row" href={toHash('competenze', r.id)} title={r.nome}
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
             onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
@@ -57,6 +59,9 @@
   .head span + span { text-align: right; padding-right: 14px; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; }
   li + li { border-top: 1px solid var(--line); }
+  /* altri ruoli: colore più chiaro invece dell'opacità, il contrasto resta AA */
+  li.altro .row, li.altro .up, li.altro .down, li.altro .chip { color: var(--fg-3); }
+  li.altro .n, li.altro .up { font-weight: 400; }
   .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); }
   .row:focus-visible { background: var(--accent-soft); outline: 2px solid var(--accent); }
   @media (hover: hover) { .row:hover { background: var(--accent-soft); } }

@@ -21,6 +21,32 @@ describe('Radar', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti, highlight: 'mcp' });
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(4);
   });
+  it('con un ruolo: le competenze degli altri ruoli attenuate, punto ed etichetta, e sempre cliccabili', async () => {
+    const onpick = vi.fn();
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti, delRuolo: ['rag', 'vector-db'], onpick });
+    const altri = [...container.querySelectorAll('g.pt.altro')];
+    expect(altri.map((g) => g.querySelector('title')?.textContent?.split(':')[0])).toEqual(expect.arrayContaining(['Agenti AI', 'Model Context Protocol (MCP)', 'AI fisica e robotica']));
+    expect(altri).toHaveLength(3);
+    expect(screen.getByText('MCP').closest('text')).toHaveClass('altro');
+    expect(screen.getByText('RAG').closest('text')).not.toHaveClass('altro');
+    await fireEvent.click(altri[0].querySelector('circle.hit')!);
+    expect(onpick).toHaveBeenCalledTimes(1);
+  });
+  it('lettore di schermo: i punti del ruolo dicono «del tuo ruolo», gli altri niente', () => {
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti, delRuolo: ['rag', 'vector-db'] });
+    const del = [...container.querySelectorAll('circle.hit > title')].filter((t) => /del tuo ruolo/.test(t.textContent ?? '')).map((t) => t.textContent?.split(',')[0]);
+    expect(del.sort()).toEqual(['Database vettoriali', 'RAG e ricerca semantica']);
+  });
+  it('con «Tutti» niente di attenuato e niente «del tuo ruolo»', () => {
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti, delRuolo: null });
+    expect(container.querySelectorAll('.altro')).toHaveLength(0);
+    expect(container.textContent).not.toMatch(/del tuo ruolo/);
+  });
+  it('con un ruolo, l’anteprima al passaggio del mouse vale come senza: piena la competenza, attenuate tutte le altre allo stesso modo', () => {
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti, delRuolo: ['rag', 'vector-db'], highlight: 'mcp' });
+    expect(container.querySelectorAll('g.pt.dim')).toHaveLength(4);
+    expect(container.querySelectorAll('.altro')).toHaveLength(0);
+  });
   it('il suggerimento di ogni punto sta sul cerchio di tocco, quello sopra il punto', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     const pts = container.querySelectorAll('g.pt');

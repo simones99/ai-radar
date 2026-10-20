@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { flushSync, tick } from 'svelte';
+  import { flushSync, onDestroy, tick } from 'svelte';
   import type { Dataset } from '../data/types';
-  import { APRI, parseHash, toHash, type Params, type TileId } from '../router';
+  import { APRI, IMPOSTA, parseHash, toHash, type Params, type TileId } from '../router';
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
   import TileFace from './TileFace.svelte';
@@ -15,7 +15,7 @@
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
   let currentEl: string | null = start?.elemento ?? null; // sincrono, come current
-  let params: Params = start?.params ?? {}; // ?ruolo=…: restano nel link finché la card è aperta, anche cambiando card
+  let params = $state<Params>(start?.params ?? {}); // ?ruolo=…: restano nel link finché la card è aperta, anche cambiando card
   let depth = 0; // passi aggiunti alla cronologia da quando la card è aperta (0: aperta da un link diretto)
   let jumping: 'close' | 'back' | null = null; // salto nella cronologia in corso: finché non arriva popstate, niente altri salti
   let jumpTimer: ReturnType<typeof setTimeout> | undefined;
@@ -116,7 +116,6 @@
 
   function onPop() {
     const h = parseHash(location.hash);
-    params = h?.params ?? {};
     const kind = jumping;
     jumping = null;
     clearTimeout(jumpTimer);
@@ -129,7 +128,9 @@
     }
     if (!h && current === null) return;
     depth = history.state?.depth ?? (history.state?.tema != null ? 1 : 0);
-    canonical(h);
+    // Con la card aperta valgono i parametri di adesso: Indietro e Avanti cambiano card ed elemento, non il ruolo scelto nel frattempo.
+    params = !h ? {} : current === null ? h.params : params;
+    canonical(h && { ...h, params });
     if (!h && location.hash) {
       show(null); // ancora interna (#stato, #crediti, #temi): chiude la card e lascia la pagina dove va il link
       return;
@@ -148,6 +149,18 @@
     document.addEventListener(APRI, onApri);
     return () => document.removeEventListener(APRI, onApri);
   });
+
+  // Un parametro cambiato dalla card (il ruolo): il link si aggiorna al suo posto.
+  // In ascolto da subito, non in un $effect: la card aperta da un link diretto lo chiede già quando si monta.
+  function onImposta(e: Event) {
+    const { chiave, valore } = (e as CustomEvent<{ chiave: string; valore: string | null }>).detail;
+    if (current === null) return;
+    const { [chiave]: _, ...resto } = params;
+    params = valore ? { ...params, [chiave]: valore } : resto;
+    history.replaceState(history.state, '', toHash(current, currentEl, params));
+  }
+  document.addEventListener(IMPOSTA, onImposta);
+  onDestroy(() => document.removeEventListener(IMPOSTA, onImposta));
 
   function onKey(e: KeyboardEvent) {
     if (e.key === 'Escape' && current) {
@@ -183,7 +196,7 @@
 
   {#if open}
     {@const D = open.Detail}
-    <div class="pane">{#key riapri}<D {data} {today} tile={open} {elemento} onclose={closeTile} />{/key}</div>
+    <div class="pane">{#key riapri}<D {data} {today} tile={open} {elemento} {params} onclose={closeTile} />{/key}</div>
   {/if}
 </div>
 

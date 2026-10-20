@@ -1,6 +1,6 @@
 import type { Component } from 'svelte';
 import type { Dataset } from '../data/types';
-import type { TileId } from '../router';
+import type { Params, TileId } from '../router';
 import type { Face, Head } from '../text/frasi';
 
 /** Le due teste della home: le persone (radar) e le organizzazioni (Italia). */
@@ -22,5 +22,6 @@ export interface DetailProps {
   today: Date;
   tile: TileDef;
   elemento: string | null;
+  params: Params; // parametri del link (?ruolo=…)
   onclose: () => void;
 }

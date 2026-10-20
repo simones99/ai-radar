@@ -1,5 +1,5 @@
 import {
-  MOVE_MIN, TUTTI, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, ultimoAnno,
+  MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
 import type { Dataset, Quadrant, Ruolo } from '../data/types';
@@ -317,7 +317,7 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
 
   // 2. un dato italiano uscito negli ultimi 30 giorni: Eurostat (prima il settore ricordato), poi uso dell'AI generativa (OWID)
   const es = d.eurostat_settori;
-  const settore = es?.settori.find((x) => x.id === settoreId && x.id !== TUTTI);
+  const settore = settoreScelto(es, settoreId); // «Tutti» o un settore sconosciuto: come senza
   const g = settore && es?.adozione[settore.id];
   const anno = g && ultimoAnno([g.IT, g.EU27_2020]);
   if (settore && g && anno && g.IT[anno] != null && recent(es.aggiornato_eurostat)) {

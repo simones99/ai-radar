@@ -4,7 +4,7 @@
   import Block from '../charts/Block.svelte';
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
-  import { adozionePerSettore, andamentoItUe, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, tNum, TUTTI, ultimoAnno, type ConfrontoItUe, type RigaItUe } from '../data/derive';
+  import { adozionePerSettore, andamentoItUe, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, settoreScelto, settoriDaScegliere, tNum, TUTTI, ultimoAnno, type ConfrontoItUe, type RigaItUe } from '../data/derive';
   import { settore as settoreRicordato } from '../scelta.svelte';
   import { exact, nf, short } from '../text/format';
   import { barsTable, dotsTable, fmtYm, itUeTable, owidCite, seriesTable, MISSING } from './cite';
@@ -41,8 +41,8 @@
   const s = (id: string) => o?.serie?.[id];
   // settori (Eurostat isoc_eb_ain2): Italia punto pieno, UE punto vuoto
   const es = $derived(data.eurostat_settori);
-  const validi = $derived(es ? es.settori.map((x) => x.id).filter((id) => id !== TUTTI) : []);
-  const settore = $derived(es?.settori.find((x) => x.id === params.settore && x.id !== TUTTI) ?? null); // un settore sconosciuto nel link si ignora
+  const validi = $derived(settoriDaScegliere(es).map((x) => x.id));
+  const settore = $derived(settoreScelto(es, params.settore)); // un settore sconosciuto nel link si ignora
   onMount(() => settoreRicordato.allinea(params.settore, validi));
   const inSettore = (t: string) => (settore ? `${t} in ${settore.nome}` : t);
   const perSettore = $derived(es ? adozionePerSettore(es) : null);

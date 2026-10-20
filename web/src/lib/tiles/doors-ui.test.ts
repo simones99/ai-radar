@@ -54,7 +54,7 @@ describe('Doors', () => {
   describe('con un settore ricordato', () => {
     // dati dei settori usciti l'1 ottobre, negli ultimi 30 giorni
     const recenti = { ...FIXTURE, eurostat_settori: { ...FIXTURE.eurostat_settori, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } } as Dataset;
-    const italia = () => screen.getAllByRole('link')[1];
+    const italia = () => screen.getByRole('link', { name: /L'AI in Italia/ });
     beforeEach(() => settore.scegli(null));
     it('l’etichetta dice il settore e il link apre la card Business con il settore', () => {
       settore.scegli('manifattura');

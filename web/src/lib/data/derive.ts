@@ -1,5 +1,5 @@
 import { daysTo, ym } from '../text/format';
-import type { AiActItem, EpochPoint, EurostatSettori, News, NewsItem, Owid, OwidPoint, PerGeo, Quadrant, Radar, RadarRow, Rapporti, Report } from './types';
+import type { AiActItem, EpochPoint, EurostatSettori, News, NewsItem, Owid, OwidPoint, PerGeo, Quadrant, Radar, RadarRow, Rapporti, Report, Settore } from './types';
 
 export const MOVE_MIN = 0.1; // spostamento minimo per disegnare una freccia: un decimo dell'asse
 /** Domini fissi degli assi, simmetrici attorno alle soglie: slancio 0 e 3 annunci ogni 10mila stanno al centro. */
@@ -136,6 +136,12 @@ export interface ConfrontoItUe { righe: RigaItUe[]; senzaItalia: string[] }
 /** Il settore che vale per tutti quelli rilevati (finanza esclusa). */
 export const TUTTI = 'tutti';
 
+/** I settori che si possono scegliere: «Tutti» non è una scelta. */
+export const settoriDaScegliere = (es: EurostatSettori | undefined): Settore[] => es?.settori.filter((s) => s.id !== TUTTI) ?? [];
+/** Il settore scelto con questo id; «Tutti» o un id sconosciuto: null, come senza scelta. */
+export const settoreScelto = (es: EurostatSettori | undefined, id: string | null | undefined): Settore | null =>
+  settoriDaScegliere(es).find((s) => s.id === id) ?? null;
+
 /** L'anno più recente fra le chiavi delle serie (anche con valore null); null se non ce n'è nessuno. */
 export function ultimoAnno(serie: Record<string, unknown>[]): string | null {
   const anni = serie.flatMap((s) => Object.keys(s).map(Number));
@@ -153,7 +159,7 @@ function itUe(voci: [string, string][], it: (id: string) => number | null | unde
 export function adozionePerSettore(es: EurostatSettori): ConfrontoItUe & { anno: string | null } {
   const anno = ultimoAnno(Object.values(es.adozione).flatMap((g) => [g.IT, g.EU27_2020]));
   if (anno == null) return { anno, righe: [], senzaItalia: [] };
-  const voci = es.settori.filter((s) => s.id !== TUTTI).map((s): [string, string] => [s.id, s.nome]);
+  const voci = settoriDaScegliere(es).map((s): [string, string] => [s.id, s.nome]);
   return { anno, ...itUe(voci, (id) => es.adozione[id]?.IT[anno], (id) => es.adozione[id]?.EU27_2020[anno]) };
 }
 

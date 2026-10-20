@@ -269,3 +269,90 @@ describe('TileGrid', () => {
     await waitFor(() => expect(location.hash).toBe(''));
   });
 });
+
+describe('TileGrid: parametri nel link', () => {
+  const link = (href: string) => {
+    const a = document.body.appendChild(document.createElement('a'));
+    a.setAttribute('href', href);
+    return a;
+  };
+  beforeEach(() => document.querySelectorAll('body > a').forEach((a) => a.remove()));
+
+  it('link diretto con parametri: la card si apre e il link resta com’è', () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati');
+    render(TileGrid, { data, today });
+    expect(document.getElementById('detail-competenze')).not.toBeNull();
+    expect(location.hash).toBe('#competenze?ruolo=dati');
+  });
+
+  it('i vecchi link a Politica diventano Norme e tengono i parametri', () => {
+    history.replaceState(null, '', '/#politica?ruolo=legale');
+    render(TileGrid, { data, today });
+    expect(location.hash).toBe('#norme?ruolo=legale');
+  });
+
+  it('dal radar a una competenza e indietro: i parametri restano', async () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati');
+    render(TileGrid, { data, today });
+    apri('competenze', 'mcp');
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp?ruolo=dati'));
+    history.back();
+    await waitFor(() => expect(location.hash).toBe('#competenze?ruolo=dati'));
+    expect(details()).toHaveLength(1);
+  });
+
+  it('cambiando card i parametri restano nel link', async () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati');
+    render(TileGrid, { data, today });
+    await fireEvent.click(screen.getByRole('button', { name: 'Norme' }));
+    expect(location.hash).toBe('#norme?ruolo=dati');
+    await fireEvent.click(card('business'));
+    expect(location.hash).toBe('#business?ruolo=dati');
+  });
+
+  it('un link aggiunge i suoi parametri e sovrascrive quelli con lo stesso nome, senza togliere gli altri', async () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati');
+    render(TileGrid, { data, today });
+    await fireEvent.click(link('#business?settore=ict'));
+    expect(location.hash).toBe('#business?ruolo=dati&settore=ict');
+    await fireEvent.click(link('#competenze/mcp?ruolo=legale'));
+    expect(location.hash).toBe('#competenze/mcp?ruolo=legale&settore=ict');
+    await fireEvent.click(link('#norme'));
+    expect(location.hash).toBe('#norme?ruolo=legale&settore=ict');
+  });
+
+  it('chiudere la card azzera il link, e la card riaperta dalla home non ha parametri', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(link('#competenze?ruolo=dati'));
+    expect(location.hash).toBe('#competenze?ruolo=dati');
+    await fireEvent.keyDown(window, { key: 'Escape' });
+    await waitFor(() => expect(details()).toHaveLength(0));
+    expect(location.hash).toBe('');
+    await fireEvent.click(face('Business'));
+    expect(location.hash).toBe('#business');
+  });
+
+  it('il filtro per fonte di Notizie tiene i parametri nel link', async () => {
+    history.replaceState(null, '', '/#notizie?ruolo=dati');
+    render(TileGrid, { data, today });
+    const fonti = screen.getByRole('group', { name: 'Filtra per fonte' });
+    const [tutte, prima] = within(fonti).getAllByRole('button');
+    await fireEvent.click(prima);
+    expect(location.hash).toMatch(/^#notizie\/[a-z0-9-]+\?ruolo=dati$/);
+    await fireEvent.click(tutte);
+    expect(location.hash).toBe('#notizie?ruolo=dati');
+  });
+
+  it('elemento, poi un’altra card, poi Indietro: si torna al radar con i parametri', async () => {
+    history.replaceState(null, '', '/#competenze?ruolo=dati');
+    render(TileGrid, { data, today });
+    apri('competenze', 'mcp');
+    await waitFor(() => expect(location.hash).toBe('#competenze/mcp?ruolo=dati'));
+    await fireEvent.click(card('norme'));
+    expect(location.hash).toBe('#norme?ruolo=dati');
+    history.back();
+    await waitFor(() => expect(location.hash).toBe('#competenze?ruolo=dati'));
+    expect(details()).toHaveLength(1);
+  });
+});
+

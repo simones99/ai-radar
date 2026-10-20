@@ -1,6 +1,6 @@
 <script lang="ts">
   import Block from '../charts/Block.svelte';
-  import { slug, toHash } from '../router';
+  import { parseHash, slug, toHash } from '../router';
   import { day } from '../text/format';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
@@ -21,7 +21,7 @@
   const errori = $derived(Object.keys(data.news?.errori ?? {}));
   function pickFonte(f: string | null) {
     fonte = f;
-    history.replaceState(history.state, '', toHash('notizie', f ? slug(f) : null));
+    history.replaceState(history.state, '', toHash('notizie', f ? slug(f) : null, parseHash(location.hash)?.params)); // i parametri restano
   }
 </script>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { flushSync, tick } from 'svelte';
   import type { Dataset } from '../data/types';
-  import { APRI, parseHash, toHash, type TileId } from '../router';
+  import { APRI, parseHash, toHash, type Params, type TileId } from '../router';
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
   import TileFace from './TileFace.svelte';
@@ -15,6 +15,7 @@
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
   let currentEl: string | null = start?.elemento ?? null; // sincrono, come current
+  let params: Params = start?.params ?? {}; // ?ruolo=…: restano nel link finché la card è aperta, anche cambiando card
   let depth = 0; // passi aggiunti alla cronologia da quando la card è aperta (0: aperta da un link diretto)
   let jumping: 'close' | 'back' | null = null; // salto nella cronologia in corso: finché non arriva popstate, niente altri salti
   let jumpTimer: ReturnType<typeof setTimeout> | undefined;
@@ -31,7 +32,7 @@
 
   // I vecchi link (#politica) si aprono e l'indirizzo diventa quello di oggi (#norme): «Copia link» copia quello.
   function canonical(h: ReturnType<typeof parseHash>) {
-    if (h && location.hash !== toHash(h.tema, h.elemento)) history.replaceState(history.state, '', toHash(h.tema, h.elemento));
+    if (h && location.hash !== toHash(h.tema, h.elemento, h.params)) history.replaceState(history.state, '', toHash(h.tema, h.elemento, h.params));
   }
 
   function setTitle(id: TileId | null) {
@@ -73,19 +74,21 @@
     else openTile(id);
   }
 
-  function openTile(id: TileId, el: string | null = null) {
+  // I parametri di un link si aggiungono a quelli già nel link; a parità di nome vince il link.
+  function openTile(id: TileId, el: string | null = null, extra: Params = {}) {
     if (jumping) return;
+    params = { ...params, ...extra };
     if (current === null) {
       depth = 1;
-      history.pushState({ tema: id, depth }, '', toHash(id, el));
+      history.pushState({ tema: id, depth }, '', toHash(id, el, params));
     } else if (current === id && el !== null && el !== currentEl) {
       depth += 1; // dentro la card, verso un elemento: Indietro torna a dove si era
-      history.pushState({ tema: id, depth, daRadar: currentEl === null }, '', toHash(id, el));
+      history.pushState({ tema: id, depth, daRadar: currentEl === null }, '', toHash(id, el, params));
     } else if (current === id && el === null && currentEl !== null && history.state?.daRadar) {
       jump('back', 1); // «Tutte le competenze» dopo esserci entrati dal radar: come Indietro
       return;
     } else {
-      history.replaceState(history.state, '', toHash(id, el));
+      history.replaceState(history.state, '', toHash(id, el, params));
     }
     show(id, el, current === id); // la stessa card: di nuovo evidenza, scorrimento e focus sul titolo
   }
@@ -97,7 +100,7 @@
     const h = href ? parseHash(href) : null;
     if (!h) return;
     e.preventDefault();
-    openTile(h.tema, h.elemento);
+    openTile(h.tema, h.elemento, h.params);
   }
 
   function closeTile() {
@@ -107,17 +110,20 @@
       return;
     }
     history.replaceState(null, '', location.pathname + location.search);
+    params = {};
     refocus(show(null));
   }
 
   function onPop() {
     const h = parseHash(location.hash);
+    params = h?.params ?? {};
     const kind = jumping;
     jumping = null;
     clearTimeout(jumpTimer);
     if (kind === 'close') {
       depth = 0;
       if (h) history.replaceState(null, '', location.pathname + location.search); // aperta da un link diretto: si chiude davvero
+      params = {};
       refocus(show(null));
       return;
     }

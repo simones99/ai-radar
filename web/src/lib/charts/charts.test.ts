@@ -7,6 +7,7 @@ import LineChart from './LineChart.svelte';
 import Scatter from './Scatter.svelte';
 import Timeline from './Timeline.svelte';
 import BlockHarness from './__tests__/BlockHarness.svelte';
+import { measureText } from './labels';
 
 describe('Block', () => {
   it('mostra titolo, grafico, fonte cliccabile e dati', () => {
@@ -55,6 +56,23 @@ describe('grafici', () => {
     const bars = container.querySelectorAll('rect.bar');
     expect(bars).toHaveLength(2);
     expect(bars[1]).toHaveClass('hot');
+  });
+  it('Bars: con nomi lunghi le barre diventano orizzontali, tutte con il nome, la più alta in cima', () => {
+    const data = ['sintesi vocale', 'image-to-image', 'classificazione di testo', 'da testo a immagine', 'generazione di testo', 'immagine e testo']
+      .map((k, i) => ({ k, v: i + 1 }));
+    const { container } = render(Bars, { label: 'Compiti', data });
+    for (const d of data) expect(screen.getByText(d.k)).toBeInTheDocument();
+    const bars = [...container.querySelectorAll('rect.bar')];
+    expect(Number(bars[0].getAttribute('y'))).toBeLessThan(Number(bars[1].getAttribute('y')));
+    expect(bars[0]).toHaveClass('hot');
+  });
+  it('LineChart: il margine destro fa spazio alle etichette finali', () => {
+    const { container } = render(LineChart, { label: 'Annunci', yFormat: (v: number) => `${v}%`, series: [
+      { name: 'Regno Unito', pts: [{ x: 2024, y: 1.5 }, { x: 2025, y: 1.928 }] },
+    ] });
+    const w = Number(container.querySelector('svg')!.getAttribute('viewBox')!.split(' ')[2]);
+    const t = container.querySelector('svg > text:last-of-type')!;
+    expect(Number(t.getAttribute('x')) + measureText(t.textContent!, '400 12px sans-serif')).toBeLessThanOrEqual(w);
   });
   it('DotPlot: punto pieno per oggi e vuoto per l’anno prima', () => {
     const { container } = render(DotPlot, { label: 'Imprese', data: [{ k: 'Europa', now: 80, was: 73, hot: true }, { k: 'Asia', now: 70 }] });

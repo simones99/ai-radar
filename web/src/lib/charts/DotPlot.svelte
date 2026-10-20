@@ -1,7 +1,7 @@
 <script lang="ts">
   import { scaleLinear } from 'd3-scale';
   import { nf } from '../text/format';
-  import { measureText } from './labels';
+  import { FONT, measureText } from './labels';
 
   let { data, label, unit = '%', maxV = 100 }: {
     data: { k: string; now: number; was?: number | null; hot?: boolean }[];
@@ -13,7 +13,7 @@
   let cw = $state(0);
   const w = $derived(Math.max(cw, 280));
   const RH = 24;
-  const ml = $derived(Math.min(w * 0.45, Math.max(48, ...data.map((d) => measureText(d.k, '12px sans-serif'))) + 16));
+  const ml = $derived(Math.min(w * 0.45, Math.max(48, ...data.map((d) => measureText(d.k, `12px ${FONT}`))) + 16));
   const m = $derived({ l: ml, r: 40, t: 8, b: 24 });
   const H = $derived(m.t + m.b + data.length * RH);
   const x = $derived(scaleLinear([0, maxV], [m.l, w - m.r]));

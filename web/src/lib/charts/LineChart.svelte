@@ -3,6 +3,7 @@
   import { scaleLinear } from 'd3-scale';
   import { curveMonotoneX, line } from 'd3-shape';
   import { nf } from '../text/format';
+  import { FONT, measureText } from './labels';
   import type { Series, SeriesPt } from './types';
 
   let { series, label, height = 304, yFormat = (v: number) => nf(v), xFormat = (v: number) => String(Math.round(v)) }: {
@@ -15,7 +16,10 @@
 
   let cw = $state(0);
   const w = $derived(Math.max(cw, 280));
-  const m = { l: 40, r: 96, t: 16, b: 32 };
+  const endLabel = (s: Series) => `${s.name} ${yFormat(s.pts[s.pts.length - 1].y)}`;
+  // a destra c'è posto per l'etichetta finale più lunga, fino a metà della larghezza
+  const r = $derived(Math.min(w * 0.5, Math.max(56, ...series.filter((s) => s.pts.length).map((s) => measureText(endLabel(s), `600 12px ${FONT}`))) + 16));
+  const m = $derived({ l: 40, r, t: 16, b: 32 });
   const all = $derived(series.flatMap((s) => s.pts));
   const x = $derived(scaleLinear(extent(all, (p) => p.x) as [number, number], [m.l, w - m.r]));
   const y = $derived(scaleLinear([0, max(all, (p) => p.y) ?? 1], [height - m.b, m.t]).nice());
@@ -47,7 +51,7 @@
       {/if}
     {/each}
     {#each ends as e (e.s.name)}
-      <text class={e.s.hot ? 't12b hot' : 't12'} x={w - m.r + 10} y={e.ty + 4}>{e.s.name} {yFormat(e.lp.y)}</text>
+      <text class={e.s.hot ? 't12b hot' : 't12'} x={w - m.r + 10} y={e.ty + 4}>{endLabel(e.s)}</text>
     {/each}
   </svg>
 </div>

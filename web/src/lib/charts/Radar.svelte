@@ -4,7 +4,7 @@
   import type { Quadrant } from '../data/types';
   import { nf, per10k, signedPct } from '../text/format';
   import { cambio } from '../text/frasi';
-  import { leader, measureText, placeLabels, type Box } from './labels';
+  import { FONT, leader, measureText, placeLabels, type Box } from './labels';
 
   let { rows, quadranti, highlight = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', onpick }: {
     rows: RadarRowM[];
@@ -36,7 +36,7 @@
   const LH = 16;
   const layout = $derived.by(() => {
     const obstacles: Box[] = QL.map((q) => {
-      const tw = measureText(quadranti[q.id], '600 12px sans-serif');
+      const tw = measureText(quadranti[q.id], `600 12px ${FONT}`);
       const x0 = q.a === 'end' ? q.x - tw : q.x;
       return { x0: x0 - 4, y0: q.y - 14, x1: x0 + tw + 4, y1: q.y + 4 };
     });
@@ -44,7 +44,7 @@
     const order = (r: RadarRowM) => (r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
       const lines = [r.breve, ...(r.changed && !narrow ? [cambio(r, quadranti)] : [])];
-      const wd = Math.max(...lines.map((t, i) => measureText(t, `${i === 0 && r.quadrante === 'impara-ora' ? 600 : 400} 12px sans-serif`)));
+      const wd = Math.max(...lines.map((t, i) => measureText(t, `${i === 0 && r.quadrante === 'impara-ora' ? 600 : 400} 12px ${FONT}`)));
       return { id: r.id, x: x(r.x), y: y(r.y), w: wd, h: lines.length * LH, lines, r };
     });
     // Sul telefono un'etichetta senza posto libero, se non è di Impara ora, non si disegna: resta il suggerimento sul punto.

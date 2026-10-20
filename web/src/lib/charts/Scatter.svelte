@@ -2,7 +2,7 @@
   import { extent } from 'd3-array';
   import { scaleLinear, scaleLog } from 'd3-scale';
   import { nf } from '../text/format';
-  import { leader, measureText, placeLabels } from './labels';
+  import { FONT, leader, measureText, placeLabels } from './labels';
 
   type Pt = { x: number; y: number; label?: string; hot?: boolean };
   let { pts, label, xLog = false, yLog = false, xFormat = (v: number) => nf(v), yFormat = (v: number) => nf(v), xTitle, yTitle, height = 320 }: {
@@ -27,7 +27,7 @@
   const yTicks = $derived(powers(y.ticks(5), yLog).slice(0, 7));
   const labelled = $derived(pts.filter((p) => p.label));
   const boxes = $derived(placeLabels(
-    labelled.map((p, i) => ({ id: String(i), x: x(p.x), y: y(p.y), w: measureText(p.label as string, '600 12px sans-serif'), h: 16 })),
+    labelled.map((p, i) => ({ id: String(i), x: x(p.x), y: y(p.y), w: measureText(p.label as string, `600 12px ${FONT}`), h: 16 })),
     { x0: m.l, y0: m.t, x1: w - m.r, y1: height - m.b },
     pts.map((p) => ({ x0: x(p.x) - 5, y0: y(p.y) - 5, x1: x(p.x) + 5, y1: y(p.y) + 5 })),
   ));

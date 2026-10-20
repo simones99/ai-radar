@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidLatestByEntity, owidPoints, owidPrev,
-  radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, barriereItUe, scopiItUe, ultimoAnno,
+  radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, andamentoItUe, barriereItUe, scopiItUe, ultimoAnno,
 } from './derive';
 import type { EpochPoint, EurostatSettori, News, Owid, Radar } from './types';
 import { FIXTURE, fromNorm } from '../test/fixtures';
@@ -171,6 +171,24 @@ describe('settori: Italia contro UE', () => {
     expect(ultimoAnno([{ 2021: 1, 2025: null }, { 2024: 3 }])).toBe('2025');
     expect(ultimoAnno([{}, {}])).toBeNull();
     expect(ultimoAnno([])).toBeNull();
+  });
+
+  it("andamento di un settore: Italia e UE per anno, in ordine di tempo, senza inventare il 2022", () => {
+    const a = andamentoItUe(es, 'manifattura');
+    expect(a.righe).toEqual([
+      { id: '2021', k: '2021', it: 6.63, eu: 6.93 }, { id: '2023', k: '2023', it: 4.94, eu: 6.79 },
+      { id: '2024', k: '2024', it: 8.03, eu: 10.57 }, { id: '2025', k: '2025', it: 14.73, eu: 17.27 },
+    ]);
+    expect(a.senzaItalia).toEqual([]);
+  });
+
+  it("andamento con un valore italiano mancante: l'anno resta, con il solo valore UE, e finisce nella nota", () => {
+    const x = structuredClone(es);
+    x.adozione.ict.IT['2023'] = null;
+    const a = andamentoItUe(x, 'ict');
+    expect(a.righe.map((r) => [r.k, r.it, r.eu])).toEqual([['2021', 16.19, 25.37], ['2023', null, 29.53], ['2024', 34.6, 48.72], ['2025', 51.28, 62.52]]);
+    expect(a.senzaItalia).toEqual(['2023']);
+    expect(andamentoItUe(x, 'boh')).toEqual({ righe: [], senzaItalia: [] });
   });
 
   it('scopi e barriere di un settore, con i nomi italiani, ordinati per valore italiano', () => {

@@ -53,3 +53,5 @@ export function sceltaRicordata(parametro: string): SceltaRicordata {
 
 /** Il ruolo (card Competenze, porta Per te). */
 export const ruolo = sceltaRicordata('ruolo');
+/** Il settore (card Business, porta Per la tua organizzazione). */
+export const settore = sceltaRicordata('settore');

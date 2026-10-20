@@ -1,15 +1,17 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Bars from '../charts/Bars.svelte';
   import Block from '../charts/Block.svelte';
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
-  import { adozionePerSettore, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, tNum, ultimoAnno, type ConfrontoItUe } from '../data/derive';
+  import { adozionePerSettore, andamentoItUe, barriereItUe, owidLatestByEntity, owidPoints, scopiItUe, tNum, TUTTI, ultimoAnno, type ConfrontoItUe, type RigaItUe } from '../data/derive';
+  import { settore as settoreRicordato } from '../scelta.svelte';
   import { exact, nf, short } from '../text/format';
   import { barsTable, dotsTable, fmtYm, itUeTable, owidCite, seriesTable, MISSING } from './cite';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
-  let { data, today, tile, onclose }: DetailProps = $props();
+  let { data, today, tile, params, onclose }: DetailProps = $props();
 
   const head = $derived(tile.head(data, today));
   const o = $derived(data.owid);
@@ -39,20 +41,28 @@
   const s = (id: string) => o?.serie?.[id];
   // settori (Eurostat isoc_eb_ain2): Italia punto pieno, UE punto vuoto
   const es = $derived(data.eurostat_settori);
+  const validi = $derived(es ? es.settori.map((x) => x.id).filter((id) => id !== TUTTI) : []);
+  const settore = $derived(es?.settori.find((x) => x.id === params.settore && x.id !== TUTTI) ?? null); // un settore sconosciuto nel link si ignora
+  onMount(() => settoreRicordato.allinea(params.settore, validi));
+  const inSettore = (t: string) => (settore ? `${t} in ${settore.nome}` : t);
   const perSettore = $derived(es ? adozionePerSettore(es) : null);
-  const scopi = $derived(es ? scopiItUe(es) : null);
-  const barriere = $derived(es ? barriereItUe(es) : null);
+  const andamento = $derived(es && settore ? andamentoItUe(es, settore.id) : null);
+  const periodo = $derived(andamento?.righe.length ? `${andamento.righe[0].k}-${andamento.righe[andamento.righe.length - 1].k}` : null);
+  const anni = (righe: RigaItUe[], v: (r: RigaItUe) => number | null) => righe.flatMap((r) => { const y = v(r); return y == null ? [] : [{ x: Number(r.k), y }]; });
+  const scopi = $derived(es ? scopiItUe(es, settore?.id) : null);
+  const barriere = $derived(es ? barriereItUe(es, settore?.id) : null);
   const conAnno = (t: string, anno: string | null | undefined) => (anno ? `${t}, ${anno}` : t);
   const esCite = (anno: string) => (es ? [{ t: 'Fonte: ' }, { t: es.fonte, href: es.url }, { t: `. Dati ${anno}.` }] : null);
   const ITUE = 'Punto pieno: Italia; vuoto: UE.';
+  const ADOZIONE = 'Imprese con almeno 10 addetti che usano almeno una tecnologia AI, %.';
   const NON_RILEVATI = 'Eurostat non rileva finanza e assicurazioni, agricoltura, estrazione, pubblica amministrazione, istruzione, sanità, attività artistiche e altri servizi.';
 </script>
 
-{#snippet bloccoItUe(titolo: string, anno: string | null | undefined, note: string, c: ConfrontoItUe | null, prima: string)}
+{#snippet bloccoItUe(titolo: string, anno: string | null | undefined, note: string, c: ConfrontoItUe | null, prima: string, evidenza: string | null = null)}
   <Block title={conAnno(titolo, anno)} note="{note} {ITUE}" missing={c?.righe.length ? null : MISSING}
     cite={c && anno ? esCite(anno) : null} table={c ? itUeTable(c.righe, prima) : null}>
     {#if c}
-      <DotPlot label="{titolo}, Italia e UE" altro="UE" data={c.righe.map((r) => ({ k: r.k, now: r.it, was: r.eu }))} />
+      <DotPlot label="{titolo}, Italia e UE" altro="UE" data={c.righe.map((r) => ({ k: r.k, now: r.it, was: r.eu, hot: r.id === evidenza }))} />
       {#if c.senzaItalia.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {c.senzaItalia.join(', ')}.</p>{/if}
     {/if}
   </Block>
@@ -79,10 +89,26 @@
 
   <div class="sezione" role="group" aria-labelledby="bz-adozione">
     <h3 class="group" id="bz-adozione">Adozione</h3>
+    {#if es}
+      <label class="scelta">
+        <span>Il tuo settore</span>
+        <select value={settore?.id ?? TUTTI} onchange={(e) => settoreRicordato.scegli(e.currentTarget.value === TUTTI ? null : e.currentTarget.value)}>
+          {#each es.settori as x (x.id)}<option value={x.id}>{x.nome}</option>{/each}
+        </select>
+      </label>
+    {/if}
     <p class="group-note">{NON_RILEVATI} «Tutti» non comprende la finanza.</p>
-    {@render bloccoItUe('Adozione per settore', perSettore?.anno, 'Imprese con almeno 10 addetti che usano almeno una tecnologia AI, %.', perSettore, 'Settore')}
-    {@render bloccoItUe("A cosa serve l'AI", es?.anno, "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}
-    {@render bloccoItUe('Cosa frena chi non la usa', es?.anno, "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
+    {@render bloccoItUe('Adozione per settore', perSettore?.anno, `${ADOZIONE}${settore ? ` In evidenza: ${settore.nome}.` : ''}`, perSettore, 'Settore', settore?.id)}
+    {#if settore && andamento}
+      <Block title={conAnno(`Adozione in ${settore.nome}`, periodo)} note="{ADOZIONE} Eurostat non ha dati del 2022: la linea non lo attraversa."
+        missing={periodo ? null : MISSING} cite={periodo ? esCite(periodo) : null} table={itUeTable(andamento.righe, 'Anno')}>
+        <LineChart label="Adozione in {settore.nome}, Italia e UE" passo={1} yFormat={(v) => `${nf(v)}%`}
+          series={[{ name: 'Italia', hot: true, pts: anni(andamento.righe, (r) => r.it) }, { name: 'UE', pts: anni(andamento.righe, (r) => r.eu) }]} />
+        {#if andamento.senzaItalia.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {andamento.senzaItalia.join(', ')}.</p>{/if}
+      </Block>
+    {/if}
+    {@render bloccoItUe(inSettore("A cosa serve l'AI"), es?.anno, settore ? "In % delle imprese del settore che usano l'AI." : "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}
+    {@render bloccoItUe(inSettore('Cosa frena chi non la usa'), es?.anno, settore ? "In % delle imprese del settore che hanno considerato l'AI senza usarla." : "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
     <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
       missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
       table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
@@ -119,5 +145,7 @@
   @media (min-width: 1200px) { .sezione { grid-auto-flow: dense; } }
   .group { grid-column: 1 / -1; font-weight: 600; font-size: 14px; line-height: 24px; color: var(--fg-2); padding-top: var(--s2); }
   .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .scelta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .scelta select { max-width: 100%; min-height: 40px; padding: 0 var(--s1); font: inherit; font-size: 16px; color: var(--fg); background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r-sm); }
   .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); }
 </style>

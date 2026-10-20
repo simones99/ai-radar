@@ -6,12 +6,14 @@
   import { FONT, measureText } from './labels';
   import type { Series, SeriesPt } from './types';
 
-  let { series, label, height = 304, yFormat = (v: number) => nf(v), xFormat = (v: number) => String(Math.round(v)) }: {
+  let { series, label, height = 304, yFormat = (v: number) => nf(v), xFormat = (v: number) => String(Math.round(v)), passo = null }: {
     series: Series[];
     label: string;
     height?: number;
     yFormat?: (v: number) => string;
     xFormat?: (v: number) => string;
+    /** Serie con periodi mancanti (Eurostat non ha il 2022): due punti distanti più di passo non si uniscono, ogni punto si disegna e l'asse dice solo i periodi rilevati. */
+    passo?: number | null;
   } = $props();
 
   let cw = $state(0);
@@ -23,9 +25,16 @@
   const all = $derived(series.flatMap((s) => s.pts));
   const x = $derived(scaleLinear(extent(all, (p) => p.x) as [number, number], [m.l, w - m.r]));
   const y = $derived(scaleLinear([0, max(all, (p) => p.y) ?? 1], [height - m.b, m.t]).nice());
-  const xTicks = $derived(x.ticks(Math.max(2, Math.min(6, Math.floor(w / 96)))).filter(Number.isInteger));
+  const xTicks = $derived(passo ? [...new Set(all.map((p) => p.x))] : x.ticks(Math.max(2, Math.min(6, Math.floor(w / 96)))).filter(Number.isInteger));
   const ordered = $derived(series.slice().sort((a, b) => Number(!!a.hot) - Number(!!b.hot)));
   const path = (pts: SeriesPt[]) => line<SeriesPt>().curve(curveMonotoneX).x((p) => x(p.x)).y((p) => y(p.y))(pts) ?? '';
+  /** I tratti senza buchi; un punto isolato non fa tratto. */
+  const tratti = (pts: SeriesPt[]): SeriesPt[][] => {
+    if (!passo) return [pts];
+    const out: SeriesPt[][] = [];
+    pts.forEach((p, i) => (i && p.x - pts[i - 1].x <= passo ? out[out.length - 1].push(p) : out.push([p])));
+    return out.filter((t) => t.length > 1);
+  };
   const ends = $derived.by(() => {
     const e = series.filter((s) => s.pts.length).map((s) => {
       const lp = s.pts[s.pts.length - 1];
@@ -44,8 +53,10 @@
     {/each}
     {#each xTicks as v (v)}<text class="t10" x={x(v)} y={height - 12} text-anchor="middle">{xFormat(v)}</text>{/each}
     {#each ordered as s (s.name)}
-      <path d={path(s.pts)} class="ln" class:hot={s.hot} />
-      {#if s.pts.length}
+      {#each tratti(s.pts) as t (t[0].x)}<path d={path(t)} class="ln" class:hot={s.hot} />{/each}
+      {#if passo}
+        {#each s.pts as p (p.x)}<circle cx={x(p.x)} cy={y(p.y)} r={s.hot ? 4.5 : 3.5} class="dot" class:hot={s.hot} />{/each}
+      {:else if s.pts.length}
         {@const lp = s.pts[s.pts.length - 1]}
         <circle cx={x(lp.x)} cy={y(lp.y)} r={s.hot ? 4.5 : 3.5} class="dot" class:hot={s.hot} />
       {/if}

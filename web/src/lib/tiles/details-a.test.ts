@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import type { Component } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
-import type { Params, TileId } from '../router';
+import { IMPOSTA, type Params, type TileId } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import { headBusiness, headCompetenze, headNotizie, headNorme, type Head } from '../text/frasi';
 import BusinessDetail from './BusinessDetail.svelte';
@@ -253,6 +253,102 @@ describe('Business', () => {
     it('senza i dati dei settori i tre grafici dicono che mancano', () => {
       render(BusinessDetail, { data: { ...data, eurostat_settori: undefined }, today, tile, elemento: null, params: {}, onclose: () => {} });
       expect(within(blk("A cosa serve l'AI")).getByText('Dati non disponibili in questo aggiornamento.')).toBeInTheDocument();
+    });
+  });
+});
+
+describe('Business: il settore', () => {
+  const tile = mk('business', 'Business', headBusiness, BusinessDetail);
+  const menu = () => screen.getByRole('combobox', { name: 'Il tuo settore' });
+  const blk = (title: string) => screen.getByRole('heading', { name: title }).closest('section')!;
+  const righe = (title: string) => within(blk(title)).getAllByRole('row').slice(1).map((r) => [...r.querySelectorAll('th, td')].map((c) => c.textContent));
+  let link: Array<[string, string | null]>; // i parametri che la card chiede di cambiare nel link
+  const ascolta = (e: Event) => link.push([(e as CustomEvent).detail.chiave, (e as CustomEvent).detail.valore]);
+  beforeEach(() => {
+    localStorage.clear();
+    link = [];
+    document.addEventListener(IMPOSTA, ascolta);
+  });
+  afterEach(() => document.removeEventListener(IMPOSTA, ascolta));
+
+  it('menu «Il tuo settore» in testa alla sezione Adozione: «Tutti» e i settori, con la nota sui non rilevati sotto', () => {
+    show(BusinessDetail, tile);
+    expect(within(screen.getByRole('group', { name: 'Adozione' })).getByRole('combobox', { name: 'Il tuo settore' })).toBe(menu());
+    expect(within(menu()).getAllByRole('option').map((o) => o.textContent)).toEqual(['Tutti', 'Manifattura', 'Informazione e comunicazione', 'Immobiliare']);
+    expect(menu()).toHaveValue('tutti');
+    expect(menu().closest('.scelta')!.nextElementSibling).toHaveTextContent(/^Eurostat non rileva finanza/);
+    expect(screen.queryByRole('heading', { name: /^Adozione in/ })).toBeNull();
+  });
+
+  it('con un settore: in evidenza nel confronto, poi andamento, scopi e barriere del settore', () => {
+    show(BusinessDetail, tile, null, { settore: 'manifattura' });
+    expect(menu()).toHaveValue('manifattura');
+    const confronto = screen.getByRole('img', { name: 'Adozione per settore, Italia e UE' });
+    expect(within(confronto).getByText('Manifattura')).toHaveClass('hot');
+    expect(within(confronto).getByText('Immobiliare')).not.toHaveClass('hot');
+    expect(blk('Adozione per settore, 2025')).toHaveTextContent('In evidenza: Manifattura.');
+    const titoli = within(screen.getByRole('group', { name: 'Adozione' })).getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    expect(titoli.slice(0, 5)).toEqual(['Adozione', 'Adozione per settore, 2025', 'Adozione in Manifattura, 2021-2025', "A cosa serve l'AI in Manifattura, 2025", 'Cosa frena chi non la usa in Manifattura, 2025']);
+    expect(within(blk('Adozione in Manifattura, 2021-2025')).getByRole('img', { name: 'Adozione in Manifattura, Italia e UE' })).toBeInTheDocument();
+    expect(blk('Adozione in Manifattura, 2021-2025')).toHaveTextContent('Dati 2021-2025.');
+    expect(righe('Adozione in Manifattura, 2021-2025')).toEqual([['2021', '6,6', '6,9'], ['2023', '4,9', '6,8'], ['2024', '8,0', '10,6'], ['2025', '14,7', '17,3']]);
+    expect(righe("A cosa serve l'AI in Manifattura, 2025")[0]).toEqual(['Marketing e vendite', '28,7', '30,4']);
+    expect(righe('Cosa frena chi non la usa in Manifattura, 2025')[0]).toEqual(['Mancano le competenze', '62,5', '71,1']);
+  });
+
+  it("l'andamento non disegna il 2022, né come punto né come tratto", () => {
+    show(BusinessDetail, tile, null, { settore: 'ict' });
+    const img = screen.getByRole('img', { name: 'Adozione in Informazione e comunicazione, Italia e UE' });
+    expect(within(img).queryByText('2022')).toBeNull();
+    expect(img.querySelectorAll('circle.dot')).toHaveLength(8); // 4 anni, Italia e UE
+  });
+
+  it('valori italiani mancanti del settore: la nota «non affidabile» sotto il grafico e nella tabella', () => {
+    const x = structuredClone(data);
+    x.eurostat_settori!.adozione.immobiliare.IT['2023'] = null;
+    render(BusinessDetail, { data: x, today, tile, elemento: null, params: { settore: 'immobiliare' }, onclose: () => {} });
+    // immobiliare, Italia, logistica: riservato (c) nei dati veri
+    expect(within(blk("A cosa serve l'AI in Immobiliare, 2025")).getByText('Dato italiano non affidabile secondo Eurostat per: Logistica.')).toBeInTheDocument();
+    const andamento = blk('Adozione in Immobiliare, 2021-2025');
+    expect(within(andamento).getByText('Dato italiano non affidabile secondo Eurostat per: 2023.')).toBeInTheDocument();
+    expect(righe('Adozione in Immobiliare, 2021-2025')[1]).toEqual(['2023', 'non affidabile', '8,5']);
+    expect(andamento.querySelectorAll('circle.dot')).toHaveLength(7); // il 2023 italiano non c'è, quello UE sì
+  });
+
+  it("cambiare settore lo mette nel link e lo ricorda; «Tutti» toglie l'uno e l'altro", async () => {
+    show(BusinessDetail, tile);
+    await fireEvent.change(menu(), { target: { value: 'ict' } });
+    expect(link).toEqual([['settore', 'ict']]);
+    expect(localStorage.getItem('ai-radar:settore')).toBe('ict');
+    await fireEvent.change(menu(), { target: { value: 'tutti' } });
+    expect(link.at(-1)).toEqual(['settore', null]);
+    expect(localStorage.getItem('ai-radar:settore')).toBeNull();
+  });
+
+  it('un settore sconosciuto nel link si ignora: la sezione è quella di «Tutti»', () => {
+    show(BusinessDetail, tile, null, { settore: 'finanza' });
+    expect(menu()).toHaveValue('tutti');
+    expect(screen.queryByRole('heading', { name: /^Adozione in/ })).toBeNull();
+    expect(screen.getByRole('heading', { name: "A cosa serve l'AI, 2025" })).toBeInTheDocument();
+    expect(link).toEqual([['settore', null]]);
+  });
+
+  it('senza settore nel link vale il ricordo, che entra nel link', () => {
+    localStorage.setItem('ai-radar:settore', 'immobiliare');
+    show(BusinessDetail, tile);
+    expect(link).toEqual([['settore', 'immobiliare']]);
+  });
+
+  describe('senza storage del browser', () => {
+    beforeEach(() => {
+      for (const m of ['getItem', 'setItem', 'removeItem'] as const) vi.spyOn(Storage.prototype, m).mockImplementation(() => { throw new Error('SecurityError'); });
+    });
+    afterEach(() => vi.restoreAllMocks());
+    it('la card funziona e il menu risponde: il settore va nel link ma non resta', async () => {
+      show(BusinessDetail, tile, null, { settore: 'ict' });
+      expect(menu()).toHaveValue('ict');
+      await fireEvent.change(menu(), { target: { value: 'manifattura' } });
+      expect(link.at(-1)).toEqual(['settore', 'manifattura']);
     });
   });
 });

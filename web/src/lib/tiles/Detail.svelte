@@ -42,6 +42,7 @@
         {#each head.title as p, i (i)}{#if p.em}<em>{p.t}</em>{:else}{p.t}{/if}{/each}
       </h2>
       {#if head.deck}<p class="deck">{head.deck}</p>{/if}
+      {#if head.nota}<p class="nota">{head.nota}</p>{/if}
       <div class="actions">
         <button type="button" class="copy" onclick={copy}>{copied ? 'Link copiato' : 'Copia link'}</button>
         <span class="sr" aria-live="polite">{copied ? 'Link copiato' : ''}</span>
@@ -69,6 +70,7 @@
   h2 { font-weight: 600; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; max-width: 22ch; outline: none; }
   h2 em { font-style: normal; color: var(--accent); }
   .deck { color: var(--fg-2); max-width: 56ch; }
+  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 56ch; }
   .actions { display: flex; flex-wrap: wrap; gap: var(--s1); align-items: center; }
   .copy { background: var(--bg); border: 0; border-radius: 999px; padding: var(--s1) var(--s2); min-height: 40px; cursor: pointer; font-size: 14px; }
   .copy-url { font: inherit; font-size: 14px; border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: var(--s1); min-width: 0; flex: 1 1 240px; background: var(--card); color: var(--fg); }
@@ -85,7 +87,7 @@
     .credit { position: absolute; right: var(--s2); bottom: var(--s1); color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(0, 0, 0, .6); }
     .d-text { align-content: end; padding: var(--s8) var(--s12) var(--s5) var(--s6); color: #fff;
       background: linear-gradient(90deg, rgba(0, 0, 0, .8) 0%, rgba(0, 0, 0, .6) 45%, rgba(0, 0, 0, 0) 85%); }
-    .lab, .deck { color: rgba(255, 255, 255, .9); }
+    .lab, .deck, .nota { color: rgba(255, 255, 255, .9); }
     h2 { font-size: clamp(40px, 3.2vw, 56px); max-width: 18ch; }
     h2 em { color: #8fc4ff; }
     .copy { background: rgba(255, 255, 255, .18); color: #fff; }

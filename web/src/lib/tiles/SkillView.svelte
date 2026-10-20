@@ -3,17 +3,14 @@
   import LineChart from '../charts/LineChart.svelte';
   import type { Cite, Series } from '../charts/types';
   import type { RadarRowM } from '../data/derive';
-  import type { Quadrant, Radar, Ruolo } from '../data/types';
+  import type { Quadrant, Radar } from '../data/types';
   import { day, dayWith, monthShort, nf, per10k, signedPct } from '../text/format';
 
-  let { row, quadranti, storico = [], ruoli = [] }: {
+  let { row, quadranti, storico = [] }: {
     row: RadarRowM;
     quadranti: Record<Quadrant, string>;
     storico?: NonNullable<Radar['storico']>;
-    ruoli?: Ruolo[];
   } = $props();
-
-  const contaPer = $derived(ruoli.filter((r) => row.ruoli?.includes(r.id)).map((r) => r.nome).join(', ')); // nell'ordine dei ruoli
 
   const FONTE: Record<string, string> = { arxiv: 'paper su arXiv', github: 'repository su GitHub', lavoro: 'annunci di lavoro' };
   const cite = (t: string, href: string): Cite => [{ t: 'Fonte: ' }, { t, href }, { t: '.' }];
@@ -44,7 +41,6 @@
 </script>
 
 <nav class="back" aria-label="Competenze"><a href="#competenze">← Tutte le competenze</a></nav>
-{#if contaPer}<p class="sub roles">Conta per: {contaPer}</p>{/if}
 {#if row.incerto}
   <p class="warn" role="note">Dato incerto: {row.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.</p>
 {/if}
@@ -110,7 +106,7 @@
 </Block>
 
 <style>
-  .back, .warn, .roles { grid-column: 1 / -1; }
+  .back, .warn { grid-column: 1 / -1; }
   .back a { font-weight: 500; }
   .warn { margin: 0; padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 24px; }
   .fig { margin: 0; font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }

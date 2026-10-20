@@ -2,13 +2,13 @@ import {
   MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
   type RadarRowM,
 } from '../data/derive';
-import type { Dataset, Quadrant } from '../data/types';
+import type { Dataset, Quadrant, Ruolo } from '../data/types';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
-export interface Head { title: TitleParts; deck: string | null }
+export interface Head { title: TitleParts; deck: string | null; nota?: string } // nota: riga piccola sotto il sottotitolo
 
 const TIPI: Record<string, string> = {
   'image-text-to-text': 'immagine e testo',
@@ -185,9 +185,10 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
 }
 
 /** Titolo della pagina di una competenza: il nome; sotto, quadrante, eventuale movimento e descrizione. */
-export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>): Head {
+export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = []): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
-  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}` };
+  const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
+  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }
 
 // ---------------------------------------------------------------- notizie

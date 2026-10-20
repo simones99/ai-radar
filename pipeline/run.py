@@ -20,7 +20,7 @@ from datetime import date
 from . import adzuna, ai_act, artificial_analysis, arxiv, epoch, eurostat, feeds, github_signals, huggingface, owid, radar, rapporti, risorse
 from .common import load_yaml, log, now_iso, read_json, redact, session, write_json
 
-ORDER = ["epoch", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "owid",
+ORDER = ["epoch", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "eurostat_settori", "owid",
          "ai_act", "rapporti", "feeds", "risorse", "radar"]
 SKIPPABLE = (adzuna.MissingCredentials, artificial_analysis.MissingCredentials)
 
@@ -47,6 +47,7 @@ def main(argv: list[str] | None = None) -> int:
         "huggingface": lambda: huggingface.run(s, today),
         "adzuna": lambda: adzuna.run(s, skills, src["jobs_countries"], src.get("jobs_eu_countries", []), today),
         "eurostat": lambda: eurostat.run(s, src["eurostat_geo"]),
+        "eurostat_settori": lambda: eurostat.run_settori(s, src["eurostat_settori"]),
         "owid": lambda: owid.run(s, src.get("owid", [])),
         "ai_act": ai_act.run,
         "rapporti": rapporti.run,

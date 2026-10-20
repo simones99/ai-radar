@@ -7,7 +7,7 @@
 
   const NOMI: Record<string, string> = {
     epoch: 'Epoch AI', artificial_analysis: 'Artificial Analysis', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
-    adzuna: 'Adzuna', eurostat: 'Eurostat', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)',
+    adzuna: 'Adzuna', eurostat: 'Eurostat', eurostat_settori: 'Eurostat (settori)', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)',
     feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)',
   };
   const STATI: Record<string, string> = { ok: 'aggiornata', errore: 'errore', 'non configurata': 'non configurata' };

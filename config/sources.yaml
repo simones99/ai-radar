@@ -26,6 +26,42 @@ eurostat_geo:
   FI: Finlandia
   SE: Svezia
 
+# Settori per la sezione Adozione di Business (Eurostat, isoc_eb_ain2), solo Italia e UE.
+# nace: codice NACE Rev. 2 di Eurostat. «Tutti» esclude la finanza, come il dato nazionale.
+# nella_frase: il settore nella frase della porta («15% delle imprese manifatturiere italiane usa l'AI»).
+eurostat_settori:
+  settori:
+    - {id: tutti, nome: Tutti, nace: C10-S951_X_K, nella_frase: delle imprese}
+    - {id: manifattura, nome: Manifattura, nace: C, nella_frase: delle imprese manifatturiere}
+    - {id: energia-acqua-rifiuti, nome: "Energia, acqua e rifiuti", nace: D_E, nella_frase: "delle imprese di energia, acqua e rifiuti"}
+    - {id: costruzioni, nome: Costruzioni, nace: F, nella_frase: delle imprese di costruzioni}
+    - {id: commercio, nome: Commercio, nace: G, nella_frase: delle imprese del commercio}
+    - {id: trasporti, nome: Trasporti e logistica, nace: H, nella_frase: delle imprese di trasporti e logistica}
+    - {id: alloggio-ristorazione, nome: Alloggio e ristorazione, nace: I, nella_frase: delle imprese di alloggio e ristorazione}
+    - {id: ict, nome: Informazione e comunicazione, nace: J, nella_frase: delle imprese di informazione e comunicazione}
+    - {id: immobiliare, nome: Immobiliare, nace: L, nella_frase: delle imprese immobiliari}
+    - {id: professionali, nome: "Attività professionali, scientifiche e tecniche", nace: M, nella_frase: "delle imprese di servizi professionali, scientifici e tecnici"}
+    - {id: servizi-imprese, nome: Noleggio e servizi alle imprese, nace: N, nella_frase: delle imprese di noleggio e servizi alle imprese}
+  # A cosa serve l'AI: % delle imprese che usano l'AI (unit PC_ENT_AI_TANY).
+  scopi:
+    E_AI_PMS: Marketing e vendite
+    E_AI_PPP: Processi di produzione
+    E_AI_PBAM: Amministrazione e gestione
+    E_AI_PLOG: Logistica
+    E_AI_PITS: Sicurezza informatica
+    E_AI_PFIN: Contabilità e finanza
+    E_AI_PRDI: Ricerca, sviluppo e innovazione
+  # Cosa frena chi non la usa: % delle imprese che hanno considerato l'AI senza usarla (unit PC_ENT_AI_EC).
+  barriere:
+    E_AI_BCST: Costi troppo alti
+    E_AI_BLE: Mancano le competenze
+    E_AI_BINC: Incompatibile con i sistemi esistenti
+    E_AI_BDDT: Dati scarsi o di bassa qualità
+    E_AI_BCDP: Timori per privacy e protezione dei dati
+    E_AI_BLEG: Conseguenze legali poco chiare
+    E_AI_BEC: Questioni etiche
+    E_AI_BNU: L'AI non serve all'impresa
+
 # Repository open source da seguire (stelle settimana per settimana).
 github_repos:
   - huggingface/transformers

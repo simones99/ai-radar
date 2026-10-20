@@ -27,7 +27,7 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     aggiornato: '2026-10-15T08:00:00+00:00',
     fonti: {
       epoch: ok, arxiv: { stato: 'errore', ultimo_successo: '2026-10-08T08:00:00+00:00', ultimo_tentativo: '2026-10-15T08:00:00+00:00', messaggio: '500' },
-      github: ok, huggingface: ok, eurostat: ok, owid: ok, ai_act: ok, rapporti: ok, feeds: ok, radar: ok,
+      github: ok, huggingface: ok, eurostat: ok, eurostat_settori: ok, owid: ok, ai_act: ok, rapporti: ok, feeds: ok, radar: ok,
       adzuna: { stato: 'non configurata', messaggio: 'ADZUNA_APP_ID/ADZUNA_APP_KEY non impostati' },
       artificial_analysis: { stato: 'non configurata', messaggio: 'AA_API_KEY non impostata' },
     },
@@ -137,5 +137,52 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     indicatore: 'Imprese con almeno 10 addetti che usano almeno una tecnologia AI (% delle imprese)', url: 'https://ec.europa.eu/eurostat/databrowser/view/isoc_eb_ai/default/table',
     nomi: { EU27_2020: 'Unione europea (27)', IT: 'Italia', DK: 'Danimarca' },
     serie: { EU27_2020: { '2024': 13.48, '2025': 19.95 }, IT: { '2024': 8.2, '2025': 16.4 }, DK: { '2024': 27.58, '2025': 42.03 } },
+  },
+  // Valori veri di isoc_eb_ain2 (giugno 2026) per 4 settori su 11. Immobiliare, logistica, Italia: riservato (c), null.
+  eurostat_settori: {
+    fonte: 'Eurostat, isoc_eb_ain2', url: 'https://ec.europa.eu/eurostat/databrowser/view/isoc_eb_ain2/default/table',
+    aggiornato_eurostat: '2026-06-15T11:00:00+0200', anno: '2025',
+    settori: [
+      { id: 'tutti', nome: 'Tutti', nace: 'C10-S951_X_K', nella_frase: 'delle imprese' },
+      { id: 'manifattura', nome: 'Manifattura', nace: 'C', nella_frase: 'delle imprese manifatturiere' },
+      { id: 'ict', nome: 'Informazione e comunicazione', nace: 'J', nella_frase: 'delle imprese di informazione e comunicazione' },
+      { id: 'immobiliare', nome: 'Immobiliare', nace: 'L', nella_frase: 'delle imprese immobiliari' },
+    ],
+    nomi_scopi: {
+      E_AI_PMS: 'Marketing e vendite', E_AI_PPP: 'Processi di produzione', E_AI_PBAM: 'Amministrazione e gestione', E_AI_PLOG: 'Logistica',
+      E_AI_PITS: 'Sicurezza informatica', E_AI_PFIN: 'Contabilità e finanza', E_AI_PRDI: 'Ricerca, sviluppo e innovazione',
+    },
+    nomi_barriere: {
+      E_AI_BCST: 'Costi troppo alti', E_AI_BLE: 'Mancano le competenze', E_AI_BINC: 'Incompatibile con i sistemi esistenti',
+      E_AI_BDDT: 'Dati scarsi o di bassa qualità', E_AI_BCDP: 'Timori per privacy e protezione dei dati', E_AI_BLEG: 'Conseguenze legali poco chiare',
+      E_AI_BEC: 'Questioni etiche', E_AI_BNU: "L'AI non serve all'impresa",
+    },
+    adozione: {
+      tutti: { IT: { '2021': 6.17, '2023': 5.05, '2024': 8.2, '2025': 16.4 }, EU27_2020: { '2021': 7.65, '2023': 8.06, '2024': 13.48, '2025': 19.95 } },
+      manifattura: { IT: { '2021': 6.63, '2023': 4.94, '2024': 8.03, '2025': 14.73 }, EU27_2020: { '2021': 6.93, '2023': 6.79, '2024': 10.57, '2025': 17.27 } },
+      ict: { IT: { '2021': 16.19, '2023': 21.04, '2024': 34.6, '2025': 51.28 }, EU27_2020: { '2021': 25.37, '2023': 29.53, '2024': 48.72, '2025': 62.52 } },
+      immobiliare: { IT: { '2021': 3.19, '2023': 2.73, '2024': 6.2, '2025': 13.96 }, EU27_2020: { '2021': 7.11, '2023': 8.5, '2024': 15.45, '2025': 24.76 } },
+    },
+    scopi: {
+      tutti: { IT: { E_AI_PMS: 33.1, E_AI_PPP: 17.49, E_AI_PBAM: 25.7, E_AI_PLOG: 6.11, E_AI_PITS: 12.12, E_AI_PFIN: 10.19, E_AI_PRDI: 19.96 },
+        EU27_2020: { E_AI_PMS: 34.7, E_AI_PPP: 20.76, E_AI_PBAM: 31.04, E_AI_PLOG: 6.08, E_AI_PITS: 19.77, E_AI_PFIN: 23.11, E_AI_PRDI: 19.05 } },
+      manifattura: { IT: { E_AI_PMS: 28.67, E_AI_PPP: 15.69, E_AI_PBAM: 21.14, E_AI_PLOG: 4.54, E_AI_PITS: 11.75, E_AI_PFIN: 8.47, E_AI_PRDI: 18.87 },
+        EU27_2020: { E_AI_PMS: 30.41, E_AI_PPP: 20.22, E_AI_PBAM: 27.05, E_AI_PLOG: 6.64, E_AI_PITS: 20.62, E_AI_PFIN: 16.93, E_AI_PRDI: 17.54 } },
+      ict: { IT: { E_AI_PMS: 36.09, E_AI_PPP: 38.58, E_AI_PBAM: 28.82, E_AI_PLOG: 2.47, E_AI_PITS: 22.46, E_AI_PFIN: 11.52, E_AI_PRDI: 50.69 },
+        EU27_2020: { E_AI_PMS: 40.64, E_AI_PPP: 35.17, E_AI_PBAM: 38.29, E_AI_PLOG: 3.76, E_AI_PITS: 28.28, E_AI_PFIN: 22.47, E_AI_PRDI: 42.5 } },
+      immobiliare: { IT: { E_AI_PMS: 46.75, E_AI_PPP: 4.36, E_AI_PBAM: 42.37, E_AI_PLOG: null, E_AI_PITS: 17.72, E_AI_PFIN: 35.26, E_AI_PRDI: 19.32 },
+        EU27_2020: { E_AI_PMS: 36.36, E_AI_PPP: 17.46, E_AI_PBAM: 31.55, E_AI_PLOG: 2.67, E_AI_PITS: 18.88, E_AI_PFIN: 26.61, E_AI_PRDI: 9.95 } },
+    },
+    barriere: {
+      tutti: { IT: { E_AI_BCST: 42.98, E_AI_BLE: 58.61, E_AI_BINC: 38.1, E_AI_BDDT: 45.16, E_AI_BCDP: 43.21, E_AI_BLEG: 47.26, E_AI_BEC: 25.69, E_AI_BNU: 14.76 },
+        EU27_2020: { E_AI_BCST: 38.37, E_AI_BLE: 70.31, E_AI_BINC: 41.6, E_AI_BDDT: 43.51, E_AI_BCDP: 52.72, E_AI_BLEG: 53.61, E_AI_BEC: 24.64, E_AI_BNU: 17.79 } },
+      manifattura: { IT: { E_AI_BCST: 43.24, E_AI_BLE: 62.46, E_AI_BINC: 37.39, E_AI_BDDT: 43.78, E_AI_BCDP: 38.01, E_AI_BLEG: 45.43, E_AI_BEC: 20.63, E_AI_BNU: 11.69 },
+        EU27_2020: { E_AI_BCST: 39.8, E_AI_BLE: 71.05, E_AI_BINC: 44.74, E_AI_BDDT: 45.29, E_AI_BCDP: 49.01, E_AI_BLEG: 51.08, E_AI_BEC: 21.41, E_AI_BNU: 15.87 } },
+      ict: { IT: { E_AI_BCST: 26.51, E_AI_BLE: 53.06, E_AI_BINC: 27.07, E_AI_BDDT: 34.56, E_AI_BCDP: 36.94, E_AI_BLEG: 40.14, E_AI_BEC: 21.02, E_AI_BNU: 29.35 },
+        EU27_2020: { E_AI_BCST: 34.11, E_AI_BLE: 54.35, E_AI_BINC: 32.41, E_AI_BDDT: 39.43, E_AI_BCDP: 54.08, E_AI_BLEG: 53.04, E_AI_BEC: 24.2, E_AI_BNU: 16.42 } },
+      immobiliare: { IT: { E_AI_BCST: 62.11, E_AI_BLE: 46.33, E_AI_BINC: 41.68, E_AI_BDDT: 47.69, E_AI_BCDP: 44.87, E_AI_BLEG: 48.84, E_AI_BEC: 14.54, E_AI_BNU: 23.29 },
+        EU27_2020: { E_AI_BCST: 28.11, E_AI_BLE: 67.45, E_AI_BINC: 35.59, E_AI_BDDT: 33.49, E_AI_BCDP: 61.32, E_AI_BLEG: 57.54, E_AI_BEC: 18.31, E_AI_BNU: 12.42 } },
+    },
+    flag: { adozione: {}, scopi: { immobiliare: { IT: { E_AI_PLOG: 'c' } } }, barriere: {} },
   },
 };

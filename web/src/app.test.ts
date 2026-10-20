@@ -17,6 +17,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Su cosa formarti e cosa succede all'AI in Italia");
     expect(document.querySelectorAll('button.face')).toHaveLength(8);
     expect(screen.getByRole('heading', { name: 'Stato delle fonti' })).toBeInTheDocument();
+    expect(within(document.getElementById('stato')!).getByRole('rowheader', { name: 'Eurostat (settori)' })).toBeInTheDocument();
     const crediti = document.getElementById('crediti')!;
     expect(within(crediti).getAllByRole('link', { name: 'CC BY-SA 4.0' })[0]).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-sa/4.0/');
     expect(within(crediti).getAllByRole('link', { name: 'CC0' })[0]).toHaveAttribute('href', 'https://creativecommons.org/publicdomain/zero/1.0/');

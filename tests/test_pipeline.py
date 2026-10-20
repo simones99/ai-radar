@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import re
 from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
 from urllib.parse import urlparse
 
 import pytest
@@ -166,6 +167,8 @@ class FakeSession:
         if host == "api.adzuna.com":
             base = 50000 if "what" not in str(p) else 0
             return FakeResponse(body={"count": base + (len(json.dumps(p, sort_keys=True)) * 13) % 700, "results": []})
+        if host == "ec.europa.eu" and url.endswith("isoc_eb_ain2"):
+            return FakeResponse(text=(Path(__file__).parent / "fixtures" / "isoc_eb_ain2.json").read_text(encoding="utf-8"))
         if host == "ec.europa.eu":
             geos = [v for k, v in params if k == "geo"]
             return FakeResponse(body=_jsonstat(geos, ["2023", "2024", "2025"], lambda g, y: 5.0 + int(y) - 2023))

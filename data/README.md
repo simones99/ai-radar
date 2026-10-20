@@ -12,6 +12,7 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `huggingface.json` | Modelli di tendenza e tipi di compito | Hugging Face |
 | `jobs.json` | Annunci di lavoro per competenza e Paese | The Adzuna API |
 | `eurostat.json` | Imprese UE che usano l'AI | Eurostat, isoc_eb_ai |
+| `eurostat_settori.json` | Per settore, Italia e UE: adozione dell'AI (2021, 2023-2025), scopi e barriere dell'ultimo anno; `null` dove Eurostat non dà il numero, con il flag in `flag` | Eurostat, isoc_eb_ain2 |
 | `news.json` | Titoli e link dai feed RSS configurati | Feed dei siti indicati |
 | `owid.json` | Investimenti, adozione, uso dell'AI generativa, data center | Our World in Data (dati dei produttori citati) |
 | `ai_act.json` | Scadenze dell'AI Act | `config/ai_act.yaml`, a mano |

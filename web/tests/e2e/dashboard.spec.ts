@@ -350,6 +350,21 @@ test('settore da tastiera: le frecce cambiano settore e link; «Tutti» toglie i
   await expect(page.getByRole('heading', { name: /^Adozione in/ })).toHaveCount(0);
 });
 
+test('Per la tua organizzazione: scelto un settore nella card, con un dato appena uscito, la home lo mostra e riapre la card con il settore', async ({ page }) => {
+  // dati dei settori usciti l'1 ottobre: negli ultimi 30 giorni rispetto al 15
+  await page.route('**/data/eurostat_settori.json', (route) =>
+    route.fulfill({ json: { ...FIXTURE.eurostat_settori, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } }));
+  await page.goto('/#business');
+  await menuSettore(page).selectOption('manifattura');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  const porta = page.getByRole('link', { name: /Per la tua organizzazione · Manifattura/ });
+  await expect(porta).toContainText("15% delle imprese manifatturiere italiane usa l'AI (UE: 17%)");
+  await porta.click();
+  await expect(page).toHaveURL(/#business\?settore=manifattura$/);
+  await expect(menuSettore(page)).toHaveValue('manifattura');
+});
+
 test('settore a 320px: menu, andamento e confronti senza scorrimento orizzontale', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#business?settore=immobiliare');

@@ -112,7 +112,7 @@ describe('porta Per te con un ruolo', () => {
   it('le regole si provano prima sulle competenze del ruolo; etichetta e link dicono il ruolo', () => {
     const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['dati'] }, { ...passa, ruoli: ['prodotto'] }]), today, 'prodotto');
     expect(text(p.title)).toBe('C1 passa a Da provare');
-    expect(p.ruolo).toBe('Prodotto');
+    expect(p.scelta).toBe('Prodotto');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1', params: { ruolo: 'prodotto' } });
   });
   it('1. sul ruolo: solo le entrate e uscite delle sue competenze', () => {
@@ -123,7 +123,7 @@ describe('porta Per te con un ruolo', () => {
   it('nessuna regola scatta sul ruolo: le stesse regole su tutte le competenze, con il ruolo nell’etichetta e nel link', () => {
     const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['dati'] }, { ruoli: ['prodotto'] }]), today, 'prodotto');
     expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
-    expect(p.ruolo).toBe('Prodotto');
+    expect(p.scelta).toBe('Prodotto');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0', params: { ruolo: 'prodotto' } });
   });
   it('le competenze incerte del ruolo non fanno notizia: si passa a tutte', () => {
@@ -143,7 +143,7 @@ describe('porta Per te con un ruolo', () => {
     const p = doorPerTe(conRuoli([{ ruoli: ['prodotto'] }, { ruoli: ['prodotto'] }, { ...fuori, ruoli: ['prodotto'] }, { ruoli: ['dati'] }, { ...fuori, ruoli: ['prodotto'] }]), today, 'prodotto');
     expect(text(p.title)).toBe('2 delle 4 competenze di Prodotto da imparare ora');
     expect(p.title[0]).toEqual({ t: '2 delle 4 competenze di Prodotto', em: true });
-    expect(p.ruolo).toBe('Prodotto');
+    expect(p.scelta).toBe('Prodotto');
     expect(p.target).toEqual({ tema: 'competenze', elemento: null, params: { ruolo: 'prodotto' } });
     const una = doorPerTe(conRuoli([{ ruoli: ['dati'] }, { ...fuori, ruoli: ['dati'] }, { ...fuori, ruoli: ['dati'] }, { ...fuori, ruoli: ['dati'] }]), today, 'dati');
     expect(text(una.title)).toBe('1 delle 4 competenze di Dati e analisi da imparare ora');
@@ -172,6 +172,49 @@ describe('porta L’AI in Italia', () => {
     expect(p.title[0]).toEqual({ t: '16% delle imprese italiane', em: true });
     expect(p.meta).toBe('Eurostat · aggiornato l’1 ott 2026');
     expect(p.target).toEqual({ tema: 'business', elemento: null });
+  });
+  describe('2. con un settore ricordato', () => {
+    // dati dei settori usciti l'1 ottobre, cioè negli ultimi 30 giorni
+    const s = { ...d, eurostat_settori: { ...d.eurostat_settori!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
+    it('la notizia è quella del settore, con la sua forma nella frase, e il link apre la card con il settore', () => {
+      const p = doorItalia(s, today, 'manifattura');
+      expect(text(p.title)).toBe("15% delle imprese manifatturiere italiane usa l'AI (UE: 17%)");
+      expect(p.title[0]).toEqual({ t: '15% delle imprese manifatturiere italiane', em: true });
+      expect(p.meta).toBe('Eurostat · aggiornato l’1 ott 2026');
+      expect(p.target).toEqual({ tema: 'business', elemento: null, params: { settore: 'manifattura' } });
+      expect(p.scelta).toBe('Manifattura');
+    });
+    // anche il dato nazionale è uscito di recente: è la frase generale di oggi
+    const tutte = { ...s, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
+    const generale = doorItalia(tutte, today);
+    it('valore italiano del settore non affidabile: la frase generale, senza settore nell’etichetta', () => {
+      const x = structuredClone(tutte);
+      x.eurostat_settori!.adozione.manifattura.IT['2025'] = null;
+      const p = doorItalia(x, today, 'manifattura');
+      expect(text(p.title)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
+      expect(p).toEqual(generale);
+      expect(p.scelta).toBeUndefined();
+    });
+    it('con «Tutti», con un settore sconosciuto o senza dati dei settori: la porta di oggi', () => {
+      for (const id of ['tutti', 'finanza', null]) expect(doorItalia(tutte, today, id)).toEqual(generale);
+      expect(doorItalia({ ...tutte, eurostat_settori: undefined }, today, 'manifattura')).toEqual(generale);
+    });
+    it('dati dei settori non recenti: la regola 2 del settore non scatta', () => {
+      expect(doorItalia({ ...tutte, eurostat_settori: d.eurostat_settori }, today, 'manifattura')).toEqual(generale);
+      expect(doorItalia({ ...d, eurostat_settori: d.eurostat_settori }, today, 'manifattura').target?.tema).toBe('rapporti');
+    });
+    it('valore UE del settore mancante: la frase senza il confronto UE', () => {
+      const x = structuredClone(s);
+      x.eurostat_settori!.adozione.ict.EU27_2020['2025'] = null;
+      expect(text(doorItalia(x, today, 'ict').title)).toBe("51% delle imprese di informazione e comunicazione italiane usa l'AI");
+    });
+    it('le regole 1, 3 e 4 non cambiano con un settore', () => {
+      const vicina = { ...s, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-10-20' }] } }; // tra 5 giorni
+      expect(doorItalia(vicina, today, 'manifattura').target?.tema).toBe('norme');
+      expect(doorItalia(vicina, today, 'manifattura')).toEqual(doorItalia(vicina, today));
+      expect(doorItalia(d, today, 'manifattura')).toEqual(doorItalia(d, today));
+      expect(doorItalia({ ...d, rapporti: undefined }, today, 'manifattura')).toEqual(doorItalia({ ...d, rapporti: undefined }, today));
+    });
   });
   it('2. Eurostat aggiornato ma senza Italia: si passa oltre', () => {
     const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01', serie: { EU27_2020: d.eurostat!.serie.EU27_2020 } } };

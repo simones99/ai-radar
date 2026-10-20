@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
-import { ruolo } from '../scelta.svelte';
+import { ruolo, settore } from '../scelta.svelte';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import Doors from './Doors.svelte';
 
@@ -49,6 +49,38 @@ describe('Doors', () => {
       ruolo.scegli(null);
       await tick();
       expect(screen.getByRole('link', { name: /Per te.*MCP entra/ })).toHaveAttribute('href', '#competenze/mcp');
+    });
+  });
+  describe('con un settore ricordato', () => {
+    // dati dei settori usciti l'1 ottobre, negli ultimi 30 giorni
+    const recenti = { ...FIXTURE, eurostat_settori: { ...FIXTURE.eurostat_settori, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } } as Dataset;
+    const italia = () => screen.getAllByRole('link')[1];
+    beforeEach(() => settore.scegli(null));
+    it('l’etichetta dice il settore e il link apre la card Business con il settore', () => {
+      settore.scegli('manifattura');
+      render(Doors, { data: recenti, today });
+      expect(italia()).toHaveAccessibleName(/^Per la tua organizzazione · Manifattura L'AI in Italia 15% delle imprese manifatturiere italiane usa l'AI \(UE: 17%\)/);
+      expect(italia()).toHaveAttribute('href', '#business?settore=manifattura');
+    });
+    it('scelto o tolto un settore con le porte a vista, la porta si aggiorna', async () => {
+      render(Doors, { data: recenti, today });
+      expect(italia()).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+      settore.scegli('ict');
+      await tick();
+      expect(italia()).toHaveAccessibleName(/^Per la tua organizzazione · Informazione e comunicazione /);
+      settore.scegli(null);
+      await tick();
+      expect(italia()).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+    });
+    it('senza storage del browser: la porta di oggi', () => {
+      settore.scegli('manifattura');
+      vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('SecurityError'); });
+      try {
+        render(Doors, { data: recenti, today });
+        expect(italia()).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+      } finally {
+        vi.restoreAllMocks();
+      }
     });
   });
 });

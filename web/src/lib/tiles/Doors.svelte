@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Dataset } from '../data/types';
   import { toHash } from '../router';
-  import { ruolo } from '../scelta.svelte';
+  import { ruolo, settore } from '../scelta.svelte';
   import { doorItalia, doorPerTe, type Door } from '../text/frasi';
   import { TESTE } from './registry';
 
@@ -9,12 +9,12 @@
 
   const doors = $derived([
     { g: TESTE[0], d: doorPerTe(data, today, ruolo.ricordato()) },
-    { g: TESTE[1], d: doorItalia(data, today) },
+    { g: TESTE[1], d: doorItalia(data, today, settore.ricordato()) },
   ]);
 </script>
 
 {#snippet body(g: (typeof TESTE)[number], d: Door)}
-  <span class="eyebrow">{g.eyebrow}{d.ruolo ? ` · ${d.ruolo}` : ''}</span>
+  <span class="eyebrow">{g.eyebrow}{d.scelta ? ` · ${d.scelta}` : ''}</span>
   <span class="name">{g.label}</span>
   {#if d.title.length}
     <span class="news">{#each d.title as p, i (i)}{#if p.em}<em>{p.t}</em>{:else}{p.t}{/if}{/each}</span>

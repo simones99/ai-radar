@@ -33,7 +33,7 @@
 
 <style>
   .doors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); }
-  @media (max-width: 720px) { .doors { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 720px), (min-width: 1200px) { .doors { grid-template-columns: minmax(0, 1fr); } }
   .door { display: grid; gap: var(--s1); align-content: start; padding: var(--s3); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); color: inherit; text-decoration: none; transition: box-shadow .25s var(--ease), transform .25s var(--ease); }
   a.door:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   @media (hover: hover) { a.door:hover { box-shadow: var(--shadow-up); transform: translateY(-2px); } }
@@ -41,5 +41,6 @@
   .name { font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .news { font-weight: 500; font-size: clamp(24px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; overflow-wrap: anywhere; }
   .news em { font-style: normal; color: var(--accent); font-weight: 700; }
+  @media (min-width: 1200px) { .news { font-size: 28px; } }
   .meta { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

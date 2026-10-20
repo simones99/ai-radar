@@ -8,6 +8,8 @@ import TileGrid from './TileGrid.svelte';
 const data = FIXTURE as Dataset;
 const face = (label: string) => screen.getByRole('button', { name: new RegExp(`^${label}`) });
 const details = () => document.querySelectorAll('section.detail');
+// con una card aperta anche le pillole hanno il nome del tema: la card si cerca per id
+const card = (id: string) => document.querySelector<HTMLButtonElement>(`#tile-${id} .face`)!;
 
 beforeEach(() => {
   history.replaceState(null, '', '/');
@@ -47,6 +49,33 @@ describe('TileGrid', () => {
     expect(document.title).toBe('Business · AI Radar');
     expect(face('Business')).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByRole('navigation', { name: 'Altri temi' }).querySelectorAll('button.pill')).toHaveLength(7);
+  });
+
+  it('card aperta: le 8 card restano come elenco compatto, il dettaglio sta accanto e prende il nome della transizione', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Business'));
+    const faces = [...document.querySelectorAll('button.face')];
+    expect(faces).toHaveLength(8);
+    faces.forEach((b) => expect(b).toHaveClass('compact'));
+    expect(faces.filter((b) => b.getAttribute('aria-expanded') === 'true')).toEqual([card('business')]);
+    const det = document.getElementById('detail-business')!;
+    expect(det.closest('.pane')).not.toBeNull();
+    expect(det.closest('article.tile')).toBeNull();
+    expect(det.style.viewTransitionName).toBe('t-business');
+    expect(card('business').style.viewTransitionName).toBe('');
+    expect(card('norme').style.viewTransitionName).toBe('t-norme');
+  });
+
+  it('dall’elenco si passa a un’altra card: un solo indietro torna alla home', async () => {
+    render(TileGrid, { data, today });
+    await fireEvent.click(face('Business'));
+    await fireEvent.click(card('norme'));
+    expect(location.hash).toBe('#norme');
+    expect(card('norme')).toHaveAttribute('aria-expanded', 'true');
+    expect(card('business')).toHaveAttribute('aria-expanded', 'false');
+    history.back();
+    await waitFor(() => expect(details()).toHaveLength(0));
+    expect(location.hash).toBe('');
   });
 
   it('Esc chiude e riporta il focus sulla card', async () => {

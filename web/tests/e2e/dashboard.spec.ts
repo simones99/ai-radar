@@ -75,6 +75,7 @@ test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude
 });
 
 test('porta con una card aperta: come una pillola, un solo indietro torna alla home', async ({ page }) => {
+  await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
   await page.goto('/');
   await page.locator('#tile-business .face').click();
   await expect(page.locator('#detail-business')).toBeVisible();
@@ -87,6 +88,7 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
 });
 
 test('porta verso la card già aperta: riapre la competenza e porta il focus al titolo', async ({ page }) => {
+  await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
   await page.goto('/');
   const porta = page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ });
   await porta.click();
@@ -125,6 +127,7 @@ for (const id of TEMI) {
 }
 
 test('indietro chiude; dopo un cambio di card un solo indietro torna alla home', async ({ page }) => {
+  await page.setViewportSize({ width: 1100, height: 800 }); // le pillole ci sono sotto 1200px
   await page.goto('/');
   await page.locator('#tile-business .face').click();
   await page.goBack();
@@ -251,4 +254,52 @@ test('Esc due volte di fila dalla pagina di una competenza: un solo salto, si re
   await page.keyboard.press('Escape');
   await expect(page.locator('#detail-competenze')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
+});
+
+const box = async (page: Page, sel: string) => (await page.locator(sel).first().boundingBox())!;
+
+test('1440px: in home intro e porte a sinistra delle card', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const intro = await box(page, '.intro');
+  const temi = await box(page, '#temi');
+  expect(intro.x + intro.width).toBeLessThanOrEqual(temi.x);
+  expect(Math.abs(intro.y - temi.y)).toBeLessThan(40);
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+test('1440px: card aperta con le altre in elenco accanto, senza intro né pillole; dall’elenco un solo indietro torna alla home', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await page.locator('#tile-business .face').click();
+  await expect(page.locator('#detail-business')).toBeVisible();
+  await expect(page.locator('.intro')).toBeHidden();
+  await expect(page.locator('nav[aria-label="Altri temi"]')).toBeHidden();
+  await expect(page.locator('button.face:visible')).toHaveCount(8);
+  await expect(page.locator('#tile-business .face')).toHaveAttribute('aria-expanded', 'true');
+  const elenco = await box(page, '#temi');
+  const det = await box(page, '#detail-business');
+  expect(elenco.x + elenco.width).toBeLessThanOrEqual(det.x);
+  await page.locator('#tile-norme .face').click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await expect(page).toHaveURL(/#norme$/);
+  await page.goBack();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('.intro')).toBeVisible();
+});
+
+test('1920px: foto a tutta larghezza dietro il titolo, grafici almeno 3 per riga', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.goto('/#modelli');
+  await expect(page.locator('#detail-modelli')).toBeVisible();
+  const foto = await box(page, '#detail-modelli figure');
+  const hero = await box(page, '#detail-modelli .d-hero');
+  const titolo = await box(page, '#h-modelli');
+  expect(foto.width).toBeGreaterThan(hero.width - 2);
+  expect(titolo.x).toBeGreaterThanOrEqual(foto.x);
+  expect(titolo.y + titolo.height).toBeLessThanOrEqual(foto.y + foto.height);
+  const tops = await page.locator('#detail-modelli .blk').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  const perRiga = Math.max(...Object.values(tops.reduce<Record<number, number>>((m, t) => ({ ...m, [t]: (m[t] ?? 0) + 1 }), {})));
+  expect(perRiga).toBeGreaterThanOrEqual(3);
 });

@@ -41,14 +41,16 @@
       <button type="button" onclick={load}>Riprova</button>
     </section>
   {:else}
-    <section class="hero">
-      <p class="small muted">Settimana {dayWith('del', isoDay(today))}</p>
-      <h1>Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
-    </section>
+    <div class="intro">
+      <section class="hero">
+        <p class="small muted">Settimana {dayWith('del', isoDay(today))}</p>
+        <h1>Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
+      </section>
+      {#if phase === 'ready'}<Doors {data} {today} />{/if}
+    </div>
   {/if}
 
   {#if phase === 'ready'}
-    <Doors {data} {today} />
     <TileGrid {data} {today} />
   {:else if phase === 'loading'}
     <p class="muted">Caricamento dei dati…</p>
@@ -79,7 +81,18 @@
   nav { display: flex; gap: var(--s3); font-size: 14px; }
   nav a { text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
   @media (hover: hover) { nav a:hover { color: var(--fg); } }
+  .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
+  /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto */
+  @media (min-width: 1200px) {
+    .wrap { max-width: 1920px; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); column-gap: var(--s5); }
+    .wrap > :global(*) { grid-column: 1 / -1; }
+    .wrap > .intro { grid-column: 1; align-self: start; position: sticky; top: var(--s3); gap: var(--s4); }
+    .wrap > :global(.board) { grid-column: 2; }
+    .wrap:has(:global(.board.has-open)) > .intro { display: none; }
+    .wrap > :global(.board.has-open) { grid-column: 1 / -1; }
+    .hero { padding-top: 0; }
+  }
   h1 { font-weight: 400; font-size: 20px; line-height: 32px; color: var(--fg-2); max-width: 60ch; }
   .alert { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s3); }
   .alert button { border: 0; border-radius: 999px; background: var(--fg); color: var(--card); padding: var(--s1) var(--s3); min-height: 40px; cursor: pointer; }

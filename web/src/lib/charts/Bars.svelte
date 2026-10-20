@@ -18,8 +18,8 @@
   const y = $derived(scaleLinear([0, max(data, (d) => d.v) ?? 1], [height - 24, 24]));
   // con molte barre e poco spazio si scrive un'etichetta ogni "step"
   const step = $derived(Math.max(1, Math.ceil(data.length / Math.max(1, Math.floor(w / 48)))));
-  // nomi più larghi di una colonna: barre orizzontali, l'ultima (in evidenza) in cima
-  const across = $derived(data.some((d) => measureText(d.k, `400 10px ${FONT}`) > x.step() - 4));
+  // nomi più larghi dello spazio che hanno anche scrivendone uno ogni "step": barre orizzontali, l'ultima (in evidenza) in cima
+  const across = $derived(data.some((d) => measureText(d.k, `400 10px ${FONT}`) > step * x.step() - 4));
   const RH = 28;
   const ml = $derived(Math.min(w * 0.45, Math.max(...data.map((d) => measureText(d.k, `600 12px ${FONT}`))) + 12));
   const xh = $derived(scaleLinear([0, max(data, (d) => d.v) ?? 1], [ml, w - 48]));

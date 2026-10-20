@@ -5,7 +5,8 @@
   import { day, dayWith } from '../text/format';
   import type { TileDef } from './types';
 
-  let { tile, data, today, expanded, onopen }: { tile: TileDef; data: Dataset; today: Date; expanded: boolean; onopen: () => void } = $props();
+  // compact: riga dell'elenco accanto alla card aperta (da 1200px)
+  let { tile, data, today, expanded, compact = false, onopen }: { tile: TileDef; data: Dataset; today: Date; expanded: boolean; compact?: boolean; onopen: () => void } = $props();
 
   const face = $derived(tile.face(data, today));
   const st = $derived(tileState(tile.source, data.status, face !== null));
@@ -13,7 +14,8 @@
   let imgFailed = $state(false);
 </script>
 
-<button type="button" class="face" aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name="t-{tile.id}" onclick={onopen}>
+<!-- aperta, il nome della transizione passa al dettaglio: due elementi con lo stesso nome annullano l'animazione -->
+<button type="button" class="face" class:compact aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
   {#if imgFailed}
     <span class="ph ph-empty" aria-hidden="true">{photo.alt}</span>
   {:else}
@@ -55,6 +57,17 @@
   @media (hover: hover) {
     .face:hover { box-shadow: var(--shadow-up); transform: translateY(-2px); }
     .face:hover .ph img { transform: scale(1.03); }
+  }
+  .face.compact { grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: 12px; padding: var(--s1); border-radius: var(--r-md); background: transparent; box-shadow: none; }
+  .compact .ph { aspect-ratio: 1; border-radius: var(--r-sm); }
+  .compact .f-body { padding-inline: 0; gap: 0; }
+  .compact .f-lab .small, .compact .sent { display: none; }
+  .compact .fig { font-size: 22px; line-height: 28px; }
+  .compact .u { font-size: 13px; }
+  .face.compact[aria-expanded="true"] { background: var(--card); box-shadow: var(--shadow), inset 3px 0 0 var(--accent); }
+  @media (hover: hover) {
+    .face.compact:hover { background: var(--card); transform: none; }
+    .face.compact:hover .ph img { transform: none; }
   }
   @media (max-width: 560px) {
     .face { grid-template-columns: 88px minmax(0, 1fr); align-items: center; padding: var(--s1); border-radius: var(--r-md); }

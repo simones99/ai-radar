@@ -28,6 +28,7 @@
 
 <style>
   .pills { display: flex; gap: var(--s1); align-items: center; }
+  @media (min-width: 1200px) { .pills { display: none; } } /* da 1200px c'è l'elenco delle card */
   .scroll { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3); flex: 1; min-width: 0; }
   .group { display: flex; flex-wrap: wrap; gap: var(--s1); align-items: center; }
   .glab { font-size: 12px; line-height: 16px; color: var(--fg-3); white-space: nowrap; }

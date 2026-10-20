@@ -33,7 +33,7 @@
 <section class="detail" id="detail-{tile.id}" aria-labelledby="h-{tile.id}" style:view-transition-name="t-{tile.id}">
   <div class="d-hero">
     <figure>
-      <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 860px) 100vw, 40vw" alt={photo.alt} /></span>
+      <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 860px) 100vw, (min-width: 1200px) 80vw, 40vw" alt={photo.alt} /></span>
       <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
     </figure>
     <div class="d-text">
@@ -77,4 +77,20 @@
   @media (hover: hover) { .copy:hover, .close:hover { background: var(--line-2); } }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }
+  /* da 1200px: foto a tutta larghezza dietro il testo, grafici in colonne da almeno 360px */
+  @media (min-width: 1200px) {
+    .d-hero { grid-template-columns: minmax(0, 1fr); position: relative; min-height: 400px; padding: 0; overflow: hidden; }
+    figure { position: absolute; inset: 0; }
+    .ph { border-radius: 0; min-height: 0; }
+    .credit { position: absolute; right: var(--s2); bottom: var(--s1); color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(0, 0, 0, .6); }
+    .d-text { align-content: end; padding: var(--s8) var(--s12) var(--s5) var(--s6); color: #fff;
+      background: linear-gradient(90deg, rgba(0, 0, 0, .8) 0%, rgba(0, 0, 0, .6) 45%, rgba(0, 0, 0, 0) 85%); }
+    .lab, .deck { color: rgba(255, 255, 255, .9); }
+    h2 { font-size: clamp(40px, 3.2vw, 56px); max-width: 18ch; }
+    h2 em { color: #8fc4ff; }
+    .copy { background: rgba(255, 255, 255, .18); color: #fff; }
+    .close { background: rgba(255, 255, 255, .92); color: #121211; }
+    @media (hover: hover) { .copy:hover { background: rgba(255, 255, 255, .3); } .close:hover { background: #fff; } }
+    .blocks { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); grid-auto-flow: dense; }
+  }
 </style>

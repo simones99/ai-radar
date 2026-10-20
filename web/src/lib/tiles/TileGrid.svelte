@@ -26,6 +26,7 @@
     history.go(-n);
   }
   let riapri = $state(0); // cresce a ogni link alla card già aperta: la scheda si ricrea come a una nuova apertura
+  const open = $derived(TILES.find((t) => t.id === openId));
   setTitle(start?.tema ?? null);
 
   // I vecchi link (#politica) si aprono e l'indirizzo diventa quello di oggi (#norme): «Copia link» copia quello.
@@ -153,40 +154,50 @@
 <svelte:window onpopstate={onPop} onkeydown={onKey} />
 <svelte:document onclick={onLink} />
 
-{#if openId}
-  <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={(id) => openTile(id)} onclose={closeTile} />
-{/if}
+<!-- Card aperta: sotto 1200px pillole e dettaglio al posto delle card; da 1200px le card restano in elenco accanto al dettaglio. -->
+<div class="board" class:has-open={open !== undefined}>
+  {#if open}
+    <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={(id) => openTile(id)} onclose={closeTile} />
+  {/if}
 
-<div class="groups" class:has-open={openId !== null} id="temi">
-  {#each TESTE as g (g.id)}
-    {@const tiles = TILES.filter((t) => t.testa === g.id)}
-    <section class="group" class:hidden={openId !== null && !tiles.some((t) => t.id === openId)} aria-labelledby="g-{g.id}">
-      <h2 id="g-{g.id}" class="g-h" class:hidden={openId !== null}>{g.label}</h2>
-      <div class="tiles">
-        {#each tiles as t (t.id)}
-          <article class="tile" class:open={openId === t.id} class:hidden={openId !== null && openId !== t.id} id="tile-{t.id}">
-            <TileFace tile={t} {data} {today} expanded={openId === t.id} onopen={() => toggleTile(t.id)} />
-            {#if openId === t.id}
-              {@const D = t.Detail}
-              {#key riapri}<D {data} {today} tile={t} {elemento} onclose={closeTile} />{/key}
-            {/if}
-          </article>
-        {/each}
-      </div>
-    </section>
-  {/each}
+  <div class="groups" id="temi">
+    {#each TESTE as g (g.id)}
+      <section class="group" aria-labelledby="g-{g.id}">
+        <h2 id="g-{g.id}" class="g-h">{g.label}</h2>
+        <div class="tiles">
+          {#each TILES.filter((t) => t.testa === g.id) as t (t.id)}
+            <article class="tile" id="tile-{t.id}">
+              <TileFace tile={t} {data} {today} expanded={openId === t.id} compact={open !== undefined} onopen={() => toggleTile(t.id)} />
+            </article>
+          {/each}
+        </div>
+      </section>
+    {/each}
+  </div>
+
+  {#if open}
+    {@const D = open.Detail}
+    <div class="pane">{#key riapri}<D {data} {today} tile={open} {elemento} onclose={closeTile} />{/key}</div>
+  {/if}
 </div>
 
 <style>
+  .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
   .groups { display: grid; gap: var(--s4); }
   .group { display: grid; gap: var(--s2); }
   .g-h { font-weight: 600; font-size: 20px; line-height: 24px; }
   .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); }
   @media (max-width: 1040px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); } }
-  .tile { min-width: 0; }
-  .has-open .tiles { grid-template-columns: minmax(0, 1fr); }
-  .has-open { gap: 0; }
-  .hidden { display: none; }
-  .open :global(.face) { display: none; }
+  .tile, .pane { min-width: 0; }
+  .has-open .groups { display: none; }
+  @media (min-width: 1200px) {
+    .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .has-open { grid-template-columns: 300px minmax(0, 1fr); gap: var(--s4); align-items: start; }
+    /* l'elenco resta a vista mentre si scorre il dettaglio */
+    .has-open .groups { display: grid; gap: var(--s3); position: sticky; top: var(--s3); max-height: calc(100vh - var(--s6)); overflow-y: auto; padding: 4px; margin: -4px; }
+    .has-open .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+    .has-open .g-h { font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-2); padding-inline: var(--s1); }
+  }
+  @media (min-width: 1680px) { .board:not(.has-open) .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>

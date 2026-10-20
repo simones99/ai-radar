@@ -66,6 +66,13 @@ describe('grafici', () => {
     expect(Number(bars[0].getAttribute('y'))).toBeLessThan(Number(bars[1].getAttribute('y')));
     expect(bars[0]).toHaveClass('hot');
   });
+  it('Bars: con nomi corti e tante barre restano verticali, un nome ogni tanto', () => {
+    const data = Array.from({ length: 11 }, (_, i) => ({ k: String(2016 + i), v: i + 1 }));
+    const { container } = render(Bars, { label: 'Anni', data });
+    const bars = [...container.querySelectorAll('rect.bar')];
+    expect(bars.map((b) => b.getAttribute('y'))).not.toEqual(bars.map(() => bars[0].getAttribute('y')));
+    expect(Number(bars[0].getAttribute('x'))).toBeLessThan(Number(bars[1].getAttribute('x')));
+  });
   it('LineChart: il margine destro fa spazio alle etichette finali', () => {
     const { container } = render(LineChart, { label: 'Annunci', yFormat: (v: number) => `${v}%`, series: [
       { name: 'Regno Unito', pts: [{ x: 2024, y: 1.5 }, { x: 2025, y: 1.928 }] },

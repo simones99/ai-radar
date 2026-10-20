@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-19T10:59:36+00:00",
+ "aggiornato": "2026-10-20T16:27:49+00:00",
  "errori": {},
  "serie": {
   "investimenti_privati": {
@@ -1295,16 +1295,11 @@
   "sviluppatori_ai": {
    "titolo": "Share of professional software developers using AI tools",
    "unita": "%",
-   "citazione": "Stack Overflow (2025) – with minor processing by Our World in Data",
-   "aggiornato_owid": "2026-02-05",
+   "citazione": "Stack Overflow (2023–2026) – with major processing by Our World in Data",
+   "aggiornato_owid": "2026-10-19",
    "url": "https://ourworldindata.org/grapher/share-of-professional-software-developers-using-ai-tools",
    "licenza": "CC BY 4.0",
    "punti": [
-    {
-     "entita": "World",
-     "t": "2020",
-     "v": 0.0
-    },
     {
      "entita": "World",
      "t": "2023",
@@ -1313,12 +1308,17 @@
     {
      "entita": "World",
      "t": "2024",
-     "v": 63.2
+     "v": 63.26
     },
     {
      "entita": "World",
      "t": "2025",
-     "v": 80.8
+     "v": 80.76
+    },
+    {
+     "entita": "World",
+     "t": "2026",
+     "v": 85.69
     }
    ]
   },

@@ -55,72 +55,135 @@
  "giorni": 45,
  "notizie": [
   {
-   "titolo": "Anthropic has nearly stopped hiring junior staff because AI agents now work six times as many hours",
-   "link": "https://the-decoder.com/anthropic-has-nearly-stopped-hiring-junior-staff-because-ai-agents-now-work-six-times-as-many-hours/",
-   "data": "2026-10-18",
+   "titolo": "Army Cyber Command's ECHOTRIBBLE would turn AI agents into self-spreading cyberweapons",
+   "link": "https://the-decoder.com/army-cyber-commands-echotribble-would-turn-ai-agents-into-self-spreading-cyberweapons/",
+   "data": "2026-10-20",
    "fonte": "The Decoder",
    "tema": "prodotti"
   },
   {
-   "titolo": "Four Gemini 4 Argon agents beat Minecraft without any human help",
-   "link": "https://the-decoder.com/four-gemini-4-argon-agents-beat-minecraft-without-any-human-help/",
-   "data": "2026-10-18",
+   "titolo": "Cloudflare's Clairic pulls data from documents faster and cheaper than LLMs",
+   "link": "https://the-decoder.com/cloudflares-clairic-pulls-data-from-documents-faster-and-cheaper-than-llms/",
+   "data": "2026-10-20",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "US bans Deepseek technology across federal civilian agencies",
+   "link": "https://the-decoder.com/us-bans-deepseek-technology-across-federal-civilian-agencies/",
+   "data": "2026-10-20",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] not much happened today",
+   "link": "https://www.latent.space/p/ainews-not-much-happened-today-f09",
+   "data": "2026-10-20",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "FairStress: A deeper evaluation of fairness in LLM decision-making",
+   "link": "https://huggingface.co/blog/allenai/fairstress",
+   "data": "2026-10-20",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "ALTK-Evolve: How learned memory tops the τ²-bench leaderboard on customer service tasks without a frontier model",
+   "link": "https://huggingface.co/blog/ibm-research/altk-evolve-bc",
+   "data": "2026-10-20",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Hugging Face ❤️ TorchTPU: TPUs, Natively",
+   "link": "https://huggingface.co/blog/hf-torchtpu",
+   "data": "2026-10-20",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "AnyLanguageModel 1.0: One Year of Local Models on Apple Platforms",
+   "link": "https://huggingface.co/blog/anylanguagemodel-1-0",
+   "data": "2026-10-20",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "MPS in PyTorch 2.15",
+   "link": "https://huggingface.co/blog/mps-pytorch-2-15",
+   "data": "2026-10-20",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "MiniMax M3.1 Flash shows China's AI price race has no floor in sight",
+   "link": "https://the-decoder.com/minimax-m3-1-flash-shows-chinas-ai-price-race-has-no-floor-in-sight/",
+   "data": "2026-10-19",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Kling AI drops version 4.0 with stereo audio, multilingual lip sync, and a lighter Flash variant",
+   "link": "https://the-decoder.com/kling-ai-drops-version-4-0-with-stereo-audio-multilingual-lip-sync-and-a-lighter-flash-variant/",
+   "data": "2026-10-19",
    "fonte": "The Decoder",
    "tema": "prodotti"
   },
   {
    "titolo": "Two German courts now hold Google liable for what its AI overviews say",
    "link": "https://the-decoder.com/two-german-courts-now-hold-google-liable-for-what-its-ai-overviews-say/",
+   "data": "2026-10-19",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Stripe says AI agent purchases are adding up, but it won't share the numbers",
+   "link": "https://the-decoder.com/stripe-says-ai-agent-purchases-are-adding-up-but-it-wont-share-the-numbers/",
+   "data": "2026-10-19",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "The neocloud shakeout is coming, and Nvidia has the most to lose",
+   "link": "https://the-decoder.com/the-neocloud-shakeout-is-coming-and-nvidia-has-the-most-to-lose/",
+   "data": "2026-10-19",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic plans fund for workers threatened by AI, Musk counters with SpaceX shares for children",
+   "link": "https://the-decoder.com/anthropic-plans-fund-for-workers-threatened-by-ai-musk-counters-with-spacex-shares-for-children/",
+   "data": "2026-10-19",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Advancing coding in low‑resource programming languages",
+   "link": "https://openai.com/index/low-resource-programming-languages",
+   "data": "2026-10-19",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Import AI 477: In which I tell the IMF the Singularity has begun",
+   "link": "https://jack-clark.net/2026/10/19/import-ai-477-in-which-i-tell-the-imf-the-singularity-has-begun/",
+   "data": "2026-10-19",
+   "fonte": "Import AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "TorchNeuron: running HF models on AWS Trainium is easier than ever",
+   "link": "https://huggingface.co/blog/hf-torchneuron",
+   "data": "2026-10-19",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Anthropic has nearly stopped hiring junior staff because AI agents now work six times as many hours",
+   "link": "https://the-decoder.com/anthropic-has-nearly-stopped-hiring-junior-staff-because-ai-agents-now-work-six-times-as-many-hours/",
    "data": "2026-10-18",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Anthropic consults law firms to set fair negotiation norms before AI agents start cutting deals",
-   "link": "https://the-decoder.com/anthropic-consults-law-firms-to-set-fair-negotiation-norms-before-ai-agents-start-cutting-deals/",
-   "data": "2026-10-18",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI agents have bad taste in long-term decisions and a new benchmark proves it",
-   "link": "https://the-decoder.com/ai-agents-have-bad-taste-in-long-term-decisions-and-a-new-benchmark-proves-it/",
-   "data": "2026-10-18",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI agents chasing a $465 train refund invented excuses, leaked medical data, and spammed an MP's office",
-   "link": "https://the-decoder.com/ai-agents-chasing-a-465-train-refund-invented-excuses-leaked-medical-data-and-spammed-an-mps-office/",
-   "data": "2026-10-18",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "An OpenAI model hacked a government site, grabbed 24 years of hospital data and kept it quiet",
-   "link": "https://the-decoder.com/an-openai-model-hacked-a-government-site-grabbed-24-years-of-hospital-data-and-kept-it-quiet/",
-   "data": "2026-10-17",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Anthropics' Claude cracks a 25-year-old NSA cryptography mystery in under 30 minutes",
-   "link": "https://the-decoder.com/anthropics-claude-cracks-a-25-year-old-nsa-cryptography-mystery-in-under-30-minutes/",
-   "data": "2026-10-17",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Deepseek V4.1 Flash 1017 beats larger rivals in agentic tasks while once again massively cutting per-task costs",
-   "link": "https://the-decoder.com/deepseek-v4-1-flash-1017-beats-larger-rivals-in-agentic-tasks-while-once-again-massively-cutting-per-task-costs/",
-   "data": "2026-10-17",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI models hide mistakes in their own work reports, but one sentence in your prompt can help",
-   "link": "https://the-decoder.com/ai-models-hide-mistakes-in-their-own-work-reports-but-one-sentence-in-your-prompt-can-help/",
-   "data": "2026-10-17",
    "fonte": "The Decoder",
    "tema": "prodotti"
   },
@@ -300,13 +363,6 @@
    "tema": "business"
   },
   {
-   "titolo": "HiRO-ACEv2: Simulating extreme weather at 3 km resolution for a fraction of the cost",
-   "link": "https://huggingface.co/blog/allenai/hiro-acev2",
-   "data": "2026-10-14",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "Google DeepMind and Singapore Government collaborate to build fine-tuned AI model for scam detection",
    "link": "https://deepmind.google/blog/on-device-ai-scam-detection-mddi/",
    "data": "2026-10-14",
@@ -321,13 +377,6 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "Higgsfield takes AI video from 1 minute to over 10",
-   "link": "https://openai.com/index/higgsfield-longer-videos-voice",
-   "data": "2026-10-13",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "Dyna-2: General Purpose Physical Agents with Hour-Long Autonomy — Jason Ma, Dyna Robotics",
    "link": "https://www.latent.space/p/dyna",
    "data": "2026-10-13",
@@ -340,13 +389,6 @@
    "data": "2026-10-13",
    "fonte": "Latent Space",
    "tema": "business"
-  },
-  {
-   "titolo": "Run fast, private agents on-device with LFM2.5-24B-A2B",
-   "link": "https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b",
-   "data": "2026-10-13",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
   },
   {
    "titolo": "Developing Gemini 4 Argon responsibly and safely",
@@ -412,25 +454,11 @@
    "tema": "business"
   },
   {
-   "titolo": "[AINews] TypeSafe/Jev at >$100M ARR, $7.5B valuation 3 weeks after launch",
-   "link": "https://www.latent.space/p/ainews-typesafejev-at-100m-arr-75b",
-   "data": "2026-10-10",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
    "titolo": "A new feature for my blog, built using my voice",
    "link": "https://simonwillison.net/2026/Oct/9/built-using-my-voice/",
    "data": "2026-10-09",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "The model that didn't exist, so you made it yourself",
-   "link": "https://huggingface.co/blog/building-with-ml-intern",
-   "data": "2026-10-08",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
   },
   {
    "titolo": "Can AI automate Epoch?",
@@ -445,13 +473,6 @@
    "data": "2026-10-07",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "Introducing Falcon ASR",
-   "link": "https://huggingface.co/blog/tiiuae/falcon-asr",
-   "data": "2026-10-07",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
   },
   {
    "titolo": "Introducing Playground: Create and play custom games",
@@ -522,20 +543,6 @@
    "data": "2026-10-03",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "The Agent Said It Was Done. The Database Disagreed.",
-   "link": "https://huggingface.co/blog/microsoft/thinkingbox",
-   "data": "2026-10-03",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "AutoSynthData: Generating Training Data for Enterprise Agents",
-   "link": "https://huggingface.co/blog/ServiceNow-AI/autosynthdata",
-   "data": "2026-10-02",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
   },
   {
    "titolo": "The latest AI news we announced in September 2026",
@@ -739,13 +746,6 @@
    "data": "2026-09-07",
    "fonte": "Import AI",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "The Pelican comparison grid for Astra is pretty interesting",
-   "link": "https://simonwillison.net/2026/Sep/4/astra-pelicans/",
-   "data": "2026-09-04",
-   "fonte": "Simon Willison",
-   "tema": "prodotti"
   }
  ]
 }

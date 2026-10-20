@@ -132,10 +132,12 @@ export interface Eurostat {
   serie: Record<string, Record<string, number>>;
 }
 
+/** Italia e UE, gli unici due territori dei dati per settore. */
+export type Geo = 'IT' | 'EU27_2020';
 /** Valori per Italia e UE; null quando Eurostat non dà il numero (riservato o poco affidabile), mai 0. */
-export type PerGeo<K extends string = string> = Record<'IT' | 'EU27_2020', Record<K, number | null>>;
+export type PerGeo<K extends string = string> = Record<Geo, Record<K, number | null>>;
 /** Flag Eurostat delle celle che ne hanno uno: «u» affidabilità bassa, «c» riservato. */
-export type FlagPerGeo = Partial<Record<'IT' | 'EU27_2020', Record<string, string>>>;
+export type FlagPerGeo = Partial<Record<Geo, Record<string, string>>>;
 export interface Settore { id: string; nome: string; nace: string; /** «delle imprese manifatturiere», per la frase della porta */ nella_frase: string }
 export interface EurostatSettori {
   fonte: string;

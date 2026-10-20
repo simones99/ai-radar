@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from pipeline import eurostat
+from pipeline import eurostat_settori
 from pipeline.common import load_yaml
 
 RECORDED = json.loads((Path(__file__).parent / "fixtures" / "isoc_eb_ain2.json").read_text(encoding="utf-8"))
@@ -50,7 +50,7 @@ def cfg():
 
 
 def run(data_dir, body=RECORDED):
-    eurostat.run_settori(Session(body), cfg())
+    eurostat_settori.run(Session(body), cfg())
     return json.loads((data_dir / "eurostat_settori.json").read_text(encoding="utf-8"))
 
 
@@ -119,27 +119,42 @@ def test_scopi_e_barriere_solo_ultimo_anno_adozione_senza_2022(data_dir):
     assert out["adozione"]["tutti"]["IT"]["2025"] == 16.4
 
 
-def _senza_settore(nace):
-    """La risposta come sarebbe se Eurostat togliesse un codice NACE: il cubo perde quella fetta."""
+def _con_codici(dim, codes):
+    """La risposta con un altro elenco di codici in una dimensione: i codici tolti perdono la loro fetta del cubo,
+    quelli nuovi arrivano senza valori (come un codice che Eurostat toglie o un anno che elenca senza dati)."""
     js = copy.deepcopy(RECORDED)
     dims = [list(js["dimension"][d]["category"]["index"]) for d in js["id"]]
-    keep = [list(js["dimension"][d]["category"]["index"]) if d != "nace_r2" else [n for n in dims[i] if n != nace]
-            for i, d in enumerate(js["id"])]
+    keep = [codes if d == dim else dims[i] for i, d in enumerate(js["id"])]
     old = {combo: str(flat) for flat, combo in enumerate(product(*dims))}
     values, status = {}, {}
     for flat, combo in enumerate(product(*keep)):
-        o = old[combo]
+        o = old.get(combo)
         if o in js["value"]:
             values[str(flat)] = js["value"][o]
         if o in js["status"]:
             status[str(flat)] = js["status"][o]
-    js["dimension"]["nace_r2"]["category"]["index"] = {n: k for k, n in enumerate(keep[js["id"].index("nace_r2")])}
+    js["dimension"][dim]["category"]["index"] = {c: k for k, c in enumerate(codes)}
     js["size"] = [len(k) for k in keep]
     js["value"], js["status"] = values, status
     return js
 
 
-@pytest.mark.parametrize("session", [Session(status=500), Session(body=_senza_settore("L"))], ids=["http-500", "codice-sparito"])
+def _senza(dim, code):
+    return _con_codici(dim, [c for c in RECORDED["dimension"][dim]["category"]["index"] if c != code])
+
+
+def test_anno_senza_valori_non_entra_nell_adozione(data_dir):
+    # Eurostat può elencare il 2022 senza nessun valore: non diventa una colonna di null
+    out = run(data_dir, _con_codici("time", ["2021", "2022", "2023", "2024", "2025"]))
+    for sid in ("tutti", "ict"):
+        for g in ("IT", "EU27_2020"):
+            assert list(out["adozione"][sid][g]) == ["2021", "2023", "2024", "2025"]
+    assert out["adozione"]["tutti"]["IT"]["2025"] == 16.4
+
+
+@pytest.mark.parametrize("session", [Session(status=500), Session(body=_senza("nace_r2", "L")),
+                                     Session(body=_senza("unit", "PC_ENT_AI_EC"))],
+                         ids=["http-500", "codice-sparito", "unita-sparita"])
 def test_errore_lascia_il_file_precedente(data_dir, monkeypatch, session):
     from pipeline import run as pipeline_run
     before = json.dumps(run(data_dir), ensure_ascii=False)

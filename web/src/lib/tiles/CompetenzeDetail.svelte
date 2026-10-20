@@ -7,7 +7,7 @@
   import { radarRows } from '../data/derive';
   import type { Quadrant } from '../data/types';
   import { apri, toHash } from '../router';
-  import { ruolo as scelta } from '../scelta.svelte';
+  import { ruolo as ruoloRicordato } from '../scelta.svelte';
   import { per10k, signedPct } from '../text/format';
   import { headSkill } from '../text/frasi';
   import Detail from './Detail.svelte';
@@ -20,7 +20,7 @@
   const quadranti = $derived(data.radar?.quadranti ?? ({ 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" } as Record<Quadrant, string>));
   const ruoli = $derived(data.radar?.ruoli ?? []);
   const ruolo = $derived(ruoli.find((r) => r.id === params.ruolo) ?? null); // un ruolo sconosciuto nel link si ignora
-  onMount(() => scelta.allinea(params.ruolo, ruoli.map((r) => r.id)));
+  onMount(() => ruoloRicordato.allinea(params.ruolo, ruoli.map((r) => r.id)));
   const skill = $derived(rows.find((r) => r.id === elemento) ?? null);
   const head = $derived(skill ? headSkill(skill, quadranti) : tile.head(data, today));
   const old = $derived(!!data.radar && data.radar.versione !== 2);
@@ -56,8 +56,8 @@
   {:else}
     {#if ruoli.length}
       <div class="chips" role="group" aria-label="Il tuo ruolo">
-        <button type="button" aria-pressed={ruolo === null} onclick={() => scelta.scegli(null)}>Tutti</button>
-        {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => scelta.scegli(r.id)}>{r.nome}</button>{/each}
+        <button type="button" aria-pressed={ruolo === null} onclick={() => ruoloRicordato.scegli(null)}>Tutti</button>
+        {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => ruoloRicordato.scegli(r.id)}>{r.nome}</button>{/each}
       </div>
     {/if}
     <Block span={8} title="Radar delle competenze"

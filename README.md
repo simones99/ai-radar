@@ -76,6 +76,7 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
 - **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
 - **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).
+- **Settori della card Business**: in `config/sources.yaml`, blocco `eurostat_settori` (id, nome, codice NACE e la forma da usare nella frase della porta per ogni settore; i nomi italiani degli scopi e delle barriere accanto ai codici Eurostat). Se Eurostat cambia un codice, il passo si ferma e resta il file del giro prima.
 - **Scadenze dell'AI Act e rapporti**: `config/ai_act.yaml` e `config/rapporti.yaml`, da aggiornare a mano. Ogni voce ha un link alla fonte.
 - **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`.
 

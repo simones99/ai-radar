@@ -21,6 +21,8 @@ export interface RadarRow {
   /** true se breve è al plurale: il verbo si accorda («Multimodali entrano»). */
   plurale?: boolean;
   descrizione: string;
+  /** Id dei ruoli per cui la competenza conta (lente scelta a mano, non cambia i numeri). */
+  ruoli?: string[];
   /** Variazione in 6 mesi della quota sul totale dell'AI: 0,25 = +25%. */
   slancio: number | null;
   slancio_margine?: [number, number] | null;
@@ -43,12 +45,14 @@ export interface RadarRow {
   per_iniziare?: Risorsa[];
   in_crescita?: RepoNuovo[];
 }
+export interface Ruolo { id: string; nome: string }
 export interface Radar {
   /** 2: unità vere e soglie fisse. Senza versione è un radar.json della pipeline vecchia e l'app non lo usa. */
   versione?: number;
   generato: string;
   soglie?: { slancio: number; domanda: number; rapporto_max: number };
   quadranti: Record<Quadrant, string>;
+  ruoli?: Ruolo[];
   competenze: RadarRow[];
   storico?: { mese: string; competenze: Record<string, { slancio: number | null; domanda: number | null; calcolato: Quadrant | null; pubblicato: Quadrant | null; incerto: boolean }> }[];
 }

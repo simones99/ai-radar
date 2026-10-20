@@ -41,7 +41,7 @@
 
 <Detail {tile} {head} {onclose}>
   {#if skill}
-    <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} />
+    <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} ruoli={data.radar?.ruoli ?? []} />
   {:else if !rows.length}
     <Block span={12} title="Radar delle competenze"
       missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar si calcola dopo il primo aggiornamento di arXiv, GitHub e Adzuna.'} />

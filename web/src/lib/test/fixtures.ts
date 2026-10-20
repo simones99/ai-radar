@@ -35,6 +35,7 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
   radar: {
     versione: 2, generato: '2026-10-15', quadranti: q,
     soglie: { slancio: 0, domanda: 3, rapporto_max: 1.55 },
+    ruoli: [{ id: 'sviluppo', nome: 'Sviluppo software' }, { id: 'prodotto', nome: 'Prodotto' }, { id: 'dati', nome: 'Dati e analisi' }, { id: 'legale', nome: 'Legale e compliance' }],
     competenze: [
       { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', plurale: true, descrizione: 'Sistemi che pianificano.',
         slancio: 0.52, slancio_margine: [0.45, 0.6], domanda: 26.4, domanda_it: 37.1, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
@@ -53,13 +54,13 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
           { titolo: 'Corso in italiano di prova', url: 'https://example.org/corso-mcp', tipo: 'corso', lingua: 'it' },
         ],
         in_crescita: [{ nome: 'acme/mcp-kit', url: 'https://github.com/acme/mcp-kit', descrizione: 'Kit per server MCP.', stelle: 1200, creato: '2026-08-02' }] },
-      { id: 'rag', nome: 'RAG e ricerca semantica', breve: 'RAG', descrizione: 'Recupero di informazioni.',
+      { id: 'rag', nome: 'RAG e ricerca semantica', breve: 'RAG', descrizione: 'Recupero di informazioni.', ruoli: ['dati', 'sviluppo', 'prodotto'],
         slancio: -0.27, slancio_margine: [-0.35, -0.18], domanda: 8, domanda_it: 6.1, quadrante: 'consolida', quadrante_calcolato: 'consolida',
         incerto: false, incerto_perche: null, slancio_prec: 0.04, domanda_prec: 8, quadrante_prec: 'impara-ora',
         segnali: { arxiv: { variazione: -0.39, margine: [-0.5, -0.25], peso: 0.33, mensile: paper(300, 0.97) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(1400, 1.1) },
           lavoro: lavoro([{ data: '2026-10-12', media: 8, it: 6.1 }]) },
         per_iniziare: [], in_crescita: [] },
-      { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.',
+      { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.', ruoli: [],
         slancio: 0.82, slancio_margine: [0.3, 1.6], domanda: 0.17, domanda_it: 0.28, quadrante: 'prova', quadrante_calcolato: 'prova',
         incerto: true, incerto_perche: 'pochi paper (45 al mese)', slancio_prec: 0.27, domanda_prec: 0.17, quadrante_prec: 'prova',
         segnali: { arxiv: { variazione: 0.9, margine: [0.2, 2], peso: 0.55, mensile: paper(30, 1.05) }, github: { variazione: 1.1, margine: [0.4, 2.2], peso: 0.45, mensile: repo(20, 1.3) },

@@ -42,4 +42,14 @@ describe('SkillView', () => {
     expect(screen.getByRole('link', { name: 'vedi il metodo' })).toHaveAttribute('href', '#competenze');
     expect(screen.getByText('Lo storico arriva con i prossimi aggiornamenti.')).toBeInTheDocument();
   });
+  it('dice per quali ruoli conta, nell’ordine dei ruoli', () => {
+    render(SkillView, { row: by('rag'), quadranti: radar.quadranti, ruoli: radar.ruoli });
+    expect(screen.getByText('Conta per: Sviluppo software, Prodotto, Dati e analisi')).toBeInTheDocument();
+  });
+  it('nessuna riga sui ruoli se la competenza non conta per nessuno, o se il radar non ha ruoli', () => {
+    render(SkillView, { row: by('robotica'), quadranti: radar.quadranti, ruoli: radar.ruoli });
+    render(SkillView, { row: by('agenti'), quadranti: radar.quadranti, ruoli: radar.ruoli });
+    render(SkillView, { row: by('rag'), quadranti: radar.quadranti });
+    expect(screen.queryByText(/Conta per/)).toBeNull();
+  });
 });

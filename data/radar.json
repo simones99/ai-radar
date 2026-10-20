@@ -12,6 +12,24 @@
   "consolida": "Da consolidare",
   "osserva": "Tieni d'occhio"
  },
+ "ruoli": [
+  {
+   "id": "sviluppo",
+   "nome": "Sviluppo software"
+  },
+  {
+   "id": "prodotto",
+   "nome": "Prodotto"
+  },
+  {
+   "id": "dati",
+   "nome": "Dati e analisi"
+  },
+  {
+   "id": "legale",
+   "nome": "Legale e compliance"
+  }
+ ],
  "competenze": [
   {
    "id": "agenti",
@@ -19,6 +37,10 @@
    "breve": "Agenti AI",
    "plurale": true,
    "descrizione": "Sistemi che pianificano e usano strumenti per completare compiti in più passi.",
+   "ruoli": [
+    "sviluppo",
+    "prodotto"
+   ],
    "slancio": 0.4271,
    "slancio_margine": [
     0.3575,
@@ -263,6 +285,9 @@
    "breve": "Agenti di coding",
    "plurale": true,
    "descrizione": "Scrivere e mantenere software delegando a agenti come Claude Code o Codex.",
+   "ruoli": [
+    "sviluppo"
+   ],
    "slancio": 0.8724,
    "slancio_margine": [
     0.5432,
@@ -507,6 +532,9 @@
    "breve": "MCP",
    "plurale": false,
    "descrizione": "Lo standard per collegare modelli e agenti a strumenti e dati esterni.",
+   "ruoli": [
+    "sviluppo"
+   ],
    "slancio": 0.3084,
    "slancio_margine": [
     0.0813,
@@ -751,6 +779,11 @@
    "breve": "RAG",
    "plurale": false,
    "descrizione": "Far rispondere i modelli sui propri documenti tramite recupero di informazioni.",
+   "ruoli": [
+    "sviluppo",
+    "prodotto",
+    "dati"
+   ],
    "slancio": -0.0233,
    "slancio_margine": [
     -0.1094,
@@ -1001,6 +1034,12 @@
    "breve": "Eval",
    "plurale": false,
    "descrizione": "Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.",
+   "ruoli": [
+    "sviluppo",
+    "prodotto",
+    "dati",
+    "legale"
+   ],
    "slancio": 0.4859,
    "slancio_margine": [
     0.3011,
@@ -1251,6 +1290,10 @@
    "breve": "Fine-tuning",
    "plurale": false,
    "descrizione": "Adattare un modello aperto a un dominio specifico con dati propri.",
+   "ruoli": [
+    "sviluppo",
+    "dati"
+   ],
    "slancio": 0.1372,
    "slancio_margine": [
     0.0093,
@@ -1495,6 +1538,12 @@
    "breve": "Context engineering",
    "plurale": false,
    "descrizione": "Progettare istruzioni, contesto e memoria che rendono affidabile un modello.",
+   "ruoli": [
+    "sviluppo",
+    "prodotto",
+    "dati",
+    "legale"
+   ],
    "slancio": -0.2581,
    "slancio_margine": [
     -0.3357,
@@ -1745,6 +1794,10 @@
    "breve": "Sicurezza AI",
    "plurale": false,
    "descrizione": "Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.",
+   "ruoli": [
+    "sviluppo",
+    "legale"
+   ],
    "slancio": 0.039,
    "slancio_margine": [
     -0.0731,
@@ -1989,6 +2042,10 @@
    "breve": "Governance",
    "plurale": false,
    "descrizione": "AI Act, gestione del rischio, audit e documentazione dei sistemi AI.",
+   "ruoli": [
+    "prodotto",
+    "legale"
+   ],
    "slancio": -0.2386,
    "slancio_margine": [
     -0.4041,
@@ -2233,6 +2290,10 @@
    "breve": "Data engineering",
    "plurale": false,
    "descrizione": "Pipeline, qualità e governance dei dati che alimentano modelli e agenti.",
+   "ruoli": [
+    "dati",
+    "legale"
+   ],
    "slancio": 0.0947,
    "slancio_margine": [
     -0.0816,
@@ -2477,6 +2538,9 @@
    "breve": "AI per BI",
    "plurale": false,
    "descrizione": "Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).",
+   "ruoli": [
+    "dati"
+   ],
    "slancio": 1.1025,
    "slancio_margine": [
     0.6327,
@@ -2727,6 +2791,10 @@
    "breve": "DB vettoriali",
    "plurale": true,
    "descrizione": "Archivi di embedding per ricerca semantica e memoria degli agenti.",
+   "ruoli": [
+    "sviluppo",
+    "dati"
+   ],
    "slancio": -0.4834,
    "slancio_margine": [
     -0.5912,
@@ -2977,6 +3045,10 @@
    "breve": "Multimodali",
    "plurale": true,
    "descrizione": "Modelli che combinano testo, immagini, audio e video.",
+   "ruoli": [
+    "sviluppo",
+    "prodotto"
+   ],
    "slancio": 0.0972,
    "slancio_margine": [
     -0.0924,
@@ -3227,6 +3299,9 @@
    "breve": "LLMOps",
    "plurale": false,
    "descrizione": "Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.",
+   "ruoli": [
+    "sviluppo"
+   ],
    "slancio": 0.2382,
    "slancio_margine": [
     -0.0316,
@@ -3477,6 +3552,9 @@
    "breve": "Modelli locali",
    "plurale": true,
    "descrizione": "Modelli aperti che girano su laptop o server propri, senza cloud.",
+   "ruoli": [
+    "sviluppo"
+   ],
    "slancio": 0.1785,
    "slancio_margine": [
     0.0617,
@@ -3721,6 +3799,7 @@
    "breve": "Robotica",
    "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
+   "ruoli": [],
    "slancio": 1.3947,
    "slancio_margine": [
     0.867,

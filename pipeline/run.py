@@ -32,7 +32,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-    skills = load_yaml("skills.yaml")["skills"]
+    cfg = load_yaml("skills.yaml")
+    skills, ruoli = cfg["skills"], cfg.get("ruoli") or []
     src = load_yaml("sources.yaml")
     today = date.today()
     s = session()
@@ -51,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         "rapporti": rapporti.run,
         "feeds": lambda: feeds.run(s, src["feeds"], src.get("feeds_days", 45), src.get("feeds_per_source", 12)),
         "risorse": lambda: risorse.run(s, skills, today),
-        "radar": lambda: radar.run(skills, today),
+        "radar": lambda: radar.run(skills, today, ruoli),
     }
     selected = args.only.split(",") if args.only else ORDER
     unknown = set(selected) - set(ORDER)

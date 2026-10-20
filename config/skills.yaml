@@ -15,9 +15,20 @@
 #   risorse: 2-4 link «Per iniziare», gratuiti, controllati a mano.
 #            tipo: documentazione, corso, guida o repository; lingua: it se in italiano (altrimenti en).
 #            La pipeline controlla i link ogni settimana e nasconde quelli che non rispondono per due giri di fila.
+#   ruoli:   per quali ruoli conta la competenza (id dall'elenco ruoli qui sotto), anche nessuno.
+#            È una lente scelta a mano: non cambia nessun numero del radar, dice solo a chi interessa.
+#            Il legame è sì/no. Ogni ruolo deve avere almeno 4 competenze, altrimenti il radar si ferma.
+#            Quando aggiungi una competenza, decidi anche i suoi ruoli.
 #
 # Per aggiungere o togliere una competenza basta modificare questo file:
 # al prossimo aggiornamento la pipeline recupera lo storico che manca.
+
+# Ruoli di chi legge «Per te». Le etichette nominano l'area di lavoro, non la persona.
+ruoli:
+  - {id: sviluppo, nome: Sviluppo software}   # chi scrive software, ML incluso
+  - {id: prodotto, nome: Prodotto}
+  - {id: dati, nome: Dati e analisi}           # analisti dei dati, non di business
+  - {id: legale, nome: Legale e compliance}
 
 skills:
   - id: agenti
@@ -25,6 +36,7 @@ skills:
     breve: Agenti AI
     plurale: true
     descrizione: Sistemi che pianificano e usano strumenti per completare compiti in più passi.
+    ruoli: [sviluppo, prodotto]
     arxiv: ["LLM agent", "LLM agents", "agentic"]
     github: ai-agents
     jobs: {what_phrase: "agentic AI"}
@@ -38,6 +50,7 @@ skills:
     breve: Agenti di coding
     plurale: true
     descrizione: Scrivere e mantenere software delegando a agenti come Claude Code o Codex.
+    ruoli: [sviluppo]
     arxiv: ["coding agent", "software engineering agent", "SWE-bench"]
     github: coding-agent
     jobs: {what_phrase: "coding agent"}
@@ -50,6 +63,7 @@ skills:
     nome: Model Context Protocol (MCP)
     breve: MCP
     descrizione: Lo standard per collegare modelli e agenti a strumenti e dati esterni.
+    ruoli: [sviluppo]
     arxiv: ["Model Context Protocol"]
     github: mcp
     jobs: {what_phrase: "Model Context Protocol"}
@@ -62,6 +76,7 @@ skills:
     nome: RAG e ricerca semantica
     breve: RAG
     descrizione: Far rispondere i modelli sui propri documenti tramite recupero di informazioni.
+    ruoli: [sviluppo, prodotto, dati]
     arxiv: ["retrieval-augmented generation", "retrieval augmented generation"]
     github: rag
     jobs: {what_phrase: "retrieval augmented generation"}
@@ -75,6 +90,7 @@ skills:
     nome: Valutazione dei modelli (eval)
     breve: Eval
     descrizione: Misurare se un sistema AI fa davvero il lavoro, con test ripetibili.
+    ruoli: [sviluppo, prodotto, dati, legale]
     arxiv: ["LLM evaluation", "evaluating large language models", "LLM-as-a-judge"]
     github: llm-evaluation
     jobs: {what_phrase: "LLM evaluation"}
@@ -88,6 +104,7 @@ skills:
     nome: Fine-tuning e post-training
     breve: Fine-tuning
     descrizione: Adattare un modello aperto a un dominio specifico con dati propri.
+    ruoli: [sviluppo, dati]
     arxiv: ["fine-tuning large language models", "post-training", "parameter-efficient fine-tuning"]
     github: fine-tuning
     jobs: {what_phrase: "LLM fine-tuning"}
@@ -100,6 +117,7 @@ skills:
     nome: Prompt e context engineering
     breve: Context engineering
     descrizione: Progettare istruzioni, contesto e memoria che rendono affidabile un modello.
+    ruoli: [sviluppo, prodotto, dati, legale]
     arxiv: ["prompt engineering", "context engineering"]
     github: prompt-engineering
     jobs: {what_phrase: "prompt engineering"}
@@ -113,6 +131,7 @@ skills:
     nome: Sicurezza dei sistemi AI
     breve: Sicurezza AI
     descrizione: Prompt injection, permessi degli agenti, red teaming, difesa con l'AI.
+    ruoli: [sviluppo, legale]
     arxiv: ["prompt injection", "jailbreak", "AI security"]
     github: ai-security
     jobs: {what_phrase: "LLM security"}
@@ -125,6 +144,7 @@ skills:
     nome: Governance e conformità AI
     breve: Governance
     descrizione: AI Act, gestione del rischio, audit e documentazione dei sistemi AI.
+    ruoli: [prodotto, legale]
     arxiv: ["AI governance", "AI Act", "AI regulation"]
     github: ai-governance
     jobs: {what_phrase: "model governance"}
@@ -137,6 +157,7 @@ skills:
     nome: Data engineering per l'AI
     breve: Data engineering
     descrizione: Pipeline, qualità e governance dei dati che alimentano modelli e agenti.
+    ruoli: [dati, legale]
     arxiv: ["data curation", "data quality for machine learning", "synthetic data generation"]
     github: data-engineering
     jobs: {what_phrase: "training data"}
@@ -149,6 +170,7 @@ skills:
     nome: AI per analisi dati e BI
     breve: AI per BI
     descrizione: Interrogare database e modelli semantici in linguaggio naturale (text-to-SQL).
+    ruoli: [dati]
     arxiv: ["text-to-SQL", "table question answering"]
     github: text-to-sql
     jobs: {what_phrase: "text-to-SQL"}
@@ -163,6 +185,7 @@ skills:
     breve: DB vettoriali
     plurale: true
     descrizione: Archivi di embedding per ricerca semantica e memoria degli agenti.
+    ruoli: [sviluppo, dati]
     arxiv: ["vector database", "approximate nearest neighbor search"]
     github: vector-database
     jobs: {what_phrase: "vector database"}
@@ -177,6 +200,7 @@ skills:
     breve: Multimodali
     plurale: true
     descrizione: Modelli che combinano testo, immagini, audio e video.
+    ruoli: [sviluppo, prodotto]
     arxiv: ["vision-language model", "multimodal large language model"]
     github: multimodal
     jobs: {what_phrase: "multimodal"}
@@ -190,6 +214,7 @@ skills:
     nome: LLMOps e messa in produzione
     breve: LLMOps
     descrizione: Rilascio, monitoraggio, costi e osservabilità dei sistemi basati su LLM.
+    ruoli: [sviluppo]
     arxiv: ["LLMOps", "LLM serving", "inference optimization"]
     github: llmops
     jobs: {what_phrase: "MLOps"}
@@ -204,6 +229,7 @@ skills:
     breve: Modelli locali
     plurale: true
     descrizione: Modelli aperti che girano su laptop o server propri, senza cloud.
+    ruoli: [sviluppo]
     arxiv: ["small language model", "on-device inference", "quantization"]
     github: local-llm
     jobs: {what_phrase: "on-device AI"}
@@ -216,6 +242,7 @@ skills:
     nome: AI fisica e robotica
     breve: Robotica
     descrizione: Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).
+    ruoli: []
     arxiv: ["vision-language-action", "world model", "robot learning"]
     github: embodied-ai
     jobs: {what_phrase: "robot learning"}

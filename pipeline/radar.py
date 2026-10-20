@@ -17,6 +17,9 @@ Una competenza è incerta se il margine all'80% dello slancio è largo:
 Lo storico si ricalcola ogni volta: il punto di k mesi fa usa le serie fermate a k mesi prima
 e le rilevazioni del lavoro di almeno 28 x k giorni prima. Dove la domanda manca (prima della
 prima rilevazione) il quadrante usa la domanda del primo punto successivo che ce l'ha.
+
+Ruoli: una lente scelta a mano in skills.yaml. Passano nel JSON così come sono e non toccano
+nessun numero; un ruolo sconosciuto o con meno di MIN_PER_RUOLO competenze ferma il radar.
 """
 from __future__ import annotations
 
@@ -37,6 +40,7 @@ MIN_GIORNI_LAVORO = 56  # 8 settimane di rilevazioni con la stessa ricerca
 GIORNI_MESE = 30.44
 POCHI = 100             # sotto questa media al mese il motivo dell'incertezza dice «pochi»
 MAX_STORICO = 24
+MIN_PER_RUOLO = 4       # sotto questa soglia la lente di un ruolo non serve
 
 QUADRANTS = {
     "impara-ora": "Impara ora",
@@ -249,7 +253,21 @@ def _publish(points: list[tuple[str, dict]], ids: list[str]) -> None:
             rows[sid]["pubblicato"] = q
 
 
-def run(skills: list[dict], today: date) -> dict:
+def _check_ruoli(skills: list[dict], ruoli: list[dict]) -> None:
+    ids = {r["id"] for r in ruoli}
+    for sk in skills:
+        ignoti = [r for r in sk.get("ruoli") or [] if r not in ids]
+        if ignoti:
+            raise ValueError(f"competenza {sk['id']}: ruolo sconosciuto {', '.join(ignoti)}")
+    for r in ruoli:
+        n = sum(r["id"] in (sk.get("ruoli") or []) for sk in skills)
+        if n < MIN_PER_RUOLO:
+            raise ValueError(f"{r['nome']}: {n} {'competenza' if n == 1 else 'competenze'}, ne servono almeno {MIN_PER_RUOLO}")
+
+
+def run(skills: list[dict], today: date, ruoli: list[dict] | None = None) -> dict:
+    ruoli = ruoli or []
+    _check_ruoli(skills, ruoli)
     arx = read_json("arxiv.json", {}) or {}
     if arx.get("completo") is False:  # giro interrotto: con poche serie i confronti sarebbero falsati
         arx = {}
@@ -290,6 +308,7 @@ def run(skills: list[dict], today: date) -> dict:
             "breve": sk.get("breve", sk["nome"]),
             "plurale": bool(sk.get("plurale", False)),  # per accordare il verbo: «Multimodali entrano»
             "descrizione": sk.get("descrizione", ""),
+            "ruoli": list(sk.get("ruoli") or []),  # «ruoli:» vuoto nel YAML è None
             "slancio": r["slancio"],
             "slancio_margine": r["slancio_margine"],
             "domanda": r["domanda"],
@@ -311,6 +330,7 @@ def run(skills: list[dict], today: date) -> dict:
         "generato": today.isoformat(),
         "soglie": {"slancio": SOGLIA_SLANCIO, "domanda": SOGLIA_DOMANDA, "rapporto_max": RAPPORTO_MAX},
         "quadranti": QUADRANTS,
+        "ruoli": ruoli,
         "competenze": out_rows,
         "storico": [{"mese": m, "competenze": {sid: {k: r[k] for k in ("slancio", "domanda", "calcolato", "pubblicato", "incerto")}
                                                 for sid, r in rows.items()}} for m, rows in points],

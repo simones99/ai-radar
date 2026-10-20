@@ -23,6 +23,22 @@ def test_config_base_topics_and_resources():
             assert r.get("lingua", "en") in {"it", "en"}, r
 
 
+def test_config_roles_match_the_approved_table():
+    """Tabella approvata il 20/10/2026 (.scratch/ruoli/spec.md, sezione 4.3)."""
+    cfg = common.load_yaml("skills.yaml")
+    assert cfg["ruoli"] == [{"id": "sviluppo", "nome": "Sviluppo software"}, {"id": "prodotto", "nome": "Prodotto"},
+                            {"id": "dati", "nome": "Dati e analisi"}, {"id": "legale", "nome": "Legale e compliance"}]
+    approvata = {
+        "agenti": {"sviluppo", "prodotto"}, "coding-agenti": {"sviluppo"}, "mcp": {"sviluppo"},
+        "rag": {"sviluppo", "prodotto", "dati"}, "valutazione": {"sviluppo", "prodotto", "dati", "legale"},
+        "post-training": {"sviluppo", "dati"}, "context-engineering": {"sviluppo", "prodotto", "dati", "legale"},
+        "sicurezza": {"sviluppo", "legale"}, "governance": {"prodotto", "legale"}, "dati-per-ai": {"dati", "legale"},
+        "text-to-sql": {"dati"}, "vector-db": {"sviluppo", "dati"}, "multimodale": {"sviluppo", "prodotto"},
+        "llmops": {"sviluppo"}, "modelli-locali": {"sviluppo"}, "robotica": set(),
+    }
+    assert {sk["id"]: set(sk.get("ruoli", [])) for sk in cfg["skills"]} == approvata
+
+
 # ------------------------------------------------------------------ tendenza
 
 def test_trend_recovers_known_growth():
@@ -374,6 +390,54 @@ def test_breve_and_plurale_in_output(tmp_path, monkeypatch):
     rows = run_radar([{"id": "a", "nome": "Alfa"}, {"id": "b", "nome": "Beta", "breve": "B", "plurale": True}])["competenze"]
     assert (rows[0]["breve"], rows[0]["plurale"]) == ("Alfa", False)
     assert (rows[1]["breve"], rows[1]["plurale"]) == ("B", True)
+
+
+RUOLI = [{"id": "x", "nome": "Ruolo X"}, {"id": "y", "nome": "Ruolo Y"}]
+
+
+def five_skills(tmp_path, monkeypatch, ruoli: dict[str, list[str]] | None = None) -> list[dict]:
+    ids = "abcde"
+    write_inputs(tmp_path, monkeypatch, {i: grow(500, 1.02 + 0.01 * n) for n, i in enumerate(ids)},
+                 {i: grow(2000, 1.03) for i in ids}, {"snapshots": [snap("2026-10-12", "it", 50)]})
+    return [{"id": i, "nome": i.upper(), **({"ruoli": ruoli[i]} if ruoli and i in ruoli else {})} for i in ids]
+
+
+def test_roles_go_to_radar_json_without_changing_numbers(tmp_path, monkeypatch):
+    legami = {"a": ["x", "y"], "b": ["x", "y"], "c": ["x", "y"], "d": ["x", "y"]}  # e: nessun ruolo
+    plain = run_radar(five_skills(tmp_path, monkeypatch))
+    radar.run(five_skills(tmp_path, monkeypatch, legami), TODAY, RUOLI)
+    out = json.loads((common.data_dir() / "radar.json").read_text(encoding="utf-8"))
+
+    assert out["ruoli"] == RUOLI
+    assert [r["ruoli"] for r in out["competenze"]] == [["x", "y"]] * 4 + [[]]
+    def senza(rows: list[dict]) -> list[dict]:
+        return [{k: v for k, v in r.items() if k != "ruoli"} for r in rows]
+
+    assert senza(out["competenze"]) == senza(plain["competenze"])
+    assert out["storico"] == plain["storico"]
+    assert plain["ruoli"] == [] and all(r["ruoli"] == [] for r in plain["competenze"])
+
+
+def test_unknown_role_stops_the_radar(tmp_path, monkeypatch):
+    legami = {i: ["x", "y"] for i in "abcd"} | {"e": ["z"]}
+    with pytest.raises(ValueError, match=r"e.*ruolo sconosciuto.*z"):
+        radar.run(five_skills(tmp_path, monkeypatch, legami), TODAY, RUOLI)
+    assert not (common.data_dir() / "radar.json").exists()
+
+
+def test_role_with_fewer_than_four_skills_stops_the_radar(tmp_path, monkeypatch):
+    legami = {i: ["x"] for i in "abcd"} | {"e": ["y"]}
+    with pytest.raises(ValueError, match=r"Ruolo Y.*1 competenz.*almeno 4"):
+        radar.run(five_skills(tmp_path, monkeypatch, legami), TODAY, RUOLI)
+
+
+def test_empty_roles_in_yaml_are_no_roles(tmp_path, monkeypatch):
+    """«ruoli:» lasciato vuoto in skills.yaml arriva come None, nell'elenco o in una competenza."""
+    skills = five_skills(tmp_path, monkeypatch)
+    skills[0]["ruoli"] = None
+    radar.run(skills, TODAY, None)
+    out = json.loads((common.data_dir() / "radar.json").read_text(encoding="utf-8"))
+    assert out["ruoli"] == [] and out["competenze"][0]["ruoli"] == []
 
 
 def test_weekly_jobs_give_previous_demand_and_history(tmp_path, monkeypatch):

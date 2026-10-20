@@ -48,7 +48,7 @@
   const perSettore = $derived(es ? adozionePerSettore(es) : null);
   const andamento = $derived(es && settore ? andamentoItUe(es, settore.id) : null);
   const periodo = $derived(andamento?.righe.length ? `${andamento.righe[0].k}-${andamento.righe[andamento.righe.length - 1].k}` : null);
-  const anni = (righe: RigaItUe[], v: (r: RigaItUe) => number | null) => righe.flatMap((r) => { const y = v(r); return y == null ? [] : [{ x: Number(r.k), y }]; });
+  const punti = (righe: RigaItUe[], v: (r: RigaItUe) => number | null) => righe.flatMap((r) => { const y = v(r); return y == null ? [] : [{ x: Number(r.k), y }]; });
   const scopi = $derived(es ? scopiItUe(es, settore?.id) : null);
   const barriere = $derived(es ? barriereItUe(es, settore?.id) : null);
   const conAnno = (t: string, anno: string | null | undefined) => (anno ? `${t}, ${anno}` : t);
@@ -58,12 +58,16 @@
   const NON_RILEVATI = 'Eurostat non rileva finanza e assicurazioni, agricoltura, estrazione, pubblica amministrazione, istruzione, sanità, attività artistiche e altri servizi.';
 </script>
 
+{#snippet nonAffidabile(senzaItalia: string[])}
+  {#if senzaItalia.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {senzaItalia.join(', ')}.</p>{/if}
+{/snippet}
+
 {#snippet bloccoItUe(titolo: string, anno: string | null | undefined, note: string, c: ConfrontoItUe | null, prima: string, evidenza: string | null = null)}
   <Block title={conAnno(titolo, anno)} note="{note} {ITUE}" missing={c?.righe.length ? null : MISSING}
     cite={c && anno ? esCite(anno) : null} table={c ? itUeTable(c.righe, prima) : null}>
     {#if c}
       <DotPlot label="{titolo}, Italia e UE" altro="UE" data={c.righe.map((r) => ({ k: r.k, now: r.it, was: r.eu, hot: r.id === evidenza }))} />
-      {#if c.senzaItalia.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {c.senzaItalia.join(', ')}.</p>{/if}
+      {@render nonAffidabile(c.senzaItalia)}
     {/if}
   </Block>
 {/snippet}
@@ -103,8 +107,8 @@
       <Block title={conAnno(`Adozione in ${settore.nome}`, periodo)} note="{ADOZIONE} Eurostat non ha dati del 2022: la linea non lo attraversa."
         missing={periodo ? null : MISSING} cite={periodo ? esCite(periodo) : null} table={itUeTable(andamento.righe, 'Anno')}>
         <LineChart label="Adozione in {settore.nome}, Italia e UE" passo={1} yFormat={(v) => `${nf(v)}%`}
-          series={[{ name: 'Italia', hot: true, pts: anni(andamento.righe, (r) => r.it) }, { name: 'UE', pts: anni(andamento.righe, (r) => r.eu) }]} />
-        {#if andamento.senzaItalia.length}<p class="nota">Dato italiano non affidabile secondo Eurostat per: {andamento.senzaItalia.join(', ')}.</p>{/if}
+          series={[{ name: 'Italia', hot: true, pts: punti(andamento.righe, (r) => r.it) }, { name: 'UE', pts: punti(andamento.righe, (r) => r.eu) }]} />
+        {@render nonAffidabile(andamento.senzaItalia)}
       </Block>
     {/if}
     {@render bloccoItUe(inSettore("A cosa serve l'AI"), es?.anno, settore ? "In % delle imprese del settore che usano l'AI." : "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}

@@ -1,4 +1,4 @@
-// Una scelta che sta nel link (?ruolo=) ed è ricordata nel browser con la chiave ai-radar:<parametro>.
+// Una scelta che sta nel link (?ruolo=, ?settore=) ed è ricordata nel browser con la chiave ai-radar:<parametro>.
 // Senza storage (bloccato, finestra privata) la pagina funziona: la scelta va nel link ma non resta.
 import { imposta } from './router';
 
@@ -51,7 +51,7 @@ export function sceltaRicordata(parametro: string): SceltaRicordata {
   };
 }
 
-/** Il ruolo (card Competenze, porta Per te). */
+/** Il ruolo (card Competenze, testa Per te). */
 export const ruolo = sceltaRicordata('ruolo');
-/** Il settore (card Business, porta Per la tua organizzazione). */
+/** Il settore (card Business, testa Per la tua organizzazione). */
 export const settore = sceltaRicordata('settore');

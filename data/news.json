@@ -160,6 +160,13 @@
    "tema": "business"
   },
   {
+   "titolo": "Profiling TorchNeuron (Part 1): System-level profiling on AWS Trainium.",
+   "link": "https://huggingface.co/blog/amazon/profiling-torchneuron-part-1-system-level-profilin",
+   "data": "2026-10-21",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
    "titolo": "Granite Speech 5.0: Transcribe, Translate, and Attribute more Accurately and Faster",
    "link": "https://huggingface.co/blog/ibm-granite/granite-speech-5",
    "data": "2026-10-21",
@@ -365,13 +372,6 @@
   {
    "titolo": "Welcome Muse Spark Open: open-weight frontier multimodal mixture-of-experts model from Meta",
    "link": "https://huggingface.co/blog/meta-muse-spark-open",
-   "data": "2026-10-15",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Welcome FLUX.3 Image Klein in Diffusers",
-   "link": "https://huggingface.co/blog/flux-3",
    "data": "2026-10-15",
    "fonte": "Hugging Face",
    "tema": "ricerca"

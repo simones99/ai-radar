@@ -8,9 +8,9 @@
    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 2103,
+   "like": 2106,
    "download": 42122,
-   "trending": 1873,
+   "trending": 1874,
    "creato": "2026-10-17"
   },
   {
@@ -18,7 +18,7 @@
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
    "tipo": "image-to-image",
    "libreria": "diffusion-single-file",
-   "like": 1149,
+   "like": 1151,
    "download": 490447,
    "trending": 862,
    "creato": "2026-10-14"
@@ -28,9 +28,9 @@
    "url": "https://huggingface.co/fishaudio/drama-3",
    "tipo": "text-to-speech",
    "libreria": null,
-   "like": 871,
+   "like": 872,
    "download": 15274,
-   "trending": 584,
+   "trending": 580,
    "creato": "2026-10-01"
   },
   {
@@ -38,9 +38,9 @@
    "url": "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 625,
+   "like": 627,
    "download": 2891,
-   "trending": 566,
+   "trending": 568,
    "creato": "2026-09-15"
   },
   {
@@ -48,9 +48,9 @@
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein",
    "tipo": "image-to-image",
    "libreria": "diffusers",
-   "like": 589,
+   "like": 592,
    "download": 92604,
-   "trending": 523,
+   "trending": 526,
    "creato": "2026-10-13"
   },
   {
@@ -58,9 +58,9 @@
    "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT",
    "tipo": "text-to-image",
    "libreria": "diffusers",
-   "like": 522,
+   "like": 523,
    "download": 5840,
-   "trending": 484,
+   "trending": 485,
    "creato": "2026-10-11"
   },
   {
@@ -68,9 +68,9 @@
    "url": "https://huggingface.co/google/embeddinggemma-2",
    "tipo": "feature-extraction",
    "libreria": "transformers",
-   "like": 2794,
+   "like": 2795,
    "download": 179734,
-   "trending": 450,
+   "trending": 449,
    "creato": "2026-09-14"
   },
   {
@@ -88,7 +88,7 @@
    "url": "https://huggingface.co/Lightricks/LTX-2.5",
    "tipo": "image-to-video",
    "libreria": "diffusion-single-file",
-   "like": 8698,
+   "like": 8699,
    "download": 2057942,
    "trending": 429,
    "creato": "2026-07-23"
@@ -100,7 +100,7 @@
    "libreria": "gguf",
    "like": 2050,
    "download": 120930,
-   "trending": 396,
+   "trending": 395,
    "creato": "2026-09-11"
   },
   {
@@ -110,7 +110,7 @@
    "libreria": "gguf",
    "like": 4749,
    "download": 2738344,
-   "trending": 327,
+   "trending": 326,
    "creato": "2026-09-20"
   },
   {
@@ -118,9 +118,9 @@
    "url": "https://huggingface.co/Comfy-Org/MOSS-Image",
    "tipo": "altro",
    "libreria": "diffusion-single-file",
-   "like": 320,
+   "like": 321,
    "download": 1290080,
-   "trending": 304,
+   "trending": 305,
    "creato": "2026-10-16"
   },
   {
@@ -128,9 +128,9 @@
    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 18110,
+   "like": 18111,
    "download": 7729432,
-   "trending": 295,
+   "trending": 294,
    "creato": "2026-08-05"
   },
   {
@@ -158,20 +158,10 @@
    "url": "https://huggingface.co/datalab-to/indra-ocr",
    "tipo": "image-to-text",
    "libreria": "onnx",
-   "like": 332,
+   "like": 333,
    "download": 3588,
-   "trending": 256,
+   "trending": 255,
    "creato": "2026-10-10"
-  },
-  {
-   "id": "LiquidAI/LFM2.5-24B-A2B",
-   "url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B",
-   "tipo": "text-generation",
-   "libreria": "transformers",
-   "like": 537,
-   "download": 16939,
-   "trending": 246,
-   "creato": "2026-10-12"
   },
   {
    "id": "mistralai/Timestral-209M",
@@ -184,13 +174,23 @@
    "creato": "2026-10-14"
   },
   {
+   "id": "LiquidAI/LFM2.5-24B-A2B",
+   "url": "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B",
+   "tipo": "text-generation",
+   "libreria": "transformers",
+   "like": 537,
+   "download": 16939,
+   "trending": 241,
+   "creato": "2026-10-12"
+  },
+  {
    "id": "facebook/sam3",
    "url": "https://huggingface.co/facebook/sam3",
    "tipo": "mask-generation",
    "libreria": "transformers",
-   "like": 4825,
+   "like": 4826,
    "download": 1906176,
-   "trending": 203,
+   "trending": 204,
    "creato": "2025-11-07"
   },
   {
@@ -238,7 +238,7 @@
    "url": "https://huggingface.co/baidu/Unlimited-OCR",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 4850,
+   "like": 4851,
    "download": 2127860,
    "trending": 186,
    "creato": "2026-06-19"
@@ -255,7 +255,7 @@
   }
  ],
  "tipi_top100": {
-  "image-text-to-text": 35,
+  "image-text-to-text": 34,
   "text-generation": 22,
   "text-to-image": 10,
   "altro": 8,
@@ -264,14 +264,14 @@
   "text-to-speech": 3,
   "time-series-forecasting": 2,
   "text-classification": 2,
+  "image-text-to-video": 2,
   "zero-shot-classification": 2,
   "feature-extraction": 1,
   "image-to-video": 1,
   "image-to-text": 1,
   "mask-generation": 1,
   "video-to-video": 1,
-  "image-feature-extraction": 1,
-  "image-text-to-video": 1
+  "image-feature-extraction": 1
  },
  "storico_tipi": [
   {
@@ -371,7 +371,7 @@
   {
    "data": "2026-10-21",
    "tipi": {
-    "image-text-to-text": 35,
+    "image-text-to-text": 34,
     "text-generation": 22,
     "text-to-image": 10,
     "altro": 8,
@@ -380,14 +380,14 @@
     "text-to-speech": 3,
     "time-series-forecasting": 2,
     "text-classification": 2,
+    "image-text-to-video": 2,
     "zero-shot-classification": 2,
     "feature-extraction": 1,
     "image-to-video": 1,
     "image-to-text": 1,
     "mask-generation": 1,
     "video-to-video": 1,
-    "image-feature-extraction": 1,
-    "image-text-to-video": 1
+    "image-feature-extraction": 1
    }
   }
  ]

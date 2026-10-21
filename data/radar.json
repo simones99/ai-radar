@@ -132,10 +132,10 @@
      ]
     },
     "github": {
-     "variazione": 1.1996,
+     "variazione": 1.1997,
      "margine": [
-      0.932,
-      1.5043
+      0.9321,
+      1.5044
      ],
      "peso": 0.333,
      "mensile": [
@@ -202,7 +202,7 @@
       {
        "mese": "2026-09",
        "n": 17787,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -260,21 +260,21 @@
      "nome": "deepseek-ai/deepseek-harness",
      "url": "https://github.com/deepseek-ai/deepseek-harness",
      "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-     "stelle": 256787,
+     "stelle": 256799,
      "creato": "2026-08-13"
     },
     {
      "nome": "Ebony-Vinyl/dsh-our-free-model",
      "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
      "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-     "stelle": 33344,
+     "stelle": 33373,
      "creato": "2026-09-24"
     },
     {
      "nome": "hypit-ai/hypit",
      "url": "https://github.com/hypit-ai/hypit",
      "descrizione": "Clone any viral video with AI agents. Not just a script, the whole workflow: swap the face, the words, the B-roll, ship 100 variants in one command, and get your 100M views.",
-     "stelle": 24581,
+     "stelle": 24585,
      "creato": "2026-07-29"
     }
    ]
@@ -379,10 +379,10 @@
      ]
     },
     "github": {
-     "variazione": 1.2336,
+     "variazione": 1.2337,
      "margine": [
-      0.6394,
-      2.0432
+      0.6395,
+      2.0433
      ],
      "peso": 0.386,
      "mensile": [
@@ -449,7 +449,7 @@
       {
        "mese": "2026-09",
        "n": 1153,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -507,7 +507,7 @@
      "nome": "ccch1mneyyy/dsh-TUI",
      "url": "https://github.com/ccch1mneyyy/dsh-TUI",
      "descrizione": "DSH's officially top-recommended TUI plugin — high performance, low overhead, cute pixel whale, smooth mouse interaction. One-command install via npm. / DSH 官方首推的 TUI 插件，高性能低占用，可爱像素鲸鱼，流畅鼠标交互，npm 一键安装",
-     "stelle": 5100,
+     "stelle": 5101,
      "creato": "2026-08-13"
     },
     {
@@ -521,7 +521,7 @@
      "nome": "HarnessRouter/harnessrouter",
      "url": "https://github.com/HarnessRouter/harnessrouter",
      "descrizione": "HarnessRouter Community Edition: the self-hosted, Apache-2.0 edition of the unified interface for agent harnesses. Run Codex, Claude Code, Hermes, PI, DSH, and more through one API, with sessions, st…",
-     "stelle": 3174,
+     "stelle": 3175,
      "creato": "2026-08-09"
     }
    ]
@@ -537,8 +537,8 @@
    ],
    "slancio": 0.3081,
    "slancio_margine": [
-    0.0812,
-    0.5828
+    0.0811,
+    0.5827
    ],
    "domanda": 3.639,
    "domanda_it": 3.035,
@@ -546,7 +546,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.1294,
+   "slancio_prec": 0.1293,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -629,7 +629,7 @@
      "variazione": 0.6735,
      "margine": [
       0.2961,
-      1.1608
+      1.1609
      ],
      "peso": 0.556,
      "mensile": [
@@ -690,13 +690,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 11636,
+       "n": 11635,
        "base": 31677
       },
       {
        "mese": "2026-09",
        "n": 14189,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -754,14 +754,14 @@
      "nome": "miuuyy/codex-chatgpt-web",
      "url": "https://github.com/miuuyy/codex-chatgpt-web",
      "descrizione": "Use ChatGPT Web (including Pro) as a native model in Codex — with context, tools, streaming and images, without using Codex quota.",
-     "stelle": 14747,
+     "stelle": 14748,
      "creato": "2026-07-26"
     },
     {
      "nome": "tangency-labs/solidcraft",
      "url": "https://github.com/tangency-labs/solidcraft",
      "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-     "stelle": 8702,
+     "stelle": 8706,
      "creato": "2026-10-07"
     },
     {
@@ -784,10 +784,10 @@
     "prodotto",
     "dati"
    ],
-   "slancio": -0.0212,
+   "slancio": -0.0211,
    "slancio_margine": [
-    -0.107,
-    0.0728
+    -0.1069,
+    0.0729
    ],
    "domanda": 7.924,
    "domanda_it": 6.515,
@@ -875,10 +875,10 @@
      ]
     },
     "github": {
-     "variazione": 0.244,
+     "variazione": 0.2442,
      "margine": [
-      0.1361,
-      0.3622
+      0.1364,
+      0.3623
      ],
      "peso": 0.667,
      "mensile": [
@@ -944,8 +944,8 @@
       },
       {
        "mese": "2026-09",
-       "n": 5656,
-       "base": 30904
+       "n": 5657,
+       "base": 30903
       }
      ]
     },
@@ -1009,7 +1009,7 @@
      "nome": "deeplethe/utopia",
      "url": "https://github.com/deeplethe/utopia",
      "descrizione": "World's first open-source enterprise world model.",
-     "stelle": 8476,
+     "stelle": 8477,
      "creato": "2026-08-07"
     },
     {
@@ -1040,10 +1040,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": 0.4937,
+   "slancio": 0.4938,
    "slancio_margine": [
-    0.3082,
-    0.7056
+    0.3083,
+    0.7057
    ],
    "domanda": 1.19,
    "domanda_it": 0.518,
@@ -1131,10 +1131,10 @@
      ]
     },
     "github": {
-     "variazione": 3.1949,
+     "variazione": 3.1951,
      "margine": [
-      2.3877,
-      4.1943
+      2.3879,
+      4.1945
      ],
      "peso": 0.385,
      "mensile": [
@@ -1201,7 +1201,7 @@
       {
        "mese": "2026-09",
        "n": 1472,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -1296,7 +1296,7 @@
    ],
    "slancio": 0.1395,
    "slancio_margine": [
-    0.0107,
+    0.0108,
     0.2847
    ],
    "domanda": 0.289,
@@ -1385,10 +1385,10 @@
      ]
     },
     "github": {
-     "variazione": 0.1249,
+     "variazione": 0.125,
      "margine": [
       -0.0294,
-      0.3038
+      0.3039
      ],
      "peso": 0.66,
      "mensile": [
@@ -1455,7 +1455,7 @@
       {
        "mese": "2026-09",
        "n": 390,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -1638,7 +1638,7 @@
      "variazione": -0.0162,
      "margine": [
       -0.1107,
-      0.0882
+      0.0883
      ],
      "peso": 0.667,
      "mensile": [
@@ -1705,7 +1705,7 @@
       {
        "mese": "2026-09",
        "n": 2063,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -1783,7 +1783,7 @@
      "nome": "Nanako0129/sepia",
      "url": "https://github.com/Nanako0129/sepia",
      "descrizione": "De-AI writing skill for any Agent Skills-compatible agent (77+ via the Skills CLI), with native plugins for Claude Code, Codex, Grok Build, and Antigravity. Narrative-architecture repair for fiction,…",
-     "stelle": 3354,
+     "stelle": 3356,
      "creato": "2026-08-28"
     }
    ]
@@ -1800,7 +1800,7 @@
    ],
    "slancio": 0.0405,
    "slancio_margine": [
-    -0.0714,
+    -0.0715,
     0.1659
    ],
    "domanda": 0.333,
@@ -1889,10 +1889,10 @@
      ]
     },
     "github": {
-     "variazione": 0.5846,
+     "variazione": 0.5847,
      "margine": [
       0.3364,
-      0.879
+      0.8791
      ],
      "peso": 0.446,
      "mensile": [
@@ -1959,7 +1959,7 @@
       {
        "mese": "2026-09",
        "n": 882,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -2031,7 +2031,7 @@
      "nome": "graygnatconsole/mcp-audit-tool",
      "url": "https://github.com/graygnatconsole/mcp-audit-tool",
      "descrizione": "🛡️ Security audit CLI for Model Context Protocol (MCP) servers — scan AI agent configs for tool poisoning, rug pulls, hardcoded secrets, command injection & supply-chain risks. Pure Python, SARIF + C…",
-     "stelle": 558,
+     "stelle": 559,
      "creato": "2026-09-26"
     }
    ]
@@ -2046,10 +2046,10 @@
     "prodotto",
     "compliance"
    ],
-   "slancio": -0.2405,
+   "slancio": -0.2406,
    "slancio_margine": [
-    -0.4049,
-    -0.0306
+    -0.4048,
+    -0.031
    ],
    "domanda": 2.698,
    "domanda_it": 0.666,
@@ -2057,7 +2057,7 @@
    "quadrante_calcolato": "osserva",
    "incerto": true,
    "incerto_perche": "pochi paper (34 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": -0.1056,
+   "slancio_prec": -0.106,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -2137,10 +2137,10 @@
      ]
     },
     "github": {
-     "variazione": -0.0999,
+     "variazione": -0.1006,
      "margine": [
-      -0.3456,
-      0.2379
+      -0.3457,
+      0.2365
      ],
      "peso": 0.586,
      "mensile": [
@@ -2201,13 +2201,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 910,
+       "n": 909,
        "base": 31677
       },
       {
        "mese": "2026-09",
        "n": 794,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -2297,7 +2297,7 @@
    "slancio": 0.0919,
    "slancio_margine": [
     -0.0833,
-    0.3005
+    0.3006
    ],
    "domanda": 3.215,
    "domanda_it": 1.407,
@@ -2385,7 +2385,7 @@
      ]
     },
     "github": {
-     "variazione": 0.4827,
+     "variazione": 0.4828,
      "margine": [
       0.3063,
       0.683
@@ -2455,7 +2455,7 @@
       {
        "mese": "2026-09",
        "n": 1973,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -2541,9 +2541,9 @@
    "ruoli": [
     "dati"
    ],
-   "slancio": 1.1157,
+   "slancio": 1.1158,
    "slancio_margine": [
-    0.6405,
+    0.6406,
     1.7286
    ],
    "domanda": 0.099,
@@ -2632,10 +2632,10 @@
      ]
     },
     "github": {
-     "variazione": 1.8967,
+     "variazione": 1.8968,
      "margine": [
-      1.2594,
-      2.7137
+      1.2595,
+      2.7139
      ],
      "peso": 0.667,
      "mensile": [
@@ -2702,7 +2702,7 @@
       {
        "mese": "2026-09",
        "n": 245,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -2888,8 +2888,8 @@
     "github": {
      "variazione": -0.3302,
      "margine": [
-      -0.4212,
-      -0.225
+      -0.4211,
+      -0.2249
      ],
      "peso": 0.667,
      "mensile": [
@@ -2956,7 +2956,7 @@
       {
        "mese": "2026-09",
        "n": 471,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -3142,8 +3142,8 @@
     "github": {
      "variazione": 0.6505,
      "margine": [
-      0.0198,
-      1.6711
+      0.0199,
+      1.6712
      ],
      "peso": 0.333,
      "mensile": [
@@ -3210,7 +3210,7 @@
       {
        "mese": "2026-09",
        "n": 408,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -3396,7 +3396,7 @@
      "variazione": 0.3753,
      "margine": [
       -0.1205,
-      1.1505
+      1.1506
      ],
      "peso": 0.333,
      "mensile": [
@@ -3463,7 +3463,7 @@
       {
        "mese": "2026-09",
        "n": 377,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -3649,7 +3649,7 @@
      "variazione": 0.6761,
      "margine": [
       0.3212,
-      1.1263
+      1.1264
      ],
      "peso": 0.333,
      "mensile": [
@@ -3716,7 +3716,7 @@
       {
        "mese": "2026-09",
        "n": 1294,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -3781,7 +3781,7 @@
      "nome": "mw00/project-maya",
      "url": "https://github.com/mw00/project-maya",
      "descrizione": "Project Maya - run GLM-5.3-Flash (321B MoE) and DeepSeek-V4.1-Flash-1017 (748B MoE) privately on your own GPU(s), from one card to 16, NVIDIA or AMD, Linux or Windows. Engine, server, dashboard, Open…",
-     "stelle": 1367,
+     "stelle": 1368,
      "creato": "2026-10-06"
     },
     {
@@ -3800,7 +3800,7 @@
    "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "ruoli": [],
-   "slancio": 1.4119,
+   "slancio": 1.412,
    "slancio_margine": [
     0.8824,
     2.0904
@@ -3891,10 +3891,10 @@
      ]
     },
     "github": {
-     "variazione": 2.147,
+     "variazione": 2.1471,
      "margine": [
       1.1817,
-      3.5395
+      3.5397
      ],
      "peso": 0.458,
      "mensile": [
@@ -3961,7 +3961,7 @@
       {
        "mese": "2026-09",
        "n": 185,
-       "base": 30904
+       "base": 30903
       }
      ]
     },
@@ -4760,7 +4760,7 @@
      "incerto": true
     },
     "mcp": {
-     "slancio": 0.1294,
+     "slancio": 0.1293,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
@@ -4802,7 +4802,7 @@
      "incerto": false
     },
     "governance": {
-     "slancio": -0.1056,
+     "slancio": -0.106,
      "domanda": null,
      "calcolato": "osserva",
      "pubblicato": "prova",
@@ -4884,14 +4884,14 @@
      "incerto": false
     },
     "rag": {
-     "slancio": -0.0212,
+     "slancio": -0.0211,
      "domanda": 7.924,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "valutazione": {
-     "slancio": 0.4937,
+     "slancio": 0.4938,
      "domanda": 1.19,
      "calcolato": "prova",
      "pubblicato": "prova",
@@ -4919,7 +4919,7 @@
      "incerto": false
     },
     "governance": {
-     "slancio": -0.2405,
+     "slancio": -0.2406,
      "domanda": 2.698,
      "calcolato": "osserva",
      "pubblicato": "osserva",
@@ -4933,7 +4933,7 @@
      "incerto": false
     },
     "text-to-sql": {
-     "slancio": 1.1157,
+     "slancio": 1.1158,
      "domanda": 0.099,
      "calcolato": "prova",
      "pubblicato": "prova",
@@ -4968,7 +4968,7 @@
      "incerto": false
     },
     "robotica": {
-     "slancio": 1.4119,
+     "slancio": 1.412,
      "domanda": 0.175,
      "calcolato": "prova",
      "pubblicato": "prova",

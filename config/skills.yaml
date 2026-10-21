@@ -9,8 +9,11 @@
 #   github: un topic GitHub; si contano i nuovi repository creati ogni mese
 #   jobs:   ricerca Adzuna. Per confrontare le competenze tra loro si usa per tutte
 #           lo stesso tipo di ricerca, una frase esatta (what_phrase), in inglese.
-#           Niente "AI" nella frase: nell'indice italiano "ai" è una preposizione
-#           e viene ignorata, quindi "AI governance" diventa "governance".
+#           "AI" non può essere l'unica parola che restringe la frase: nell'indice italiano
+#           "ai" è una preposizione e viene ignorata, quindi "AI governance" diventa "governance".
+#           In coda a una frase già specifica va bene, e serve nei Paesi di lingua inglese:
+#           lì "agentic" da solo trova anche "agent", in Italia "agentic AI" vale "agentic".
+#           Prova la frase con e senza AI con il workflow prova-adzuna.yml.
 #           Se cambi una frase, la crescita della domanda riparte da zero per quella competenza.
 #   risorse: 2-4 link «Per iniziare», gratuiti, controllati a mano.
 #            tipo: documentazione, corso, guida o repository; lingua: it se in italiano (altrimenti en).

@@ -1,14 +1,14 @@
 import {
-  MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows,
+  MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
-import type { Dataset, Quadrant } from '../data/types';
+import type { Dataset, Quadrant, Ruolo } from '../data/types';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
-export interface Head { title: TitleParts; deck: string | null }
+export interface Head { title: TitleParts; deck: string | null; nota?: string } // nota: riga piccola sotto il sottotitolo
 
 const TIPI: Record<string, string> = {
   'image-text-to-text': 'immagine e testo',
@@ -185,9 +185,10 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
 }
 
 /** Titolo della pagina di una competenza: il nome; sotto, quadrante, eventuale movimento e descrizione. */
-export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>): Head {
+export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = []): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
-  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}` };
+  const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
+  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }
 
 // ---------------------------------------------------------------- notizie
@@ -233,7 +234,7 @@ export interface Door {
   title: TitleParts; // vuoto se non ci sono dati
   meta: string; // fonte e data del dato
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
-  ruolo?: string; // nome del ruolo ricordato, per l'etichetta (Per te · Prodotto)
+  scelta?: string; // nome del ruolo o del settore ricordato, per l'etichetta (Per te · Prodotto)
 }
 const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: null };
 
@@ -282,7 +283,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
   const sure = rows.filter((r) => !r.incerto); // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza
-  const conRuolo = ruolo ? { ruolo: ruolo.nome } : {};
+  const conRuolo = ruolo ? { scelta: ruolo.nome } : {};
   const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...(ruolo && { params: { ruolo: ruolo.id } }) });
 
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
@@ -297,7 +298,8 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
 
 const SOON = 30; // giorni: scadenze vicine, dati appena usciti, rapporti in arrivo
 
-export function doorItalia(d: Dataset, today: Date): Door {
+/** Con un settore ricordato la regola 2 dice prima il dato del settore (spec Settori, sezione 6). */
+export function doorItalia(d: Dataset, today: Date, settoreId: string | null = null): Door {
   const ahead = (iso: string) => daysTo(iso, today);
   const recent = (iso: string | null | undefined) => !!iso && ahead(iso) <= 0 && ahead(iso) >= -SOON;
   const scad = (d.ai_act?.scadenze ?? []).slice().sort((a, b) => a.data.localeCompare(b.data));
@@ -313,7 +315,20 @@ export function doorItalia(d: Dataset, today: Date): Door {
     };
   }
 
-  // 2. un dato italiano uscito negli ultimi 30 giorni: Eurostat, poi uso dell'AI generativa (OWID)
+  // 2. un dato italiano uscito negli ultimi 30 giorni: Eurostat (prima il settore ricordato), poi uso dell'AI generativa (OWID)
+  const es = d.eurostat_settori;
+  const settore = settoreScelto(es, settoreId); // «Tutti» o un settore sconosciuto: come senza
+  const g = settore && es?.adozione[settore.id];
+  const anno = g && ultimoAnno([g.IT, g.EU27_2020]);
+  if (settore && g && anno && g.IT[anno] != null && recent(es.aggiornato_eurostat)) {
+    const ue = g.EU27_2020[anno];
+    return {
+      title: [{ t: `${nf(g.IT[anno], 0)}% ${settore.nella_frase} italiane`, em: true }, { t: ` usa l'AI${ue != null ? ` (UE: ${nf(ue, 0)}%)` : ''}` }],
+      meta: `Eurostat · aggiornato ${dayWith('il', es.aggiornato_eurostat as string)}`,
+      target: { tema: 'business', elemento: null, params: { settore: settore.id } },
+      scelta: settore.nome,
+    };
+  }
   const e = impreseUe(d);
   const euAgg = d.eurostat?.aggiornato_eurostat;
   if (e?.it != null && recent(euAgg)) {

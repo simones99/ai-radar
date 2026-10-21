@@ -2,7 +2,7 @@ import type { Dataset } from './types';
 
 export const FILES = [
   'status', 'radar', 'owid', 'ai_act', 'rapporti', 'news', 'epoch', 'huggingface', 'github', 'arxiv',
-  'artificial_analysis', 'jobs', 'eurostat',
+  'artificial_analysis', 'jobs', 'eurostat', 'eurostat_settori',
 ] as const;
 export type FileKey = (typeof FILES)[number];
 

@@ -289,6 +289,100 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
+const SETTORI = ['Adozione per settore, Italia e UE', "A cosa serve l'AI, Italia e UE", 'Cosa frena chi non la usa, Italia e UE'];
+
+test('Business in tema scuro: i grafici dei settori senza violazioni gravi', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/#business');
+  await page.reload();
+  for (const name of SETTORI) await expect(page.getByRole('img', { name })).toBeVisible();
+  expect(await seriousViolations(page)).toEqual([]);
+});
+
+test('Business a 320px: i grafici dei settori senza scorrimento orizzontale', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#business');
+  await page.reload();
+  for (const name of SETTORI) await expect(page.getByRole('img', { name })).toBeVisible();
+  await expect(page.getByText(/^Eurostat non rileva finanza/)).toBeVisible();
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+test('Business a 1440px: «Adozione per settore» resta sotto il titolo «Adozione», non sale fra gli investimenti', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/#business');
+  await page.reload();
+  const titolo = await page.getByRole('heading', { name: 'Adozione', exact: true }).boundingBox();
+  const blocco = await page.getByRole('heading', { name: /^Adozione per settore/ }).boundingBox();
+  expect(blocco!.y).toBeGreaterThan(titolo!.y + titolo!.height);
+});
+
+const menuSettore = (page: Page) => page.getByRole('combobox', { name: 'Il tuo settore' });
+
+test('settore: il link lo sceglie, il ricaricamento lo tiene, un link con un altro settore vince sul ricordo', async ({ page }) => {
+  await page.goto('/#business?settore=ict');
+  await page.reload();
+  await expect(menuSettore(page)).toHaveValue('ict');
+  await expect(page.getByRole('img', { name: 'Adozione in Informazione e comunicazione, Italia e UE' })).toBeVisible();
+  await page.goto('about:blank');
+  await page.goto('/#business'); // senza settore nel link: vale il ricordo, che entra nel link
+  await expect(menuSettore(page)).toHaveValue('ict');
+  await expect(page).toHaveURL(/#business\?settore=ict$/);
+  await page.goto('about:blank');
+  await page.goto('/#business?settore=manifattura');
+  await expect(menuSettore(page)).toHaveValue('manifattura');
+  await page.goto('about:blank');
+  await page.goto('/#business');
+  await expect(menuSettore(page)).toHaveValue('manifattura');
+});
+
+test('settore da tastiera: le frecce cambiano settore e link; «Tutti» toglie il settore dal link', async ({ page }) => {
+  await page.goto('/#business');
+  await menuSettore(page).focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(menuSettore(page)).toHaveValue('manifattura');
+  await expect(page).toHaveURL(/#business\?settore=manifattura$/);
+  await expect(page.getByRole('heading', { name: 'Adozione in Manifattura, 2021-2025' })).toBeVisible();
+  await expect(menuSettore(page)).toBeFocused();
+  await page.keyboard.press('ArrowUp');
+  await expect(menuSettore(page)).toHaveValue('tutti');
+  await expect(page).toHaveURL(/#business$/);
+  await expect(page.getByRole('heading', { name: /^Adozione in/ })).toHaveCount(0);
+});
+
+test('Per la tua organizzazione: scelto un settore nella card, con un dato appena uscito, la home lo mostra e riapre la card con il settore', async ({ page }) => {
+  // dati dei settori usciti l'1 ottobre: negli ultimi 30 giorni rispetto al 15
+  await page.route('**/data/eurostat_settori.json', (route) =>
+    route.fulfill({ json: { ...FIXTURE.eurostat_settori, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } }));
+  await page.goto('/#business');
+  await menuSettore(page).selectOption('manifattura');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  const porta = page.getByRole('link', { name: /Per la tua organizzazione · Manifattura/ });
+  await expect(porta).toContainText("15% delle imprese manifatturiere italiane usa l'AI (UE: 17%)");
+  await porta.click();
+  await expect(page).toHaveURL(/#business\?settore=manifattura$/);
+  await expect(menuSettore(page)).toHaveValue('manifattura');
+});
+
+test('settore a 320px: menu, andamento e confronti senza scorrimento orizzontale', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#business?settore=immobiliare');
+  await page.reload();
+  await expect(menuSettore(page)).toHaveValue('immobiliare');
+  await expect(page.getByRole('img', { name: 'Adozione in Immobiliare, Italia e UE' })).toBeVisible();
+  await expect(page.getByText('Dato italiano non affidabile secondo Eurostat per: Logistica.')).toBeVisible();
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+test('settore scelto in tema scuro: nessuna violazione grave', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/#business?settore=manifattura');
+  await page.reload();
+  await expect(page.getByRole('img', { name: 'Adozione in Manifattura, Italia e UE' })).toBeVisible();
+  expect(await seriousViolations(page)).toEqual([]);
+});
+
 test('ancora interna con una card aperta: la pagina va all’ancora, non alle card', async ({ page }) => {
   await page.goto('/');
   await page.locator('#tile-business .face').click();

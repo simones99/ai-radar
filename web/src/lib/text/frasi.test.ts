@@ -72,6 +72,14 @@ describe('numeri chiave delle card', () => {
     expect(headSkill(by('mcp'), d.radar!.quadranti)).toEqual({ title: [{ t: 'Model Context Protocol (MCP)' }], deck: 'Impara ora. Lo standard per collegare strumenti.' });
     expect(headSkill(by('vector-db'), d.radar!.quadranti).deck).toBe("Tieni d'occhio, in movimento verso Da provare. Indici.");
   });
+  it('pagina di una competenza: sotto la descrizione, per quali ruoli conta, nell’ordine dei ruoli', () => {
+    const rows = radarRows(d.radar!);
+    const by = (id: string) => rows.find((r) => r.id === id)!;
+    expect(headSkill(by('rag'), d.radar!.quadranti, d.radar!.ruoli).nota).toBe('Conta per: Sviluppo software, Prodotto, Dati e analisi');
+    expect(headSkill(by('robotica'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // non conta per nessun ruolo
+    expect(headSkill(by('agenti'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // radar senza il campo ruoli
+    expect(headSkill(by('rag'), d.radar!.quadranti)).not.toHaveProperty('nota'); // radar senza elenco dei ruoli
+  });
   it('notizie: settimana e settimana vuota', () => {
     expect(faceNotizie(d, today)).toEqual({ fig: '2', unit: '', sent: 'Notizie negli ultimi 7 giorni da 2 fonti.' });
     expect(faceNotizie(d, new Date(2026, 11, 1))?.sent).toBe('Nessuna notizia negli ultimi 7 giorni.');

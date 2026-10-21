@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidLatestByEntity, owidPoints, owidPrev,
-  radarChanges, radarRows, tNum, nx, ny,
+  radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, andamentoItUe, barriereItUe, scopiItUe, ultimoAnno,
 } from './derive';
-import type { EpochPoint, News, Owid, Radar } from './types';
-import { fromNorm } from '../test/fixtures';
+import type { EpochPoint, EurostatSettori, News, Owid, Radar } from './types';
+import { FIXTURE, fromNorm } from '../test/fixtures';
 
 const today = new Date(2026, 9, 15, 10);
 
@@ -134,5 +134,76 @@ describe('coordinate del radar', () => {
     expect(ny(0.1)).toBeCloseTo(0);
     expect(ny(90)).toBeCloseTo(1);
     expect(ny(0)).toBe(0);
+  });
+});
+
+describe('settori: Italia contro UE', () => {
+  const es = FIXTURE.eurostat_settori as EurostatSettori;
+
+  it("adozione: i settori (senza «Tutti») ordinati per valore italiano dell'ultimo anno", () => {
+    const a = adozionePerSettore(es);
+    expect(a.anno).toBe('2025');
+    expect(a.righe).toEqual([
+      { id: 'ict', k: 'Informazione e comunicazione', it: 51.28, eu: 62.52 },
+      { id: 'manifattura', k: 'Manifattura', it: 14.73, eu: 17.27 },
+      { id: 'immobiliare', k: 'Immobiliare', it: 13.96, eu: 24.76 },
+    ]);
+  });
+
+  it('un valore italiano mancante resta null, mai 0, va in fondo e il nome finisce nella nota', () => {
+    const x = structuredClone(es);
+    x.adozione.ict.IT['2025'] = null;
+    delete x.adozione.manifattura.IT['2025'];
+    const a = adozionePerSettore(x);
+    expect(a.righe.map((r) => [r.k, r.it])).toEqual([['Immobiliare', 13.96], ['Informazione e comunicazione', null], ['Manifattura', null]]);
+    expect(a.righe[1].eu).toBe(62.52);
+    expect(a.senzaItalia).toEqual(['Informazione e comunicazione', 'Manifattura']);
+    expect(adozionePerSettore(es).senzaItalia).toEqual([]);
+  });
+
+  it('adozione senza nessun valore: niente anno e niente righe, mai «-Infinity»', () => {
+    const x = structuredClone(es);
+    for (const g of Object.values(x.adozione)) { g.IT = {}; g.EU27_2020 = {}; }
+    expect(adozionePerSettore(x)).toEqual({ anno: null, righe: [], senzaItalia: [] });
+  });
+
+  it("ultimo anno: il più recente fra le chiavi delle serie, null se non ce n'è", () => {
+    expect(ultimoAnno([{ 2021: 1, 2025: null }, { 2024: 3 }])).toBe('2025');
+    expect(ultimoAnno([{}, {}])).toBeNull();
+    expect(ultimoAnno([])).toBeNull();
+  });
+
+  it("andamento di un settore: Italia e UE per anno, in ordine di tempo, senza inventare il 2022", () => {
+    const a = andamentoItUe(es, 'manifattura');
+    expect(a.righe).toEqual([
+      { id: '2021', k: '2021', it: 6.63, eu: 6.93 }, { id: '2023', k: '2023', it: 4.94, eu: 6.79 },
+      { id: '2024', k: '2024', it: 8.03, eu: 10.57 }, { id: '2025', k: '2025', it: 14.73, eu: 17.27 },
+    ]);
+    expect(a.senzaItalia).toEqual([]);
+  });
+
+  it("andamento con un valore italiano mancante: l'anno resta, con il solo valore UE, e finisce nella nota", () => {
+    const x = structuredClone(es);
+    x.adozione.ict.IT['2023'] = null;
+    const a = andamentoItUe(x, 'ict');
+    expect(a.righe.map((r) => [r.k, r.it, r.eu])).toEqual([['2021', 16.19, 25.37], ['2023', null, 29.53], ['2024', 34.6, 48.72], ['2025', 51.28, 62.52]]);
+    expect(a.senzaItalia).toEqual(['2023']);
+    expect(andamentoItUe(x, 'boh')).toEqual({ righe: [], senzaItalia: [] });
+  });
+
+  it('scopi e barriere di un settore, con i nomi italiani, ordinati per valore italiano', () => {
+    const b = barriereItUe(es);
+    expect(b.righe.map((r) => r.k)).toEqual([
+      'Mancano le competenze', 'Conseguenze legali poco chiare', 'Dati scarsi o di bassa qualità', 'Timori per privacy e protezione dei dati',
+      'Costi troppo alti', 'Incompatibile con i sistemi esistenti', 'Questioni etiche', "L'AI non serve all'impresa",
+    ]);
+    expect(b.righe[0]).toEqual({ id: 'E_AI_BLE', k: 'Mancano le competenze', it: 58.61, eu: 70.31 });
+    expect(b.senzaItalia).toEqual([]);
+    // immobiliare, Italia, logistica: riservato (c)
+    const s = scopiItUe(es, 'immobiliare');
+    expect(s.righe.map((r) => r.it)).toEqual([46.75, 42.37, 35.26, 19.32, 17.72, 4.36, null]);
+    expect(s.righe.at(-1)).toEqual({ id: 'E_AI_PLOG', k: 'Logistica', it: null, eu: 2.67 });
+    expect(s.senzaItalia).toEqual(['Logistica']);
+    expect(scopiItUe(es).righe[0]).toMatchObject({ k: 'Marketing e vendite', it: 33.1, eu: 34.7 });
   });
 });

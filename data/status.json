@@ -115,6 +115,15 @@
     "non_raggiungibili": 0
    },
    "secondi": 0.0
+  },
+  "eurostat_settori": {
+   "stato": "ok",
+   "ultimo_successo": "2026-10-20T12:43:20+00:00",
+   "dettagli": {
+    "settori": 11,
+    "anno": "2025"
+   },
+   "secondi": 0.6
   }
  }
 }

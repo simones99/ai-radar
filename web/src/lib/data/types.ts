@@ -132,6 +132,31 @@ export interface Eurostat {
   serie: Record<string, Record<string, number>>;
 }
 
+/** Italia e UE, gli unici due territori dei dati per settore. */
+export type Geo = 'IT' | 'EU27_2020';
+/** Valori per Italia e UE; null quando Eurostat non dà il numero (riservato o poco affidabile), mai 0. */
+export type PerGeo<K extends string = string> = Record<Geo, Record<K, number | null>>;
+/** Flag Eurostat delle celle che ne hanno uno: «u» affidabilità bassa, «c» riservato. */
+export type FlagPerGeo = Partial<Record<Geo, Record<string, string>>>;
+export interface Settore { id: string; nome: string; nace: string; /** «delle imprese manifatturiere», per la frase della porta */ nella_frase: string }
+export interface EurostatSettori {
+  fonte: string;
+  url: string;
+  aggiornato_eurostat?: string;
+  /** Anno di scopi e barriere: l'ultimo con valori. */
+  anno: string;
+  settori: Settore[];
+  nomi_scopi: Record<string, string>;
+  nomi_barriere: Record<string, string>;
+  /** Per settore: anni rilevati (2021, 2023-2025; il 2022 non c'è). */
+  adozione: Record<string, PerGeo>;
+  /** Per settore: % delle imprese che usano l'AI, per scopo. */
+  scopi: Record<string, PerGeo>;
+  /** Per settore: % delle imprese che hanno considerato l'AI senza usarla, per barriera. */
+  barriere: Record<string, PerGeo>;
+  flag: Record<'adozione' | 'scopi' | 'barriere', Record<string, FlagPerGeo>>;
+}
+
 export interface Dataset {
   status?: Status;
   radar?: Radar;
@@ -146,4 +171,5 @@ export interface Dataset {
   artificial_analysis?: ArtificialAnalysis;
   jobs?: Jobs;
   eurostat?: Eurostat;
+  eurostat_settori?: EurostatSettori;
 }

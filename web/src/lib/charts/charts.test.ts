@@ -51,6 +51,28 @@ describe('grafici', () => {
     expect(screen.getByText('USA 230')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Investimenti' })).toBeInTheDocument();
   });
+  it('LineChart con passo: un anno mancante non si disegna, né come punto né come tratto', () => {
+    const { container } = render(LineChart, { label: 'Adozione', passo: 1, series: [
+      { name: 'Italia', hot: true, pts: [{ x: 2021, y: 6 }, { x: 2023, y: 5 }, { x: 2024, y: 8 }, { x: 2025, y: 15 }] },
+      { name: 'UE', pts: [{ x: 2021, y: 7 }, { x: 2023, y: 8 }, { x: 2024, y: 13 }, { x: 2025, y: 20 }] },
+    ] });
+    // ogni anno ha il suo punto; il 2021 resta isolato, la linea va dal 2023 al 2025
+    expect(container.querySelectorAll('circle.dot')).toHaveLength(8);
+    const paths = [...container.querySelectorAll('path.ln')];
+    expect(paths).toHaveLength(2);
+    const xs = (anno: string) => [...container.querySelectorAll('svg > text')].find((t) => t.textContent === anno)?.getAttribute('x');
+    for (const p of paths) expect(Number(p.getAttribute('d')!.slice(1).split(',')[0])).toBeCloseTo(Number(xs('2023')), 2);
+    // sull'asse solo gli anni rilevati
+    expect(xs('2021')).toBeDefined();
+    expect(xs('2022')).toBeUndefined();
+  });
+  it('LineChart con passo: un punto che manca a metà spezza la linea in due', () => {
+    const { container } = render(LineChart, { label: 'Adozione', passo: 1, series: [
+      { name: 'Italia', pts: [{ x: 2021, y: 6 }, { x: 2022, y: 5 }, { x: 2024, y: 8 }, { x: 2025, y: 15 }] },
+    ] });
+    expect(container.querySelectorAll('path.ln')).toHaveLength(2);
+    expect(container.querySelectorAll('circle.dot')).toHaveLength(4);
+  });
   it('Bars: una barra per dato, l’ultima in evidenza', () => {
     const { container } = render(Bars, { label: 'Generativa', data: [{ k: '2024', v: 43.7 }, { k: '2025', v: 143.8 }] });
     const bars = container.querySelectorAll('rect.bar');
@@ -86,6 +108,23 @@ describe('grafici', () => {
     expect(container.querySelectorAll('circle.now')).toHaveLength(2);
     expect(container.querySelectorAll('circle.was')).toHaveLength(1);
     expect(screen.getByText('Europa')).toHaveClass('hot');
+  });
+  it('DotPlot: il valore di oggi sta accanto al suo punto, anche quando quello dell’anno prima è più a destra', () => {
+    const { container } = render(DotPlot, { label: 'Imprese', data: [{ k: 'Europa', now: 50, was: 60 }] });
+    const was = Number(container.querySelector('circle.was')!.getAttribute('cx'));
+    const now = Number(container.querySelector('circle.now')!.getAttribute('cx'));
+    const x = Number(screen.getByText('50').getAttribute('x'));
+    expect(x).toBeGreaterThan(now);
+    expect(x).toBeLessThan(was);
+  });
+  it('DotPlot Italia–UE: il numero accanto al punto UE dice che è il valore UE', () => {
+    const { container } = render(DotPlot, { label: 'Settori', altro: 'UE', data: [
+      { k: 'Informazione e comunicazione', now: 51.28, was: 62.52 }, { k: 'Manifattura', now: null, was: 17.27 },
+    ] });
+    const texts = [...container.querySelectorAll('svg text')].map((t) => t.textContent);
+    expect(texts).toContain('51 · UE 63');
+    expect(texts).toContain('UE 17'); // senza il dato italiano resta il solo valore UE, scritto come tale
+    expect(texts).not.toContain('51');
   });
   it('Scatter: un punto per dato, scala logaritmica', () => {
     const { container } = render(Scatter, { label: 'Calcolo', xTitle: 'anno', yTitle: 'FLOP', yLog: true,

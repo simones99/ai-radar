@@ -29,19 +29,23 @@ L'attività aziendale per cui un'impresa che usa l'AI la impiega, per esempio ma
 _Avoid_: uso, applicazione, caso d'uso
 
 **Modello nazionale**:
-Un modello AI attribuito al Paese in cui ha sede l'organizzazione che lo sviluppa. Un modello sviluppato da organizzazioni di Paesi diversi conta per ciascuno di quei Paesi.
+Un modello AI attribuito al Paese in cui ha sede l'organizzazione che lo sviluppa. Un modello sviluppato da organizzazioni di Paesi diversi conta solo per il Paese della prima organizzazione indicata. Un modello senza Paese non è un modello nazionale.
 _Avoid_: modello sovrano, modello locale, modello del Paese
 
 **Area**:
-Uno dei blocchi in cui si confrontano i modelli nazionali: USA, Cina, Regno Unito, UE e Altri. Dentro l'UE si vedono anche i singoli Paesi, Italia compresa.
+Uno dei blocchi in cui si confrontano i modelli nazionali: USA, Cina (Hong Kong compresa), Regno Unito, UE e Altri, cioè tutti gli altri Paesi, Taiwan compresa. Dentro l'UE si vedono anche i singoli Paesi, Italia compresa.
 _Avoid_: regione, blocco, zona
 
 **Calcolo di addestramento**:
 La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli.
 _Avoid_: compute, potenza di calcolo
 
+**Modello di grande scala**:
+Un modello AI addestrato con almeno 1e23 FLOP di calcolo di addestramento. Sono i modelli su cui si contano le aree.
+_Avoid_: modello grande, modello di frontiera, modello notevole
+
 **Capacità**:
-Quanto un modello è bravo oggi, misurata dall'indice di intelligenza di Artificial Analysis. Dice quanto valgono i risultati di un'area.
+Quanto un modello è bravo nei compiti verificabili, misurata dall'Epoch Capabilities Index. Ha senso solo nel confronto tra modelli, non come valore assoluto. Dice quanto valgono i risultati di un'area.
 _Avoid_: competenza, intelligenza, potenza (per un modello)
 
 **Barriera**:

@@ -28,6 +28,22 @@ _Avoid_: diffusione, uso dell'AI (per le imprese)
 L'attività aziendale per cui un'impresa che usa l'AI la impiega, per esempio marketing e vendite o logistica.
 _Avoid_: uso, applicazione, caso d'uso
 
+**Modello nazionale**:
+Un modello AI attribuito al Paese in cui ha sede l'organizzazione che lo sviluppa. Un modello sviluppato da organizzazioni di Paesi diversi conta per ciascuno di quei Paesi.
+_Avoid_: modello sovrano, modello locale, modello del Paese
+
+**Area**:
+Uno dei blocchi in cui si confrontano i modelli nazionali: USA, Cina, Regno Unito, UE e Altri. Dentro l'UE si vedono anche i singoli Paesi, Italia compresa.
+_Avoid_: regione, blocco, zona
+
+**Calcolo di addestramento**:
+La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli.
+_Avoid_: compute, potenza di calcolo
+
+**Capacità**:
+Quanto un modello è bravo oggi, misurata dall'indice di intelligenza di Artificial Analysis. Dice quanto valgono i risultati di un'area.
+_Avoid_: competenza, intelligenza, potenza (per un modello)
+
 **Barriera**:
 Un motivo per cui un'impresa che ha considerato l'AI non la usa, per esempio i costi o la mancanza di competenze.
 _Avoid_: ostacolo, freno

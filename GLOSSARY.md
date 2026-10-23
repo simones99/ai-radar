@@ -45,8 +45,12 @@ L'unità con cui si misura la potenza di calcolo di un data center: quante GPU N
 _Avoid_: GPU, chip, potenza installata
 
 **Calcolo di addestramento**:
-La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli.
-_Avoid_: compute, potenza di calcolo
+La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli. È noto solo per una parte dei modelli: quando l'organizzazione non lo pubblica, è una stima di Epoch.
+_Avoid_: compute, potenza di calcolo, calcolo pubblicato, calcolo dichiarato
+
+**Anno in corso**:
+L'anno non ancora chiuso. Tra le aree si confronta alla pari, perché è parziale per tutte; con gli anni chiusi no.
+_Avoid_: anno corrente, ultimo anno
 
 **Modello di grande scala**:
 Un modello AI addestrato con almeno 1e23 FLOP di calcolo di addestramento. Sono i modelli su cui si contano le aree.

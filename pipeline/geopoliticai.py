@@ -126,16 +126,23 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
     zone: dict[str, dict] = defaultdict(lambda: {"calcolo": {}, "eci": {}, "org_eci": set(), "org_ls": set()})
     senza = {"large": [], "eci": []}
     altri_paesi: dict[str, int] = defaultdict(int)
+    altrove: dict[str, int] = defaultdict(int)
 
     for r in large:
         y = _anno(r["Publication date"])
         if not y or y < DA_CALCOLO:
             continue
         paese = primo_paese(r[PAESE])
+        area, ue = zone_di(paese) if paese else (None, None)
+        # un'organizzazione di un Paese UE che non è la prima: il modello conta altrove (o, senza Paese, da nessuna parte)
+        presenti = {PAESI_UE[p.strip()][0] for p in r[PAESE].split(",") if p.strip() in PAESI_UE}
+        for pid in presenti - {ue}:
+            altrove[pid] += 1
+        if presenti and area != "ue":
+            altrove["ue"] += 1
         if not paese:
             senza["large"].append(r["Model"].strip())
             continue
-        area, ue = zone_di(paese)
         if area == "altri":
             altri_paesi[paese] += 1
         org = r["Organization"].split(",")[0].strip()
@@ -171,7 +178,7 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
         z = zone[k]
         return {"nome": nome, "tipo": tipo, "aggettivo": aggettivo, "con_articolo": articolo,
                 "calcolo": dict(sorted(z["calcolo"].items())), "eci": dict(sorted(z["eci"].items())),
-                "org_eci": sorted(z["org_eci"]), "org_ls": sorted(z["org_ls"])}
+                "org_eci": sorted(z["org_eci"]), "org_ls": sorted(z["org_ls"]), "contano_altrove": altrove[k]}
 
     out: dict[str, dict] = {}
     for k, (nome, agg, art) in AREE.items():

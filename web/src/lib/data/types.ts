@@ -172,6 +172,8 @@ export interface GeoZona {
   eci: Record<string, GeoEci>;
   org_eci: string[];
   org_ls: string[];
+  /** modelli di grande scala dal 2020 con un'organizzazione di questa zona, che contano altrove: solo UE e Paesi UE, 0 per le altre aree */
+  contano_altrove: number;
 }
 export interface Geopoliticai {
   fonte: string;

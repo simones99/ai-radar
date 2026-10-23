@@ -99,6 +99,30 @@ def test_conta_solo_la_prima_organizzazione(data_dir):
     assert zone["francia"]["calcolo"]["2025"]["n"] == 3
 
 
+def test_aggettivo_di_ogni_zona(data_dir):
+    zone = run(data_dir)["zone"]
+    assert {k: z["aggettivo"] for k, z in zone.items()} == {
+        "usa": "statunitense", "cina": "cinese", "ue": "europeo", "uk": "britannico", "altri": None,
+        "bulgaria": "bulgaro", "finlandia": "finlandese", "francia": "francese", "germania": "tedesco", "italia": "italiano",
+    }
+
+
+def test_contano_altrove_i_modelli_con_la_prima_organizzazione_di_un_altro_paese(data_dir):
+    # oggi 28 modelli di grande scala con un'organizzazione UE: 5 contano per gli USA, 1 per «Altri», Poro 34B è senza Paese
+    zone = run(data_dir)["zone"]
+    assert zone["ue"]["contano_altrove"] == 7
+    assert zone["francia"]["contano_altrove"] == 5
+    assert zone["finlandia"]["contano_altrove"] == 1
+    assert zone["usa"]["contano_altrove"] == 0
+    assert zone["italia"]["contano_altrove"] == 0
+    # per un Paese UE conta anche un modello che resta nell'UE ma con la prima organizzazione di un altro Paese
+    righe = [large("Insieme", "Germany,Italy", "1e24", org="Aleph Alpha,Sapienza")]
+    zone = run(data_dir, Session(large=con_righe(LARGE, righe)))["zone"]
+    assert zone["italia"]["contano_altrove"] == 1
+    assert zone["germania"]["contano_altrove"] == 0
+    assert zone["ue"]["contano_altrove"] == 7
+
+
 def test_hong_kong_e_macao_nella_cina_taiwan_in_altri(data_dir):
     base = run(data_dir)["zone"]
     righe = [large("HK", "Hong Kong", "1e24"), large("MO", "Macao", "1e24"), large("TW", "Taiwan", "5e25")]

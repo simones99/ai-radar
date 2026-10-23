@@ -231,6 +231,68 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+const aree = (page: Page) => page.getByRole('group', { name: 'Area' });
+const paesiUe = (page: Page) => page.getByRole('group', { name: "Paesi dell'UE" });
+const scheda = (page: Page) => page.locator('#detail-geopoliticai h3').first();
+
+test('area: il link apre il Paese, il ricaricamento lo tiene, un link con un’altra area vince sul ricordo', async ({ page }) => {
+  await page.goto('/#geopoliticai?area=italia');
+  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(paesiUe(page).locator('button[aria-pressed="true"]')).toHaveText('Italia');
+  await page.reload();
+  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await page.goto('about:blank');
+  await page.goto('/#geopoliticai'); // senza area nel link: vale il ricordo, che entra nel link
+  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
+  await page.goto('about:blank');
+  await page.goto('/#geopoliticai?area=cina');
+  await expect(scheda(page)).toHaveText('Cina');
+  await expect(aree(page).locator('button[aria-pressed="true"]')).toHaveText('Cina');
+});
+
+test('area non valida: si apre l’UE, senza errori', async ({ page }) => {
+  const errori: string[] = [];
+  page.on('pageerror', (e) => errori.push(e.message));
+  await page.goto('/#geopoliticai?area=atlantide');
+  await expect(scheda(page)).toHaveText('UE');
+  await expect(aree(page).locator('button[aria-pressed="true"]')).toHaveText('UE');
+  await expect(page).toHaveURL(/#geopoliticai$/);
+  expect(errori).toEqual([]);
+});
+
+test('area da tastiera: Tab tra i pulsanti, Invio sceglie; «Tutta l’UE» toglie l’area dal link', async ({ page }) => {
+  await page.goto('/#geopoliticai');
+  await aree(page).getByRole('button', { name: 'USA' }).focus();
+  await page.keyboard.press('Tab');
+  await expect(aree(page).getByRole('button', { name: 'Cina' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(scheda(page)).toHaveText('Cina');
+  await expect(page).toHaveURL(/#geopoliticai\?area=cina$/);
+  await aree(page).getByRole('button', { name: 'UE' }).focus();
+  await page.keyboard.press('Enter');
+  await paesiUe(page).getByRole('button', { name: "Tutta l'UE" }).focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await expect(scheda(page)).toHaveText("Francia, nell'UE");
+  await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Space');
+  await expect(scheda(page)).toHaveText('UE');
+  await expect(page).toHaveURL(/#geopoliticai$/);
+});
+
+test('area a 320px: le file vanno a capo, niente scorrimento orizzontale', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#geopoliticai?area=italia');
+  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  for (const fila of [aree(page), paesiUe(page)]) {
+    const tops = await fila.getByRole('button').evaluateAll((bs) => new Set(bs.map((b) => b.getBoundingClientRect().top)).size);
+    expect(tops).toBeGreaterThan(1);
+  }
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
 for (const width of [320, 360]) {
   test(`${width}px: nessuno scorrimento orizzontale`, async ({ page }) => {
     await page.setViewportSize({ width, height: 780 });

@@ -26,7 +26,12 @@ export function di(conArticolo: string): string {
 const delModello = (z: GeoZona): string => (z.aggettivo ? z.aggettivo : `di ${z.tipo === 'area' ? z.con_articolo : z.nome}`);
 const elenco = (xs: string[]): string => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} e ${xs[xs.length - 1]}`);
 
-export interface Cifra { fig: string; sotto: string }
+export interface Cifra {
+  fig: string;
+  sotto: string;
+  /** sotto la cifra del calcolo: per quanti modelli è noto */
+  nota?: string;
+}
 export interface Scheda {
   titolo: string;
   /** la frase in grassetto in testa */
@@ -63,6 +68,25 @@ function rigaAnnoInCorso(g: Geopoliticai, k: string): string | null {
   return `${capitalize(y)}: ${c.n} ${c.n === 1 ? 'modello' : 'modelli'} di grande scala, senza il calcolo noto.`;
 }
 
+/** «Calcolo noto per 3 dei 5 modelli di grande scala del 2025»: noto, mai «pubblicato» (spesso è una stima di Epoch). */
+function copertura(g: Geopoliticai, k: string, y: number): string {
+  const { n, nc } = g.zone[k].calcolo[String(y)];
+  const dei = n === 1 ? "l'unico modello" : nc === n ? `tutti i ${n} modelli` : `${nc} dei ${n} modelli`;
+  return `Calcolo noto per ${dei} di grande scala del ${annoTesto(g, y)}`;
+}
+
+/** «europeo» → «europea», «francese» resta: per «un'organizzazione …». */
+const femminile = (agg: string): string => agg.replace(/o$/, 'a');
+
+/** Nella vista UE e nei Paesi UE: i modelli con un'organizzazione della zona che contano per un'altra, se ce ne sono. */
+function contanoAltrove(k: string, z: GeoZona): string | null {
+  const n = z.contano_altrove;
+  if (!n || !(k === 'ue' || z.tipo === 'paese-ue')) return null;
+  const agg = z.aggettivo ? femminile(z.aggettivo) : `di ${z.nome}`;
+  const altra = z.tipo === 'paese-ue' ? 'un altro Paese' : "un'altra area";
+  return `Dal 2020, ${n} ${n === 1 ? 'modello' : 'modelli'} con un'organizzazione ${agg} ${n === 1 ? 'conta' : 'contano'} per ${altra}, perché la prima organizzazione non è ${agg}.`;
+}
+
 /** «Per l'UE l'ECI valuta solo Mistral AI»: le organizzazioni si nominano se sono fino a tre. */
 function soloOrg(z: GeoZona): string[] {
   const out: string[] = [];
@@ -92,11 +116,13 @@ export function scheda(g: Geopoliticai, k: string): Scheda {
   const inCorso = c && c.anno !== g.anno_corrente ? rigaAnnoInCorso(g, k) : null;
   if (inCorso) righe.push(inCorso);
   righe.push(...soloOrg(z));
+  const altrove = contanoAltrove(k, z);
+  if (altrove) righe.push(altrove);
   return {
     titolo: z.tipo === 'paese-ue' ? `${z.nome}, nell'UE` : z.nome,
     frase,
     capacita: cifra(g, e, eci),
-    calcolo: cifra(g, c, flop),
+    calcolo: c && { ...cifra(g, c, flop)!, nota: copertura(g, k, c.anno) },
     righe,
   };
 }

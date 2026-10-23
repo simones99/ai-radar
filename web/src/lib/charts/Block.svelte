@@ -3,19 +3,22 @@
   import DataTable from './DataTable.svelte';
   import type { Cite, TableData } from './types';
 
-  let { title, note = null, span = 6, cite = null, table = null, missing = null, children }: {
+  let { title, note = null, span = 6, cite = null, table = null, missing = null, id = null, children }: {
     title: string;
     note?: string | null;
     span?: 4 | 6 | 8 | 12;
     cite?: Cite | null;
     table?: TableData | null;
     missing?: string | null;
+    /** con un id il blocco è una regione con il suo titolo, e può ricevere il focus */
+    id?: string | null;
     children?: Snippet;
   } = $props();
 </script>
 
-<section class="blk w{span}">
-  <h3>{title}</h3>
+<!-- svelte-ignore a11y_no_noninteractive_tabindex: tabindex è -1 o assente, serve a dare il focus al blocco da codice -->
+<section class="blk w{span}" id={id} tabindex={id ? -1 : undefined} aria-labelledby={id ? `${id}-t` : undefined}>
+  <h3 id={id ? `${id}-t` : undefined}>{title}</h3>
   {#if note}<p class="note">{note}</p>{/if}
   {#if missing}
     <p class="note">{missing}</p>

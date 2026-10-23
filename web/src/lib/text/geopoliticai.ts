@@ -1,4 +1,4 @@
-import { classifica, ultimo, valore, type Valore } from '../data/geopoliticai';
+import { AREE, classifica, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
 import type { Geopoliticai, GeoZona } from '../data/types';
 import { capitalize, dayWith, nf } from './format';
 import type { Cite } from '../charts/types';
@@ -218,6 +218,24 @@ export function scheda(g: Geopoliticai, k: string): Scheda {
     nota: k === 'uk' && !z.eci[String(chiuso)] && !z.calcolo[String(chiuso)]?.n ? NOTA_UK : null,
     mappa: null,
   };
+}
+
+/** La nota sotto la matrice, prima della fonte: la misura, la copertura del calcolo, i modelli senza Paese (spec, «La matrice»). */
+export function notaMatrice(g: Geopoliticai, misura: Misura): string {
+  const cosa = misura === 'eci'
+    ? "Capacità: l'Epoch Capabilities Index più alto tra i modelli usciti nell'anno, su tutti i modelli valutati, non solo quelli di grande scala. "
+      + "Conta il confronto tra modelli, non il valore assoluto; il colore dice quanto l'area è vicina alla prima dell'anno, fino a 40 punti sotto."
+    : "Calcolo di addestramento: i FLOP del modello di grande scala più grande uscito nell'anno. "
+      + "Il colore va in scala logaritmica: pieno per la prima area dell'anno, chiaro a mille volte meno.";
+  // sulle aree, non sui Paesi UE, che sono già dentro l'UE
+  const anni = AREE.flatMap((k) => Object.values(g.zone[k].calcolo));
+  const n = anni.reduce((t, c) => t + c.n, 0);
+  const nc = anni.reduce((t, c) => t + c.nc, 0);
+  const copertura = `Il calcolo è noto per ${nc} dei ${n} modelli di grande scala delle aree, ed è spesso una stima di Epoch.`;
+  const s = (misura === 'eci' ? g.senza_paese.eci : g.senza_paese.large).length;
+  const quali = misura === 'eci' ? (s === 1 ? 'modello valutato' : 'modelli valutati') : (s === 1 ? 'modello di grande scala' : 'modelli di grande scala');
+  const senza = s ? ` ${s} ${quali} ${s === 1 ? 'non ha' : 'non hanno'} un Paese (Multinational o non indicato) e ${s === 1 ? 'resta' : 'restano'} fuori dalle aree.` : '';
+  return `${cosa} ${copertura}${senza}`;
 }
 
 /** Fonte sotto la card (ticket 06, Q15). */

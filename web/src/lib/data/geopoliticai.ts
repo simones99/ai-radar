@@ -29,3 +29,10 @@ export const classifica = (g: Geopoliticai, misura: Misura, anno: number): Valor
 /** L'anno della card in home: quello in corso se l'UE ci ha già un valore, altrimenti l'ultimo chiuso. */
 export const annoFaccia = (g: Geopoliticai): number =>
   valore(g, 'ue', 'eci', g.anno_corrente) ? g.anno_corrente : g.anno_corrente - 1;
+
+/** I Paesi UE del file, nell'ordine del file, con l'Italia sempre in fondo. */
+export const paesiUe = (g: Geopoliticai): string[] =>
+  Object.keys(g.zone).filter((k) => g.zone[k].tipo === 'paese-ue').sort((a, b) => Number(a === 'italia') - Number(b === 'italia'));
+
+/** Le righe della matrice: le aree, con i Paesi UE subito sotto l'UE. */
+export const righeMatrice = (g: Geopoliticai): string[] => AREE.flatMap((k) => (k === 'ue' ? [k, ...paesiUe(g)] : [k]));

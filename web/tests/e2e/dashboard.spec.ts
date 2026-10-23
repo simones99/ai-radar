@@ -293,6 +293,29 @@ test('area a 320px: le file vanno a capo, niente scorrimento orizzontale', async
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+const matrice = (page: Page) => page.getByRole('table', { name: 'Calcolo e capacità per area, anno per anno' });
+
+test('matrice: un clic su una riga cambia l’area nel link e porta il focus alla scheda', async ({ page }) => {
+  await page.goto('/#geopoliticai');
+  await matrice(page).getByRole('button', { name: 'Germania' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?area=germania$/);
+  await expect(scheda(page)).toHaveText("Germania, nell'UE");
+  await expect(page.getByRole('region', { name: "Germania, nell'UE" })).toBeFocused();
+  await matrice(page).getByRole('button', { name: 'USA' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#geopoliticai\?area=usa$/);
+  await expect(page.getByRole('region', { name: 'USA' })).toBeFocused();
+});
+
+test('matrice a 320px: scorre dentro il suo contenitore, non la pagina', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#geopoliticai');
+  await page.getByRole('group', { name: 'Misura' }).getByRole('button', { name: 'Calcolo di addestramento (FLOP)' }).click();
+  const box = page.getByRole('region', { name: /scorre in orizzontale/ });
+  expect(await box.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
 for (const width of [320, 360]) {
   test(`${width}px: nessuno scorrimento orizzontale`, async ({ page }) => {
     await page.setViewportSize({ width, height: 780 });

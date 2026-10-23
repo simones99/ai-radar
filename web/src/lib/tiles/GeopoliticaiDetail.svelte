@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import Block from '../charts/Block.svelte';
-  import { AREE } from '../data/geopoliticai';
+  import { AREE, paesiUe } from '../data/geopoliticai';
   import { area as areaRicordata } from '../scelta.svelte';
-  import { citeGeo, scheda } from '../text/geopoliticai';
+  import { scheda } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
+  import GeoMatrice from './GeoMatrice.svelte';
   import type { DetailProps } from './types';
 
   let { data, today, tile, params, onclose }: DetailProps = $props();
@@ -15,10 +16,18 @@
   const zona = $derived(params.area && validi.includes(params.area) ? params.area : 'ue'); // senza una scelta valida, l'UE
   onMount(() => areaRicordata.allinea(params.area, validi));
   const nellUe = $derived(zona === 'ue' || g?.zone[zona]?.tipo === 'paese-ue');
-  // i Paesi UE del file, con l'Italia sempre in fondo
-  const paesi = $derived(Object.keys(g?.zone ?? {}).filter((k) => g!.zone[k].tipo === 'paese-ue').sort((a, b) => Number(a === 'italia') - Number(b === 'italia')));
+  const paesi = $derived(g ? paesiUe(g) : []);
   const scegli = (k: string) => areaRicordata.scegli(k === 'ue' ? null : k); // l'UE è la scelta di partenza
   const s = $derived(g && g.zone[zona] ? scheda(g, zona) : null);
+  /** Dalla matrice: sceglie l'area, porta la scheda in vista e le dà il focus. */
+  async function apriScheda(k: string) {
+    scegli(k);
+    await tick();
+    const el = document.getElementById('geo-scheda');
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    el?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    el?.focus({ preventScroll: true });
+  }
   /** Alla sezione della mappa quando c'è, altrimenti in fondo al dettaglio. */
   function versoLaMappa() {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -39,7 +48,7 @@
       </div>
     {/if}
   {/if}
-  <Block span={12} title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'} cite={g ? citeGeo(g) : null}>
+  <Block span={12} id="geo-scheda" title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'}>
     {#if s}
       <p class="frase"><strong>{s.frase}</strong></p>
       {#if s.situazione !== 'zero'}
@@ -66,6 +75,7 @@
       {#if s.mappa}<p><button type="button" class="vai" onclick={versoLaMappa}>{s.mappa}</button></p>{/if}
     {/if}
   </Block>
+  {#if g}<GeoMatrice {g} {zona} onscegli={apriScheda} />{/if}
 </Detail>
 
 <style>

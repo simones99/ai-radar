@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/svelte';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { Dataset, Geopoliticai } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
@@ -20,6 +20,8 @@ const ueSenzaAnnoInCorso = (): Dataset => {
   return { ...data, geopoliticai: { ...geo, zone: { ...geo.zone, ue: { ...geo.zone.ue, eci } } } };
 };
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
+/** La scheda dell'area, con il suo titolo: le cifre si cercano lì, perché la matrice ha gli stessi numeri. */
+const laScheda = (titolo: string) => within(screen.getByRole('region', { name: titolo }));
 
 describe('GeopoliticAI: card in home', () => {
   it("la capacità del miglior modello europeo, contro USA e Cina nell'anno in corso", () => {
@@ -54,16 +56,16 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
     const [cap, calc] = screen.getAllByRole('heading', { level: 4 });
     expect(cap).toHaveTextContent('Capacità');
     expect(calc).toHaveTextContent('Calcolo di addestramento');
-    expect(screen.getByText('150,0')).toBeInTheDocument();
+    expect(laScheda('UE').getByText('150,0')).toBeInTheDocument();
     expect(screen.getByText('Mistral Large 4, 2026, anno in corso')).toBeInTheDocument();
-    expect(screen.getByText('1,2 × 10²⁴')).toBeInTheDocument();
+    expect(laScheda('UE').getByText('1,2 × 10²⁴')).toBeInTheDocument();
     expect(screen.getByText('Mistral Small 3, 2025')).toBeInTheDocument();
     expect(screen.getByText('Calcolo: il più grande è Mistral Small 3, del 2025, con 1,2 × 10²⁴ FLOP. '
       + 'Il più grande del 2025, Grok 4 (USA), ne ha usati 430 volte tanto.')).toBeInTheDocument();
     expect(screen.getByText('2026, anno in corso: nessun modello di grande scala.')).toBeInTheDocument();
     expect(screen.getByText("Per l'UE l'ECI valuta solo Mistral AI.")).toBeInTheDocument();
   });
-  it('sotto c’è la fonte di Epoch, con i link e la data', () => {
+  it('la fonte di Epoch, con i link e la data, è una sola, sotto la matrice', () => {
     const { container } = show();
     const cite = container.querySelector('.cite') as HTMLElement;
     expect(cite).toHaveTextContent('Fonte: Epoch AI, Data on AI models ed Epoch Capabilities Index (CC BY 4.0), aggregati per area da AI Radar. Dati scaricati il 15 ott 2026.');
@@ -190,11 +192,11 @@ describe('GeopoliticAI: le schede con i vuoti', () => {
 
   it('È a zero: l’Italia apre con la nota, poi il riferimento europeo e il link alla mappa, senza cifre vuote', () => {
     area('italia');
-    expect(screen.getByText('Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.').tagName).toBe('STRONG');
+    expect(laScheda("Italia, nell'UE").getByText('Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.').tagName).toBe('STRONG');
     expect(screen.getByText("Nell'UE la frontiera è Mistral AI, in Francia: 150,0 ECI nel 2026, anno in corso.")).toBeInTheDocument();
     expect(screen.getByRole('button', { name: "Dove sta l'Italia nella catena dell'AI →" })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { level: 4 })).toBeNull();
-    expect(screen.queryByText(/nessun modello (valutato|di grande scala)/i)).toBeNull();
+    expect(laScheda("Italia, nell'UE").queryByRole('heading', { level: 4 })).toBeNull();
+    expect(laScheda("Italia, nell'UE").queryByText(/nessun modello (valutato|di grande scala)/i)).toBeNull();
   });
 
   it('Ha solo il calcolo: la Germania dice che l’ECI non la valuta, poi il calcolo con la distanza e le organizzazioni', () => {
@@ -232,9 +234,9 @@ describe('GeopoliticAI: le schede con i vuoti', () => {
     expect(screen.getByText('Dal 2025 Epoch non ha modelli del Regno Unito, né valutati né di grande scala.').tagName).toBe('STRONG');
     expect(screen.getByText('Gli ultimi: Stable Beluga 2, 117,0 ECI nel 2023, e Stable LM 2 12B, 2,9 × 10²³ FLOP nel 2024.')).toBeInTheDocument();
     expect(screen.getByText('Epoch attribuisce Google DeepMind, che ha sede a Londra, agli USA: i suoi modelli contano lì.').tagName).toBe('EM');
-    expect(screen.getByText('117,0')).toBeInTheDocument();
+    expect(laScheda('Regno Unito').getByText('117,0')).toBeInTheDocument();
     expect(screen.getByText('Stable Beluga 2, 2023')).toBeInTheDocument();
-    expect(screen.queryByText(/volte tanto|punti sotto|Calcolo:|anno in corso:/)).toBeNull();
+    expect(laScheda('Regno Unito').queryByText(/volte tanto|punti sotto|Calcolo:|anno in corso:/)).toBeNull();
   });
 
   it('il Regno Unito con un valore nell’ultimo anno chiuso perde la nota', () => {
@@ -254,6 +256,90 @@ describe('GeopoliticAI: le schede con i vuoti', () => {
     area('germania', con('germania', { calcolo: { '2026': { n: 1, nc: 0, max: null, modello: null } } }));
     expect(screen.getByText('1 modello di grande scala, senza il calcolo noto')).toBeInTheDocument();
     expect(screen.getByText('1 modello di grande scala nel 2026, anno in corso, senza il calcolo noto.')).toBeInTheDocument();
+  });
+});
+
+
+describe('GeopoliticAI: la matrice', () => {
+  beforeEach(() => localStorage.clear());
+  const matrice = () => screen.getByRole('table', { name: 'Calcolo e capacità per area, anno per anno' });
+  const misura = () => screen.getByRole('group', { name: 'Misura' });
+  const testate = () => within(matrice()).getAllByRole('columnheader').map((h) => h.textContent?.trim());
+  const righe = () => within(matrice()).getAllByRole('rowheader').map((h) => h.textContent?.trim());
+
+  it('parte sulla capacità: anni dal 2023, l’anno in corso marcato, le righe come i pulsanti', () => {
+    show();
+    expect(within(misura()).getByRole('button', { name: 'Capacità (ECI)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(testate()).toEqual(['Area', '2023', '2024', '2025', '2026 in corso']);
+    expect(righe()).toEqual(['USA', 'Cina', 'UE', 'Francia', 'Germania', 'Italia', 'Regno Unito', 'Altri']);
+    expect(within(matrice()).getByRole('cell', { name: '168,8 ECI, Claude Opus 5.5' })).toHaveTextContent(/^168,8$/);
+    expect(within(matrice()).getByRole('cell', { name: '168,8 ECI, Claude Opus 5.5' })).toHaveAttribute('title', 'Claude Opus 5.5');
+  });
+
+  /** Le celle di una riga della matrice, una per anno. */
+  const celle = (riga: string) => within(within(matrice()).getByRole('rowheader', { name: riga }).closest('tr') as HTMLElement).getAllByRole('cell');
+
+  it('l’interruttore passa al calcolo: anni dal 2020, scritto come nella scheda', async () => {
+    show();
+    await fireEvent.click(within(misura()).getByRole('button', { name: 'Calcolo di addestramento (FLOP)' }));
+    expect(within(misura()).getByRole('button', { name: 'Calcolo di addestramento (FLOP)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(testate()).toEqual(['Area', '2020', '2021', '2022', '2023', '2024', '2025', '2026 in corso']);
+    const astra = within(matrice()).getByRole('cell', { name: '9,4 × 10²⁶ FLOP, GPT-6 Astra' });
+    expect(astra).toHaveTextContent(/^9,4 × 10²⁶$/);
+    expect(astra).toHaveAttribute('title', 'GPT-6 Astra');
+  });
+
+  it('le celle vuote con le regole brevi della scheda, mai vuote davvero', async () => {
+    show();
+    expect(celle('Germania')[0]).toHaveTextContent('nessuno');
+    expect(celle('Germania')[0]).toHaveAccessibleName('nessun modello valutato');
+    await fireEvent.click(within(misura()).getByRole('button', { name: 'Calcolo di addestramento (FLOP)' }));
+    expect(celle('Germania')[0]).toHaveTextContent('nessuno');
+    expect(celle('Germania')[0]).toHaveAccessibleName('nessun modello di grande scala');
+    const uk2023 = celle('Regno Unito')[3];
+    expect(uk2023).toHaveTextContent('1 senza calcolo');
+    expect(uk2023).toHaveAccessibleName('1 modello di grande scala, senza il calcolo noto');
+  });
+
+  it('l’Italia a zero è una riga intera con la nota; con un modello torna alle celle', () => {
+    show();
+    expect(celle('Italia')).toHaveLength(1);
+    expect(celle('Italia')[0]).toHaveTextContent('Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.');
+    expect(celle('Italia')[0]).toHaveAttribute('colspan', '4');
+    cleanup();
+    const italia = { ...geo.zone.italia, eci: { '2025': { n: 1, max: 101.5, modello: 'Velvet' } } };
+    show({ ...data, geopoliticai: { ...geo, zone: { ...geo.zone, italia } } });
+    expect(celle('Italia')).toHaveLength(4);
+    expect(celle('Italia')[2]).toHaveAccessibleName('101,5 ECI, Velvet');
+  });
+
+  it('un clic su una riga sceglie l’area, la ricorda e dà il focus alla scheda', async () => {
+    show();
+    await fireEvent.click(within(matrice()).getByRole('button', { name: 'Cina' }));
+    expect(localStorage.getItem('ai-radar:area')).toBe('cina');
+    await waitFor(() => expect(screen.getByRole('region', { name: 'UE' })).toHaveFocus());
+    await fireEvent.click(celle('Francia')[1]); // anche un clic su una cella sceglie la riga
+    expect(localStorage.getItem('ai-radar:area')).toBe('francia');
+    await fireEvent.click(within(matrice()).getByRole('button', { name: 'UE' }));
+    expect(localStorage.getItem('ai-radar:area')).toBeNull();
+  });
+
+  it('sotto la matrice una nota sola: la misura, la copertura del calcolo, i modelli senza Paese, poi la fonte', async () => {
+    const { container } = show();
+    const nota = () => container.querySelector('.nota-matrice') as HTMLElement;
+    expect(nota()).toHaveTextContent(
+      "Capacità: l'Epoch Capabilities Index più alto tra i modelli usciti nell'anno, su tutti i modelli valutati, non solo quelli di grande scala. "
+      + "Conta il confronto tra modelli, non il valore assoluto; il colore dice quanto l'area è vicina alla prima dell'anno, fino a 40 punti sotto. "
+      + "Il calcolo è noto per 287 dei 487 modelli di grande scala delle aree, ed è spesso una stima di Epoch. "
+      + '3 modelli valutati non hanno un Paese (Multinational o non indicato) e restano fuori dalle aree.');
+    const cite = [...container.querySelectorAll('.cite')].at(-1) as HTMLElement;
+    expect(nota().compareDocumentPosition(cite) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    await fireEvent.click(within(misura()).getByRole('button', { name: 'Calcolo di addestramento (FLOP)' }));
+    expect(nota()).toHaveTextContent(
+      "Calcolo di addestramento: i FLOP del modello di grande scala più grande uscito nell'anno. "
+      + "Il colore va in scala logaritmica: pieno per la prima area dell'anno, chiaro a mille volte meno. "
+      + "Il calcolo è noto per 287 dei 487 modelli di grande scala delle aree, ed è spesso una stima di Epoch. "
+      + '1 modello di grande scala non ha un Paese (Multinational o non indicato) e resta fuori dalle aree.');
   });
 });
 

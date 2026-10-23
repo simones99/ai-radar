@@ -19,6 +19,12 @@
   const paesi = $derived(Object.keys(g?.zone ?? {}).filter((k) => g!.zone[k].tipo === 'paese-ue').sort((a, b) => Number(a === 'italia') - Number(b === 'italia')));
   const scegli = (k: string) => areaRicordata.scegli(k === 'ue' ? null : k); // l'UE è la scelta di partenza
   const s = $derived(g && g.zone[zona] ? scheda(g, zona) : null);
+  /** Alla sezione della mappa quando c'è, altrimenti in fondo al dettaglio. */
+  function versoLaMappa() {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const mappa = document.getElementById('geo-mappa');
+    (mappa ?? document.getElementById('detail-geopoliticai'))?.scrollIntoView?.({ block: mappa ? 'start' : 'end', behavior: reduce ? 'auto' : 'smooth' });
+  }
 </script>
 
 <Detail {tile} {head} {onclose}>
@@ -36,6 +42,7 @@
   <Block span={12} title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'} cite={g ? citeGeo(g) : null}>
     {#if s}
       <p class="frase"><strong>{s.frase}</strong></p>
+      {#if s.situazione !== 'zero'}
       <div class="due">
         <section aria-labelledby="geo-cap">
           <h4 id="geo-cap">Capacità <span>Epoch Capabilities Index</span></h4>
@@ -50,10 +57,13 @@
             <p class="fig">{s.calcolo.fig}</p>
             <p class="sotto">{s.calcolo.sotto}</p>
             {#if s.calcolo.nota}<p class="sotto">{s.calcolo.nota}</p>{/if}
-          {:else}<p class="sotto">nessun modello di grande scala</p>{/if}
+          {:else}<p class="sotto">{s.calcoloVuoto}</p>{/if}
         </section>
       </div>
+      {/if}
       {#each s.righe as r, i (i)}<p class="riga">{r}</p>{/each}
+      {#if s.nota}<p class="riga"><em>{s.nota}</em></p>{/if}
+      {#if s.mappa}<p><button type="button" class="vai" onclick={versoLaMappa}>{s.mappa}</button></p>{/if}
     {/if}
   </Block>
 </Detail>
@@ -68,6 +78,7 @@
   h4 span { display: block; font-weight: 400; color: var(--fg-3); }
   .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
   .sotto { font-size: 14px; line-height: 20px; color: var(--fg-2); }
+  .vai { background: none; border: 0; padding: 0; font: inherit; font-size: 14px; line-height: 24px; color: var(--accent); text-decoration: underline; cursor: pointer; }
   .riga { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }
   @media (max-width: 560px) { .fig { font-size: 28px; line-height: 32px; } }
 </style>

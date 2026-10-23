@@ -182,3 +182,78 @@ describe('GeopoliticAI: le righe di contesto', () => {
   });
 });
 
+
+describe('GeopoliticAI: le schede con i vuoti', () => {
+  beforeEach(() => localStorage.clear());
+  /** Il dataset con una zona cambiata. */
+  const con = (k: string, z: Partial<Geopoliticai['zone'][string]>): Dataset => ({ ...data, geopoliticai: { ...geo, zone: { ...geo.zone, [k]: { ...geo.zone[k], ...z } } } });
+
+  it('È a zero: l’Italia apre con la nota, poi il riferimento europeo e il link alla mappa, senza cifre vuote', () => {
+    area('italia');
+    expect(screen.getByText('Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.').tagName).toBe('STRONG');
+    expect(screen.getByText("Nell'UE la frontiera è Mistral AI, in Francia: 150,0 ECI nel 2026, anno in corso.")).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: "Dove sta l'Italia nella catena dell'AI →" })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 4 })).toBeNull();
+    expect(screen.queryByText(/nessun modello (valutato|di grande scala)/i)).toBeNull();
+  });
+
+  it('Ha solo il calcolo: la Germania dice che l’ECI non la valuta, poi il calcolo con la distanza e le organizzazioni', () => {
+    area('germania');
+    expect(screen.getByText("Nessun modello tedesco è valutato dall'ECI.").tagName).toBe('STRONG');
+    expect(screen.getByText('Il più grande è Teuken 7B, del 2025, con 2,1 × 10²³ FLOP. '
+      + 'Il più grande del 2025, Grok 4 (USA), ne ha usati 2.300 volte tanto.')).toBeInTheDocument();
+    expect(screen.getByText('Per la Germania i modelli di grande scala sono solo di Aleph Alpha e OpenGPT-X.')).toBeInTheDocument();
+    expect(screen.getByText('nessun modello valutato')).toBeInTheDocument();
+  });
+
+  it('l’Italia con un modello non ha più la nota', () => {
+    area('italia', con('italia', { calcolo: { '2025': { n: 1, nc: 1, max: 3e23, modello: 'Minerva 7B' } }, org_ls: ['Sapienza'] }));
+    expect(screen.queryByText(/Minerva \(Sapienza\)/)).toBeNull();
+    expect(screen.getByText("Nessun modello italiano è valutato dall'ECI.").tagName).toBe('STRONG');
+    expect(screen.getByText('Minerva 7B, 2025')).toBeInTheDocument();
+  });
+
+  it('Ha solo il calcolo, con una capacità vecchia: «Altri» la nomina, e c’è la Corea del Sud', () => {
+    area('altri');
+    expect(screen.getByText("Dal 2025 l'ECI non valuta modelli di «Altri»: l'ultimo è Command R+, 119,2 nel 2024.").tagName).toBe('STRONG');
+    expect(screen.getByText('Il più grande è EXAONE 4.5, del 2026, anno in corso, con 3,9 × 10²⁴ FLOP. '
+      + 'Il più grande del 2026, anno in corso, GPT-6 Astra (USA), ne ha usati 240 volte tanto.')).toBeInTheDocument();
+    expect(screen.getByText("Per «Altri» l'ECI valuta solo Cohere e Technology Innovation Institute.")).toBeInTheDocument();
+    expect(screen.getByText('In «Altri» il Paese con più modelli di grande scala è la Corea del Sud: 22 dal 2020.')).toBeInTheDocument();
+  });
+
+  it('la Corea del Sud si nomina solo se è il Paese con più modelli di «Altri»', () => {
+    area('altri', { ...data, geopoliticai: { ...geo, altri_paesi: { Canada: 30, 'South Korea': 22 } } });
+    expect(screen.queryByText(/Corea del Sud/)).toBeNull();
+  });
+
+  it('Ha solo valori vecchi: il Regno Unito mostra gli ultimi, senza distanza dal primo, con la nota su DeepMind', () => {
+    area('uk');
+    expect(screen.getByText('Dal 2025 Epoch non ha modelli del Regno Unito, né valutati né di grande scala.').tagName).toBe('STRONG');
+    expect(screen.getByText('Gli ultimi: Stable Beluga 2, 117,0 ECI nel 2023, e Stable LM 2 12B, 2,9 × 10²³ FLOP nel 2024.')).toBeInTheDocument();
+    expect(screen.getByText('Epoch attribuisce Google DeepMind, che ha sede a Londra, agli USA: i suoi modelli contano lì.').tagName).toBe('EM');
+    expect(screen.getByText('117,0')).toBeInTheDocument();
+    expect(screen.getByText('Stable Beluga 2, 2023')).toBeInTheDocument();
+    expect(screen.queryByText(/volte tanto|punti sotto|Calcolo:|anno in corso:/)).toBeNull();
+  });
+
+  it('il Regno Unito con un valore nell’ultimo anno chiuso perde la nota', () => {
+    area('uk', con('uk', { eci: { ...geo.zone.uk.eci, '2025': { n: 1, max: 120.5, modello: 'Nuovo UK' } } }));
+    expect(screen.queryByText(/Google DeepMind/)).toBeNull();
+    expect(screen.getByText('Il miglior modello britannico, Nuovo UK, ha 120,5 ECI nel 2025: 35,8 punti sotto GPT-5.2 Pro (USA).')).toBeInTheDocument();
+  });
+
+  it('modelli di grande scala senza il calcolo noto: si dice quanti sono, mai 0 e mai una cella vuota', () => {
+    area('germania', con('germania', { calcolo: { '2025': { n: 2, nc: 0, max: null, modello: null } } }));
+    expect(screen.getByText('2 modelli di grande scala, senza il calcolo noto')).toBeInTheDocument();
+    expect(screen.getByText('2 modelli di grande scala nel 2025, senza il calcolo noto.')).toBeInTheDocument();
+    expect(screen.queryByText(/nessun modello di grande scala/i)).toBeNull();
+  });
+
+  it('un solo modello di grande scala senza il calcolo noto, al singolare', () => {
+    area('germania', con('germania', { calcolo: { '2026': { n: 1, nc: 0, max: null, modello: null } } }));
+    expect(screen.getByText('1 modello di grande scala, senza il calcolo noto')).toBeInTheDocument();
+    expect(screen.getByText('1 modello di grande scala nel 2026, anno in corso, senza il calcolo noto.')).toBeInTheDocument();
+  });
+});
+

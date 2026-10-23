@@ -293,6 +293,20 @@ test('area a 320px: le file vanno a capo, niente scorrimento orizzontale', async
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+test('Modelli e ricerca: il rimando apre GeopoliticAI, Indietro torna a Modelli e poi alla home', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#tile-modelli .face').click();
+  await page.getByRole('link', { name: 'Vai a GeopoliticAI →' }).click();
+  await expect(page).toHaveURL(/#geopoliticai$/);
+  await expect(scheda(page)).toHaveText('UE');
+  await page.goBack();
+  await expect(page).toHaveURL(/#modelli$/);
+  await expect(page.locator('#detail-modelli')).toBeVisible();
+  await page.goBack();
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(page).toHaveURL(/\/$/);
+});
+
 const matrice = (page: Page) => page.getByRole('table', { name: 'Calcolo e capacità per area, anno per anno' });
 
 test('matrice: un clic su una riga cambia l’area nel link e porta il focus alla scheda', async ({ page }) => {

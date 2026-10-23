@@ -343,3 +343,49 @@ describe('GeopoliticAI: la matrice', () => {
   });
 });
 
+
+describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
+  beforeEach(() => localStorage.clear());
+  const blocco = () => within(screen.getByRole('heading', { level: 3, name: 'Chi addestra i modelli di grande scala' }).closest('section') as HTMLElement);
+  const inEvidenza = () => blocco().getAllByRole('listitem').filter((li) => li.getAttribute('aria-current') === 'true').map((li) => li.textContent?.trim());
+
+  it('una barra per anno con la quota delle cinque aree e il totale, l’area scelta in evidenza', () => {
+    show();
+    expect(blocco().getByText('Quota dei modelli di grande scala usciti ogni anno, per area. È un conteggio: non dice quanto sono potenti.')).toBeInTheDocument();
+    const barre = blocco().getAllByRole('img');
+    expect(barre.map((b) => b.getAttribute('aria-label')?.slice(0, 4))).toEqual(['2023', '2024', '2025', '2026']);
+    const barra2025 = blocco().getByRole('img', { name: '2025: USA 66, Cina 84, UE 5, Regno Unito 0, Altri 10. Totale 165.' });
+    expect(barra2025.nextElementSibling).toHaveTextContent(/^165$/); // il totale accanto alla barra
+    expect(inEvidenza()).toEqual(['UE']);
+  });
+
+  it('con un Paese UE scelto è in evidenza l’UE; con un’altra area, quella', () => {
+    area('francia');
+    expect(inEvidenza()).toEqual(['UE']);
+    cleanup();
+    area('cina');
+    expect(inEvidenza()).toEqual(['Cina']);
+  });
+
+  it('la frase sull’area scelta, sempre per l’ultimo anno chiuso', () => {
+    show();
+    expect(blocco().getByText("Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).")).toBeInTheDocument();
+    cleanup();
+    area('usa');
+    expect(blocco().getByText('Nel 2025, 66 dei 165 modelli di grande scala sono degli USA (40%).')).toBeInTheDocument();
+  });
+
+  it('per un Paese UE usa il suo nome; con un modello solo al singolare, sotto l’1% con un decimale', () => {
+    area('francia');
+    expect(blocco().getByText('Nel 2025, 3 dei 165 modelli di grande scala sono della Francia (2%).')).toBeInTheDocument();
+    cleanup();
+    area('germania');
+    expect(blocco().getByText('Nel 2025, 1 dei 165 modelli di grande scala è della Germania (0,6%).')).toBeInTheDocument();
+  });
+
+  it('a zero lo dice a parole', () => {
+    area('italia');
+    expect(blocco().getByText("Nel 2025 nessuno dei 165 modelli di grande scala è dell'Italia.")).toBeInTheDocument();
+  });
+});
+

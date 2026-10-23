@@ -238,6 +238,18 @@ export function notaMatrice(g: Geopoliticai, misura: Misura): string {
   return `${cosa} ${copertura}${senza}`;
 }
 
+/** «Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).»: sempre per l'ultimo anno chiuso, il totale è delle cinque aree. */
+export function fraseChiAddestra(g: Geopoliticai, k: string): string {
+  const y = g.anno_corrente - 1;
+  const n = (z: string) => g.zone[z].calcolo[String(y)]?.n ?? 0;
+  const tot = AREE.reduce((t, z) => t + n(z), 0);
+  const mio = n(k);
+  const dove = di(g.zone[k].con_articolo);
+  if (!mio) return `Nel ${y} nessuno dei ${tot} modelli di grande scala è ${dove}.`;
+  const pct = (100 * mio) / tot;
+  return `Nel ${y}, ${mio} dei ${tot} modelli di grande scala ${mio === 1 ? 'è' : 'sono'} ${dove} (${nf(pct, pct < 1 ? 1 : 0)}%).`;
+}
+
 /** Fonte sotto la card (ticket 06, Q15). */
 export const citeGeo = (g: Geopoliticai): Cite => [
   { t: 'Fonte: Epoch AI, ' }, { t: 'Data on AI models', href: g.url_modelli }, { t: ' ed ' },

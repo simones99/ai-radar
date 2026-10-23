@@ -75,7 +75,8 @@
   }
 
   // I parametri di un link si aggiungono a quelli già nel link; a parità di nome vince il link.
-  function openTile(id: TileId, el: string | null = null, extra: Params = {}) {
+  // `rimando`: un link dentro un dettaglio verso un'altra card aggiunge un passo, e Indietro torna alla card di prima.
+  function openTile(id: TileId, el: string | null = null, extra: Params = {}, rimando = false) {
     if (jumping) return;
     params = { ...params, ...extra };
     if (current === null) {
@@ -84,6 +85,9 @@
     } else if (current === id && el !== null && el !== currentEl) {
       depth += 1; // dentro la card, verso un elemento: Indietro torna a dove si era
       history.pushState({ tema: id, depth, daRadar: currentEl === null }, '', toHash(id, el, params));
+    } else if (rimando && current !== id) {
+      depth += 1;
+      history.pushState({ tema: id, depth }, '', toHash(id, el, params));
     } else if (current === id && el === null && currentEl !== null && history.state?.daRadar) {
       jump('back', 1); // «Tutte le competenze» dopo esserci entrati dal radar: come Indietro
       return;
@@ -93,14 +97,15 @@
     show(id, el, current === id); // la stessa card: di nuovo evidenza, scorrimento e focus sul titolo
   }
 
-  // Link a una card (le porte): stessa cronologia del clic su una card. Clic centrale, Ctrl e Maiusc restano al browser.
+  // Link a una card (le porte): stessa cronologia del clic su una card; da dentro un dettaglio è un rimando. Clic centrale, Ctrl e Maiusc restano al browser.
   function onLink(e: MouseEvent) {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    const href = (e.target as Element | null)?.closest?.('a[href^="#"]')?.getAttribute('href');
+    const a = (e.target as Element | null)?.closest?.('a[href^="#"]');
+    const href = a?.getAttribute('href');
     const h = href ? parseHash(href) : null;
     if (!h) return;
     e.preventDefault();
-    openTile(h.tema, h.elemento, h.params);
+    openTile(h.tema, h.elemento, h.params, !!a?.closest('section.detail'));
   }
 
   function closeTile() {

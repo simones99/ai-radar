@@ -2,11 +2,10 @@
   import Bars from '../charts/Bars.svelte';
   import Block from '../charts/Block.svelte';
   import DataTable from '../charts/DataTable.svelte';
-  import LineChart from '../charts/LineChart.svelte';
   import Scatter from '../charts/Scatter.svelte';
   import { tNum } from '../data/derive';
+  import { toHash } from '../router';
   import { day, monthName, nf } from '../text/format';
-  import { seriesTable } from './cite';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
@@ -28,8 +27,6 @@
   const months = $derived(ar ? ar.mesi.slice(-12) : []);
   const papers = $derived(months.map((m) => ({ k: monthName(m).slice(0, 3), v: ar?.series._totale?.[m] ?? 0 })));
   const open = $derived((ep?.pesi_aperti ?? []).map((p) => ({ k: String(p.anno), v: p.totale ? (100 * p.aperti) / p.totale : 0 })));
-  const AREE = ['USA', 'Cina', 'UE', 'Regno Unito'];
-  const perArea = $derived(AREE.map((a) => ({ a, pts: (ep?.per_anno ?? []).filter((p) => p.area === a).map((p) => ({ x: p.anno, y: p.n })) })));
   const epCite = $derived(ep ? [{ t: 'Fonte: ' }, { t: 'Epoch AI', href: ep.url }, { t: ' (CC BY 4.0).' }] : null);
 </script>
 
@@ -54,13 +51,8 @@
     cite={epCite} table={{ cols: ['Anno', '% con pesi aperti'], rows: open.map((o) => [o.k, o.v]) }}>
     <Bars label="Quota di modelli con pesi aperti" data={open} format={(v) => `${nf(v)}%`} />
   </Block>
-  <Block span={12} title="Chi costruisce i modelli notevoli" note="Modelli notevoli all'anno per area dell'organizzazione." missing={ep ? null : 'Dati di Epoch AI non disponibili.'} cite={epCite}
-    table={seriesTable(perArea.map((p) => ({ name: p.a, pts: p.pts })), 'Anno')}>
-    <div class="multiples">
-      {#each perArea as p (p.a)}
-        <LineChart label="Modelli notevoli all'anno: {p.a}" height={160} series={[{ name: p.a, hot: p.a === 'UE', pts: p.pts }]} />
-      {/each}
-    </div>
+  <Block span={12} title="Chi costruisce i modelli, area per area" note="USA, Cina, UE, Regno Unito e gli altri Paesi: capacità, calcolo e quanti modelli di grande scala addestra ognuno sono in GeopoliticAI.">
+    <p><a class="vai" href={toHash('geopoliticai')}>Vai a GeopoliticAI →</a></p>
   </Block>
   <Block span={12} title="Ultimi modelli notevoli" missing={ep?.recenti?.length ? null : 'Dati di Epoch AI non disponibili.'} cite={epCite}>
     <DataTable cols={['Modello', 'Organizzazione', 'Data', 'Area', 'Accesso']} rows={(ep?.recenti ?? []).map((r) => [r.m, r.o, day(r.d), r.a, r.accesso])} />
@@ -68,5 +60,5 @@
 </Detail>
 
 <style>
-  .multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s3); }
+  .vai { font-size: 14px; line-height: 24px; color: var(--accent); }
 </style>

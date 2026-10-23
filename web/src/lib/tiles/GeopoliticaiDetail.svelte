@@ -5,6 +5,7 @@
   import { area as areaRicordata } from '../scelta.svelte';
   import { scheda } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
+  import GeoChiAddestra from './GeoChiAddestra.svelte';
   import GeoMatrice from './GeoMatrice.svelte';
   import type { DetailProps } from './types';
 
@@ -75,7 +76,10 @@
       {#if s.mappa}<p><button type="button" class="vai" onclick={versoLaMappa}>{s.mappa}</button></p>{/if}
     {/if}
   </Block>
-  {#if g}<GeoMatrice {g} {zona} onscegli={apriScheda} />{/if}
+  {#if g}
+    <GeoMatrice {g} {zona} onscegli={apriScheda} />
+    <GeoChiAddestra {g} {zona} />
+  {/if}
 </Detail>
 
 <style>

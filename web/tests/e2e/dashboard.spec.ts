@@ -26,14 +26,14 @@ const scrollSettled = (page: Page) =>
 const seriousViolations = async (page: Page) =>
   (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
 
-test('home: due porte, due sezioni, 8 temi', async ({ page }) => {
+test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText("Su cosa formarti e cosa succede all'AI in Italia");
   await expect(page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /A ottobre esce State of AI Report/ })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Su cosa formarti' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: "L'AI in Italia" })).toBeVisible();
-  await expect(page.locator('button.face')).toHaveCount(8);
+  await expect(page.locator('button.face')).toHaveCount(9);
 });
 
 test('la settimana dell’8: articolo eliso nella data in testa', async ({ page }) => {
@@ -265,7 +265,7 @@ test('riduci movimento: nessuna animazione all’apertura', async ({ page }) => 
 
 test('accessibilità: nessuna violazione grave in home e nelle card', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('button.face')).toHaveCount(8);
+  await expect(page.locator('button.face')).toHaveCount(9);
   expect(await seriousViolations(page)).toEqual([]);
   for (const id of TEMI) {
     await page.goto(`/#${id}`);
@@ -438,7 +438,7 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
   await expect(page.locator('#detail-business')).toBeVisible();
   await expect(page.locator('.intro')).toBeHidden();
   await expect(page.locator('nav[aria-label="Altri temi"]')).toBeHidden();
-  await expect(page.locator('button.face:visible')).toHaveCount(8);
+  await expect(page.locator('button.face:visible')).toHaveCount(9);
   await expect(page.locator('#tile-business .face')).toHaveAttribute('aria-expanded', 'true');
   const elenco = await box(page, '#temi');
   const det = await box(page, '#detail-business');

@@ -157,6 +157,35 @@ export interface EurostatSettori {
   flag: Record<'adozione' | 'scopi' | 'barriere', Record<string, FlagPerGeo>>;
 }
 
+/** Calcolo di addestramento dei modelli di grande scala usciti in un anno: n modelli, nc con il calcolo noto. */
+export interface GeoCalcolo { n: number; nc: number; max: number | null; modello: string | null }
+/** Capacità (ECI) dei modelli usciti in un anno. */
+export interface GeoEci { n: number; max: number | null; modello: string | null }
+export interface GeoZona {
+  nome: string;
+  tipo: 'area' | 'paese-ue';
+  /** «europeo», «tedesco»; null per «Altri» */
+  aggettivo: string | null;
+  /** «l'UE», «la Germania» */
+  con_articolo: string;
+  calcolo: Record<string, GeoCalcolo>;
+  eci: Record<string, GeoEci>;
+  org_eci: string[];
+  org_ls: string[];
+}
+export interface Geopoliticai {
+  fonte: string;
+  licenza: string;
+  url_modelli: string;
+  url_eci: string;
+  scaricato: string;
+  anno_corrente: number;
+  /** Le cinque aree, poi i Paesi UE con almeno un modello e l'Italia sempre. */
+  zone: Record<string, GeoZona>;
+  senza_paese: { large: string[]; eci: string[] };
+  altri_paesi: Record<string, number>;
+}
+
 export interface Dataset {
   status?: Status;
   radar?: Radar;
@@ -172,4 +201,5 @@ export interface Dataset {
   jobs?: Jobs;
   eurostat?: Eurostat;
   eurostat_settori?: EurostatSettori;
+  geopoliticai?: Geopoliticai;
 }

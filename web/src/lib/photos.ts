@@ -15,6 +15,8 @@ import notizie from '../assets/photos/notizie.jpg?w=900&format=webp';
 import notizieSet from '../assets/photos/notizie.jpg?w=480;900&format=webp&as=srcset';
 import rapporti from '../assets/photos/rapporti.jpg?w=900&format=webp';
 import rapportiSet from '../assets/photos/rapporti.jpg?w=480;900&format=webp&as=srcset';
+import geopoliticai from '../assets/photos/geopoliticai.jpg?w=900&format=webp';
+import geopoliticaiSet from '../assets/photos/geopoliticai.jpg?w=480;900&format=webp&as=srcset';
 
 /** licenzaUrl: testo della licenza; vuoto per il pubblico dominio. */
 export interface Photo { src: string; srcset: string; alt: string; titolo: string; autore: string; licenza: string; licenzaUrl: string; pagina: string }
@@ -49,4 +51,7 @@ export const PHOTOS: Record<TileId, Photo> = {
   rapporti: { src: rapporti, srcset: rapportiSet, alt: 'Sala di lettura della Library of Congress',
     titolo: 'LOC Main Reading Room Highsmith', autore: 'Carol M. Highsmith', licenza: 'Pubblico dominio', licenzaUrl: '',
     pagina: `${C}LOC_Main_Reading_Room_Highsmith.jpg` },
+  geopoliticai: { src: geopoliticai, srcset: geopoliticaiSet, alt: "La Terra vista dall'Apollo 17: l'Africa, la penisola arabica e l'Antartide",
+    titolo: 'The Earth seen from Apollo 17', autore: 'NASA, equipaggio di Apollo 17', licenza: 'Pubblico dominio', licenzaUrl: '',
+    pagina: `${C}The_Earth_seen_from_Apollo_17.jpg` },
 };

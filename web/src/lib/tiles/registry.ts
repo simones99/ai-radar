@@ -1,9 +1,10 @@
 import {
-  faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
-  headBusiness, headCompetenze, headModelli, headNotizie, headOpen, headPersone, headNorme, headRapporti,
+  faceBusiness, faceCompetenze, faceGeopoliticai, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
+  headBusiness, headCompetenze, headGeopoliticai, headModelli, headNotizie, headOpen, headPersone, headNorme, headRapporti,
 } from '../text/frasi';
 import BusinessDetail from './BusinessDetail.svelte';
 import CompetenzeDetail from './CompetenzeDetail.svelte';
+import GeopoliticaiDetail from './GeopoliticaiDetail.svelte';
 import ModelliDetail from './ModelliDetail.svelte';
 import NotizieDetail from './NotizieDetail.svelte';
 import OpenDetail from './OpenDetail.svelte';
@@ -23,6 +24,7 @@ export const TILES: TileDef[] = [
   { id: 'open', label: 'Open source', source: 'huggingface', eager: true, testa: 'per-te', face: faceOpen, head: headOpen, Detail: OpenDetail },
   { id: 'notizie', label: 'Notizie', source: 'feeds', eager: true, testa: 'per-te', face: faceNotizie, head: headNotizie, Detail: NotizieDetail },
   { id: 'business', label: 'Business', source: 'owid', eager: false, testa: 'italia', face: faceBusiness, head: headBusiness, Detail: BusinessDetail },
+  { id: 'geopoliticai', label: 'GeopoliticAI', source: 'geopoliticai', eager: false, testa: 'italia', face: faceGeopoliticai, head: headGeopoliticai, Detail: GeopoliticaiDetail },
   { id: 'persone', label: 'Persone e lavoro', source: 'owid', eager: false, testa: 'italia', face: facePersone, head: headPersone, Detail: PersoneDetail },
   { id: 'norme', label: 'Norme', source: 'ai_act', eager: false, testa: 'italia', face: faceNorme, head: headNorme, Detail: NormeDetail },
   { id: 'rapporti', label: 'Rapporti', source: 'rapporti', eager: false, testa: 'italia', face: faceRapporti, head: headRapporti, Detail: RapportiDetail },

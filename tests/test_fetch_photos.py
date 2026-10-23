@@ -22,6 +22,6 @@ def test_crop_box():
 
 
 def test_every_photo_has_title_and_alt():
-    assert set(fp.PHOTOS) == {"modelli", "open", "business", "persone", "politica", "competenze", "notizie", "rapporti"}
+    assert set(fp.PHOTOS) == {"modelli", "open", "business", "persone", "politica", "competenze", "notizie", "rapporti", "geopoliticai"}
     for pid, p in fp.PHOTOS.items():
         assert p["titolo"].startswith("File:"), pid

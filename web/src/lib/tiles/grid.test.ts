@@ -18,12 +18,12 @@ beforeEach(() => {
 });
 
 describe('TileGrid', () => {
-  it('due sezioni da 4 card, nell’ordine delle teste', () => {
+  it('due sezioni, da 4 e da 5 card, nell’ordine delle teste', () => {
     render(TileGrid, { data, today });
     const sezione = (name: string) => screen.getByRole('heading', { level: 2, name }).closest('section')!;
     const ids = (s: Element) => [...s.querySelectorAll('article.tile')].map((a) => a.id);
     expect(ids(sezione('Su cosa formarti'))).toEqual(['tile-competenze', 'tile-modelli', 'tile-open', 'tile-notizie']);
-    expect(ids(sezione("L'AI in Italia"))).toEqual(['tile-business', 'tile-persone', 'tile-norme', 'tile-rapporti']);
+    expect(ids(sezione("L'AI in Italia"))).toEqual(['tile-business', 'tile-geopoliticai', 'tile-persone', 'tile-norme', 'tile-rapporti']);
   });
 
   it('pillole in due gruppi con il nome della testa', async () => {
@@ -33,12 +33,12 @@ describe('TileGrid', () => {
     const perTe = within(nav).getByRole('group', { name: 'Su cosa formarti' });
     const italia = within(nav).getByRole('group', { name: "L'AI in Italia" });
     expect(within(perTe).getAllByRole('button').map((b) => b.textContent)).toEqual(['Competenze', 'Modelli e ricerca', 'Open source', 'Notizie']);
-    expect(within(italia).getAllByRole('button').map((b) => b.textContent)).toEqual(['Persone e lavoro', 'Norme', 'Rapporti']);
+    expect(within(italia).getAllByRole('button').map((b) => b.textContent)).toEqual(['GeopoliticAI', 'Persone e lavoro', 'Norme', 'Rapporti']);
   });
 
-  it('8 card chiuse', () => {
+  it('9 card chiuse', () => {
     render(TileGrid, { data, today });
-    expect(document.querySelectorAll('button.face')).toHaveLength(8);
+    expect(document.querySelectorAll('button.face')).toHaveLength(9);
     document.querySelectorAll('button.face').forEach((b) => expect(b).toHaveAttribute('aria-expanded', 'false'));
   });
 
@@ -49,14 +49,14 @@ describe('TileGrid', () => {
     expect(location.hash).toBe('#business');
     expect(document.title).toBe('Business · AI Radar');
     expect(face('Business')).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('navigation', { name: 'Altri temi' }).querySelectorAll('button.pill')).toHaveLength(7);
+    expect(screen.getByRole('navigation', { name: 'Altri temi' }).querySelectorAll('button.pill')).toHaveLength(8);
   });
 
-  it('card aperta: le 8 card restano come elenco compatto, il dettaglio sta accanto e prende il nome della transizione', async () => {
+  it('card aperta: le 9 card restano come elenco compatto, il dettaglio sta accanto e prende il nome della transizione', async () => {
     render(TileGrid, { data, today });
     await fireEvent.click(face('Business'));
     const faces = [...document.querySelectorAll('button.face')];
-    expect(faces).toHaveLength(8);
+    expect(faces).toHaveLength(9);
     faces.forEach((b) => expect(b).toHaveClass('compact'));
     expect(faces.filter((b) => b.getAttribute('aria-expanded') === 'true')).toEqual([card('business')]);
     const det = document.getElementById('detail-business')!;

@@ -17,10 +17,11 @@ import time
 import traceback
 from datetime import date
 
-from . import adzuna, ai_act, artificial_analysis, arxiv, epoch, eurostat, eurostat_settori, feeds, github_signals, huggingface, owid, radar, rapporti, risorse
+from . import (adzuna, ai_act, artificial_analysis, arxiv, epoch, eurostat, eurostat_settori, feeds, geopoliticai, github_signals,
+               huggingface, owid, radar, rapporti, risorse)
 from .common import load_yaml, log, now_iso, read_json, redact, session, write_json
 
-ORDER = ["epoch", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "eurostat_settori", "owid",
+ORDER = ["epoch", "geopoliticai", "artificial_analysis", "arxiv", "github", "huggingface", "adzuna", "eurostat", "eurostat_settori", "owid",
          "ai_act", "rapporti", "feeds", "risorse", "radar"]
 SKIPPABLE = (adzuna.MissingCredentials, artificial_analysis.MissingCredentials)
 
@@ -40,6 +41,7 @@ def main(argv: list[str] | None = None) -> int:
 
     jobs = {
         "epoch": lambda: epoch.run(s, today),
+        "geopoliticai": lambda: geopoliticai.run(s, today),
         "artificial_analysis": lambda: artificial_analysis.run(s, today),
         "arxiv": lambda: arxiv.run(s, skills, today, months=args.months),
         "github": lambda: github_signals.run(s, skills, src.get("github_repos", []), today, months=args.months,

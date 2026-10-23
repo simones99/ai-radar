@@ -2,7 +2,9 @@ import {
   MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
+import { annoFaccia, valore } from '../data/geopoliticai';
 import type { Dataset, Quadrant, Ruolo } from '../data/types';
+import { eci as eciFmt, fraseFaccia } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
@@ -225,6 +227,24 @@ export function headRapporti(d: Dataset, today: Date): Head {
   return {
     title: [{ t: 'Prossimo rapporto: ' }, { t: n.report.nome, em: true }],
     deck: `Previsto per ${monthYear(n.ym)}: è una stima. Qui trovi solo link e date, nessuna sintesi.`,
+  };
+}
+
+// ---------------------------------------------------------------- geopoliticai
+/** Sempre l'UE, anche con un'altra area scelta nel dettaglio (ticket 04, Q12). */
+export function faceGeopoliticai(d: Dataset, _today?: Date): Face | null {
+  const g = d.geopoliticai;
+  if (!g) return null;
+  const y = annoFaccia(g);
+  const ue = valore(g, 'ue', 'eci', y);
+  const sent = fraseFaccia(g, y);
+  return ue && sent ? { fig: eciFmt(ue.v), unit: 'ECI', sent } : null;
+}
+export function headGeopoliticai(d: Dataset, _today?: Date): Head {
+  if (!d.geopoliticai) return { title: plain('GeopoliticAI'), deck: null };
+  return {
+    title: [{ t: 'Chi costruisce i modelli più potenti, ' }, { t: "e dov'è l'Europa", em: true }],
+    deck: "Calcolo di addestramento e capacità dei modelli AI per area, dal 2020. Un modello conta per il Paese della prima organizzazione che l'ha sviluppato.",
   };
 }
 

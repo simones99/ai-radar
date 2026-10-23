@@ -6,7 +6,7 @@
   let { status }: { status: Status | undefined } = $props();
 
   const NOMI: Record<string, string> = {
-    epoch: 'Epoch AI', artificial_analysis: 'Artificial Analysis', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
+    epoch: 'Epoch AI', geopoliticai: 'Epoch (GeopoliticAI)', artificial_analysis: 'Artificial Analysis', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
     adzuna: 'Adzuna', eurostat: 'Eurostat', eurostat_settori: 'Eurostat (settori)', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)',
     feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)',
   };

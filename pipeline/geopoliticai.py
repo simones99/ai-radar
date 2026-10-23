@@ -3,7 +3,8 @@
 Regole del ticket 06 (.scratch/geopoliticai): un modello conta solo per il Paese della prima
 organizzazione; Hong Kong e Macao vanno con la Cina, Taiwan con «Altri»; i modelli senza Paese
 restano fuori dalle aree. Il calcolo viene dal dataset large-scale (almeno 1e23 FLOP, dal 2020),
-la capacità dall'Epoch Capabilities Index su tutti i suoi modelli (dal 2023).
+la capacità dall'Epoch Capabilities Index su tutti i suoi modelli (dal 2023). Per l'anello dei modelli
+sulla mappa c'è anche l'ECI massimo per Paese dell'ultimo anno chiuso, con i codici ADM0_A3 dei confini.
 """
 from __future__ import annotations
 
@@ -112,6 +113,13 @@ def zone_di(paese: str) -> tuple[str, str | None]:
     return "altri", None
 
 
+def codice_mappa(paese: str) -> str | None:
+    """Il codice ADM0_A3 della mappa, con Hong Kong e Macao nella Cina; None per un nome sconosciuto."""
+    if paese in CINA:
+        return "CHN"
+    return PAESI_UE[paese][4] if paese in PAESI_UE else PAESI_FUORI_UE.get(paese)
+
+
 def _leggi(text: str, colonne: set[str], nome: str) -> list[dict]:
     righe = list(csv.DictReader(io.StringIO(text.lstrip("﻿"))))
     mancano = colonne - set(righe[0] if righe else {})
@@ -127,6 +135,8 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
     senza = {"large": [], "eci": []}
     altri_paesi: dict[str, int] = defaultdict(int)
     altrove: dict[str, int] = defaultdict(int)
+    chiuso = today.year - 1  # l'anello dei modelli sulla mappa guarda l'ultimo anno chiuso
+    eci_paesi: dict[str, dict] = {}
 
     for r in large:
         y = _anno(r["Publication date"])
@@ -167,6 +177,9 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
             senza["eci"].append(nome)
             continue
         area, ue = zone_di(paese)
+        iso = codice_mappa(paese)
+        if y == chiuso and iso and (iso not in eci_paesi or v > eci_paesi[iso]["max"]):
+            eci_paesi[iso] = {"max": round(v, 2), "modello": nome}
         for k in [area] + ([ue] if ue else []):
             e = zone[k]["eci"].setdefault(str(y), {"n": 0, "max": None, "modello": None})
             e["n"] += 1
@@ -174,20 +187,23 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
             if e["max"] is None or v > e["max"]:
                 e["max"], e["modello"] = round(v, 2), nome
 
-    def zona(k: str, nome: str, tipo: str, aggettivo: str | None, articolo: str) -> dict:
+    def zona(k: str, nome: str, tipo: str, aggettivo: str | None, articolo: str, mappa: list[str]) -> dict:
         z = zone[k]
         return {"nome": nome, "tipo": tipo, "aggettivo": aggettivo, "con_articolo": articolo,
                 "calcolo": dict(sorted(z["calcolo"].items())), "eci": dict(sorted(z["eci"].items())),
-                "org_eci": sorted(z["org_eci"]), "org_ls": sorted(z["org_ls"]), "contano_altrove": altrove[k]}
+                "org_eci": sorted(z["org_eci"]), "org_ls": sorted(z["org_ls"]), "contano_altrove": altrove[k],
+                "paesi_mappa": mappa}
 
+    paesi = {v[0]: v for v in PAESI_UE.values()}
+    # i Paesi della mappa di ogni area; «Altri» è tutto il resto e resta vuota
+    mappa_aree = {"usa": ["USA"], "cina": ["CHN"], "ue": sorted(v[4] for v in paesi.values()), "uk": ["GBR"], "altri": []}
     out: dict[str, dict] = {}
     for k, (nome, agg, art) in AREE.items():
-        out[k] = zona(k, nome, "area", agg, art)
+        out[k] = zona(k, nome, "area", agg, art, mappa_aree[k])
     # i Paesi UE con almeno un modello, più l'Italia sempre
-    paesi = {v[0]: v for v in PAESI_UE.values()}
-    for pid, (_, nome, agg, art, _) in sorted(paesi.items(), key=lambda kv: kv[1][1]):
+    for pid, (_, nome, agg, art, iso) in sorted(paesi.items(), key=lambda kv: kv[1][1]):
         if pid in zone or pid == "italia":
-            out[pid] = zona(pid, nome, "paese-ue", agg, art)
+            out[pid] = zona(pid, nome, "paese-ue", agg, art, [iso])
 
     return {
         "fonte": "Epoch AI",
@@ -199,6 +215,7 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
         "zone": out,
         "senza_paese": senza,
         "altri_paesi": dict(sorted(altri_paesi.items(), key=lambda kv: (-kv[1], kv[0]))),
+        "eci_paesi": {"anno": chiuso, "valori": dict(sorted(eci_paesi.items(), key=lambda kv: -kv[1]["max"]))},
     }
 
 

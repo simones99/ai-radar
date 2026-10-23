@@ -124,7 +124,7 @@ function corea(g: Geopoliticai): string | null {
 const NOTA_UK = 'Epoch attribuisce Google DeepMind, che ha sede a Londra, agli USA: i suoi modelli contano lì.';
 
 /** Nota fissa, finché l'Italia è a zero. */
-const NOTA_ITALIA = 'Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.';
+export const NOTA_ITALIA = 'Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.';
 
 /** «Nell'UE la frontiera è Mistral AI, in Francia: 150,0 ECI nel 2026, anno in corso.» */
 function frontieraUe(g: Geopoliticai): string | null {

@@ -1,8 +1,11 @@
-"""File scritti a mano: scadenze dell'AI Act e rapporti periodici."""
+"""File scritti a mano (scadenze dell'AI Act e rapporti periodici) e file generati una volta (i confini della mappa)."""
 from __future__ import annotations
 
+import importlib.util
 import json
+import re
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -73,3 +76,43 @@ def test_shipped_files_are_valid(tmp_path, monkeypatch):
     assert rapporti.run()["rapporti"] >= 4
     assert json.loads((tmp_path / "ai_act.json").read_text())["scadenze"]
     assert json.loads((tmp_path / "rapporti.json").read_text())["rapporti"]
+
+
+# ---- i confini della mappa di GeopoliticAI, generati una volta da scripts/confini.py ----
+
+ROOT = Path(__file__).resolve().parents[1]
+CONFINI = json.loads((ROOT / "web" / "src" / "lib" / "geo" / "confini.json").read_text(encoding="utf-8"))
+_spec = importlib.util.spec_from_file_location("confini", ROOT / "scripts" / "confini.py")
+confini = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(confini)
+PAESI = {p["id"]: p for p in CONFINI["paesi"]}
+
+
+def dentro(iso: str, lon: float, lat: float) -> bool:
+    """Il punto sta nel percorso del Paese, con la regola pari-dispari su tutti i suoi anelli."""
+    x, y = confini.proj(lon, lat)
+    n = False
+    for parte in PAESI[iso]["d"].strip("Z").split("Z"):
+        pts = [tuple(map(float, v.split(","))) for v in parte.lstrip("M").split("L")]
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:] + pts[:1]):
+            if (y0 > y) != (y1 > y) and x < x0 + (y - y0) * (x1 - x0) / (y1 - y0):
+                n = not n
+    return n
+
+
+def test_confini_con_le_chiavi_adm0_a3():
+    assert all(re.fullmatch(r"[A-Z]{3}", k) for k in PAESI)
+    # dove ADM0_A3 e ISO_A3 non coincidono: Kosovo, Norvegia, Sahara Occidentale
+    assert {"KOS", "NOR", "SAH", "ITA", "USA", "CHN"} <= set(PAESI)
+    assert PAESI["ITA"]["nome"] == "Italia"
+
+
+def test_taiwan_a_se_hong_kong_e_macao_nella_cina():
+    assert "TWN" in PAESI
+    assert "HKG" not in PAESI and "MAC" not in PAESI
+    assert dentro("TWN", 121.56, 25.03) and not dentro("CHN", 121.56, 25.03)  # Taipei
+
+
+def test_la_crimea_dentro_l_ucraina():
+    assert dentro("UKR", 34.10, 44.95) and not dentro("RUS", 34.10, 44.95)  # Sinferopoli
+    assert dentro("UKR", 30.52, 50.45) and dentro("RUS", 37.62, 55.75)  # Kiev, Mosca

@@ -6,6 +6,7 @@
   import { scheda } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
   import GeoChiAddestra from './GeoChiAddestra.svelte';
+  import GeoMappa from './GeoMappa.svelte';
   import GeoMatrice from './GeoMatrice.svelte';
   import type { DetailProps } from './types';
 
@@ -78,6 +79,7 @@
   </Block>
   {#if g}
     <GeoMatrice {g} {zona} onscegli={apriScheda} />
+    <GeoMappa {g} {zona} anello={params.anello} onscegli={scegli} />
     <GeoChiAddestra {g} {zona} />
   {/if}
 </Detail>

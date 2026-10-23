@@ -123,6 +123,44 @@ def test_contano_altrove_i_modelli_con_la_prima_organizzazione_di_un_altro_paese
     assert zone["ue"]["contano_altrove"] == 7
 
 
+def test_paesi_della_mappa_di_ogni_zona(data_dir):
+    zone = run(data_dir)["zone"]
+    assert zone["usa"]["paesi_mappa"] == ["USA"]
+    assert zone["cina"]["paesi_mappa"] == ["CHN"]
+    assert zone["uk"]["paesi_mappa"] == ["GBR"]
+    assert zone["francia"]["paesi_mappa"] == ["FRA"]
+    assert zone["italia"]["paesi_mappa"] == ["ITA"]
+    ue = zone["ue"]["paesi_mappa"]
+    assert len(ue) == 27 and {"ITA", "FRA", "DEU", "CZE", "NLD"} <= set(ue)
+    assert zone["altri"]["paesi_mappa"] == []  # «Altri» è tutto il resto
+
+
+def eci(modello, paese, valore, anno="2025"):
+    return {"Model": modello, "Display name": modello, "eci": valore, "date": f"{anno}-06-01", "Organization": "Org",
+            "Country (of organization)": paese}
+
+
+def test_eci_paesi_dell_ultimo_anno_chiuso(data_dir):
+    # nel 2025 l'ECI valuta modelli di tre Paesi soltanto, contati per la prima organizzazione
+    out = run(data_dir)
+    assert out["eci_paesi"] == {"anno": 2025, "valori": {
+        "USA": {"max": 156.33, "modello": "GPT-5.2 Pro"},
+        "CHN": {"max": 146.09, "modello": "DeepSeek-V3.2"},
+        "FRA": {"max": 134.02, "modello": "Mistral Medium 3"},
+    }}
+
+
+def test_eci_paesi_con_i_codici_della_mappa(data_dir):
+    righe = [eci("HK", "Hong Kong", "150"), eci("TW", "Taiwan", "120"), eci("KR", "South Korea,United States of America", "125"),
+             eci("Vecchio", "Japan", "140", anno="2024"), eci("Nuovo", "Japan", "141", anno="2026"), eci("Senza", "", "160")]
+    valori = run(data_dir, Session(eci=con_righe(ECI, righe)))["eci_paesi"]["valori"]
+    assert valori["CHN"] == {"max": 150.0, "modello": "HK"}
+    assert valori["TWN"] == {"max": 120.0, "modello": "TW"}
+    assert valori["KOR"] == {"max": 125.0, "modello": "KR"}
+    assert "HKG" not in valori and "JPN" not in valori
+    assert valori["USA"]["modello"] == "GPT-5.2 Pro"
+
+
 def test_hong_kong_e_macao_nella_cina_taiwan_in_altri(data_dir):
     base = run(data_dir)["zone"]
     righe = [large("HK", "Hong Kong", "1e24"), large("MO", "Macao", "1e24"), large("TW", "Taiwan", "5e25")]

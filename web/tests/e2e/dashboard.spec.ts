@@ -330,6 +330,66 @@ test('matrice a 320px: scorre dentro il suo contenitore, non la pagina', async (
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+const mappa = (page: Page) => page.getByRole('region', { name: "Chi controlla la catena dell'AI" });
+const europa = (page: Page) => mappa(page).getByRole('group', { name: 'Europa, ingrandita' });
+const italiaInEuropa = (page: Page) => europa(page).getByRole('button', { name: /^Italia:/ });
+
+test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette nel link', async ({ page }) => {
+  await page.goto('/#geopoliticai?anello=modelli');
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
+  await expect(mappa(page).getByRole('button', { name: 'Materie prime (in arrivo)' })).toBeDisabled();
+  await page.goto('/#geopoliticai?anello=fabbricazione'); // non ancora attivo: si aprono i modelli
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
+  await page.goto('/#geopoliticai');
+  await mappa(page).getByRole('button', { name: '6 Modelli', exact: true }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?anello=modelli$/);
+  // l'anello non si ricorda tra le visite: resta solo nel link
+  await page.goto('about:blank');
+  await page.goto('/#geopoliticai');
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
+  await expect(page).toHaveURL(/#geopoliticai$/);
+});
+
+test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la evidenzia', async ({ page }) => {
+  await page.goto('/#geopoliticai');
+  await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true'); // dentro l'UE
+  await paesiUe(page).getByRole('button', { name: 'Francia' }).click();
+  await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'false');
+  await italiaInEuropa(page).click();
+  await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
+  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('mappa a 320px: il riquadro dell’Europa sta sotto la mappa, l’Italia si tocca bene', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#geopoliticai');
+  // le due mappe misurate insieme: tra due misure separate la pagina può scorrere
+  const [mondo, riquadro] = await mappa(page).evaluate((el) =>
+    ['svg[aria-label^="Mappa del mondo"]', 'svg[aria-label="Europa, ingrandita"]'].map((s) => el.querySelector(s)!.getBoundingClientRect().toJSON()));
+  expect(riquadro.y).toBeGreaterThanOrEqual(mondo.y + mondo.height);
+  expect(riquadro.width).toBeGreaterThan(mondo.width - 4);
+  const it = (await italiaInEuropa(page).boundingBox())!;
+  expect(Math.min(it.width, it.height)).toBeGreaterThanOrEqual(44);
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+test('mappa in tema scuro: nessuna violazione grave', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/#geopoliticai?area=cina');
+  await page.reload();
+  await expect(mappa(page)).toBeVisible();
+  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+});
+
+test('mappa con «riduci movimento»: nessuna animazione nel scegliere un Paese', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/#geopoliticai');
+  await italiaInEuropa(page).click();
+  await expect(page).toHaveURL(/area=italia/);
+  expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+});
+
 for (const width of [320, 360]) {
   test(`${width}px: nessuno scorrimento orizzontale`, async ({ page }) => {
     await page.setViewportSize({ width, height: 780 });

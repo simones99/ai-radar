@@ -174,7 +174,11 @@ export interface GeoZona {
   org_ls: string[];
   /** modelli di grande scala dal 2020 con un'organizzazione di questa zona, che contano altrove: solo UE e Paesi UE, 0 per le altre aree */
   contano_altrove: number;
+  /** i codici ADM0_A3 dei Paesi della mappa che stanno nella zona; vuoto per «Altri», che è tutto il resto */
+  paesi_mappa: string[];
 }
+/** L'ECI massimo di un Paese della mappa (codice ADM0_A3) nell'anno, con il modello. */
+export interface GeoEciPaese { max: number; modello: string }
 export interface Geopoliticai {
   fonte: string;
   licenza: string;
@@ -186,6 +190,8 @@ export interface Geopoliticai {
   zone: Record<string, GeoZona>;
   senza_paese: { large: string[]; eci: string[] };
   altri_paesi: Record<string, number>;
+  /** L'anello dei modelli sulla mappa: l'ECI massimo per Paese nell'ultimo anno chiuso. */
+  eci_paesi: { anno: number; valori: Record<string, GeoEciPaese> };
 }
 
 export interface Dataset {

@@ -69,8 +69,9 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
     const { container } = show();
     const cite = container.querySelector('.cite') as HTMLElement;
     expect(cite).toHaveTextContent('Fonte: Epoch AI, Data on AI models ed Epoch Capabilities Index (CC BY 4.0), aggregati per area da AI Radar. Dati scaricati il 15 ott 2026.');
-    expect(screen.getByRole('link', { name: 'Data on AI models' })).toHaveAttribute('href', 'https://epoch.ai/data/ai-models');
-    expect(screen.getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
+    expect(within(cite).getByRole('link', { name: 'Data on AI models' })).toHaveAttribute('href', 'https://epoch.ai/data/ai-models');
+    expect(within(cite).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
+    expect(screen.getAllByRole('link', { name: 'Data on AI models' })).toHaveLength(1);
   });
   it('senza il file lo dice', () => {
     show({ ...data, geopoliticai: undefined });
@@ -226,7 +227,7 @@ describe('GeopoliticAI: le schede con i vuoti', () => {
 
   it('la Corea del Sud si nomina solo se è il Paese con più modelli di «Altri»', () => {
     area('altri', { ...data, geopoliticai: { ...geo, altri_paesi: { Canada: 30, 'South Korea': 22 } } });
-    expect(screen.queryByText(/Corea del Sud/)).toBeNull();
+    expect(laScheda('Altri').queryByText(/Corea del Sud/)).toBeNull();
   });
 
   it('Ha solo valori vecchi: il Regno Unito mostra gli ultimi, senza distanza dal primo, con la nota su DeepMind', () => {
@@ -389,3 +390,102 @@ describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
   });
 });
 
+
+describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  /** Il valore del tabellone sotto un'etichetta. */
+  const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
+
+  it('sei fermate: solo quella dei modelli è attiva, le altre sono disabilitate e lo dicono', () => {
+    show();
+    const linea = within(mappa().getByRole('navigation', { name: "Gli anelli della catena dell'AI" }));
+    const fermate = linea.getAllByRole('listitem').map((li) => within(li).getByRole('button'));
+    expect(fermate.map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
+      '1 Materie prime (in arrivo)', '2 Progettazione dei chip (in arrivo)', '3 Fabbricazione dei chip (in arrivo)',
+      '4 Macchinari (in arrivo)', '5 Data center (in arrivo)', '6 Modelli',
+    ]);
+    expect(fermate.slice(0, 5).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
+    expect(fermate[5]).toBeEnabled();
+    expect(fermate[5]).toHaveAttribute('aria-current', 'step');
+    // con un anello solo attivo, le frecce non portano da nessuna parte
+    expect(linea.getByRole('button', { name: 'Anello precedente' })).toBeDisabled();
+    expect(linea.getByRole('button', { name: 'Anello successivo' })).toBeDisabled();
+  });
+
+  it('il titolo dell’anello ha numero, nome, misura, fonte e data', () => {
+    show();
+    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
+    expect(mappa().getByText('ECI del miglior modello del 2025 · Epoch AI, dati scaricati il 15 ott 2026')).toBeInTheDocument();
+  });
+
+  it('un anello non valido, o non ancora attivo, apre i modelli', () => {
+    show(data, { anello: 'datacenter' });
+    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
+    cleanup();
+    show(data, { anello: 'boh' });
+    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
+  });
+
+  it('il tabellone: il primo, l’UE e l’Italia, con le frasi oneste al posto dei vuoti', () => {
+    show();
+    expect(cifra('Il primo')).toHaveTextContent(/^USA 156,3 ECI GPT-5\.2 Pro$/);
+    expect(cifra('UE')).toHaveTextContent(/^134,0 ECI Mistral Medium 3$/);
+    expect(cifra('Italia')).toHaveTextContent(/^nessun modello valutato nel 2025$/);
+    expect(mappa().getAllByText(/./, { selector: 'dt' }).map((d) => d.textContent)).toEqual(['Il primo', 'UE', 'Italia']);
+  });
+
+  it('il tabellone aggiunge l’area scelta, se non è già lì', () => {
+    area('cina');
+    expect(cifra('Cina')).toHaveTextContent(/^146,1 ECI DeepSeek-V3\.2$/);
+    cleanup();
+    area('germania');
+    expect(cifra('Germania')).toHaveTextContent(/^nessun modello valutato nel 2025$/);
+    cleanup();
+    area('usa'); // gli USA sono già «Il primo»
+    expect(mappa().getAllByText(/./, { selector: 'dt' }).map((d) => d.textContent)).toEqual(['Il primo', 'UE', 'Italia']);
+  });
+
+  it('la tabella dei Paesi dell’anello: Paese, valore, data', () => {
+    show();
+    const tabella = within(mappa().getByRole('table'));
+    expect(tabella.getAllByRole('columnheader').map((c) => c.textContent)).toEqual(['Paese', 'Valore', 'Data']);
+    expect(tabella.getAllByRole('row').slice(1).map((r) => [...r.children].map((c) => c.textContent))).toEqual([
+      ['USA', '156,3 ECI, GPT-5.2 Pro', '2025'],
+      ['Cina', '146,1 ECI, DeepSeek-V3.2', '2025'],
+      ['Francia', '134,0 ECI, Mistral Medium 3', '2025'],
+    ]);
+  });
+
+  it('sulla mappa i numeri dei primi Paesi, con il segnalino accanto al primo', () => {
+    show();
+    const etichette = mappa().getAllByTestId('etichetta').map((e) => e.textContent?.replace(/\s+/g, ' ').trim());
+    expect(etichette).toEqual(['USA 156,3', 'Cina 146,1', 'Francia 134,0']);
+    expect(mappa().getByTestId('segnalino')).toHaveAccessibleName('Il primo: USA');
+  });
+
+  it('l’Italia nel riquadro dell’Europa: si può toccare, e sceglie l’Italia', async () => {
+    const europa = () => within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+    const italia = () => europa().getByRole('button', { name: 'Italia: nessun modello valutato nel 2025' });
+    const francia = () => europa().getByRole('button', { name: 'Francia: 134,0 ECI, Mistral Medium 3' });
+    area('francia');
+    expect(italia()).toHaveAttribute('aria-pressed', 'false');
+    expect(francia()).toHaveAttribute('aria-pressed', 'true');
+    const scelto = new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
+    await fireEvent.click(italia());
+    expect((await scelto).detail).toEqual({ chiave: 'area', valore: 'italia' });
+    cleanup();
+    area('italia');
+    expect(italia()).toHaveAttribute('aria-pressed', 'true');
+    expect(francia()).toHaveAttribute('aria-pressed', 'false');
+    cleanup();
+    show(); // con tutta l'UE, l'Italia è dentro l'area scelta
+    expect(italia()).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('sotto la mappa le fonti e le licenze dell’anello aperto', () => {
+    show();
+    const fonte = mappa().getByText(/^Modelli: Epoch AI/);
+    expect(fonte).toHaveTextContent("Modelli: Epoch AI, Epoch Capabilities Index (CC BY 4.0), ECI massimo per Paese aggregato da AI Radar. Confini: Natural Earth, pubblico dominio.");
+    expect(within(fonte).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
+  });
+});

@@ -33,8 +33,16 @@ Un modello AI attribuito al Paese in cui ha sede l'organizzazione che lo svilupp
 _Avoid_: modello sovrano, modello locale, modello del Paese
 
 **Area**:
-Uno dei blocchi in cui si confrontano i modelli nazionali: USA, Cina (Hong Kong compresa), Regno Unito, UE e Altri, cioè tutti gli altri Paesi, Taiwan compresa. Dentro l'UE si vedono anche i singoli Paesi, Italia compresa.
+Uno dei blocchi in cui si confrontano i modelli nazionali e si riassume la mappa: USA, Cina (Hong Kong e Macao comprese), Regno Unito, UE e Altri, cioè tutti gli altri Paesi, Taiwan compresa. Dentro l'UE si vedono anche i singoli Paesi, Italia compresa; sulla mappa ogni Paese ha il suo valore.
 _Avoid_: regione, blocco, zona
+
+**Anello**:
+Una delle tappe della catena dell'AI su cui la mappa confronta i Paesi: le materie prime, la progettazione, la fabbricazione e i macchinari dei chip, i data center e i modelli. Ogni anello ha la sua misura, e gli anelli non si sommano.
+_Avoid_: risorsa, fase, livello, layer
+
+**H100 equivalente**:
+L'unità con cui si misura la potenza di calcolo di un data center: quante GPU NVIDIA H100 servirebbero per la stessa potenza. È la misura dell'anello dei data center.
+_Avoid_: GPU, chip, potenza installata
 
 **Calcolo di addestramento**:
 La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli.

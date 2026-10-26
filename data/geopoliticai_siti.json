@@ -1,0 +1,480 @@
+{
+ "aggiornato": "2026-10-26",
+ "siti": {
+  "Colossus 2": {
+   "lat": 34.98929,
+   "lon": -90.03857,
+   "posizione": "epoch"
+  },
+  "Anthropic-Amazon New Carlisle": {
+   "lat": 41.67936,
+   "lon": -86.47123,
+   "posizione": "epoch"
+  },
+  "Microsoft Fairwater Atlanta": {
+   "lat": 33.45719,
+   "lon": -84.52452,
+   "posizione": "epoch"
+  },
+  "Google Pryor (North)": {
+   "lat": 36.24535,
+   "lon": -95.32349,
+   "posizione": "epoch"
+  },
+  "DayOne Nusajaya": {
+   "lat": 1.42938,
+   "lon": 103.59785,
+   "posizione": "epoch"
+  },
+  "Meta Prometheus": {
+   "lat": 40.08778,
+   "lon": -82.74276,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Abilene": {
+   "lat": 32.50131,
+   "lon": -99.78561,
+   "posizione": "epoch"
+  },
+  "DayOne Kempas": {
+   "lat": 1.55943,
+   "lon": 103.71987,
+   "posizione": "epoch"
+  },
+  "Microsoft Fairwater Wisconsin": {
+   "lat": 42.68393,
+   "lon": -87.9152,
+   "posizione": "epoch"
+  },
+  "Google Columbus": {
+   "lat": 39.84913,
+   "lon": -82.99661,
+   "posizione": "epoch"
+  },
+  "Google New Albany": {
+   "lat": 40.05677,
+   "lon": -82.76774,
+   "posizione": "epoch"
+  },
+  "Google Mesa": {
+   "lat": 33.35458,
+   "lon": -111.67587,
+   "posizione": "epoch"
+  },
+  "Colossus 1": {
+   "lat": 35.06017,
+   "lon": -90.15546,
+   "posizione": "epoch"
+  },
+  "Google Council Bluffs (East)": {
+   "lat": 41.17277,
+   "lon": -95.79685,
+   "posizione": "epoch"
+  },
+  "CoreWeave Denton TX": {
+   "lat": 33.21479,
+   "lon": -97.21003,
+   "posizione": "epoch"
+  },
+  "QTS Richmond 1": {
+   "lat": 37.48546,
+   "lon": -77.24695,
+   "posizione": "epoch"
+  },
+  "Bridge Data Centres MY06": {
+   "lat": 1.69721,
+   "lon": 103.41588,
+   "posizione": "epoch"
+  },
+  "Meta Rosemount": {
+   "lat": 44.73396,
+   "lon": -93.06196,
+   "posizione": "epoch"
+  },
+  "Amazon Madison Mega Site": {
+   "lat": 32.59743,
+   "lon": -90.09133,
+   "posizione": "epoch"
+  },
+  "Google Bristow": {
+   "lat": 38.77717,
+   "lon": -77.58298,
+   "posizione": "epoch"
+  },
+  "Microsoft Goodyear": {
+   "lat": 33.41204,
+   "lon": -112.36634,
+   "posizione": "epoch"
+  },
+  "Meta Jeffersonville": {
+   "lat": 38.36947,
+   "lon": -85.6643,
+   "posizione": "epoch"
+  },
+  "Google Kansas City East": {
+   "lat": 39.17962,
+   "lon": -94.46422,
+   "posizione": "epoch"
+  },
+  "Meta Temple": {
+   "lat": 31.13095,
+   "lon": -97.36672,
+   "posizione": "epoch"
+  },
+  "AWS New Albany": {
+   "lat": 40.1059,
+   "lon": -82.74032,
+   "posizione": "epoch"
+  },
+  "Google Omaha": {
+   "lat": 41.34173,
+   "lon": -96.08888,
+   "posizione": "epoch"
+  },
+  "Google Lincoln": {
+   "lat": 40.90705,
+   "lon": -96.65364,
+   "posizione": "epoch"
+  },
+  "QTS Richmond 2": {
+   "lat": 37.48504,
+   "lon": -77.24281,
+   "posizione": "epoch"
+  },
+  "Google The Dalles": {
+   "lat": 45.62427,
+   "lon": -121.20715,
+   "posizione": "epoch"
+  },
+  "QTS Richmond 3": {
+   "lat": 37.47916,
+   "lon": -77.25095,
+   "posizione": "epoch"
+  },
+  "Meta Montgomery": {
+   "lat": 32.27003,
+   "lon": -86.32571,
+   "posizione": "epoch"
+  },
+  "Meta Kuna": {
+   "lat": 43.46746,
+   "lon": -116.27015,
+   "posizione": "epoch"
+  },
+  "Meta Cheyenne": {
+   "lat": 41.08009,
+   "lon": -104.8241,
+   "posizione": "epoch"
+  },
+  "Amazon Ridgeland": {
+   "lat": 32.41046,
+   "lon": -90.18979,
+   "posizione": "epoch"
+  },
+  "Meta Huntsville": {
+   "lat": 34.85387,
+   "lon": -86.6262,
+   "posizione": "epoch"
+  },
+  "Coreweave Helios": {
+   "lat": 33.77506,
+   "lon": -100.86985,
+   "posizione": "epoch"
+  },
+  "Microsoft Project Osmium": {
+   "lat": 41.49704,
+   "lon": -93.78939,
+   "posizione": "epoch"
+  },
+  "Meta Eagle Mountain": {
+   "lat": 40.26529,
+   "lon": -112.01925,
+   "posizione": "epoch"
+  },
+  "Google Midlothian": {
+   "lat": 32.44248,
+   "lon": -97.06137,
+   "posizione": "epoch"
+  },
+  "Google Storey County": {
+   "lat": 39.49468,
+   "lon": -119.43018,
+   "posizione": "epoch"
+  },
+  "Meta Los Lunas": {
+   "lat": 34.82765,
+   "lon": -106.78799,
+   "posizione": "epoch"
+  },
+  "Google Lancaster": {
+   "lat": 39.72534,
+   "lon": -82.68934,
+   "posizione": "epoch"
+  },
+  "Meta-QTS Hillsboro 2": {
+   "lat": 45.5588,
+   "lon": -122.93779,
+   "posizione": "epoch"
+  },
+  "Google Waltham Cross": {
+   "lat": 51.69543,
+   "lon": -0.04904,
+   "posizione": "epoch"
+  },
+  "VNET Bayin Ulanqab": {
+   "lat": 40.98109,
+   "lon": 113.31431,
+   "posizione": "epoch"
+  },
+  "Google Arcola": {
+   "lat": 38.94189,
+   "lon": -77.53159,
+   "posizione": "epoch"
+  },
+  "Google Red Oak": {
+   "lat": 32.53767,
+   "lon": -96.79351,
+   "posizione": "epoch"
+  },
+  "Google Papillion": {
+   "lat": 41.136,
+   "lon": -96.14906,
+   "posizione": "epoch"
+  },
+  "Meta Gallatin": {
+   "lat": 36.40714,
+   "lon": -86.36847,
+   "posizione": "epoch"
+  },
+  "CoreWeave Ellendale ND": {
+   "lat": 46.0153,
+   "lon": -98.57252,
+   "posizione": "epoch"
+  },
+  "Meta Sarpy": {
+   "lat": 41.11153,
+   "lon": -96.14507,
+   "posizione": "epoch"
+  },
+  "Huawei Horinger": {
+   "lat": 40.53969,
+   "lon": 111.82774,
+   "posizione": "epoch"
+  },
+  "CoreWeave Chester VA": {
+   "lat": 37.3591,
+   "lon": -77.32952,
+   "posizione": "epoch"
+  },
+  "Oracle Batam": {
+   "lat": 1.18829,
+   "lon": 104.10497,
+   "posizione": "epoch"
+  },
+  "AWS Berwick": {
+   "lat": 41.08505,
+   "lon": -76.14879,
+   "posizione": "epoch"
+  },
+  "CoreWeave Marble NC": {
+   "lat": 35.18747,
+   "lon": -83.91607,
+   "posizione": "epoch"
+  },
+  "Meta Aiken": {
+   "lat": 33.64243,
+   "lon": -81.8428,
+   "posizione": "epoch"
+  },
+  "Huawei Wuhu": {
+   "lat": 31.29177,
+   "lon": 118.29981,
+   "posizione": "epoch"
+  },
+  "Core42 Lake Mariner": {
+   "lat": 43.35493,
+   "lon": -78.60604,
+   "posizione": "epoch"
+  },
+  "Microsoft SAT40": {
+   "lat": 29.41537,
+   "lon": -98.80424,
+   "posizione": "epoch"
+  },
+  "STACK Infrastructure NVA02": {
+   "lat": 38.74482,
+   "lon": -77.53963,
+   "posizione": "epoch"
+  },
+  "Anthropic Lake Mariner": {
+   "lat": 43.35643,
+   "lon": -78.60204,
+   "posizione": "epoch"
+  },
+  "Microsoft-Nebius New Jersey": {
+   "lat": 39.42675,
+   "lon": -75.01675,
+   "posizione": "epoch"
+  },
+  "CoreWeave Norway": {
+   "lat": 58.25879,
+   "lon": 7.89842,
+   "posizione": "epoch"
+  },
+  "Nebius Mantsala": {
+   "lat": 60.62935,
+   "lon": 25.26047,
+   "posizione": "epoch"
+  },
+  "Southgate Melbourne": {
+   "lat": -37.81721,
+   "lon": 144.84334,
+   "posizione": "epoch"
+  },
+  "Stream Phoenix": {
+   "lat": 33.41268,
+   "lon": -112.36005,
+   "posizione": "epoch"
+  },
+  "Microsoft SAT14": {
+   "lat": 29.47523,
+   "lon": -98.68086,
+   "posizione": "epoch"
+  },
+  "Vantage TX1": {
+   "lat": 29.41781,
+   "lon": -98.78969,
+   "posizione": "epoch"
+  },
+  "CoreWeave Dalton 1 & 2": {
+   "lat": 34.71318,
+   "lon": -84.95105,
+   "posizione": "epoch"
+  },
+  "Alibaba Zhangbei": {
+   "lat": 41.18353,
+   "lon": 114.73237,
+   "posizione": "epoch"
+  },
+  "Start Campus Sines Data Campus": {
+   "lat": 37.93497,
+   "lon": -8.81272,
+   "posizione": "epoch"
+  },
+  "xAI QTS Atlanta": {
+   "lat": 33.77825,
+   "lon": -84.41944,
+   "posizione": "epoch"
+  },
+  "Nscale Keflavik": {
+   "lat": 63.97616,
+   "lon": -22.57644,
+   "posizione": "epoch"
+  },
+  "Anthropic Barber Lake": {
+   "lat": 32.39807,
+   "lon": -100.91981,
+   "posizione": "epoch"
+  },
+  "CoreWeave Lancaster Greenfield site": {
+   "lat": 40.04814,
+   "lon": -76.26218,
+   "posizione": "epoch"
+  },
+  "CoreWeave Muskogee OK": {
+   "lat": 35.69364,
+   "lon": -95.38847,
+   "posizione": "epoch"
+  },
+  "Crusoe Abilene Expansion": {
+   "lat": 32.49188,
+   "lon": -99.78198,
+   "posizione": "epoch"
+  },
+  "EcoDataCenter 2": {
+   "lat": 60.52633,
+   "lon": 15.41698,
+   "posizione": "epoch"
+  },
+  "Envision Galaxy Ulanqab": {
+   "lat": 40.94681,
+   "lon": 113.24977,
+   "posizione": "epoch"
+  },
+  "Goodnight": {
+   "lat": 35.01971,
+   "lon": -101.30863,
+   "posizione": "epoch"
+  },
+  "Google Cedar Rapids": {
+   "lat": 41.91699,
+   "lon": -91.72237,
+   "posizione": "epoch"
+  },
+  "Google Fort Wayne": {
+   "lat": 41.03177,
+   "lon": -85.04886,
+   "posizione": "epoch"
+  },
+  "Meta Bowling Green": {
+   "lat": 41.46732,
+   "lon": -83.63613,
+   "posizione": "epoch"
+  },
+  "Meta Hyperion": {
+   "lat": 32.51059,
+   "lon": -91.63604,
+   "posizione": "epoch"
+  },
+  "Microsoft Narvik Norway": {
+   "lat": 68.57628,
+   "lon": 17.59633,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Lordstown": {
+   "lat": 41.15311,
+   "lon": -80.88123,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Michigan": {
+   "lat": 42.12123,
+   "lon": -83.88417,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Milam": {
+   "lat": 30.99631,
+   "lon": -97.01034,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate New Mexico": {
+   "lat": 31.82032,
+   "lon": -106.68427,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Shackelford": {
+   "lat": 32.54376,
+   "lon": -99.54831,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate UAE": {
+   "lat": 24.15029,
+   "lon": 54.44278,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Wisconsin": {
+   "lat": 43.43041,
+   "lon": -87.85604,
+   "posizione": "epoch"
+  },
+  "QTS Cedar Rapids": {
+   "lat": 41.90968,
+   "lon": -91.74293,
+   "posizione": "epoch"
+  },
+  "QTS Eagle Mountain": {
+   "lat": 40.26496,
+   "lon": -112.02862,
+   "posizione": "epoch"
+  }
+ }
+}

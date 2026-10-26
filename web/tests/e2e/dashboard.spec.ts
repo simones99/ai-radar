@@ -563,20 +563,25 @@ test('riduci movimento: nessuna animazione all’apertura', async ({ page }) => 
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
 });
 
-test('accessibilità: nessuna violazione grave in home e nelle card', async ({ page }) => {
+// Un test per pagina: axe su tutte le card in un test solo supera i 30 s.
+test('accessibilità: nessuna violazione grave in home', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('button.face')).toHaveCount(9);
   expect(await seriousViolations(page)).toEqual([]);
-  for (const id of TEMI) {
+});
+
+for (const id of TEMI) {
+  test(`accessibilità: nessuna violazione grave nella card ${id}`, async ({ page }) => {
     await page.goto(`/#${id}`);
-    await page.reload();
     await expect(page.locator(`#detail-${id}`)).toBeVisible();
-    expect(await seriousViolations(page), id).toEqual([]);
-  }
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+}
+
+test('accessibilità: nessuna violazione grave in competenze/mcp', async ({ page }) => {
   await page.goto('/#competenze/mcp');
-  await page.reload();
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
-  expect(await seriousViolations(page), 'competenze/mcp').toEqual([]);
+  expect(await seriousViolations(page)).toEqual([]);
 });
 
 for (const colorScheme of ['light', 'dark'] as const) {

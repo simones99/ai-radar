@@ -35,6 +35,7 @@ PHOTOS = {
                           "from machine) - World-Telegram photo LCCN95506971.jpg",
                 "crop": (0.073, 0.114, 0.927, 0.886)},
     "rapporti": {"titolo": "File:LOC Main Reading Room Highsmith.jpg"},
+    "geopoliticai": {"titolo": "File:The Earth seen from Apollo 17.jpg"},
 }
 
 

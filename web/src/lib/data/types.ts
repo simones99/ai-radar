@@ -157,6 +157,90 @@ export interface EurostatSettori {
   flag: Record<'adozione' | 'scopi' | 'barriere', Record<string, FlagPerGeo>>;
 }
 
+/** Calcolo di addestramento dei modelli di grande scala usciti in un anno: n modelli, nc con il calcolo noto. */
+export interface GeoCalcolo { n: number; nc: number; max: number | null; modello: string | null }
+/** Capacità (ECI) dei modelli usciti in un anno. */
+export interface GeoEci { n: number; max: number | null; modello: string | null }
+export interface GeoZona {
+  nome: string;
+  tipo: 'area' | 'paese-ue';
+  /** «europeo», «tedesco»; null per «Altri» */
+  aggettivo: string | null;
+  /** «l'UE», «la Germania» */
+  con_articolo: string;
+  calcolo: Record<string, GeoCalcolo>;
+  eci: Record<string, GeoEci>;
+  org_eci: string[];
+  org_ls: string[];
+  /** modelli di grande scala dal 2020 con un'organizzazione di questa zona, che contano altrove: solo UE e Paesi UE, 0 per le altre aree */
+  contano_altrove: number;
+  /** i codici ADM0_A3 dei Paesi della mappa che stanno nella zona; vuoto per «Altri», che è tutto il resto */
+  paesi_mappa: string[];
+}
+/** L'ECI massimo di un Paese della mappa (codice ADM0_A3) nell'anno, con il modello. */
+export interface GeoEciPaese { max: number; modello: string }
+export interface Geopoliticai {
+  fonte: string;
+  licenza: string;
+  url_modelli: string;
+  url_eci: string;
+  scaricato: string;
+  anno_corrente: number;
+  /** Le cinque aree, poi i Paesi UE con almeno un modello e l'Italia sempre. */
+  zone: Record<string, GeoZona>;
+  senza_paese: { large: string[]; eci: string[] };
+  altri_paesi: Record<string, number>;
+  /** L'anello dei modelli sulla mappa: l'ECI massimo per Paese nell'ultimo anno chiuso. */
+  eci_paesi: { anno: number; valori: Record<string, GeoEciPaese> };
+  /** L'anello dei data center, da «AI data centers» di Epoch; manca nei file scritti prima del ticket 19. */
+  data_center?: GeoDataCenter;
+}
+/**
+ * Un data center di Epoch: «operativo» se ha H100 equivalenti attuali, altrimenti «in costruzione». La posizione viene dalla
+ * mappa di Epoch o, «indirizzo», da Nominatim; manca per un sito senza posizione e nei file scritti prima del ticket 21.
+ */
+export interface GeoSito {
+  nome: string; proprietario: string | null; iso: string | null; h100e: number; mw: number; stato: 'operativo' | 'in costruzione';
+  lat?: number | null; lon?: number | null; posizione?: 'epoch' | 'indirizzo' | null;
+}
+/** La quota per Paese (ADM0_A3) degli H100 equivalenti dei siti noti, e i siti. */
+export interface GeoDataCenter { aggiornato: string; quote: Record<string, number>; siti: GeoSito[] }
+
+/** Un anello della catena da un file curato: la quota per Paese (codice ADM0_A3), e il valore unico «europa» dove la fonte non divide i Paesi. */
+export interface CatenaAnello {
+  misura: string;
+  fonte: string;
+  titolo: string;
+  url: string;
+  licenza: string;
+  url_licenza: string;
+  data: string;
+  quote: Record<string, number>;
+  europa: number | null;
+  nota?: string;
+}
+export type Materiale = 'gallio' | 'terre' | 'silicio' | 'germanio';
+/** Le materie prime: un insieme di quote per materiale, ognuno con la sua fonte e la sua data. */
+export interface CatenaMaterie { materiali: Partial<Record<Materiale, CatenaAnello & { nome: string }>> }
+/** Una tappa del Filo della catena: dove passa il modello in un anello, con una frase e la fonte che la sostiene. */
+export interface CatenaTappa {
+  anello: 'materie' | 'progettazione' | 'fabbricazione' | 'macchinari' | 'datacenter' | 'modelli';
+  luogo: string;
+  iso: string;
+  lat: number;
+  lon: number;
+  frase: string;
+  fonte: string;
+}
+/** Un esempio del Filo della catena: sei tappe, una per anello, nell'ordine delle fermate. */
+export interface CatenaFilo { nome: string; tappe: CatenaTappa[] }
+export type FiloKey = 'usa' | 'ue' | 'cina';
+export interface Catena {
+  anelli: Partial<Record<'progettazione' | 'fabbricazione' | 'macchinari', CatenaAnello>> & { materie?: CatenaMaterie };
+  /** manca in un file del giro prima */
+  fili?: Partial<Record<FiloKey, CatenaFilo>>;
+}
+
 export interface Dataset {
   status?: Status;
   radar?: Radar;
@@ -172,4 +256,6 @@ export interface Dataset {
   jobs?: Jobs;
   eurostat?: Eurostat;
   eurostat_settori?: EurostatSettori;
+  geopoliticai?: Geopoliticai;
+  catena?: Catena;
 }

@@ -1,5 +1,5 @@
 // Ordine delle card: prima "Su cosa formarti", poi "L'AI in Italia".
-export const TEMI = ['competenze', 'modelli', 'open', 'notizie', 'business', 'persone', 'norme', 'rapporti'] as const;
+export const TEMI = ['competenze', 'modelli', 'open', 'notizie', 'business', 'geopoliticai', 'persone', 'norme', 'rapporti'] as const;
 export type TileId = (typeof TEMI)[number];
 
 // Id cambiati: i link vecchi continuano a funzionare.

@@ -1,0 +1,534 @@
+Model,Organization,Publication date,Country (of organization),Training compute (FLOP),Confidence
+DeepSeek V4.1 Flash,DeepSeek,2026-09-09,China,4.32e+24,Likely
+GPT-6 Astra,OpenAI,2026-09-03,United States of America,9.4e+26,Likely
+WeatherNext 3,"Google DeepMind,Google Research",2026-09-03,"United States of America,United States of America",2.0725198384e+23,Speculative
+GLM-5.3-Flash,Z.ai (Zhipu AI),2026-08-20,China,3.24e+24,Likely
+DeepSeek V4 Pro 0813,DeepSeek,2026-08-13,China,9.702e+24,Unverified
+Motif-3,Motif Technologies,2026-08-07,South Korea,1.1e+24,Confident
+DeepSeek V4 Flash 0731,DeepSeek,2026-07-31,China,2.496e+24,Likely
+A.X K2,SK Telecom,2026-07-29,South Korea,1.8e+24,Confident
+Kimi K3,Moonshot,2026-07-16,China,2.0001e+25,Speculative
+Inkling,Thinking Machines,2026-07-15,United States of America,1.1e+25,Likely
+LongCat-2.0,Meituan Inc,2026-06-29,China,1.008e+25,Likely
+Solar Open2 250B,Upstage,2026-06-28,South Korea,1.05e+24,Likely
+Nemotron 3 Ultra,Nvidia,2026-06-04,United States of America,6.6e+24,Likely
+MAI-Thinking-1,Microsoft,2026-06-02,United States of America,6.98511e+24,Confident
+Composer 2.5,Cursor,2026-05-18,United States of America,3.87e+25,Likely
+Granite 4.1 30B,IBM,2026-04-29,United States of America,2.7e+24,Likely
+Granite 4.1 8B,IBM,2026-04-29,United States of America,7.2e+23,Likely
+DeepSeek-V4-Pro,DeepSeek,2026-04-24,China,9.702e+24,Likely
+DeepSeek-V4-Flash,DeepSeek,2026-04-24,China,2.496e+24,Likely
+GPT-5.5 Pro,OpenAI,2026-04-23,United States of America,,Likely
+GPT-5.5,OpenAI,2026-04-23,United States of America,,Likely
+MiMo-V2.5-Pro,Xiaomi Corp,2026-04-23,China,6.804e+24,Likely
+MiMo-V2.5,Xiaomi Corp,2026-04-23,China,4.32e+24,Unverified
+Grok 4.3 Beta,xAI,2026-04-17,United States of America,,Likely
+Claude Opus 4.7,Anthropic,2026-04-16,United States of America,,Likely
+EXAONE 4.5,LG AI Research,2026-04-09,South Korea,3.85e+24,Confident
+GPT-5.4,OpenAI,2026-03-05,United States of America,,Likely
+GPT-5.4 Pro,OpenAI,2026-03-05,United States of America,,Likely
+Gemini 3.1 Pro,Google DeepMind,2026-02-19,United States of America,,Likely
+Arcee Trinity Large,"Prime Intellect,Arcee AI",2026-02-19,"United States of America,United States of America",1.326e+24,Likely
+Claude Sonnet 4.6,Anthropic,2026-02-17,United States of America,,Likely
+GLM-5,Z.ai (Zhipu AI),2026-02-12,China,6.84e+24,Likely
+Claude Opus 4.6,Anthropic,2026-02-05,United States of America,,Likely
+GPT-5.3 Codex,OpenAI,2026-02-05,United States of America,,Likely
+Kimi K2.5,Moonshot,2026-02-02,China,5.8e+24,Likely
+Solar Open 100B,Upstage,2025-12-31,South Korea,1.4e+24,Confident
+K-EXAONE,LG AI Research,2025-12-31,South Korea,1.52e+24,Confident
+GPT-5.2 Codex,OpenAI,2025-12-18,United States of America,,Likely
+MiMo-V2-Flash,Xiaomi Corp,2025-12-16,China,2.43e+24,Likely
+Nemotron 3-Nano-30B-A3B,Nvidia,2025-12-15,United States of America,4.8e+23,Likely
+GPT-5.2,OpenAI,2025-12-11,United States of America,,Unknown
+GPT-5.2 Pro,OpenAI,2025-12-11,United States of America,,Likely
+DeepSeek-V3.2,DeepSeek,2025-12-01,China,4.2e+24,Likely
+Claude Opus 4.5,Anthropic,2025-11-24,United States of America,,Unknown
+Olmo 3,Allen Institute for AI,2025-11-20,United States of America,1.1e+24,Confident
+Gemini 3 Pro,Google DeepMind,2025-11-18,United States of America,,Unknown
+GPT-5.1-Codex,OpenAI,2025-11-12,United States of America,,Unknown
+Emu3.5,Beijing Academy of Artificial Intelligence / BAAI,2025-10-30,China,9.86736e+24,Confident
+Kimi Linear,Moonshot,2025-10-30,China,1.026e+23,Confident
+Lapa LLM,"Ukrainian Catholic University,Igor Sikorsky Kyiv Polytechnic Institute,AGH University of Krakow,Lviv Polytechnic",2025-10-25,"Ukraine,Ukraine,Poland,Ukraine",8.64e+23,Likely
+Odyssey 102B,Anthrogen,2025-10-18,United States of America,1.1e+23,Confident
+Ling-1T,Ant Group,2025-10-10,China,6.000001e+24,Confident
+GPT-5 Pro,OpenAI,2025-10-07,United States of America,,Unknown
+Granite-4.0-H-Tiny,IBM,2025-10-02,United States of America,1.35e+23,Confident
+Granite-4.0-H-Micro,IBM,2025-10-02,United States of America,3.15e+23,Confident
+Granite-4.0-H-Small,IBM,2025-10-02,United States of America,1.215e+24,Confident
+GLM-4.6,"Z.ai (Zhipu AI),Tsinghua University",2025-09-30,"China,China",4.42e+24,Likely
+DeepSeek-V3.2-Exp,DeepSeek,2025-09-29,China,4.18e+24,Confident
+DeepSeek-V3.1-Terminus,DeepSeek,2025-09-22,China,3.594058e+24,Likely
+Qwen3-Next-80B-A3B,Alibaba,2025-09-10,China,2.7e+23,Confident
+Ling-mini-base-2.0-20T,Ant Group,2025-09-10,China,1.68e+23,Confident
+Ling-flash-base-2.0-20T,Ant Group,2025-09-10,China,7.32e+23,Confident
+Qwen3-Max,Alibaba,2025-09-05,China,1.512e+25,Speculative
+Apertus 70B,"ETH Zurich,Ecole Polytechnique F´ed´erale de Lausanne (EPFL),Swiss National Supercomputing Centre (CSCS),Swisscom",2025-09-02,"Switzerland,Switzerland,Switzerland,Switzerland",6.74e+24,Confident
+LongCat-Flash,Meituan Inc,2025-09-01,China,3.726e+24,Likely
+DeepSeek-V3.1,DeepSeek,2025-08-21,China,3.594058e+24,Confident
+Seed-OSS-36B-Base,ByteDance,2025-08-21,China,2.592e+24,Confident
+Teuken 7B,"OpenGPT-X,Fraunhofer Institute for Algorithms and Scientific Computing,Forschungszentrum Julich,Technische Universität Dresden",2025-08-21,"Germany,Germany,Germany,Germany",2.1444092e+23,Confident
+NVIDIA-Nemotron-Nano-9B-v2,Nvidia,2025-08-18,United States of America,1.53e+24,Confident
+NVIDIA-Nemotron-Nano-12B-v2,Nvidia,2025-08-18,United States of America,1.5192e+24,Confident
+GLM-4.5V,"Z.ai (Zhipu AI),Tsinghua University",2025-08-15,"China,China",1.8e+24,Confident
+GLM-4.1V-Thinking,"Z.ai (Zhipu AI),Tsinghua University",2025-08-15,"China,China",9.18e+23,Likely
+GPT-5,OpenAI,2025-08-07,United States of America,6.6e+25,Speculative
+gpt-oss-120b,OpenAI,2025-08-05,United States of America,4.94e+24,Confident
+gpt-oss-20b,OpenAI,2025-08-05,United States of America,5.49e+23,Confident
+Tri-21B,Trillion Labs,2025-08-01,South Korea,2.95e+23,Confident
+Qwen3-30B-A3B (Jul 2025),Alibaba,2025-07-29,China,6.48e+23,Likely
+GLM-4.5,"Z.ai (Zhipu AI),Tsinghua University",2025-07-28,"China,China",4.42e+24,Confident
+Wan 2.2 14B T2V,Alibaba,2025-07-28,China,4.2e+23,Likely
+GLM-4.5-Air,"Z.ai (Zhipu AI),Tsinghua University",2025-07-28,"China,China",1.656e+24,Confident
+Qwen3-235B-A22B-Thinking (Jul 2025),Alibaba,2025-07-25,China,4.752e+24,Likely
+Qwen3-235B-A22B (Jul 2025),Alibaba,2025-07-25,China,4.752e+24,Likely
+Qwen3-Coder-480B-A35B,Alibaba,2025-07-22,China,1.575e+24,Confident
+EXAONE 4.0 (32B),LG AI Research,2025-07-15,South Korea,2.69000000000001e+24,Confident
+Kimi K2,Moonshot,2025-07-11,China,2.976e+24,Confident
+Grok 4,xAI,2025-07-09,United States of America,5.0000000000001e+26,Speculative
+dots.llm1,Rednote,2025-07-06,China,1.2164856e+24,Confident
+ERNIE-4.5-300B-A47B,Baidu,2025-06-29,China,2.82e+24,Speculative
+ERNIE-4.5-21B-A3B,Baidu,2025-06-29,China,1.8e+23,Speculative
+Minimax Hailuo 02,"MiniMax,Hailuo AI",2025-06-18,"China,Singapore",,Unknown
+MiniMax-M1-80k,MiniMax,2025-06-13,China,4.3240062e+24,Likely
+MiniMax-M1-40k,MiniMax,2025-06-13,China,4.1861931e+24,Likely
+Cosmos-Predict2-14B-Text2Image,Nvidia,2025-06-11,United States of America,,Confident
+Cosmos-Predict2-2B-Video2World,Nvidia,2025-06-11,United States of America,,Confident
+Cosmos-Predict2-14B-Video2World,Nvidia,2025-06-11,United States of America,,Confident
+Seed-1.6-Thinking,ByteDance,2025-06-11,China,,Confident
+Seed 1.6,ByteDance,2025-06-11,China,,Confident
+Seedance 1.0,ByteDance,2025-06-10,China,,Unknown
+MiMo-7B-Base,Xiaomi Corp,2025-06-05,China,1.05e+24,Confident
+Gemini 2.5 Pro (Jun 2025),Google DeepMind,2025-06-05,United States of America,,Unknown
+MiMo-VL-7B-SFT,Xiaomi Corp,2025-06-04,China,1.1508e+24,Confident
+Seed-Coder,ByteDance,2025-06-04,China,2.952e+23,Confident
+Eleven v3,ElevenLabs,2025-06-03,United States of America,,Unknown
+Kling 2.1,Kuaishou Technology,2025-05-29,China,,Unknown
+Codestral Embed,Mistral AI,2025-05-28,France,,Unknown
+Pangu Pro MoE,Huawei,2025-05-28,China,1.287e+24,Confident
+DeepSeek-R1 (May 2025),DeepSeek,2025-05-28,China,4.020010000000001e+24,Confident
+Claude Opus 4,Anthropic,2025-05-22,United States of America,,Unknown
+Claude Sonnet 4,Anthropic,2025-05-22,United States of America,,Unknown
+Veo 3,Google DeepMind,2025-05-21,United States of America,,Unknown
+Falcon-H1,Technology Innovation Institute,2025-05-21,United Arab Emirates,3.672e+24,Confident
+Gemma 3n,Google,2025-05-20,United States of America,5.181e+23,Confident
+Imagen 4,Google,2025-05-20,United States of America,,Unknown
+Marin 8B,Marin,2025-05-19,United States of America,6.12e+23,Confident
+Minimax-Speech-02-HD,MiniMax,2025-05-12,China,,Unknown
+Seed1.5-VL,ByteDance,2025-05-11,China,1.388556e+24,Confident
+Mistral Medium 3,Mistral AI,2025-05-07,France,,Unknown
+Pangu Ultra MoE,Huawei,2025-05-07,China,3.0888e+24,Speculative
+Gemini 2.5 Pro (May 2025),Google DeepMind,2025-05-06,United States of America,,Unknown
+MiniMax-Speech-02-turbo,MiniMax,2025-05-02,China,,Unknown
+Amazon Nova Premier,Amazon,2025-04-30,United States of America,,Unknown
+Qwen3-235B-A22B,Alibaba,2025-04-29,China,4.752e+24,Likely
+Qwen3-30B-A3B,Alibaba,2025-04-29,China,6.48e+23,Likely
+Qwen3-32B,Alibaba,2025-04-29,China,7.0848e+24,Confident
+Qwen3-14B,Alibaba,2025-04-29,China,3.1968e+24,Confident
+Qwen3-8B,Alibaba,2025-04-29,China,1.7712e+24,Confident
+Qwen3-4B,Alibaba,2025-04-29,China,8.64e+23,Confident
+Qwen3-1.7B,Alibaba,2025-04-29,China,3.672e+23,Confident
+Qwen3-0.6B,Alibaba,2025-04-29,China,1.296e+23,Confident
+Foundation-sec-8b,Cisco,2025-04-28,United States of America,1.2242448e+24,Confident
+gpt-image-1,OpenAI,2025-04-23,United States of America,,Unknown
+MamayLM,"INSAIT,ETH Zurich",2025-04-23,"Bulgaria,Switzerland",4.36e+23,Likely
+Gemini 2.5 Flash,Google DeepMind,2025-04-17,United States of America,,Unknown
+o4-mini,OpenAI,2025-04-16,United States of America,,Unknown
+Seedream 3.0,ByteDance,2025-04-16,China,,Unknown
+Kling 2.0 Video Generation,Kuaishou Technology,2025-04-15,China,,Unknown
+GPT-4.1,OpenAI,2025-04-14,United States of America,,Unknown
+GPT-4.1 mini,OpenAI,2025-04-14,United States of America,,Unknown
+GPT-4.1 nano,OpenAI,2025-04-14,United States of America,,Unknown
+Nemotron-H 8B,Nvidia,2025-04-14,United States of America,7.2e+23,Confident
+Nemotron-H 56B,Nvidia,2025-04-14,United States of America,6.72e+24,Confident
+GLM-Z1-Rumination-32B-0414,Tsinghua University,2025-04-14,China,2.88e+24,Confident
+GLM-4-9B-0414,Tsinghua University,2025-04-14,China,8.1e+23,Likely
+GLM-4-32B-0414,"Z.ai (Zhipu AI),Tsinghua University",2025-04-14,"China,China",2.88e+24,Confident
+SenseNova V6,SenseTime,2025-04-12,Hong Kong,,Confident
+Seaweed-7B,ByteDance,2025-04-11,China,9.0007697e+23,Confident
+Pangu Ultra,Huawei,2025-04-10,China,1.0692e+25,Confident
+Gen-4 Turbo,Runway,2025-04-09,United States of America,,Unknown
+QWQ-Plus,Alibaba,2025-04-08,China,,Unknown
+Amazon Nova Sonic,Amazon,2025-04-08,United States of America,,Confident
+Amazon Nova Reel,Amazon,2025-04-07,United States of America,,Unknown
+Llama 4 Scout,Meta AI,2025-04-05,United States of America,4.08e+24,Likely
+Llama 4 Maverick,Meta AI,2025-04-05,United States of America,2.244000000001e+24,Likely
+Llama 4 Behemoth (preview),Meta AI,2025-04-05,United States of America,5.18400000000001e+25,Likely
+Amazon Nova Act,Amazon,2025-03-31,United States of America,,Unknown
+Gen-4,Runway,2025-03-31,United States of America,,Unknown
+QVQ-Max,Alibaba,2025-03-28,China,,Confident
+Ideogram 3.0,Ideogram,2025-03-26,Canada,,Unknown
+Gemini 2.5 Pro (Mar 2025),Google DeepMind,2025-03-25,United States of America,,Unknown
+DeepSeek-V3 (Mar 2025),DeepSeek,2025-03-24,China,3.3e+24,Confident
+o1-pro,OpenAI,2025-03-19,United States of America,,Likely
+Llama Nemotron Ultra 253B,Nvidia,2025-03-18,United States of America,3.911001e+25,Likely
+Cosmos-Transfer1-7B,Nvidia,2025-03-18,United States of America,3.6059017e+24,Likely
+Chirp 3 Speech-to-Text,"Google,Google DeepMind",2025-03-17,"United States of America,United States of America",,Unknown
+Chirp 3 HD Text-to-Speech,"Google,Google DeepMind",2025-03-17,"United States of America,United States of America",,Unknown
+ERNIE x1 (文心大模型X1),Baidu,2025-03-16,China,,Unknown
+Hunyuan T1,Tencent,2025-03-15,China,,Unverified
+Cohere Command A,Cohere,2025-03-13,Canada,,Confident
+OLMo 2 32B,Allen Institute for AI,2025-03-13,United States of America,1.3e+24,Confident
+Hunyuan-TurboS,Tencent,2025-03-11,China,5.4e+24,Confident
+Seedream 2.0,ByteDance,2025-03-10,China,,Unknown
+"Ling-lite-1.5 (""Bailing"")",Ant Group,2025-03-10,China,1.485e+23,Confident
+"Ling-Plus (""Bailing"")",Ant Group,2025-03-10,China,1.5552e+24,Confident
+Spark-X1,iFlytek,2025-03-03,China,,Confident
+GPT-4.5,OpenAI,2025-02-27,United States of America,3.8e+26,Likely
+Eleven Scribe,ElevenLabs,2025-02-26,United States of America,,Unknown
+Wan 2.1 14B I2V,Alibaba,2025-02-25,China,2.5e+23,Likely
+Bailing-Pro-20250225,Ant Group,2025-02-25,China,,Unknown
+YandexGPT 5 Lite,Yandex,2025-02-25,Russia,7.3536e+23,Confident
+Claude 3.7 Sonnet,Anthropic,2025-02-24,United States of America,3.35e+25,Likely
+Step-Video-T2V,StepFun,2025-02-24,China,4.1015808e+24,Likely
+Evo 2 40B,"Arc Institute,Stanford University,Nvidia,Liquid,University of California (UC) Berkeley,Goodfire,Columbia University,University of California San Francisco",2025-02-19,"United States of America,United States of America,United States of America,United States of America,United States of America,United States of America,United States of America",2.25e+24,Confident
+Evo 2 7B,"Arc Institute,Stanford University,Nvidia,Liquid,University of California (UC) Berkeley,Goodfire,Columbia University,University of California San Francisco",2025-02-19,"United States of America,United States of America,United States of America,United States of America,United States of America,United States of America,United States of America",1.008e+23,Confident
+Qwen2.5-VL-72B,Alibaba,2025-02-19,China,9.5712e+24,Confident
+Qwen2.5-VL-7B,Alibaba,2025-02-19,China,9.9408e+23,Confident
+Step-1,StepFun,2025-02-18,China,6.24e+23,Confident
+Grok 3,xAI,2025-02-17,United States of America,3.5e+26,Likely
+YAYI-Ultra,Yayi (Wenge),2025-02-15,China,,Unknown
+o3-mini,OpenAI,2025-01-31,United States of America,,Unknown
+Mistral Small 3,Mistral AI,2025-01-30,France,1.152e+24,Confident
+Qwen2.5-Max,Alibaba,2025-01-28,China,,Unknown
+Doubao-1.5-pro,ByteDance,2025-01-22,China,,Confident
+DeepSeek-R1,DeepSeek,2025-01-20,China,3.5e+24,Confident
+MiniMax Speech-01-HD (T2A-01-HD),MiniMax,2025-01-15,China,,Unknown
+MiniMax-Text-01,MiniMax,2025-01-14,China,3.1417632e+24,Likely
+MiniMax-VL-01,MiniMax,2025-01-14,China,2.1238848e+24,Likely
+SenseNova Unified Large Model,SenseTime,2025-01-13,Hong Kong,,Unknown
+"Cosmos-1.0-
+Diffusion-14B Video2World",Nvidia,2025-01-07,United States of America,2.8e+24,Likely
+Cosmos-Predict1-7b-Video2World,Nvidia,2025-01-07,United States of America,1.4e+24,Likely
+Cosmos-Predict1-14b-Video2World,Nvidia,2025-01-07,United States of America,2.8e+24,Likely
+OLMo 2 Furious 7B,"Allen Institute for AI,University of Washington,New York University (NYU)",2024-12-31,"United States of America,United States of America,United States of America",1.8e+23,Confident
+OLMo 2 Furious 13B,"Allen Institute for AI,University of Washington,New York University (NYU)",2024-12-31,"United States of America,United States of America,United States of America",4.6e+23,Confident
+DeepSeek-V3,DeepSeek,2024-12-24,China,3.3e+24,Confident
+o3,OpenAI,2024-12-20,United States of America,,Unknown
+Kling 1.6 Pro,Kuaishou Technology,2024-12-19,China,,Unknown
+Granite 3.1 2B,IBM,2024-12-18,United States of America,1.8e+23,Confident
+Granite 3.1 8B,IBM,2024-12-18,United States of America,5.832e+23,Confident
+Falcon3-7B,Technology Innovation Institute,2024-12-17,United Arab Emirates,5.88e+23,Confident
+Veo 2,Google DeepMind,2024-12-16,United States of America,,Unknown
+Phi-4,Microsoft Research,2024-12-12,United States of America,9.3202015e+23,Confident
+Gemini 2.0 Flash,"Google DeepMind,Google",2024-12-11,"United States of America,United States of America",,Unknown
+Gemini 2.0 Pro,Google DeepMind,2024-12-11,United States of America,,Unknown
+Sora Turbo,OpenAI,2024-12-09,United States of America,,Unknown
+EXAONE 3.5 7.8B,LG AI Research,2024-12-09,South Korea,4.21e+23,Confident
+EXAONE 3.5 32B,LG AI Research,2024-12-09,South Korea,1.25e+24,Confident
+Llama 3.3 70B,Meta AI,2024-12-06,United States of America,6.8649768e+24,Confident
+o1,OpenAI,2024-12-05,United States of America,,Unknown
+Amazon Nova Pro,Amazon,2024-12-03,United States of America,6.000010000000001e+24,Speculative
+Hunyuan Video,Tencent,2024-12-03,China,1.4814815e+23,Confident
+Amazon Nova Canvas,Amazon,2024-12-03,United States of America,,Unknown
+360gpt2-pro,360 Security Technology,2024-11-29,China,,Unknown
+abab7,MiniMax,2024-11-29,China,,Unknown
+bailing-pro-1120,Ant Group,2024-11-15,China,,Unknown
+Qwen2.5-Coder (32B),Alibaba,2024-11-12,China,1.0725e+24,Confident
+Hunyuan-Large,Tencent,2024-11-06,China,3.49237e+24,Confident
+Stable Diffusion 3.5 Medium,Stability AI,2024-10-29,United Kingdom,,Confident
+Doubao-pro,ByteDance,2024-10-28,China,2.505e+25,Likely
+Claude 3.5 Haiku,Anthropic,2024-10-22,United States of America,,Unknown
+Stable Diffusion 3.5 Large,Stability AI,2024-10-22,United Kingdom,,Confident
+Granite 3.0 8B,IBM,2024-10-21,United States of America,5.832e+23,Confident
+Granite 3.0 2B,IBM,2024-10-21,United States of America,1.8e+23,Confident
+TeleChat2-35B,China Telecom,2024-10-18,China,,Confident
+Yi-Lightning,01.AI,2024-10-16,China,1.5e+24,Confident
+Ministral 8B,Mistral AI,2024-10-16,France,,Confident
+Firefly Video,Adobe,2024-10-14,United States of America,,Unknown
+Chirp 2 Speech-to-Text,Google,2024-10-09,United States of America,,Unknown
+CogVideoX,"Z.ai (Zhipu AI),Tsinghua University",2024-10-08,"China,China",,Confident
+Aria,Rhymes AI,2024-10-08,United States of America,1.428e+23,Confident
+Movie Gen Video,Meta AI,2024-10-04,United States of America,1.65e+24,Confident
+Movie Gen Audio,Meta AI,2024-10-04,United States of America,1.4e+23,Confident
+Llama 3.2 11B,Meta AI,2024-09-24,United States of America,5.79e+23,Confident
+Llama 3.2 90B,Meta AI,2024-09-24,United States of America,,Confident
+Llama 3.2 3B,Meta AI,2024-09-24,United States of America,1.7334e+23,Confident
+PixelDance,ByteDance,2024-09-24,China,,Unknown
+Spark 4.0,iFlytek,2024-09-23,China,,Unknown
+Kling 1.5 Pro,Kuaishou Technology,2024-09-22,China,,Unknown
+Telechat2-115B,China Telecom,2024-09-20,China,6.9e+24,Confident
+Qwen2.5-72B,Alibaba,2024-09-19,China,7.8e+24,Confident
+Qwen2.5-3B,Alibaba,2024-09-19,China,3.3372e+23,Confident
+Qwen2.5-7B,Alibaba,2024-09-19,China,8.2188e+23,Confident
+Qwen2.5-1.5B,Alibaba,2024-09-19,China,1.6632e+23,Confident
+Qwen2.5-14B,Alibaba,2024-09-19,China,1.58760000000001e+24,Confident
+Qwen2-VL-72B,Alibaba,2024-09-18,China,6.048e+23,Confident
+Qwen2.5-Coder (7B),Alibaba,2024-09-18,China,2.5113e+23,Confident
+Pixtral 12B,Mistral AI,2024-09-17,France,,Confident
+Qwen2.5-32B,Alibaba,2024-09-17,China,3.51e+24,Confident
+o1-mini,OpenAI,2024-09-12,United States of America,,Unknown
+o1-preview,OpenAI,2024-09-12,United States of America,,Unknown
+DeepSeek-V2.5,DeepSeek,2024-09-06,China,1.7892e+24,Confident
+Moonshot-v1,Moonshot,2024-09-01,China,,Unknown
+GLM-4-Plus,Z.ai (Zhipu AI),2024-08-29,China,,Speculative
+Pharia-1-LLM-7B,Aleph Alpha,2024-08-26,Germany,4.43e+23,Confident
+Jamba 1.5-Large,AI21 Labs,2024-08-22,Israel,,Confident
+Gen-3 Alpha Turbo,Runway,2024-08-15,United States of America,,Unknown
+Grok-2,xAI,2024-08-13,United States of America,2.96e+25,Confident
+Falcon Mamba,Technology Innovation Institute,2024-08-12,United Arab Emirates,3.9391101e+23,Confident
+EXAONE 3.0,LG AI Research,2024-08-07,South Korea,4.0000000000000003e+23,Confident
+Jais-70B ,"G42,Inception G42",2024-08-05,"United Arab Emirates,United Arab Emirates",9.654e+23,Confident
+Midjourney V6.1,Midjourney,2024-07-30,United States of America,,Unknown
+AFM-on-device,Apple,2024-07-29,United States of America,4.5126e+23,Confident
+AFM-server,Apple,2024-07-29,United States of America,4.3e+24,Likely
+Mistral Large 2,Mistral AI,2024-07-24,France,,Likely
+Llama 3.1-405B,Meta AI,2024-07-23,United States of America,3.8e+25,Confident
+Llama 3.1-70B,Meta AI,2024-07-23,United States of America,7.929e+24,Confident
+Llama 3.1-8B,Meta AI,2024-07-23,United States of America,1.224e+24,Likely
+DCLM 7B,Apple,2024-07-20,United States of America,1.05e+23,Confident
+Eleven Turbo v2.5,ElevenLabs,2024-07-19,United States of America,,Unknown
+GPT-4o mini,OpenAI,2024-07-18,United States of America,,Speculative
+MAP-Neo,"University of Waterloo,01.AI,Wuhan University",2024-07-10,"Canada,China,China",1.89e+23,Confident
+Ernie 4.0 Turbo,Baidu,2024-06-28,China,,Unknown
+ESM3 (98B),"EvolutionaryScale,University of California (UC) Berkeley",2024-06-25,"United States of America,United States of America",1.07e+24,Confident
+Gemma 2 9B,Google DeepMind,2024-06-24,United States of America,4.32e+23,Confident
+Gemma 2 27B,Google DeepMind,2024-06-24,United States of America,2.106e+24,Confident
+Claude 3.5 Sonnet,Anthropic,2024-06-20,United States of America,2.700000000000001e+25,Speculative
+GLM-4V-9B,"Z.ai (Zhipu AI),Tsinghua University",2024-06-18,"China,China",,Likely
+Gen-3 Alpha,Runway,2024-06-17,United States of America,,Unknown
+JIUTIAN-139MoE,China Mobile,2024-06-15,China,4.3596131e+23,Confident
+Nemotron-4 340B,Nvidia,2024-06-14,United States of America,1.8e+25,Confident
+PLaMo-100B,Preferred Networks Inc,2024-06-14,Japan,1.2e+24,Confident
+Mamba2-Hybrid,Nvidia,2024-06-12,United States of America,1.8186e+23,Likely
+Phoenix 1.0 Ultra,Leonardo AI,2024-06-12,Australia,,Unknown
+Kling,Kuaishou Technology,2024-06-10,China,,Unknown
+Qwen2-72B,Alibaba,2024-06-07,China,3.02e+24,Confident
+Qwen2-7B,Alibaba,2024-06-07,China,2.9400000000001e+23,Confident
+Qwen2-57B-A14B,Alibaba,2024-06-07,China,3.7800000000001e+23,Confident
+Granite 20B,IBM Research,2024-05-31,United States of America,3.0000000000001e+23,Confident
+Codestral,Mistral AI,2024-05-29,France,,Confident
+Nanbeige2-16B-Chat,Nanbeige LLM Lab,2024-05-28,China,4.05e+23,Confident
+360Zhinao-7B,360 Security Technology,2024-05-22,China,1.428e+23,Confident
+ALLaM 34B,Saudi Data and Artificial Intelligence Authority,2024-05-21,Saudi Arabia,1.0608e+24,Confident
+Chameleon-34B,Facebook AI Research,2024-05-16,"United States of America,France",1.6453571041e+24,Confident
+FragLlama: Next-fragment prediction for molecular design,Facebook AI Research,2024-05-16,"United States of America,France",3.3399700602e+23,Confident
+Doubao-lite,ByteDance,2024-05-15,China,,Unknown
+Imagen 3,Google DeepMind,2024-05-14,United States of America,,Unknown
+Yi-Large,01.AI,2024-05-13,China,1.8e+24,Speculative
+GPT-4o,OpenAI,2024-05-13,United States of America,,Speculative
+Yi-1.5-34B,01.AI,2024-05-13,China,7.344e+23,Confident
+Yi-1.5-9B,01.AI,2024-05-13,China,1.90728e+23,Confident
+Falcon 2 11B,Technology Innovation Institute,2024-05-09,United Arab Emirates,3.6e+23,Confident
+DeepSeek-V2 (MoE-236B),DeepSeek,2024-05-07,China,1.02e+24,Confident
+Multi-Token Prediction 7B,Facebook AI Research,2024-04-30,"United States of America,France",3.841092e+23,Likely
+Multi-Token Prediction 13B,Facebook AI Research,2024-04-30,"United States of America,France",1.5364368e+23,Likely
+Qwen1.5-110B,Alibaba,2024-04-25,China,,Confident
+Arctic,Snowflake,2024-04-24,United States of America,3.8347175e+23,Confident
+phi-3-medium 14B,Microsoft,2024-04-23,United States of America,4.032e+23,Likely
+SenseChat 5.0,SenseTime,2024-04-23,Hong Kong,,Likely
+phi-3-small 7.4B,Microsoft,2024-04-23,United States of America,2.1312e+23,Confident
+Phi-3.5-MoE,Microsoft,2024-04-23,United States of America,3.0202896e+23,Confident
+Llama 3-70B,Meta AI,2024-04-18,United States of America,7.861e+24,Confident
+Llama 3-8B,Meta AI,2024-04-18,United States of America,7.2e+23,Confident
+Reka Edge,Reka AI,2024-04-18,United States of America,1.89e+23,Likely
+Mixtral 8x22B,Mistral AI,2024-04-17,France,2.34e+24,Speculative
+abab6.5,MiniMax,2024-04-17,China,,Confident
+OLMo 1.7-7B,Allen Institute for AI,2024-04-17,United States of America,,
+Reka Core,Reka AI,2024-04-15,United States of America,8.400010000000001e+24,Speculative
+Reka Flash,Reka AI,2024-04-15,United States of America,6.3e+23,Likely
+Stable LM 2 12B,Stability AI,2024-04-08,United Kingdom,2.91e+23,Confident
+Command R+,"Cohere,Cohere Labs (formerly Cohere for AI)",2024-04-04,"Canada,Canada",,Confident
+Viking,"Silo AI,University of Turku",2024-04-04,"Finland,Finland",2.574e+23,Confident
+Grok-1.5,xAI,2024-03-28,United States of America,9.26e+24,Speculative
+Grok-1.5V,xAI,2024-03-28,United States of America,,Speculative
+YandexGPT 3,Yandex,2024-03-28,Russia,,Unknown
+DBRX,Databricks,2024-03-27,United States of America,2.6e+24,Confident
+Xinghai (星海),Hisense,2024-03-15,China,,Unknown
+MM1-30B,Apple,2024-03-14,United States of America,4.86e+23,Likely
+Inflection-2.5,Inflection AI,2024-03-07,United States of America,8.000001e+24,Likely
+Claude 3 Haiku,Anthropic,2024-03-04,United States of America,,Unknown
+Claude 3 Sonnet,Anthropic,2024-03-04,United States of America,,Unknown
+Claude 3 Opus,Anthropic,2024-03-04,United States of America,,Speculative
+Aramco Metabrain AI,Saudi Aramco,2024-03-04,Saudi Arabia,1.05e+25,Likely
+Step-2,StepFun,2024-03-01,China,,Likely
+StarCoder 2 15B,"Hugging Face,ServiceNow,Nvidia,BigCode",2024-02-29,"United States of America,United States of America,United States of America",3.87e+23,Confident
+StarCoder 2 7B,"Hugging Face,ServiceNow,Nvidia,BigCode",2024-02-29,"United States of America,United States of America,United States of America",1.55e+23,Confident
+Ideogram 1.0,Ideogram,2024-02-28,Canada,,Unknown
+Nemotron-4 15B,Nvidia,2024-02-27,United States of America,7.5005116e+23,Confident
+Mistral Large,Mistral AI,2024-02-26,France,,Speculative
+Gemma 1.1 7B Instruct,Google,2024-02-24,United States of America,3.0744e+23,Confident
+MegaScale (175B),"ByteDance,Peking University",2024-02-23,"China,China",2.7385671436e+23,Confident
+MegaScale (530B),"ByteDance,Peking University",2024-02-23,"China,China",9.6910000000001e+23,Confident
+MegaScale (Production),"ByteDance,Peking University",2024-02-23,"China,China",3.9e+24,Speculative
+Gemma 7B,Google DeepMind,2024-02-21,United States of America,3.07e+23,Confident
+Sora,OpenAI,2024-02-15,United States of America,,Unknown
+Gemini 1.5 Pro,Google DeepMind,2024-02-15,United States of America,,Speculative
+Gemini 1.0 Pro Vision,Google DeepMind,2024-02-15,United States of America,,Unknown
+KwaiYii 175B,Kuaishou Technology,2024-02-14,China,,Confident
+Qwen1.5-32B,Alibaba,2024-02-05,China,,Confident
+Qwen1.5-72B,Alibaba,2024-02-04,China,1.3e+24,Confident
+Qwen1.5-7B,Alibaba,2024-02-04,China,1.68e+23,Confident
+Qwen1.5-14B,Alibaba,2024-02-04,China,3.36e+23,Confident
+OLMo-7B,"Allen Institute for AI,University of Washington",2024-02-01,"United States of America,United States of America",1.0332e+23,Confident
+Code Llama-70B,Meta AI,2024-01-29,United States of America,1.26e+24,Confident
+Qwen-VL-Max,Alibaba,2024-01-25,China,,Confident
+Fuyu-Heavy,Adept,2024-01-24,United States of America,,Speculative
+GLM-4 (0116),Z.ai (Zhipu AI),2024-01-17,China,,Likely
+GLM-4,Z.ai (Zhipu AI),2024-01-17,China,,Confident
+InternLM2-20B,"Shanghai AI Lab,SenseTime,Chinese University of Hong Kong (CUHK),Fudan University",2024-01-12,"China,Hong Kong,Hong Kong,China",3.12e+23,Confident
+DeepSeek LLM 67B,DeepSeek,2024-01-05,China,8.04e+23,Confident
+YaYi 2.0,Yayi (Wenge),2023-12-22,China,4.77e+23,Likely
+Gemini Nano-2,Google DeepMind,2023-12-19,United States of America,,Confident
+Lyra-Fr 10B,LightOn,2023-12-15,France,,Likely
+Konan LLM 41B,Konan Technology,2023-12-15,South Korea,1.722e+23,Likely
+Poro 34B,"High-Performance Language Technologies (HPLT),University of Turku",2023-12-14,"Multinational,Finland",2.052e+23,Confident
+Imagen 2,Google DeepMind,2023-12-13,United States of America,,Unknown
+Mixtral 8x7B,Mistral AI,2023-12-11,France,7.74e+23,Speculative
+Mistral Medium,Mistral AI,2023-12-11,France,,Unknown
+XVERSE-65B-2,"XVERSE Technology,Shenzhen Yuanxiang Technology",2023-12-08,"China,China",1.24800000000001e+24,Confident
+Gemini 1.0 Ultra,Google DeepMind,2023-12-06,United States of America,5.0000000001e+25,Speculative
+Gemini 1.0 Pro,Google DeepMind,2023-12-06,United States of America,,Speculative
+tsuzumi 7B,NTT Communication Science Laboratories,2023-12-01,Japan,,Confident
+Qwen-72B,Alibaba,2023-11-30,China,1.3e+24,Confident
+Granite 13B,IBM,2023-11-30,United States of America,2.44e+23,Likely
+Yuan 2.0,Inspur,2023-11-27,China,1.78e+23,Confident
+Amazon Transcribe,Amazon,2023-11-26,United States of America,,Unknown
+Inflection-2,Inflection AI,2023-11-22,United States of America,1.001e+25,Confident
+Lyria,Google DeepMind,2023-11-16,United States of America,,Unknown
+Nemotron-3-8B,Nvidia,2023-11-15,United States of America,1.8e+23,Confident
+Samsung Gauss Language,Samsung,2023-11-08,South Korea,,Unknown
+Samsung Gauss Code,Samsung,2023-11-08,South Korea,,Unknown
+Samsung Gauss Image,Samsung,2023-11-08,South Korea,,Unknown
+Jais-30b (phase 1),"Cerebras Systems,Mohamed bin Zayed University of Artificial Intelligence (MBZUAI),Inception G42,G42",2023-11-08,"United States of America,United Arab Emirates,United Arab Emirates,United Arab Emirates",1.0372049e+23,Confident
+XVERSE-13B-2,"XVERSE Technology,Shenzhen Yuanxiang Technology",2023-11-06,"China,China",,Likely
+Whisper v3,OpenAI,2023-11-06,United States of America,2.7e+23,Likely
+GPT-4 Turbo (Nov 2023),OpenAI,2023-11-06,United States of America,,Unknown
+Grok-1,xAI,2023-11-04,United States of America,2.90000000001e+24,Likely
+Grok-0,xAI,2023-11-04,United States of America,,Likely
+DeepSeek Coder 33B,"DeepSeek,Peking University",2023-11-02,"China,China",3.96e+23,Likely
+Yi-34B,01.AI,2023-11-02,China,6.1e+23,Confident
+Cohere Embed,Cohere,2023-11-02,Canada,,Unknown
+BlueLM 70B,vivo AI lab,2023-11-02,China,4.2e+23,Confident
+BlueLM 130B,vivo AI lab,2023-11-02,China,7.8e+23,Confident
+BlueLM 175B,vivo AI lab,2023-11-02,China,1.05e+24,Confident
+Yi 6B,01.AI,2023-11-02,China,1.26e+23,Confident
+Nanbeige-16B,Nanbeige LLM Lab,2023-11-01,China,2.4e+23,Likely
+LingoWhale-8B,DeepLang AI,2023-11-01,China,,Confident
+BlueLM 7B,vivo AI lab,2023-10-31,China,1.0920000000001e+23,Confident
+Tongyi Qianwen 2.0,Alibaba,2023-10-31,China,,Unknown
+Mi:dm 200B,KT,2023-10-31,South Korea,1.2e+24,Confident
+Skywork-13B,Kunlun Inc.,2023-10-30,China,2.5e+23,Confident
+Xinghan Foundation Model,Dahua Technology,2023-10-25,China,,Unknown
+Spark 3.0,iFlytek,2023-10-24,China,,Likely
+DALL·E 3,OpenAI,2023-10-19,United States of America,,Unknown
+ERNIE 4.0,Baidu,2023-10-17,China,,Unknown
+Fuyu-8B,Adept,2023-10-17,United States of America,,Confident
+Aquila2 34B,Beijing Academy of Artificial Intelligence / BAAI,2023-10-13,China,,Likely
+Jiutian,China Mobile,2023-10-12,China,1.668e+23,Likely
+Mistral 7B,Mistral AI,2023-10-10,France,,Confident
+CodeFuse-13B,Ant Group,2023-10-10,China,3.09e+23,Confident
+Qwen-14B,Alibaba,2023-09-28,China,2.5e+23,Confident
+Amazon Titan,Amazon,2023-09-28,United States of America,4.8e+24,Likely
+Qwen-7B,Alibaba,2023-09-28,China,1.01e+23,Confident
+PLaMo-13B,Preferred Networks Inc,2023-09-28,Japan,1.17e+23,Confident
+GPT-3.5 Turbo Instruct,OpenAI,2023-09-28,United States of America,,Likely
+Show-1,National University of Singapore,2023-09-27,Singapore,,Unknown
+Baichuan 2-7B,Baichuan,2023-09-20,China,1.092e+23,Confident
+Hunyuan,Tencent,2023-09-07,China,1.2e+24,Confident
+Falcon-180B,Technology Innovation Institute,2023-09-06,United Arab Emirates,3.76e+24,Confident
+Baichuan2-13B,Baichuan,2023-09-06,China,2.03e+23,Confident
+TigerBot-70B,Tigerobo,2023-09-06,China,1.02e+24,Confident
+360 Smart Brain,360 Security Technology,2023-09-04,China,,Likely
+ABAB,MiniMax,2023-08-30,China,,Unknown
+Luca 2.0,Mianbi Intelligence,2023-08-29,China,1.2e+24,Likely
+MathGPT,TAL Education Group (Xueersi),2023-08-24,China,,Unknown
+HyperCLOVA X,NAVER,2023-08-24,South Korea,,Speculative
+Eleven Multilingual v2,ElevenLabs,2023-08-22,United States of America,,Unknown
+Dou Bao,ByteDance,2023-08-18,China,,Unknown
+KwaiYii 13B,Kuaishou Technology,2023-08-16,China,,Likely
+VARCO LLM 2.0 base,NCSOFT,2023-08-16,South Korea,1.248e+23,Likely
+Code Llama-34B,Meta AI,2023-08-14,United States of America,5.3e+23,Confident
+Baichuan2-53B,Baichuan,2023-08-09,China,8.268e+23,Likely
+Claude Instant,Anthropic,2023-08-09,United States of America,,Unknown
+CALM (NVIDIA),"Nvidia,Technion - Israel Institute of Technology",2023-08-06,"United States of America,Israel",,Unknown
+Zi Yue,NetEase,2023-07-28,China,,Unknown
+Zi Yue 2.0,NetEase,2023-07-28,China,,Unknown
+EXAONE 2.0,LG AI Research,2023-07-19,South Korea,,Speculative
+Llama 2-70B,Meta AI,2023-07-18,United States of America,8.1e+23,Confident
+Llama 2-34B,Meta AI,2023-07-18,United States of America,4.08e+23,Confident
+Llama 2-13B,Meta AI,2023-07-18,United States of America,1.6e+23,Confident
+BaiLing,Ant Group,2023-07-15,China,,Unknown
+ChatRhino,JD.com,2023-07-13,China,,Confident
+Claude 2,Anthropic,2023-07-11,United States of America,3.866e+24,Speculative
+TeleChat,China Telecom,2023-07-07,China,,Unknown
+Pangu 3.0,Huawei,2023-07-07,China,,Likely
+InternLM,"Shanghai AI Lab,SenseTime",2023-07-06,"China,Hong Kong",9.984e+23,Confident
+xTrimoPGLM -100B,"Tsinghua University,BioMap Research",2023-07-06,"China,China",6.2e+23,Confident
+NEC LLM 13B,NEC Laboratories,2023-07-06,United States of America,,Confident
+Stable Diffusion XL (SDXL),Stability AI,2023-07-04,United Kingdom,,Speculative
+ERNIE 3.5,Baidu,2023-06-27,China,,Unknown
+Inflection-1,Inflection AI,2023-06-23,United States of America,1.0001e+24,Speculative
+MPT-30B,MosaicML,2023-06-22,United States of America,1.8900000000001e+23,Confident
+GPT-3.5 Turbo,OpenAI,2023-06-13,United States of America,,Likely
+Wu Dao Aquila-7B,Beijing Academy of Artificial Intelligence / BAAI,2023-06-10,China,,Confident
+Wu Dao Aquila-33B,Beijing Academy of Artificial Intelligence / BAAI,2023-06-10,China,,Confident
+MusicGen,Meta AI,2023-06-08,United States of America,,Likely
+PolySphere-1,AI inside,2023-06-08,Japan,,Likely
+PaLM 2,Google,2023-05-10,United States of America,7.34e+24,Likely
+CodeGen2,Salesforce,2023-05-03,United States of America,,Confident
+Eleven Multilingual v1,ElevenLabs,2023-04-27,United States of America,,Unknown
+ruGPT-3.5 13B,Sber,2023-04-24,Russia,1.0699776e+23,Confident
+Claude 1.3,Anthropic,2023-04-18,United States of America,,Unknown
+AiLMe-100B v3,"Qilin Hesheng Network Technology Co., Ltd. (APUS)",2023-04-18,China,,Confident
+SenseChat,SenseTime,2023-04-10,Hong Kong,3.89e+24,Speculative
+BloombergGPT,"Bloomberg,Johns Hopkins University",2023-03-30,"United States of America,United States of America",2.36e+23,Confident
+LightOn Mini,LightOn,2023-03-21,France,2.4e+23,Confident
+Firefly,Adobe,2023-03-21,United States of America,,Unknown
+Gen-2,Runway,2023-03-20,United States of America,,Unknown
+PanGu-Σ,Huawei Noah's Ark Lab,2023-03-20,China,4.67e+23,Confident
+GPT-4 (Mar 2023),OpenAI,2023-03-15,United States of America,2.1e+25,Likely
+Falcon-40B,Technology Innovation Institute,2023-03-15,United Arab Emirates,2.4e+23,Confident
+Claude,Anthropic,2023-03-14,United States of America,,Unknown
+Cohere Command,Cohere,2023-03-01,Canada,,Speculative
+Jurassic-2 Jumbo,AI21 Labs,2023-03-01,Israel,,
+CodeGen-Mono 16.1B,Salesforce,2023-02-27,United States of America,,Likely
+LLaMA-33B,Meta AI,2023-02-27,United States of America,2.7300000000001e+23,Confident
+LLaMA-65B,Meta AI,2023-02-24,United States of America,5.5e+23,Confident
+Anthropic LM 175B,Anthropic,2023-02-15,United States of America,,Confident
+ViT-22B,Google,2023-02-10,United States of America,1.93248e+23,Confident
+Gen-1,Runway,2023-02-06,United States of America,,Unknown
+Eleven Monolingual v1,ElevenLabs,2023-01-16,United States of America,,Unknown
+Whisper v2,OpenAI,2022-12-05,United States of America,1.1e+23,Likely
+Galactica,Meta AI,2022-11-16,United States of America,3.24e+23,Likely
+Imagen Video,Google Brain,2022-10-05,United States of America,,Confident
+Make-A-Video,Meta AI,2022-09-29,United States of America,,Unknown
+PaLI,Google,2022-09-14,United States of America,1.69e+23,Likely
+Luminous-supreme,Aleph Alpha,2022-08-15,Germany,3.5461e+23,Confident
+Luminous-extended,Aleph Alpha,2022-08-15,Germany,1.0019457e+23,Confident
+GLM-130B,Tsinghua University,2022-08-04,China,3.5490054945e+23,Confident
+AlexaTM 20B,Amazon,2022-08-02,United States of America,2.04374016e+23,Confident
+YuYan 11B,"Hong Kong Baptist University,NetEase",2022-07-15,"Hong Kong,China",,Confident
+BLOOM-176B,"Hugging Face,BigScience",2022-07-11,"United States of America,France",3.65664e+23,Confident
+Minerva (540B),Google,2022-06-29,United States of America,2.7415e+24,Confident
+CodeWhisperer,Amazon,2022-06-24,United States of America,,Unknown
+YaLM,Yandex,2022-06-23,Russia,2.2e+23,Likely
+Parti,Google Research,2022-06-22,United States of America,5.09607936e+23,Confident
+OPT-66B,Meta AI,2022-06-21,United States of America,1.100000000001e+23,Confident
+MetaLM,Microsoft Research,2022-06-13,United States of America,,Speculative
+BIG-G 137B,Google,2022-06-09,United States of America,5.6e+23,Confident
+UL2,"Google Research,Google Brain",2022-05-10,"United States of America,United States of America",1.2e+23,Confident
+OPT-175B,Meta AI,2022-05-02,United States of America,4.3e+23,Confident
+OPT-13B,Meta AI,2022-05-02,United States of America,3.53e+23,Likely
+Anthropic LM 52B,Anthropic,2022-04-12,United States of America,,Confident
+VLM-4,LightOn,2022-04-12,France,,Unknown
+DALL·E 2,OpenAI,2022-04-06,United States of America,3.3695784e+23,Speculative
+PaLM (540B),Google Research,2022-04-04,United States of America,2.5272e+24,Confident
+Chinchilla,DeepMind,2022-03-29,United Kingdom,5.76e+23,Confident
+GPT-3.5 (davinci-002),OpenAI,2022-03-15,United States of America,2.578e+24,Speculative
+ST-MoE,"Google,Google Brain,Google Research",2022-02-17,"United States of America,United States of America,United States of America",2.9e+23,Likely
+Midjourney V1,Midjourney,2022-02-15,United States of America,,Unknown
+LaMDA,Google,2022-02-10,United States of America,3.55e+23,Confident
+AlphaCode,DeepMind,2022-02-02,United Kingdom,2.38010000000001e+23,Confident
+ERNIE 3.0 Titan,"Baidu,Peng Cheng Laboratory",2021-12-23,"China,China",1.0421e+24,Confident
+EXAONE 1.0,LG,2021-12-14,South Korea,1.6956e+24,Speculative
+GLaM,Google,2021-12-13,United States of America,3.6363112434e+23,Confident
+Gopher (280B),DeepMind,2021-12-08,United Kingdom,6.31e+23,Confident
+Yuan 1.0,Inspur,2021-10-12,China,3.5380000000001e+23,Confident
+Megatron-Turing NLG 530B,"Microsoft,Nvidia",2021-10-11,"United States of America,United States of America",8.586e+23,Confident
+HyperCLOVA 82B,"NAVER,Search Solutions",2021-09-10,"South Korea,South Korea",1.476e+23,Confident
+HyperCLOVA 204B,NAVER,2021-09-10,South Korea,2.0000000001e+23,Speculative
+Jurassic-1-Jumbo,AI21 Labs,2021-08-11,Israel,3.7e+23,Confident
+Wu Dao 2.0,Beijing Academy of Artificial Intelligence / BAAI,2021-05-31,China,1.54350000000001e+24,Speculative
+GPT-3 175B (davinci),OpenAI,2020-05-28,United States of America,3.14e+23,Confident
+Meena,Google Brain,2020-01-28,United States of America,1.12e+23,Confident
+AlphaStar,DeepMind,2019-10-30,United Kingdom,1.0773400001e+23,Confident

@@ -1,0 +1,101 @@
+<script lang="ts">
+  import { onMount, tick } from 'svelte';
+  import Block from '../charts/Block.svelte';
+  import { AREE, paesiUe } from '../data/geopoliticai';
+  import { area as areaRicordata } from '../scelta.svelte';
+  import { scheda } from '../text/geopoliticai';
+  import Detail from './Detail.svelte';
+  import GeoChiAddestra from './GeoChiAddestra.svelte';
+  import GeoMappa from './GeoMappa.svelte';
+  import GeoMatrice from './GeoMatrice.svelte';
+  import type { DetailProps } from './types';
+
+  let { data, today, tile, params, onclose }: DetailProps = $props();
+
+  const head = $derived(tile.head(data, today));
+  const g = $derived(data.geopoliticai);
+  const validi = $derived(Object.keys(g?.zone ?? {}));
+  const zona = $derived(params.area && validi.includes(params.area) ? params.area : 'ue'); // senza una scelta valida, l'UE
+  onMount(() => areaRicordata.allinea(params.area, validi));
+  const nellUe = $derived(zona === 'ue' || g?.zone[zona]?.tipo === 'paese-ue');
+  const paesi = $derived(g ? paesiUe(g) : []);
+  const scegli = (k: string) => areaRicordata.scegli(k === 'ue' ? null : k); // l'UE è la scelta di partenza
+  const s = $derived(g && g.zone[zona] ? scheda(g, zona) : null);
+  /** Dalla matrice: sceglie l'area, porta la scheda in vista e le dà il focus. */
+  async function apriScheda(k: string) {
+    scegli(k);
+    await tick();
+    const el = document.getElementById('geo-scheda');
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    el?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    el?.focus({ preventScroll: true });
+  }
+  /** Alla sezione della mappa quando c'è, altrimenti in fondo al dettaglio. */
+  function versoLaMappa() {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const mappa = document.getElementById('geo-mappa');
+    (mappa ?? document.getElementById('detail-geopoliticai'))?.scrollIntoView?.({ block: mappa ? 'start' : 'end', behavior: reduce ? 'auto' : 'smooth' });
+  }
+</script>
+
+<Detail {tile} {head} {onclose}>
+  {#if g}
+    <div class="chips" role="group" aria-label="Area">
+      {#each AREE as k (k)}<button type="button" aria-pressed={k === 'ue' ? nellUe : zona === k} onclick={() => scegli(k)}>{g.zone[k].nome}</button>{/each}
+    </div>
+    {#if nellUe}
+      <div class="chips" role="group" aria-label="Paesi dell'UE">
+        <button type="button" aria-pressed={zona === 'ue'} onclick={() => scegli('ue')}>Tutta l'UE</button>
+        {#each paesi as k (k)}<button type="button" aria-pressed={zona === k} onclick={() => scegli(k)}>{g.zone[k].nome}</button>{/each}
+      </div>
+    {/if}
+  {/if}
+  <Block span={12} id="geo-scheda" title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'}>
+    {#if s}
+      <p class="frase"><strong>{s.frase}</strong></p>
+      {#if s.situazione !== 'zero'}
+      <div class="due">
+        <section aria-labelledby="geo-cap">
+          <h4 id="geo-cap">Capacità <span>Epoch Capabilities Index</span></h4>
+          {#if s.capacita}
+            <p class="fig">{s.capacita.fig}</p>
+            <p class="sotto">{s.capacita.sotto}</p>
+          {:else}<p class="sotto">nessun modello valutato</p>{/if}
+        </section>
+        <section aria-labelledby="geo-calc">
+          <h4 id="geo-calc">Calcolo di addestramento <span>FLOP del modello più grande</span></h4>
+          {#if s.calcolo}
+            <p class="fig">{s.calcolo.fig}</p>
+            <p class="sotto">{s.calcolo.sotto}</p>
+            {#if s.calcolo.nota}<p class="sotto">{s.calcolo.nota}</p>{/if}
+          {:else}<p class="sotto">{s.calcoloVuoto}</p>{/if}
+        </section>
+      </div>
+      {/if}
+      {#each s.righe as r, i (i)}<p class="riga">{r}</p>{/each}
+      {#if s.nota}<p class="riga"><em>{s.nota}</em></p>{/if}
+      {#if s.mappa}<p><button type="button" class="vai" onclick={versoLaMappa}>{s.mappa}</button></p>{/if}
+    {/if}
+  </Block>
+  {#if g}
+    <GeoMatrice {g} {zona} onscegli={apriScheda} />
+    <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
+      vista={params.vista} filo={params.filo} onscegli={scegli} />
+    <GeoChiAddestra {g} {zona} />
+  {/if}
+</Detail>
+
+<style>
+  .chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
+  .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
+  .frase { font-size: 18px; line-height: 28px; max-width: 60ch; }
+  .due { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s3); }
+  h4 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-2); }
+  h4 span { display: block; font-weight: 400; color: var(--fg-3); }
+  .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .sotto { font-size: 14px; line-height: 20px; color: var(--fg-2); }
+  .vai { background: none; border: 0; padding: 0; font: inherit; font-size: 14px; line-height: 24px; color: var(--accent); text-decoration: underline; cursor: pointer; }
+  .riga { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }
+  @media (max-width: 560px) { .fig { font-size: 28px; line-height: 32px; } }
+</style>

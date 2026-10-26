@@ -172,6 +172,14 @@ class FakeSession:
         if host == "ec.europa.eu":
             geos = [v for k, v in params if k == "geo"]
             return FakeResponse(body=_jsonstat(geos, ["2023", "2024", "2025"], lambda g, y: 5.0 + int(y) - 2023))
+        if host == "epoch.ai" and "large_scale" in url:
+            return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_large_scale.csv").read_text(encoding="utf-8"))
+        if host == "epoch.ai" and "ai-data-centers/map" in url:
+            return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_mappa_data_center.html").read_text(encoding="utf-8"))
+        if host == "epoch.ai" and "data_centers" in url:
+            return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_data_centers.csv").read_text(encoding="utf-8"))
+        if host == "epoch.ai" and "eci_scores" in url:
+            return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_eci.csv").read_text(encoding="utf-8"))
         if host == "epoch.ai":
             return FakeResponse(text=_epoch_csv())
         if host == "artificialanalysis.ai":
@@ -223,6 +231,12 @@ def test_full_run(env):
     ep = json.loads((tmp / "epoch.json").read_text())
     assert ep["modelli"] == 80
     assert {r["area"] for r in ep["per_anno"]} == set(epoch.REGION_ORDER)
+
+    geo = json.loads((tmp / "geopoliticai.json").read_text(encoding="utf-8"))
+    assert geo["zone"]["ue"]["eci"]["2026"]["modello"] == "Mistral Large 4"
+    assert all(s["posizione"] == "epoch" for s in geo["data_center"]["siti"])
+    assert "messaggio" not in status["fonti"]["geopoliticai"]
+    assert not any("nominatim" in u for u in fake.calls)
 
     gh = json.loads((tmp / "github.json").read_text())
     assert "anthropics/claude-code" not in {r["repo"] for r in gh["repos"]}

@@ -28,6 +28,46 @@ _Avoid_: diffusione, uso dell'AI (per le imprese)
 L'attività aziendale per cui un'impresa che usa l'AI la impiega, per esempio marketing e vendite o logistica.
 _Avoid_: uso, applicazione, caso d'uso
 
+**Modello nazionale**:
+Un modello AI attribuito al Paese in cui ha sede l'organizzazione che lo sviluppa. Un modello sviluppato da organizzazioni di Paesi diversi conta solo per il Paese della prima organizzazione indicata. Un modello senza Paese non è un modello nazionale.
+_Avoid_: modello sovrano, modello locale, modello del Paese
+
+**Area**:
+Uno dei blocchi in cui si confrontano i modelli nazionali e si riassume la mappa: USA, Cina (Hong Kong e Macao comprese), Regno Unito, UE e Altri, cioè tutti gli altri Paesi, Taiwan compresa. Dentro l'UE si vedono anche i singoli Paesi, Italia compresa; sulla mappa ogni Paese ha il suo valore.
+_Avoid_: regione, blocco, zona
+
+**Anello**:
+Uno dei passaggi della catena dell'AI su cui la mappa confronta i Paesi: le materie prime, la progettazione, la fabbricazione e i macchinari dei chip, i data center e i modelli. Ogni anello ha la sua misura, e gli anelli non si sommano.
+_Avoid_: risorsa, fase, livello, layer
+
+**H100 equivalente**:
+L'unità con cui si misura la potenza di calcolo di un data center: quante GPU NVIDIA H100 servirebbero per la stessa potenza. È la misura dell'anello dei data center.
+_Avoid_: GPU, chip, potenza installata
+
+**Sito**:
+Un data center che Epoch conta in *AI data centers*, con i suoi H100 equivalenti attuali e uno stato, operativo o in costruzione. Un cluster del censimento *GPU clusters*, come Leonardo al CINECA, non è un sito.
+_Avoid_: cluster, impianto, struttura, campus
+
+**Filo della catena**:
+Un esempio di percorso, scelto da noi, che segue un modello attraverso i sei anelli: per ogni anello una tappa, cioè un luogo con la frase e la fonte che lo sostengono. Non è un dato e non misura niente: le quote per Paese sono l'altra vista della mappa.
+_Avoid_: flusso, percorso reale, supply chain
+
+**Calcolo di addestramento**:
+La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli. È noto solo per una parte dei modelli: quando l'organizzazione non lo pubblica, è una stima di Epoch.
+_Avoid_: compute, potenza di calcolo, calcolo pubblicato, calcolo dichiarato
+
+**Anno in corso**:
+L'anno non ancora chiuso. Tra le aree si confronta alla pari, perché è parziale per tutte; con gli anni chiusi no.
+_Avoid_: anno corrente, ultimo anno
+
+**Modello di grande scala**:
+Un modello AI addestrato con almeno 1e23 FLOP di calcolo di addestramento. Sono i modelli su cui si contano le aree.
+_Avoid_: modello grande, modello di frontiera, modello notevole
+
+**Capacità**:
+Quanto un modello è bravo nei compiti verificabili, misurata dall'Epoch Capabilities Index. Ha senso solo nel confronto tra modelli, non come valore assoluto. Dice quanto valgono i risultati di un'area.
+_Avoid_: competenza, intelligenza, potenza (per un modello)
+
 **Barriera**:
 Un motivo per cui un'impresa che ha considerato l'AI non la usa, per esempio i costi o la mancanza di competenze.
 _Avoid_: ostacolo, freno

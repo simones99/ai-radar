@@ -13,3 +13,7 @@ I cinque ruoli canonici, scritti come riga `Status:` in ogni ticket. See `docs/a
 ### Domain docs
 
 Single-context: `GLOSSARY.md` e `docs/adr/` nella radice. See `docs/agents/domain.md`.
+
+### Screenshot
+
+Per guardare una vista a occhio: `npm run scatto` in `web/`, con le variabili descritte in `web/tests/scatto/scatto.spec.ts`.

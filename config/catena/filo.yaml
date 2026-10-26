@@ -1,0 +1,156 @@
+# Gli esempi del Filo della catena nella mappa di GeopoliticAI: tre percorsi scelti da noi, non un dato.
+#
+# Ogni esempio ha sei tappe, una per anello, nell'ordine delle fermate: materie, progettazione, fabbricazione,
+# macchinari, datacenter, modelli. Ogni tappa ha il luogo, il Paese (codice ADM0_A3), le coordinate, una frase e la
+# fonte che la sostiene. Fonti lette il 26 ottobre 2026. Il data center di ogni esempio è un sito di Epoch,
+# con il suo nome e le sue coordinate (data/geopoliticai_siti.json).
+#
+# Da sapere, prima di cambiare una tappa:
+# - Gallio: nessuna fonte affidabile lega il gallio a una raffineria precisa. La tappa è la Cina, su un punto indicativo
+#   (il centro geografico), con la quota dello USGS.
+# - TSMC a Tainan: è una deduzione. Il 4NP delle Blackwell è della famiglia dei 5 nm, che TSMC fa nella Fab 18 di Tainan.
+#   Dall'ottobre 2025 TSMC fa wafer Blackwell anche in Arizona.
+# - La pagina di OpenAI sull'addestramento ad Abilene non si legge dai client automatici (403): la tappa 6 americana
+#   si appoggia alla pagina di Epoch sul sito.
+# - Chi fabbrica gli Ascend non è chiaro: TechInsights ha trovato anche die di TSMC. La frase su SMIC è attribuita
+#   al Congresso USA, che scrive «purportedly».
+# - Pangu Ultra non dice dove è stato addestrato: il legame con Huawei Wuhu è una nostra scelta, coerente con gli Ascend.
+
+fili:
+  usa:
+    nome: Un modello americano
+    tappe:
+      - anello: materie
+        luogo: Gallio
+        iso: CHN
+        lat: 35.86
+        lon: 104.20
+        frase: "La Cina produce il 99% del gallio primario mondiale, ricavato soprattutto dalla lavorazione della bauxite."
+        fonte: https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-gallium.pdf
+      - anello: progettazione
+        luogo: NVIDIA, Santa Clara
+        iso: USA
+        lat: 37.37
+        lon: -121.96
+        frase: "Progetta le GPU Blackwell, con 208 miliardi di transistor; a fabbricarle è TSMC, con un processo 4NP su misura."
+        fonte: https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
+      - anello: fabbricazione
+        luogo: TSMC, Tainan
+        iso: TWN
+        lat: 23.11
+        lon: 120.28
+        frase: "A Tainan c'è la Fab 18, la GigaFab di TSMC nata per i chip a 5 nanometri."
+        fonte: https://pr.tsmc.com/english/news/1951
+      - anello: macchinari
+        luogo: ASML, Veldhoven
+        iso: NLD
+        lat: 51.41
+        lon: 5.46
+        frase: "È l'unica al mondo a costruire macchine EUV, usate per gli strati più fini dei chip più avanzati."
+        fonte: https://www.sec.gov/Archives/edgar/data/937966/000093796625000011/a2024annualreportbasedon.htm
+      - anello: datacenter
+        luogo: OpenAI Stargate Abilene, Texas
+        iso: USA
+        lat: 32.50
+        lon: -99.79
+        frase: "Data center di Oracle usato da OpenAI, operativo; secondo Epoch ha GPU NVIDIA B200 e B300."
+        fonte: https://epoch.ai/data/ai-data-centers/directory/openai-stargate-abilene
+      - anello: modelli
+        luogo: OpenAI, San Francisco
+        iso: USA
+        lat: 37.77
+        lon: -122.39
+        frase: "Sviluppa i modelli GPT; secondo Epoch è OpenAI a usare i chip del sito di Abilene."
+        fonte: https://epoch.ai/data/ai-data-centers/directory/openai-stargate-abilene
+
+  ue:
+    nome: Un modello europeo
+    tappe:
+      - anello: materie
+        luogo: Gallio
+        iso: CHN
+        lat: 35.86
+        lon: 104.20
+        frase: "Anche per l'Europa il gallio viene dalla Cina, che ne produce il 99% del primario mondiale."
+        fonte: https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-gallium.pdf
+      - anello: progettazione
+        luogo: NVIDIA, Santa Clara
+        iso: USA
+        lat: 37.37
+        lon: -121.96
+        frase: "Progetta le GPU Vera Rubin che ospiterà il data center svedese usato da Mistral AI."
+        fonte: https://ecodatacenter.tech/press/mistral-ai-and-ecodatacenter-partner-to-build-ai-focused-data-center-in-sweden-3431886
+      - anello: fabbricazione
+        luogo: TSMC, Tainan
+        iso: TWN
+        lat: 23.11
+        lon: 120.28
+        frase: "Le GPU NVIDIA le fabbrica TSMC: le Blackwell, per esempio, con un processo 4NP su misura."
+        fonte: https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/
+      - anello: macchinari
+        luogo: ASML, Veldhoven
+        iso: NLD
+        lat: 51.41
+        lon: 5.46
+        frase: "L'olandese ASML è oggi l'unica al mondo a costruire macchine per la litografia EUV."
+        fonte: https://www.sec.gov/Archives/edgar/data/937966/000093796625000011/a2024annualreportbasedon.htm
+      - anello: datacenter
+        luogo: EcoDataCenter 2, Borlänge
+        iso: SWE
+        lat: 60.53
+        lon: 15.42
+        frase: "In costruzione nell'ex cartiera di Kvarnsveden; secondo Epoch i chip saranno di Mistral AI, che li userà."
+        fonte: https://epoch.ai/data/ai-data-centers/directory/ecodatacenter-2
+      - anello: modelli
+        luogo: Mistral AI, Parigi
+        iso: FRA
+        lat: 48.86
+        lon: 2.35
+        frase: "La prima infrastruttura di Mistral AI fuori dalla Francia servirà a sviluppare e far girare i suoi prossimi modelli."
+        fonte: https://ecodatacenter.tech/press/mistral-ai-and-ecodatacenter-partner-to-build-ai-focused-data-center-in-sweden-3431886
+
+  cina:
+    nome: Un modello cinese
+    tappe:
+      - anello: materie
+        luogo: Gallio
+        iso: CHN
+        lat: 35.86
+        lon: 104.20
+        frase: "La materia prima è in casa, la Cina produce il 99% del gallio primario mondiale."
+        fonte: https://pubs.usgs.gov/periodicals/mcs2026/mcs2026-gallium.pdf
+      - anello: progettazione
+        luogo: Huawei, Shenzhen
+        iso: CHN
+        lat: 22.65
+        lon: 114.06
+        frase: "Progetta i chip Ascend, ma dice di non avere accesso ai processi produttivi più avanzati."
+        fonte: https://www.huawei.com/en/news/2025/9/hc-xu-keynote-speech
+      - anello: fabbricazione
+        luogo: SMIC, Shanghai
+        iso: CHN
+        lat: 31.20
+        lon: 121.60
+        frase: "Secondo il Congresso USA produce i chip Ascend di Huawei, arrivando ai 7 nm con macchine DUV di ASML."
+        fonte: https://selectcommitteeontheccp.house.gov/sites/evo-subsites/selectcommitteeontheccp.house.gov/files/evo-media-document/selling-the-forges-of-the-future.pdf
+      - anello: macchinari
+        luogo: ASML, Veldhoven
+        iso: NLD
+        lat: 51.41
+        lon: 5.46
+        frase: "I Paesi Bassi negano alla Cina le macchine EUV; dal 2023 serve una licenza anche per le DUV più avanzate."
+        fonte: https://selectcommitteeontheccp.house.gov/sites/evo-subsites/selectcommitteeontheccp.house.gov/files/evo-media-document/selling-the-forges-of-the-future.pdf
+      - anello: datacenter
+        luogo: Huawei Wuhu, Anhui
+        iso: CHN
+        lat: 31.29
+        lon: 118.30
+        frase: "Data center di Huawei, operativo; secondo Epoch ha chip Ascend 910C."
+        fonte: https://epoch.ai/data/ai-data-centers/directory/huawei-wuhu
+      - anello: modelli
+        luogo: Huawei Pangu, Shenzhen
+        iso: CHN
+        lat: 22.65
+        lon: 114.06
+        frase: "Pangu Ultra, 135 miliardi di parametri, è stato addestrato su 8.192 chip Ascend."
+        fonte: https://arxiv.org/abs/2504.07866

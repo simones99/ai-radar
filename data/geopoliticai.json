@@ -1,0 +1,1784 @@
+{
+ "fonte": "Epoch AI",
+ "licenza": "CC BY 4.0",
+ "url_modelli": "https://epoch.ai/data/ai-models",
+ "url_eci": "https://epoch.ai/eci",
+ "scaricato": "2026-10-26",
+ "anno_corrente": 2026,
+ "zone": {
+  "usa": {
+   "nome": "USA",
+   "tipo": "area",
+   "aggettivo": "statunitense",
+   "con_articolo": "gli USA",
+   "calcolo": {
+    "2020": {
+     "n": 2,
+     "nc": 2,
+     "max": 3.14e+23,
+     "modello": "GPT-3 175B (davinci)"
+    },
+    "2021": {
+     "n": 2,
+     "nc": 2,
+     "max": 8.586e+23,
+     "modello": "Megatron-Turing NLG 530B"
+    },
+    "2022": {
+     "n": 23,
+     "nc": 17,
+     "max": 2.7415e+24,
+     "modello": "Minerva (540B)"
+    },
+    "2023": {
+     "n": 47,
+     "nc": 21,
+     "max": 5.0000000001e+25,
+     "modello": "Gemini 1.0 Ultra"
+    },
+    "2024": {
+     "n": 81,
+     "nc": 52,
+     "max": 3.8e+25,
+     "modello": "Llama 3.1-405B"
+    },
+    "2025": {
+     "n": 66,
+     "nc": 31,
+     "max": 5.0000000000001e+26,
+     "modello": "Grok 4"
+    },
+    "2026": {
+     "n": 20,
+     "nc": 10,
+     "max": 9.4e+26,
+     "modello": "GPT-6 Astra"
+    }
+   },
+   "eci": {
+    "2023": {
+     "n": 23,
+     "max": 125.74,
+     "modello": "GPT-4 (Mar 2023)"
+    },
+    "2024": {
+     "n": 42,
+     "max": 141.72,
+     "modello": "o1"
+    },
+    "2025": {
+     "n": 46,
+     "max": 156.33,
+     "modello": "GPT-5.2 Pro"
+    },
+    "2026": {
+     "n": 50,
+     "max": 168.83,
+     "modello": "Claude Opus 5.5"
+    }
+   },
+   "org_eci": [
+    "Anthropic",
+    "Cerebras Systems",
+    "Databricks",
+    "Google",
+    "Google DeepMind",
+    "Hugging Face",
+    "Meta AI",
+    "Microsoft",
+    "Microsoft Research",
+    "MosaicML",
+    "Nvidia",
+    "OpenAI",
+    "Prime Intellect",
+    "Salesforce",
+    "Thinking Machines",
+    "xAI"
+   ],
+   "org_ls": [
+    "Adept",
+    "Adobe",
+    "Allen Institute for AI",
+    "Amazon",
+    "Anthrogen",
+    "Anthropic",
+    "Apple",
+    "Arc Institute",
+    "Bloomberg",
+    "Cerebras Systems",
+    "Cisco",
+    "Cursor",
+    "Databricks",
+    "ElevenLabs",
+    "EvolutionaryScale",
+    "Facebook AI Research",
+    "Google",
+    "Google Brain",
+    "Google DeepMind",
+    "Google Research",
+    "Hugging Face",
+    "IBM",
+    "IBM Research",
+    "Inflection AI",
+    "Marin",
+    "Meta AI",
+    "Microsoft",
+    "Microsoft Research",
+    "Midjourney",
+    "MosaicML",
+    "NEC Laboratories",
+    "Nvidia",
+    "OpenAI",
+    "Prime Intellect",
+    "Reka AI",
+    "Rhymes AI",
+    "Runway",
+    "Salesforce",
+    "Snowflake",
+    "Thinking Machines",
+    "xAI"
+   ],
+   "contano_altrove": 0,
+   "paesi_mappa": [
+    "USA"
+   ]
+  },
+  "cina": {
+   "nome": "Cina",
+   "tipo": "area",
+   "aggettivo": "cinese",
+   "con_articolo": "la Cina",
+   "calcolo": {
+    "2021": {
+     "n": 3,
+     "nc": 3,
+     "max": 1.54350000000001e+24,
+     "modello": "Wu Dao 2.0"
+    },
+    "2022": {
+     "n": 2,
+     "nc": 1,
+     "max": 3.5490054945e+23,
+     "modello": "GLM-130B"
+    },
+    "2023": {
+     "n": 49,
+     "nc": 27,
+     "max": 3.89e+24,
+     "modello": "SenseChat"
+    },
+    "2024": {
+     "n": 59,
+     "nc": 34,
+     "max": 2.505e+25,
+     "modello": "Doubao-pro"
+    },
+    "2025": {
+     "n": 84,
+     "nc": 62,
+     "max": 1.512e+25,
+     "modello": "Qwen3-Max"
+    },
+    "2026": {
+     "n": 12,
+     "nc": 12,
+     "max": 2.0001e+25,
+     "modello": "Kimi K3"
+    }
+   },
+   "eci": {
+    "2023": {
+     "n": 10,
+     "max": 117.33,
+     "modello": "Yi-34B"
+    },
+    "2024": {
+     "n": 8,
+     "max": 132.3,
+     "modello": "DeepSeek-V3"
+    },
+    "2025": {
+     "n": 21,
+     "max": 146.09,
+     "modello": "DeepSeek-V3.2"
+    },
+    "2026": {
+     "n": 33,
+     "max": 157.86,
+     "modello": "Kimi K3"
+    }
+   },
+   "org_eci": [
+    "01.AI",
+    "Alibaba",
+    "Baichuan",
+    "DeepSeek",
+    "MiniMax",
+    "Moonshot",
+    "Z.ai (Zhipu AI)"
+   ],
+   "org_ls": [
+    "01.AI",
+    "360 Security Technology",
+    "Alibaba",
+    "Ant Group",
+    "Baichuan",
+    "Baidu",
+    "Beijing Academy of Artificial Intelligence / BAAI",
+    "ByteDance",
+    "China Mobile",
+    "China Telecom",
+    "Dahua Technology",
+    "DeepLang AI",
+    "DeepSeek",
+    "Hisense",
+    "Hong Kong Baptist University",
+    "Huawei",
+    "Huawei Noah's Ark Lab",
+    "Inspur",
+    "JD.com",
+    "Kuaishou Technology",
+    "Kunlun Inc.",
+    "Meituan Inc",
+    "Mianbi Intelligence",
+    "MiniMax",
+    "Moonshot",
+    "Nanbeige LLM Lab",
+    "NetEase",
+    "Qilin Hesheng Network Technology Co.",
+    "Rednote",
+    "SenseTime",
+    "Shanghai AI Lab",
+    "StepFun",
+    "TAL Education Group (Xueersi)",
+    "Tencent",
+    "Tigerobo",
+    "Tsinghua University",
+    "XVERSE Technology",
+    "Xiaomi Corp",
+    "Yayi (Wenge)",
+    "Z.ai (Zhipu AI)",
+    "iFlytek",
+    "vivo AI lab"
+   ],
+   "contano_altrove": 0,
+   "paesi_mappa": [
+    "CHN"
+   ]
+  },
+  "ue": {
+   "nome": "UE",
+   "tipo": "area",
+   "aggettivo": "europeo",
+   "con_articolo": "l'UE",
+   "calcolo": {
+    "2022": {
+     "n": 3,
+     "nc": 2,
+     "max": 3.5461e+23,
+     "modello": "Luminous-supreme"
+    },
+    "2023": {
+     "n": 5,
+     "nc": 2,
+     "max": 7.74e+23,
+     "modello": "Mixtral 8x7B"
+    },
+    "2024": {
+     "n": 8,
+     "nc": 3,
+     "max": 2.34e+24,
+     "modello": "Mixtral 8x22B"
+    },
+    "2025": {
+     "n": 5,
+     "nc": 3,
+     "max": 1.152e+24,
+     "modello": "Mistral Small 3"
+    }
+   },
+   "eci": {
+    "2023": {
+     "n": 2,
+     "max": 118.44,
+     "modello": "Mixtral 8x7B"
+    },
+    "2024": {
+     "n": 7,
+     "max": 128.57,
+     "modello": "Mistral Large 2 (Nov 2024)"
+    },
+    "2025": {
+     "n": 3,
+     "max": 134.02,
+     "modello": "Mistral Medium 3"
+    },
+    "2026": {
+     "n": 2,
+     "max": 150.03,
+     "modello": "Mistral Large 4"
+    }
+   },
+   "org_eci": [
+    "Mistral AI"
+   ],
+   "org_ls": [
+    "Aleph Alpha",
+    "INSAIT",
+    "LightOn",
+    "Mistral AI",
+    "OpenGPT-X",
+    "Silo AI"
+   ],
+   "contano_altrove": 7,
+   "paesi_mappa": [
+    "AUT",
+    "BEL",
+    "BGR",
+    "CYP",
+    "CZE",
+    "DEU",
+    "DNK",
+    "ESP",
+    "EST",
+    "FIN",
+    "FRA",
+    "GRC",
+    "HRV",
+    "HUN",
+    "IRL",
+    "ITA",
+    "LTU",
+    "LUX",
+    "LVA",
+    "MLT",
+    "NLD",
+    "POL",
+    "PRT",
+    "ROU",
+    "SVK",
+    "SVN",
+    "SWE"
+   ]
+  },
+  "uk": {
+   "nome": "Regno Unito",
+   "tipo": "area",
+   "aggettivo": "britannico",
+   "con_articolo": "il Regno Unito",
+   "calcolo": {
+    "2021": {
+     "n": 1,
+     "nc": 1,
+     "max": 6.31e+23,
+     "modello": "Gopher (280B)"
+    },
+    "2022": {
+     "n": 2,
+     "nc": 2,
+     "max": 5.76e+23,
+     "modello": "Chinchilla"
+    },
+    "2023": {
+     "n": 1,
+     "nc": 0,
+     "max": null,
+     "modello": null
+    },
+    "2024": {
+     "n": 3,
+     "nc": 1,
+     "max": 2.91e+23,
+     "modello": "Stable LM 2 12B"
+    }
+   },
+   "eci": {
+    "2023": {
+     "n": 1,
+     "max": 117.02,
+     "modello": "Stable Beluga 2"
+    }
+   },
+   "org_eci": [
+    "Stability AI"
+   ],
+   "org_ls": [
+    "DeepMind",
+    "Stability AI"
+   ],
+   "contano_altrove": 0,
+   "paesi_mappa": [
+    "GBR"
+   ]
+  },
+  "altri": {
+   "nome": "Altri",
+   "tipo": "area",
+   "aggettivo": null,
+   "con_articolo": "«Altri»",
+   "calcolo": {
+    "2021": {
+     "n": 4,
+     "nc": 4,
+     "max": 1.6956e+24,
+     "modello": "EXAONE 1.0"
+    },
+    "2022": {
+     "n": 1,
+     "nc": 1,
+     "max": 2.2e+23,
+     "modello": "YaLM"
+    },
+    "2023": {
+     "n": 18,
+     "nc": 7,
+     "max": 3.76e+24,
+     "modello": "Falcon-180B"
+    },
+    "2024": {
+     "n": 16,
+     "nc": 11,
+     "max": 1.05e+25,
+     "modello": "Aramco Metabrain AI"
+    },
+    "2025": {
+     "n": 10,
+     "nc": 8,
+     "max": 6.74e+24,
+     "modello": "Apertus 70B"
+    },
+    "2026": {
+     "n": 4,
+     "nc": 4,
+     "max": 3.85e+24,
+     "modello": "EXAONE 4.5"
+    }
+   },
+   "eci": {
+    "2023": {
+     "n": 3,
+     "max": 111.96,
+     "modello": "Falcon-180B"
+    },
+    "2024": {
+     "n": 2,
+     "max": 119.2,
+     "modello": "Command R+"
+    }
+   },
+   "org_eci": [
+    "Cohere",
+    "Technology Innovation Institute"
+   ],
+   "org_ls": [
+    "AI inside",
+    "AI21 Labs",
+    "Cohere",
+    "ETH Zurich",
+    "G42",
+    "Ideogram",
+    "KT",
+    "Konan Technology",
+    "LG",
+    "LG AI Research",
+    "Leonardo AI",
+    "Motif Technologies",
+    "NAVER",
+    "NCSOFT",
+    "NTT Communication Science Laboratories",
+    "National University of Singapore",
+    "Preferred Networks Inc",
+    "SK Telecom",
+    "Samsung",
+    "Saudi Aramco",
+    "Saudi Data and Artificial Intelligence Authority",
+    "Sber",
+    "Technology Innovation Institute",
+    "Trillion Labs",
+    "Ukrainian Catholic University",
+    "University of Waterloo",
+    "Upstage",
+    "Yandex"
+   ],
+   "contano_altrove": 0,
+   "paesi_mappa": []
+  },
+  "bulgaria": {
+   "nome": "Bulgaria",
+   "tipo": "paese-ue",
+   "aggettivo": "bulgaro",
+   "con_articolo": "la Bulgaria",
+   "calcolo": {
+    "2025": {
+     "n": 1,
+     "nc": 1,
+     "max": 4.36e+23,
+     "modello": "MamayLM"
+    }
+   },
+   "eci": {},
+   "org_eci": [],
+   "org_ls": [
+    "INSAIT"
+   ],
+   "contano_altrove": 0,
+   "paesi_mappa": [
+    "BGR"
+   ]
+  },
+  "finlandia": {
+   "nome": "Finlandia",
+   "tipo": "paese-ue",
+   "aggettivo": "finlandese",
+   "con_articolo": "la Finlandia",
+   "calcolo": {
+    "2024": {
+     "n": 1,
+     "nc": 1,
+     "max": 2.574e+23,
+     "modello": "Viking"
+    }
+   },
+   "eci": {},
+   "org_eci": [],
+   "org_ls": [
+    "Silo AI"
+   ],
+   "contano_altrove": 1,
+   "paesi_mappa": [
+    "FIN"
+   ]
+  },
+  "francia": {
+   "nome": "Francia",
+   "tipo": "paese-ue",
+   "aggettivo": "francese",
+   "con_articolo": "la Francia",
+   "calcolo": {
+    "2022": {
+     "n": 1,
+     "nc": 0,
+     "max": null,
+     "modello": null
+    },
+    "2023": {
+     "n": 5,
+     "nc": 2,
+     "max": 7.74e+23,
+     "modello": "Mixtral 8x7B"
+    },
+    "2024": {
+     "n": 6,
+     "nc": 1,
+     "max": 2.34e+24,
+     "modello": "Mixtral 8x22B"
+    },
+    "2025": {
+     "n": 3,
+     "nc": 1,
+     "max": 1.152e+24,
+     "modello": "Mistral Small 3"
+    }
+   },
+   "eci": {
+    "2023": {
+     "n": 2,
+     "max": 118.44,
+     "modello": "Mixtral 8x7B"
+    },
+    "2024": {
+     "n": 7,
+     "max": 128.57,
+     "modello": "Mistral Large 2 (Nov 2024)"
+    },
+    "2025": {
+     "n": 3,
+     "max": 134.02,
+     "modello": "Mistral Medium 3"
+    },
+    "2026": {
+     "n": 2,
+     "max": 150.03,
+     "modello": "Mistral Large 4"
+    }
+   },
+   "org_eci": [
+    "Mistral AI"
+   ],
+   "org_ls": [
+    "LightOn",
+    "Mistral AI"
+   ],
+   "contano_altrove": 5,
+   "paesi_mappa": [
+    "FRA"
+   ]
+  },
+  "germania": {
+   "nome": "Germania",
+   "tipo": "paese-ue",
+   "aggettivo": "tedesco",
+   "con_articolo": "la Germania",
+   "calcolo": {
+    "2022": {
+     "n": 2,
+     "nc": 2,
+     "max": 3.5461e+23,
+     "modello": "Luminous-supreme"
+    },
+    "2024": {
+     "n": 1,
+     "nc": 1,
+     "max": 4.43e+23,
+     "modello": "Pharia-1-LLM-7B"
+    },
+    "2025": {
+     "n": 1,
+     "nc": 1,
+     "max": 2.1444092e+23,
+     "modello": "Teuken 7B"
+    }
+   },
+   "eci": {},
+   "org_eci": [],
+   "org_ls": [
+    "Aleph Alpha",
+    "OpenGPT-X"
+   ],
+   "contano_altrove": 0,
+   "paesi_mappa": [
+    "DEU"
+   ]
+  },
+  "italia": {
+   "nome": "Italia",
+   "tipo": "paese-ue",
+   "aggettivo": "italiano",
+   "con_articolo": "l'Italia",
+   "calcolo": {},
+   "eci": {},
+   "org_eci": [],
+   "org_ls": [],
+   "contano_altrove": 0,
+   "paesi_mappa": [
+    "ITA"
+   ]
+  }
+ },
+ "senza_paese": {
+  "large": [
+   "Poro 34B"
+  ],
+  "eci": [
+   "Qwen2.5-Coder-14B",
+   "PaLM 2-L",
+   "internlm-20b",
+   "DeepSeek-Coder-V2-Lite-Base",
+   "PaLM 2-M",
+   "Qwen2.5-Coder-3B",
+   "Yi-9B",
+   "PaLM 2-S",
+   "internlm-7b",
+   "chatglm2-6b",
+   "CodeQwen1.5-7B",
+   "vicuna-13b-v1.1",
+   "Qwen-1_8B",
+   "open_llama_7b",
+   "RedPajama-INCITE-7B-Base",
+   "Qwen2.5-Coder-0.5B",
+   "stablelm-tuned-alpha-7b"
+  ]
+ },
+ "altri_paesi": {
+  "South Korea": 22,
+  "Canada": 7,
+  "United Arab Emirates": 7,
+  "Japan": 4,
+  "Russia": 4,
+  "Israel": 3,
+  "Saudi Arabia": 2,
+  "Australia": 1,
+  "Singapore": 1,
+  "Switzerland": 1,
+  "Ukraine": 1
+ },
+ "eci_paesi": {
+  "anno": 2025,
+  "valori": {
+   "USA": {
+    "max": 156.33,
+    "modello": "GPT-5.2 Pro"
+   },
+   "CHN": {
+    "max": 146.09,
+    "modello": "DeepSeek-V3.2"
+   },
+   "FRA": {
+    "max": 134.02,
+    "modello": "Mistral Medium 3"
+   }
+  }
+ },
+ "data_center": {
+  "aggiornato": "2026-10-26",
+  "quote": {
+   "USA": 86.49,
+   "MYS": 8.69,
+   "CHN": 2.17,
+   "GBR": 0.84,
+   "IDN": 0.57,
+   "NOR": 0.34,
+   "FIN": 0.33,
+   "AUS": 0.31,
+   "PRT": 0.22,
+   "ISL": 0.04
+  },
+  "siti": [
+   {
+    "nome": "Colossus 2",
+    "proprietario": "SpaceXAI",
+    "iso": "USA",
+    "h100e": 1111673,
+    "mw": 946.0,
+    "stato": "operativo",
+    "lat": 34.98929,
+    "lon": -90.03857,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Anthropic-Amazon New Carlisle",
+    "proprietario": "Amazon",
+    "iso": "USA",
+    "h100e": 818428,
+    "mw": 1037.0,
+    "stato": "operativo",
+    "lat": 41.67936,
+    "lon": -86.47123,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft Fairwater Atlanta",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 768769,
+    "mw": 636.0,
+    "stato": "operativo",
+    "lat": 33.45719,
+    "lon": -84.52452,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Pryor (North)",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 636685,
+    "mw": 368.0,
+    "stato": "operativo",
+    "lat": 36.24535,
+    "lon": -95.32349,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "DayOne Nusajaya",
+    "proprietario": null,
+    "iso": "MYS",
+    "h100e": 583837,
+    "mw": 473.0,
+    "stato": "operativo",
+    "lat": 1.42938,
+    "lon": 103.59785,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Prometheus",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 536343,
+    "mw": 471.0,
+    "stato": "operativo",
+    "lat": 40.08778,
+    "lon": -82.74276,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate Abilene",
+    "proprietario": "Oracle",
+    "iso": "USA",
+    "h100e": 509348,
+    "mw": 421.0,
+    "stato": "operativo",
+    "lat": 32.50131,
+    "lon": -99.78561,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "DayOne Kempas",
+    "proprietario": null,
+    "iso": "MYS",
+    "h100e": 480639,
+    "mw": 421.7,
+    "stato": "operativo",
+    "lat": 1.55943,
+    "lon": 103.71987,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft Fairwater Wisconsin",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 445680,
+    "mw": 369.0,
+    "stato": "operativo",
+    "lat": 42.68393,
+    "lon": -87.9152,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Columbus",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 331986,
+    "mw": 303.0,
+    "stato": "operativo",
+    "lat": 39.84913,
+    "lon": -82.99661,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google New Albany",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 323901,
+    "mw": 333.0,
+    "stato": "operativo",
+    "lat": 40.05677,
+    "lon": -82.76774,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Mesa",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 289540,
+    "mw": 183.0,
+    "stato": "operativo",
+    "lat": 33.35458,
+    "lon": -111.67587,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Colossus 1",
+    "proprietario": "SpaceXAI",
+    "iso": "USA",
+    "h100e": 275796,
+    "mw": 340.0,
+    "stato": "operativo",
+    "lat": 35.06017,
+    "lon": -90.15546,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Council Bluffs (East)",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 255685,
+    "mw": 237.0,
+    "stato": "operativo",
+    "lat": 41.17277,
+    "lon": -95.79685,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Denton TX",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 252653,
+    "mw": 262.0,
+    "stato": "operativo",
+    "lat": 33.21479,
+    "lon": -97.21003,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "QTS Richmond 1",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 242547,
+    "mw": 238.0,
+    "stato": "operativo",
+    "lat": 37.48546,
+    "lon": -77.24695,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Bridge Data Centres MY06",
+    "proprietario": "ByteDance",
+    "iso": "MYS",
+    "h100e": 221052,
+    "mw": 243.0,
+    "stato": "operativo",
+    "lat": 1.69721,
+    "lon": 103.41588,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Rosemount",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 215675,
+    "mw": 178.0,
+    "stato": "operativo",
+    "lat": 44.73396,
+    "lon": -93.06196,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Amazon Madison Mega Site",
+    "proprietario": "Amazon",
+    "iso": "USA",
+    "h100e": 214348,
+    "mw": 284.0,
+    "stato": "operativo",
+    "lat": 32.59743,
+    "lon": -90.09133,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Bristow",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 209861,
+    "mw": 238.0,
+    "stato": "operativo",
+    "lat": 38.77717,
+    "lon": -77.58298,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft Goodyear",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 205154,
+    "mw": 202.0,
+    "stato": "operativo",
+    "lat": 33.41204,
+    "lon": -112.36634,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Jeffersonville",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 203133,
+    "mw": 178.0,
+    "stato": "operativo",
+    "lat": 38.36947,
+    "lon": -85.6643,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Kansas City East",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 202628,
+    "mw": 105.0,
+    "stato": "operativo",
+    "lat": 39.17962,
+    "lon": -94.46422,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Temple",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 202473,
+    "mw": 178.0,
+    "stato": "operativo",
+    "lat": 31.13095,
+    "lon": -97.36672,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "AWS New Albany",
+    "proprietario": "Amazon",
+    "iso": "USA",
+    "h100e": 201112,
+    "mw": 213.0,
+    "stato": "operativo",
+    "lat": 40.1059,
+    "lon": -82.74032,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Omaha",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 198585,
+    "mw": 237.0,
+    "stato": "operativo",
+    "lat": 41.34173,
+    "lon": -96.08888,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Lincoln",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 197575,
+    "mw": 141.0,
+    "stato": "operativo",
+    "lat": 40.90705,
+    "lon": -96.65364,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "QTS Richmond 2",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 182921,
+    "mw": 180.0,
+    "stato": "operativo",
+    "lat": 37.48504,
+    "lon": -77.24281,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google The Dalles",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 175341,
+    "mw": 154.0,
+    "stato": "operativo",
+    "lat": 45.62427,
+    "lon": -121.20715,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "QTS Richmond 3",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 174836,
+    "mw": 144.0,
+    "stato": "operativo",
+    "lat": 37.47916,
+    "lon": -77.25095,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Montgomery",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 174517,
+    "mw": 153.0,
+    "stato": "operativo",
+    "lat": 32.27003,
+    "lon": -86.32571,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Kuna",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 173248,
+    "mw": 152.0,
+    "stato": "operativo",
+    "lat": 43.46746,
+    "lon": -116.27015,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Cheyenne",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 172815,
+    "mw": 152.0,
+    "stato": "operativo",
+    "lat": 41.08009,
+    "lon": -104.8241,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Amazon Ridgeland",
+    "proprietario": "Amazon",
+    "iso": "USA",
+    "h100e": 171299,
+    "mw": 228.0,
+    "stato": "operativo",
+    "lat": 32.41046,
+    "lon": -90.18979,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Huntsville",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 166761,
+    "mw": 146.0,
+    "stato": "operativo",
+    "lat": 34.85387,
+    "lon": -86.6262,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Coreweave Helios",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 159552,
+    "mw": 132.0,
+    "stato": "operativo",
+    "lat": 33.77506,
+    "lon": -100.86985,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft Project Osmium",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 155634,
+    "mw": 190.0,
+    "stato": "operativo",
+    "lat": 41.49704,
+    "lon": -93.78939,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Eagle Mountain",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 151354,
+    "mw": 133.0,
+    "stato": "operativo",
+    "lat": 40.26529,
+    "lon": -112.01925,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Midlothian",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 143581,
+    "mw": 103.0,
+    "stato": "operativo",
+    "lat": 32.44248,
+    "lon": -97.06137,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Storey County",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 133906,
+    "mw": 161.0,
+    "stato": "operativo",
+    "lat": 39.49468,
+    "lon": -119.43018,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Los Lunas",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 133906,
+    "mw": 118.0,
+    "stato": "operativo",
+    "lat": 34.82765,
+    "lon": -106.78799,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Lancaster",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 130369,
+    "mw": 137.0,
+    "stato": "operativo",
+    "lat": 39.72534,
+    "lon": -82.68934,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta-QTS Hillsboro 2",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 123839,
+    "mw": 180.0,
+    "stato": "operativo",
+    "lat": 45.5588,
+    "lon": -122.93779,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Waltham Cross",
+    "proprietario": "Google",
+    "iso": "GBR",
+    "h100e": 123800,
+    "mw": 88.0,
+    "stato": "operativo",
+    "lat": 51.69543,
+    "lon": -0.04904,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "VNET Bayin Ulanqab",
+    "proprietario": "VNET",
+    "iso": "CHN",
+    "h100e": 122789,
+    "mw": 221.0,
+    "stato": "operativo",
+    "lat": 40.98109,
+    "lon": 113.31431,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Arcola",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 108135,
+    "mw": 77.0,
+    "stato": "operativo",
+    "lat": 38.94189,
+    "lon": -77.53159,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Red Oak",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 108135,
+    "mw": 77.0,
+    "stato": "operativo",
+    "lat": 32.53767,
+    "lon": -96.79351,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Papillion",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 100556,
+    "mw": 237.0,
+    "stato": "operativo",
+    "lat": 41.136,
+    "lon": -96.14906,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Gallatin",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 99545,
+    "mw": 87.0,
+    "stato": "operativo",
+    "lat": 36.40714,
+    "lon": -86.36847,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Ellendale ND",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 93482,
+    "mw": 68.0,
+    "stato": "operativo",
+    "lat": 46.0153,
+    "lon": -98.57252,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Sarpy",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 91966,
+    "mw": 80.0,
+    "stato": "operativo",
+    "lat": 41.11153,
+    "lon": -96.14507,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Huawei Horinger",
+    "proprietario": "Huawei",
+    "iso": "CHN",
+    "h100e": 89439,
+    "mw": 184.3,
+    "stato": "operativo",
+    "lat": 40.53969,
+    "lon": 111.82774,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Chester VA",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 88428,
+    "mw": 82.0,
+    "stato": "operativo",
+    "lat": 37.3591,
+    "lon": -77.32952,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Oracle Batam",
+    "proprietario": "Oracle",
+    "iso": "IDN",
+    "h100e": 84386,
+    "mw": 72.0,
+    "stato": "operativo",
+    "lat": 1.18829,
+    "lon": 104.10497,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "AWS Berwick",
+    "proprietario": "Amazon",
+    "iso": "USA",
+    "h100e": 81354,
+    "mw": 108.0,
+    "stato": "operativo",
+    "lat": 41.08505,
+    "lon": -76.14879,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Marble NC",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 78828,
+    "mw": 65.0,
+    "stato": "operativo",
+    "lat": 35.18747,
+    "lon": -83.91607,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Aiken",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 78322,
+    "mw": 69.0,
+    "stato": "operativo",
+    "lat": 33.64243,
+    "lon": -81.8428,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Huawei Wuhu",
+    "proprietario": "Huawei",
+    "iso": "CHN",
+    "h100e": 76326,
+    "mw": 157.0,
+    "stato": "operativo",
+    "lat": 31.29177,
+    "lon": 118.29981,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Core42 Lake Mariner",
+    "proprietario": "Core42",
+    "iso": "USA",
+    "h100e": 71753,
+    "mw": 58.0,
+    "stato": "operativo",
+    "lat": 43.35493,
+    "lon": -78.60604,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft SAT40",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 64679,
+    "mw": 75.0,
+    "stato": "operativo",
+    "lat": 29.41537,
+    "lon": -98.80424,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "STACK Infrastructure NVA02",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 61142,
+    "mw": 85.0,
+    "stato": "operativo",
+    "lat": 38.74482,
+    "lon": -77.53963,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Anthropic Lake Mariner",
+    "proprietario": "AI XPV Platform",
+    "iso": "USA",
+    "h100e": 58565,
+    "mw": 42.0,
+    "stato": "operativo",
+    "lat": 43.35643,
+    "lon": -78.60204,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft-Nebius New Jersey",
+    "proprietario": "Nebius",
+    "iso": "USA",
+    "h100e": 56847,
+    "mw": 50.0,
+    "stato": "operativo",
+    "lat": 39.42675,
+    "lon": -75.01675,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Norway",
+    "proprietario": "CoreWeave",
+    "iso": "NOR",
+    "h100e": 50773,
+    "mw": 42.0,
+    "stato": "operativo",
+    "lat": 58.25879,
+    "lon": 7.89842,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Nebius Mantsala",
+    "proprietario": "Nebius",
+    "iso": "FIN",
+    "h100e": 48528,
+    "mw": 75.0,
+    "stato": "operativo",
+    "lat": 60.62935,
+    "lon": 25.26047,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Southgate Melbourne",
+    "proprietario": "Firmus",
+    "iso": "AUS",
+    "h100e": 46488,
+    "mw": 41.0,
+    "stato": "operativo",
+    "lat": -37.81721,
+    "lon": 144.84334,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Stream Phoenix",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 46134,
+    "mw": 64.0,
+    "stato": "operativo",
+    "lat": 33.41268,
+    "lon": -112.36005,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft SAT14",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 45174,
+    "mw": 47.0,
+    "stato": "operativo",
+    "lat": 29.47523,
+    "lon": -98.68086,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Vantage TX1",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 38706,
+    "mw": 32.0,
+    "stato": "operativo",
+    "lat": 29.41781,
+    "lon": -98.78969,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Dalton 1 & 2",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 32239,
+    "mw": 28.0,
+    "stato": "operativo",
+    "lat": 34.71318,
+    "lon": -84.95105,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Alibaba Zhangbei",
+    "proprietario": "Alibaba",
+    "iso": "CHN",
+    "h100e": 31885,
+    "mw": 169.0,
+    "stato": "operativo",
+    "lat": 41.18353,
+    "lon": 114.73237,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Start Campus Sines Data Campus",
+    "proprietario": "Nscale",
+    "iso": "PRT",
+    "h100e": 31834,
+    "mw": 33.0,
+    "stato": "operativo",
+    "lat": 37.93497,
+    "lon": -8.81272,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "xAI QTS Atlanta",
+    "proprietario": "SpaceXAI",
+    "iso": "USA",
+    "h100e": 11470,
+    "mw": 17.3,
+    "stato": "operativo",
+    "lat": 33.77825,
+    "lon": -84.41944,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Nscale Keflavik",
+    "proprietario": "Nscale",
+    "iso": "ISL",
+    "h100e": 5821,
+    "mw": 5.1,
+    "stato": "operativo",
+    "lat": 63.97616,
+    "lon": -22.57644,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Anthropic Barber Lake",
+    "proprietario": "Cipher Mining",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 32.39807,
+    "lon": -100.91981,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Lancaster Greenfield site",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 40.04814,
+    "lon": -76.26218,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "CoreWeave Muskogee OK",
+    "proprietario": "CoreWeave",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 35.69364,
+    "lon": -95.38847,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Crusoe Abilene Expansion",
+    "proprietario": "Microsoft",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 32.49188,
+    "lon": -99.78198,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "EcoDataCenter 2",
+    "proprietario": "Mistral AI",
+    "iso": "SWE",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 60.52633,
+    "lon": 15.41698,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Envision Galaxy Ulanqab",
+    "proprietario": null,
+    "iso": "CHN",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 40.94681,
+    "lon": 113.24977,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Goodnight",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 35.01971,
+    "lon": -101.30863,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Cedar Rapids",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 41.91699,
+    "lon": -91.72237,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Google Fort Wayne",
+    "proprietario": "Google",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 41.03177,
+    "lon": -85.04886,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Bowling Green",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 41.46732,
+    "lon": -83.63613,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Meta Hyperion",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 32.51059,
+    "lon": -91.63604,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "Microsoft Narvik Norway",
+    "proprietario": "Nscale",
+    "iso": "NOR",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 68.57628,
+    "lon": 17.59633,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate Lordstown",
+    "proprietario": "Softbank",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 41.15311,
+    "lon": -80.88123,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate Michigan",
+    "proprietario": "Oracle",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 42.12123,
+    "lon": -83.88417,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate Milam",
+    "proprietario": "Softbank",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 30.99631,
+    "lon": -97.01034,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate New Mexico",
+    "proprietario": "Oracle",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 31.82032,
+    "lon": -106.68427,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate Shackelford",
+    "proprietario": "Oracle",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 32.54376,
+    "lon": -99.54831,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate UAE",
+    "proprietario": "G42",
+    "iso": "ARE",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 24.15029,
+    "lon": 54.44278,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "OpenAI Stargate Wisconsin",
+    "proprietario": "Oracle",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 43.43041,
+    "lon": -87.85604,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "QTS Cedar Rapids",
+    "proprietario": null,
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 41.90968,
+    "lon": -91.74293,
+    "posizione": "epoch"
+   },
+   {
+    "nome": "QTS Eagle Mountain",
+    "proprietario": "Meta",
+    "iso": "USA",
+    "h100e": 0,
+    "mw": 0.0,
+    "stato": "in costruzione",
+    "lat": 40.26496,
+    "lon": -112.02862,
+    "posizione": "epoch"
+   }
+  ]
+ }
+}

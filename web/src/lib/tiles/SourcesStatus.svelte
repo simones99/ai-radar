@@ -6,13 +6,13 @@
   let { status }: { status: Status | undefined } = $props();
 
   const NOMI: Record<string, string> = {
-    epoch: 'Epoch AI', artificial_analysis: 'Artificial Analysis', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
-    adzuna: 'Adzuna', eurostat: 'Eurostat', eurostat_settori: 'Eurostat (settori)', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)',
+    epoch: 'Epoch AI', geopoliticai: 'Epoch (GeopoliticAI)', artificial_analysis: 'Artificial Analysis', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
+    adzuna: 'Adzuna', eurostat: 'Eurostat', eurostat_settori: 'Eurostat (settori)', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)', catena: "Catena dell'AI (dati curati)",
     feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)',
   };
   const STATI: Record<string, string> = { ok: 'aggiornata', errore: 'errore', 'non configurata': 'non configurata' };
   const rows = $derived(Object.entries(status?.fonti ?? {}).map(([k, s]) => [
-    NOMI[k] ?? k, STATI[s.stato] ?? s.stato, s.ultimo_successo ? day(s.ultimo_successo) : '—', s.stato === 'ok' ? '' : (s.messaggio ?? ''),
+    NOMI[k] ?? k, STATI[s.stato] ?? s.stato, s.ultimo_successo ? day(s.ultimo_successo) : '—', s.messaggio ?? '', // anche una fonte aggiornata può avere un avviso
   ]));
 </script>
 

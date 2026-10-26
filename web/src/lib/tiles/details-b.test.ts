@@ -32,7 +32,12 @@ describe('Modelli', () => {
     expect(screen.getByRole('img', { name: 'Calcolo di addestramento dei modelli notevoli' })).toBeInTheDocument();
     expect(screen.getByText('Gemini 4 Argon')).toBeInTheDocument();
     expect(screen.getByText(/Serve una chiave gratuita di Artificial Analysis/)).toBeInTheDocument();
-    expect(screen.getAllByRole('img', { name: /Modelli notevoli all'anno/ })).toHaveLength(4);
+    expect(screen.queryAllByRole('img', { name: /Modelli notevoli all'anno/ })).toHaveLength(0);
+    expect(screen.queryByRole('heading', { name: 'Chi costruisce i modelli notevoli' })).toBeNull();
+  });
+  it('chi costruisce i modelli ora sta in GeopoliticAI: il rimando apre la card', () => {
+    show(ModelliDetail, mk('modelli', 'Modelli e ricerca', headModelli, ModelliDetail));
+    expect(screen.getByRole('link', { name: 'Vai a GeopoliticAI →' })).toHaveAttribute('href', '#geopoliticai');
   });
 });
 

@@ -41,10 +41,10 @@
     "sviluppo",
     "prodotto"
    ],
-   "slancio": 0.4257,
+   "slancio": 0.4256,
    "slancio_margine": [
-    0.3558,
-    0.4992
+    0.3559,
+    0.499
    ],
    "domanda": 30.787,
    "domanda_it": 44.476,
@@ -52,7 +52,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.4656,
+   "slancio_prec": 0.4654,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -132,10 +132,10 @@
      ]
     },
     "github": {
-     "variazione": 1.1973,
+     "variazione": 1.1971,
      "margine": [
-      0.9253,
-      1.5078
+      0.9257,
+      1.5067
      ],
      "peso": 0.333,
      "mensile": [
@@ -197,12 +197,12 @@
       {
        "mese": "2026-08",
        "n": 17939,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 17971,
-       "base": 31295
+       "n": 17980,
+       "base": 31308
       }
      ]
     },
@@ -265,21 +265,21 @@
      "nome": "deepseek-ai/deepseek-harness",
      "url": "https://github.com/deepseek-ai/deepseek-harness",
      "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-     "stelle": 262089,
+     "stelle": 262347,
      "creato": "2026-08-13"
     },
     {
      "nome": "Ebony-Vinyl/dsh-our-free-model",
      "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
      "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-     "stelle": 44041,
+     "stelle": 44474,
      "creato": "2026-09-24"
     },
     {
      "nome": "hypit-ai/hypit",
      "url": "https://github.com/hypit-ai/hypit",
      "descrizione": "Clone any viral video with AI agents. Not just a script, the whole workflow: swap the face, the words, the B-roll, ship 100 variants in one command, and get your 100M views.",
-     "stelle": 25768,
+     "stelle": 25808,
      "creato": "2026-07-29"
     }
    ]
@@ -293,10 +293,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.8421,
+   "slancio": 0.8726,
    "slancio_margine": [
-    0.5155,
-    1.2392
+    0.5447,
+    1.2701
    ],
    "domanda": 1.913,
    "domanda_it": 0.473,
@@ -304,7 +304,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 1.6877,
+   "slancio_prec": 1.689,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -314,7 +314,7 @@
       0.2966,
       1.1319
      ],
-     "peso": 0.616,
+     "peso": 0.599,
      "mensile": [
       {
        "mese": "2025-09",
@@ -384,12 +384,12 @@
      ]
     },
     "github": {
-     "variazione": 1.1723,
+     "variazione": 1.2374,
      "margine": [
-      0.585,
-      1.9772
+      0.6507,
+      2.0327
      ],
-     "peso": 0.384,
+     "peso": 0.401,
      "mensile": [
       {
        "mese": "2025-09",
@@ -448,13 +448,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 1367,
-       "base": 31845
+       "n": 1369,
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 1136,
-       "base": 31295
+       "n": 1174,
+       "base": 31308
       }
      ]
     },
@@ -517,14 +517,14 @@
      "nome": "ccch1mneyyy/dsh-TUI",
      "url": "https://github.com/ccch1mneyyy/dsh-TUI",
      "descrizione": "DSH's officially top-recommended TUI plugin — high performance, low overhead, cute pixel whale, smooth mouse interaction. One-command install via npm. / DSH 官方首推的 TUI 插件，高性能低占用，可爱像素鲸鱼，流畅鼠标交互，npm 一键安装",
-     "stelle": 5867,
+     "stelle": 5887,
      "creato": "2026-08-13"
     },
     {
      "nome": "HarnessRouter/harnessrouter",
      "url": "https://github.com/HarnessRouter/harnessrouter",
      "descrizione": "HarnessRouter Community Edition: the self-hosted, Apache-2.0 edition of the unified interface for agent harnesses. Run Codex, Claude Code, Hermes, PI, DSH, and more through one API, with sessions, st…",
-     "stelle": 3663,
+     "stelle": 3678,
      "creato": "2026-08-09"
     },
     {
@@ -545,10 +545,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.3015,
+   "slancio": 0.3016,
    "slancio_margine": [
-    0.0759,
-    0.5743
+    0.0758,
+    0.5748
    ],
    "domanda": 4.678,
    "domanda_it": 4.101,
@@ -636,10 +636,10 @@
      ]
     },
     "github": {
-     "variazione": 0.6749,
+     "variazione": 0.6768,
      "margine": [
-      0.2983,
-      1.1608
+      0.2992,
+      1.1643
      ],
      "peso": 0.558,
      "mensile": [
@@ -700,13 +700,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 11712,
-       "base": 31845
+       "n": 11716,
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 14355,
-       "base": 31295
+       "n": 14375,
+       "base": 31308
       }
      ]
     },
@@ -769,21 +769,21 @@
      "nome": "tangency-labs/solidcraft",
      "url": "https://github.com/tangency-labs/solidcraft",
      "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-     "stelle": 10635,
+     "stelle": 10694,
      "creato": "2026-10-07"
     },
     {
      "nome": "rehan-remade/universal-modder",
      "url": "https://github.com/rehan-remade/universal-modder",
      "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
-     "stelle": 8986,
+     "stelle": 9000,
      "creato": "2026-09-30"
     },
     {
      "nome": "KKKKhazix/AIHOT",
      "url": "https://github.com/KKKKhazix/AIHOT",
      "descrizione": "一个自己找热点、自己写日报的网站框架。把信源和精选标准换成你的，它就是你的行业热点站。",
-     "stelle": 8655,
+     "stelle": 8670,
      "creato": "2026-09-28"
     }
    ]
@@ -799,10 +799,10 @@
     "prodotto",
     "dati"
    ],
-   "slancio": -0.0151,
+   "slancio": -0.0148,
    "slancio_margine": [
-    -0.1019,
-    0.0801
+    -0.1015,
+    0.0804
    ],
    "domanda": 9.545,
    "domanda_it": 9.621,
@@ -810,7 +810,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.1486,
+   "slancio_prec": 0.1487,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -890,10 +890,10 @@
      ]
     },
     "github": {
-     "variazione": 0.2539,
+     "variazione": 0.2545,
      "margine": [
-      0.1473,
-      0.3704
+      0.1479,
+      0.371
      ],
      "peso": 0.667,
      "mensile": [
@@ -954,13 +954,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 5896,
-       "base": 31845
+       "n": 5899,
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 5774,
-       "base": 31295
+       "n": 5779,
+       "base": 31308
       }
      ]
     },
@@ -1029,14 +1029,14 @@
      "nome": "deeplethe/utopia",
      "url": "https://github.com/deeplethe/utopia",
      "descrizione": "World's first open-source enterprise world model.",
-     "stelle": 8549,
+     "stelle": 8551,
      "creato": "2026-08-07"
     },
     {
      "nome": "youngyangyang04/llm-master",
      "url": "https://github.com/youngyangyang04/llm-master",
      "descrizione": "大模型（LLM）全栈学习路线与中文教程🔥：覆盖 Prompt Engineering、RAG、AI Agent、MCP、微调、模型部署、Transformer、AI 编程与大厂面试，从入门到生产实践。",
-     "stelle": 1431,
+     "stelle": 1432,
      "creato": "2026-09-12"
     },
     {
@@ -1060,10 +1060,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": 0.5278,
+   "slancio": 0.5285,
    "slancio_margine": [
-    0.3394,
-    0.7427
+    0.34,
+    0.7435
    ],
    "domanda": 1.269,
    "domanda_it": 0.473,
@@ -1071,7 +1071,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 1.2563,
+   "slancio_prec": 1.2554,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -1151,10 +1151,10 @@
      ]
     },
     "github": {
-     "variazione": 3.2855,
+     "variazione": 3.2906,
      "margine": [
-      2.4756,
-      4.2841
+      2.4798,
+      4.2904
      ],
      "peso": 0.395,
      "mensile": [
@@ -1215,13 +1215,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 1410,
-       "base": 31845
+       "n": 1411,
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 1518,
-       "base": 31295
+       "n": 1520,
+       "base": 31308
       }
      ]
     },
@@ -1290,21 +1290,21 @@
      "nome": "jwuthri-cloud/Tracely-ai",
      "url": "https://github.com/jwuthri-cloud/Tracely-ai",
      "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-     "stelle": 1181,
+     "stelle": 1183,
      "creato": "2026-10-11"
     },
     {
      "nome": "xinxuxin/keystone-bench",
      "url": "https://github.com/xinxuxin/keystone-bench",
      "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
-     "stelle": 940,
+     "stelle": 944,
      "creato": "2026-09-07"
     },
     {
      "nome": "superwesleyhys-ux/factcircuit",
      "url": "https://github.com/superwesleyhys-ux/factcircuit",
      "descrizione": "FactCircuit: an auditable claim-and-evidence verification loop with immutable provenance, staged checks, bounded retrieval, and reproducible evaluation.",
-     "stelle": 846,
+     "stelle": 850,
      "creato": "2026-09-06"
     }
    ]
@@ -1319,10 +1319,10 @@
     "sviluppo",
     "dati"
    ],
-   "slancio": 0.1381,
+   "slancio": 0.1376,
    "slancio_margine": [
-    0.0105,
-    0.2818
+    0.0102,
+    0.2812
    ],
    "domanda": 0.323,
    "domanda_it": 0.315,
@@ -1330,7 +1330,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.0811,
+   "slancio_prec": 0.0809,
    "domanda_prec": null,
    "quadrante_prec": "osserva",
    "segnali": {
@@ -1410,10 +1410,10 @@
      ]
     },
     "github": {
-     "variazione": 0.1185,
+     "variazione": 0.1179,
      "margine": [
-      -0.0331,
-      0.294
+      -0.0335,
+      0.2931
      ],
      "peso": 0.666,
      "mensile": [
@@ -1475,12 +1475,12 @@
       {
        "mese": "2026-08",
        "n": 393,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
        "n": 393,
-       "base": 31295
+       "base": 31308
       }
      ]
     },
@@ -1557,7 +1557,7 @@
      "nome": "modelscope/ms-cookbook",
      "url": "https://github.com/modelscope/ms-cookbook",
      "descrizione": "魔搭紫皮书｜ModelScope Cookbook：面向开发者的开源模型应用实战指南，覆盖模型选型、推理、微调、评测、RAG、Agent 与 AIGC，从跑通第一个模型到构建实际应用。",
-     "stelle": 505,
+     "stelle": 506,
      "creato": "2026-09-11"
     }
    ]
@@ -1576,8 +1576,8 @@
    ],
    "slancio": -0.2649,
    "slancio_margine": [
-    -0.3415,
-    -0.1794
+    -0.3418,
+    -0.179
    ],
    "domanda": 14.342,
    "domanda_it": 11.987,
@@ -1585,7 +1585,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": -0.0523,
+   "slancio_prec": -0.0515,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -1665,10 +1665,10 @@
      ]
     },
     "github": {
-     "variazione": -0.0225,
+     "variazione": -0.0224,
      "margine": [
-      -0.118,
-      0.0834
+      -0.119,
+      0.0848
      ],
      "peso": 0.667,
      "mensile": [
@@ -1729,13 +1729,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 2337,
-       "base": 31845
+       "n": 2341,
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 2073,
-       "base": 31295
+       "n": 2072,
+       "base": 31308
       }
      ]
     },
@@ -1804,7 +1804,7 @@
      "nome": "Leonxlnx/unlazy",
      "url": "https://github.com/Leonxlnx/unlazy",
      "descrizione": "Anti-laziness skill for AI agents. Core: the Depth Tree method, which splits a task N layers deep and gives every leaf the full time budget of the whole task, so effort multiplies with depth. Grounde…",
-     "stelle": 4137,
+     "stelle": 4140,
      "creato": "2026-08-09"
     },
     {
@@ -1818,7 +1818,7 @@
      "nome": "Nanako0129/sepia",
      "url": "https://github.com/Nanako0129/sepia",
      "descrizione": "De-AI writing skill for any Agent Skills-compatible agent (77+ via the Skills CLI), with native plugins for Claude Code, Codex, Grok Build, and Antigravity. Narrative-architecture repair for fiction,…",
-     "stelle": 3488,
+     "stelle": 3495,
      "creato": "2026-08-28"
     }
    ]
@@ -1833,10 +1833,10 @@
     "sviluppo",
     "compliance"
    ],
-   "slancio": 0.034,
+   "slancio": 0.0337,
    "slancio_margine": [
-    -0.0769,
-    0.1582
+    -0.0773,
+    0.158
    ],
    "domanda": 0.467,
    "domanda_it": 1.577,
@@ -1844,7 +1844,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.1255,
+   "slancio_prec": 0.1252,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -1854,7 +1854,7 @@
       -0.3724,
       -0.1473
      ],
-     "peso": 0.548,
+     "peso": 0.549,
      "mensile": [
       {
        "mese": "2025-09",
@@ -1924,12 +1924,12 @@
      ]
     },
     "github": {
-     "variazione": 0.5737,
+     "variazione": 0.5746,
      "margine": [
-      0.3292,
-      0.8631
+      0.3297,
+      0.8646
      ],
-     "peso": 0.452,
+     "peso": 0.451,
      "mensile": [
       {
        "mese": "2025-09",
@@ -1989,12 +1989,12 @@
       {
        "mese": "2026-08",
        "n": 800,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 893,
-       "base": 31295
+       "n": 894,
+       "base": 31308
       }
      ]
     },
@@ -2057,7 +2057,7 @@
      "nome": "trhhubsd/ARTEX",
      "url": "https://github.com/trhhubsd/ARTEX",
      "descrizione": "ARTEX · AI autonomous penetration testing system (multi-agent LLM, Go + Next.js) · AI 自主渗透测试系统 · 百度 agent+ 攻防挑战赛冠军",
-     "stelle": 1947,
+     "stelle": 1965,
      "creato": "2026-10-08"
     },
     {
@@ -2086,10 +2086,10 @@
     "prodotto",
     "compliance"
    ],
-   "slancio": -0.2408,
+   "slancio": -0.2415,
    "slancio_margine": [
-    -0.4045,
-    -0.0323
+    -0.4049,
+    -0.0332
    ],
    "domanda": 3.211,
    "domanda_it": 0.946,
@@ -2097,7 +2097,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": true,
    "incerto_perche": "pochi paper (34 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": -0.1078,
+   "slancio_prec": -0.1079,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -2177,10 +2177,10 @@
      ]
     },
     "github": {
-     "variazione": -0.1014,
+     "variazione": -0.1029,
      "margine": [
-      -0.3449,
-      0.2326
+      -0.3459,
+      0.2303
      ],
      "peso": 0.59,
      "mensile": [
@@ -2242,12 +2242,12 @@
       {
        "mese": "2026-08",
        "n": 910,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 805,
-       "base": 31295
+       "n": 804,
+       "base": 31308
       }
      ]
     },
@@ -2310,7 +2310,7 @@
      "nome": "agents-universe/agents-universe",
      "url": "https://github.com/agents-universe/agents-universe",
      "descrizione": "不是问答机器人，而是能真正干活的数字分身。共享智能体，共享项目上下文，让项目所有成员一起协同工作。同时智能体会像人一样通过资料或者工作抽象和总结经验到项目上下文中",
-     "stelle": 745,
+     "stelle": 748,
      "creato": "2026-09-10"
     },
     {
@@ -2339,10 +2339,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": 0.0917,
+   "slancio": 0.092,
    "slancio_margine": [
-    -0.0843,
-    0.3015
+    -0.084,
+    0.3017
    ],
    "domanda": 3.268,
    "domanda_it": 1.104,
@@ -2350,7 +2350,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": -0.047,
+   "slancio_prec": -0.0472,
    "domanda_prec": null,
    "quadrante_prec": "consolida",
    "segnali": {
@@ -2430,10 +2430,10 @@
      ]
     },
     "github": {
-     "variazione": 0.4847,
+     "variazione": 0.4853,
      "margine": [
-      0.3037,
-      0.6909
+      0.3045,
+      0.691
      ],
      "peso": 0.667,
      "mensile": [
@@ -2495,12 +2495,12 @@
       {
        "mese": "2026-08",
        "n": 2061,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 1994,
-       "base": 31295
+       "n": 1996,
+       "base": 31308
       }
      ]
     },
@@ -2577,7 +2577,7 @@
      "nome": "ashishsinha1602/schemagate",
      "url": "https://github.com/ashishsinha1602/schemagate",
      "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
-     "stelle": 173,
+     "stelle": 174,
      "creato": "2026-09-06"
     }
    ]
@@ -2591,10 +2591,10 @@
    "ruoli": [
     "dati"
    ],
-   "slancio": 1.1509,
+   "slancio": 1.1528,
    "slancio_margine": [
-    0.668,
-    1.7738
+    0.6713,
+    1.7731
    ],
    "domanda": 0.127,
    "domanda_it": 0.158,
@@ -2602,7 +2602,7 @@
    "quadrante_calcolato": "prova",
    "incerto": true,
    "incerto_perche": "pochi paper (25 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": 1.1276,
+   "slancio_prec": 1.1344,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -2682,10 +2682,10 @@
      ]
     },
     "github": {
-     "variazione": 1.974,
+     "variazione": 1.978,
      "margine": [
-      1.321,
-      2.8108
+      1.3302,
+      2.8059
      ],
      "peso": 0.667,
      "mensile": [
@@ -2746,13 +2746,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 185,
-       "base": 31845
+       "n": 186,
+       "base": 31857
       },
       {
        "mese": "2026-09",
        "n": 253,
-       "base": 31295
+       "base": 31308
       }
      ]
     },
@@ -2828,7 +2828,7 @@
      "nome": "ashishsinha1602/schemagate",
      "url": "https://github.com/ashishsinha1602/schemagate",
      "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
-     "stelle": 173,
+     "stelle": 174,
      "creato": "2026-09-06"
     },
     {
@@ -2850,10 +2850,10 @@
     "sviluppo",
     "dati"
    ],
-   "slancio": -0.4831,
+   "slancio": -0.4833,
    "slancio_margine": [
-    -0.5912,
-    -0.3464
+    -0.5914,
+    -0.3466
    ],
    "domanda": 5.337,
    "domanda_it": 3.391,
@@ -2861,7 +2861,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": true,
    "incerto_perche": "pochi paper (15 al mese)",
-   "slancio_prec": -0.2229,
+   "slancio_prec": -0.2231,
    "domanda_prec": null,
    "quadrante_prec": "consolida",
    "segnali": {
@@ -2941,10 +2941,10 @@
      ]
     },
     "github": {
-     "variazione": -0.3313,
+     "variazione": -0.3317,
      "margine": [
-      -0.4244,
-      -0.2232
+      -0.4247,
+      -0.2235
      ],
      "peso": 0.667,
      "mensile": [
@@ -3006,12 +3006,12 @@
       {
        "mese": "2026-08",
        "n": 569,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
        "n": 473,
-       "base": 31295
+       "base": 31308
       }
      ]
     },
@@ -3080,7 +3080,7 @@
      "nome": "kividbio/kividb",
      "url": "https://github.com/kividbio/kividb",
      "descrizione": "A fast, multi-threaded Redis® and Valkey alternative written in Rust: drop-in compatible, with full-text and vector search built in",
-     "stelle": 654,
+     "stelle": 665,
      "creato": "2026-10-16"
     },
     {
@@ -3109,10 +3109,10 @@
     "sviluppo",
     "prodotto"
    ],
-   "slancio": 0.0951,
+   "slancio": 0.0954,
    "slancio_margine": [
-    -0.0932,
-    0.3224
+    -0.0933,
+    0.3232
    ],
    "domanda": 8.866,
    "domanda_it": 2.602,
@@ -3120,7 +3120,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.0261,
+   "slancio_prec": 0.0268,
    "domanda_prec": null,
    "quadrante_prec": "consolida",
    "segnali": {
@@ -3200,10 +3200,10 @@
      ]
     },
     "github": {
-     "variazione": 0.6439,
+     "variazione": 0.6453,
      "margine": [
-      0.0149,
-      1.6627
+      0.0145,
+      1.6684
      ],
      "peso": 0.333,
      "mensile": [
@@ -3264,13 +3264,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 542,
-       "base": 31845
+       "n": 543,
+       "base": 31857
       },
       {
        "mese": "2026-09",
        "n": 411,
-       "base": 31295
+       "base": 31308
       }
      ]
     },
@@ -3339,7 +3339,7 @@
      "nome": "ARahim3/DigUp",
      "url": "https://github.com/ARahim3/DigUp",
      "descrizione": "Search your computer by what's in your files: photos, PDFs, documents, recordings, videos and code. On-device on Mac, Windows and Linux, built on Google DeepMind's EmbeddingGemma 2.",
-     "stelle": 5826,
+     "stelle": 5842,
      "creato": "2026-10-08"
     },
     {
@@ -3353,7 +3353,7 @@
      "nome": "Anionex/agent-vision-toolkit",
      "url": "https://github.com/Anionex/agent-vision-toolkit",
      "descrizione": "为纯文本模型\"看图“设计更好的视觉工具箱和技能，支持多图理解，图片问答，前端UI还原、GUI 自动化等，并可选无缝接入多个主流agent，直接识别粘贴图片｜ A vision toolkit and skill designed for text-only llms — image Q&A, long-screenshot OCR, frontend UI restoration, and GU…",
-     "stelle": 1250,
+     "stelle": 1251,
      "creato": "2026-08-01"
     }
    ]
@@ -3367,10 +3367,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.2378,
+   "slancio": 0.2384,
    "slancio_margine": [
-    -0.0334,
-    0.585
+    -0.0327,
+    0.5855
    ],
    "domanda": 17.719,
    "domanda_it": 14.352,
@@ -3378,7 +3378,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": true,
    "incerto_perche": "pochi paper (38 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": 0.5966,
+   "slancio_prec": 0.5962,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -3458,10 +3458,10 @@
      ]
     },
     "github": {
-     "variazione": 0.3474,
+     "variazione": 0.3495,
      "margine": [
-      -0.1468,
-      1.1278
+      -0.1446,
+      1.1289
      ],
      "peso": 0.333,
      "mensile": [
@@ -3523,12 +3523,12 @@
       {
        "mese": "2026-08",
        "n": 431,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 372,
-       "base": 31295
+       "n": 373,
+       "base": 31308
       }
      ]
     },
@@ -3597,7 +3597,7 @@
      "nome": "jwuthri-cloud/Tracely-ai",
      "url": "https://github.com/jwuthri-cloud/Tracely-ai",
      "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-     "stelle": 1181,
+     "stelle": 1183,
      "creato": "2026-10-11"
     },
     {
@@ -3611,7 +3611,7 @@
      "nome": "respanai/respan-gateway",
      "url": "https://github.com/respanai/respan-gateway",
      "descrizione": "One endpoint for every LLM vendor. Any SDK, any model, any tool. One Rust binary.",
-     "stelle": 326,
+     "stelle": 333,
      "creato": "2026-09-25"
     }
    ]
@@ -3625,10 +3625,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.1818,
+   "slancio": 0.1819,
    "slancio_margine": [
-    0.0644,
-    0.3121
+    0.0645,
+    0.3123
    ],
    "domanda": 0.179,
    "domanda_it": 0.158,
@@ -3636,7 +3636,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.2596,
+   "slancio_prec": 0.2594,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -3716,10 +3716,10 @@
      ]
     },
     "github": {
-     "variazione": 0.688,
+     "variazione": 0.6883,
      "margine": [
-      0.3294,
-      1.1432
+      0.3296,
+      1.1438
      ],
      "peso": 0.333,
      "mensile": [
@@ -3781,12 +3781,12 @@
       {
        "mese": "2026-08",
        "n": 1169,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
-       "n": 1315,
-       "base": 31295
+       "n": 1316,
+       "base": 31308
       }
      ]
     },
@@ -3849,21 +3849,21 @@
      "nome": "syv-ai/HyperQwen",
      "url": "https://github.com/syv-ai/HyperQwen",
      "descrizione": "Serve large Qwen models fast on the GPUs you actually own. Qwen3.8-27B on a single 24 GB card with vLLM: 127 tok/s single-user (381 when the answer quotes the prompt), ~1,035 tok/s at 64 concurrent, …",
-     "stelle": 2233,
+     "stelle": 2241,
      "creato": "2026-08-15"
     },
     {
      "nome": "mw00/project-maya",
      "url": "https://github.com/mw00/project-maya",
      "descrizione": "Project Maya - run GLM-5.3-Flash (321B MoE) and DeepSeek-V4.1-Flash-1017 (748B MoE) privately on your own GPU(s), from one card to 16, NVIDIA or AMD, Linux or Windows. Engine, server, dashboard, Open…",
-     "stelle": 1939,
+     "stelle": 1957,
      "creato": "2026-10-06"
     },
     {
      "nome": "StayLameBro/backburner",
      "url": "https://github.com/StayLameBro/backburner",
      "descrizione": "Your iPhone helps your Mac run a 27B model: faster prompt reading and more context over a USB-C cable",
-     "stelle": 1121,
+     "stelle": 1122,
      "creato": "2026-10-01"
     }
    ]
@@ -3875,10 +3875,10 @@
    "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "ruoli": [],
-   "slancio": 1.4209,
+   "slancio": 1.4201,
    "slancio_margine": [
-    0.8895,
-    2.1018
+    0.8889,
+    2.1009
    ],
    "domanda": 0.232,
    "domanda_it": 0.315,
@@ -3886,7 +3886,7 @@
    "quadrante_calcolato": "prova",
    "incerto": true,
    "incerto_perche": "paper con andamento irregolare e repository nuovi con andamento irregolare",
-   "slancio_prec": 0.8154,
+   "slancio_prec": 0.8151,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -3966,10 +3966,10 @@
      ]
     },
     "github": {
-     "variazione": 2.1545,
+     "variazione": 2.1525,
      "margine": [
-      1.186,
-      3.5522
+      1.1845,
+      3.5494
      ],
      "peso": 0.457,
      "mensile": [
@@ -4031,12 +4031,12 @@
       {
        "mese": "2026-08",
        "n": 144,
-       "base": 31845
+       "base": 31857
       },
       {
        "mese": "2026-09",
        "n": 188,
-       "base": 31295
+       "base": 31308
       }
      ]
     },
@@ -4099,7 +4099,7 @@
      "nome": "cobanov/awesome-fly",
      "url": "https://github.com/cobanov/awesome-fly",
      "descrizione": "A curated list of fruit fly connectome projects: MaleCNS, FlyWire, brain simulations, embodied models, games, and research tools.",
-     "stelle": 722,
+     "stelle": 723,
      "creato": "2026-09-12"
     },
     {
@@ -4826,14 +4826,14 @@
    "mese": "2026-08",
    "competenze": {
     "agenti": {
-     "slancio": 0.4656,
+     "slancio": 0.4654,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.6877,
+     "slancio": 1.689,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
@@ -4847,91 +4847,91 @@
      "incerto": false
     },
     "rag": {
-     "slancio": 0.1486,
+     "slancio": 0.1487,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "valutazione": {
-     "slancio": 1.2563,
+     "slancio": 1.2554,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "post-training": {
-     "slancio": 0.0811,
+     "slancio": 0.0809,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "osserva",
      "incerto": false
     },
     "context-engineering": {
-     "slancio": -0.0523,
+     "slancio": -0.0515,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.1255,
+     "slancio": 0.1252,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "governance": {
-     "slancio": -0.1078,
+     "slancio": -0.1079,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": true
     },
     "dati-per-ai": {
-     "slancio": -0.047,
+     "slancio": -0.0472,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": false
     },
     "text-to-sql": {
-     "slancio": 1.1276,
+     "slancio": 1.1344,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": true
     },
     "vector-db": {
-     "slancio": -0.2229,
+     "slancio": -0.2231,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": true
     },
     "multimodale": {
-     "slancio": 0.0261,
+     "slancio": 0.0268,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "consolida",
      "incerto": false
     },
     "llmops": {
-     "slancio": 0.5966,
+     "slancio": 0.5962,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.2596,
+     "slancio": 0.2594,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "robotica": {
-     "slancio": 0.8154,
+     "slancio": 0.8151,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
@@ -4943,42 +4943,42 @@
    "mese": "2026-09",
    "competenze": {
     "agenti": {
-     "slancio": 0.4257,
+     "slancio": 0.4256,
      "domanda": 30.787,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "coding-agenti": {
-     "slancio": 0.8421,
+     "slancio": 0.8726,
      "domanda": 1.913,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "mcp": {
-     "slancio": 0.3015,
+     "slancio": 0.3016,
      "domanda": 4.678,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "rag": {
-     "slancio": -0.0151,
+     "slancio": -0.0148,
      "domanda": 9.545,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "valutazione": {
-     "slancio": 0.5278,
+     "slancio": 0.5285,
      "domanda": 1.269,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "post-training": {
-     "slancio": 0.1381,
+     "slancio": 0.1376,
      "domanda": 0.323,
      "calcolato": "prova",
      "pubblicato": "prova",
@@ -4992,63 +4992,63 @@
      "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.034,
+     "slancio": 0.0337,
      "domanda": 0.467,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "governance": {
-     "slancio": -0.2408,
+     "slancio": -0.2415,
      "domanda": 3.211,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.0917,
+     "slancio": 0.092,
      "domanda": 3.268,
      "calcolato": "impara-ora",
      "pubblicato": "consolida",
      "incerto": false
     },
     "text-to-sql": {
-     "slancio": 1.1509,
+     "slancio": 1.1528,
      "domanda": 0.127,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": true
     },
     "vector-db": {
-     "slancio": -0.4831,
+     "slancio": -0.4833,
      "domanda": 5.337,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": true
     },
     "multimodale": {
-     "slancio": 0.0951,
+     "slancio": 0.0954,
      "domanda": 8.866,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "llmops": {
-     "slancio": 0.2378,
+     "slancio": 0.2384,
      "domanda": 17.719,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.1818,
+     "slancio": 0.1819,
      "domanda": 0.179,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "robotica": {
-     "slancio": 1.4209,
+     "slancio": 1.4201,
      "domanda": 0.232,
      "calcolato": "prova",
      "pubblicato": "prova",

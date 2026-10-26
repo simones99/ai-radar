@@ -8,9 +8,9 @@
    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 3074,
+   "like": 3120,
    "download": 95889,
-   "trending": 1104,
+   "trending": 1089,
    "creato": "2026-10-17"
   },
   {
@@ -18,9 +18,9 @@
    "url": "https://huggingface.co/RecursiveSI/flint",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 882,
+   "like": 895,
    "download": 8470,
-   "trending": 849,
+   "trending": 861,
    "creato": "2026-10-21"
   },
   {
@@ -28,9 +28,9 @@
    "url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 510,
+   "like": 540,
    "download": 2787,
-   "trending": 508,
+   "trending": 538,
    "creato": "2026-10-24"
   },
   {
@@ -38,9 +38,9 @@
    "url": "https://huggingface.co/XHToken/Spark-X2.6-4B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 584,
+   "like": 619,
    "download": 4726,
-   "trending": 507,
+   "trending": 531,
    "creato": "2026-10-19"
   },
   {
@@ -48,9 +48,9 @@
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
    "tipo": "image-to-image",
    "libreria": "diffusion-single-file",
-   "like": 1641,
+   "like": 1660,
    "download": 700652,
-   "trending": 479,
+   "trending": 466,
    "creato": "2026-10-14"
   },
   {
@@ -58,9 +58,9 @@
    "url": "https://huggingface.co/Lightricks/LTX-2.5",
    "tipo": "image-to-video",
    "libreria": "diffusion-single-file",
-   "like": 9380,
+   "like": 9402,
    "download": 2117147,
-   "trending": 411,
+   "trending": 410,
    "creato": "2026-07-23"
   },
   {
@@ -68,19 +68,29 @@
    "url": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 365,
+   "like": 373,
    "download": 8782,
-   "trending": 354,
+   "trending": 362,
    "creato": "2026-10-17"
+  },
+  {
+   "id": "Qwen/Qwen3.8-27B",
+   "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+   "tipo": "image-text-to-text",
+   "libreria": "transformers",
+   "like": 18438,
+   "download": 7608285,
+   "trending": 316,
+   "creato": "2026-08-05"
   },
   {
    "id": "OpenMOSS-Team/MOSS-Image-SFT",
    "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT",
    "tipo": "text-to-image",
    "libreria": "diffusers",
-   "like": 738,
+   "like": 744,
    "download": 12114,
-   "trending": 320,
+   "trending": 313,
    "creato": "2026-10-11"
   },
   {
@@ -88,29 +98,19 @@
    "url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
    "tipo": "text-to-image",
    "libreria": "gguf",
-   "like": 5068,
+   "like": 5083,
    "download": 2207486,
-   "trending": 315,
+   "trending": 311,
    "creato": "2026-09-20"
-  },
-  {
-   "id": "Qwen/Qwen3.8-27B",
-   "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
-   "tipo": "image-text-to-text",
-   "libreria": "transformers",
-   "like": 18427,
-   "download": 7608285,
-   "trending": 313,
-   "creato": "2026-08-05"
   },
   {
    "id": "ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
    "url": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
    "tipo": "text-generation",
    "libreria": "gguf",
-   "like": 312,
+   "like": 326,
    "download": 891147,
-   "trending": 297,
+   "trending": 309,
    "creato": "2026-10-23"
   },
   {
@@ -118,9 +118,9 @@
    "url": "https://huggingface.co/InternScience/Sage-A1.5",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 296,
+   "like": 304,
    "download": 5235,
-   "trending": 289,
+   "trending": 297,
    "creato": "2026-10-15"
   },
   {
@@ -128,9 +128,9 @@
    "url": "https://huggingface.co/fishaudio/drama-3",
    "tipo": "text-to-speech",
    "libreria": null,
-   "like": 1021,
+   "like": 1024,
    "download": 23216,
-   "trending": 272,
+   "trending": 262,
    "creato": "2026-10-01"
   },
   {
@@ -138,69 +138,49 @@
    "url": "https://huggingface.co/unsloth/flint-GGUF",
    "tipo": "text-generation",
    "libreria": null,
-   "like": 259,
+   "like": 261,
    "download": 125188,
-   "trending": 250,
+   "trending": 252,
    "creato": "2026-10-20"
-  },
-  {
-   "id": "Comfy-Org/MOSS-Image",
-   "url": "https://huggingface.co/Comfy-Org/MOSS-Image",
-   "tipo": "altro",
-   "libreria": "diffusion-single-file",
-   "like": 466,
-   "download": 2442344,
-   "trending": 234,
-   "creato": "2026-10-16"
   },
   {
    "id": "dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8",
    "url": "https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 375,
+   "like": 379,
    "download": 7557,
-   "trending": 233,
+   "trending": 226,
    "creato": "2026-10-18"
+  },
+  {
+   "id": "Comfy-Org/MOSS-Image",
+   "url": "https://huggingface.co/Comfy-Org/MOSS-Image",
+   "tipo": "altro",
+   "libreria": "diffusion-single-file",
+   "like": 471,
+   "download": 2442344,
+   "trending": 223,
+   "creato": "2026-10-16"
   },
   {
    "id": "mistralai/Timestral-209M",
    "url": "https://huggingface.co/mistralai/Timestral-209M",
    "tipo": "time-series-forecasting",
    "libreria": "timestral",
-   "like": 382,
+   "like": 390,
    "download": 10971,
-   "trending": 220,
+   "trending": 217,
    "creato": "2026-10-14"
-  },
-  {
-   "id": "lodestones/Kromoss",
-   "url": "https://huggingface.co/lodestones/Kromoss",
-   "tipo": "text-to-image",
-   "libreria": "diffusers",
-   "like": 263,
-   "download": 27829,
-   "trending": 212,
-   "creato": "2026-10-19"
-  },
-  {
-   "id": "OpenMOSS-Team/MOSS-Image-Base",
-   "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-Base",
-   "tipo": "text-to-image",
-   "libreria": "diffusers",
-   "like": 559,
-   "download": 8080,
-   "trending": 204,
-   "creato": "2026-10-11"
   },
   {
    "id": "datalab-to/indra-ocr",
    "url": "https://huggingface.co/datalab-to/indra-ocr",
    "tipo": "image-to-text",
    "libreria": "onnx",
-   "like": 428,
+   "like": 434,
    "download": 5008,
-   "trending": 202,
+   "trending": 204,
    "creato": "2026-10-10"
   },
   {
@@ -208,50 +188,70 @@
    "url": "https://huggingface.co/orcarouter/DeepSeek-V4.1-Flash-1017-abliterated-GGUF",
    "tipo": "text-generation",
    "libreria": "gguf",
-   "like": 227,
+   "like": 231,
    "download": 9022,
-   "trending": 196,
+   "trending": 199,
    "creato": "2026-10-22"
   },
   {
-   "id": "google/embeddinggemma-2",
-   "url": "https://huggingface.co/google/embeddinggemma-2",
-   "tipo": "feature-extraction",
-   "libreria": "transformers",
-   "like": 2931,
-   "download": 231262,
-   "trending": 194,
-   "creato": "2026-09-14"
+   "id": "OpenMOSS-Team/MOSS-Image-Base",
+   "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-Base",
+   "tipo": "text-to-image",
+   "libreria": "diffusers",
+   "like": 562,
+   "download": 8080,
+   "trending": 197,
+   "creato": "2026-10-11"
   },
   {
    "id": "HuggingFaceBio/Carbon-X",
    "url": "https://huggingface.co/HuggingFaceBio/Carbon-X",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 194,
+   "like": 197,
    "download": 1128,
-   "trending": 187,
+   "trending": 190,
    "creato": "2026-10-21"
   },
   {
-   "id": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
-   "url": "https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
-   "tipo": "image-text-to-text",
-   "libreria": null,
-   "like": 2100,
-   "download": 1687633,
-   "trending": 185,
-   "creato": "2026-09-01"
+   "id": "google/embeddinggemma-2",
+   "url": "https://huggingface.co/google/embeddinggemma-2",
+   "tipo": "feature-extraction",
+   "libreria": "transformers",
+   "like": 2936,
+   "download": 231262,
+   "trending": 187,
+   "creato": "2026-09-14"
   },
   {
    "id": "Comfy-Org/Fibo-2.0",
    "url": "https://huggingface.co/Comfy-Org/Fibo-2.0",
    "tipo": "altro",
    "libreria": "diffusion-single-file",
-   "like": 186,
+   "like": 189,
    "download": 146049,
-   "trending": 183,
+   "trending": 186,
    "creato": "2026-10-20"
+  },
+  {
+   "id": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+   "url": "https://huggingface.co/DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+   "tipo": "image-text-to-text",
+   "libreria": null,
+   "like": 2103,
+   "download": 1687633,
+   "trending": 185,
+   "creato": "2026-09-01"
+  },
+  {
+   "id": "lodestones/Kromoss",
+   "url": "https://huggingface.co/lodestones/Kromoss",
+   "tipo": "text-to-image",
+   "libreria": "diffusers",
+   "like": 264,
+   "download": 27829,
+   "trending": 181,
+   "creato": "2026-10-19"
   }
  ],
  "tipi_top100": {

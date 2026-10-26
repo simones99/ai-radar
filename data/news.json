@@ -55,6 +55,13 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "Meta plans up to $95 billion in stock sales to fund its AI buildout",
+   "link": "https://the-decoder.com/meta-plans-up-to-95-billion-in-stock-sales-to-fund-its-ai-buildout/",
+   "data": "2026-10-26",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Wall Street's fastest traders are building data centers and backing chip startups to stay ahead in AI",
    "link": "https://the-decoder.com/wall-streets-fastest-traders-are-building-data-centers-and-backing-chip-startups-to-stay-ahead-in-ai/",
    "data": "2026-10-26",
@@ -67,6 +74,20 @@
    "data": "2026-10-26",
    "fonte": "The Decoder",
    "tema": "prodotti"
+  },
+  {
+   "titolo": "How Fanatics and OpenAI streamline the fan experience",
+   "link": "https://openai.com/index/fanatics-streamline-fan-experience",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Import AI 478: Math for alignment; ProgramBench; and Mirendil shows what RSI means",
+   "link": "https://jack-clark.net/2026/10/26/import-ai-478-math-for-alignment-programbench-and-mirendil-shows-what-rsi-means/",
+   "data": "2026-10-26",
+   "fonte": "Import AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "Nvidia open-sources Flora to make robot video labeling 125x cheaper than GPT-6 Astra",
@@ -113,13 +134,6 @@
   {
    "titolo": "Three fired OpenAI safety researchers say they were never told what they actually leaked",
    "link": "https://the-decoder.com/three-fired-openai-safety-researchers-say-they-were-never-told-what-they-actually-leaked/",
-   "data": "2026-10-24",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI makes junior patent attorneys instantly better but may quietly stunt their professional growth",
-   "link": "https://the-decoder.com/ai-makes-junior-patent-attorneys-instantly-better-but-may-quietly-stunt-their-professional-growth/",
    "data": "2026-10-24",
    "fonte": "The Decoder",
    "tema": "prodotti"
@@ -274,13 +288,6 @@
   {
    "titolo": "ChatGPT Ads expands to 26 new countries as over 100,000 advertisers have used the platform",
    "link": "https://openai.com/index/chatgpt-ads-expands-26-new-countries",
-   "data": "2026-10-21",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Using thousands of AI agents to uncover new leads in biological data",
-   "link": "https://openai.com/index/scaling-ai-research-for-complex-biological-data",
    "data": "2026-10-21",
    "fonte": "OpenAI",
    "tema": "prodotti"

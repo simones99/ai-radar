@@ -1,0 +1,43 @@
+name: Controlli
+
+# Gli stessi test di «Aggiorna e pubblica», senza raccogliere dati né pubblicare,
+# sui rami diversi da main e sulle pull request. Gli end-to-end restano lì.
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  controlli:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Installa le dipendenze
+        run: |
+          pip install -r requirements.txt
+          npm ci --prefix web
+
+      - name: Test della pipeline
+        run: python -m pytest -q
+
+      - name: Test dell'app
+        working-directory: web
+        run: |
+          npm run check
+          npm test

@@ -17,7 +17,7 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `owid.json` | Investimenti, adozione, uso dell'AI generativa, data center | Our World in Data (dati dei produttori citati) |
 | `ai_act.json` | Scadenze dell'AI Act | `config/ai_act.yaml`, a mano |
 | `rapporti.json` | Rapporti periodici: edizioni e prossime uscite | `config/rapporti.yaml`, a mano |
-| `catena.json` | Gli anelli dei chip della mappa di GeopoliticAI: progettazione, fabbricazione e macchinari, quote per Paese | `config/catena/eto.yaml`, a mano dal dataset ETO (CC BY-NC 4.0, non per uso commerciale: vedi `config/catena/LICENSE-ETO.md`) |
+| `catena.json` | Gli anelli curati della mappa di GeopoliticAI, quote per Paese: le materie prime per materiale (gallio, terre rare, silicio metallico, germanio) e i chip (progettazione, fabbricazione, macchinari) | `config/catena/materie.yaml`, a mano da USGS (pubblico dominio) e dallo studio UE 2023 (CC BY 4.0); `config/catena/eto.yaml`, a mano dal dataset ETO (CC BY-NC 4.0, non per uso commerciale: vedi `config/catena/LICENSE-ETO.md`) |
 | `risorse.json` | Stato settimanale dei link «Per iniziare» delle competenze | Controllo della pipeline |
 | `radar.json` | Radar delle competenze (versione 2: unità vere, soglie fisse, incertezza), calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |

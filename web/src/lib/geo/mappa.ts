@@ -1,7 +1,7 @@
 // La mappa di GeopoliticAI: i confini generati da scripts/confini.py, gli anelli della catena e i testi dell'anello aperto.
 import type { Cite, TableData } from '../charts/types';
 import { AREE } from '../data/geopoliticai';
-import type { Catena, CatenaAnello, Geopoliticai } from '../data/types';
+import type { Catena, CatenaAnello, Geopoliticai, Materiale } from '../data/types';
 import { dayWith, nf } from '../text/format';
 import { eci } from '../text/geopoliticai';
 import CONFINI from './confini.json';
@@ -22,14 +22,25 @@ export const ANELLI = [
   { key: 'modelli', nome: 'Modelli' },
 ] as const;
 export type AnelloKey = (typeof ANELLI)[number]['key'];
-type Chip = keyof Catena['anelli'];
+type Chip = 'progettazione' | 'fabbricazione' | 'macchinari';
 const CHIP: readonly Chip[] = ['progettazione', 'fabbricazione', 'macchinari'];
 /** La frase onesta di un Paese senza quota, per anello dei chip. */
 const VUOTO_CHIP: Record<Chip, string> = { progettazione: 'nessuna quota', fabbricazione: 'nessuno stabilimento', macchinari: 'nessuna produzione' };
 
-/** Gli anelli che hanno i dati: i modelli sempre, i chip se c'è il file della catena. Gli altri si accendono con i loro ticket. */
+/** I materiali delle materie prime, nell'ordine del selettore. */
+const MATERIALI: readonly Materiale[] = ['gallio', 'terre', 'silicio', 'germanio'];
+
+/** Gli anelli che hanno i dati: i modelli sempre, materie prime e chip se c'è il file della catena. Gli altri si accendono con i loro ticket. */
 export const attivi = (c: Catena | undefined): AnelloKey[] =>
-  ANELLI.map((a) => a.key).filter((k) => k === 'modelli' || (CHIP as readonly string[]).includes(k) && !!c?.anelli[k as Chip]);
+  ANELLI.map((a) => a.key).filter((k) => k === 'modelli' || (k === 'materie' ? materialiDi(c).length > 0 : (CHIP as readonly string[]).includes(k) && !!c?.anelli[k as Chip]));
+/** I materiali nel file della catena, con il loro nome. */
+export const materialiDi = (c: Catena | undefined): { key: Materiale; nome: string }[] =>
+  MATERIALI.flatMap((key) => { const m = c?.anelli.materie?.materiali[key]; return m ? [{ key, nome: m.nome }] : []; });
+/** ?materiale=: un valore non valido torna al gallio, o al primo materiale che c'è. */
+export function materialeDi(p: string | undefined, c: Catena | undefined): Materiale {
+  const ok = materialiDi(c).map((m) => m.key);
+  return ok.includes(p as Materiale) ? (p as Materiale) : ok.includes('gallio') ? 'gallio' : ok[0] ?? 'gallio';
+}
 /** ?anello=: un valore non valido, o un anello non attivo, apre i modelli. */
 export const anelloDi = (p: string | undefined, ok: readonly AnelloKey[]): AnelloKey => (ok as readonly string[]).includes(p ?? '') ? (p as AnelloKey) : 'modelli';
 
@@ -58,9 +69,13 @@ export interface Vista {
   note: string[];
 }
 
-export function vista(g: Geopoliticai, c: Catena | undefined, k: AnelloKey): Vista {
+export function vista(g: Geopoliticai, c: Catena | undefined, k: AnelloKey, materiale?: string): Vista {
+  if (k === 'materie') {
+    const m = c?.anelli.materie?.materiali[materialeDi(materiale, c)];
+    if (m) return vistaQuote(g, `Materie prime, ${m.nome.toLowerCase()}`, 'nessuna produzione', m);
+  }
   const a = (CHIP as readonly string[]).includes(k) ? c?.anelli[k as Chip] : undefined;
-  return a ? vistaChip(g, k as Chip, a) : vistaModelli(g);
+  return a ? vistaQuote(g, ANELLI.find((x) => x.key === k)!.nome, VUOTO_CHIP[k as Chip], a) : vistaModelli(g);
 }
 
 /** I Paesi della mappa di una zona: «Altri» è tutto quello che non sta nelle altre aree. */
@@ -118,13 +133,11 @@ function vistaModelli(g: Geopoliticai): Vista {
   };
 }
 
-// ---------------------------------------------------------------- gli anelli dei chip: le quote di ETO, con il valore unico dell'Europa
+// ---------------------------------------------------------------- materie prime e chip: le quote per Paese, con il valore unico dell'Europa dove c'è
 
 const pct = (v: number) => `${nf(v, Number.isInteger(v) ? 0 : 1)}%`;
 
-function vistaChip(g: Geopoliticai, k: Chip, a: CatenaAnello): Vista {
-  const nome = ANELLI.find((x) => x.key === k)!.nome;
-  const vuoto = VUOTO_CHIP[k];
+function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnello): Vista {
   const ue = new Set(g.zone.ue?.paesi_mappa ?? []);
   const valori = Object.entries(a.quote).sort((x, y) => y[1] - x[1]);
   const inEuropa = (iso: string) => a.europa != null && ue.has(iso);

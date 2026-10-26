@@ -230,6 +230,22 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
   // gli anelli dei file curati: quote arrotondate dalla ricerca sulle fonti della mappa, solo i Paesi dei test
   catena: {
     anelli: {
+      materie: {
+        materiali: {
+          gallio: { nome: 'Gallio', misura: 'Quota della produzione primaria mondiale, stima del 2025', fonte: 'USGS', titolo: 'Mineral Commodity Summaries 2026',
+            url: 'https://pubs.usgs.gov/periodicals/mcs2026/mcs2026.pdf', licenza: 'pubblico dominio',
+            url_licenza: 'https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits', data: '2025',
+            quote: { CHN: 99, RUS: 0.7, JPN: 0.3 }, europa: null },
+          terre: { nome: 'Terre rare', misura: 'Quota della produzione mineraria mondiale, stima del 2025', fonte: 'USGS', titolo: 'Mineral Commodity Summaries 2026',
+            url: 'https://pubs.usgs.gov/periodicals/mcs2026/mcs2026.pdf', licenza: 'pubblico dominio',
+            url_licenza: 'https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits', data: '2025',
+            quote: { CHN: 69.2, USA: 13.1, AUS: 7.4 }, europa: null },
+          germanio: { nome: 'Germanio', misura: 'Quota della raffinazione mondiale, media 2016-2020', fonte: 'Commissione europea',
+            titolo: 'Study on the critical raw materials for the EU 2023', url: 'https://op.europa.eu/en/publication-detail/-/publication/57318397-fdd4-11ed-a05c-01aa75ed71a1',
+            licenza: 'CC BY 4.0', url_licenza: 'https://creativecommons.org/licenses/by/4.0/', data: '2016-2020',
+            quote: { CHN: 83.1, RUS: 5, BEL: 4.5, DEU: 2.7 }, europa: null },
+        },
+      },
       progettazione: { misura: 'Quota del valore dei chip progettati, per sede dell’azienda', fonte: 'ETO', titolo: 'Advanced Semiconductor Supply Chain Dataset',
         url: 'https://eto.tech/dataset-docs/chipexplorer', licenza: 'CC BY-NC 4.0', url_licenza: 'https://creativecommons.org/licenses/by-nc/4.0/', data: '2022',
         quote: { USA: 51, KOR: 13, JPN: 9, TWN: 8, CHN: 6 }, europa: 10 },

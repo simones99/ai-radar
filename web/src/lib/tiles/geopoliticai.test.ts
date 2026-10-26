@@ -399,20 +399,20 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
   const linea = () => within(mappa().getByRole('navigation', { name: "Gli anelli della catena dell'AI" }));
   const fermate = () => linea().getAllByRole('listitem').map((li) => within(li).getByRole('button'));
 
-  it('sei fermate: i chip e i modelli sono attivi, le altre sono disabilitate e lo dicono', () => {
+  it('sei fermate: materie prime, chip e modelli sono attivi, le altre sono disabilitate e lo dicono', () => {
     show();
     expect(fermate().map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
-      '1 Materie prime (in arrivo)', '2 Progettazione dei chip', '3 Fabbricazione dei chip',
+      '1 Materie prime', '2 Progettazione dei chip', '3 Fabbricazione dei chip',
       '4 Macchinari', '5 Data center (in arrivo)', '6 Modelli',
     ]);
-    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([true, false, false, false, true, false]);
+    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([false, false, false, false, true, false]);
     expect(fermate()[5]).toHaveAttribute('aria-current', 'step');
     // dai modelli si torna indietro, saltando i data center che non ci sono ancora
     expect(linea().getByRole('button', { name: 'Anello precedente' })).toBeEnabled();
     expect(linea().getByRole('button', { name: 'Anello successivo' })).toBeDisabled();
   });
 
-  it('senza il file della catena i chip restano disabilitati', () => {
+  it('senza il file della catena materie prime e chip restano disabilitati', () => {
     const { catena: _, ...senza } = data;
     show(senza, { anello: 'fabbricazione' });
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
@@ -565,5 +565,52 @@ describe('GeopoliticAI: gli anelli dei chip', () => {
     expect(fonte).toHaveTextContent('Macchinari: ETO, Advanced Semiconductor Supply Chain Dataset (CC BY-NC 4.0, uso commerciale non consentito), dati del 2025, quote rielaborate da AI Radar. Confini: Natural Earth, pubblico dominio.');
     expect(within(fonte).getByRole('link', { name: 'CC BY-NC 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nc/4.0/');
     expect(within(fonte).getByRole('link', { name: 'Advanced Semiconductor Supply Chain Dataset' })).toHaveAttribute('href', 'https://eto.tech/dataset-docs/chipexplorer');
+  });
+});
+
+describe('GeopoliticAI: l’anello delle materie prime', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
+  const materiali = () => within(mappa().getByRole('group', { name: 'Materiale' }));
+  const premuto = () => materiali().getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent);
+
+  it('si apre sul gallio, con il selettore dei materiali nel titolo dell’anello', () => {
+    show(data, { anello: 'materie' });
+    expect(mappa().getByRole('heading', { level: 4, name: '1. Materie prime' })).toBeInTheDocument();
+    expect(materiali().getAllByRole('button').map((b) => b.textContent)).toEqual(['Gallio', 'Terre rare', 'Germanio']);
+    expect(premuto()).toEqual(['Gallio']);
+    expect(mappa().getByText('Quota della produzione primaria mondiale, stima del 2025 · USGS, dati del 2025')).toBeInTheDocument();
+    expect(cifra('Il primo')).toHaveTextContent(/^Cina 99%$/);
+  });
+
+  it('?materiale= sceglie il materiale, e un valore non valido torna al gallio', () => {
+    show(data, { anello: 'materie', materiale: 'terre' });
+    expect(premuto()).toEqual(['Terre rare']);
+    expect(cifra('Il primo')).toHaveTextContent(/^Cina 69,2%$/);
+    cleanup();
+    show(data, { anello: 'materie', materiale: 'oro' });
+    expect(premuto()).toEqual(['Gallio']);
+  });
+
+  it('un clic su un materiale lo mette nel link', async () => {
+    show(data, { anello: 'materie' });
+    const scelto = new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
+    await fireEvent.click(materiali().getByRole('button', { name: 'Germanio' }));
+    expect((await scelto).detail).toEqual({ chiave: 'materiale', valore: 'germanio' });
+  });
+
+  it('mappa, tabellone, tabella e fonte seguono il materiale, e l’Italia ha la sua frase onesta', () => {
+    show(data, { anello: 'materie', materiale: 'germanio' });
+    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+    expect(europa.getByRole('button', { name: 'Italia: nessuna produzione' })).toBeInTheDocument();
+    expect(cifra('Italia')).toHaveTextContent(/^nessuna produzione$/);
+    expect(cifra('UE')).toHaveTextContent(/^7,2%$/); // Belgio e Germania
+    const tabella = within(mappa().getByRole('table'));
+    expect(tabella.getAllByRole('row').slice(1).map((r) => [...r.children].map((c) => c.textContent))).toEqual([
+      ['Cina', '83,1%', '2016-2020'], ['Russia', '5%', '2016-2020'], ['Belgio', '4,5%', '2016-2020'], ['Germania', '2,7%', '2016-2020'],
+    ]);
+    const fonte = mappa().getByText(/^Materie prime, germanio:/);
+    expect(fonte).toHaveTextContent('Materie prime, germanio: Commissione europea, Study on the critical raw materials for the EU 2023 (CC BY 4.0), dati del 2016-2020, quote rielaborate da AI Radar. Confini: Natural Earth, pubblico dominio.');
+    expect(mappa().queryByText(/uso commerciale/)).toBeNull();
   });
 });

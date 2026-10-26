@@ -79,7 +79,7 @@
   </Block>
   {#if g}
     <GeoMatrice {g} {zona} onscegli={apriScheda} />
-    <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} onscegli={scegli} />
+    <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} onscegli={scegli} />
     <GeoChiAddestra {g} {zona} />
   {/if}
 </Detail>

@@ -207,7 +207,10 @@ export interface CatenaAnello {
   europa: number | null;
   nota?: string;
 }
-export interface Catena { anelli: Partial<Record<'progettazione' | 'fabbricazione' | 'macchinari', CatenaAnello>> }
+export type Materiale = 'gallio' | 'terre' | 'silicio' | 'germanio';
+/** Le materie prime: un insieme di quote per materiale, ognuno con la sua fonte e la sua data. */
+export interface CatenaMaterie { materiali: Partial<Record<Materiale, CatenaAnello & { nome: string }>> }
+export interface Catena { anelli: Partial<Record<'progettazione' | 'fabbricazione' | 'macchinari', CatenaAnello>> & { materie?: CatenaMaterie } }
 
 export interface Dataset {
   status?: Status;

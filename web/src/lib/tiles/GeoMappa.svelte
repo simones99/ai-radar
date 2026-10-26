@@ -1,14 +1,16 @@
 <script lang="ts">
   // «Chi controlla la catena dell'AI»: la linea dei sei anelli, la mappa del mondo colorata per l'anello aperto con l'Europa
-  // ingrandita, il tabellone e la tabella. Ci sono i tre anelli dei chip, dai file curati di ETO, e quello dei modelli.
+  // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO) e i modelli.
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai } from '../data/types';
-  import { ANELLI, anelloDi, attivi, CENTRO, EUROPA as EUR, NOMI, PAESI, paesiZona, VIEWBOX, vista, zonaDi, type AnelloKey } from '../geo/mappa';
+  import {
+    ANELLI, anelloDi, attivi, CENTRO, EUROPA as EUR, materialeDi, materialiDi, NOMI, PAESI, paesiZona, VIEWBOX, vista, zonaDi, type AnelloKey,
+  } from '../geo/mappa';
   import { imposta } from '../router';
   import { NOTA_ITALIA } from '../text/geopoliticai';
 
-  let { g, catena, zona, anello: param, onscegli }: {
-    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; onscegli: (k: string) => void;
+  let { g, catena, zona, anello: param, materiale: paramMateriale, onscegli }: {
+    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; onscegli: (k: string) => void;
   } = $props();
 
   const ok = $derived(attivi(catena));
@@ -24,7 +26,9 @@
   const dopo = $derived(vicino(1));
   const vai = (k: AnelloKey | null) => k && imposta('anello', k);
 
-  const v = $derived(vista(g, catena, anello));
+  const materiali = $derived(materialiDi(catena));
+  const materiale = $derived(materialeDi(paramMateriale, catena));
+  const v = $derived(vista(g, catena, anello, materiale));
   const ev = $derived(paesiZona(g, zona));
   const scelte = $derived(zonaDi(g));
   /** I Paesi UE che prendono il valore unico dell'Europa, tratteggiati. */
@@ -91,6 +95,13 @@
 
     <div class="titolo">
       <h4>{idx + 1}. {ANELLI[idx].nome}</h4>
+      {#if anello === 'materie'}
+        <div class="materiali" role="group" aria-label="Materiale">
+          {#each materiali as m (m.key)}
+            <button type="button" aria-pressed={m.key === materiale ? 'true' : 'false'} onclick={() => imposta('materiale', m.key)}>{m.nome}</button>
+          {/each}
+        </div>
+      {/if}
       <span>{v.misura}</span>
     </div>
 
@@ -167,6 +178,9 @@
   li.on .lab { font-weight: 700; color: var(--fg); }
   .titolo { display: grid; gap: 4px; border-left: 5px solid var(--c); padding-left: 10px; }
   .titolo h4 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 600; }
+  .materiali { display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .materiali button { background: var(--bg); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; min-height: 44px; font-size: 14px; line-height: 20px; cursor: pointer; color: var(--fg-2); }
+  .materiali button[aria-pressed='true'] { background: var(--c); border-color: var(--c); color: #fff; }
   .titolo span { font-size: 13px; line-height: 20px; color: var(--fg-3); }
 
   .cornice { position: relative; }

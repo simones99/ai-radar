@@ -83,6 +83,26 @@ def test_catena_valid():
     assert out["macchinari"]["europa"] is None and out["macchinari"]["nota"] == "EUV"
 
 
+MATERIA = {**ANELLO_ETO, "nome": "Gallio", "fonte": "USGS", "licenza": "pubblico dominio", "quote": {"CHN": 99.0, "RUS": 0.7}, "europa": None}
+
+
+def test_catena_materie_un_anello_per_materiale():
+    out = catena.validate({"anelli": {"materie": {"materiali": {"gallio": MATERIA, "germanio": {**MATERIA, "nome": "Germanio"}}}}})
+    assert out["materie"]["materiali"]["gallio"] == {**MATERIA, "data": "2022"}
+    assert list(out["materie"]["materiali"]) == ["gallio", "germanio"]
+
+
+@pytest.mark.parametrize("materiali, msg", [
+    ({"indio": MATERIA}, "materiale sconosciuto: indio"),
+    ({"gallio": {**MATERIA, "quote": {"CHN": 101}}}, "gallio, CHN: quota fuori da 0-100"),
+    ({"gallio": {**MATERIA, "nome": ""}}, "gallio: nome mancante"),
+    ({}, "materie: nessun materiale"),
+])
+def test_catena_materie_rejects(materiali, msg):
+    with pytest.raises(ValueError, match=msg):
+        catena.validate({"anelli": {"materie": {"materiali": materiali}}})
+
+
 def test_catena_tollera_gli_arrotondamenti_della_fonte():
     # la litografia di ETO somma a 100,1
     out = catena.validate({"anelli": {"macchinari": {**ANELLO_ETO, "europa": None, "quote": {"NLD": 81.5, "JPN": 15, "AUT": 1.6, "DEU": 2.0}}}})
@@ -115,9 +135,16 @@ def test_shipped_files_are_valid(tmp_path, monkeypatch):
 
 def test_shipped_catena_is_valid(tmp_path, monkeypatch):
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    assert catena.run() == {"anelli": 3}
+    assert catena.run() == {"anelli": 4}
     anelli = json.loads((tmp_path / "catena.json").read_text(encoding="utf-8"))["anelli"]
+    materie = anelli.pop("materie")["materiali"]
     assert {k: a["data"] for k, a in anelli.items()} == {"progettazione": "2022", "fabbricazione": "2022", "macchinari": "2025"}
+    assert {m: (x["fonte"], x["licenza"]) for m, x in materie.items()} == {
+        "gallio": ("USGS", "pubblico dominio"), "terre": ("USGS", "pubblico dominio"), "silicio": ("USGS", "pubblico dominio"),
+        "germanio": ("Commissione europea", "CC BY 4.0"),
+    }
+    # l'Italia non produce nessuno dei quattro materiali
+    assert all("ITA" not in x["quote"] for x in materie.values())
     assert anelli["progettazione"]["europa"] and anelli["fabbricazione"]["europa"] and anelli["macchinari"]["europa"] is None
     assert "EUV" in anelli["macchinari"]["nota"]
     assert all(a["licenza"] == "CC BY-NC 4.0" for a in anelli.values())

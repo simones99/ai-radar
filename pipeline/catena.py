@@ -1,17 +1,20 @@
 """Gli anelli della catena dell'AI che non vengono da Epoch, dai file curati a mano in config/catena/: scrive catena.json.
 
 I dati di ETO stanno in config/catena/eto.yaml, con la loro licenza CC BY-NC accanto (ADR 0001).
+Le materie prime stanno in config/catena/materie.yaml: USGS e studio UE, un insieme di quote per materiale.
 """
 from __future__ import annotations
 
 from .common import load_yaml, write_json
 
 OUT = "catena.json"
-FILE = "catena/eto.yaml"
+FILES = ("catena/eto.yaml", "catena/materie.yaml")
 
 
 # gli anelli dei file curati; i data center e i modelli li scrive il passo geopoliticai
-ANELLI = ("progettazione", "fabbricazione", "macchinari")
+ANELLI = ("materie", "progettazione", "fabbricazione", "macchinari")
+# i materiali delle materie prime, nell'ordine del selettore
+MATERIALI = ("gallio", "terre", "silicio", "germanio")
 # le quote di ETO sono arrotondate: la litografia somma a 100,1. Un errore di battitura si vede lo stesso.
 ARROTONDAMENTO = 0.5
 
@@ -51,18 +54,32 @@ def _anello(a: dict, where: str) -> dict:
     }
 
 
-def validate(doc: dict) -> dict:
+def _materie(a: dict, where: str) -> dict:
+    materiali = (a or {}).get("materiali") or {}
+    if not materiali:
+        raise ValueError(f"{where}: nessun materiale")
+    out = {}
+    for m, x in materiali.items():
+        if m not in MATERIALI:
+            raise ValueError(f"{where}: materiale sconosciuto: {m}")
+        out[m] = {"nome": _testo(x, "nome", f"{where}, {m}"), **_anello(x, f"{where}, {m}")}
+    return {"materiali": {m: out[m] for m in MATERIALI if m in out}}
+
+
+def validate(doc: dict, file: str = "catena") -> dict:
     out = {}
     for k, a in ((doc or {}).get("anelli") or {}).items():
         if k not in ANELLI:
-            raise ValueError(f"{FILE}: anello sconosciuto: {k}")
-        out[k] = _anello(a, f"{FILE}, {k}")
+            raise ValueError(f"{file}: anello sconosciuto: {k}")
+        out[k] = _materie(a, f"{file}, {k}") if k == "materie" else _anello(a, f"{file}, {k}")
     return out
 
 
 def run() -> dict:
-    anelli = validate(load_yaml(FILE))
+    anelli = {}
+    for f in FILES:
+        anelli |= validate(load_yaml(f), f)
     if not anelli:
-        raise ValueError(f"{FILE}: nessun anello")
-    write_json(OUT, {"anelli": anelli})
+        raise ValueError("catena: nessun anello")
+    write_json(OUT, {"anelli": {k: anelli[k] for k in ANELLI if k in anelli}})
     return {"anelli": len(anelli)}

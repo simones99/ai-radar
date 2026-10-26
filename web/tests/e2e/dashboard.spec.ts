@@ -380,6 +380,56 @@ test('mappa: ?anello=datacenter apre le quote dei data center, con la nota sulla
   await expect(mappa(page).getByText(/coprono circa il 44% del calcolo AI mondiale/)).toBeVisible();
 });
 
+/** Un tocco su un punto della mappa, nelle coordinate dei confini: il centro del riquadro di un Paese con territori lontani cade nell'oceano. */
+async function tocca(page: Page, svg: ReturnType<typeof europa>, [x, y]: [number, number]) {
+  await svg.scrollIntoViewIfNeeded();
+  const punto = await svg.evaluate((el, [x, y]) => {
+    const s = el as SVGSVGElement;
+    const p = Object.assign(s.createSVGPoint(), { x, y }).matrixTransform(s.getScreenCTM()!);
+    return { x: p.x, y: p.y };
+  }, [x, y]);
+  await page.mouse.click(punto.x, punto.y);
+  return punto;
+}
+const FRANCIA: [number, number] = [505.8, -163.6]; // il centro della Francia metropolitana, da confini.json
+
+test('mappa: un tocco sulla Francia apre il fumetto senza coprirla né l’Europa e sceglie ?area=francia; Esc chiude solo il fumetto', async ({ page }) => {
+  await page.goto('/#geopoliticai');
+  const mondo = mappa(page).getByRole('group', { name: /^Mappa del mondo/ });
+  const punto = await tocca(page, mondo, FRANCIA);
+  const fumetto = mappa(page).getByRole('dialog', { name: 'Francia' });
+  await expect(fumetto).toBeFocused();
+  await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
+  await expect(scheda(page)).toHaveText("Francia, nell'UE");
+  const box = (await fumetto.boundingBox())!;
+  const riquadro = (await europa(page).boundingBox())!;
+  expect(punto.x < box.x || punto.x > box.x + box.width || punto.y < box.y || punto.y > box.y + box.height).toBe(true);
+  expect(box.x).toBeGreaterThan(riquadro.x + riquadro.width); // il riquadro dell'Europa resta scoperto
+  await page.keyboard.press('Escape');
+  await expect(fumetto).toBeHidden();
+  await expect(mondo.getByRole('button', { name: /^Francia:/ })).toBeFocused();
+  await expect(scheda(page)).toHaveText("Francia, nell'UE"); // il dettaglio resta aperto
+});
+
+test('mappa a 320px: il fumetto è un pannello sotto le mappe, con il pulsante per chiuderlo', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#geopoliticai');
+  // l'Italia dal riquadro e la Cina dal mondo: sul desktop i loro fumetti si aprono da lati diversi
+  const paesi = [['Italia', italiaInEuropa(page)], ['Cina', mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByRole('button', { name: /^Cina:/ })]] as const;
+  for (const [nome, paese] of paesi) {
+    await paese.click();
+    const fumetto = mappa(page).getByRole('dialog', { name: nome });
+    await expect(fumetto).toBeVisible();
+    const [mondo, riquadro, pannello] = await mappa(page).evaluate((el) =>
+      ['svg[aria-label^="Mappa del mondo"]', 'svg[aria-label="Europa, ingrandita"]', '[role="dialog"]'].map((s) => el.querySelector(s)!.getBoundingClientRect().toJSON()));
+    expect(pannello.y).toBeGreaterThanOrEqual(riquadro.y + riquadro.height);
+    expect([pannello.x, pannello.width]).toEqual([mondo.x, mondo.width]); // a tutta larghezza, come la mappa
+    expect(await noHorizontalScroll(page)).toBe(true);
+    await fumetto.getByRole('button', { name: 'Chiudi' }).click();
+    await expect(fumetto).toBeHidden();
+  }
+});
+
 test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la evidenzia', async ({ page }) => {
   await page.goto('/#geopoliticai');
   await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true'); // dentro l'UE

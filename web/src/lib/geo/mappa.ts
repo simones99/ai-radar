@@ -66,6 +66,8 @@ export interface Vista {
   breve: (v: number) => string;
   /** Il valore di un Paese, o la frase onesta che lo sostituisce: per il nome dei pulsanti e il tooltip. */
   testo: (iso: string) => string;
+  /** Di quando è il dato: l'anno, il periodo o il giorno dello scarico. */
+  data: string;
   tabellone: (zona: string) => Cifra[];
   tabella: TableData;
   cite: Cite;
@@ -80,6 +82,21 @@ export function vista(g: Geopoliticai, c: Catena | undefined, k: AnelloKey, mate
   if (k === 'datacenter' && g.data_center) return vistaDataCenter(g);
   const a = (CHIP as readonly string[]).includes(k) ? c?.anelli[k as Chip] : undefined;
   return a ? vistaQuote(g, ANELLI.find((x) => x.key === k)!.nome, VUOTO_CHIP[k as Chip], a, `dati del ${a.data}`) : vistaModelli(g);
+}
+
+/** Un anello nel fumetto del Paese: il valore di ogni materiale, o il valore unico, ognuno con la sua data. */
+export interface AnelloFumetto { key: AnelloKey; nome: string; voci: { materiale?: string; testo: string; data?: string }[] }
+
+/** Il fumetto di un Paese: i sei anelli, con la frase onesta dove il Paese non ha niente e «dati in arrivo» dove l'anello non c'è. */
+export function fumetto(g: Geopoliticai, c: Catena | undefined, iso: string): AnelloFumetto[] {
+  const ok = attivi(g, c);
+  const voce = (v: Vista, materiale?: string) => ({ materiale, testo: v.testo(iso), data: v.data });
+  return ANELLI.map(({ key, nome }) => ({
+    key, nome,
+    voci: !ok.includes(key) ? [{ testo: 'dati in arrivo' }]
+      : key === 'materie' ? materialiDi(c).map((m) => voce(vista(g, c, key, m.key), m.nome))
+      : [voce(vista(g, c, key))],
+  }));
 }
 
 /** I Paesi della mappa di una zona: «Altri» è tutto quello che non sta nelle altre aree. */
@@ -125,7 +142,7 @@ function vistaModelli(g: Geopoliticai): Vista {
   const primo = p ? { etichetta: 'Il primo', nome: NOMI[p[0]] ?? p[0], valore: `${eci(p[1])} ECI`, dettaglio: g.eci_paesi.valori[p[0]].modello } : null;
   return {
     misura: `ECI del miglior modello del ${anno} · ${g.fonte}, dati scaricati ${dayWith('il', g.scaricato)}`,
-    valori, europa: null, scala: valori.length ? [valori[valori.length - 1][1] - 10, valori[0][1]] : [0, 1], breve: eci, testo,
+    valori, europa: null, scala: valori.length ? [valori[valori.length - 1][1] - 10, valori[0][1]] : [0, 1], breve: eci, testo, data: String(anno),
     tabellone: (zona) => tabellone(g, zona, primo, diZona, p?.[0]),
     tabella: { cols: ['Paese', 'Valore', 'Data'], rows: valori.map(([iso]) => [NOMI[iso] ?? iso, testo(iso), String(anno)]) },
     cite: [
@@ -172,7 +189,7 @@ function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnell
   const nc = /NC/.test(a.licenza) ? ', uso commerciale non consentito' : '';
   return {
     misura: `${a.misura} · ${a.fonte}, ${dati}`,
-    valori, europa: a.europa, scala: [0, Math.max(a.europa ?? 0, p?.[1] ?? 1)], breve: pct, testo,
+    valori, europa: a.europa, scala: [0, Math.max(a.europa ?? 0, p?.[1] ?? 1)], breve: pct, testo, data: a.data,
     tabellone: (zona) => tabellone(g, zona, primo, diZona, p?.[0]),
     tabella: { cols: ['Paese', 'Valore', 'Data'], rows: righe.map(([iso, v]) => [iso === EUROPA ? DATO_UNICO : NOMI[iso] ?? iso, pct(v), a.data]) },
     cite: [

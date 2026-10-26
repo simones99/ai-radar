@@ -125,6 +125,8 @@ const NOTA_UK = 'Epoch attribuisce Google DeepMind, che ha sede a Londra, agli U
 
 /** Nota fissa, finché l'Italia è a zero. */
 export const NOTA_ITALIA = 'Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.';
+/** La nota sotto la mappa, in tutti gli anelli: i cluster italiani che Epoch conta fuori dai dati della mappa. */
+export const NOTA_GPU = 'Fuori dai dati della mappa: il censimento GPU clusters di Epoch conta in Italia 9 cluster, tra cui Leonardo al CINECA ed Eni HPC6 (dato di marzo 2026).';
 
 /** «Nell'UE la frontiera è Mistral AI, in Francia: 150,0 ECI nel 2026, anno in corso.» */
 function frontieraUe(g: Geopoliticai): string | null {

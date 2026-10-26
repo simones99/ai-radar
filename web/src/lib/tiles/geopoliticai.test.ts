@@ -653,3 +653,97 @@ describe('GeopoliticAI: l’anello dei data center', () => {
     expect(righe.at(-1)).toEqual(['Islanda', 'meno dello 0,1%', '15 ott 2026']);
   });
 });
+
+describe('GeopoliticAI: il fumetto del Paese', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  const mondo = () => within(mappa().getByRole('group', { name: /^Mappa del mondo/ }));
+  const europa = () => within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+  /** Gli anelli del fumetto: il nome, poi una riga per valore. */
+  const anelli = (nome: string) =>
+    [...mappa().getByRole('dialog', { name: nome }).querySelectorAll('dl > div')].map((d) => [...d.children].map((c) => c.textContent?.replace(/\s+/g, ' ').trim()));
+
+  it('un clic su un Paese apre il fumetto con i sei anelli, ognuno con il valore e la data', async () => {
+    show();
+    await fireEvent.click(mondo().getByRole('button', { name: 'Cina: 146,1 ECI, DeepSeek-V3.2' }));
+    expect(anelli('Cina')).toEqual([
+      ['1. Materie prime', 'Gallio: 99% · 2025', 'Terre rare: 69,2% · 2025', 'Germanio: 83,1% · 2016-2020'],
+      ['2. Progettazione dei chip', '6% · 2022'],
+      ['3. Fabbricazione dei chip', '24% · 2022'],
+      ['4. Macchinari', 'nessuna produzione · 2025'],
+      ['5. Data center', '2,2% · 15 ott 2026'],
+      ['6. Modelli', '146,1 ECI, DeepSeek-V3.2 · 2025'],
+    ]);
+  });
+
+  it('il fumetto dell’Italia, dal riquadro dell’Europa: «Europa, dato unico» e le frasi oneste al posto dei vuoti', async () => {
+    show();
+    await fireEvent.click(europa().getByRole('button', { name: /^Italia:/ }));
+    expect(anelli('Italia')).toEqual([
+      ['1. Materie prime', 'Gallio: nessuna produzione · 2025', 'Terre rare: nessuna produzione · 2025', 'Germanio: nessuna produzione · 2016-2020'],
+      ['2. Progettazione dei chip', 'Europa, dato unico, 10% · 2022'],
+      ['3. Fabbricazione dei chip', 'Europa, dato unico, 8% · 2022'],
+      ['4. Macchinari', 'nessuna produzione · 2025'],
+      ['5. Data center', 'nessun sito noto a Epoch · 15 ott 2026'],
+      ['6. Modelli', 'nessun modello valutato nel 2025 · 2025'],
+    ]);
+  });
+
+  it('senza il file della catena, gli anelli che mancano dicono «dati in arrivo»', async () => {
+    const { catena: _, ...senza } = data;
+    show(senza);
+    await fireEvent.click(mondo().getByRole('button', { name: /^USA:/ }));
+    expect(anelli('USA').map((a) => a.join(' | '))).toEqual([
+      '1. Materie prime | dati in arrivo', '2. Progettazione dei chip | dati in arrivo', '3. Fabbricazione dei chip | dati in arrivo',
+      '4. Macchinari | dati in arrivo', '5. Data center | 86,5% · 15 ott 2026', '6. Modelli | 156,3 ECI, GPT-5.2 Pro · 2025',
+    ]);
+  });
+
+  /** Le scelte di ?area= che la mappa manda mentre si fa `fai`. */
+  async function aree(fai: () => Promise<unknown>): Promise<string[]> {
+    const viste: string[] = [];
+    const ascolta = (e: Event) => { const d = (e as CustomEvent).detail; if (d.chiave === 'area') viste.push(d.valore); };
+    document.addEventListener('ai-radar:imposta', ascolta);
+    await fai();
+    document.removeEventListener('ai-radar:imposta', ascolta);
+    return viste;
+  }
+
+  it('un Paese che è una scelta di area sceglie anche l’area; uno di «Altri» apre solo il fumetto', async () => {
+    show();
+    expect(await aree(() => fireEvent.click(europa().getByRole('button', { name: /^Francia:/ })))).toEqual(['francia']);
+    expect(mappa().getByRole('dialog', { name: 'Francia' })).toBeInTheDocument();
+    const corea = mondo().getByRole('button', { name: 'Corea del Sud: nessun modello valutato nel 2025' });
+    expect(corea).not.toHaveAttribute('aria-pressed');
+    expect(await aree(() => fireEvent.click(corea))).toEqual([]);
+    expect(anelli('Corea del Sud')[1]).toEqual(['2. Progettazione dei chip', '13% · 2022']);
+    expect(mappa().queryByRole('dialog', { name: 'Francia' })).toBeNull();
+  });
+
+  it('Invio su un Paese apre il fumetto e gli dà il focus; Esc lo chiude e riporta il focus al Paese', async () => {
+    show();
+    const usa = mondo().getByRole('button', { name: /^USA:/ });
+    usa.focus();
+    await fireEvent.keyDown(usa, { key: 'Enter' });
+    const fumetto = mappa().getByRole('dialog', { name: 'USA' });
+    await waitFor(() => expect(fumetto).toHaveFocus());
+    await fireEvent.keyDown(fumetto, { key: 'Escape' });
+    expect(mappa().queryByRole('dialog')).toBeNull();
+    expect(usa).toHaveFocus();
+  });
+
+  it('il pulsante Chiudi chiude il fumetto', async () => {
+    show();
+    await fireEvent.click(mondo().getByRole('button', { name: /^USA:/ }));
+    await fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' }));
+    expect(mappa().queryByRole('dialog')).toBeNull();
+  });
+
+  it('sotto la mappa, in ogni anello, la nota sui modelli italiani e quella sul censimento GPU clusters', () => {
+    for (const anello of ['modelli', 'fabbricazione', 'datacenter']) {
+      show(data, { anello });
+      expect(mappa().getByText('Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.')).toBeInTheDocument();
+      expect(mappa().getByText('Fuori dai dati della mappa: il censimento GPU clusters di Epoch conta in Italia 9 cluster, tra cui Leonardo al CINECA ed Eni HPC6 (dato di marzo 2026).')).toBeInTheDocument();
+      cleanup();
+    }
+  });
+});

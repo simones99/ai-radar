@@ -1,13 +1,16 @@
 <script lang="ts">
   // «Chi controlla la catena dell'AI»: la linea dei sei anelli, la mappa del mondo colorata per l'anello aperto con l'Europa
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
+  // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
+  import { tick } from 'svelte';
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai } from '../data/types';
   import {
-    ANELLI, anelloDi, attivi, CENTRO, EUROPA as EUR, materialeDi, materialiDi, NOMI, PAESI, paesiZona, VIEWBOX, vista, zonaDi, type AnelloKey,
+    ANELLI, anelloDi, attivi, CENTRO, EUROPA as EUR, fumetto, materialeDi, materialiDi, NOMI, PAESI, paesiZona, VIEWBOX, vista, zonaDi,
+    type AnelloKey, type Paese,
   } from '../geo/mappa';
   import { imposta } from '../router';
-  import { NOTA_ITALIA } from '../text/geopoliticai';
+  import { NOTA_GPU, NOTA_ITALIA } from '../text/geopoliticai';
 
   let { g, catena, zona, anello: param, materiale: paramMateriale, onscegli }: {
     g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; onscegli: (k: string) => void;
@@ -63,17 +66,33 @@
   const etItalia = pos(CENTRO.ITA[0] + 2, CENTRO.ITA[1] + 10, EUROPA);
   const ita = PAESI.find((p) => p.id === 'ITA');
 
+  // il fumetto si apre dal lato opposto del Paese rispetto al centro della mappa; i Paesi europei sono anche nel riquadro, a sinistra,
+  // e si aprono sempre a destra, così il fumetto non copre l'Europa
+  const aDestra = new Set([...europei.map((p) => p.id), ...PAESI.filter((p) => p.c[0] < vx + vw / 2).map((p) => p.id)]);
+  let aperto = $state<{ iso: string; lato: 'destra' | 'sinistra'; da: SVGPathElement } | null>(null);
+  let pannello = $state<HTMLElement>();
+  const anelliPaese = $derived(aperto ? fumetto(g, catena, aperto.iso) : []);
+  async function tocca(p: Paese, da: SVGPathElement) {
+    aperto = { iso: p.id, lato: aDestra.has(p.id) ? 'destra' : 'sinistra', da };
+    if (scelte[p.id]) onscegli(scelte[p.id]);
+    await tick();
+    pannello?.focus();
+  }
+  function chiudi() {
+    const da = aperto?.da;
+    aperto = null;
+    da?.focus();
+  }
+
   const cifre = $derived(v.tabellone(zona));
   const italiaAZero = $derived(!Object.keys(g.zone.italia?.calcolo ?? {}).length && !Object.keys(g.zone.italia?.eci ?? {}).length);
 </script>
 
-{#snippet paese(p: (typeof PAESI)[number])}
-  {#if scelte[p.id]}
-    <path d={p.d} fill={fill(p.id)} class="pz sc" class:ev={ev.has(p.id)} role="button" tabindex="-1" aria-label={nome(p.id)} aria-pressed={ev.has(p.id) ? 'true' : 'false'}
-      onclick={() => onscegli(scelte[p.id])} onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && onscegli(scelte[p.id])}><title>{nome(p.id)}</title></path>
-  {:else}
-    <path d={p.d} fill={fill(p.id)} class="pz" class:ev={ev.has(p.id)} aria-hidden="true"><title>{nome(p.id)}</title></path>
-  {/if}
+{#snippet paese(p: Paese)}
+  <!-- aria-pressed solo per i Paesi che sono una scelta di ?area=: quelli di «Altri» aprono solo il fumetto -->
+  <path d={p.d} fill={fill(p.id)} class="pz" class:ev={ev.has(p.id)} role="button" tabindex="-1" aria-label={nome(p.id)} aria-haspopup="dialog"
+    aria-pressed={scelte[p.id] ? (ev.has(p.id) ? 'true' : 'false') : undefined} onclick={(e) => tocca(p, e.currentTarget)}
+    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tocca(p, e.currentTarget); } }}><title>{nome(p.id)}</title></path>
 {/snippet}
 
 <Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note="Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese." table={v.tabella} cite={v.cite}>
@@ -137,6 +156,26 @@
         <span class="in-t" aria-hidden="true">Europa, ingrandita</span>
         <span class="et it" style:left={etItalia.left} style:top={etItalia.top} aria-hidden="true">Italia</span>
       </div>
+      {#if aperto}
+        <!-- sotto i 600 px non galleggia: è un pannello sotto le mappe -->
+        <div class="fumetto {aperto.lato}" role="dialog" aria-labelledby="geo-fumetto-t" tabindex="-1" bind:this={pannello}
+          onkeydown={(e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); chiudi(); } }}>
+          <div class="testa">
+            <h5 id="geo-fumetto-t">{NOMI[aperto.iso] ?? aperto.iso}</h5>
+            <button type="button" class="chiudi" onclick={chiudi}>Chiudi</button>
+          </div>
+          <dl>
+            {#each anelliPaese as a, i (a.key)}
+              <div style:--c="var(--k-{a.key})">
+                <dt>{i + 1}. {a.nome}</dt>
+                {#each a.voci as x, j (j)}
+                  <dd>{x.materiale ? `${x.materiale}: ` : ''}<b>{x.testo}</b>{#if x.data}<span class="data">{` · ${x.data}`}</span>{/if}</dd>
+                {/each}
+              </div>
+            {/each}
+          </dl>
+        </div>
+      {/if}
     </div>
 
     <dl class="tabellone">
@@ -150,12 +189,11 @@
         </div>
       {/each}
     </dl>
-    {#if italiaAZero || v.note.length}
-      <ul class="note">
-        {#each v.note as n (n)}<li>{n}</li>{/each}
-        {#if italiaAZero}<li>{NOTA_ITALIA}</li>{/if}
-      </ul>
-    {/if}
+    <ul class="note">
+      {#if italiaAZero}<li>{NOTA_ITALIA}</li>{/if}
+      <li>{NOTA_GPU}</li>
+      {#each v.note as n (n)}<li>{n}</li>{/each}
+    </ul>
   </div>
 </Block>
 
@@ -188,8 +226,8 @@
   svg { display: block; width: 100%; height: auto; }
   .mondo > svg { background: color-mix(in srgb, var(--bg) 70%, #9fc3d9); border-radius: var(--r-md); }
   .pz { stroke: var(--card); stroke-width: .4; }
-  .pz.sc { cursor: pointer; }
-  .pz.sc:hover { stroke: var(--fg); stroke-width: .8; }
+  .pz { cursor: pointer; }
+  .pz:hover { stroke: var(--fg); stroke-width: .8; }
   .unico { fill: url(#geo-tratteggio); pointer-events: none; }
   pattern line { stroke: var(--card); stroke-width: .7; }
   .bordo { fill: none; stroke: var(--fg); stroke-width: .7; pointer-events: none; }
@@ -205,10 +243,23 @@
   .europa .italia { stroke-width: 1; stroke-dasharray: 1.5 .8; }
   .in-t { position: absolute; left: 6px; top: 4px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; text-shadow: 0 0 3px var(--card), 0 0 2px var(--card); }
   .et.it { font-size: 11px; font-weight: 700; color: var(--accent); }
+  .fumetto { position: absolute; top: 8px; z-index: 2; width: min(340px, 44%); display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
+    background: var(--card); border: 1px solid var(--line-2); box-shadow: 0 6px 20px rgb(0 0 0 / .18); }
+  .fumetto.destra { right: 8px; }
+  .fumetto.sinistra { left: 8px; }
+  .fumetto .testa { display: flex; align-items: center; justify-content: space-between; gap: var(--s1); }
+  .fumetto h5 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 700; }
+  .chiudi { min-width: 44px; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
+  .fumetto dl { margin: 0; display: grid; gap: 6px; }
+  .fumetto dl > div { border-left: 4px solid var(--c); padding-left: 8px; }
+  .fumetto dd { display: block; font-size: 13px; line-height: 18px; }
+  .fumetto dd b { font-size: 13px; line-height: 18px; font-weight: 600; }
+  .fumetto .data { color: var(--fg-3); }
   @media (max-width: 599px) {
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */
     .europa { position: relative; left: auto !important; top: auto !important; width: auto !important; margin-top: var(--s1); }
     .in-t { font-size: 12px; }
+    .fumetto.destra, .fumetto.sinistra { position: relative; inset: auto; width: auto; margin-top: var(--s1); box-shadow: none; }
   }
   @media (max-width: 560px) {
     .linea { grid-template-columns: 36px minmax(0, 1fr) 36px; gap: 4px; padding-bottom: 20px; }

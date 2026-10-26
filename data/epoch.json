@@ -4080,7 +4080,7 @@
   {
    "anno": 2026,
    "area": "USA",
-   "n": 49
+   "n": 53
   },
   {
    "anno": 2026,
@@ -4157,10 +4157,24 @@
   {
    "anno": 2026,
    "aperti": 29,
-   "totale": 84
+   "totale": 88
   }
  ],
  "recenti": [
+  {
+   "m": "Muse Wonder Full",
+   "o": "Meta AI",
+   "d": "2026-10-12",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "Muse Wonder",
+   "o": "Meta AI",
+   "d": "2026-10-12",
+   "a": "USA",
+   "accesso": "API access"
+  },
   {
    "m": "Gemini 4 Argon",
    "o": "Google DeepMind",
@@ -4184,6 +4198,13 @@
   },
   {
    "m": "GPT-6 Sol",
+   "o": "OpenAI",
+   "d": "2026-09-22",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "GPT-6 Luna Decisions",
    "o": "OpenAI",
    "d": "2026-09-22",
    "a": "USA",
@@ -4223,32 +4244,11 @@
    "d": "2026-09-09",
    "a": "Cina",
    "accesso": "Open weights (unrestricted)"
-  },
-  {
-   "m": "GPT-Image-2.5 Sunburst",
-   "o": "OpenAI",
-   "d": "2026-09-08",
-   "a": "USA",
-   "accesso": "API access"
-  },
-  {
-   "m": "GPT-Image-2.5 Flare",
-   "o": "OpenAI",
-   "d": "2026-09-08",
-   "a": "USA",
-   "accesso": "API access"
-  },
-  {
-   "m": "ChatGPT Images 2.5",
-   "o": "OpenAI",
-   "d": "2026-09-08",
-   "a": "USA",
-   "accesso": "Hosted access (no API)"
   }
  ],
  "anno_in_corso": 2026,
  "fonte": "Epoch AI, Data on AI Models (CC BY 4.0)",
  "url": "https://epoch.ai/data/ai-models",
  "file": "https://epoch.ai/data/notable_ai_models.csv",
- "modelli": 1078
+ "modelli": 1082
 }

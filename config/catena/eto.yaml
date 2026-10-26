@@ -1,0 +1,52 @@
+# Gli anelli dei chip della mappa di GeopoliticAI, dal dataset ETO.
+#
+# Questo file NON è sotto licenza MIT come il resto del repository: i dati sono di ETO
+# (Emerging Technology Observatory, Georgetown CSET) e hanno licenza CC BY-NC 4.0.
+# Vedi LICENSE-ETO.md accanto e docs/adr/0001-dati-eto-in-cc-by-nc.md.
+# Chi riusa il repository per scopi commerciali deve togliere questo file o chiedere il permesso a ETO.
+#
+# Copia fatta a mano, perché i termini di ETO vietano lo scaricamento automatico.
+# File scaricati dal browser il 26 ottobre 2026 da https://github.com/georgetown-cset/eto-supply-chain
+# (data/provision.csv e data/stages.csv). Per aggiornare: riscaricarli a mano e ricopiare le righe qui sotto.
+#
+# Quote in % del mondo, per codice ADM0_A3. «europa» è il valore unico che ETO dà a «Europe» (EUR)
+# quando non divide i Paesi. Le righe «Various countries» di ETO restano fuori: sono «Tutti gli altri».
+
+anelli:
+  progettazione:
+    # provision.csv, provided_id S1 «Design», 2022. Fonte di ETO: SIA e WSTS. Quota delle aziende per sede della capogruppo.
+    misura: Quota del valore dei chip progettati, per sede dell'azienda
+    fonte: ETO
+    titolo: Advanced Semiconductor Supply Chain Dataset
+    url: https://eto.tech/dataset-docs/chipexplorer
+    licenza: CC BY-NC 4.0
+    url_licenza: https://creativecommons.org/licenses/by-nc/4.0/
+    data: "2022"
+    quote: {USA: 51, KOR: 13, JPN: 9, TWN: 8, CHN: 6}
+    europa: 10
+
+  fabbricazione:
+    # provision.csv, provided_id S2 «Fabrication», 2022. Fonte di ETO: SIA. Capacità per luogo dello stabilimento.
+    misura: Quota della capacità produttiva, per luogo dello stabilimento
+    fonte: ETO
+    titolo: Advanced Semiconductor Supply Chain Dataset
+    url: https://eto.tech/dataset-docs/chipexplorer
+    licenza: CC BY-NC 4.0
+    url_licenza: https://creativecommons.org/licenses/by-nc/4.0/
+    data: "2022"
+    quote: {CHN: 24, TWN: 18, JPN: 17, KOR: 17, USA: 10}
+    europa: 8
+
+  macchinari:
+    # provision.csv, provided_id N19 «Lithography tools», 2025. Fonte di ETO: CSET analysis of TechInsights data
+    # (pubblicati da TechInsights il 3 luglio 2026). I Paesi UE hanno ognuno il suo valore.
+    # La somma fa 100,1 per gli arrotondamenti della fonte. EUV: N20 «EUV lithography tools», NLD 100.
+    misura: Quota del mercato delle macchine di litografia, per sede dell'azienda
+    fonte: ETO
+    titolo: Advanced Semiconductor Supply Chain Dataset
+    url: https://eto.tech/dataset-docs/chipexplorer
+    licenza: CC BY-NC 4.0
+    url_licenza: https://creativecommons.org/licenses/by-nc/4.0/
+    data: "2025"
+    quote: {NLD: 81.5, JPN: 15, AUT: 1.6, DEU: 0.6, USA: 0.6, SWE: 0.4, CHN: 0.2, KOR: 0.2}
+    nota: Le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML nei Paesi Bassi.

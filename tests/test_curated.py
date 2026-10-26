@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from pipeline import ai_act, rapporti
+from pipeline import ai_act, catena, rapporti
 
 GOOD_ACT = {"scadenze": [
     {"data": date(2026, 12, 2), "titolo": "B", "descrizione": "d", "fonte": "https://eur-lex.europa.eu/x"},
@@ -70,12 +70,59 @@ def test_rapporti_allows_no_next_edition():
     assert rapporti.validate(doc)[0]["prossima_prevista"] is None
 
 
+ANELLO_ETO = {
+    "misura": "Quota del valore dei chip progettati", "fonte": "ETO", "titolo": "Supply Chain Dataset", "url": "https://eto.tech/x",
+    "licenza": "CC BY-NC 4.0", "url_licenza": "https://creativecommons.org/licenses/by-nc/4.0/", "data": 2022,
+    "quote": {"USA": 51, "KOR": 13}, "europa": 10,
+}
+
+
+def test_catena_valid():
+    out = catena.validate({"anelli": {"progettazione": ANELLO_ETO, "macchinari": {**ANELLO_ETO, "europa": None, "nota": "EUV"}}})
+    assert out["progettazione"] == {**ANELLO_ETO, "data": "2022"}
+    assert out["macchinari"]["europa"] is None and out["macchinari"]["nota"] == "EUV"
+
+
+def test_catena_tollera_gli_arrotondamenti_della_fonte():
+    # la litografia di ETO somma a 100,1
+    out = catena.validate({"anelli": {"macchinari": {**ANELLO_ETO, "europa": None, "quote": {"NLD": 81.5, "JPN": 15, "AUT": 1.6, "DEU": 2.0}}}})
+    assert sum(out["macchinari"]["quote"].values()) == pytest.approx(100.1)
+
+
+@pytest.mark.parametrize("anelli, msg", [
+    ({"energia": ANELLO_ETO}, "anello sconosciuto: energia"),
+    ({"datacenter": ANELLO_ETO}, "anello sconosciuto: datacenter"),  # viene dalla pipeline, non da un file curato
+    ({"progettazione": {**ANELLO_ETO, "quote": {"USA": 101}}}, "USA: quota fuori da 0-100"),
+    ({"progettazione": {**ANELLO_ETO, "quote": {"USA": -1}}}, "USA: quota fuori da 0-100"),
+    ({"progettazione": {**ANELLO_ETO, "europa": 120}}, "europa: quota fuori da 0-100"),
+    ({"progettazione": {**ANELLO_ETO, "quote": {"USA": 60, "KOR": 31}}}, "somma delle quote sopra 100"),  # con l'Europa al 10
+    ({"progettazione": {**ANELLO_ETO, "url": "http://eto.tech"}}, "url"),
+    ({"progettazione": {**ANELLO_ETO, "fonte": " "}}, "fonte"),
+    ({"progettazione": {**ANELLO_ETO, "titolo": None}}, "titolo"),
+])
+def test_catena_rejects(anelli, msg):
+    with pytest.raises(ValueError, match=msg):
+        catena.validate({"anelli": anelli})
+
+
 def test_shipped_files_are_valid(tmp_path, monkeypatch):
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
     assert ai_act.run()["scadenze"] >= 5
     assert rapporti.run()["rapporti"] >= 4
     assert json.loads((tmp_path / "ai_act.json").read_text())["scadenze"]
     assert json.loads((tmp_path / "rapporti.json").read_text())["rapporti"]
+
+
+def test_shipped_catena_is_valid(tmp_path, monkeypatch):
+    monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
+    assert catena.run() == {"anelli": 3}
+    anelli = json.loads((tmp_path / "catena.json").read_text(encoding="utf-8"))["anelli"]
+    assert {k: a["data"] for k, a in anelli.items()} == {"progettazione": "2022", "fabbricazione": "2022", "macchinari": "2025"}
+    assert anelli["progettazione"]["europa"] and anelli["fabbricazione"]["europa"] and anelli["macchinari"]["europa"] is None
+    assert "EUV" in anelli["macchinari"]["nota"]
+    assert all(a["licenza"] == "CC BY-NC 4.0" for a in anelli.values())
+    # la licenza di ETO sta accanto al file (ADR 0001)
+    assert "Attribution-NonCommercial 4.0" in (ROOT / "config" / "catena" / "LICENSE-ETO.md").read_text(encoding="utf-8")
 
 
 # ---- i confini della mappa di GeopoliticAI, generati una volta da scripts/confini.py ----

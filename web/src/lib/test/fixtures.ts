@@ -27,7 +27,7 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     aggiornato: '2026-10-15T08:00:00+00:00',
     fonti: {
       epoch: ok, arxiv: { stato: 'errore', ultimo_successo: '2026-10-08T08:00:00+00:00', ultimo_tentativo: '2026-10-15T08:00:00+00:00', messaggio: '500' },
-      github: ok, huggingface: ok, eurostat: ok, eurostat_settori: ok, geopoliticai: ok, owid: ok, ai_act: ok, rapporti: ok, feeds: ok, radar: ok,
+      github: ok, huggingface: ok, eurostat: ok, eurostat_settori: ok, geopoliticai: ok, owid: ok, ai_act: ok, rapporti: ok, catena: ok, feeds: ok, radar: ok,
       adzuna: { stato: 'non configurata', messaggio: 'ADZUNA_APP_ID/ADZUNA_APP_KEY non impostati' },
       artificial_analysis: { stato: 'non configurata', messaggio: 'AA_API_KEY non impostata' },
     },
@@ -226,5 +226,20 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     senza_paese: { large: ['Poro 34B'], eci: ['Qwen2.5-Coder-14B', 'PaLM 2-L', 'internlm-20b'] },
     altri_paesi: { 'South Korea': 22, Canada: 7, 'United Arab Emirates': 7 },
     eci_paesi: { anno: 2025, valori: { USA: { max: 156.33, modello: 'GPT-5.2 Pro' }, CHN: { max: 146.09, modello: 'DeepSeek-V3.2' }, FRA: { max: 134.02, modello: 'Mistral Medium 3' } } },
+  },
+  // gli anelli dei file curati: quote arrotondate dalla ricerca sulle fonti della mappa, solo i Paesi dei test
+  catena: {
+    anelli: {
+      progettazione: { misura: 'Quota del valore dei chip progettati, per sede dell’azienda', fonte: 'ETO', titolo: 'Advanced Semiconductor Supply Chain Dataset',
+        url: 'https://eto.tech/dataset-docs/chipexplorer', licenza: 'CC BY-NC 4.0', url_licenza: 'https://creativecommons.org/licenses/by-nc/4.0/', data: '2022',
+        quote: { USA: 51, KOR: 13, JPN: 9, TWN: 8, CHN: 6 }, europa: 10 },
+      fabbricazione: { misura: 'Quota della capacità produttiva, per luogo dello stabilimento', fonte: 'ETO', titolo: 'Advanced Semiconductor Supply Chain Dataset',
+        url: 'https://eto.tech/dataset-docs/chipexplorer', licenza: 'CC BY-NC 4.0', url_licenza: 'https://creativecommons.org/licenses/by-nc/4.0/', data: '2022',
+        quote: { CHN: 24, TWN: 18, JPN: 17, KOR: 17, USA: 10 }, europa: 8 },
+      macchinari: { misura: 'Quota del mercato delle macchine di litografia', fonte: 'ETO', titolo: 'Advanced Semiconductor Supply Chain Dataset',
+        url: 'https://eto.tech/dataset-docs/chipexplorer', licenza: 'CC BY-NC 4.0', url_licenza: 'https://creativecommons.org/licenses/by-nc/4.0/', data: '2025',
+        quote: { NLD: 81.5, JPN: 15, AUT: 1.6 }, europa: null,
+        nota: 'Le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML nei Paesi Bassi.' },
+    },
   },
 };

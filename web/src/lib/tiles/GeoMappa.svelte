@@ -1,20 +1,20 @@
 <script lang="ts">
   // «Chi controlla la catena dell'AI»: la linea dei sei anelli, la mappa del mondo colorata per l'anello aperto con l'Europa
-  // ingrandita, il tabellone e la tabella. Per ora c'è solo l'anello dei modelli: l'ECI massimo per Paese dell'ultimo anno chiuso.
+  // ingrandita, il tabellone e la tabella. Ci sono i tre anelli dei chip, dai file curati di ETO, e quello dei modelli.
   import Block from '../charts/Block.svelte';
-  import type { Geopoliticai } from '../data/types';
-  import {
-    ANELLI, ATTIVI, anelloDi, CENTRO, citeModelli, misuraModelli, NOMI, PAESI, paesiZona, tabellaModelli, tabellone, testoPaese,
-    valoriModelli, VIEWBOX, zonaDi, type AnelloKey,
-  } from '../geo/mappa';
+  import type { Catena, Geopoliticai } from '../data/types';
+  import { ANELLI, anelloDi, attivi, CENTRO, EUROPA as EUR, NOMI, PAESI, paesiZona, VIEWBOX, vista, zonaDi, type AnelloKey } from '../geo/mappa';
   import { imposta } from '../router';
-  import { eci, NOTA_ITALIA } from '../text/geopoliticai';
+  import { NOTA_ITALIA } from '../text/geopoliticai';
 
-  let { g, zona, anello: param, onscegli }: { g: Geopoliticai; zona: string; anello: string | undefined; onscegli: (k: string) => void } = $props();
+  let { g, catena, zona, anello: param, onscegli }: {
+    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; onscegli: (k: string) => void;
+  } = $props();
 
-  const anello = $derived(anelloDi(param));
+  const ok = $derived(attivi(catena));
+  const anello = $derived(anelloDi(param, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
-  const attivo = (k: AnelloKey) => ATTIVI.includes(k);
+  const attivo = (k: AnelloKey) => ok.includes(k);
   /** La fermata attiva più vicina in quella direzione, se c'è. */
   const vicino = (d: number): AnelloKey | null => {
     for (let i = idx + d; i >= 0 && i < ANELLI.length; i += d) if (attivo(ANELLI[i].key)) return ANELLI[i].key;
@@ -24,27 +24,31 @@
   const dopo = $derived(vicino(1));
   const vai = (k: AnelloKey | null) => k && imposta('anello', k);
 
-  const valori = $derived(valoriModelli(g));
+  const v = $derived(vista(g, catena, anello));
   const ev = $derived(paesiZona(g, zona));
   const scelte = $derived(zonaDi(g));
-  // il colore: dal valore più basso (appena sopra il grigio) al più alto
-  const [lo, hi] = $derived(valori.length ? [valori[valori.length - 1][1] - 10, valori[0][1]] : [0, 1]);
+  /** I Paesi UE che prendono il valore unico dell'Europa, tratteggiati. */
+  const unico = $derived(new Set(v.europa != null ? g.zone.ue?.paesi_mappa ?? [] : []));
+  const quote = $derived(Object.fromEntries(v.valori));
+  // il colore: dal valore più basso della scala (appena sopra il grigio) al più alto
   function fill(iso: string): string {
-    const v = g.eci_paesi.valori[iso]?.max;
-    if (v == null) return 'var(--line)';
-    return `color-mix(in srgb, var(--c) ${Math.round(25 + (75 * (v - lo)) / (hi - lo || 1))}%, var(--card))`;
+    const x = unico.has(iso) ? v.europa : quote[iso];
+    if (x == null) return 'var(--line)';
+    const [lo, hi] = v.scala;
+    return `color-mix(in srgb, var(--c) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
   }
-  const nome = (iso: string) => `${NOMI[iso] ?? iso}: ${testoPaese(g, iso)}`;
+  const nome = (iso: string) => `${NOMI[iso] ?? iso}: ${v.testo(iso)}`;
 
   const [vx, vy, vw, vh] = VIEWBOX.split(' ').map(Number);
   /** La posizione di un punto della mappa, in percentuale del riquadro che la contiene. */
   const pos = (x: number, y: number, b = { x: vx, y: vy, w: vw, h: vh }) => ({ left: `${((x - b.x) / b.w) * 100}%`, top: `${((y - b.y) / b.h) * 100}%` });
   // dove i Paesi sono piccoli o affollati l'etichetta si sposta: [dx, dy]
   const SPOSTA: Record<string, [number, number]> = { FRA: [-30, 4], GBR: [-30, -6], DEU: [6, -10], KOR: [14, -2], JPN: [18, 4], TWN: [14, 6], ISR: [-12, 6], ARE: [10, 8] };
-  const etichette = $derived(valori.slice(0, 5).map(([iso, v], i) => {
-    const [x, y] = CENTRO[iso] ?? [vx + vw / 2, 0];
+  // l'Europa del dato unico ha la sua etichetta sulla Germania
+  const etichette = $derived([...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([iso, x]) => {
+    const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
     const [dx, dy] = SPOSTA[iso] ?? [0, 0];
-    return { iso, nome: NOMI[iso] ?? iso, testo: eci(v), primo: i === 0, ...pos(x + dx, y + dy) };
+    return { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
   }));
 
   // il riquadro dell'Europa, nell'oceano Pacifico del sud; sotto i 600 px diventa una seconda mappa sotto quella del mondo
@@ -55,7 +59,7 @@
   const etItalia = pos(CENTRO.ITA[0] + 2, CENTRO.ITA[1] + 10, EUROPA);
   const ita = PAESI.find((p) => p.id === 'ITA');
 
-  const cifre = $derived(tabellone(g, zona));
+  const cifre = $derived(v.tabellone(zona));
   const italiaAZero = $derived(!Object.keys(g.zone.italia?.calcolo ?? {}).length && !Object.keys(g.zone.italia?.eci ?? {}).length);
 </script>
 
@@ -68,7 +72,7 @@
   {/if}
 {/snippet}
 
-<Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note="Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese." table={tabellaModelli(g)} cite={citeModelli(g)}>
+<Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note="Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese." table={v.tabella} cite={v.cite}>
   <div class="anello" style:--c="var(--k-{anello})">
     <nav class="linea" aria-label="Gli anelli della catena dell'AI">
       <button type="button" class="fr" disabled={!prima} onclick={() => vai(prima)} aria-label="Anello precedente">←</button>
@@ -87,13 +91,17 @@
 
     <div class="titolo">
       <h4>{idx + 1}. {ANELLI[idx].nome}</h4>
-      <span>{misuraModelli(g)}</span>
+      <span>{v.misura}</span>
     </div>
 
     <div class="cornice">
       <div class="mondo">
-        <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {misuraModelli(g).split(' · ')[0]}">
+        <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {v.misura.split(' · ')[0]}">
+          <defs>
+            <pattern id="geo-tratteggio" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2" /></pattern>
+          </defs>
           {#each PAESI as p (p.id)}{@render paese(p)}{/each}
+          {#each PAESI.filter((p) => unico.has(p.id)) as p (p.id)}<path d={p.d} class="unico" />{/each}
           {#each PAESI.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
         </svg>
@@ -111,6 +119,7 @@
       <div class="europa" style:left={posEuropa.left} style:top={posEuropa.top} style:width={posEuropa.width}>
         <svg viewBox="{EUROPA.x} {EUROPA.y} {EUROPA.w} {EUROPA.h}" role="group" aria-label="Europa, ingrandita">
           {#each europei as p (p.id)}{@render paese(p)}{/each}
+          {#each europei.filter((p) => unico.has(p.id)) as p (p.id)}<path d={p.d} class="unico" />{/each}
           {#each europei.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
         </svg>
@@ -125,12 +134,17 @@
           <dt>{c.etichetta}</dt>
           <dd>
             {#if c.vuoto}<span class="vuoto">{c.vuoto}</span>
-            {:else}{#if c.nome}<b>{c.nome}</b>{' '}{/if}<strong>{c.valore}</strong>{' '}<span class="mod">{c.modello}</span>{/if}
+            {:else}{#if c.nome}<b>{c.nome}</b>{' '}{/if}<strong>{c.valore}</strong>{#if c.dettaglio}{' '}<span class="mod">{c.dettaglio}</span>{/if}{/if}
           </dd>
         </div>
       {/each}
     </dl>
-    {#if italiaAZero}<ul class="note"><li>{NOTA_ITALIA}</li></ul>{/if}
+    {#if italiaAZero || v.note.length}
+      <ul class="note">
+        {#each v.note as n (n)}<li>{n}</li>{/each}
+        {#if italiaAZero}<li>{NOTA_ITALIA}</li>{/if}
+      </ul>
+    {/if}
   </div>
 </Block>
 
@@ -162,6 +176,8 @@
   .pz { stroke: var(--card); stroke-width: .4; }
   .pz.sc { cursor: pointer; }
   .pz.sc:hover { stroke: var(--fg); stroke-width: .8; }
+  .unico { fill: url(#geo-tratteggio); pointer-events: none; }
+  pattern line { stroke: var(--card); stroke-width: .7; }
   .bordo { fill: none; stroke: var(--fg); stroke-width: .7; pointer-events: none; }
   .italia { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 2 1; pointer-events: none; }
   .et { position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: baseline; gap: 4px; white-space: nowrap; pointer-events: none;

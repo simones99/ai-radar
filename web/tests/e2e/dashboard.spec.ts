@@ -338,7 +338,7 @@ test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette n
   await page.goto('/#geopoliticai?anello=modelli');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
   await expect(mappa(page).getByRole('button', { name: 'Materie prime (in arrivo)' })).toBeDisabled();
-  await page.goto('/#geopoliticai?anello=fabbricazione'); // non ancora attivo: si aprono i modelli
+  await page.goto('/#geopoliticai?anello=datacenter'); // non ancora attivo: si aprono i modelli
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
   await page.goto('/#geopoliticai');
   await mappa(page).getByRole('button', { name: '6 Modelli', exact: true }).click();
@@ -348,6 +348,18 @@ test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette n
   await page.goto('/#geopoliticai');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
   await expect(page).toHaveURL(/#geopoliticai$/);
+});
+
+test('mappa: ?anello=fabbricazione apre l’anello dei chip, e un clic su una fermata aggiorna il link', async ({ page }) => {
+  await page.goto('/#geopoliticai?anello=fabbricazione');
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('3. Fabbricazione dei chip');
+  await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: Europa, dato unico, 8%');
+  await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?anello=macchinari$/);
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('4. Macchinari');
+  await expect(mappa(page).getByText(/Le macchine EUV/)).toBeVisible();
+  await mappa(page).getByRole('button', { name: 'Anello precedente' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?anello=fabbricazione$/);
 });
 
 test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la evidenzia', async ({ page }) => {

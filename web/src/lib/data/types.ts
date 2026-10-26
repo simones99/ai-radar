@@ -194,6 +194,21 @@ export interface Geopoliticai {
   eci_paesi: { anno: number; valori: Record<string, GeoEciPaese> };
 }
 
+/** Un anello della catena da un file curato: la quota per Paese (codice ADM0_A3), e il valore unico «europa» dove la fonte non divide i Paesi. */
+export interface CatenaAnello {
+  misura: string;
+  fonte: string;
+  titolo: string;
+  url: string;
+  licenza: string;
+  url_licenza: string;
+  data: string;
+  quote: Record<string, number>;
+  europa: number | null;
+  nota?: string;
+}
+export interface Catena { anelli: Partial<Record<'progettazione' | 'fabbricazione' | 'macchinari', CatenaAnello>> }
+
 export interface Dataset {
   status?: Status;
   radar?: Radar;
@@ -210,4 +225,5 @@ export interface Dataset {
   eurostat?: Eurostat;
   eurostat_settori?: EurostatSettori;
   geopoliticai?: Geopoliticai;
+  catena?: Catena;
 }

@@ -396,20 +396,27 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
   /** Il valore del tabellone sotto un'etichetta. */
   const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
 
-  it('sei fermate: solo quella dei modelli è attiva, le altre sono disabilitate e lo dicono', () => {
+  const linea = () => within(mappa().getByRole('navigation', { name: "Gli anelli della catena dell'AI" }));
+  const fermate = () => linea().getAllByRole('listitem').map((li) => within(li).getByRole('button'));
+
+  it('sei fermate: i chip e i modelli sono attivi, le altre sono disabilitate e lo dicono', () => {
     show();
-    const linea = within(mappa().getByRole('navigation', { name: "Gli anelli della catena dell'AI" }));
-    const fermate = linea.getAllByRole('listitem').map((li) => within(li).getByRole('button'));
-    expect(fermate.map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
-      '1 Materie prime (in arrivo)', '2 Progettazione dei chip (in arrivo)', '3 Fabbricazione dei chip (in arrivo)',
-      '4 Macchinari (in arrivo)', '5 Data center (in arrivo)', '6 Modelli',
+    expect(fermate().map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
+      '1 Materie prime (in arrivo)', '2 Progettazione dei chip', '3 Fabbricazione dei chip',
+      '4 Macchinari', '5 Data center (in arrivo)', '6 Modelli',
     ]);
-    expect(fermate.slice(0, 5).every((b) => (b as HTMLButtonElement).disabled)).toBe(true);
-    expect(fermate[5]).toBeEnabled();
-    expect(fermate[5]).toHaveAttribute('aria-current', 'step');
-    // con un anello solo attivo, le frecce non portano da nessuna parte
-    expect(linea.getByRole('button', { name: 'Anello precedente' })).toBeDisabled();
-    expect(linea.getByRole('button', { name: 'Anello successivo' })).toBeDisabled();
+    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([true, false, false, false, true, false]);
+    expect(fermate()[5]).toHaveAttribute('aria-current', 'step');
+    // dai modelli si torna indietro, saltando i data center che non ci sono ancora
+    expect(linea().getByRole('button', { name: 'Anello precedente' })).toBeEnabled();
+    expect(linea().getByRole('button', { name: 'Anello successivo' })).toBeDisabled();
+  });
+
+  it('senza il file della catena i chip restano disabilitati', () => {
+    const { catena: _, ...senza } = data;
+    show(senza, { anello: 'fabbricazione' });
+    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
+    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([true, true, true, true, true, false]);
   });
 
   it('il titolo dell’anello ha numero, nome, misura, fonte e data', () => {
@@ -487,5 +494,76 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
     const fonte = mappa().getByText(/^Modelli: Epoch AI/);
     expect(fonte).toHaveTextContent("Modelli: Epoch AI, Epoch Capabilities Index (CC BY 4.0), ECI massimo per Paese aggregato da AI Radar. Confini: Natural Earth, pubblico dominio.");
     expect(within(fonte).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
+  });
+});
+
+describe('GeopoliticAI: gli anelli dei chip', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
+  const anello = (anello: string, extra: Record<string, string> = {}) => show(data, { anello, ...extra });
+
+  it('?anello= apre progettazione, fabbricazione e macchinari, con misura, fonte e data', () => {
+    anello('progettazione');
+    expect(mappa().getByRole('heading', { level: 4, name: '2. Progettazione dei chip' })).toBeInTheDocument();
+    expect(mappa().getByText('Quota del valore dei chip progettati, per sede dell’azienda · ETO, dati del 2022')).toBeInTheDocument();
+    cleanup();
+    anello('macchinari');
+    expect(mappa().getByRole('heading', { level: 4, name: '4. Macchinari' })).toBeInTheDocument();
+    expect(mappa().getByText('Quota del mercato delle macchine di litografia · ETO, dati del 2025')).toBeInTheDocument();
+  });
+
+  it('progettazione e fabbricazione: i Paesi UE con lo stesso valore, «Europa, dato unico», e la nota', () => {
+    anello('fabbricazione');
+    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+    expect(europa.getByRole('button', { name: 'Italia: Europa, dato unico, 8%' })).toBeInTheDocument();
+    expect(europa.getByRole('button', { name: 'Francia: Europa, dato unico, 8%' })).toBeInTheDocument();
+    expect(cifra('UE')).toHaveTextContent(/^8% Europa, dato unico$/);
+    expect(cifra('Italia')).toHaveTextContent(/^8% Europa, dato unico$/);
+    expect(mappa().getByText(/^Europa, dato unico: la fonte dà 8% per l'Europa intera/)).toBeInTheDocument();
+    expect(mappa().queryByText(/EUV/)).toBeNull();
+  });
+
+  it('macchinari: ogni Paese UE ha il suo valore, l’UE è la loro somma, e c’è la nota EUV', () => {
+    anello('macchinari');
+    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+    expect(europa.getByRole('button', { name: 'Italia: nessuna produzione' })).toBeInTheDocument();
+    expect(cifra('Il primo')).toHaveTextContent(/^Paesi Bassi 81,5%$/);
+    expect(cifra('UE')).toHaveTextContent(/^83,1%$/);
+    expect(cifra('Italia')).toHaveTextContent(/^nessuna produzione$/);
+    expect(mappa().getByText('Le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML nei Paesi Bassi.')).toBeInTheDocument();
+    expect(mappa().queryByText(/dato unico/)).toBeNull();
+  });
+
+  it('il tabellone con l’area scelta, e le frasi oneste dove la fonte non ha il Paese', () => {
+    anello('fabbricazione', { area: 'uk' });
+    expect(cifra('Il primo')).toHaveTextContent(/^Cina 24%$/);
+    expect(cifra('Regno Unito')).toHaveTextContent(/^nessuno stabilimento$/);
+    cleanup();
+    anello('progettazione', { area: 'altri' });
+    expect(cifra('Altri')).toHaveTextContent(/^30%$/); // Corea, Giappone e Taiwan
+  });
+
+  it('la tabella dei Paesi dell’anello, con la riga dell’Europa al suo posto', () => {
+    anello('progettazione');
+    const tabella = within(mappa().getByRole('table'));
+    expect(tabella.getAllByRole('row').slice(1).map((r) => [...r.children].map((c) => c.textContent))).toEqual([
+      ['USA', '51%', '2022'], ['Corea del Sud', '13%', '2022'], ['Europa, dato unico', '10%', '2022'],
+      ['Giappone', '9%', '2022'], ['Taiwan', '8%', '2022'], ['Cina', '6%', '2022'],
+    ]);
+  });
+
+  it('sulla mappa i numeri dei primi, con l’Europa tra loro e il segnalino sul primo Paese', () => {
+    anello('progettazione');
+    const etichette = mappa().getAllByTestId('etichetta').map((e) => e.textContent?.replace(/\s+/g, ' ').trim());
+    expect(etichette).toEqual(['USA 51%', 'Corea del Sud 13%', 'Europa 10%', 'Giappone 9%', 'Taiwan 8%']);
+    expect(mappa().getByTestId('segnalino')).toHaveAccessibleName('Il primo: USA');
+  });
+
+  it('sotto la mappa l’attribuzione di ETO, con la CC BY-NC e il divieto di uso commerciale', () => {
+    anello('macchinari');
+    const fonte = mappa().getByText(/^Macchinari: ETO/);
+    expect(fonte).toHaveTextContent('Macchinari: ETO, Advanced Semiconductor Supply Chain Dataset (CC BY-NC 4.0, uso commerciale non consentito), dati del 2025, quote rielaborate da AI Radar. Confini: Natural Earth, pubblico dominio.');
+    expect(within(fonte).getByRole('link', { name: 'CC BY-NC 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nc/4.0/');
+    expect(within(fonte).getByRole('link', { name: 'Advanced Semiconductor Supply Chain Dataset' })).toHaveAttribute('href', 'https://eto.tech/dataset-docs/chipexplorer');
   });
 });

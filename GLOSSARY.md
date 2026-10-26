@@ -37,7 +37,7 @@ Uno dei blocchi in cui si confrontano i modelli nazionali e si riassume la mappa
 _Avoid_: regione, blocco, zona
 
 **Anello**:
-Una delle tappe della catena dell'AI su cui la mappa confronta i Paesi: le materie prime, la progettazione, la fabbricazione e i macchinari dei chip, i data center e i modelli. Ogni anello ha la sua misura, e gli anelli non si sommano.
+Uno dei passaggi della catena dell'AI su cui la mappa confronta i Paesi: le materie prime, la progettazione, la fabbricazione e i macchinari dei chip, i data center e i modelli. Ogni anello ha la sua misura, e gli anelli non si sommano.
 _Avoid_: risorsa, fase, livello, layer
 
 **H100 equivalente**:
@@ -47,6 +47,10 @@ _Avoid_: GPU, chip, potenza installata
 **Sito**:
 Un data center che Epoch conta in *AI data centers*, con i suoi H100 equivalenti attuali e uno stato, operativo o in costruzione. Un cluster del censimento *GPU clusters*, come Leonardo al CINECA, non è un sito.
 _Avoid_: cluster, impianto, struttura, campus
+
+**Filo della catena**:
+Un esempio di percorso, scelto da noi, che segue un modello attraverso i sei anelli: per ogni anello una tappa, cioè un luogo con la frase e la fonte che lo sostengono. Non è un dato e non misura niente: le quote per Paese sono l'altra vista della mappa.
+_Avoid_: flusso, percorso reale, supply chain
 
 **Calcolo di addestramento**:
 La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli. È noto solo per una parte dei modelli: quando l'organizzazione non lo pubblica, è una stima di Epoch.

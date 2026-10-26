@@ -454,6 +454,23 @@ test('mappa a 320px: il riquadro dell’Europa sta sotto la mappa, l’Italia si
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=modelli&siti=1 no', async ({ page }) => {
+  const cerchi = () => mappa(page).getByRole('button', { name: /: (.+ H100 equivalenti|in costruzione)$/ });
+  await page.goto('/#geopoliticai?anello=datacenter');
+  await expect(cerchi()).toHaveCount(0);
+  await mappa(page).getByRole('button', { name: 'Siti' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?anello=datacenter&siti=1$/);
+  await expect(mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByRole('button', { name: /^Colossus 2:/ })).toBeVisible();
+  await europa(page).getByRole('button', { name: /^Google Waltham Cross:/ }).click();
+  await expect(mappa(page).getByRole('dialog', { name: 'Google Waltham Cross' })).toBeFocused();
+  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  await page.goto('about:blank'); // a card aperta un hash nuovo tiene i parametri: si riparte
+  await page.goto('/#geopoliticai?anello=modelli&siti=1');
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
+  await expect(cerchi()).toHaveCount(0);
+  await expect(mappa(page).getByRole('button', { name: 'Siti' })).toHaveCount(0);
+});
+
 test('mappa in tema scuro: nessuna violazione grave', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/#geopoliticai?area=cina');

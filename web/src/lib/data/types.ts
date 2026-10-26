@@ -195,8 +195,14 @@ export interface Geopoliticai {
   /** L'anello dei data center, da «AI data centers» di Epoch; manca nei file scritti prima del ticket 19. */
   data_center?: GeoDataCenter;
 }
-/** Un data center di Epoch: «operativo» se ha H100 equivalenti attuali, altrimenti «in costruzione». */
-export interface GeoSito { nome: string; proprietario: string | null; iso: string | null; h100e: number; mw: number; stato: 'operativo' | 'in costruzione' }
+/**
+ * Un data center di Epoch: «operativo» se ha H100 equivalenti attuali, altrimenti «in costruzione». La posizione viene dalla
+ * mappa di Epoch o, «indirizzo», da Nominatim; manca per un sito senza posizione e nei file scritti prima del ticket 21.
+ */
+export interface GeoSito {
+  nome: string; proprietario: string | null; iso: string | null; h100e: number; mw: number; stato: 'operativo' | 'in costruzione';
+  lat?: number | null; lon?: number | null; posizione?: 'epoch' | 'indirizzo' | null;
+}
 /** La quota per Paese (ADM0_A3) degli H100 equivalenti dei siti noti, e i siti. */
 export interface GeoDataCenter { aggiornato: string; quote: Record<string, number>; siti: GeoSito[] }
 

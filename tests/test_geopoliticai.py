@@ -1,7 +1,9 @@
 """Passo geopoliticai con i CSV veri di Epoch, registrati il 23 ottobre 2026 (nessuna chiamata di rete).
 
 Dei file restano solo le colonne che il passo legge: tests/fixtures/epoch_large_scale.csv, epoch_eci.csv ed
-epoch_data_centers.csv (Epoch AI, «AI data centers», CC BY 4.0, registrato il 26 ottobre 2026).
+epoch_data_centers.csv (Epoch AI, «AI data centers», CC BY 4.0, registrato il 26 ottobre 2026). Della pagina della
+mappa di Epoch, epoch_mappa_data_center.html, registrata lo stesso giorno, restano l'isola di Astro con i siti, solo
+con `id` e `lngLat`, e un'altra isola da ignorare.
 """
 from __future__ import annotations
 
@@ -9,6 +11,7 @@ import csv
 import io
 import json
 import logging
+import re
 from datetime import date
 from pathlib import Path
 
@@ -20,6 +23,7 @@ FIX = Path(__file__).parent / "fixtures"
 LARGE = (FIX / "epoch_large_scale.csv").read_text(encoding="utf-8")
 ECI = (FIX / "epoch_eci.csv").read_text(encoding="utf-8")
 DC = (FIX / "epoch_data_centers.csv").read_text(encoding="utf-8")
+MAPPA = (FIX / "epoch_mappa_data_center.html").read_text(encoding="utf-8")
 TODAY = date(2026, 10, 23)
 
 
@@ -31,13 +35,26 @@ class Resp:
         if self.status_code >= 400:
             raise RuntimeError(f"HTTP {self.status_code}")
 
+    def json(self):
+        return json.loads(self.text)
+
 
 class Session:
-    def __init__(self, large=LARGE, eci=ECI, dc=DC, status=200, status_dc=200):
-        self.large, self.eci, self.dc, self.status, self.status_dc, self.calls = large, eci, dc, status, status_dc, []
+    """Epoch e Nominatim registrati. `luoghi`: indirizzo → [lat, lon] che Nominatim trova; gli altri non li trova."""
+
+    def __init__(self, large=LARGE, eci=ECI, dc=DC, mappa=MAPPA, status=200, status_dc=200, status_mappa=200, luoghi=None):
+        self.large, self.eci, self.dc, self.mappa, self.luoghi = large, eci, dc, mappa, luoghi or {}
+        self.status, self.status_dc, self.status_mappa = status, status_dc, status_mappa
+        self.calls, self.nominatim = [], []
 
     def get(self, url, params=None, headers=None, timeout=None):
         self.calls.append(url)
+        if "nominatim" in url:
+            self.nominatim.append((params, headers))
+            luogo = self.luoghi.get(params["q"])
+            return Resp(json.dumps([{"lat": str(luogo[0]), "lon": str(luogo[1])}] if luogo else []))
+        if "ai-data-centers/map" in url:
+            return Resp(self.mappa, self.status_mappa)
         if "data_centers" in url:
             return Resp(self.dc, self.status_dc)
         return Resp(self.large if "large_scale" in url else self.eci, self.status)
@@ -207,11 +224,114 @@ def test_data_center_quote_per_paese_degli_h100_equivalenti(data_dir):
 def test_data_center_siti_con_lo_stato(data_dir):
     siti = {s["nome"]: s for s in run(data_dir)["data_center"]["siti"]}
     assert len(siti) == 95
-    assert siti["Colossus 2"] == {"nome": "Colossus 2", "proprietario": "SpaceXAI", "iso": "USA", "h100e": 1111673, "mw": 946, "stato": "operativo"}
-    assert siti["EcoDataCenter 2"] == {"nome": "EcoDataCenter 2", "proprietario": "Mistral AI", "iso": "SWE", "h100e": 0, "mw": 0, "stato": "in costruzione"}
+    assert siti["Colossus 2"] == {"nome": "Colossus 2", "proprietario": "SpaceXAI", "iso": "USA", "h100e": 1111673, "mw": 946, "stato": "operativo",
+                                  "lat": 34.98929, "lon": -90.03857, "posizione": "epoch"}
+    assert siti["EcoDataCenter 2"] == {"nome": "EcoDataCenter 2", "proprietario": "Mistral AI", "iso": "SWE", "h100e": 0, "mw": 0, "stato": "in costruzione",
+                                       "lat": 60.52633, "lon": 15.41698, "posizione": "epoch"}
     assert siti["DayOne Nusajaya"]["proprietario"] is None
     assert siti["DayOne Kempas"]["mw"] == 421.7
     assert sum(s["stato"] == "in costruzione" for s in siti.values()) == 21
+
+
+def copia(data_dir) -> dict:
+    """La copia delle coordinate tra i dati: nome del sito → posizione."""
+    return json.loads((data_dir / "geopoliticai_siti.json").read_text(encoding="utf-8"))["siti"]
+
+
+def test_siti_con_le_coordinate_della_mappa_abbinate_per_nome(data_dir):
+    siti = {s["nome"]: s for s in run(data_dir)["data_center"]["siti"]}
+    assert {k: siti["Colossus 2"][k] for k in ("lat", "lon", "posizione")} == {"lat": 34.98929, "lon": -90.03857, "posizione": "epoch"}
+    assert {k: siti["EcoDataCenter 2"][k] for k in ("lat", "lon", "posizione")} == {"lat": 60.52633, "lon": 15.41698, "posizione": "epoch"}
+    assert all(s["posizione"] == "epoch" for s in siti.values())
+    salvati = copia(data_dir)
+    assert len(salvati) == 95
+    assert salvati["Nebius Mantsala"] == {"lat": 60.62935, "lon": 25.26047, "posizione": "epoch"}
+
+
+def mappa_con(n: int) -> str:
+    """La pagina registrata con le coordinate solo dei primi n siti: gli altri hanno un nome che il CSV non conosce."""
+    k = iter(range(1000))
+    return re.sub(r"&quot;id&quot;:\[0,&quot;", lambda m: m.group(0) + ("" if next(k) < n else "Altrove "), MAPPA)
+
+
+def senza(*nomi: str) -> str:
+    """La pagina registrata senza le coordinate di questi siti."""
+    out = MAPPA
+    for n in nomi:
+        out = out.replace(f"&quot;{n}&quot;", f"&quot;{n} (altrove)&quot;")
+    return out
+
+
+@pytest.mark.parametrize("session", [
+    Session(status_mappa=500),
+    Session(mappa="<html><body><p>Mappa nuova</p></body></html>"),
+    Session(mappa=MAPPA.replace("lngLat", "lonLat")),
+    Session(mappa=mappa_con(40)),
+], ids=["http-500", "senza-isola", "campo-cambiato", "meno-della-meta"])
+def test_pagina_della_mappa_non_letta_tiene_la_copia_e_lo_dice(data_dir, monkeypatch, session):
+    from pipeline import run as pipeline_run
+    run(data_dir)
+    prima = copia(data_dir)
+    monkeypatch.setattr("pipeline.run.session", lambda: session)
+    assert pipeline_run.main(["--only", "geopoliticai"]) == 0
+    assert copia(data_dir) == prima
+    # la data della copia resta quella dell'ultima pagina letta, non quella di oggi
+    assert json.loads((data_dir / "geopoliticai_siti.json").read_text(encoding="utf-8"))["aggiornato"] == "2026-10-23"
+    siti = {s["nome"]: s for s in json.loads((data_dir / "geopoliticai.json").read_text(encoding="utf-8"))["data_center"]["siti"]}
+    assert (siti["Colossus 2"]["lat"], siti["Colossus 2"]["posizione"]) == (34.98929, "epoch")
+    assert session.nominatim == []  # i siti erano tutti nella copia
+    status = json.loads((data_dir / "status.json").read_text(encoding="utf-8"))["fonti"]["geopoliticai"]
+    assert status["stato"] == "ok"
+    assert status["messaggio"].endswith("restano le posizioni salvate")
+    assert "avviso" not in status["dettagli"]
+
+
+def test_pagina_con_piu_della_meta_dei_siti_si_usa(data_dir):
+    siti = {s["nome"]: s for s in run(data_dir, Session(mappa=mappa_con(60)))["data_center"]["siti"]}
+    assert sum(s["posizione"] == "epoch" for s in siti.values()) == 60
+
+
+def test_sito_senza_coordinate_una_richiesta_a_nominatim_e_poi_mai_piu(data_dir):
+    colossus = "5420 Tulane Rd, Memphis, TN 38109"
+    session = Session(mappa=senza("Colossus 2"), luoghi={colossus: [35.06, -90.08]})
+    siti = {s["nome"]: s for s in run(data_dir, session)["data_center"]["siti"]}
+    assert [p["q"] for p, _ in session.nominatim] == [colossus]
+    params, headers = session.nominatim[0]
+    assert params["limit"] == 1 and "AI Radar" in headers["User-Agent"]
+    assert {k: siti["Colossus 2"][k] for k in ("lat", "lon", "posizione")} == {"lat": 35.06, "lon": -90.08, "posizione": "indirizzo"}
+    assert copia(data_dir)["Colossus 2"] == {"lat": 35.06, "lon": -90.08, "posizione": "indirizzo", "indirizzo": colossus}
+    # al giro dopo il sito è nella copia: nessuna richiesta
+    again = Session(mappa=senza("Colossus 2"))
+    run(data_dir, again)
+    assert again.nominatim == []
+    assert copia(data_dir)["Colossus 2"]["lat"] == 35.06
+
+
+def test_sito_che_nominatim_non_trova_resta_senza_cerchio_ma_conta_nella_quota(data_dir):
+    session = Session(mappa=senza("Colossus 2"))
+    dc = run(data_dir, session)["data_center"]
+    sito = next(s for s in dc["siti"] if s["nome"] == "Colossus 2")
+    assert (sito["lat"], sito["lon"], sito["posizione"]) == (None, None, None)
+    assert dc["quote"]["USA"] == 86.49
+    assert len(session.nominatim) == 1
+    again = Session(mappa=senza("Colossus 2"))
+    run(data_dir, again)
+    assert again.nominatim == []
+
+
+def test_un_sito_senza_indirizzo_non_si_cerca(data_dir):
+    session = Session(mappa=senza("Nebius Mantsala"))
+    sito = next(s for s in run(data_dir, session)["data_center"]["siti"] if s["nome"] == "Nebius Mantsala")
+    assert session.nominatim == [] and sito["lat"] is None
+
+
+def test_nominatim_al_massimo_una_richiesta_al_secondo(data_dir, monkeypatch):
+    pause = []
+    monkeypatch.setattr("time.sleep", pause.append)
+    session = Session(mappa=senza("Colossus 2", "Anthropic-Amazon New Carlisle", "EcoDataCenter 2"))
+    run(data_dir, session)
+    assert len(session.nominatim) == 3
+    assert len(pause) == 2 and all(0.9 < x <= 1 for x in pause)
 
 
 @pytest.mark.parametrize("session", [

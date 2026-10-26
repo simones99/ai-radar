@@ -2,18 +2,20 @@
   // «Chi controlla la catena dell'AI»: la linea dei sei anelli, la mappa del mondo colorata per l'anello aperto con l'Europa
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
+  // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
   import { tick } from 'svelte';
   import Block from '../charts/Block.svelte';
-  import type { Catena, Geopoliticai } from '../data/types';
+  import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
-    ANELLI, anelloDi, attivi, CENTRO, EUROPA as EUR, fumetto, materialeDi, materialiDi, NOMI, PAESI, paesiZona, VIEWBOX, vista, zonaDi,
-    type AnelloKey, type Paese,
+    ANELLI, anelloDi, attivi, CENTRO, citeSiti, didascaliaSiti, EUROPA as EUR, fumetto, materialeDi, materialiDi, NOMI, nomeSito, PAESI, paesiZona,
+    puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
   import { NOTA_GPU, NOTA_ITALIA } from '../text/geopoliticai';
 
-  let { g, catena, zona, anello: param, materiale: paramMateriale, onscegli }: {
-    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; onscegli: (k: string) => void;
+  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, onscegli }: {
+    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; siti: string | undefined;
+    onscegli: (k: string) => void;
   } = $props();
 
   const ok = $derived(attivi(g, catena));
@@ -65,19 +67,29 @@
   const posEuropa = { left: `${((IN.x - vx) / vw) * 100}%`, top: `${((IN.y - vy) / vh) * 100}%`, width: `${((EUROPA.w * IN.k) / vw) * 100}%` };
   const etItalia = pos(CENTRO.ITA[0] + 2, CENTRO.ITA[1] + 10, EUROPA);
   const ita = PAESI.find((p) => p.id === 'ITA');
+  const nelRiquadro = (x: number, y: number) => x >= EUROPA.x && x <= EUROPA.x + EUROPA.w && y >= EUROPA.y && y <= EUROPA.y + EUROPA.h;
 
-  // il fumetto si apre dal lato opposto del Paese rispetto al centro della mappa; i Paesi europei sono anche nel riquadro, a sinistra,
-  // e si aprono sempre a destra, così il fumetto non copre l'Europa
-  const aDestra = new Set([...europei.map((p) => p.id), ...PAESI.filter((p) => p.c[0] < vx + vw / 2).map((p) => p.id)]);
-  let aperto = $state<{ iso: string; lato: 'destra' | 'sinistra'; da: SVGPathElement } | null>(null);
+  // i Siti valgono solo nei data center: con un altro anello ?siti=1 si ignora
+  const conSiti = $derived(anello === 'datacenter' && paramSiti === '1' && !!g.data_center);
+  const punti = $derived(conSiti ? puntiSiti(g.data_center!) : []);
+  const puntiEuropa = $derived(punti.filter((q) => nelRiquadro(q.x, q.y)));
+
+  // il fumetto, di un Paese o di un sito, si apre dal lato opposto rispetto al centro della mappa; l'Europa è anche nel riquadro,
+  // a sinistra, e si apre sempre a destra, così il fumetto non la copre
+  const EUROPEI = new Set(europei.map((p) => p.id));
+  let aperto = $state<{ titolo: string; iso?: string; sito?: GeoSito; lato: 'destra' | 'sinistra'; da: SVGElement } | null>(null);
   let pannello = $state<HTMLElement>();
-  const anelliPaese = $derived(aperto ? fumetto(g, catena, aperto.iso) : []);
-  async function tocca(p: Paese, da: SVGPathElement) {
-    aperto = { iso: p.id, lato: aDestra.has(p.id) ? 'destra' : 'sinistra', da };
-    if (scelte[p.id]) onscegli(scelte[p.id]);
+  const anelliPaese = $derived(aperto?.iso ? fumetto(g, catena, aperto.iso) : []);
+  async function apri(cosa: { titolo: string; iso?: string; sito?: GeoSito }, x: number, europeo: boolean, da: SVGElement) {
+    aperto = { ...cosa, lato: europeo || x < vx + vw / 2 ? 'destra' : 'sinistra', da };
     await tick();
     pannello?.focus();
   }
+  function tocca(p: Paese, da: SVGElement) {
+    if (scelte[p.id]) onscegli(scelte[p.id]);
+    return apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), da);
+  }
+  const toccaSito = (q: PuntoSito, da: SVGElement) => apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
   function chiudi() {
     const da = aperto?.da;
     aperto = null;
@@ -95,7 +107,14 @@
     onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tocca(p, e.currentTarget); } }}><title>{nome(p.id)}</title></path>
 {/snippet}
 
-<Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note="Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese." table={v.tabella} cite={v.cite}>
+{#snippet cerchio(q: PuntoSito, tab: boolean)}
+  <!-- un sito in costruzione ha il cerchio vuoto; i cerchi, pochi, si raggiungono con Tab, quelli europei solo nel riquadro -->
+  <circle cx={q.x} cy={q.y} r={q.r} fill={q.sito.stato === 'operativo' ? 'var(--sito)' : 'none'} class="sito" role="button" tabindex={tab ? 0 : -1}
+    aria-label={nomeSito(q.sito)} aria-haspopup="dialog" onclick={(e) => toccaSito(q, e.currentTarget)}
+    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toccaSito(q, e.currentTarget); } }}><title>{nomeSito(q.sito)}</title></circle>
+{/snippet}
+
+<Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note="Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese." table={v.tabella} cite={conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
   <div class="anello" style:--c="var(--k-{anello})">
     <nav class="linea" aria-label="Gli anelli della catena dell'AI">
       <button type="button" class="fr" disabled={!prima} onclick={() => vai(prima)} aria-label="Anello precedente">←</button>
@@ -115,10 +134,14 @@
     <div class="titolo">
       <h4>{idx + 1}. {ANELLI[idx].nome}</h4>
       {#if anello === 'materie'}
-        <div class="materiali" role="group" aria-label="Materiale">
+        <div class="scelte" role="group" aria-label="Materiale">
           {#each materiali as m (m.key)}
             <button type="button" aria-pressed={m.key === materiale ? 'true' : 'false'} onclick={() => imposta('materiale', m.key)}>{m.nome}</button>
           {/each}
+        </div>
+      {:else if anello === 'datacenter'}
+        <div class="scelte">
+          <button type="button" aria-pressed={conSiti ? 'true' : 'false'} onclick={() => imposta('siti', conSiti ? null : '1')}>Siti</button>
         </div>
       {/if}
       <span>{v.misura}</span>
@@ -134,6 +157,7 @@
           {#each PAESI.filter((p) => unico.has(p.id)) as p (p.id)}<path d={p.d} class="unico" />{/each}
           {#each PAESI.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
+          {#each punti as q (q.sito.nome)}{@render cerchio(q, !nelRiquadro(q.x, q.y))}{/each}
         </svg>
         {#each etichette as e (e.iso)}
           <span class="et" data-testid="etichetta" style:left={e.left} style:top={e.top}>
@@ -152,6 +176,7 @@
           {#each europei.filter((p) => unico.has(p.id)) as p (p.id)}<path d={p.d} class="unico" />{/each}
           {#each europei.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
+          {#each puntiEuropa as q (q.sito.nome)}{@render cerchio(q, true)}{/each}
         </svg>
         <span class="in-t" aria-hidden="true">Europa, ingrandita</span>
         <span class="et it" style:left={etItalia.left} style:top={etItalia.top} aria-hidden="true">Italia</span>
@@ -161,22 +186,30 @@
         <div class="fumetto {aperto.lato}" role="dialog" aria-labelledby="geo-fumetto-t" tabindex="-1" bind:this={pannello}
           onkeydown={(e) => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); chiudi(); } }}>
           <div class="testa">
-            <h5 id="geo-fumetto-t">{NOMI[aperto.iso] ?? aperto.iso}</h5>
+            <h5 id="geo-fumetto-t">{aperto.titolo}</h5>
             <button type="button" class="chiudi" onclick={chiudi}>Chiudi</button>
           </div>
-          <dl>
-            {#each anelliPaese as a, i (a.key)}
-              <div style:--c="var(--k-{a.key})">
-                <dt>{i + 1}. {a.nome}</dt>
-                {#each a.voci as x, j (j)}
-                  <dd>{x.materiale ? `${x.materiale}: ` : ''}<b>{x.testo}</b>{#if x.data}<span class="data">{` · ${x.data}`}</span>{/if}</dd>
-                {/each}
-              </div>
-            {/each}
-          </dl>
+          {#if aperto.sito}
+            <dl class="sito-righe">
+              {#each schedaSito(aperto.sito) as [k, x] (k)}<div><dt>{k}</dt><dd>{x}</dd></div>{/each}
+            </dl>
+            {#if aperto.sito.posizione === 'indirizzo'}<p class="appross">Posizione approssimativa, ricavata dall'indirizzo.</p>{/if}
+          {:else}
+            <dl class="anelli-righe">
+              {#each anelliPaese as a, i (a.key)}
+                <div style:--c="var(--k-{a.key})">
+                  <dt>{i + 1}. {a.nome}</dt>
+                  {#each a.voci as x, j (j)}
+                    <dd>{x.materiale ? `${x.materiale}: ` : ''}<b>{x.testo}</b>{#if x.data}<span class="data">{` · ${x.data}`}</span>{/if}</dd>
+                  {/each}
+                </div>
+              {/each}
+            </dl>
+          {/if}
         </div>
       {/if}
     </div>
+    {#if conSiti}<p class="didascalia">{didascaliaSiti(g.data_center!)}</p>{/if}
 
     <dl class="tabellone">
       {#each cifre as c (c.etichetta)}
@@ -200,6 +233,7 @@
 <style>
   /* un colore per anello, con il testo bianco sopra a ≥ 4,5:1 */
   .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #a8432c; --k-modelli: #b2461f;
+    --sito: color-mix(in srgb, var(--fg) 55%, transparent);
     display: grid; gap: var(--s2); min-width: 0; }
   .linea { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: start; gap: var(--s1); }
   .fr { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--card); cursor: pointer; font-size: 20px; }
@@ -216,9 +250,9 @@
   li.on .lab { font-weight: 700; color: var(--fg); }
   .titolo { display: grid; gap: 4px; border-left: 5px solid var(--c); padding-left: 10px; }
   .titolo h4 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 600; }
-  .materiali { display: flex; flex-wrap: wrap; gap: var(--s1); }
-  .materiali button { background: var(--bg); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; min-height: 44px; font-size: 14px; line-height: 20px; cursor: pointer; color: var(--fg-2); }
-  .materiali button[aria-pressed='true'] { background: var(--c); border-color: var(--c); color: #fff; }
+  .scelte { display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .scelte button { background: var(--bg); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; min-height: 44px; font-size: 14px; line-height: 20px; cursor: pointer; color: var(--fg-2); }
+  .scelte button[aria-pressed='true'] { background: var(--c); border-color: var(--c); color: #fff; }
   .titolo span { font-size: 13px; line-height: 20px; color: var(--fg-3); }
 
   .cornice { position: relative; }
@@ -251,10 +285,19 @@
   .fumetto h5 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 700; }
   .chiudi { min-width: 44px; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
   .fumetto dl { margin: 0; display: grid; gap: 6px; }
-  .fumetto dl > div { border-left: 4px solid var(--c); padding-left: 8px; }
+  .fumetto .anelli-righe > div { border-left: 4px solid var(--c); padding-left: 8px; }
   .fumetto dd { display: block; font-size: 13px; line-height: 18px; }
   .fumetto dd b { font-size: 13px; line-height: 18px; font-weight: 600; }
   .fumetto .data { color: var(--fg-3); }
+  .fumetto .sito-righe > div { display: flex; gap: var(--s1); justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  .fumetto .sito-righe dt { font-size: 13px; line-height: 18px; color: var(--fg-3); }
+  .fumetto .sito-righe dd { font-weight: 600; text-align: right; }
+  .appross { margin: 0; font-size: 13px; line-height: 18px; font-style: italic; color: var(--fg-2); }
+  /* i cerchi si toccano anche dentro, quando sono vuoti */
+  .sito { stroke: var(--card); stroke-width: .6; cursor: pointer; pointer-events: all; }
+  .sito[fill='none'] { stroke: var(--fg); stroke-width: .8; }
+  .sito:hover, .sito:focus-visible { outline: none; stroke: var(--accent); stroke-width: 1.4; }
+  .didascalia { margin: 0; font-size: 13px; line-height: 20px; color: var(--fg-2); }
   @media (max-width: 599px) {
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */
     .europa { position: relative; left: auto !important; top: auto !important; width: auto !important; margin-top: var(--s1); }

@@ -6,22 +6,31 @@ restano fuori dalle aree. Il calcolo viene dal dataset large-scale (almeno 1e23 
 la capacità dall'Epoch Capabilities Index su tutti i suoi modelli (dal 2023). Per l'anello dei modelli
 sulla mappa c'è anche l'ECI massimo per Paese dell'ultimo anno chiuso, con i codici ADM0_A3 dei confini.
 Per l'anello dei data center, dal database «AI data centers» di Epoch: i siti e la quota per Paese dei loro
-H100 equivalenti attuali.
+H100 equivalenti attuali. Le posizioni dei siti vengono dalla pagina della mappa di Epoch e restano in una copia tra
+i dati; un sito che non c'è né nella pagina né nella copia si cerca una volta sola dal suo indirizzo, con Nominatim.
 """
 from __future__ import annotations
 
 import csv
+import html
 import io
+import json
 import re
+import time
 from collections import defaultdict
 from datetime import date
 
-from .common import http_get, log, write_json
+from .common import http_get, log, read_json, redact, write_json
 
 LARGE = "https://epoch.ai/data/large_scale_ai_models.csv"
 ECI = "https://epoch.ai/data/eci_scores.csv"
 DATA_CENTER = "https://epoch.ai/data/data_centers/data_centers.csv"
+MAPPA = "https://epoch.ai/data/ai-data-centers/map"
+NOMINATIM = "https://nominatim.openstreetmap.org/search"
+# la policy di Nominatim vuole uno User-Agent che dica chi fa le richieste
+UA_NOMINATIM = "ai-radar/1.0 (AI Radar, https://github.com/simones99/ai-radar)"
 OUT = "geopoliticai.json"
+COPIA = "geopoliticai_siti.json"  # le posizioni dei siti: l'ultima copia buona
 DA_CALCOLO = 2020
 DA_ECI = 2023
 MIN_RIGHE = 100  # sotto questa soglia il file è troncato o le colonne sono cambiate
@@ -226,8 +235,11 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
     }
 
 
-def data_center(righe: list[dict], today: date) -> dict:
-    """I siti, con lo stato ricavato dagli H100 equivalenti attuali, e la quota per Paese sul totale dei siti noti."""
+def data_center(righe: list[dict], today: date, pos: dict[str, dict]) -> dict:
+    """I siti, con lo stato ricavato dagli H100 equivalenti attuali e la posizione, e la quota per Paese sul totale dei siti noti.
+
+    Un sito senza posizione resta senza cerchio sulla mappa, ma conta nella quota del suo Paese.
+    """
     siti, per_paese = [], defaultdict(float)
     for r in righe:
         paese = r["Country"].strip()
@@ -239,17 +251,106 @@ def data_center(righe: list[dict], today: date) -> dict:
             per_paese[iso] += h100e
         # il proprietario dei chip, senza l'etichetta di confidenza di Epoch («#confident», «#likely», «#speculative»)
         proprietario = re.sub(r"\s*#\w+", "", r["Owner"]).strip() or None
+        p = pos.get(r["Name"].strip()) or {"lat": None}
         siti.append({"nome": r["Name"].strip(), "proprietario": proprietario, "iso": iso, "h100e": round(h100e),
-                     "mw": round(float(r[MW] or 0), 1), "stato": "operativo" if h100e > 0 else "in costruzione"})
+                     "mw": round(float(r[MW] or 0), 1), "stato": "operativo" if h100e > 0 else "in costruzione",
+                     "lat": p["lat"], "lon": p.get("lon"), "posizione": p.get("posizione") if p["lat"] is not None else None})
     totale = sum(float(r[H100E] or 0) for r in righe) or 1
     quote = {iso: round(100 * v / totale, 2) for iso, v in sorted(per_paese.items(), key=lambda kv: -kv[1])}
     return {"aggiornato": today.isoformat(), "quote": quote, "siti": siti}
+
+
+def _astro(v):
+    """Un valore dei props di un'isola di Astro: [0, valore] per i valori semplici e gli oggetti, [1, lista] per le liste,
+    [0] da solo per un valore vuoto."""
+    if len(v) == 1:
+        return None
+    tipo, x = v
+    if tipo == 1:
+        return [_astro(y) for y in x]
+    return {k: _astro(y) for k, y in x.items()} if isinstance(x, dict) else x
+
+
+def coordinate_mappa(text: str) -> dict[str, tuple[float, float]]:
+    """Nome del sito → (lat, lon), dal campo `lngLat` dei siti nell'isola SearchFilterMap della pagina della mappa.
+
+    Il formato è interno ad Astro e non è documentato: una pagina che non ha questa forma solleva un errore.
+    """
+    isola = next((i for i in re.findall(r"<astro-island\b[^>]*>", text) if "SearchFilterMap" in i), None)
+    if isola is None:
+        raise ValueError("manca l'isola SearchFilterMap")
+    props = json.loads(html.unescape(re.search(r'\sprops="([^"]*)"', isola).group(1)))
+    out = {}
+    for _, sito in props["dataCenters"][1]:  # di ogni sito si decodificano solo il nome e le coordinate
+        lng_lat = _astro(sito["lngLat"]) if "lngLat" in sito else None
+        if lng_lat:
+            out[_astro(sito["id"]).strip()] = (round(lng_lat[1], 5), round(lng_lat[0], 5))
+    return out
+
+
+def posizioni(s, righe: list[dict], today: date) -> tuple[dict, str | None, int]:
+    """La copia delle posizioni dei siti, l'avviso se la pagina della mappa non si è letta, e le richieste fatte a Nominatim.
+
+    Le coordinate vengono dalla pagina della mappa. Se la pagina non si legge, o le ha per meno della metà dei siti,
+    restano quelle della copia e il passo non fallisce. Un sito che non c'è né nella pagina né nella copia si cerca dal
+    suo indirizzo, una volta sola: anche un indirizzo non trovato resta nella copia, e non si richiede più. Un indirizzo
+    che cambia è una richiesta nuova. La data della copia è quella dell'ultima lettura buona della pagina.
+    """
+    copia = read_json(COPIA) or {}
+    prima = copia.get("siti", {})
+    nomi = [r["Name"].strip() for r in righe]
+    if righe and "Address" not in righe[0]:
+        log.warning("GeopoliticAI: il CSV dei data center non ha più la colonna Address, i siti nuovi restano senza posizione")
+    avviso = None
+    try:
+        mappa = coordinate_mappa(http_get(s, MAPPA, timeout=120).text)
+    except Exception as exc:  # una pagina fuori forma o una rete che non risponde: si tiene la copia
+        mappa, avviso = {}, f"pagina della mappa di Epoch non letta ({redact(str(exc))[:150]}): restano le posizioni salvate"
+    else:
+        trovati = sum(n in mappa for n in nomi)
+        if 2 * trovati < len(nomi):
+            mappa, avviso = {}, f"la pagina della mappa di Epoch ha le coordinate di {trovati} siti su {len(nomi)}: restano le posizioni salvate"
+    if avviso:
+        log.warning("GeopoliticAI: %s", avviso)
+
+    out, richieste, ultima = {}, 0, None
+    for r in righe:
+        nome, indirizzo = r["Name"].strip(), (r.get("Address") or "").strip()
+        vecchia = prima.get(nome)
+        if nome in mappa:
+            lat, lon = mappa[nome]
+            out[nome] = {"lat": lat, "lon": lon, "posizione": "epoch"}
+        elif vecchia and (vecchia["posizione"] == "epoch" or vecchia.get("indirizzo") == indirizzo):
+            out[nome] = vecchia
+        elif indirizzo:
+            # Nominatim: al massimo una richiesta al secondo, una dopo l'altra
+            if ultima is not None:
+                time.sleep(max(0.0, 1.0 - (time.monotonic() - ultima)))
+            richieste += 1
+            try:
+                luoghi = http_get(s, NOMINATIM, params={"q": indirizzo, "format": "jsonv2", "limit": 1},
+                                  headers={"User-Agent": UA_NOMINATIM}, timeout=30, retries=1).json()
+            except Exception as exc:  # si riprova al prossimo giro
+                log.warning("GeopoliticAI: Nominatim non ha risposto per %s (%s)", nome, redact(str(exc)))
+                continue
+            finally:
+                ultima = time.monotonic()
+            lat, lon = (round(float(luoghi[0]["lat"]), 5), round(float(luoghi[0]["lon"]), 5)) if luoghi else (None, None)
+            if lat is None:
+                log.warning("GeopoliticAI: Nominatim non trova l'indirizzo di %s, resta senza posizione", nome)
+            out[nome] = {"lat": lat, "lon": lon, "posizione": "indirizzo", "indirizzo": indirizzo}
+    aggiornato = copia.get("aggiornato") if avviso else today.isoformat()
+    return {"aggiornato": aggiornato, "siti": out}, avviso, richieste
 
 
 def run(s, today: date) -> dict:
     large = _leggi(http_get(s, LARGE, timeout=120).text, COLONNE_LARGE, "large_scale_ai_models.csv")
     eci = _leggi(http_get(s, ECI, timeout=120).text, COLONNE_ECI, "eci_scores.csv")
     dc = _leggi(http_get(s, DATA_CENTER, timeout=120).text, COLONNE_DC, "data_centers.csv", MIN_SITI)
-    out = {**aggregate(large, eci, today), "data_center": data_center(dc, today)}
+    copia, avviso, richieste = posizioni(s, dc, today)
+    out = {**aggregate(large, eci, today), "data_center": data_center(dc, today, copia["siti"])}
     write_json(OUT, out)
-    return {"zone": len(out["zone"]), "modelli_large": len(large), "modelli_eci": len(eci), "data_center": len(dc)}
+    write_json(COPIA, copia)
+    info = {"zone": len(out["zone"]), "modelli_large": len(large), "modelli_eci": len(eci), "data_center": len(dc),
+            "siti_con_posizione": sum(x["lat"] is not None for x in out["data_center"]["siti"]), "richieste_nominatim": richieste}
+    return {**info, "avviso": avviso} if avviso else info

@@ -27,7 +27,9 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     aggiornato: '2026-10-15T08:00:00+00:00',
     fonti: {
       epoch: ok, arxiv: { stato: 'errore', ultimo_successo: '2026-10-08T08:00:00+00:00', ultimo_tentativo: '2026-10-15T08:00:00+00:00', messaggio: '500' },
-      github: ok, huggingface: ok, eurostat: ok, eurostat_settori: ok, geopoliticai: ok, owid: ok, ai_act: ok, rapporti: ok, catena: ok, feeds: ok, radar: ok,
+      github: ok, huggingface: ok, eurostat: ok, eurostat_settori: ok, owid: ok,
+      // riuscita con le posizioni dei siti dalla copia: lo stato è ok, con l'avviso
+      geopoliticai: { ...ok, messaggio: 'pagina della mappa di Epoch non letta (HTTP 503): restano le posizioni salvate' }, ai_act: ok, rapporti: ok, catena: ok, feeds: ok, radar: ok,
       adzuna: { stato: 'non configurata', messaggio: 'ADZUNA_APP_ID/ADZUNA_APP_KEY non impostati' },
       artificial_analysis: { stato: 'non configurata', messaggio: 'AA_API_KEY non impostata' },
     },
@@ -226,14 +228,17 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     senza_paese: { large: ['Poro 34B'], eci: ['Qwen2.5-Coder-14B', 'PaLM 2-L', 'internlm-20b'] },
     altri_paesi: { 'South Korea': 22, Canada: 7, 'United Arab Emirates': 7 },
     eci_paesi: { anno: 2025, valori: { USA: { max: 156.33, modello: 'GPT-5.2 Pro' }, CHN: { max: 146.09, modello: 'DeepSeek-V3.2' }, FRA: { max: 134.02, modello: 'Mistral Medium 3' } } },
-    // dal CSV registrato dei data center (Epoch, 26 ottobre 2026), solo alcuni Paesi e siti
+    // dal CSV e dalla pagina della mappa registrati (Epoch, 26 ottobre 2026), solo alcuni Paesi e siti; per i test Waltham
+    // Cross ha la posizione dall'indirizzo, e DayOne Nusajaya non ce l'ha
     data_center: {
       aggiornato: '2026-10-15',
       quote: { USA: 86.49, MYS: 8.69, CHN: 2.17, GBR: 0.84, FIN: 0.33, PRT: 0.22, ISL: 0.04 },
       siti: [
-        { nome: 'Colossus 2', proprietario: 'SpaceXAI', iso: 'USA', h100e: 1111673, mw: 946, stato: 'operativo' },
-        { nome: 'Nebius Mantsala', proprietario: 'Nebius', iso: 'FIN', h100e: 48528, mw: 75, stato: 'operativo' },
-        { nome: 'EcoDataCenter 2', proprietario: 'Mistral AI', iso: 'SWE', h100e: 0, mw: 0, stato: 'in costruzione' },
+        { nome: 'Colossus 2', proprietario: 'SpaceXAI', iso: 'USA', h100e: 1111673, mw: 946, stato: 'operativo', lat: 34.98929, lon: -90.03857, posizione: 'epoch' },
+        { nome: 'Google Waltham Cross', proprietario: 'Google', iso: 'GBR', h100e: 123800, mw: 88, stato: 'operativo', lat: 51.69543, lon: -0.04904, posizione: 'indirizzo' },
+        { nome: 'Nebius Mantsala', proprietario: 'Nebius', iso: 'FIN', h100e: 48528, mw: 75, stato: 'operativo', lat: 60.62935, lon: 25.26047, posizione: 'epoch' },
+        { nome: 'EcoDataCenter 2', proprietario: 'Mistral AI', iso: 'SWE', h100e: 0, mw: 0, stato: 'in costruzione', lat: 60.52633, lon: 15.41698, posizione: 'epoch' },
+        { nome: 'DayOne Nusajaya', proprietario: null, iso: 'MYS', h100e: 160000, mw: 170, stato: 'operativo', lat: null, lon: null, posizione: null },
       ],
     },
   },

@@ -1,7 +1,7 @@
 // La mappa di GeopoliticAI: i confini generati da scripts/confini.py, gli anelli della catena e i testi dell'anello aperto.
 import type { Cite, TableData } from '../charts/types';
 import { AREE } from '../data/geopoliticai';
-import type { Catena, CatenaAnello, Geopoliticai, Materiale } from '../data/types';
+import type { Catena, CatenaAnello, GeoDataCenter, Geopoliticai, GeoSito, Materiale } from '../data/types';
 import { day, dayWith, nf } from '../text/format';
 import { eci } from '../text/geopoliticai';
 import CONFINI from './confini.json';
@@ -153,6 +153,67 @@ function vistaModelli(g: Geopoliticai): Vista {
     note: [],
   };
 }
+
+// ---------------------------------------------------------------- i Siti: un cerchio per ogni data center noto a Epoch
+
+const A1 = 1.340264, A2 = -0.081106, A3 = 0.000893, A4 = 0.003796, M = Math.sqrt(3) / 2;
+const S = 1000 / (2 * 2.70646);
+/** Equal Earth, come in scripts/confini.py: le coordinate dei confini, larghe 1000, con il nord in alto. */
+export function proietta(lon: number, lat: number): [number, number] {
+  const th = Math.asin(M * Math.sin((lat * Math.PI) / 180));
+  const t2 = th * th, t6 = t2 ** 3;
+  const x = ((lon * Math.PI) / 180) * Math.cos(th) / (M * (A1 + 3 * A2 * t2 + t6 * (7 * A3 + 9 * A4 * t2)));
+  return [500 + S * x, -S * th * (A1 + A2 * t2 + t6 * (A3 + A4 * t2))];
+}
+
+/** Il raggio del sito più grande e il più piccolo, anche per i siti in costruzione, nelle coordinate della mappa. */
+const R_MAX = 14, R_MIN = 1.6;
+
+export interface PuntoSito { sito: GeoSito; x: number; y: number; r: number }
+
+/** I cerchi dei siti con una posizione: l'area cresce con gli H100 equivalenti, e i più grandi stanno sotto. */
+export function puntiSiti(dc: GeoDataCenter): PuntoSito[] {
+  const max = Math.max(1, ...dc.siti.map((s) => s.h100e));
+  return dc.siti.flatMap((sito) => {
+    if (sito.lat == null || sito.lon == null) return [];
+    const [x, y] = proietta(sito.lon, sito.lat);
+    const r = Math.max(R_MIN, R_MAX * Math.sqrt(sito.h100e / max));
+    return [{ sito, x, y, r }];
+  }).sort((a, b) => b.r - a.r);
+}
+
+/** Il nome di un cerchio, per il lettore di schermo e il tooltip. */
+export const nomeSito = (s: GeoSito): string => `${s.nome}: ${s.stato === 'operativo' ? `${nf(s.h100e)} H100 equivalenti` : 'in costruzione'}`;
+
+/** Le righe del fumetto di un sito. */
+export function schedaSito(s: GeoSito): [string, string][] {
+  return [
+    ['Proprietario dei chip', s.proprietario ?? 'non noto'],
+    ['Paese', s.iso ? NOMI[s.iso] ?? s.iso : 'non noto'],
+    ['H100 equivalenti', s.stato === 'operativo' ? nf(s.h100e) : 'in costruzione'],
+    ...(s.mw > 0 ? [['Potenza elettrica', `${nf(s.mw, Number.isInteger(s.mw) ? 0 : 1)} MW`] as [string, string]] : []),
+    ['Stato', s.stato],
+  ];
+}
+
+/** La didascalia dei Siti: cosa sono i cerchi, i siti che non ne hanno uno, e l'Italia quando non ha siti. */
+export function didascaliaSiti(dc: GeoDataCenter): string {
+  const senza = dc.siti.filter((s) => s.lat == null).length;
+  return [
+    'Ogni cerchio è un data center noto a Epoch, grande secondo i suoi H100 equivalenti; i cerchi vuoti sono in costruzione.',
+    ...(senza ? [`${senza === 1 ? '1 sito non ha' : `${senza} siti non hanno`} una posizione: ${senza === 1 ? 'conta' : 'contano'} nella quota, ma senza cerchio.`] : []),
+    ...(dc.siti.some((s) => s.iso === 'ITA') ? [] : ['In Italia Epoch non conta nessun data center: i cluster italiani sono nella nota sul censimento GPU clusters.']),
+  ].join(' ');
+}
+
+/** L'attribuzione dei Siti, con OpenStreetMap solo se almeno una posizione viene da un indirizzo. */
+export const citeSiti = (dc: GeoDataCenter): Cite => [
+  { t: ' Siti dei data center: Epoch AI, ' }, { t: 'AI data centers', href: 'https://epoch.ai/data/ai-data-centers' }, { t: ', ' },
+  { t: 'CC BY 4.0', href: 'https://creativecommons.org/licenses/by/4.0/' },
+  { t: '. Posizioni ricavate dalla mappa di Epoch, dati rielaborati da AI Radar.' },
+  ...(dc.siti.some((s) => s.posizione === 'indirizzo' && s.lat != null)
+    ? [{ t: ' © ' }, { t: 'OpenStreetMap', href: 'https://www.openstreetmap.org/copyright' }, { t: ' contributors.' }] : []),
+];
 
 // ---------------------------------------------------------------- materie prime e chip: le quote per Paese, con il valore unico dell'Europa dove c'è
 

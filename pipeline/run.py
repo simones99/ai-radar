@@ -74,8 +74,10 @@ def main(argv: list[str] | None = None) -> int:
         log.info("== %s", name)
         try:
             info = jobs[name]()
+            # un passo riuscito a metà (per esempio con una parte dei dati presa dall'ultima copia buona) lo dice con un avviso
+            avviso = info.pop("avviso", None) if isinstance(info, dict) else None
             sources[name] = {"stato": "ok", "ultimo_successo": now_iso(), "dettagli": info,
-                             "secondi": round(time.time() - t0, 1)}
+                             "secondi": round(time.time() - t0, 1), **({"messaggio": avviso} if avviso else {})}
             ok += 1
         except SKIPPABLE as exc:
             sources[name] = {**prev, "stato": "non configurata", "messaggio": redact(str(exc))}

@@ -1,96 +1,97 @@
-Name,Current H100 equivalents,Current power (MW),Owner,Country
-Colossus 2,1111672.5618999496,946,SpaceXAI #confident,United States
-Anthropic-Amazon New Carlisle,818428.4992420415,1037,Amazon #confident,United States
-Microsoft Fairwater Atlanta,768768.7220818596,636,Microsoft #confident,United States
-Google Pryor (North),636685.1945426983,368,Google #confident,United States
-DayOne Nusajaya,583836.7862556847,473,,Malaysia
-Meta Prometheus,536343.0015159171,471,Meta #confident,United States
-OpenAI Stargate Abilene,509348.15563415864,421,Oracle #confident,United States
-DayOne Kempas,480638.7064173825,421.691664,,Malaysia
-Microsoft Fairwater Wisconsin,445679.63617988885,369,Microsoft #confident,United States
-Google Columbus,331985.85144012125,303,Google #confident,United States
-Google New Albany,323900.9600808489,333,Google #confident,United States
-Google Mesa,289540.17180394137,183,Google #confident,United States
-Colossus 1,275795.85649317835,340,SpaceXAI #confident,United States
-Google Council Bluffs (East),255684.68923698837,237,Google #confident,United States
-CoreWeave Denton TX,252652.85497726125,262,CoreWeave #confident,United States
-QTS Richmond 1,242546.7407781708,238,,United States
-Bridge Data Centres MY06,221051.54118241536,243,ByteDance #likely,Malaysia
-Meta Rosemount,215675.11520970188,178,Meta #confident,United States
-Amazon Madison Mega Site,214348.14354550533,284,Amazon #confident,United States
-Google Bristow,209860.53562405254,238,Google,United States
-Microsoft Goodyear,205154.11824153614,202,Microsoft #confident,United States
-Meta Jeffersonville,203132.89540171804,178,Meta #confident,United States
-Google Kansas City East,202627.5896917635,105,Google #confident,United States
-Meta Temple,202472.98777125112,178,Meta #confident,United States
-AWS New Albany,201111.67256189996,213,Amazon #confident,United States
-Google Omaha,198585.14401212733,237,Google #confident,United States
-Google Lincoln,197574.53259221828,141,Google #confident,United States
-QTS Richmond 2,182920.66700353715,180,,United States
-Google The Dalles,175341.0813542193,154,Google #confident,United States
-QTS Richmond 3,174835.77564426477,144,,United States
-Meta Montgomery,174517.43304699342,153,Meta #confident,United States
-Meta Kuna,173247.67205659422,152,Meta #confident,United States
-Meta Cheyenne,172814.5528044467,152,Meta #confident,United States
-Amazon Ridgeland,171298.6356745831,228,Amazon #confident,United States
-Meta Huntsville,166760.9903991915,146,Meta #confident,United States
-Coreweave Helios,159551.768236855,132,CoreWeave #confident,United States
-Microsoft Project Osmium,155634.15866599293,190,Microsoft #confident,United States
-Meta Eagle Mountain,151354.21930267813,133,Meta #confident,United States
-Google Midlothian,143580.85118746842,103,Google #confident,United States
-Google Storey County,133906.01313794847,161,Google #confident,United States
-Meta Los Lunas,133906.01313794847,118,Meta #confident,United States
-Google Lancaster,130368.8731682668,137,Google #confident,United States
-Meta-QTS Hillsboro 2,123839,180,Meta #likely,United States
-Google Waltham Cross,123799.89893885801,88,Google #confident,United Kingdom
-VNET Bayin Ulanqab,122789.28751894896,221,VNET #confident,China
-Google Arcola,108135.42193026781,77,Google #confident,United States
-Google Red Oak,108135.42193026781,77,Google #confident,United States
-Google Papillion,100555.83628094998,237,Google #confident,United States
-Meta Gallatin,99545.22486104093,87,Meta #confident,United States
-CoreWeave Ellendale ND,93481.55634158666,68,CoreWeave #confident,United States
-Meta Sarpy,91965.63921172309,80,Meta #confident,United States
-Huawei Horinger,89439.11066195049,184.3,Huawei #confident,China
-CoreWeave Chester VA,88428.49924204143,82,CoreWeave #confident,United States
-Oracle Batam,84386.05356240526,72,Oracle #likely,Indonesia
-AWS Berwick,81354.21930267812,108,Amazon #confident,United States
-CoreWeave Marble NC,78827.6907529055,65,CoreWeave #confident,United States
-Meta Aiken,78322.38504295099,69,Meta #confident,United States
-Huawei Wuhu,76326.42748863062,157,Huawei #confident,China
-Core42 Lake Mariner,71753.4108135422,58,Core42 #confident,United States
-Microsoft SAT40,64679.13087417888,75,Microsoft #confident,United States
-STACK Infrastructure NVA02,61141.99090449722,85,,United States
-Anthropic Lake Mariner,58564.93178372915,42,AI XPV Platform #confident,United States
-Microsoft-Nebius New Jersey,56846.89236988378,50,Nebius #confident,United States
-CoreWeave Norway,50773.11773623042,42,CoreWeave #confident,Norway
-Nebius Mantsala,48527.92066700354,75,Nebius #confident,Finland
-Southgate Melbourne,46488.12531581607,41,Firmus #confident,Australia
-Stream Phoenix,46134.4113188479,64,,United States
-Microsoft SAT14,45174.33046993431,47,Microsoft #confident,United States
-Vantage TX1,38706.417382516425,32,,United States
-CoreWeave Dalton 1 & 2,32238.504295098533,28,CoreWeave #confident,United States
-Alibaba Zhangbei,31884.79029813037,169,Alibaba #confident,China
-Start Campus Sines Data Campus,31834.259727134915,33,Nscale #confident,Portugal
-xAI QTS Atlanta,11470.43961596766,17.32971,SpaceXAI #confident,United States
-Nscale Keflavik,5821.121778676099,5.11,Nscale #confident,Iceland
-Anthropic Barber Lake,0,0,Cipher Mining #confident,United States
-CoreWeave Lancaster Greenfield site,0,0,CoreWeave #confident,United States
-CoreWeave Muskogee OK,0,0,CoreWeave #confident,United States
-Crusoe Abilene Expansion,0,0,Microsoft #confident,United States
-EcoDataCenter 2,0,0,Mistral AI #confident,Sweden
-Envision Galaxy Ulanqab,0,0,,China
-Goodnight,0,0,Google #speculative,United States
-Google Cedar Rapids,0,0,Google #confident,United States
-Google Fort Wayne,0,0,Google #confident,United States
-Meta Bowling Green,0,0,Meta #confident,United States
-Meta Hyperion,0,0,Meta #confident,United States
-Microsoft Narvik Norway,0,0,Nscale #likely,Norway
-OpenAI Stargate Lordstown,0,0,Softbank #confident,United States
-OpenAI Stargate Michigan,0,0,Oracle #confident,United States
-OpenAI Stargate Milam,0,0,Softbank #confident,United States
-OpenAI Stargate New Mexico,0,0,Oracle #confident,United States
-OpenAI Stargate Shackelford,0,0,Oracle #confident,United States
-OpenAI Stargate UAE,0,0,G42 #likely,United Arab Emirates
-OpenAI Stargate Wisconsin,0,0,Oracle #confident,United States
-QTS Cedar Rapids,0,0,,United States
-QTS Eagle Mountain,0,0,Meta #speculative,United States
+Name,Current H100 equivalents,Current power (MW),Owner,Country,Address
+Colossus 2,1111672.5618999496,946,SpaceXAI #confident,United States,"5420 Tulane Rd, Memphis, TN 38109"
+Anthropic-Amazon New Carlisle,818428.4992420415,1037,Amazon #confident,United States,"55001 Larrison Blvd, New Carlisle, IN 46552"
+Microsoft Fairwater Atlanta,768768.7220818596,636,Microsoft #confident,United States,"1435 Hwy 54 W, Fayetteville, GA 30214"
+Google Pryor (North),636685.1945426983,368,Google #confident,United States,"4581 Webb St, Pryor, OK 74361"
+DayOne Nusajaya,583836.7862556847,473,,Malaysia,
+Meta Prometheus,536343.0015159171,471,Meta #confident,United States,"1 Community Cir, New Albany, OH 43054"
+OpenAI Stargate Abilene,509348.15563415864,421,Oracle #confident,United States,"5502 Spinks Rd, Abilene, TX 79601"
+DayOne Kempas,480638.7064173825,421.691664,,Malaysia,"HP79+MP, 81300 Johor Bahru, Johor, Malaysia"
+Microsoft Fairwater Wisconsin,445679.63617988885,369,Microsoft #confident,United States,"4800 90th St, Mount Pleasant, WI 53403"
+Google Columbus,331985.85144012125,303,Google #confident,United States,"5076 S High St, Columbus, OH 43207"
+Google New Albany,323900.9600808489,333,Google #confident,United States,"1101 Beech Rd SW, New Albany, OH 43054"
+Google Mesa,289540.17180394137,183,Google #confident,United States,
+Colossus 1,275795.85649317835,340,SpaceXAI #confident,United States,"3231 Riverport Rd, Memphis, TN 38109"
+Google Council Bluffs (East),255684.68923698837,237,Google #confident,United States,"10410 Bunge Ave, Council Bluffs, IA 51503"
+CoreWeave Denton TX,252652.85497726125,262,CoreWeave #confident,United States,"8171 Jim Christal Rd, Denton, TX 76207"
+QTS Richmond 1,242546.7407781708,238,,United States,"6000 Technology Blvd, Sandston, VA 23150"
+Bridge Data Centres MY06,221051.54118241536,243,ByteDance #likely,Malaysia,"Bridge Data Centres, Sedenak Tech Park, Johor, Malaysia"
+Meta Rosemount,215675.11520970188,178,Meta #confident,United States,"1772-2396 145th St, Rosemount, MN 55068, USA"
+Amazon Madison Mega Site,214348.14354550533,284,Amazon #confident,United States,"Amazon Data Services Inc, Madison Mega Site Nissan Parkway and Highway 22 Canton, Mississippi Madison County"
+Google Bristow,209860.53562405254,238,Google,United States,"13001 Rollins Ford Road, Bristow, VA 20136"
+Microsoft Goodyear,205154.11824153614,202,Microsoft #confident,United States,"14250 W Broadway Rd, Goodyear, AZ 85338"
+Meta Jeffersonville,203132.89540171804,178,Meta #confident,United States,"500 8th St, Jeffersonville, IN 47130, USA"
+Google Kansas City East,202627.5896917635,105,Google #confident,United States,
+Meta Temple,202472.98777125112,178,Meta #confident,United States,"2310 Eberhardt Rd, Temple, TX 76504"
+AWS New Albany,201111.67256189996,213,Amazon #confident,United States,13360 Miller Rd NW
+Google Omaha,198585.14401212733,237,Google #confident,United States,"11110 State St, Omaha, NE 68142"
+Google Lincoln,197574.53259221828,141,Google #confident,United States,"5475 Cloud Ct, Lincoln, NE 68514"
+QTS Richmond 2,182920.66700353715,180,,United States,"6030–6070 Technology Blvd, Sandston, VA 23150"
+Google The Dalles,175341.0813542193,154,Google #confident,United States,"3500 River Rd, The Dalles, OR"
+QTS Richmond 3,174835.77564426477,144,,United States,"3525–3543 Portugee Rd, Sandston, VA 23150"
+Meta Montgomery,174517.43304699342,153,Meta #confident,United States,"Co Rd 42, Montgomery, AL 36105, USA"
+Meta Kuna,173247.67205659422,152,Meta #confident,United States,"601 Kuna Mora Rd,  Kuna ID 83634"
+Meta Cheyenne,172814.5528044467,152,Meta #confident,United States,"Cheyenne, WY 82007, USA"
+Amazon Ridgeland,171298.6356745831,228,Amazon #confident,United States,"1626 County Line Road Ridgeland, Mississippi"
+Meta Huntsville,166760.9903991915,146,Meta #confident,United States,"5400 Prosperity Dr NW, Toney, AL"
+Coreweave Helios,159551.768236855,132,CoreWeave #confident,United States,"984 County Road 112, Afton, TX 79220"
+Microsoft Project Osmium,155634.15866599293,190,Microsoft #confident,United States,"5855 SW Kerry St, Cumming, IA 50061"
+Meta Eagle Mountain,151354.21930267813,133,Meta #confident,United States,"1275 N Community Cir, Eagle Mountain, UT 84005"
+Google Midlothian,143580.85118746842,103,Google #confident,United States,"3250 Railport Parkway, Midlothian, TX 76065"
+Google Storey County,133906.01313794847,161,Google #confident,United States,
+Meta Los Lunas,133906.01313794847,118,Meta #confident,United States,"4250 Messenger Lp, Los Lunas, NM 87031"
+Google Lancaster,130368.8731682668,137,Google #confident,United States,"105 Whiley Rd, Lancaster, OH 43130"
+Meta-QTS Hillsboro 2,123839,180,Meta #likely,United States,"4755 NE Huffman St, Hillsboro, OR 97124"
+Google Waltham Cross,123799.89893885801,88,Google #confident,United Kingdom,"Land at Maxwell's Farm West, Great Cambridge Road, Cheshunt, EN8 8XH"
+VNET Bayin Ulanqab,122789.28751894896,221,VNET #confident,China,"Bayin, Ulanqab, China"
+Google Arcola,108135.42193026781,77,Google #confident,United States,"42575 Arcola Blvd, Sterling, VA 20166"
+Google Red Oak,108135.42193026781,77,Google #confident,United States,"330 Austin Blvd, Red Oak, TX 75154"
+Google Papillion,100555.83628094998,237,Google #confident,United States,"14651-15249 Gold Coast Rd 68138 Papillion Nebraska, USA"
+Meta Gallatin,99545.22486104093,87,Meta #confident,United States,"1 Meta Lp, Gallatin, TN 37066"
+CoreWeave Ellendale ND,93481.55634158666,68,CoreWeave #confident,United States,"9685 87th Ave SE, Ellendale, ND 58436"
+Meta Sarpy,91965.63921172309,80,Meta #confident,United States,"14436-14998 Fairview Rd, Springfield, NE 68059, USA"
+Huawei Horinger,89439.11066195049,184.3,Huawei #confident,China,"Huawei, Horinger, China"
+CoreWeave Chester VA,88428.49924204143,82,CoreWeave #confident,United States,"1401 Meadowville Technology Parkway, Chester, VA"
+Oracle Batam,84386.05356240526,72,Oracle #likely,Indonesia,
+AWS Berwick,81354.21930267812,108,Amazon #confident,United States,"1125 Electron Ave, Berwick, PA 18603"
+CoreWeave Marble NC,78827.6907529055,65,CoreWeave #confident,United States,"155 Palmer Ln, Marble, NC 28905"
+Meta Aiken,78322.38504295099,69,Meta #confident,United States,"7601 State Hwy 105, Trenton, SC 29847, USA"
+Huawei Wuhu,76326.42748863062,157,Huawei #confident,China,"Wuhu, China"
+Core42 Lake Mariner,71753.4108135422,58,Core42 #confident,United States,"7725 Lake Rd, Barker, NY 14012"
+Microsoft SAT40,64679.13087417888,75,Microsoft #confident,United States,"15000 Lambda Drive, San Antonio, TX 78245"
+STACK Infrastructure NVA02,61141.99090449722,85,,United States,"9590 Hornbaker Rd, Manassas, VA 20109"
+Anthropic Lake Mariner,58564.93178372915,42,AI XPV Platform #confident,United States,"7725 Lake Rd, Barker, NY 14012"
+Microsoft-Nebius New Jersey,56846.89236988378,50,Nebius #confident,United States,"3963 S Lincoln Ave, Vineland, New Jersey"
+CoreWeave Norway,50773.11773623042,42,CoreWeave #confident,Norway,"Stølevegen 39, 4715 Øvrebø, Norway"
+Nebius Mantsala,48527.92066700354,75,Nebius #confident,Finland,
+Southgate Melbourne,46488.12531581607,41,Firmus #confident,Australia,
+Stream Phoenix,46134.4113188479,64,,United States,2950 S. Litchfield Road
+Microsoft SAT14,45174.33046993431,47,Microsoft #confident,United States,"3545 Wiseman Boulevard, San Antonio, TX 78251"
+Vantage TX1,38706.417382516425,32,,United States,"14720 Omicron Dr, San Antonio, TX 78245"
+CoreWeave Dalton 1 & 2,32238.504295098533,28,CoreWeave #confident,United States,"2205 Industrial South Rd, Dalton, GA, 30721"
+Alibaba Zhangbei,31884.79029813037,169,Alibaba #confident,China,"Alibaba Zhangbei Yun Calculation Data Center, Zhangbei County, Zhangjiakou, Hebei, China, 076471"
+Start Campus Sines Data Campus,31834.259727134915,33,Nscale #confident,Portugal,"Start Campus - Sustainable Data Center Services, Sines, Portugal"
+xAI QTS Atlanta,11470.43961596766,17.32971,SpaceXAI #confident,United States,"1025 Jefferson Street NW, Atlanta, GA 30318"
+Nscale Keflavik,5821.121778676099,5.11,Nscale #confident,Iceland,"Valhallarbraut 868, 262 Reykjanesbær, Iceland"
+Anthropic Barber Lake,0,0,Cipher Mining #confident,United States,
+CoreWeave Lancaster Greenfield site,0,0,CoreWeave #confident,United States,"216 Greenfield Rd, Lancaster, PA 
+"
+CoreWeave Muskogee OK,0,0,CoreWeave #confident,United States,"1525 W 43rd St S, Muskogee, OK 74401, USA"
+Crusoe Abilene Expansion,0,0,Microsoft #confident,United States,"5502 Spinks Rd, Abilene, TX 79601"
+EcoDataCenter 2,0,0,Mistral AI #confident,Sweden,"Kvarnsvedsvägen 420, 784 66 Borlänge, Sweden"
+Envision Galaxy Ulanqab,0,0,,China,
+Goodnight,0,0,Google #speculative,United States,"10001 Lima Rd, Claude, TX 79019"
+Google Cedar Rapids,0,0,Google #confident,United States,"5800 EDGEWOOD RD SW CEDAR RAPIDS, IA 52404"
+Google Fort Wayne,0,0,Google #confident,United States,"6015 Adams Center Road, Fort Wayne, IN 46806"
+Meta Bowling Green,0,0,Meta #confident,United States,"12356 Middleton Pike, Bowling Green, OH 43402"
+Meta Hyperion,0,0,Meta #confident,United States,"Holly Ridge, LA 71269"
+Microsoft Narvik Norway,0,0,Nscale #likely,Norway,
+OpenAI Stargate Lordstown,0,0,Softbank #confident,United States,"2300 Hallock Young Rd, Warren, OH 44481"
+OpenAI Stargate Michigan,0,0,Oracle #confident,United States,
+OpenAI Stargate Milam,0,0,Softbank #confident,United States,
+OpenAI Stargate New Mexico,0,0,Oracle #confident,United States,
+OpenAI Stargate Shackelford,0,0,Oracle #confident,United States,"175 Private Road 1604, Abilene, TX 79601, Shackelford County"
+OpenAI Stargate UAE,0,0,G42 #likely,United Arab Emirates,"Nexus L&T Project Office, Al Bihouth, Al Dhafrah, Abu Dhabi, United Arab Emirates"
+OpenAI Stargate Wisconsin,0,0,Oracle #confident,United States,
+QTS Cedar Rapids,0,0,,United States,"6200 76th Ave SW, Fairfax, IA 52228"
+QTS Eagle Mountain,0,0,Meta #speculative,United States,"652 E Hyperscale Way, Eagle Mountain, UT 84013"

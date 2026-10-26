@@ -747,3 +747,95 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
     }
   });
 });
+
+describe('GeopoliticAI: i Siti dei data center', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  const mondo = () => within(mappa().getByRole('group', { name: /^Mappa del mondo/ }));
+  const europa = () => within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+  const siti = () => mappa().queryByRole('button', { name: 'Siti' });
+
+  it('l’interruttore «Siti» c’è solo nei data center, e acceso mette un cerchio per ogni sito con la posizione', async () => {
+    show(data, { anello: 'datacenter' });
+    expect(siti()).toHaveAttribute('aria-pressed', 'false');
+    expect(mondo().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
+    const acceso = new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
+    await fireEvent.click(siti()!);
+    expect((await acceso).detail).toEqual({ chiave: 'siti', valore: '1' });
+    cleanup();
+    show(data, { anello: 'datacenter', siti: '1' });
+    expect(siti()).toHaveAttribute('aria-pressed', 'true');
+    const colossus = mondo().getByRole('button', { name: 'Colossus 2: 1.111.673 H100 equivalenti' });
+    // la stessa proiezione dei confini: Equal Earth di scripts/confini.py
+    expect([Number(colossus.getAttribute('cx')).toFixed(1), Number(colossus.getAttribute('cy')).toFixed(1)]).toEqual(['271.8', '-126.6']);
+    expect(mondo().queryByRole('button', { name: /^DayOne Nusajaya/ })).toBeNull(); // senza posizione, senza cerchio
+    cleanup();
+    show(data, { anello: 'modelli', siti: '1' });
+    expect(siti()).toBeNull();
+    expect(mondo().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
+  });
+
+  const conSiti = (d: Dataset = data) => show(d, { anello: 'datacenter', siti: '1' });
+  /** Le righe del fumetto di un sito: etichetta e valore. */
+  const righe = (nome: string) =>
+    within(mappa().getByRole('dialog', { name: nome })).getAllByRole('term').map((dt) => [dt.textContent, dt.nextElementSibling?.textContent]);
+
+  it('un sito in costruzione ha il cerchio vuoto', () => {
+    conSiti();
+    const eco = europa().getByRole('button', { name: 'EcoDataCenter 2: in costruzione' });
+    expect(eco).toHaveAttribute('fill', 'none');
+    expect(mondo().getByRole('button', { name: /^Colossus 2:/ })).not.toHaveAttribute('fill', 'none');
+  });
+
+  it('un tocco su un cerchio del riquadro apre il fumetto del sito, con la posizione approssimativa se viene dall’indirizzo', async () => {
+    conSiti();
+    await fireEvent.click(europa().getByRole('button', { name: 'Google Waltham Cross: 123.800 H100 equivalenti' }));
+    expect(righe('Google Waltham Cross')).toEqual([
+      ['Proprietario dei chip', 'Google'], ['Paese', 'Regno Unito'], ['H100 equivalenti', '123.800'], ['Potenza elettrica', '88 MW'], ['Stato', 'operativo'],
+    ]);
+    expect(within(mappa().getByRole('dialog')).getByText("Posizione approssimativa, ricavata dall'indirizzo.")).toBeInTheDocument();
+  });
+
+  it('da tastiera: Invio su un cerchio apre il fumetto, Esc lo chiude e torna al cerchio', async () => {
+    conSiti();
+    const eco = europa().getByRole('button', { name: 'EcoDataCenter 2: in costruzione' });
+    expect(eco).toHaveAttribute('tabindex', '0');
+    // nel mondo lo stesso sito si tocca, ma da tastiera ci si arriva una volta sola, dal riquadro
+    expect(mondo().getByRole('button', { name: 'EcoDataCenter 2: in costruzione' })).toHaveAttribute('tabindex', '-1');
+    expect(mondo().getByRole('button', { name: /^Colossus 2:/ })).toHaveAttribute('tabindex', '0');
+    eco.focus();
+    await fireEvent.keyDown(eco, { key: 'Enter' });
+    expect(righe('EcoDataCenter 2')).toEqual([
+      ['Proprietario dei chip', 'Mistral AI'], ['Paese', 'Svezia'], ['H100 equivalenti', 'in costruzione'], ['Stato', 'in costruzione'],
+    ]);
+    expect(within(mappa().getByRole('dialog')).queryByText(/approssimativa/)).toBeNull();
+    const fumetto = mappa().getByRole('dialog');
+    await waitFor(() => expect(fumetto).toHaveFocus());
+    await fireEvent.keyDown(fumetto, { key: 'Escape' });
+    expect(mappa().queryByRole('dialog')).toBeNull();
+    expect(eco).toHaveFocus();
+  });
+
+  it('la didascalia dei Siti: l’Italia non ne ha, e il rimando alla nota GPU clusters', () => {
+    conSiti();
+    expect(mappa().getByText('Ogni cerchio è un data center noto a Epoch, grande secondo i suoi H100 equivalenti; i cerchi vuoti sono in costruzione. '
+      + '1 sito non ha una posizione: conta nella quota, ma senza cerchio. '
+      + 'In Italia Epoch non conta nessun data center: i cluster italiani sono nella nota sul censimento GPU clusters.')).toBeInTheDocument();
+    expect(mappa().getByText(/^Fuori dai dati della mappa: il censimento GPU clusters/)).toBeInTheDocument();
+    expect(mappa().queryByRole('button', { name: /Leonardo|HPC6/ })).toBeNull();
+  });
+
+  it('l’attribuzione dei Siti, con OpenStreetMap solo se una posizione viene da un indirizzo', () => {
+    conSiti();
+    const fonte = mappa().getByText(/^Data center: Epoch AI/);
+    expect(fonte).toHaveTextContent('Siti dei data center: Epoch AI, AI data centers, CC BY 4.0. Posizioni ricavate dalla mappa di Epoch, dati rielaborati da AI Radar. © OpenStreetMap contributors.');
+    expect(within(fonte).getByRole('link', { name: 'OpenStreetMap' })).toHaveAttribute('href', 'https://www.openstreetmap.org/copyright');
+    cleanup();
+    const dc = geo.data_center!;
+    conSiti({ ...data, geopoliticai: { ...geo, data_center: { ...dc, siti: dc.siti.map((x) => ({ ...x, posizione: x.posizione && 'epoch' })) } } });
+    expect(mappa().getByText(/^Data center: Epoch AI/)).toHaveTextContent(/dati rielaborati da AI Radar\.$/);
+    expect(mappa().queryByRole('link', { name: 'OpenStreetMap' })).toBeNull();
+    cleanup();
+    show(data, { anello: 'datacenter' }); // senza i Siti, nessuna attribuzione dei Siti
+    expect(mappa().queryByText(/Siti dei data center/)).toBeNull();
+  });
+});

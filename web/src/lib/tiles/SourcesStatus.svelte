@@ -12,7 +12,7 @@
   };
   const STATI: Record<string, string> = { ok: 'aggiornata', errore: 'errore', 'non configurata': 'non configurata' };
   const rows = $derived(Object.entries(status?.fonti ?? {}).map(([k, s]) => [
-    NOMI[k] ?? k, STATI[s.stato] ?? s.stato, s.ultimo_successo ? day(s.ultimo_successo) : '—', s.stato === 'ok' ? '' : (s.messaggio ?? ''),
+    NOMI[k] ?? k, STATI[s.stato] ?? s.stato, s.ultimo_successo ? day(s.ultimo_successo) : '—', s.messaggio ?? '', // anche una fonte aggiornata può avere un avviso
   ]));
 </script>
 

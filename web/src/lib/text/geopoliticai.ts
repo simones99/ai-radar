@@ -125,6 +125,8 @@ const NOTA_UK = 'Epoch attribuisce Google DeepMind, che ha sede a Londra, agli U
 
 /** Nota fissa, finché l'Italia è a zero. */
 export const NOTA_ITALIA = 'Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.';
+/** In testa all'elenco delle tappe del Filo della catena. */
+export const NOTA_FILO = "Un esempio scelto da noi, non un dato: mostra da quali Paesi passa un modello, una tappa per anello. Le quote per Paese sono nell'altra vista.";
 /** La nota sotto la mappa, in tutti gli anelli: i cluster italiani che Epoch conta fuori dai dati della mappa. */
 export const NOTA_GPU = 'Fuori dai dati della mappa: il censimento GPU clusters di Epoch conta in Italia 9 cluster, tra cui Leonardo al CINECA ed Eni HPC6 (dato di marzo 2026).';
 

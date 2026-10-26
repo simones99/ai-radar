@@ -471,6 +471,50 @@ test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=model
   await expect(mappa(page).getByRole('button', { name: 'Siti' })).toHaveCount(0);
 });
 
+/** I tratti degli archi del filo nel riquadro dell'Europa, nell'ordine delle fermate: null è un arco pieno. */
+const tratti = (page: Page) => europa(page).getByTestId('arco').evaluateAll((as) => as.map((a) => a.getAttribute('stroke-dasharray')));
+
+test('filo: ?vista=filo&filo=cina apre l’esempio cinese, e un clic su una fermata sposta l’arco pieno', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=filo&filo=cina');
+  await expect(mappa(page).getByRole('group', { name: 'Vista' }).getByRole('button', { name: 'Filo della catena' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(mappa(page).getByRole('group', { name: 'Esempio' }).getByRole('button', { name: 'Un modello cinese' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello cinese' })).toBeVisible();
+  await expect(mappa(page).getByText(/^Un esempio scelto da noi, non un dato/)).toBeVisible();
+  expect(await tratti(page)).toEqual([null, null, null, null, null]);
+  await mappa(page).getByRole('button', { name: '3 Fabbricazione dei chip', exact: true }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?vista=filo&filo=cina&anello=fabbricazione$/);
+  await expect.poll(() => tratti(page)).toEqual([null, null, '3 2', '3 2', '3 2']);
+  // di nuovo alle quote: il filo resta nel link, ma la vista è quella delle quote
+  await mappa(page).getByRole('button', { name: 'Quote per Paese' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione$/);
+  await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
+  await expect(europa(page).getByTestId('arco')).toHaveCount(0);
+});
+
+test('filo a 320px: nessuno scorrimento orizzontale, e gli archi d’Europa nel riquadro sotto la mappa', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#geopoliticai?vista=filo');
+  await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello europeo' })).toBeVisible();
+  await expect(europa(page).getByTestId('arco').first()).toBeAttached();
+  expect(await noHorizontalScroll(page)).toBe(true);
+  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+});
+
+test('filo con «riduci movimento»: gli archi non si animano', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/#geopoliticai?vista=filo');
+  await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
+  await expect(page).toHaveURL(/anello=macchinari/);
+  expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+});
+
+test('filo senza «riduci movimento»: l’arco che arriva alla fermata scelta si disegna', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=filo');
+  await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
+  await expect(page).toHaveURL(/anello=macchinari/);
+  expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(0);
+});
+
 test('mappa in tema scuro: nessuna violazione grave', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/#geopoliticai?area=cina');

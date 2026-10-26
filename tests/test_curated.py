@@ -125,6 +125,45 @@ def test_catena_rejects(anelli, msg):
         catena.validate({"anelli": anelli})
 
 
+def tappa(anello: str, **patch) -> dict:
+    return {"anello": anello, "luogo": "TSMC, Tainan", "iso": "TWN", "lat": 23.11, "lon": 120.27, "frase": "fabbrica il chip",
+            "fonte": "https://www.tsmc.com/x", **patch}
+
+
+FERMATE = ["materie", "progettazione", "fabbricazione", "macchinari", "datacenter", "modelli"]
+FILO = {"nome": "Un modello americano", "tappe": [tappa(a) for a in FERMATE]}
+
+
+def test_filo_valid():
+    out = catena.validate_fili({"fili": {"usa": FILO, "ue": {**FILO, "nome": "Un modello europeo"}}})
+    assert list(out) == ["usa", "ue"]
+    assert out["usa"]["nome"] == "Un modello americano"
+    assert [t["anello"] for t in out["usa"]["tappe"]] == FERMATE
+    assert out["usa"]["tappe"][2] == tappa("fabbricazione")
+
+
+def test_un_file_senza_fili_non_ne_ha():
+    assert catena.validate_fili({"anelli": {}}) == {}
+
+
+@pytest.mark.parametrize("fili, msg", [
+    ({"giappone": FILO}, "esempio sconosciuto: giappone"),
+    ({"usa": {**FILO, "nome": ""}}, "usa: nome mancante"),
+    ({"usa": {**FILO, "tappe": [tappa(a) for a in FERMATE[:5]]}}, "usa: servono sei tappe"),
+    ({"usa": {**FILO, "tappe": [tappa(a) for a in FERMATE] + [tappa("modelli")]}}, "usa: servono sei tappe"),
+    ({"usa": {**FILO, "tappe": [tappa(a) for a in FERMATE[1:2] + FERMATE[:1] + FERMATE[2:]]}}, "usa, tappa 1: serve l'anello materie, non progettazione"),
+    ({"usa": {**FILO, "tappe": [tappa(a, fonte=None if a == "macchinari" else "https://x.example") for a in FERMATE]}}, "usa, tappa 4: fonte mancante"),
+    ({"usa": {**FILO, "tappe": [tappa(a, fonte="http://x.example") for a in FERMATE]}}, "usa, tappa 1: fonte deve iniziare con https://"),
+    ({"usa": {**FILO, "tappe": [tappa(a, frase=" ") for a in FERMATE]}}, "usa, tappa 1: frase mancante"),
+    ({"usa": {**FILO, "tappe": [tappa(a, iso="Taiwan") for a in FERMATE]}}, "usa, tappa 1: iso non è un codice ADM0_A3"),
+    ({"usa": {**FILO, "tappe": [tappa(a, lat=95) for a in FERMATE]}}, "usa, tappa 1: coordinate fuori scala"),
+    ({"usa": {**FILO, "tappe": [tappa(a, lon="120") for a in FERMATE]}}, "usa, tappa 1: coordinate fuori scala"),
+])
+def test_filo_rejects(fili, msg):
+    with pytest.raises(ValueError, match=msg):
+        catena.validate_fili({"fili": fili})
+
+
 def test_shipped_files_are_valid(tmp_path, monkeypatch):
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
     assert ai_act.run()["scadenze"] >= 5
@@ -135,8 +174,15 @@ def test_shipped_files_are_valid(tmp_path, monkeypatch):
 
 def test_shipped_catena_is_valid(tmp_path, monkeypatch):
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
-    assert catena.run() == {"anelli": 4}
-    anelli = json.loads((tmp_path / "catena.json").read_text(encoding="utf-8"))["anelli"]
+    assert catena.run() == {"anelli": 4, "fili": 3}
+    doc = json.loads((tmp_path / "catena.json").read_text(encoding="utf-8"))
+    fili, anelli = doc["fili"], doc["anelli"]
+    assert list(fili) == ["usa", "ue", "cina"]
+    assert all(t["fonte"].startswith("https://") for f in fili.values() for t in f["tappe"])
+    # il data center dell'esempio europeo è un sito di Epoch, non «Mistral Compute»
+    siti = {s["nome"] for s in json.loads((ROOT / "data" / "geopoliticai.json").read_text(encoding="utf-8"))["data_center"]["siti"]}
+    assert all(f["tappe"][4]["luogo"].split(",")[0] in siti for f in fili.values())
+    assert fili["ue"]["tappe"][4]["iso"] == "SWE"
     materie = anelli.pop("materie")["materiali"]
     assert {k: a["data"] for k, a in anelli.items()} == {"progettazione": "2022", "fabbricazione": "2022", "macchinari": "2025"}
     assert {m: (x["fonte"], x["licenza"]) for m, x in materie.items()} == {

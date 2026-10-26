@@ -272,5 +272,32 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
         quote: { NLD: 81.5, JPN: 15, AUT: 1.6 }, europa: null,
         nota: 'Le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML nei Paesi Bassi.' },
     },
+    // gli esempi del Filo della catena: per i test bastano luoghi e frasi brevi, le fonti sono finte
+    fili: {
+      usa: { nome: 'Un modello americano', tappe: [
+        { anello: 'materie', luogo: 'Gallio', iso: 'CHN', lat: 36.8, lon: 118.05, frase: 'Il gallio viene quasi tutto dalla Cina.', fonte: 'https://example.org/usa-1' },
+        { anello: 'progettazione', luogo: 'NVIDIA, Santa Clara', iso: 'USA', lat: 37.37, lon: -121.96, frase: 'Progetta la GPU.', fonte: 'https://example.org/usa-2' },
+        { anello: 'fabbricazione', luogo: 'TSMC, Tainan', iso: 'TWN', lat: 23.11, lon: 120.27, frase: 'Fabbrica il chip.', fonte: 'https://example.org/usa-3' },
+        { anello: 'macchinari', luogo: 'ASML, Veldhoven', iso: 'NLD', lat: 51.42, lon: 5.4, frase: 'Fa le macchine EUV.', fonte: 'https://example.org/usa-4' },
+        { anello: 'datacenter', luogo: 'OpenAI Stargate Abilene', iso: 'USA', lat: 32.5, lon: -99.79, frase: 'Il data center.', fonte: 'https://example.org/usa-5' },
+        { anello: 'modelli', luogo: 'OpenAI, San Francisco', iso: 'USA', lat: 37.77, lon: -122.42, frase: 'Il modello.', fonte: 'https://example.org/usa-6' },
+      ] },
+      ue: { nome: 'Un modello europeo', tappe: [
+        { anello: 'materie', luogo: 'Gallio', iso: 'CHN', lat: 36.8, lon: 118.05, frase: 'Anche per l’Europa il gallio viene dalla Cina.', fonte: 'https://example.org/ue-1' },
+        { anello: 'progettazione', luogo: 'NVIDIA, Santa Clara', iso: 'USA', lat: 37.37, lon: -121.96, frase: 'Le GPU sono americane.', fonte: 'https://example.org/ue-2' },
+        { anello: 'fabbricazione', luogo: 'TSMC, Tainan', iso: 'TWN', lat: 23.11, lon: 120.27, frase: 'Fabbricate a Taiwan.', fonte: 'https://example.org/ue-3' },
+        { anello: 'macchinari', luogo: 'ASML, Veldhoven', iso: 'NLD', lat: 51.42, lon: 5.4, frase: 'Le macchine EUV sono olandesi.', fonte: 'https://example.org/ue-4' },
+        { anello: 'datacenter', luogo: 'EcoDataCenter 2', iso: 'SWE', lat: 60.53, lon: 15.42, frase: 'Il data center di Mistral AI in Svezia.', fonte: 'https://example.org/ue-5' },
+        { anello: 'modelli', luogo: 'Mistral AI, Parigi', iso: 'FRA', lat: 48.86, lon: 2.35, frase: 'Il modello.', fonte: 'https://example.org/ue-6' },
+      ] },
+      cina: { nome: 'Un modello cinese', tappe: [
+        { anello: 'materie', luogo: 'Gallio', iso: 'CHN', lat: 36.8, lon: 118.05, frase: 'Il gallio è in casa.', fonte: 'https://example.org/cina-1' },
+        { anello: 'progettazione', luogo: 'HiSilicon, Shenzhen', iso: 'CHN', lat: 22.54, lon: 114.06, frase: 'Progetta i chip Ascend.', fonte: 'https://example.org/cina-2' },
+        { anello: 'fabbricazione', luogo: 'SMIC, Shanghai', iso: 'CHN', lat: 31.23, lon: 121.47, frase: 'Fabbrica senza EUV.', fonte: 'https://example.org/cina-3' },
+        { anello: 'macchinari', luogo: 'ASML, Veldhoven', iso: 'NLD', lat: 51.42, lon: 5.4, frase: 'Solo macchine DUV.', fonte: 'https://example.org/cina-4' },
+        { anello: 'datacenter', luogo: 'Huawei Horinger', iso: 'CHN', lat: 40.54, lon: 111.83, frase: 'Il data center.', fonte: 'https://example.org/cina-5' },
+        { anello: 'modelli', luogo: 'Huawei, Shenzhen', iso: 'CHN', lat: 22.65, lon: 114.06, frase: 'Il modello.', fonte: 'https://example.org/cina-6' },
+      ] },
+    },
   },
 };

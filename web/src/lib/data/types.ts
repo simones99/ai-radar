@@ -222,7 +222,24 @@ export interface CatenaAnello {
 export type Materiale = 'gallio' | 'terre' | 'silicio' | 'germanio';
 /** Le materie prime: un insieme di quote per materiale, ognuno con la sua fonte e la sua data. */
 export interface CatenaMaterie { materiali: Partial<Record<Materiale, CatenaAnello & { nome: string }>> }
-export interface Catena { anelli: Partial<Record<'progettazione' | 'fabbricazione' | 'macchinari', CatenaAnello>> & { materie?: CatenaMaterie } }
+/** Una tappa del Filo della catena: dove passa il modello in un anello, con una frase e la fonte che la sostiene. */
+export interface CatenaTappa {
+  anello: 'materie' | 'progettazione' | 'fabbricazione' | 'macchinari' | 'datacenter' | 'modelli';
+  luogo: string;
+  iso: string;
+  lat: number;
+  lon: number;
+  frase: string;
+  fonte: string;
+}
+/** Un esempio del Filo della catena: sei tappe, una per anello, nell'ordine delle fermate. */
+export interface CatenaFilo { nome: string; tappe: CatenaTappa[] }
+export type FiloKey = 'usa' | 'ue' | 'cina';
+export interface Catena {
+  anelli: Partial<Record<'progettazione' | 'fabbricazione' | 'macchinari', CatenaAnello>> & { materie?: CatenaMaterie };
+  /** manca in un file del giro prima */
+  fili?: Partial<Record<FiloKey, CatenaFilo>>;
+}
 
 export interface Dataset {
   status?: Status;

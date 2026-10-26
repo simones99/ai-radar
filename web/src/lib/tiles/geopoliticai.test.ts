@@ -839,3 +839,100 @@ describe('GeopoliticAI: i Siti dei data center', () => {
     expect(mappa().queryByText(/Siti dei data center/)).toBeNull();
   });
 });
+
+describe('GeopoliticAI: il Filo della catena', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  const viste = () => within(mappa().getByRole('group', { name: 'Vista' }));
+  const esempi = () => within(mappa().getByRole('group', { name: 'Esempio' }));
+  const premuto = (g: ReturnType<typeof viste>) => g.getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent);
+  const imposta = () => new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
+
+  it('l’interruttore «Quote per Paese / Filo della catena»: si parte dalle quote, e un clic mette ?vista=filo nel link', async () => {
+    show();
+    expect(premuto(viste())).toEqual(['Quote per Paese']);
+    expect(mappa().queryByRole('group', { name: 'Esempio' })).toBeNull();
+    const evento = imposta();
+    await fireEvent.click(viste().getByRole('button', { name: 'Filo della catena' }));
+    expect((await evento).detail).toEqual({ chiave: 'vista', valore: 'filo' });
+  });
+
+  it('?vista=filo apre il filo dell’esempio europeo; ?filo= sceglie l’esempio, e i valori non validi si ignorano', async () => {
+    show(data, { vista: 'filo' });
+    expect(premuto(viste())).toEqual(['Filo della catena']);
+    expect(premuto(esempi())).toEqual(['Un modello europeo']);
+    expect(esempi().getAllByRole('button').map((b) => b.textContent)).toEqual(['Un modello americano', 'Un modello europeo', 'Un modello cinese']);
+    cleanup();
+    show(data, { vista: 'filo', filo: 'cina' });
+    expect(premuto(esempi())).toEqual(['Un modello cinese']);
+    const evento = imposta();
+    await fireEvent.click(esempi().getByRole('button', { name: 'Un modello americano' }));
+    expect((await evento).detail).toEqual({ chiave: 'filo', valore: 'usa' });
+    cleanup();
+    show(data, { vista: 'filo', filo: 'giappone' });
+    expect(premuto(esempi())).toEqual(['Un modello europeo']);
+    cleanup();
+    show(data, { vista: 'boh', filo: 'cina' });
+    expect(premuto(viste())).toEqual(['Quote per Paese']);
+  });
+
+  const elenco = () => within(mappa().getByRole('list', { name: /^Le tappe del filo/ }));
+
+  it('sotto la mappa l’elenco delle tappe al posto del tabellone: luogo, frase e fonte, con la nota in testa', () => {
+    show(data, { vista: 'filo', filo: 'ue' });
+    expect(mappa().getByText("Un esempio scelto da noi, non un dato: mostra da quali Paesi passa un modello, una tappa per anello. Le quote per Paese sono nell'altra vista."))
+      .toBeInTheDocument();
+    expect(mappa().queryByText('Il primo', { selector: 'dt' })).toBeNull();
+    const tappe = elenco().getAllByRole('listitem');
+    expect(tappe.map((li) => within(li).getByRole('button').textContent)).toEqual([
+      '1Materie prime: Gallio, Cina', '2Progettazione dei chip: NVIDIA, Santa Clara, USA', '3Fabbricazione dei chip: TSMC, Tainan, Taiwan',
+      '4Macchinari: ASML, Veldhoven, Paesi Bassi', '5Data center: EcoDataCenter 2, Svezia', '6Modelli: Mistral AI, Parigi, Francia',
+    ]);
+    expect(within(tappe[4]).getByText(/^Il data center di Mistral AI in Svezia\./)).toBeInTheDocument();
+    expect(within(tappe[4]).getByRole('link', { name: 'Fonte: example.org' })).toHaveAttribute('href', 'https://example.org/ue-5');
+    // si parte dai modelli: l'ultima tappa è quella scelta
+    expect(tappe.map((li) => li.getAttribute('aria-current'))).toEqual([null, null, null, null, null, 'step']);
+    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' }).nextElementSibling).toHaveTextContent('Mistral AI, Parigi, Francia');
+  });
+
+  it('un clic su una tappa dell’elenco, o sulla mappa, sceglie la sua fermata', async () => {
+    show(data, { vista: 'filo' });
+    let evento = imposta();
+    await fireEvent.click(within(elenco().getAllByRole('listitem')[3]).getByRole('button'));
+    expect((await evento).detail).toEqual({ chiave: 'anello', valore: 'macchinari' });
+    evento = imposta();
+    await fireEvent.click(within(mappa().getByRole('group', { name: 'Europa, ingrandita' })).getByRole('button', { name: '5. Data center: EcoDataCenter 2' }));
+    expect((await evento).detail).toEqual({ chiave: 'anello', valore: 'datacenter' });
+  });
+
+  it('nel filo non ci sono le quote: niente numeri sulla mappa, niente Siti, e la fonte è chi ha scelto l’esempio', () => {
+    show(data, { vista: 'filo', anello: 'datacenter', siti: '1' });
+    expect(mappa().queryAllByTestId('etichetta')).toEqual([]);
+    expect(mappa().queryByRole('button', { name: 'Siti' })).toBeNull();
+    expect(mappa().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
+    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+    expect(europa.getByRole('button', { name: 'Svezia: 5. EcoDataCenter 2' })).toBeInTheDocument();
+    expect(europa.getByRole('button', { name: 'Italia: nessuna tappa del filo' })).toBeInTheDocument();
+    expect(mappa().getByText(/^Filo della catena: un esempio scelto da AI Radar/)).toHaveTextContent(/Confini: Natural Earth, pubblico dominio\.$/);
+  });
+
+  it('gli archi: pieni fino alla fermata scelta, tratteggiati dopo, e anche nel riquadro dell’Europa', () => {
+    const tratti = (g: string) => within(mappa().getByRole('group', { name: g })).queryAllByTestId('arco').map((a) => a.getAttribute('stroke-dasharray'));
+    show(data, { vista: 'filo', anello: 'fabbricazione' });
+    // cinque archi tra sei tappe: arrivano alle fermate 2, 3, 4, 5 e 6
+    expect(tratti('Mappa del mondo: Filo della catena, un modello europeo')).toEqual([null, null, '3 2', '3 2', '3 2']);
+    expect(tratti('Europa, ingrandita')).toEqual([null, null, '3 2', '3 2', '3 2']);
+    cleanup();
+    show(data, { vista: 'filo', anello: 'materie' });
+    expect(tratti('Europa, ingrandita')).toEqual(['3 2', '3 2', '3 2', '3 2', '3 2']);
+    cleanup();
+    show(data, { vista: 'filo' });
+    expect(tratti('Europa, ingrandita')).toEqual([null, null, null, null, null]);
+  });
+
+  it('senza gli esempi nel file della catena non c’è l’interruttore, e ?vista=filo si ignora', () => {
+    const { fili: _, ...catena } = data.catena!;
+    show({ ...data, catena }, { vista: 'filo' });
+    expect(mappa().queryByRole('group', { name: 'Vista' })).toBeNull();
+    expect(mappa().getByText('Il primo', { selector: 'dt' })).toBeInTheDocument();
+  });
+});

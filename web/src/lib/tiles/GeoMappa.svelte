@@ -3,22 +3,26 @@
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
   // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
+  // Con ?vista=filo, al posto delle quote il Filo della catena: un esempio scelto da noi (?filo=), con gli archi tra le sei tappe e il loro elenco.
   import { tick } from 'svelte';
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
-    ANELLI, anelloDi, attivi, CENTRO, citeSiti, didascaliaSiti, EUROPA as EUR, fumetto, materialeDi, materialiDi, NOMI, nomeSito, PAESI, paesiZona,
-    puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
+    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
+    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
-  import { NOTA_GPU, NOTA_ITALIA } from '../text/geopoliticai';
+  import { NOTA_FILO, NOTA_GPU, NOTA_ITALIA } from '../text/geopoliticai';
 
-  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, onscegli }: {
+  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, vista: paramVista, filo: paramFilo, onscegli }: {
     g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; siti: string | undefined;
-    onscegli: (k: string) => void;
+    vista: string | undefined; filo: string | undefined; onscegli: (k: string) => void;
   } = $props();
 
-  const ok = $derived(attivi(g, catena));
+  const fili = $derived(filiDi(catena));
+  const filo = $derived(filoDi(paramVista, paramFilo, catena));
+  // nel filo ogni fermata ha la sua tappa, anche quella di un anello senza dati
+  const ok = $derived(filo ? ANELLI.map((a) => a.key) : attivi(g, catena));
   const anello = $derived(anelloDi(param, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
   const attivo = (k: AnelloKey) => ok.includes(k);
@@ -37,16 +41,25 @@
   const ev = $derived(paesiZona(g, zona));
   const scelte = $derived(zonaDi(g));
   /** I Paesi UE che prendono il valore unico dell'Europa, tratteggiati. */
-  const unico = $derived(new Set(v.europa != null ? g.zone.ue?.paesi_mappa ?? [] : []));
+  const unico = $derived(new Set(v.europa != null && !filo ? g.zone.ue?.paesi_mappa ?? [] : []));
   const quote = $derived(Object.fromEntries(v.valori));
   // il colore: dal valore più basso della scala (appena sopra il grigio) al più alto
   function fill(iso: string): string {
+    if (filo) return fillFilo(iso);
     const x = unico.has(iso) ? v.europa : quote[iso];
     if (x == null) return 'var(--line)';
     const [lo, hi] = v.scala;
     return `color-mix(in srgb, var(--c) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
   }
-  const nome = (iso: string) => `${NOMI[iso] ?? iso}: ${v.testo(iso)}`;
+  const nome = (iso: string) => (filo ? nomeFilo(filo, iso) : `${NOMI[iso] ?? iso}: ${v.testo(iso)}`);
+
+  // il filo: i Paesi delle tappe in tinta leggera, quello della fermata scelta nel colore del suo anello
+  const tappa = $derived(filo?.tappe[idx]);
+  const tappe = $derived(filo ? filo.tappe.map((t, i) => { const [x, y] = proietta(t.lon, t.lat); return { ...t, i, x, y }; }) : []);
+  const fillFilo = (iso: string) =>
+    tappa?.iso === iso ? `color-mix(in srgb, var(--k-${tappa.anello}) 45%, var(--card))`
+    : tappe.some((t) => t.iso === iso) ? 'color-mix(in srgb, var(--fg) 16%, var(--card))' : 'var(--line)';
+  const linee = $derived(filo ? archi(filo, idx) : []);
 
   const [vx, vy, vw, vh] = VIEWBOX.split(' ').map(Number);
   /** La posizione di un punto della mappa, in percentuale del riquadro che la contiene. */
@@ -54,7 +67,7 @@
   // dove i Paesi sono piccoli o affollati l'etichetta si sposta: [dx, dy]
   const SPOSTA: Record<string, [number, number]> = { FRA: [-30, 4], GBR: [-30, -6], DEU: [6, -10], KOR: [14, -2], JPN: [18, 4], TWN: [14, 6], ISR: [-12, 6], ARE: [10, 8] };
   // l'Europa del dato unico ha la sua etichetta sulla Germania
-  const etichette = $derived([...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([iso, x]) => {
+  const etichette = $derived(filo ? [] : [...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([iso, x]) => {
     const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
     const [dx, dy] = SPOSTA[iso] ?? [0, 0];
     return { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
@@ -70,9 +83,10 @@
   const nelRiquadro = (x: number, y: number) => x >= EUROPA.x && x <= EUROPA.x + EUROPA.w && y >= EUROPA.y && y <= EUROPA.y + EUROPA.h;
 
   // i Siti valgono solo nei data center: con un altro anello ?siti=1 si ignora
-  const conSiti = $derived(anello === 'datacenter' && paramSiti === '1' && !!g.data_center);
+  const conSiti = $derived(!filo && anello === 'datacenter' && paramSiti === '1' && !!g.data_center);
   const punti = $derived(conSiti ? puntiSiti(g.data_center!) : []);
   const puntiEuropa = $derived(punti.filter((q) => nelRiquadro(q.x, q.y)));
+  const tappeEuropa = $derived(tappe.filter((t) => nelRiquadro(t.x, t.y)));
 
   // il fumetto, di un Paese o di un sito, si apre dal lato opposto rispetto al centro della mappa; l'Europa è anche nel riquadro,
   // a sinistra, e si apre sempre a destra, così il fumetto non la copre
@@ -114,8 +128,40 @@
     onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toccaSito(q, e.currentTarget); } }}><title>{nomeSito(q.sito)}</title></circle>
 {/snippet}
 
-<Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note="Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese." table={v.tabella} cite={conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
+{#snippet filoSvg(dentro: typeof tappe, k: number)}
+  <!-- gli archi si disegnano anche nel riquadro: l'Europa si legge lì. La chiave cambia con la fermata scelta, così l'arco che ci arriva
+       è un elemento nuovo e la sua animazione riparte -->
+  {#each linee as a (`${filo?.key}-${a.verso}-${a.verso === idx}`)}
+    <path d={a.d} class="arco" class:on={a.verso === idx} style:--c="var(--k-{ANELLI[a.verso].key})" stroke-dasharray={a.pieno ? undefined : '3 2'}
+      pathLength="100" data-testid="arco" aria-hidden="true" />
+  {/each}
+  <!-- la tappa scelta sta sopra le altre: due tappe possono stare nello stesso posto -->
+  {#each [...dentro.filter((t) => t.i !== idx), ...dentro.filter((t) => t.i === idx)] as t (t.i)}
+    <!-- come i Paesi, fuori dal Tab: da tastiera le tappe si scelgono dall'elenco sotto la mappa -->
+    <g class="tappa" class:on={t.i === idx} transform="translate({t.x} {t.y}) scale({k})" style:--c="var(--k-{t.anello})" role="button" tabindex="-1"
+      aria-label="{t.i + 1}. {ANELLI[t.i].nome}: {t.luogo}" onclick={() => vai(t.anello)}
+      onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vai(t.anello); } }}>
+      <circle r={t.i === idx ? 9.5 : 8} /><text y="3.2" text-anchor="middle" aria-hidden="true">{t.i + 1}</text>
+    </g>
+  {/each}
+{/snippet}
+
+<Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note={filo ? 'Sei anelli, dalla miniera al modello: il filo mostra da quali Paesi passa un modello.' : 'Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese.'}
+  table={filo ? null : v.tabella} cite={filo ? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
   <div class="anello" style:--c="var(--k-{anello})">
+    {#if fili.length}
+      <div class="viste">
+        <div class="scelte" role="group" aria-label="Vista">
+          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', null)}>Quote per Paese</button>
+          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={() => imposta('vista', 'filo')}>Filo della catena</button>
+        </div>
+        {#if filo}
+          <div class="scelte" role="group" aria-label="Esempio">
+            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} onclick={() => imposta('filo', f.key)}>{f.nome}</button>{/each}
+          </div>
+        {/if}
+      </div>
+    {/if}
     <nav class="linea" aria-label="Gli anelli della catena dell'AI">
       <button type="button" class="fr" disabled={!prima} onclick={() => vai(prima)} aria-label="Anello precedente">←</button>
       <ol>
@@ -133,23 +179,23 @@
 
     <div class="titolo">
       <h4>{idx + 1}. {ANELLI[idx].nome}</h4>
-      {#if anello === 'materie'}
+      {#if !filo && anello === 'materie'}
         <div class="scelte" role="group" aria-label="Materiale">
           {#each materiali as m (m.key)}
             <button type="button" aria-pressed={m.key === materiale ? 'true' : 'false'} onclick={() => imposta('materiale', m.key)}>{m.nome}</button>
           {/each}
         </div>
-      {:else if anello === 'datacenter'}
+      {:else if !filo && anello === 'datacenter'}
         <div class="scelte">
           <button type="button" aria-pressed={conSiti ? 'true' : 'false'} onclick={() => imposta('siti', conSiti ? null : '1')}>Siti</button>
         </div>
       {/if}
-      <span>{v.misura}</span>
+      <span>{tappa ? `${tappa.luogo}, ${NOMI[tappa.iso] ?? tappa.iso}` : v.misura}</span>
     </div>
 
     <div class="cornice">
       <div class="mondo">
-        <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {v.misura.split(' · ')[0]}">
+        <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {filo ? `Filo della catena, ${filo.nome.toLowerCase()}` : v.misura.split(' · ')[0]}">
           <defs>
             <pattern id="geo-tratteggio" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2" /></pattern>
           </defs>
@@ -158,6 +204,7 @@
           {#each PAESI.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
           {#each punti as q (q.sito.nome)}{@render cerchio(q, !nelRiquadro(q.x, q.y))}{/each}
+          {#if filo}{@render filoSvg(tappe, 1)}{/if}
         </svg>
         {#each etichette as e (e.iso)}
           <span class="et" data-testid="etichetta" style:left={e.left} style:top={e.top}>
@@ -177,6 +224,7 @@
           {#each europei.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
           {#each puntiEuropa as q (q.sito.nome)}{@render cerchio(q, true)}{/each}
+          {#if filo}{@render filoSvg(tappeEuropa, 0.7)}{/if}
         </svg>
         <span class="in-t" aria-hidden="true">Europa, ingrandita</span>
         <span class="et it" style:left={etItalia.left} style:top={etItalia.top} aria-hidden="true">Italia</span>
@@ -211,6 +259,19 @@
     </div>
     {#if conSiti}<p class="didascalia">{didascaliaSiti(g.data_center!)}</p>{/if}
 
+    {#if filo}
+      <p class="esempio">{NOTA_FILO}</p>
+      <ol class="tappe" aria-label="Le tappe del filo: {filo.nome.toLowerCase()}">
+        {#each filo.tappe as t, i (i)}
+          <li aria-current={i === idx ? 'step' : undefined} style:--c="var(--k-{t.anello})">
+            <button type="button" onclick={() => vai(t.anello)}>
+              <span class="tn">{i + 1}</span><span><b>{ANELLI[i].nome}</b>: {t.luogo}, {NOMI[t.iso] ?? t.iso}</span>
+            </button>
+            <p>{t.frase} <a href={t.fonte} target="_blank" rel="noopener">Fonte: {dominio(t.fonte)}</a></p>
+          </li>
+        {/each}
+      </ol>
+    {:else}
     <dl class="tabellone">
       {#each cifre as c (c.etichetta)}
         <div class="cifra" class:primo={c.etichetta === 'Il primo'} class:it={c.etichetta === 'Italia'}>
@@ -227,6 +288,7 @@
       <li>{NOTA_GPU}</li>
       {#each v.note as n (n)}<li>{n}</li>{/each}
     </ul>
+    {/if}
   </div>
 </Block>
 
@@ -313,6 +375,30 @@
     li.on .lab { display: block; position: absolute; top: 46px; white-space: nowrap; }
     li:first-child.on .lab { left: 0; } li:last-child.on .lab { right: 0; }
   }
+
+  .viste { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+  .viste .scelte button[aria-pressed='true'] { background: var(--fg); border-color: var(--fg); color: var(--card); }
+  /* l'arco che arriva alla fermata scelta si disegna; con «riduci movimento» no (app.css) */
+  .arco { fill: none; stroke: var(--c); stroke-width: 1.2; stroke-linecap: round; opacity: .6; pointer-events: none; }
+  .arco.on { stroke-width: 2.2; opacity: 1; animation: traccia .8s ease-out; }
+  @keyframes traccia { from { stroke-dasharray: 100; stroke-dashoffset: 100; } to { stroke-dasharray: 100; stroke-dashoffset: 0; } }
+  .europa .arco { stroke-width: .8; }
+  .europa .arco.on { stroke-width: 1.5; }
+  .tappa { cursor: pointer; }
+  .tappa circle { fill: var(--c); stroke: #fff; stroke-width: 1.2; }
+  .tappa.on circle { stroke: var(--fg); stroke-width: 1.8; }
+  .tappa text { font-size: 9px; font-weight: 800; fill: #fff; pointer-events: none; }
+  .tappa:focus-visible { outline: none; }
+  .tappa:focus-visible circle { stroke: var(--accent); stroke-width: 2.4; }
+  .esempio { margin: 0; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); }
+  .tappe { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .tappe li { display: grid; gap: 2px; padding: 6px 8px; border-radius: var(--r-sm); border-left: 4px solid var(--c); }
+  .tappe li[aria-current='step'] { background: color-mix(in srgb, var(--c) 7%, var(--card)); }
+  .tappe button { display: flex; align-items: center; gap: 10px; min-height: 44px; width: 100%; padding: 0; border: 0; background: none; text-align: left;
+    font: inherit; font-size: 15px; line-height: 20px; color: var(--fg); cursor: pointer; }
+  .tn { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #fff; font-weight: 700; font-size: 13px; }
+  .tappe p { margin: 0 0 0 38px; font-size: 13px; line-height: 20px; color: var(--fg-2); overflow-wrap: anywhere; }
+  .tappe a { color: var(--accent); }
 
   .tabellone { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--s1); margin: 0; }
   .cifra { display: grid; gap: 2px; align-content: start; padding: 12px; border-radius: var(--r-sm); background: var(--bg); }

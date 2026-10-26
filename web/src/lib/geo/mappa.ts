@@ -1,7 +1,7 @@
 // La mappa di GeopoliticAI: i confini generati da scripts/confini.py, gli anelli della catena e i testi dell'anello aperto.
 import type { Cite, TableData } from '../charts/types';
 import { AREE } from '../data/geopoliticai';
-import type { Catena, CatenaAnello, GeoDataCenter, Geopoliticai, GeoSito, Materiale } from '../data/types';
+import type { Catena, CatenaAnello, CatenaFilo, FiloKey, GeoDataCenter, Geopoliticai, GeoSito, Materiale } from '../data/types';
 import { day, dayWith, nf } from '../text/format';
 import { eci } from '../text/geopoliticai';
 import CONFINI from './confini.json';
@@ -214,6 +214,47 @@ export const citeSiti = (dc: GeoDataCenter): Cite => [
   ...(dc.siti.some((s) => s.posizione === 'indirizzo' && s.lat != null)
     ? [{ t: ' © ' }, { t: 'OpenStreetMap', href: 'https://www.openstreetmap.org/copyright' }, { t: ' contributors.' }] : []),
 ];
+
+// ---------------------------------------------------------------- il Filo della catena: un esempio di percorso, una tappa per anello
+
+/** Gli esempi del filo, nell'ordine del selettore. */
+const FILI: readonly FiloKey[] = ['usa', 'ue', 'cina'];
+/** Un esempio del filo, con la sua chiave di ?filo=. */
+export type Filo = { key: FiloKey } & CatenaFilo;
+/** Gli esempi nel file della catena; un file del giro prima non ne ha. */
+export const filiDi = (c: Catena | undefined): Filo[] =>
+  FILI.flatMap((key) => { const f = c?.fili?.[key]; return f ? [{ key, ...f }] : []; });
+/** ?vista=filo&filo=: il filo da mostrare, o null per la vista «Quote per Paese». Un esempio non valido torna a quello europeo. */
+export function filoDi(vista: string | undefined, p: string | undefined, c: Catena | undefined): Filo | null {
+  const fili = filiDi(c);
+  if (vista !== 'filo' || !fili.length) return null;
+  return fili.find((f) => f.key === p) ?? fili.find((f) => f.key === 'ue') ?? fili[0];
+}
+
+/** Il punto più alto che un arco può toccare: il bordo della mappa tagliata, con un margine. */
+const CIMA = Number(VIEWBOX.split(' ')[1]) + 6;
+export interface Arco { d: string; verso: number; pieno: boolean }
+/** Gli archi tra una tappa e la successiva, curvati verso l'alto: pieni fino alla fermata scelta, poi tratteggiati. */
+export function archi(f: CatenaFilo, scelta: number): Arco[] {
+  const punti = f.tappe.map((t) => proietta(t.lon, t.lat));
+  return punti.slice(1).map(([x2, y2], i) => {
+    const [x1, y1] = punti[i];
+    const cy = Math.max(CIMA, Math.min(y1, y2) - Math.min(80, Math.max(6, Math.hypot(x2 - x1, y2 - y1) * 0.2)));
+    return { d: `M${x1},${y1} Q${(x1 + x2) / 2},${cy} ${x2},${y2}`, verso: i + 1, pieno: i + 1 <= scelta };
+  });
+}
+
+/** Il nome di un Paese nella vista del filo: le sue tappe, o nessuna. */
+export function nomeFilo(f: CatenaFilo, iso: string): string {
+  const qui = f.tappe.flatMap((t, i) => (t.iso === iso ? [`${i + 1}. ${t.luogo}`] : []));
+  return `${NOMI[iso] ?? iso}: ${qui.length ? qui.join('; ') : 'nessuna tappa del filo'}`;
+}
+
+/** Il dominio della fonte di una tappa, per il testo del link: «Fonte: epoch.ai». */
+export const dominio = (url: string): string => new URL(url).hostname.replace(/^www\./, '');
+
+/** Sotto la mappa del filo: le fonti stanno nelle tappe, qui solo chi ha scelto l'esempio e i confini. */
+export const CITE_FILO: Cite = [{ t: "Filo della catena: un esempio scelto da AI Radar, con la fonte di ogni tappa nell'elenco." }, ...CONFINI_CITE];
 
 // ---------------------------------------------------------------- materie prime e chip: le quote per Paese, con il valore unico dell'Europa dove c'è
 

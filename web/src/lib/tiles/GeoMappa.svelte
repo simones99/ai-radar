@@ -1,6 +1,6 @@
 <script lang="ts">
   // «Chi controlla la catena dell'AI»: la linea dei sei anelli, la mappa del mondo colorata per l'anello aperto con l'Europa
-  // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO) e i modelli.
+  // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai } from '../data/types';
   import {
@@ -13,7 +13,7 @@
     g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; onscegli: (k: string) => void;
   } = $props();
 
-  const ok = $derived(attivi(catena));
+  const ok = $derived(attivi(g, catena));
   const anello = $derived(anelloDi(param, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
   const attivo = (k: AnelloKey) => ok.includes(k);

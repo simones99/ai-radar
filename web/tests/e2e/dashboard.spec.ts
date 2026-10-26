@@ -337,8 +337,7 @@ const italiaInEuropa = (page: Page) => europa(page).getByRole('button', { name: 
 test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette nel link', async ({ page }) => {
   await page.goto('/#geopoliticai?anello=modelli');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
-  await expect(mappa(page).getByRole('button', { name: 'Data center (in arrivo)' })).toBeDisabled();
-  await page.goto('/#geopoliticai?anello=datacenter'); // non ancora attivo: si aprono i modelli
+  await page.goto('/#geopoliticai?anello=boh'); // non valido: si aprono i modelli
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
   await page.goto('/#geopoliticai');
   await mappa(page).getByRole('button', { name: '6 Modelli', exact: true }).click();
@@ -372,6 +371,13 @@ test('mappa: ?anello=materie&materiale=terre apre le terre rare, e un clic su un
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#geopoliticai\?anello=materie&materiale=germanio$/);
   await expect(materiali.getByRole('button', { name: 'Germanio' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('mappa: ?anello=datacenter apre le quote dei data center, con la nota sulla copertura', async ({ page }) => {
+  await page.goto('/#geopoliticai?anello=datacenter');
+  await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('5. Data center');
+  await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: nessun sito noto a Epoch');
+  await expect(mappa(page).getByText(/coprono circa il 44% del calcolo AI mondiale/)).toBeVisible();
 });
 
 test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la evidenzia', async ({ page }) => {

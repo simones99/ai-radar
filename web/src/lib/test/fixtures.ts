@@ -226,6 +226,16 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     senza_paese: { large: ['Poro 34B'], eci: ['Qwen2.5-Coder-14B', 'PaLM 2-L', 'internlm-20b'] },
     altri_paesi: { 'South Korea': 22, Canada: 7, 'United Arab Emirates': 7 },
     eci_paesi: { anno: 2025, valori: { USA: { max: 156.33, modello: 'GPT-5.2 Pro' }, CHN: { max: 146.09, modello: 'DeepSeek-V3.2' }, FRA: { max: 134.02, modello: 'Mistral Medium 3' } } },
+    // dal CSV registrato dei data center (Epoch, 26 ottobre 2026), solo alcuni Paesi e siti
+    data_center: {
+      aggiornato: '2026-10-15',
+      quote: { USA: 86.49, MYS: 8.69, CHN: 2.17, GBR: 0.84, FIN: 0.33, PRT: 0.22, ISL: 0.04 },
+      siti: [
+        { nome: 'Colossus 2', proprietario: 'SpaceXAI', iso: 'USA', h100e: 1111673, mw: 946, stato: 'operativo' },
+        { nome: 'Nebius Mantsala', proprietario: 'Nebius', iso: 'FIN', h100e: 48528, mw: 75, stato: 'operativo' },
+        { nome: 'EcoDataCenter 2', proprietario: 'Mistral AI', iso: 'SWE', h100e: 0, mw: 0, stato: 'in costruzione' },
+      ],
+    },
   },
   // gli anelli dei file curati: quote arrotondate dalla ricerca sulle fonti della mappa, solo i Paesi dei test
   catena: {

@@ -1,6 +1,7 @@
 """Passo geopoliticai con i CSV veri di Epoch, registrati il 23 ottobre 2026 (nessuna chiamata di rete).
 
-Dei due file restano solo le colonne che il passo legge: tests/fixtures/epoch_large_scale.csv ed epoch_eci.csv.
+Dei file restano solo le colonne che il passo legge: tests/fixtures/epoch_large_scale.csv, epoch_eci.csv ed
+epoch_data_centers.csv (Epoch AI, «AI data centers», CC BY 4.0, registrato il 26 ottobre 2026).
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from pipeline import geopoliticai
 FIX = Path(__file__).parent / "fixtures"
 LARGE = (FIX / "epoch_large_scale.csv").read_text(encoding="utf-8")
 ECI = (FIX / "epoch_eci.csv").read_text(encoding="utf-8")
+DC = (FIX / "epoch_data_centers.csv").read_text(encoding="utf-8")
 TODAY = date(2026, 10, 23)
 
 
@@ -31,11 +33,13 @@ class Resp:
 
 
 class Session:
-    def __init__(self, large=LARGE, eci=ECI, status=200):
-        self.large, self.eci, self.status, self.calls = large, eci, status, []
+    def __init__(self, large=LARGE, eci=ECI, dc=DC, status=200, status_dc=200):
+        self.large, self.eci, self.dc, self.status, self.status_dc, self.calls = large, eci, dc, status, status_dc, []
 
     def get(self, url, params=None, headers=None, timeout=None):
         self.calls.append(url)
+        if "data_centers" in url:
+            return Resp(self.dc, self.status_dc)
         return Resp(self.large if "large_scale" in url else self.eci, self.status)
 
 
@@ -191,12 +195,33 @@ def test_paese_sconosciuto_va_in_altri_e_nel_log(data_dir, caplog):
     assert "Atlantide" in caplog.text
 
 
+def test_data_center_quote_per_paese_degli_h100_equivalenti(data_dir):
+    dc = run(data_dir)["data_center"]
+    assert dc["aggiornato"] == "2026-10-23"
+    assert list(dc["quote"].items())[:4] == [("USA", 86.49), ("MYS", 8.69), ("CHN", 2.17), ("GBR", 0.84)]
+    assert dc["quote"]["ISL"] == 0.04
+    # l'Italia non ha siti, e i Paesi con soli siti in costruzione non hanno quota
+    assert "ITA" not in dc["quote"] and "SWE" not in dc["quote"] and "ARE" not in dc["quote"]
+
+
+def test_data_center_siti_con_lo_stato(data_dir):
+    siti = {s["nome"]: s for s in run(data_dir)["data_center"]["siti"]}
+    assert len(siti) == 95
+    assert siti["Colossus 2"] == {"nome": "Colossus 2", "proprietario": "SpaceXAI", "iso": "USA", "h100e": 1111673, "mw": 946, "stato": "operativo"}
+    assert siti["EcoDataCenter 2"] == {"nome": "EcoDataCenter 2", "proprietario": "Mistral AI", "iso": "SWE", "h100e": 0, "mw": 0, "stato": "in costruzione"}
+    assert siti["DayOne Nusajaya"]["proprietario"] is None
+    assert siti["DayOne Kempas"]["mw"] == 421.7
+    assert sum(s["stato"] == "in costruzione" for s in siti.values()) == 21
+
+
 @pytest.mark.parametrize("session", [
     Session(status=500),
+    Session(status_dc=500),
+    Session(dc=DC.replace("Current H100 equivalents", "H100e")),
     Session(large=LARGE.replace("Training compute (FLOP)", "Compute")),
     Session(eci=ECI.replace("Display name", "Name")),
     Session(eci="\n".join(ECI.splitlines()[:20])),
-], ids=["http-500", "colonna-calcolo", "colonna-eci", "eci-troncato"])
+], ids=["http-500", "data-center-500", "colonna-data-center", "colonna-calcolo", "colonna-eci", "eci-troncato"])
 def test_errore_lascia_il_file_precedente(data_dir, monkeypatch, session):
     from pipeline import run as pipeline_run
     before = json.dumps(run(data_dir), ensure_ascii=False)

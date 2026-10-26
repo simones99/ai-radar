@@ -174,6 +174,8 @@ class FakeSession:
             return FakeResponse(body=_jsonstat(geos, ["2023", "2024", "2025"], lambda g, y: 5.0 + int(y) - 2023))
         if host == "epoch.ai" and "large_scale" in url:
             return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_large_scale.csv").read_text(encoding="utf-8"))
+        if host == "epoch.ai" and "data_centers" in url:
+            return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_data_centers.csv").read_text(encoding="utf-8"))
         if host == "epoch.ai" and "eci_scores" in url:
             return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_eci.csv").read_text(encoding="utf-8"))
         if host == "epoch.ai":

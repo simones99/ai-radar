@@ -399,15 +399,14 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
   const linea = () => within(mappa().getByRole('navigation', { name: "Gli anelli della catena dell'AI" }));
   const fermate = () => linea().getAllByRole('listitem').map((li) => within(li).getByRole('button'));
 
-  it('sei fermate: materie prime, chip e modelli sono attivi, le altre sono disabilitate e lo dicono', () => {
+  it('sei fermate, tutte attive, e si parte dai modelli', () => {
     show();
     expect(fermate().map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
       '1 Materie prime', '2 Progettazione dei chip', '3 Fabbricazione dei chip',
-      '4 Macchinari', '5 Data center (in arrivo)', '6 Modelli',
+      '4 Macchinari', '5 Data center', '6 Modelli',
     ]);
-    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([false, false, false, false, true, false]);
+    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([false, false, false, false, false, false]);
     expect(fermate()[5]).toHaveAttribute('aria-current', 'step');
-    // dai modelli si torna indietro, saltando i data center che non ci sono ancora
     expect(linea().getByRole('button', { name: 'Anello precedente' })).toBeEnabled();
     expect(linea().getByRole('button', { name: 'Anello successivo' })).toBeDisabled();
   });
@@ -416,7 +415,15 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
     const { catena: _, ...senza } = data;
     show(senza, { anello: 'fabbricazione' });
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
-    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([true, true, true, true, true, false]);
+    expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([true, true, true, true, false, false]);
+  });
+
+  it('senza i data center nel file di Epoch, la fermata 5 resta disabilitata e lo dice', () => {
+    const { data_center: _, ...g } = geo;
+    show({ ...data, geopoliticai: g }, { anello: 'datacenter' });
+    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
+    expect(fermate()[4]).toBeDisabled();
+    expect(fermate()[4]).toHaveTextContent('Data center (in arrivo)');
   });
 
   it('il titolo dell’anello ha numero, nome, misura, fonte e data', () => {
@@ -425,10 +432,7 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
     expect(mappa().getByText('ECI del miglior modello del 2025 · Epoch AI, dati scaricati il 15 ott 2026')).toBeInTheDocument();
   });
 
-  it('un anello non valido, o non ancora attivo, apre i modelli', () => {
-    show(data, { anello: 'datacenter' });
-    expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
-    cleanup();
+  it('un anello non valido apre i modelli', () => {
     show(data, { anello: 'boh' });
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
   });
@@ -612,5 +616,40 @@ describe('GeopoliticAI: l’anello delle materie prime', () => {
     const fonte = mappa().getByText(/^Materie prime, germanio:/);
     expect(fonte).toHaveTextContent('Materie prime, germanio: Commissione europea, Study on the critical raw materials for the EU 2023 (CC BY 4.0), dati del 2016-2020, quote rielaborate da AI Radar. Confini: Natural Earth, pubblico dominio.');
     expect(mappa().queryByText(/uso commerciale/)).toBeNull();
+  });
+});
+
+describe('GeopoliticAI: l’anello dei data center', () => {
+  const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
+  const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
+
+  it('?anello=datacenter apre le quote degli H100 equivalenti dei siti noti', () => {
+    show(data, { anello: 'datacenter' });
+    expect(mappa().getByRole('heading', { level: 4, name: '5. Data center' })).toBeInTheDocument();
+    expect(mappa().getByText('Quota degli H100 equivalenti dei siti noti · Epoch AI, dati scaricati il 15 ott 2026')).toBeInTheDocument();
+    expect(cifra('Il primo')).toHaveTextContent(/^USA 86,5%$/);
+    expect(cifra('UE')).toHaveTextContent(/^0,6%$/); // Finlandia e Portogallo
+  });
+
+  it('l’Italia, che non ha siti, ha la sua frase onesta', () => {
+    show(data, { anello: 'datacenter' });
+    expect(cifra('Italia')).toHaveTextContent(/^nessun sito noto a Epoch$/);
+    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
+    expect(europa.getByRole('button', { name: 'Italia: nessun sito noto a Epoch' })).toBeInTheDocument();
+  });
+
+  it('sotto la mappa la nota sulla copertura del 44% e l’attribuzione di Epoch', () => {
+    show(data, { anello: 'datacenter' });
+    expect(mappa().getByText('I siti noti a Epoch coprono circa il 44% del calcolo AI mondiale: le quote sono calcolate solo su questi siti.')).toBeInTheDocument();
+    const fonte = mappa().getByText(/^Data center: Epoch AI/);
+    expect(fonte).toHaveTextContent('Data center: Epoch AI, AI data centers (CC BY 4.0), dati scaricati il 15 ott 2026, quote rielaborate da AI Radar. Confini: Natural Earth, pubblico dominio.');
+    expect(within(fonte).getByRole('link', { name: 'AI data centers' })).toHaveAttribute('href', 'https://epoch.ai/data/ai-data-centers');
+  });
+
+  it('la tabella dei Paesi, con le quote sotto lo 0,1% dette così', () => {
+    show(data, { anello: 'datacenter' });
+    const righe = within(mappa().getByRole('table')).getAllByRole('row').slice(1).map((r) => [...r.children].map((c) => c.textContent));
+    expect(righe[0]).toEqual(['USA', '86,5%', '15 ott 2026']);
+    expect(righe.at(-1)).toEqual(['Islanda', 'meno dello 0,1%', '15 ott 2026']);
   });
 });

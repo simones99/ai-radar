@@ -2,7 +2,7 @@
 import type { Cite, TableData } from '../charts/types';
 import { AREE } from '../data/geopoliticai';
 import type { Catena, CatenaAnello, Geopoliticai, Materiale } from '../data/types';
-import { dayWith, nf } from '../text/format';
+import { day, dayWith, nf } from '../text/format';
 import { eci } from '../text/geopoliticai';
 import CONFINI from './confini.json';
 
@@ -30,9 +30,12 @@ const VUOTO_CHIP: Record<Chip, string> = { progettazione: 'nessuna quota', fabbr
 /** I materiali delle materie prime, nell'ordine del selettore. */
 const MATERIALI: readonly Materiale[] = ['gallio', 'terre', 'silicio', 'germanio'];
 
-/** Gli anelli che hanno i dati: i modelli sempre, materie prime e chip se c'è il file della catena. Gli altri si accendono con i loro ticket. */
-export const attivi = (c: Catena | undefined): AnelloKey[] =>
-  ANELLI.map((a) => a.key).filter((k) => k === 'modelli' || (k === 'materie' ? materialiDi(c).length > 0 : (CHIP as readonly string[]).includes(k) && !!c?.anelli[k as Chip]));
+/** Gli anelli che hanno i dati: i modelli sempre, i data center se ci sono nel file di Epoch, materie prime e chip se c'è il file della catena. */
+export function attivi(g: Geopoliticai, c: Catena | undefined): AnelloKey[] {
+  const ok = (k: AnelloKey) =>
+    k === 'modelli' || (k === 'datacenter' ? !!g.data_center : k === 'materie' ? materialiDi(c).length > 0 : !!c?.anelli[k as Chip]);
+  return ANELLI.map((a) => a.key).filter(ok);
+}
 /** I materiali nel file della catena, con il loro nome. */
 export const materialiDi = (c: Catena | undefined): { key: Materiale; nome: string }[] =>
   MATERIALI.flatMap((key) => { const m = c?.anelli.materie?.materiali[key]; return m ? [{ key, nome: m.nome }] : []; });
@@ -72,10 +75,11 @@ export interface Vista {
 export function vista(g: Geopoliticai, c: Catena | undefined, k: AnelloKey, materiale?: string): Vista {
   if (k === 'materie') {
     const m = c?.anelli.materie?.materiali[materialeDi(materiale, c)];
-    if (m) return vistaQuote(g, `Materie prime, ${m.nome.toLowerCase()}`, 'nessuna produzione', m);
+    if (m) return vistaQuote(g, `Materie prime, ${m.nome.toLowerCase()}`, 'nessuna produzione', m, `dati del ${m.data}`);
   }
+  if (k === 'datacenter' && g.data_center) return vistaDataCenter(g);
   const a = (CHIP as readonly string[]).includes(k) ? c?.anelli[k as Chip] : undefined;
-  return a ? vistaQuote(g, ANELLI.find((x) => x.key === k)!.nome, VUOTO_CHIP[k as Chip], a) : vistaModelli(g);
+  return a ? vistaQuote(g, ANELLI.find((x) => x.key === k)!.nome, VUOTO_CHIP[k as Chip], a, `dati del ${a.data}`) : vistaModelli(g);
 }
 
 /** I Paesi della mappa di una zona: «Altri» è tutto quello che non sta nelle altre aree. */
@@ -135,9 +139,21 @@ function vistaModelli(g: Geopoliticai): Vista {
 
 // ---------------------------------------------------------------- materie prime e chip: le quote per Paese, con il valore unico dell'Europa dove c'è
 
-const pct = (v: number) => `${nf(v, Number.isInteger(v) ? 0 : 1)}%`;
+const pct = (v: number) => (v > 0 && v < 0.05 ? 'meno dello 0,1%' : `${nf(v, Number.isInteger(v) ? 0 : 1)}%`);
 
-function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnello): Vista {
+/** I data center: la quota per Paese degli H100 equivalenti dei siti noti a Epoch, aggiornata ogni settimana. */
+function vistaDataCenter(g: Geopoliticai): Vista {
+  const dc = g.data_center!;
+  const a: CatenaAnello = {
+    misura: 'Quota degli H100 equivalenti dei siti noti', fonte: g.fonte, titolo: 'AI data centers', url: 'https://epoch.ai/data/ai-data-centers',
+    licenza: g.licenza, url_licenza: 'https://creativecommons.org/licenses/by/4.0/', data: day(dc.aggiornato), quote: dc.quote, europa: null,
+    nota: 'I siti noti a Epoch coprono circa il 44% del calcolo AI mondiale: le quote sono calcolate solo su questi siti.',
+  };
+  return vistaQuote(g, 'Data center', 'nessun sito noto a Epoch', a, `dati scaricati ${dayWith('il', dc.aggiornato)}`);
+}
+
+/** `dati`: quando è il dato, dopo la fonte nel titolo e nella citazione («dati del 2022»). */
+function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnello, dati: string): Vista {
   const ue = new Set(g.zone.ue?.paesi_mappa ?? []);
   const valori = Object.entries(a.quote).sort((x, y) => y[1] - x[1]);
   const inEuropa = (iso: string) => a.europa != null && ue.has(iso);
@@ -155,13 +171,13 @@ function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnell
   const righe: [string, number][] = [...valori, ...(a.europa != null ? [[EUROPA, a.europa] as [string, number]] : [])].sort((x, y) => y[1] - x[1]);
   const nc = /NC/.test(a.licenza) ? ', uso commerciale non consentito' : '';
   return {
-    misura: `${a.misura} · ${a.fonte}, dati del ${a.data}`,
+    misura: `${a.misura} · ${a.fonte}, ${dati}`,
     valori, europa: a.europa, scala: [0, Math.max(a.europa ?? 0, p?.[1] ?? 1)], breve: pct, testo,
     tabellone: (zona) => tabellone(g, zona, primo, diZona, p?.[0]),
     tabella: { cols: ['Paese', 'Valore', 'Data'], rows: righe.map(([iso, v]) => [iso === EUROPA ? DATO_UNICO : NOMI[iso] ?? iso, pct(v), a.data]) },
     cite: [
       { t: `${nome}: ${a.fonte}, ` }, { t: a.titolo, href: a.url }, { t: ' (' }, { t: a.licenza, href: a.url_licenza },
-      { t: `${nc}), dati del ${a.data}, quote rielaborate da AI Radar.` }, ...CONFINI_CITE,
+      { t: `${nc}), ${dati}, quote rielaborate da AI Radar.` }, ...CONFINI_CITE,
     ],
     note: [
       ...(a.europa != null ? [`${DATO_UNICO}: la fonte dà ${pct(a.europa)} per l'Europa intera, e la mappa colora allo stesso modo, a tratteggio, tutti i Paesi UE.`] : []),

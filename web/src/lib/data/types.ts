@@ -192,7 +192,13 @@ export interface Geopoliticai {
   altri_paesi: Record<string, number>;
   /** L'anello dei modelli sulla mappa: l'ECI massimo per Paese nell'ultimo anno chiuso. */
   eci_paesi: { anno: number; valori: Record<string, GeoEciPaese> };
+  /** L'anello dei data center, da «AI data centers» di Epoch; manca nei file scritti prima del ticket 19. */
+  data_center?: GeoDataCenter;
 }
+/** Un data center di Epoch: «operativo» se ha H100 equivalenti attuali, altrimenti «in costruzione». */
+export interface GeoSito { nome: string; proprietario: string | null; iso: string | null; h100e: number; mw: number; stato: 'operativo' | 'in costruzione' }
+/** La quota per Paese (ADM0_A3) degli H100 equivalenti dei siti noti, e i siti. */
+export interface GeoDataCenter { aggiornato: string; quote: Record<string, number>; siti: GeoSito[] }
 
 /** Un anello della catena da un file curato: la quota per Paese (codice ADM0_A3), e il valore unico «europa» dove la fonte non divide i Paesi. */
 export interface CatenaAnello {

@@ -5,11 +5,14 @@ organizzazione; Hong Kong e Macao vanno con la Cina, Taiwan con «Altri»; i mod
 restano fuori dalle aree. Il calcolo viene dal dataset large-scale (almeno 1e23 FLOP, dal 2020),
 la capacità dall'Epoch Capabilities Index su tutti i suoi modelli (dal 2023). Per l'anello dei modelli
 sulla mappa c'è anche l'ECI massimo per Paese dell'ultimo anno chiuso, con i codici ADM0_A3 dei confini.
+Per l'anello dei data center, dal database «AI data centers» di Epoch: i siti e la quota per Paese dei loro
+H100 equivalenti attuali.
 """
 from __future__ import annotations
 
 import csv
 import io
+import re
 from collections import defaultdict
 from datetime import date
 
@@ -17,13 +20,17 @@ from .common import http_get, log, write_json
 
 LARGE = "https://epoch.ai/data/large_scale_ai_models.csv"
 ECI = "https://epoch.ai/data/eci_scores.csv"
+DATA_CENTER = "https://epoch.ai/data/data_centers/data_centers.csv"
 OUT = "geopoliticai.json"
 DA_CALCOLO = 2020
 DA_ECI = 2023
 MIN_RIGHE = 100  # sotto questa soglia il file è troncato o le colonne sono cambiate
+MIN_SITI = 20  # i data center sono meno: 95 a ottobre 2026
 PAESE = "Country (of organization)"
 COLONNE_LARGE = {"Model", "Organization", "Publication date", PAESE, "Training compute (FLOP)"}
 COLONNE_ECI = {"Display name", "eci", "date", "Organization", PAESE}
+H100E, MW = "Current H100 equivalents", "Current power (MW)"
+COLONNE_DC = {"Name", H100E, MW, "Owner", "Country"}
 
 # id: (nome, aggettivo per le frasi, nome con l'articolo)
 AREE = {
@@ -120,12 +127,12 @@ def codice_mappa(paese: str) -> str | None:
     return PAESI_UE[paese][4] if paese in PAESI_UE else PAESI_FUORI_UE.get(paese)
 
 
-def _leggi(text: str, colonne: set[str], nome: str) -> list[dict]:
+def _leggi(text: str, colonne: set[str], nome: str, minimo: int = MIN_RIGHE) -> list[dict]:
     righe = list(csv.DictReader(io.StringIO(text.lstrip("﻿"))))
     mancano = colonne - set(righe[0] if righe else {})
     if mancano:
         raise ValueError(f"GeopoliticAI: in {nome} mancano le colonne {sorted(mancano)}")
-    if len(righe) < MIN_RIGHE:
+    if len(righe) < minimo:
         raise ValueError(f"GeopoliticAI: solo {len(righe)} righe in {nome}, file troncato?")
     return righe
 
@@ -219,9 +226,30 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
     }
 
 
+def data_center(righe: list[dict], today: date) -> dict:
+    """I siti, con lo stato ricavato dagli H100 equivalenti attuali, e la quota per Paese sul totale dei siti noti."""
+    siti, per_paese = [], defaultdict(float)
+    for r in righe:
+        paese = r["Country"].strip()
+        iso = codice_mappa(paese)
+        if not iso:
+            log.warning("GeopoliticAI: Paese di un data center sconosciuto, resta fuori dalle quote: %s", paese)
+        h100e = float(r[H100E] or 0)
+        if iso and h100e > 0:
+            per_paese[iso] += h100e
+        # il proprietario dei chip, senza l'etichetta di confidenza di Epoch («#confident», «#likely», «#speculative»)
+        proprietario = re.sub(r"\s*#\w+", "", r["Owner"]).strip() or None
+        siti.append({"nome": r["Name"].strip(), "proprietario": proprietario, "iso": iso, "h100e": round(h100e),
+                     "mw": round(float(r[MW] or 0), 1), "stato": "operativo" if h100e > 0 else "in costruzione"})
+    totale = sum(float(r[H100E] or 0) for r in righe) or 1
+    quote = {iso: round(100 * v / totale, 2) for iso, v in sorted(per_paese.items(), key=lambda kv: -kv[1])}
+    return {"aggiornato": today.isoformat(), "quote": quote, "siti": siti}
+
+
 def run(s, today: date) -> dict:
     large = _leggi(http_get(s, LARGE, timeout=120).text, COLONNE_LARGE, "large_scale_ai_models.csv")
     eci = _leggi(http_get(s, ECI, timeout=120).text, COLONNE_ECI, "eci_scores.csv")
-    out = aggregate(large, eci, today)
+    dc = _leggi(http_get(s, DATA_CENTER, timeout=120).text, COLONNE_DC, "data_centers.csv", MIN_SITI)
+    out = {**aggregate(large, eci, today), "data_center": data_center(dc, today)}
     write_json(OUT, out)
-    return {"zone": len(out["zone"]), "modelli_large": len(large), "modelli_eci": len(eci)}
+    return {"zone": len(out["zone"]), "modelli_large": len(large), "modelli_eci": len(eci), "data_center": len(dc)}

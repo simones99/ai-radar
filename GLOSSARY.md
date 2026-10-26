@@ -44,6 +44,10 @@ _Avoid_: risorsa, fase, livello, layer
 L'unità con cui si misura la potenza di calcolo di un data center: quante GPU NVIDIA H100 servirebbero per la stessa potenza. È la misura dell'anello dei data center.
 _Avoid_: GPU, chip, potenza installata
 
+**Sito**:
+Un data center che Epoch conta in *AI data centers*, con i suoi H100 equivalenti attuali e uno stato, operativo o in costruzione. Un cluster del censimento *GPU clusters*, come Leonardo al CINECA, non è un sito.
+_Avoid_: cluster, impianto, struttura, campus
+
 **Calcolo di addestramento**:
 La quantità di calcolo, in FLOP, usata per addestrare un modello. Dice quanto un'area investe nei modelli. È noto solo per una parte dei modelli: quando l'organizzazione non lo pubblica, è una stima di Epoch.
 _Avoid_: compute, potenza di calcolo, calcolo pubblicato, calcolo dichiarato

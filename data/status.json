@@ -1,17 +1,17 @@
 {
- "aggiornato": "2026-10-27T10:06:47+00:00",
+ "aggiornato": "2026-10-27T11:16:32+00:00",
  "fonti": {
   "epoch": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:03:53+00:00",
+   "ultimo_successo": "2026-10-27T11:13:38+00:00",
    "dettagli": {
     "modelli": 1083
    },
-   "secondi": 0.4
+   "secondi": 0.3
   },
   "arxiv": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:03:53+00:00",
+   "ultimo_successo": "2026-10-27T11:13:39+00:00",
    "dettagli": {
     "chiamate": 0,
     "serie": 17
@@ -20,26 +20,26 @@
   },
   "github": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:32+00:00",
+   "ultimo_successo": "2026-10-27T11:16:15+00:00",
    "dettagli": {
     "chiamate": 68,
     "topic": 16,
     "base": 4,
     "repository": 12
    },
-   "secondi": 158.4
+   "secondi": 156.4
   },
   "huggingface": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:32+00:00",
+   "ultimo_successo": "2026-10-27T11:16:15+00:00",
    "dettagli": {
     "modelli": 100
    },
-   "secondi": 0.1
+   "secondi": 0.2
   },
   "adzuna": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:32+00:00",
+   "ultimo_successo": "2026-10-27T11:16:15+00:00",
    "dettagli": {
     "chiamate": 0,
     "rilevazione": "2026-10-26"
@@ -48,43 +48,43 @@
   },
   "eurostat": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:32+00:00",
+   "ultimo_successo": "2026-10-27T11:16:16+00:00",
    "dettagli": {
     "paesi": 10
    },
-   "secondi": 0.6
+   "secondi": 0.7
   },
   "feeds": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:47+00:00",
+   "ultimo_successo": "2026-10-27T11:16:32+00:00",
    "dettagli": {
     "notizie": 98,
     "feed_non_letti": 0
    },
-   "secondi": 5.3
+   "secondi": 6.0
   },
   "radar": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:47+00:00",
+   "ultimo_successo": "2026-10-27T11:16:32+00:00",
    "dettagli": {
     "competenze": 16,
     "posizionate": 16,
-    "incerte": 6
+    "incerte": 5
    },
    "secondi": 0.0
   },
   "owid": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:42+00:00",
+   "ultimo_successo": "2026-10-27T11:16:26+00:00",
    "dettagli": {
     "serie": 13,
     "errori": 0
    },
-   "secondi": 9.4
+   "secondi": 9.5
   },
   "ai_act": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:42+00:00",
+   "ultimo_successo": "2026-10-27T11:16:26+00:00",
    "dettagli": {
     "scadenze": 8
    },
@@ -92,7 +92,7 @@
   },
   "rapporti": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:42+00:00",
+   "ultimo_successo": "2026-10-27T11:16:26+00:00",
    "dettagli": {
     "rapporti": 4
    },
@@ -100,7 +100,7 @@
   },
   "risorse": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:47+00:00",
+   "ultimo_successo": "2026-10-27T11:16:32+00:00",
    "dettagli": {
     "link": 54,
     "richieste": 0,
@@ -110,16 +110,16 @@
   },
   "eurostat_settori": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:33+00:00",
+   "ultimo_successo": "2026-10-27T11:16:16+00:00",
    "dettagli": {
     "settori": 11,
     "anno": "2025"
    },
-   "secondi": 0.3
+   "secondi": 0.4
   },
   "geopoliticai": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:03:53+00:00",
+   "ultimo_successo": "2026-10-27T11:13:39+00:00",
    "dettagli": {
     "zone": 10,
     "modelli_large": 533,
@@ -128,11 +128,11 @@
     "siti_con_posizione": 95,
     "richieste_nominatim": 0
    },
-   "secondi": 0.5
+   "secondi": 0.6
   },
   "catena": {
    "stato": "ok",
-   "ultimo_successo": "2026-10-27T10:06:42+00:00",
+   "ultimo_successo": "2026-10-27T11:16:26+00:00",
    "dettagli": {
     "anelli": 4,
     "fili": 3

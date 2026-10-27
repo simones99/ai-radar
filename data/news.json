@@ -55,6 +55,13 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "OpenAI's Ted Sanders shares a rule of thumb for picking the right GPT-model",
+   "link": "https://the-decoder.com/openais-ted-sanders-shares-a-rule-of-thumb-for-picking-the-right-gpt-model/",
+   "data": "2026-10-27",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Meta gets $3 billion from Nvidia and plans to spend more on Nvidia chips",
    "link": "https://the-decoder.com/meta-gets-3-billion-from-nvidia-and-plans-to-spend-more-on-nvidia-chips/",
    "data": "2026-10-27",
@@ -183,13 +190,6 @@
   {
    "titolo": "Nvidia open-sources Flora to make robot video labeling 125x cheaper than GPT-6 Astra",
    "link": "https://the-decoder.com/nvidia-open-sources-flora-to-make-robot-video-labeling-125x-cheaper-than-gpt-6-astra/",
-   "data": "2026-10-25",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Anthropic co-founder Jack Clark moves his prediction for self-improving AI forward to 2027",
-   "link": "https://the-decoder.com/anthropic-co-founder-jack-clark-moves-his-prediction-for-self-improving-ai-forward-to-2027/",
    "data": "2026-10-25",
    "fonte": "The Decoder",
    "tema": "prodotti"

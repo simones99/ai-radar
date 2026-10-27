@@ -904,7 +904,7 @@ describe('GeopoliticAI: il Filo della catena', () => {
     expect((await evento).detail).toEqual({ chiave: 'anello', valore: 'datacenter' });
   });
 
-  it('nel filo non ci sono le quote: niente numeri sulla mappa, niente Siti, e la fonte è chi ha scelto l’esempio', () => {
+  it('nel filo la mappa non mostra le quote: niente numeri, niente Siti', () => {
     show(data, { vista: 'filo', anello: 'datacenter', siti: '1' });
     expect(mappa().queryAllByTestId('etichetta')).toEqual([]);
     expect(mappa().queryByRole('button', { name: 'Siti' })).toBeNull();
@@ -912,7 +912,42 @@ describe('GeopoliticAI: il Filo della catena', () => {
     const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
     expect(europa.getByRole('button', { name: 'Svezia: 5. EcoDataCenter 2' })).toBeInTheDocument();
     expect(europa.getByRole('button', { name: 'Italia: nessuna tappa del filo' })).toBeInTheDocument();
-    expect(mappa().getByText(/^Filo della catena: un esempio scelto da AI Radar/)).toHaveTextContent(/Confini: Natural Earth, pubblico dominio\.$/);
+  });
+
+  it('nel filo «Vedi i dati» ha le quote della fermata scelta, e la fonte viene dopo chi ha scelto l’esempio, con i confini una volta sola', () => {
+    show(data, { vista: 'filo', anello: 'fabbricazione' });
+    const tabella = within(mappa().getByRole('table'));
+    expect(tabella.getAllByRole('columnheader').map((c) => c.textContent)).toEqual(['Paese', 'Valore', 'Data']);
+    expect(tabella.getAllByRole('row')[1]).toHaveTextContent('Cina24%2022');
+    const fonte = mappa().getByText(/^Filo della catena: un esempio scelto da AI Radar/);
+    expect(fonte).toHaveTextContent(/nell'elenco\. Fabbricazione dei chip: ETO, Advanced Semiconductor Supply Chain Dataset/);
+    expect(fonte.textContent?.match(/Confini:/g)).toHaveLength(1);
+  });
+
+  it('nel filo restano le due note generali, non quelle delle quote', () => {
+    show(data, { vista: 'filo', anello: 'macchinari' });
+    expect(mappa().getByText(/^Fuori dai dati della mappa: il censimento GPU clusters/)).toBeInTheDocument();
+    expect(mappa().getByText(/^Epoch non conta nessun modello italiano/, { selector: 'li' })).toBeInTheDocument();
+    expect(mappa().queryByText('Le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML nei Paesi Bassi.')).toBeNull();
+  });
+
+  it('nel filo la fermata delle materie prime ha la colonna del materiale del link, il gallio se manca', () => {
+    show(data, { vista: 'filo', anello: 'materie' });
+    expect(within(mappa().getByRole('table')).getAllByRole('columnheader').map((c) => c.textContent)).toEqual(['Paese', 'Gallio', 'Data']);
+    cleanup();
+    show(data, { vista: 'filo', anello: 'materie', materiale: 'germanio' });
+    const tabella = within(mappa().getByRole('table'));
+    expect(tabella.getAllByRole('columnheader').map((c) => c.textContent)).toEqual(['Paese', 'Germanio', 'Data']);
+    expect(tabella.getAllByRole('row')[1]).toHaveTextContent('Cina83,1%2016-2020');
+  });
+
+  it('nel filo una fermata senza dati non ha la tabella, e la fonte è solo chi ha scelto l’esempio', () => {
+    const { fabbricazione: _, ...anelli } = data.catena!.anelli;
+    show({ ...data, catena: { ...data.catena!, anelli } }, { vista: 'filo', anello: 'fabbricazione' });
+    expect(mappa().getByRole('heading', { level: 4, name: '3. Fabbricazione dei chip' })).toBeInTheDocument();
+    expect(mappa().queryByText('Vedi i dati')).toBeNull();
+    expect(mappa().getByText(/^Filo della catena: un esempio scelto da AI Radar/))
+      .toHaveTextContent("Filo della catena: un esempio scelto da AI Radar, con la fonte di ogni tappa nell'elenco. Confini: Natural Earth, pubblico dominio.");
   });
 
   it('gli archi: pieni fino alla fermata scelta, tratteggiati dopo, e anche nel riquadro dell’Europa', () => {

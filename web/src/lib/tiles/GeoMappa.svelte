@@ -4,11 +4,12 @@
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
   // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
   // Con ?vista=filo, al posto delle quote il Filo della catena: un esempio scelto da noi (?filo=), con gli archi tra le sei tappe e il loro elenco.
+  // Nel filo restano la tabella delle quote della fermata scelta e le note che non parlano delle quote.
   import { tick } from 'svelte';
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
-    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
+    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
     nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
@@ -60,6 +61,7 @@
     tappa?.iso === iso ? `color-mix(in srgb, var(--k-${tappa.anello}) 45%, var(--card))`
     : tappe.some((t) => t.iso === iso) ? 'color-mix(in srgb, var(--fg) 16%, var(--card))' : 'var(--line)';
   const linee = $derived(filo ? archi(filo, idx) : []);
+  const dati = $derived(filo ? datiFilo(g, catena, anello, paramMateriale) : null);
 
   const [vx, vy, vw, vh] = VIEWBOX.split(' ').map(Number);
   /** La posizione di un punto della mappa, in percentuale del riquadro che la contiene. */
@@ -147,7 +149,7 @@
 {/snippet}
 
 <Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note={filo ? 'Sei anelli, dalla miniera al modello: il filo mostra da quali Paesi passa un modello.' : 'Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese.'}
-  table={filo ? null : v.tabella} cite={filo ? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
+  table={filo ? dati?.tabella ?? null : v.tabella} cite={filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
   <div class="anello" style:--c="var(--k-{anello})">
     {#if fili.length}
       <div class="viste">
@@ -210,9 +212,7 @@
           <span class="et" data-testid="etichetta" style:left={e.left} style:top={e.top}>
             <span class="n">{e.nome}</span>{' '}<b>{e.testo}</b>
             {#if e.primo}
-              <span class="segnalino" data-testid="segnalino" role="img" aria-label="Il primo: {e.nome}">
-                <svg viewBox="0 0 24 16" aria-hidden="true"><path d="M5 6h10l2 3H3zM8 3h6v3H8zM14 4h9v1.4h-9zM2 10h20a2.5 2.5 0 0 1 0 5H2a2.5 2.5 0 0 1 0-5z" /></svg>
-              </span>
+              <span class="segnalino" data-testid="segnalino" role="img" aria-label="Il primo: {e.nome}"></span>
             {/if}
           </span>
         {/each}
@@ -283,12 +283,13 @@
         </div>
       {/each}
     </dl>
+    {/if}
+    <!-- le note dell'anello parlano delle quote: nel filo restano solo le due generali -->
     <ul class="note">
       {#if italiaAZero}<li>{NOTA_ITALIA}</li>{/if}
       <li>{NOTA_GPU}</li>
-      {#each v.note as n (n)}<li>{n}</li>{/each}
+      {#if !filo}{#each v.note as n (n)}<li>{n}</li>{/each}{/if}
     </ul>
-    {/if}
   </div>
 </Block>
 
@@ -332,8 +333,11 @@
     font-size: 12px; line-height: 16px; color: var(--fg); text-shadow: 0 0 3px var(--card), 0 0 3px var(--card), 0 0 2px var(--card); }
   .et .n { color: var(--fg-2); }
   .et b { font-size: 14px; font-weight: 800; }
-  .segnalino { display: inline-block; width: 22px; height: 15px; align-self: center; }
-  .segnalino svg { fill: var(--fg); stroke: var(--card); stroke-width: 1.2; paint-order: stroke; overflow: visible; }
+  /* il primo: «1º» bianco su un tondino nel colore dell'anello, con un filo di carta che lo stacca dalla mappa. Il testo sta nel CSS:
+     chi non vede la mappa ha il nome del segnalino, e il numero dell'etichetta resta solo */
+  .segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; align-self: center; border-radius: 50%; background: var(--c);
+    box-shadow: 0 0 0 1.5px var(--card); color: #fff; font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
+  .segnalino::after { content: '1º'; }
   .europa { position: absolute; border-radius: var(--r-sm); border: 1px solid var(--fg-3); overflow: hidden; background: color-mix(in srgb, var(--bg) 60%, #9fc3d9); }
   .europa .pz { stroke-width: .3; }
   .europa .italia { stroke-width: 1; stroke-dasharray: 1.5 .8; }

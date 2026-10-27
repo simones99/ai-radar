@@ -333,10 +333,10 @@
     font-size: 12px; line-height: 16px; color: var(--fg); text-shadow: 0 0 3px var(--card), 0 0 3px var(--card), 0 0 2px var(--card); }
   .et .n { color: var(--fg-2); }
   .et b { font-size: 14px; font-weight: 800; }
-  /* il primo: «1º» bianco su un tondino nel colore dell'anello, con un filo di carta che lo stacca dalla mappa. Il testo sta nel CSS:
+  /* il primo: «1º» nel colore della carta su un tondino nel colore del testo, che si stacca da qualunque Paese in tutti e due i temi. Il testo sta nel CSS:
      chi non vede la mappa ha il nome del segnalino, e il numero dell'etichetta resta solo */
-  .segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; align-self: center; border-radius: 50%; background: var(--c);
-    box-shadow: 0 0 0 1.5px var(--card); color: #fff; font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
+  .segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; align-self: center; border-radius: 50%; background: var(--fg);
+    box-shadow: 0 0 0 1.5px var(--card); color: var(--card); font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
   .segnalino::after { content: '1º'; }
   .europa { position: absolute; border-radius: var(--r-sm); border: 1px solid var(--fg-3); overflow: hidden; background: color-mix(in srgb, var(--bg) 60%, #9fc3d9); }
   .europa .pz { stroke-width: .3; }

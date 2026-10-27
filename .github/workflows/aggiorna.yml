@@ -28,7 +28,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
+      # l'ultimo commit del ramo, non quello che ha fatto partire il giro: un giro rimasto in coda parte così
+      # dai dati salvati dal giro prima, e pubblica anche i push arrivati nel frattempo
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-python@v7
         with:
@@ -72,7 +76,9 @@ jobs:
             echo "Nessun dato nuovo da salvare."
           else
             git commit -m "Dati aggiornati $(date -u +%F)"
-            # se nel frattempo qualcuno ha fatto push, mettiamo i dati sopra le sue modifiche
+            # un push arrivato mentre il giro girava: i dati vanno sopra. Il rebase passa se il push non tocca data/,
+            # e data/ la scrive solo questo workflow, un giro alla volta. Se tocca i percorsi in `on.push`, il push
+            # ha già messo in coda il suo giro, che pubblicherà anche lui
             git pull --rebase origin "$GITHUB_REF_NAME"
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi

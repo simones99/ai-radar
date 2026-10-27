@@ -10,8 +10,9 @@
 #   (il centro geografico), con la quota dello USGS.
 # - TSMC a Tainan: è una deduzione. Il 4NP delle Blackwell è della famiglia dei 5 nm, che TSMC fa nella Fab 18 di Tainan.
 #   Dall'ottobre 2025 TSMC fa wafer Blackwell anche in Arizona.
-# - La pagina di OpenAI sull'addestramento ad Abilene non si legge dai client automatici (403): la tappa 6 americana
-#   si appoggia alla pagina di Epoch sul sito.
+# - La pagina di OpenAI sull'addestramento ad Abilene non si legge dai client automatici (403): per controllarla
+#   va aperta in un browser. Le tappe 5 e 6 americane si appoggiano a lei; Epoch dà ad Abilene GPU B200 e B300,
+#   OpenAI sistemi GB200, e teniamo OpenAI.
 # - Chi fabbrica gli Ascend non è chiaro: TechInsights ha trovato anche die di TSMC. La frase su SMIC è attribuita
 #   al Congresso USA, che scrive «purportedly».
 # - Pangu Ultra non dice dove è stato addestrato: il legame con Huawei Wuhu è una nostra scelta, coerente con gli Ascend.
@@ -53,15 +54,15 @@ fili:
         iso: USA
         lat: 32.50
         lon: -99.79
-        frase: "Data center di Oracle usato da OpenAI, operativo; secondo Epoch ha GPU NVIDIA B200 e B300."
-        fonte: https://epoch.ai/data/ai-data-centers/directory/openai-stargate-abilene
+        frase: "Il sito Stargate di punta di OpenAI, operativo: gira su Oracle Cloud Infrastructure, con sistemi NVIDIA GB200."
+        fonte: https://openai.com/index/building-the-compute-infrastructure-for-the-intelligence-age/
       - anello: modelli
         luogo: OpenAI, San Francisco
         iso: USA
         lat: 37.77
         lon: -122.39
-        frase: "Sviluppa i modelli GPT; secondo Epoch è OpenAI a usare i chip del sito di Abilene."
-        fonte: https://epoch.ai/data/ai-data-centers/directory/openai-stargate-abilene
+        frase: "Sviluppa i modelli GPT: GPT-5.5 è stato addestrato nel sito di Abilene."
+        fonte: https://openai.com/index/building-the-compute-infrastructure-for-the-intelligence-age/
 
   ue:
     nome: Un modello europeo

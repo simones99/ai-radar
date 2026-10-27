@@ -4085,7 +4085,7 @@
   {
    "anno": 2026,
    "area": "Cina",
-   "n": 29
+   "n": 30
   },
   {
    "anno": 2026,
@@ -4157,7 +4157,7 @@
   {
    "anno": 2026,
    "aperti": 29,
-   "totale": 88
+   "totale": 89
   }
  ],
  "recenti": [
@@ -4250,5 +4250,5 @@
  "fonte": "Epoch AI, Data on AI Models (CC BY 4.0)",
  "url": "https://epoch.ai/data/ai-models",
  "file": "https://epoch.ai/data/notable_ai_models.csv",
- "modelli": 1082
+ "modelli": 1083
 }

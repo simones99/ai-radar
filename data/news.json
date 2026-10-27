@@ -55,6 +55,41 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "[AINews] Anthropic files for $2T IPO in 2 weeks: 1400% growth rate, 48% of revenue through cloud partners, 85% margin, $1B op profit in Q2, $134B cash in bank and $10B lifetime burn",
+   "link": "https://latent.space/p/ainews-anthropic-s1/",
+   "data": "2026-10-27",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "GPT-6.1 Terra halves OpenAI's API prices and still gains ground on its larger models",
+   "link": "https://the-decoder.com/gpt-6-1-terra-halves-openais-api-prices-and-still-gains-ground-on-its-larger-models/",
+   "data": "2026-10-26",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic opens its books for Wall Street, showing record revenue and mounting obligations",
+   "link": "https://the-decoder.com/anthropic-opens-its-books-for-wall-street-showing-record-revenue-and-mounting-obligations/",
+   "data": "2026-10-26",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Researchers find six patterns that make AI text so exhausting to read",
+   "link": "https://the-decoder.com/researchers-find-six-patterns-that-make-ai-text-so-exhausting-to-read/",
+   "data": "2026-10-26",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Reddit's r/opensource bans all AI-related projects, sparking backlash and a rival subreddit",
+   "link": "https://the-decoder.com/reddits-r-opensource-bans-all-ai-related-projects-sparking-backlash-and-a-rival-subreddit/",
+   "data": "2026-10-26",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Meta plans up to $95 billion in stock sales to fund its AI buildout",
    "link": "https://the-decoder.com/meta-plans-up-to-95-billion-in-stock-sales-to-fund-its-ai-buildout/",
    "data": "2026-10-26",
@@ -76,8 +111,50 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "Greptile takes bug detection beyond code review with GPT-6 Astra",
+   "link": "https://openai.com/index/greptile-code-review-codex-astra",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Working with academic communities to build scientific understanding",
+   "link": "https://openai.com/index/building-scientific-understanding-with-academic-communities",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "GPT-6.1 Sol helps CodeRabbit strengthen security across complex codebases",
+   "link": "https://openai.com/index/gpt-6-1-sol-coderabbit-code-security",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "ChatGPT’s expanding world of work",
+   "link": "https://openai.com/index/chatgpt-expanding-world-of-work",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "How Fanatics and OpenAI streamline the fan experience",
    "link": "https://openai.com/index/fanatics-streamline-fan-experience",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "How Ultrafast cut incident investigation from hours to minutes at OpenAI",
+   "link": "https://openai.com/index/openai-cut-incident-investigation",
+   "data": "2026-10-26",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Introducing GPT-6.1 Terra",
+   "link": "https://openai.com/index/introducing-gpt-6-1-terra",
    "data": "2026-10-26",
    "fonte": "OpenAI",
    "tema": "prodotti"
@@ -88,6 +165,13 @@
    "data": "2026-10-26",
    "fonte": "Import AI",
    "tema": "ricerca"
+  },
+  {
+   "titolo": "Our newest AI Quest: Mapping the human brain",
+   "link": "https://blog.google/products-and-platforms/products/education/ai-quests-polar-peaks/",
+   "data": "2026-10-26",
+   "fonte": "Google AI",
+   "tema": "prodotti"
   },
   {
    "titolo": "Nvidia open-sources Flora to make robot video labeling 125x cheaper than GPT-6 Astra",
@@ -107,34 +191,6 @@
    "titolo": "Anthropic says one AI agent beats many subagents now that models can handle complexity alone",
    "link": "https://the-decoder.com/anthropic-says-one-ai-agent-beats-many-subagents-now-that-models-can-handle-complexity-alone/",
    "data": "2026-10-25",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Ex-Google CEO Eric Schmidt calls OpenAI and Anthropic modern colonial trading companies",
-   "link": "https://the-decoder.com/ex-google-ceo-eric-schmidt-calls-openai-and-anthropic-modern-colonial-trading-companies/",
-   "data": "2026-10-25",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI offers discounts up to 90 percent to poach Anthropic's biggest customers",
-   "link": "https://the-decoder.com/openai-offers-discounts-up-to-90-percent-to-poach-anthropics-biggest-customers/",
-   "data": "2026-10-25",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenMobile-2 proves open-source smartphone agents can rival proprietary models",
-   "link": "https://the-decoder.com/openmobile-2-proves-open-source-smartphone-agents-can-rival-proprietary-models/",
-   "data": "2026-10-25",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Three fired OpenAI safety researchers say they were never told what they actually leaked",
-   "link": "https://the-decoder.com/three-fired-openai-safety-researchers-say-they-were-never-told-what-they-actually-leaked/",
-   "data": "2026-10-24",
    "fonte": "The Decoder",
    "tema": "prodotti"
   },
@@ -209,13 +265,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Uber brings ChatGPT Work to all employees with OpenAI",
-   "link": "https://openai.com/index/uber-chatgpt-work-rollout",
-   "data": "2026-10-22",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "Why AI Compute Comes in Rectangles — Erik Bernhardsson, Modal CEO",
    "link": "https://latent.space/p/modal-d/",
    "data": "2026-10-22",
@@ -256,41 +305,6 @@
    "data": "2026-10-22",
    "fonte": "Google DeepMind",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "How AT&T is rethinking in-house legal work with OpenAI",
-   "link": "https://openai.com/index/att-legal",
-   "data": "2026-10-21",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Broad access through consistent standards",
-   "link": "https://openai.com/index/broad-access-through-consistent-standards",
-   "data": "2026-10-21",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI models are coming to Google Cloud",
-   "link": "https://openai.com/index/openai-models-google-cloud",
-   "data": "2026-10-21",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Patch the Planet: global response coordination as agents uncover critical vulnerabilities",
-   "link": "https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities",
-   "data": "2026-10-21",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "ChatGPT Ads expands to 26 new countries as over 100,000 advertisers have used the platform",
-   "link": "https://openai.com/index/chatgpt-ads-expands-26-new-countries",
-   "data": "2026-10-21",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
   },
   {
    "titolo": "Claude Mods: Flipping the Harness Inside Out",
@@ -403,13 +417,6 @@
    "data": "2026-10-19",
    "fonte": "Hugging Face",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "[AINews] High Taste Testers Ep. 1",
-   "link": "https://latent.space/p/ainews-high-taste-testers-ep-1/",
-   "data": "2026-10-17",
-   "fonte": "Latent Space",
-   "tema": "business"
   },
   {
    "titolo": "Open-weight models trail closed models in cyber capabilities by 6–7 months",
@@ -727,22 +734,8 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "AI for everyone in every language",
-   "link": "https://blog.google/innovation-and-ai/technology/ai/ai-for-every-language/",
-   "data": "2026-09-15",
-   "fonte": "Google AI",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "Generating running routes with GPT-6 Astra and ChatGPT Work",
    "link": "https://simonwillison.net/2026/Sep/12/astra-running-routes/",
-   "data": "2026-09-12",
-   "fonte": "Simon Willison",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI agents attacked RubyGems back in May",
-   "link": "https://simonwillison.net/2026/Sep/12/openai-agents-rubygems/",
    "data": "2026-09-12",
    "fonte": "Simon Willison",
    "tema": "prodotti"

@@ -1,6 +1,6 @@
 {
  "versione": 2,
- "generato": "2026-10-26",
+ "generato": "2026-10-27",
  "soglie": {
   "slancio": 0.0,
   "domanda": 3.0,
@@ -41,10 +41,10 @@
     "sviluppo",
     "prodotto"
    ],
-   "slancio": 0.4256,
+   "slancio": 0.426,
    "slancio_margine": [
-    0.3559,
-    0.499
+    0.356,
+    0.4995
    ],
    "domanda": 30.787,
    "domanda_it": 44.476,
@@ -52,7 +52,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.4654,
+   "slancio_prec": 0.4658,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -132,10 +132,10 @@
      ]
     },
     "github": {
-     "variazione": 1.1971,
+     "variazione": 1.1986,
      "margine": [
-      0.9257,
-      1.5067
+      0.9264,
+      1.5094
      ],
      "peso": 0.333,
      "mensile": [
@@ -196,13 +196,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 17939,
-       "base": 31857
+       "n": 17965,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 17980,
-       "base": 31308
+       "n": 18013,
+       "base": 31353
       }
      ]
     },
@@ -265,21 +265,21 @@
      "nome": "deepseek-ai/deepseek-harness",
      "url": "https://github.com/deepseek-ai/deepseek-harness",
      "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-     "stelle": 262347,
+     "stelle": 263187,
      "creato": "2026-08-13"
     },
     {
      "nome": "Ebony-Vinyl/dsh-our-free-model",
      "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
      "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-     "stelle": 44474,
+     "stelle": 45818,
      "creato": "2026-09-24"
     },
     {
      "nome": "hypit-ai/hypit",
      "url": "https://github.com/hypit-ai/hypit",
      "descrizione": "Clone any viral video with AI agents. Not just a script, the whole workflow: swap the face, the words, the B-roll, ship 100 variants in one command, and get your 100M views.",
-     "stelle": 25808,
+     "stelle": 25990,
      "creato": "2026-07-29"
     }
    ]
@@ -293,10 +293,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.8726,
+   "slancio": 0.7684,
    "slancio_margine": [
-    0.5447,
-    1.2701
+    0.5507,
+    1.0167
    ],
    "domanda": 1.913,
    "domanda_it": 0.473,
@@ -304,7 +304,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 1.689,
+   "slancio_prec": 1.1951,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -314,7 +314,7 @@
       0.2966,
       1.1319
      ],
-     "peso": 0.599,
+     "peso": 0.333,
      "mensile": [
       {
        "mese": "2025-09",
@@ -384,12 +384,12 @@
      ]
     },
     "github": {
-     "variazione": 1.2374,
+     "variazione": 0.8239,
      "margine": [
-      0.6507,
-      2.0327
+      0.5653,
+      1.1252
      ],
-     "peso": 0.401,
+     "peso": 0.667,
      "mensile": [
       {
        "mese": "2025-09",
@@ -448,13 +448,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 1369,
-       "base": 31857
+       "n": 936,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 1174,
-       "base": 31308
+       "n": 1179,
+       "base": 31353
       }
      ]
     },
@@ -517,21 +517,21 @@
      "nome": "ccch1mneyyy/dsh-TUI",
      "url": "https://github.com/ccch1mneyyy/dsh-TUI",
      "descrizione": "DSH's officially top-recommended TUI plugin — high performance, low overhead, cute pixel whale, smooth mouse interaction. One-command install via npm. / DSH 官方首推的 TUI 插件，高性能低占用，可爱像素鲸鱼，流畅鼠标交互，npm 一键安装",
-     "stelle": 5887,
+     "stelle": 5966,
      "creato": "2026-08-13"
     },
     {
      "nome": "HarnessRouter/harnessrouter",
      "url": "https://github.com/HarnessRouter/harnessrouter",
      "descrizione": "HarnessRouter Community Edition: the self-hosted, Apache-2.0 edition of the unified interface for agent harnesses. Run Codex, Claude Code, Hermes, PI, DSH, and more through one API, with sessions, st…",
-     "stelle": 3678,
+     "stelle": 3719,
      "creato": "2026-08-09"
     },
     {
      "nome": "fuxicodex/Fuxi",
      "url": "https://github.com/fuxicodex/Fuxi",
      "descrizione": "FuXi is a fast, self-contained AI coding agent that lives in your terminal — edit code, run commands, and drive tools, with cost-aware routing across LLM providers.",
-     "stelle": 3206,
+     "stelle": 3204,
      "creato": "2026-08-04"
     }
    ]
@@ -545,10 +545,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.3016,
+   "slancio": 0.3021,
    "slancio_margine": [
-    0.0758,
-    0.5748
+    0.0759,
+    0.5758
    ],
    "domanda": 4.678,
    "domanda_it": 4.101,
@@ -556,7 +556,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.1215,
+   "slancio_prec": 0.1219,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -566,7 +566,7 @@
       -0.2896,
       0.2597
      ],
-     "peso": 0.442,
+     "peso": 0.444,
      "mensile": [
       {
        "mese": "2025-09",
@@ -636,12 +636,12 @@
      ]
     },
     "github": {
-     "variazione": 0.6768,
+     "variazione": 0.6799,
      "margine": [
-      0.2992,
-      1.1643
+      0.3008,
+      1.1696
      ],
-     "peso": 0.558,
+     "peso": 0.556,
      "mensile": [
       {
        "mese": "2025-09",
@@ -700,13 +700,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 11716,
-       "base": 31857
+       "n": 11730,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 14375,
-       "base": 31308
+       "n": 14415,
+       "base": 31353
       }
      ]
     },
@@ -769,21 +769,21 @@
      "nome": "tangency-labs/solidcraft",
      "url": "https://github.com/tangency-labs/solidcraft",
      "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-     "stelle": 10694,
+     "stelle": 10915,
      "creato": "2026-10-07"
     },
     {
      "nome": "rehan-remade/universal-modder",
      "url": "https://github.com/rehan-remade/universal-modder",
      "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
-     "stelle": 9000,
+     "stelle": 9039,
      "creato": "2026-09-30"
     },
     {
      "nome": "KKKKhazix/AIHOT",
      "url": "https://github.com/KKKKhazix/AIHOT",
      "descrizione": "一个自己找热点、自己写日报的网站框架。把信源和精选标准换成你的，它就是你的行业热点站。",
-     "stelle": 8670,
+     "stelle": 8715,
      "creato": "2026-09-28"
     }
    ]
@@ -799,10 +799,10 @@
     "prodotto",
     "dati"
    ],
-   "slancio": -0.0148,
+   "slancio": -0.0141,
    "slancio_margine": [
-    -0.1015,
-    0.0804
+    -0.1009,
+    0.0811
    ],
    "domanda": 9.545,
    "domanda_it": 9.621,
@@ -810,7 +810,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.1487,
+   "slancio_prec": 0.1491,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -890,10 +890,10 @@
      ]
     },
     "github": {
-     "variazione": 0.2545,
+     "variazione": 0.2557,
      "margine": [
-      0.1479,
-      0.371
+      0.1491,
+      0.3722
      ],
      "peso": 0.667,
      "mensile": [
@@ -954,13 +954,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 5899,
-       "base": 31857
+       "n": 5907,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 5779,
-       "base": 31308
+       "n": 5792,
+       "base": 31353
       }
      ]
     },
@@ -1029,14 +1029,14 @@
      "nome": "deeplethe/utopia",
      "url": "https://github.com/deeplethe/utopia",
      "descrizione": "World's first open-source enterprise world model.",
-     "stelle": 8551,
+     "stelle": 8565,
      "creato": "2026-08-07"
     },
     {
      "nome": "youngyangyang04/llm-master",
      "url": "https://github.com/youngyangyang04/llm-master",
      "descrizione": "大模型（LLM）全栈学习路线与中文教程🔥：覆盖 Prompt Engineering、RAG、AI Agent、MCP、微调、模型部署、Transformer、AI 编程与大厂面试，从入门到生产实践。",
-     "stelle": 1432,
+     "stelle": 1440,
      "creato": "2026-09-12"
     },
     {
@@ -1060,10 +1060,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": 0.5285,
+   "slancio": 0.5411,
    "slancio_margine": [
-    0.34,
-    0.7435
+    0.3516,
+    0.7572
    ],
    "domanda": 1.269,
    "domanda_it": 0.473,
@@ -1071,7 +1071,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 1.2554,
+   "slancio_prec": 1.2561,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -1081,7 +1081,7 @@
       -0.3417,
       -0.0766
      ],
-     "peso": 0.605,
+     "peso": 0.602,
      "mensile": [
       {
        "mese": "2025-09",
@@ -1151,12 +1151,12 @@
      ]
     },
     "github": {
-     "variazione": 3.2906,
+     "variazione": 3.3119,
      "margine": [
-      2.4798,
-      4.2904
+      2.5026,
+      4.3081
      ],
-     "peso": 0.395,
+     "peso": 0.398,
      "mensile": [
       {
        "mese": "2025-09",
@@ -1215,13 +1215,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 1411,
-       "base": 31857
+       "n": 1412,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 1520,
-       "base": 31308
+       "n": 1529,
+       "base": 31353
       }
      ]
     },
@@ -1290,21 +1290,21 @@
      "nome": "jwuthri-cloud/Tracely-ai",
      "url": "https://github.com/jwuthri-cloud/Tracely-ai",
      "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-     "stelle": 1183,
+     "stelle": 1195,
      "creato": "2026-10-11"
     },
     {
      "nome": "xinxuxin/keystone-bench",
      "url": "https://github.com/xinxuxin/keystone-bench",
      "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
-     "stelle": 944,
+     "stelle": 958,
      "creato": "2026-09-07"
     },
     {
      "nome": "superwesleyhys-ux/factcircuit",
      "url": "https://github.com/superwesleyhys-ux/factcircuit",
      "descrizione": "FactCircuit: an auditable claim-and-evidence verification loop with immutable provenance, staged checks, bounded retrieval, and reproducible evaluation.",
-     "stelle": 850,
+     "stelle": 864,
      "creato": "2026-09-06"
     }
    ]
@@ -1319,10 +1319,10 @@
     "sviluppo",
     "dati"
    ],
-   "slancio": 0.1376,
+   "slancio": 0.1381,
    "slancio_margine": [
-    0.0102,
-    0.2812
+    0.0106,
+    0.2817
    ],
    "domanda": 0.323,
    "domanda_it": 0.315,
@@ -1330,7 +1330,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.0809,
+   "slancio_prec": 0.0803,
    "domanda_prec": null,
    "quadrante_prec": "osserva",
    "segnali": {
@@ -1410,10 +1410,10 @@
      ]
     },
     "github": {
-     "variazione": 0.1179,
+     "variazione": 0.1186,
      "margine": [
-      -0.0335,
-      0.2931
+      -0.0329,
+      0.2939
      ],
      "peso": 0.666,
      "mensile": [
@@ -1475,12 +1475,12 @@
       {
        "mese": "2026-08",
        "n": 393,
-       "base": 31857
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 393,
-       "base": 31308
+       "n": 394,
+       "base": 31353
       }
      ]
     },
@@ -1557,7 +1557,7 @@
      "nome": "modelscope/ms-cookbook",
      "url": "https://github.com/modelscope/ms-cookbook",
      "descrizione": "魔搭紫皮书｜ModelScope Cookbook：面向开发者的开源模型应用实战指南，覆盖模型选型、推理、微调、评测、RAG、Agent 与 AIGC，从跑通第一个模型到构建实际应用。",
-     "stelle": 506,
+     "stelle": 507,
      "creato": "2026-09-11"
     }
    ]
@@ -1574,10 +1574,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": -0.2649,
+   "slancio": -0.2652,
    "slancio_margine": [
-    -0.3418,
-    -0.179
+    -0.3419,
+    -0.1795
    ],
    "domanda": 14.342,
    "domanda_it": 11.987,
@@ -1585,7 +1585,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": -0.0515,
+   "slancio_prec": -0.052,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -1665,10 +1665,10 @@
      ]
     },
     "github": {
-     "variazione": -0.0224,
+     "variazione": -0.0229,
      "margine": [
-      -0.119,
-      0.0848
+      -0.1189,
+      0.0835
      ],
      "peso": 0.667,
      "mensile": [
@@ -1730,12 +1730,12 @@
       {
        "mese": "2026-08",
        "n": 2341,
-       "base": 31857
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 2072,
-       "base": 31308
+       "n": 2075,
+       "base": 31353
       }
      ]
     },
@@ -1811,14 +1811,14 @@
      "nome": "yanliudesign/mono-color-skill",
      "url": "https://github.com/yanliudesign/mono-color-skill",
      "descrizione": "One-ink editorial print image skill — warm paper, halftone photography, active negative space, and restrained typography.",
-     "stelle": 3506,
+     "stelle": 3516,
      "creato": "2026-08-19"
     },
     {
      "nome": "Nanako0129/sepia",
      "url": "https://github.com/Nanako0129/sepia",
      "descrizione": "De-AI writing skill for any Agent Skills-compatible agent (77+ via the Skills CLI), with native plugins for Claude Code, Codex, Grok Build, and Antigravity. Narrative-architecture repair for fiction,…",
-     "stelle": 3495,
+     "stelle": 3505,
      "creato": "2026-08-28"
     }
    ]
@@ -1833,10 +1833,10 @@
     "sviluppo",
     "compliance"
    ],
-   "slancio": 0.0337,
+   "slancio": 0.0343,
    "slancio_margine": [
-    -0.0773,
-    0.158
+    -0.0765,
+    0.1584
    ],
    "domanda": 0.467,
    "domanda_it": 1.577,
@@ -1844,7 +1844,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.1252,
+   "slancio_prec": 0.1246,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -1854,7 +1854,7 @@
       -0.3724,
       -0.1473
      ],
-     "peso": 0.549,
+     "peso": 0.547,
      "mensile": [
       {
        "mese": "2025-09",
@@ -1924,12 +1924,12 @@
      ]
     },
     "github": {
-     "variazione": 0.5746,
+     "variazione": 0.5717,
      "margine": [
-      0.3297,
-      0.8646
+      0.328,
+      0.86
      ],
-     "peso": 0.451,
+     "peso": 0.453,
      "mensile": [
       {
        "mese": "2025-09",
@@ -1989,12 +1989,12 @@
       {
        "mese": "2026-08",
        "n": 800,
-       "base": 31857
+       "base": 31885
       },
       {
        "mese": "2026-09",
        "n": 894,
-       "base": 31308
+       "base": 31353
       }
      ]
     },
@@ -2057,7 +2057,7 @@
      "nome": "trhhubsd/ARTEX",
      "url": "https://github.com/trhhubsd/ARTEX",
      "descrizione": "ARTEX · AI autonomous penetration testing system (multi-agent LLM, Go + Next.js) · AI 自主渗透测试系统 · 百度 agent+ 攻防挑战赛冠军",
-     "stelle": 1965,
+     "stelle": 2031,
      "creato": "2026-10-08"
     },
     {
@@ -2071,7 +2071,7 @@
      "nome": "graygnatconsole/mcp-audit-tool",
      "url": "https://github.com/graygnatconsole/mcp-audit-tool",
      "descrizione": "🛡️ Security audit CLI for Model Context Protocol (MCP) servers — scan AI agent configs for tool poisoning, rug pulls, hardcoded secrets, command injection & supply-chain risks. Pure Python, SARIF + C…",
-     "stelle": 543,
+     "stelle": 544,
      "creato": "2026-09-26"
     }
    ]
@@ -2086,10 +2086,10 @@
     "prodotto",
     "compliance"
    ],
-   "slancio": -0.2415,
+   "slancio": -0.241,
    "slancio_margine": [
-    -0.4049,
-    -0.0332
+    -0.405,
+    -0.0318
    ],
    "domanda": 3.211,
    "domanda_it": 0.946,
@@ -2097,7 +2097,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": true,
    "incerto_perche": "pochi paper (34 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": -0.1079,
+   "slancio_prec": -0.106,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -2107,7 +2107,7 @@
       -0.5923,
       -0.1297
      ],
-     "peso": 0.41,
+     "peso": 0.412,
      "mensile": [
       {
        "mese": "2025-09",
@@ -2177,12 +2177,12 @@
      ]
     },
     "github": {
-     "variazione": -0.1029,
+     "variazione": -0.1004,
      "margine": [
-      -0.3459,
-      0.2303
+      -0.3451,
+      0.2358
      ],
-     "peso": 0.59,
+     "peso": 0.588,
      "mensile": [
       {
        "mese": "2025-09",
@@ -2241,13 +2241,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 910,
-       "base": 31857
+       "n": 915,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 804,
-       "base": 31308
+       "n": 805,
+       "base": 31353
       }
      ]
     },
@@ -2310,14 +2310,14 @@
      "nome": "agents-universe/agents-universe",
      "url": "https://github.com/agents-universe/agents-universe",
      "descrizione": "不是问答机器人，而是能真正干活的数字分身。共享智能体，共享项目上下文，让项目所有成员一起协同工作。同时智能体会像人一样通过资料或者工作抽象和总结经验到项目上下文中",
-     "stelle": 748,
+     "stelle": 763,
      "creato": "2026-09-10"
     },
     {
      "nome": "decionis/agent-safe-pipeline",
      "url": "https://github.com/decionis/agent-safe-pipeline",
      "descrizione": "An execution-authority gateway for AI agents and APIs. It intercepts consequential HTTP actions, asks Decionis whether they are authorized, and forwards exactly the authorized request once on a singl…",
-     "stelle": 671,
+     "stelle": 672,
      "creato": "2026-08-13"
     },
     {
@@ -2339,10 +2339,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": 0.092,
+   "slancio": 0.0915,
    "slancio_margine": [
-    -0.084,
-    0.3017
+    -0.0843,
+    0.3011
    ],
    "domanda": 3.268,
    "domanda_it": 1.104,
@@ -2350,7 +2350,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": -0.0472,
+   "slancio_prec": -0.0475,
    "domanda_prec": null,
    "quadrante_prec": "consolida",
    "segnali": {
@@ -2430,10 +2430,10 @@
      ]
     },
     "github": {
-     "variazione": 0.4853,
+     "variazione": 0.4844,
      "margine": [
-      0.3045,
-      0.691
+      0.304,
+      0.6896
      ],
      "peso": 0.667,
      "mensile": [
@@ -2494,13 +2494,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 2061,
-       "base": 31857
+       "n": 2062,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 1996,
-       "base": 31308
+       "n": 1998,
+       "base": 31353
       }
      ]
     },
@@ -2563,7 +2563,7 @@
      "nome": "Hebbian-Robotics/hflow",
      "url": "https://github.com/Hebbian-Robotics/hflow",
      "descrizione": "SDK for robotics teams to verify the quality of their data used for AI model training.",
-     "stelle": 301,
+     "stelle": 302,
      "creato": "2026-08-18"
     },
     {
@@ -2577,7 +2577,7 @@
      "nome": "ashishsinha1602/schemagate",
      "url": "https://github.com/ashishsinha1602/schemagate",
      "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
-     "stelle": 174,
+     "stelle": 175,
      "creato": "2026-09-06"
     }
    ]
@@ -2591,10 +2591,10 @@
    "ruoli": [
     "dati"
    ],
-   "slancio": 1.1528,
+   "slancio": 1.1498,
    "slancio_margine": [
-    0.6713,
-    1.7731
+    0.6689,
+    1.7694
    ],
    "domanda": 0.127,
    "domanda_it": 0.158,
@@ -2602,7 +2602,7 @@
    "quadrante_calcolato": "prova",
    "incerto": true,
    "incerto_perche": "pochi paper (25 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": 1.1344,
+   "slancio_prec": 1.1332,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -2682,10 +2682,10 @@
      ]
     },
     "github": {
-     "variazione": 1.978,
+     "variazione": 1.9717,
      "margine": [
-      1.3302,
-      2.8059
+      1.3248,
+      2.7986
      ],
      "peso": 0.667,
      "mensile": [
@@ -2747,12 +2747,12 @@
       {
        "mese": "2026-08",
        "n": 186,
-       "base": 31857
+       "base": 31885
       },
       {
        "mese": "2026-09",
        "n": 253,
-       "base": 31308
+       "base": 31353
       }
      ]
     },
@@ -2825,18 +2825,18 @@
      "creato": "2026-09-23"
     },
     {
-     "nome": "ashishsinha1602/schemagate",
-     "url": "https://github.com/ashishsinha1602/schemagate",
-     "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
-     "stelle": 174,
-     "creato": "2026-09-06"
-    },
-    {
      "nome": "apowerb/apowerb",
      "url": "https://github.com/apowerb/apowerb",
      "descrizione": "The open-source agentic framework to build, orchestrate, and operate production AI agents.",
      "stelle": 150,
      "creato": "2026-07-29"
+    },
+    {
+     "nome": "yimindev/dati",
+     "url": "https://github.com/yimindev/dati",
+     "descrizione": "Turn your database into secure, semantically rich MCP tools for agents.",
+     "stelle": 71,
+     "creato": "2026-08-23"
     }
    ]
   },
@@ -2850,10 +2850,10 @@
     "sviluppo",
     "dati"
    ],
-   "slancio": -0.4833,
+   "slancio": -0.4832,
    "slancio_margine": [
     -0.5914,
-    -0.3466
+    -0.3463
    ],
    "domanda": 5.337,
    "domanda_it": 3.391,
@@ -2861,7 +2861,7 @@
    "quadrante_calcolato": "consolida",
    "incerto": true,
    "incerto_perche": "pochi paper (15 al mese)",
-   "slancio_prec": -0.2231,
+   "slancio_prec": -0.2221,
    "domanda_prec": null,
    "quadrante_prec": "consolida",
    "segnali": {
@@ -2941,10 +2941,10 @@
      ]
     },
     "github": {
-     "variazione": -0.3317,
+     "variazione": -0.3314,
      "margine": [
-      -0.4247,
-      -0.2235
+      -0.425,
+      -0.2225
      ],
      "peso": 0.667,
      "mensile": [
@@ -3005,13 +3005,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 569,
-       "base": 31857
+       "n": 571,
+       "base": 31885
       },
       {
        "mese": "2026-09",
        "n": 473,
-       "base": 31308
+       "base": 31353
       }
      ]
     },
@@ -3080,7 +3080,7 @@
      "nome": "kividbio/kividb",
      "url": "https://github.com/kividbio/kividb",
      "descrizione": "A fast, multi-threaded Redis® and Valkey alternative written in Rust: drop-in compatible, with full-text and vector search built in",
-     "stelle": 665,
+     "stelle": 711,
      "creato": "2026-10-16"
     },
     {
@@ -3109,10 +3109,10 @@
     "sviluppo",
     "prodotto"
    ],
-   "slancio": 0.0954,
+   "slancio": 0.0949,
    "slancio_margine": [
-    -0.0933,
-    0.3232
+    -0.093,
+    0.3218
    ],
    "domanda": 8.866,
    "domanda_it": 2.602,
@@ -3120,7 +3120,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.0268,
+   "slancio_prec": 0.0256,
    "domanda_prec": null,
    "quadrante_prec": "consolida",
    "segnali": {
@@ -3200,10 +3200,10 @@
      ]
     },
     "github": {
-     "variazione": 0.6453,
+     "variazione": 0.6432,
      "margine": [
-      0.0145,
-      1.6684
+      0.0157,
+      1.6585
      ],
      "peso": 0.333,
      "mensile": [
@@ -3264,13 +3264,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 543,
-       "base": 31857
+       "n": 542,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 411,
-       "base": 31308
+       "n": 412,
+       "base": 31353
       }
      ]
     },
@@ -3339,21 +3339,21 @@
      "nome": "ARahim3/DigUp",
      "url": "https://github.com/ARahim3/DigUp",
      "descrizione": "Search your computer by what's in your files: photos, PDFs, documents, recordings, videos and code. On-device on Mac, Windows and Linux, built on Google DeepMind's EmbeddingGemma 2.",
-     "stelle": 5842,
+     "stelle": 5893,
      "creato": "2026-10-08"
     },
     {
      "nome": "Tencent/WeMM-Embedding",
      "url": "https://github.com/Tencent/WeMM-Embedding",
      "descrizione": "WeMM-Embedding is a family of universal multimodal embedding models by the WeChat Vision Team at Tencent, supporting multimodal understanding and retrieval.",
-     "stelle": 1783,
+     "stelle": 1786,
      "creato": "2026-08-25"
     },
     {
      "nome": "Anionex/agent-vision-toolkit",
      "url": "https://github.com/Anionex/agent-vision-toolkit",
      "descrizione": "为纯文本模型\"看图“设计更好的视觉工具箱和技能，支持多图理解，图片问答，前端UI还原、GUI 自动化等，并可选无缝接入多个主流agent，直接识别粘贴图片｜ A vision toolkit and skill designed for text-only llms — image Q&A, long-screenshot OCR, frontend UI restoration, and GU…",
-     "stelle": 1251,
+     "stelle": 1249,
      "creato": "2026-08-01"
     }
    ]
@@ -3367,10 +3367,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.2384,
+   "slancio": 0.0899,
    "slancio_margine": [
-    -0.0327,
-    0.5855
+    -0.2565,
+    0.5977
    ],
    "domanda": 17.719,
    "domanda_it": 14.352,
@@ -3378,7 +3378,7 @@
    "quadrante_calcolato": "impara-ora",
    "incerto": true,
    "incerto_perche": "pochi paper (38 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": 0.5962,
+   "slancio_prec": 0.5955,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "segnali": {
@@ -3458,10 +3458,10 @@
      ]
     },
     "github": {
-     "variazione": 0.3495,
+     "variazione": -0.08,
      "margine": [
-      -0.1446,
-      1.1289
+      -0.6573,
+      1.4693
      ],
      "peso": 0.333,
      "mensile": [
@@ -3523,12 +3523,12 @@
       {
        "mese": "2026-08",
        "n": 431,
-       "base": 31857
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 373,
-       "base": 31308
+       "n": 116,
+       "base": 31353
       }
      ]
     },
@@ -3597,7 +3597,7 @@
      "nome": "jwuthri-cloud/Tracely-ai",
      "url": "https://github.com/jwuthri-cloud/Tracely-ai",
      "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-     "stelle": 1183,
+     "stelle": 1195,
      "creato": "2026-10-11"
     },
     {
@@ -3611,7 +3611,7 @@
      "nome": "respanai/respan-gateway",
      "url": "https://github.com/respanai/respan-gateway",
      "descrizione": "One endpoint for every LLM vendor. Any SDK, any model, any tool. One Rust binary.",
-     "stelle": 333,
+     "stelle": 345,
      "creato": "2026-09-25"
     }
    ]
@@ -3625,10 +3625,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.1819,
+   "slancio": 0.0524,
    "slancio_margine": [
-    0.0645,
-    0.3123
+    -0.0618,
+    0.1805
    ],
    "domanda": 0.179,
    "domanda_it": 0.158,
@@ -3636,7 +3636,7 @@
    "quadrante_calcolato": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.2594,
+   "slancio_prec": 0.2606,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -3716,10 +3716,10 @@
      ]
     },
     "github": {
-     "variazione": 0.6883,
+     "variazione": 0.192,
      "margine": [
-      0.3296,
-      1.1438
+      -0.0973,
+      0.5742
      ],
      "peso": 0.333,
      "mensile": [
@@ -3780,13 +3780,13 @@
       },
       {
        "mese": "2026-08",
-       "n": 1169,
-       "base": 31857
+       "n": 1173,
+       "base": 31885
       },
       {
        "mese": "2026-09",
-       "n": 1316,
-       "base": 31308
+       "n": 896,
+       "base": 31353
       }
      ]
     },
@@ -3849,21 +3849,21 @@
      "nome": "syv-ai/HyperQwen",
      "url": "https://github.com/syv-ai/HyperQwen",
      "descrizione": "Serve large Qwen models fast on the GPUs you actually own. Qwen3.8-27B on a single 24 GB card with vLLM: 127 tok/s single-user (381 when the answer quotes the prompt), ~1,035 tok/s at 64 concurrent, …",
-     "stelle": 2241,
+     "stelle": 2260,
      "creato": "2026-08-15"
     },
     {
      "nome": "mw00/project-maya",
      "url": "https://github.com/mw00/project-maya",
      "descrizione": "Project Maya - run GLM-5.3-Flash (321B MoE) and DeepSeek-V4.1-Flash-1017 (748B MoE) privately on your own GPU(s), from one card to 16, NVIDIA or AMD, Linux or Windows. Engine, server, dashboard, Open…",
-     "stelle": 1957,
+     "stelle": 2018,
      "creato": "2026-10-06"
     },
     {
      "nome": "StayLameBro/backburner",
      "url": "https://github.com/StayLameBro/backburner",
      "descrizione": "Your iPhone helps your Mac run a 27B model: faster prompt reading and more context over a USB-C cable",
-     "stelle": 1122,
+     "stelle": 1125,
      "creato": "2026-10-01"
     }
    ]
@@ -3875,10 +3875,10 @@
    "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "ruoli": [],
-   "slancio": 1.4201,
+   "slancio": 1.4179,
    "slancio_margine": [
-    0.8889,
-    2.1009
+    0.8871,
+    2.098
    ],
    "domanda": 0.232,
    "domanda_it": 0.315,
@@ -3886,7 +3886,7 @@
    "quadrante_calcolato": "prova",
    "incerto": true,
    "incerto_perche": "paper con andamento irregolare e repository nuovi con andamento irregolare",
-   "slancio_prec": 0.8151,
+   "slancio_prec": 0.8144,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "segnali": {
@@ -3966,10 +3966,10 @@
      ]
     },
     "github": {
-     "variazione": 2.1525,
+     "variazione": 2.146,
      "margine": [
-      1.1845,
-      3.5494
+      1.1801,
+      3.54
      ],
      "peso": 0.457,
      "mensile": [
@@ -4031,12 +4031,12 @@
       {
        "mese": "2026-08",
        "n": 144,
-       "base": 31857
+       "base": 31885
       },
       {
        "mese": "2026-09",
        "n": 188,
-       "base": 31308
+       "base": 31353
       }
      ]
     },
@@ -4099,7 +4099,7 @@
      "nome": "cobanov/awesome-fly",
      "url": "https://github.com/cobanov/awesome-fly",
      "descrizione": "A curated list of fruit fly connectome projects: MaleCNS, FlyWire, brain simulations, embodied models, games, and research tools.",
-     "stelle": 723,
+     "stelle": 725,
      "creato": "2026-09-12"
     },
     {
@@ -4113,7 +4113,7 @@
      "nome": "OpenMOSS/EasyWAM",
      "url": "https://github.com/OpenMOSS/EasyWAM",
      "descrizione": "A unified framework for training, fine-tuning, and evaluating World Action Models",
-     "stelle": 387,
+     "stelle": 391,
      "creato": "2026-08-26"
     }
    ]
@@ -4826,112 +4826,112 @@
    "mese": "2026-08",
    "competenze": {
     "agenti": {
-     "slancio": 0.4654,
+     "slancio": 0.4658,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "coding-agenti": {
-     "slancio": 1.689,
+     "slancio": 1.1951,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
-     "incerto": true
+     "incerto": false
     },
     "mcp": {
-     "slancio": 0.1215,
+     "slancio": 0.1219,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "rag": {
-     "slancio": 0.1487,
+     "slancio": 0.1491,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "valutazione": {
-     "slancio": 1.2554,
+     "slancio": 1.2561,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "post-training": {
-     "slancio": 0.0809,
+     "slancio": 0.0803,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "osserva",
      "incerto": false
     },
     "context-engineering": {
-     "slancio": -0.0515,
+     "slancio": -0.052,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.1252,
+     "slancio": 0.1246,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "governance": {
-     "slancio": -0.1079,
+     "slancio": -0.106,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": true
     },
     "dati-per-ai": {
-     "slancio": -0.0472,
+     "slancio": -0.0475,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": false
     },
     "text-to-sql": {
-     "slancio": 1.1344,
+     "slancio": 1.1332,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": true
     },
     "vector-db": {
-     "slancio": -0.2231,
+     "slancio": -0.2221,
      "domanda": null,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": true
     },
     "multimodale": {
-     "slancio": 0.0268,
+     "slancio": 0.0256,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "consolida",
      "incerto": false
     },
     "llmops": {
-     "slancio": 0.5962,
+     "slancio": 0.5955,
      "domanda": null,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.2594,
+     "slancio": 0.2606,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "robotica": {
-     "slancio": 0.8151,
+     "slancio": 0.8144,
      "domanda": null,
      "calcolato": "prova",
      "pubblicato": "prova",
@@ -4943,112 +4943,112 @@
    "mese": "2026-09",
    "competenze": {
     "agenti": {
-     "slancio": 0.4256,
+     "slancio": 0.426,
      "domanda": 30.787,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "coding-agenti": {
-     "slancio": 0.8726,
+     "slancio": 0.7684,
      "domanda": 1.913,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "mcp": {
-     "slancio": 0.3016,
+     "slancio": 0.3021,
      "domanda": 4.678,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "rag": {
-     "slancio": -0.0148,
+     "slancio": -0.0141,
      "domanda": 9.545,
      "calcolato": "consolida",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "valutazione": {
-     "slancio": 0.5285,
+     "slancio": 0.5411,
      "domanda": 1.269,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "post-training": {
-     "slancio": 0.1376,
+     "slancio": 0.1381,
      "domanda": 0.323,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "context-engineering": {
-     "slancio": -0.2649,
+     "slancio": -0.2652,
      "domanda": 14.342,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": false
     },
     "sicurezza": {
-     "slancio": 0.0337,
+     "slancio": 0.0343,
      "domanda": 0.467,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "governance": {
-     "slancio": -0.2415,
+     "slancio": -0.241,
      "domanda": 3.211,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": true
     },
     "dati-per-ai": {
-     "slancio": 0.092,
+     "slancio": 0.0915,
      "domanda": 3.268,
      "calcolato": "impara-ora",
      "pubblicato": "consolida",
      "incerto": false
     },
     "text-to-sql": {
-     "slancio": 1.1528,
+     "slancio": 1.1498,
      "domanda": 0.127,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": true
     },
     "vector-db": {
-     "slancio": -0.4833,
+     "slancio": -0.4832,
      "domanda": 5.337,
      "calcolato": "consolida",
      "pubblicato": "consolida",
      "incerto": true
     },
     "multimodale": {
-     "slancio": 0.0954,
+     "slancio": 0.0949,
      "domanda": 8.866,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": false
     },
     "llmops": {
-     "slancio": 0.2384,
+     "slancio": 0.0899,
      "domanda": 17.719,
      "calcolato": "impara-ora",
      "pubblicato": "impara-ora",
      "incerto": true
     },
     "modelli-locali": {
-     "slancio": 0.1819,
+     "slancio": 0.0524,
      "domanda": 0.179,
      "calcolato": "prova",
      "pubblicato": "prova",
      "incerto": false
     },
     "robotica": {
-     "slancio": 1.4201,
+     "slancio": 1.4179,
      "domanda": 0.232,
      "calcolato": "prova",
      "pubblicato": "prova",

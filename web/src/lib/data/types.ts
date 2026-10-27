@@ -113,12 +113,6 @@ export interface Github {
 
 export interface Arxiv { mesi: string[]; series: Record<string, Record<string, number>> }
 
-export interface ArtificialAnalysis {
-  data: string;
-  url: string;
-  modelli: { nome: string; creatore: string; indice: number; prezzo: number | null }[];
-}
-
 export interface Jobs {
   paesi: Record<string, string>;
   snapshots: { data: string; paese: string; totale: number; competenze: Record<string, number> }[];
@@ -192,8 +186,14 @@ export interface Geopoliticai {
   altri_paesi: Record<string, number>;
   /** L'anello dei modelli sulla mappa: l'ECI massimo per Paese nell'ultimo anno chiuso. */
   eci_paesi: { anno: number; valori: Record<string, GeoEciPaese> };
+  /** L'ECI di ogni modello dal 2023, per data di uscita; manca nei file scritti prima del ticket aa-termini/01. */
+  punti_eci?: GeoPuntoEci[];
   /** L'anello dei data center, da «AI data centers» di Epoch; manca nei file scritti prima del ticket 19. */
   data_center?: GeoDataCenter;
+}
+/** Un modello dell'ECI: valore, intervallo di confidenza e se, quando è uscito, era un record di capacità. */
+export interface GeoPuntoEci {
+  m: string; d: string; v: number; lo: number | null; hi: number | null; r: boolean;
 }
 /**
  * Un data center di Epoch: «operativo» se ha H100 equivalenti attuali, altrimenti «in costruzione». La posizione viene dalla
@@ -252,7 +252,6 @@ export interface Dataset {
   huggingface?: HuggingFace;
   github?: Github;
   arxiv?: Arxiv;
-  artificial_analysis?: ArtificialAnalysis;
   jobs?: Jobs;
   eurostat?: Eurostat;
   eurostat_settori?: EurostatSettori;

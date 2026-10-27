@@ -182,12 +182,6 @@ class FakeSession:
             return FakeResponse(text=(Path(__file__).parent / "fixtures" / "epoch_eci.csv").read_text(encoding="utf-8"))
         if host == "epoch.ai":
             return FakeResponse(text=_epoch_csv())
-        if host == "artificialanalysis.ai":
-            return FakeResponse(body={"data": [
-                {"name": f"Modello {i}", "model_creator": {"name": "Lab"},
-                 "evaluations": {"artificial_analysis_intelligence_index": 70 - i},
-                 "pricing": {"price_1m_blended_3_to_1": 1.5 + i}, "median_output_tokens_per_second": 80}
-                for i in range(15)]})
         if host == "ourworldindata.org":
             if url.endswith(".metadata.json"):
                 return FakeResponse(body={"columns": {}})
@@ -202,7 +196,6 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("AI_RADAR_DATA_DIR", str(tmp_path))
     monkeypatch.setenv("ADZUNA_APP_ID", "x")
     monkeypatch.setenv("ADZUNA_APP_KEY", "y")
-    monkeypatch.setenv("AA_API_KEY", "z")
     monkeypatch.setenv("GITHUB_TOKEN", "t")
     monkeypatch.setattr("time.sleep", lambda *_: None)
     fake = FakeSession()
@@ -251,11 +244,9 @@ def test_missing_keys_are_not_errors(env, monkeypatch):
     from pipeline import run
     tmp, _ = env
     monkeypatch.delenv("ADZUNA_APP_ID")
-    monkeypatch.delenv("AA_API_KEY")
     assert run.main(["--months", "8"]) == 0
     status = json.loads((tmp / "status.json").read_text())["fonti"]
     assert status["adzuna"]["stato"] == "non configurata"
-    assert status["artificial_analysis"]["stato"] == "non configurata"
     rad = json.loads((tmp / "radar.json").read_text())
     # senza Adzuna niente domanda: lo slancio c'è, il quadrante no
     assert all(r["slancio"] is not None and r["quadrante"] is None for r in rad["competenze"])

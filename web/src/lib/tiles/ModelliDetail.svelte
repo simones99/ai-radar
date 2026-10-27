@@ -5,7 +5,9 @@
   import Scatter from '../charts/Scatter.svelte';
   import { tNum } from '../data/derive';
   import { toHash } from '../router';
+  import type { GeoPuntoEci } from '../data/types';
   import { day, monthName, nf } from '../text/format';
+  import { eci } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
@@ -13,7 +15,7 @@
 
   const head = $derived(tile.head(data, today));
   const ep = $derived(data.epoch);
-  const aa = $derived(data.artificial_analysis);
+  const geo = $derived(data.geopoliticai);
   const ar = $derived(data.arxiv);
   const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
   const pow10 = (v: number) => `10${String(Math.round(Math.log10(v))).split('').map((c) => SUP[Number(c)]).join('')}`;
@@ -22,8 +24,13 @@
     const frontier = ep.punti.filter((p) => p.f && p.c).sort((a, b) => b.d.localeCompare(a.d)).slice(0, 3).map((p) => p.m);
     return ep.punti.filter((p) => p.c && p.c > 0).map((p) => ({ x: tNum(p.d), y: p.c as number, hot: p.f, label: frontier.includes(p.m) ? p.m : undefined }));
   });
-  const aaPts = $derived((aa?.modelli ?? []).filter((m) => m.prezzo && m.prezzo > 0).slice(0, 40)
-    .map((m, i) => ({ x: m.prezzo as number, y: m.indice, hot: i < 3, label: i < 3 ? m.nome : undefined })));
+  // i record di capacità dal più recente (ticket aa-termini/01)
+  const record = $derived((geo?.punti_eci ?? []).filter((p) => p.r).sort((a, b) => b.d.localeCompare(a.d)));
+  const capacita = $derived.by(() => {
+    const ultimi = record.slice(0, 3).map((p) => p.m);
+    return (geo?.punti_eci ?? []).map((p) => ({ x: tNum(p.d), y: p.v, hot: p.r, label: ultimi.includes(p.m) ? p.m : undefined }));
+  });
+  const intervallo = (p: GeoPuntoEci) => (p.lo != null && p.hi != null ? `${eci(p.lo)}–${eci(p.hi)}` : '');
   const months = $derived(ar ? ar.mesi.slice(-12) : []);
   const papers = $derived(months.map((m) => ({ k: monthName(m).slice(0, 3), v: ar?.series._totale?.[m] ?? 0 })));
   const open = $derived((ep?.pesi_aperti ?? []).map((p) => ({ k: String(p.anno), v: p.totale ? (100 * p.aperti) / p.totale : 0 })));
@@ -36,11 +43,12 @@
     table={{ cols: ['Modello di frontiera', 'Data', 'FLOP'], rows: (ep?.punti ?? []).filter((p) => p.f && p.c).sort((a, b) => b.d.localeCompare(a.d)).slice(0, 20).map((p) => [p.m, day(p.d), (p.c as number).toExponential(1)]) }}>
     <Scatter label="Calcolo di addestramento dei modelli notevoli" pts={compute} yLog xTitle="anno di pubblicazione" yTitle="FLOP" yFormat={pow10} xFormat={(v) => String(Math.round(v))} />
   </Block>
-  <Block span={4} title="Capacità contro prezzo" note="Indice di intelligenza di Artificial Analysis contro prezzo per milione di token, scala logaritmica."
-    missing={aaPts.length ? null : 'Serve una chiave gratuita di Artificial Analysis (AA_API_KEY nei secret del repository).'}
-    cite={aa ? [{ t: 'Fonte: ' }, { t: 'Artificial Analysis', href: aa.url }, { t: '.' }] : null}
-    table={{ cols: ['Modello', '$ per milione di token', 'Indice'], rows: (aa?.modelli ?? []).filter((m) => m.prezzo).slice(0, 40).map((m) => [m.nome, m.prezzo as number, m.indice]) }}>
-    <Scatter label="Capacità contro prezzo dei modelli linguistici" pts={aaPts} xLog xTitle="$ per milione di token" yTitle="indice" xFormat={(v) => `$${nf(v, v < 1 ? 2 : 0)}`} />
+  <Block span={4} title="Capacità dei modelli nel tempo"
+    note="Epoch Capabilities Index di ogni modello dal 2023. In blu i record di capacità: i modelli che, quando sono usciti, avevano la capacità più alta mai misurata. Pochi punti di differenza stanno dentro l’errore della misura."
+    missing={capacita.length ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'}
+    cite={geo ? [{ t: 'Fonte: Epoch AI, ' }, { t: 'Epoch Capabilities Index', href: geo.url_eci }, { t: ' (' }, { t: geo.licenza, href: 'https://creativecommons.org/licenses/by/4.0/' }, { t: ').' }] : null}
+    table={{ cols: ['Record di capacità', 'Data', 'ECI', 'Intervallo'], rows: record.slice(0, 20).map((p) => [p.m, day(p.d), eci(p.v), intervallo(p)]) }}>
+    <Scatter label="Capacità dei modelli nel tempo" pts={capacita} xTitle="data di uscita" yTitle="ECI" xFormat={(v) => String(Math.round(v))} />
   </Block>
   <Block title="Paper sull'AI pubblicati ogni mese" note="Nuovi paper nelle categorie informatiche dell'AI su arXiv." missing={papers.length ? null : 'Dati di arXiv non disponibili in questo aggiornamento.'}
     cite={[{ t: 'Fonte: ' }, { t: 'arXiv', href: 'https://arxiv.org' }, { t: ' (metadati CC0). Grazie ad arXiv per l’accesso aperto ai metadati.' }]}

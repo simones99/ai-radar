@@ -31,7 +31,6 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
       // riuscita con le posizioni dei siti dalla copia: lo stato è ok, con l'avviso
       geopoliticai: { ...ok, messaggio: 'pagina della mappa di Epoch non letta (HTTP 503): restano le posizioni salvate' }, ai_act: ok, rapporti: ok, catena: ok, feeds: ok, radar: ok,
       adzuna: { stato: 'non configurata', messaggio: 'ADZUNA_APP_ID/ADZUNA_APP_KEY non impostati' },
-      artificial_analysis: { stato: 'non configurata', messaggio: 'AA_API_KEY non impostata' },
     },
   },
   radar: {
@@ -227,6 +226,16 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     },
     senza_paese: { large: ['Poro 34B'], eci: ['Qwen2.5-Coder-14B', 'PaLM 2-L', 'internlm-20b'] },
     altri_paesi: { 'South Korea': 22, Canada: 7, 'United Arab Emirates': 7 },
+    // dal CSV registrato (Epoch, 23 ottobre 2026), solo alcuni modelli; i record sono quelli calcolati su tutto il file
+    punti_eci: [
+      { m: 'Claude Opus 5', d: '2026-07-24', v: 163.94, lo: 161.12, hi: 168.24, r: true },
+      { m: 'Kimi K3', d: '2026-07-16', v: 157.86, lo: 155.11, hi: 160.63, r: false },
+      { m: 'Claude Fable 5.1', d: '2026-09-01', v: 166.49, lo: 163.47, hi: 171.35, r: true },
+      { m: 'GPT-6 Astra', d: '2026-09-03', v: 168.81, lo: 165.45, hi: 174.51, r: true },
+      { m: 'Claude Opus 5.5', d: '2026-09-22', v: 168.83, lo: 165.25, hi: 173.95, r: true },
+      { m: 'Gemini 4 Argon', d: '2026-09-30', v: 166.45, lo: 163.23, hi: 171.52, r: false },
+      { m: 'Mistral Large 4', d: '2026-10-06', v: 150.03, lo: 146.94, hi: 152.74, r: false },
+    ],
     eci_paesi: { anno: 2025, valori: { USA: { max: 156.33, modello: 'GPT-5.2 Pro' }, CHN: { max: 146.09, modello: 'DeepSeek-V3.2' }, FRA: { max: 134.02, modello: 'Mistral Medium 3' } } },
     // dal CSV e dalla pagina della mappa registrati (Epoch, 26 ottobre 2026), solo alcuni Paesi e siti; per i test Waltham
     // Cross ha la posizione dall'indirizzo, e DayOne Nusajaya non ce l'ha

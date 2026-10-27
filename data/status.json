@@ -9,14 +9,6 @@
    },
    "secondi": 0.5
   },
-  "artificial_analysis": {
-   "stato": "ok",
-   "ultimo_successo": "2026-10-26T15:10:55+00:00",
-   "dettagli": {
-    "modelli": 698
-   },
-   "secondi": 0.3
-  },
   "arxiv": {
    "stato": "ok",
    "ultimo_successo": "2026-10-26T15:10:55+00:00",

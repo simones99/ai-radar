@@ -60,7 +60,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
           ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
-          AA_API_KEY: ${{ secrets.AA_API_KEY }}
           AI_RADAR_USER_AGENT: "ai-radar (+https://github.com/${{ github.repository }})"
         run: python -m pipeline.run
 

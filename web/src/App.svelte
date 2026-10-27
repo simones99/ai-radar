@@ -22,7 +22,7 @@
   onMount(load);
 
   const FONTI = [
-    ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['Artificial Analysis', 'https://artificialanalysis.ai/'], ['arXiv', 'https://arxiv.org'],
+    ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['arXiv', 'https://arxiv.org'],
     ['GitHub', 'https://github.com'], ['Hugging Face', 'https://huggingface.co'], ['The Adzuna API', 'https://www.adzuna.co.uk'],
     ['Eurostat', 'https://ec.europa.eu/eurostat'], ['Our World in Data', 'https://ourworldindata.org'],
   ];

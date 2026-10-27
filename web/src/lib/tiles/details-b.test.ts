@@ -26,14 +26,34 @@ describe('paesi', () => {
 });
 
 describe('Modelli', () => {
-  it('calcolo, modelli recenti, chiave mancante dichiarata', () => {
+  it('calcolo e modelli recenti', () => {
     show(ModelliDetail, mk('modelli', 'Modelli e ricerca', headModelli, ModelliDetail));
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('4,8 volte');
     expect(screen.getByRole('img', { name: 'Calcolo di addestramento dei modelli notevoli' })).toBeInTheDocument();
     expect(screen.getByText('Gemini 4 Argon')).toBeInTheDocument();
-    expect(screen.getByText(/Serve una chiave gratuita di Artificial Analysis/)).toBeInTheDocument();
     expect(screen.queryAllByRole('img', { name: /Modelli notevoli all'anno/ })).toHaveLength(0);
     expect(screen.queryByRole('heading', { name: 'Chi costruisce i modelli notevoli' })).toBeNull();
+  });
+  it('capacità dei modelli nel tempo: in tabella i record, dal più recente, con l’intervallo', () => {
+    show(ModelliDetail, mk('modelli', 'Modelli e ricerca', headModelli, ModelliDetail));
+    expect(screen.getByRole('img', { name: 'Capacità dei modelli nel tempo' })).toBeInTheDocument();
+    const blk = screen.getByRole('heading', { name: 'Capacità dei modelli nel tempo' }).closest('section')!;
+    expect(blk).toHaveTextContent('Pochi punti di differenza stanno dentro l’errore della misura.');
+    expect(within(blk).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
+    const righe = within(blk).getAllByRole('row', { hidden: true }).slice(1).map((r) => r.textContent);
+    expect(righe).toEqual([
+      'Claude Opus 5.522 set 2026168,8165,3–174,0', 'GPT-6 Astra3 set 2026168,8165,5–174,5',
+      'Claude Fable 5.11 set 2026166,5163,5–171,4', 'Claude Opus 524 lug 2026163,9161,1–168,2',
+    ]);
+  });
+  it('capacità dei modelli nel tempo senza i dati di Epoch', () => {
+    render(ModelliDetail, { data: { ...data, geopoliticai: undefined }, today, tile: mk('modelli', 'Modelli e ricerca', headModelli, ModelliDetail), elemento: null, params: {}, onclose: () => {} });
+    const blk = screen.getByRole('heading', { name: 'Capacità dei modelli nel tempo' }).closest('section')!;
+    expect(blk).toHaveTextContent('Dati di Epoch AI non disponibili in questo aggiornamento.');
+  });
+  it('niente più Artificial Analysis', () => {
+    const { container } = show(ModelliDetail, mk('modelli', 'Modelli e ricerca', headModelli, ModelliDetail));
+    expect(container).not.toHaveTextContent(/Artificial Analysis/);
   });
   it('chi costruisce i modelli ora sta in GeopoliticAI: il rimando apre la card', () => {
     show(ModelliDetail, mk('modelli', 'Modelli e ricerca', headModelli, ModelliDetail));

@@ -6,9 +6,8 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | File | Contenuto | Fonte |
 | --- | --- | --- |
 | `epoch.json` | Modelli AI notevoli: calcolo di addestramento, area, pesi aperti | Epoch AI (CC BY 4.0) |
-| `geopoliticai.json` | GeopoliticAI: calcolo e capacità per area e Paese UE, l'ECI massimo per Paese, i data center con le quote per Paese e i siti | Epoch AI (CC BY 4.0) |
+| `geopoliticai.json` | GeopoliticAI: calcolo e capacità per area e Paese UE, l'ECI massimo per Paese, i data center con le quote per Paese e i siti, l'ECI di ogni modello con i record di capacità | Epoch AI (CC BY 4.0) |
 | `geopoliticai_siti.json` | Le posizioni dei siti dei data center: l'ultima copia buona, letta dalla pagina della mappa di Epoch; i pochi siti che la pagina non ha, cercati una volta sola dall'indirizzo (`posizione: "indirizzo"`) | Epoch AI (CC BY 4.0); le posizioni dall'indirizzo da Nominatim, © OpenStreetMap contributors (ODbL) |
-| `artificial_analysis.json` | Indice di intelligenza, prezzo e velocità dei modelli linguistici | Artificial Analysis |
 | `arxiv.json` | Paper AI al mese, totali e per competenza | arXiv (metadati CC0) |
 | `github.json` | Nuovi repository al mese per topic; serie `base` (nuovi repository AI al mese, somma dei topic di base); `in_crescita` (repository nuovi più stellati per competenza); stelle dei progetti seguiti | GitHub |
 | `huggingface.json` | Modelli di tendenza e tipi di compito | Hugging Face |
@@ -24,5 +23,5 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `radar.json` | Radar delle competenze (versione 2: unità vere, soglie fisse, incertezza), calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
 
-I file con storico (arXiv, GitHub, Hugging Face, Adzuna, Artificial Analysis) si
+I file con storico (arXiv, GitHub, Hugging Face, Adzuna) si
 arricchiscono a ogni giro: per questo sono salvati nel repository.

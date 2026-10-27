@@ -5,6 +5,7 @@ organizzazione; Hong Kong e Macao vanno con la Cina, Taiwan con «Altri»; i mod
 restano fuori dalle aree. Il calcolo viene dal dataset large-scale (almeno 1e23 FLOP, dal 2020),
 la capacità dall'Epoch Capabilities Index su tutti i suoi modelli (dal 2023). Per l'anello dei modelli
 sulla mappa c'è anche l'ECI massimo per Paese dell'ultimo anno chiuso, con i codici ADM0_A3 dei confini.
+Per la card dei modelli, l'ECI di ogni modello dal 2023 con il suo intervallo e i record di capacità.
 Per l'anello dei data center, dal database «AI data centers» di Epoch: i siti e la quota per Paese dei loro
 H100 equivalenti attuali. Le posizioni dei siti vengono dalla pagina della mappa di Epoch e restano in una copia tra
 i dati; un sito che non c'è né nella pagina né nella copia si cerca una volta sola dal suo indirizzo, con Nominatim.
@@ -37,7 +38,7 @@ MIN_RIGHE = 100  # sotto questa soglia il file è troncato o le colonne sono cam
 MIN_SITI = 20  # i data center sono meno: 95 a ottobre 2026
 PAESE = "Country (of organization)"
 COLONNE_LARGE = {"Model", "Organization", "Publication date", PAESE, "Training compute (FLOP)"}
-COLONNE_ECI = {"Display name", "eci", "date", "Organization", PAESE}
+COLONNE_ECI = {"Display name", "eci", "eci_ci_low", "eci_ci_high", "date", "Organization", PAESE}
 H100E, MW = "Current H100 equivalents", "Current power (MW)"
 COLONNE_DC = {"Name", H100E, MW, "Owner", "Country"}
 
@@ -153,6 +154,7 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
     altrove: dict[str, int] = defaultdict(int)
     chiuso = today.year - 1  # l'anello dei modelli sulla mappa guarda l'ultimo anno chiuso
     eci_paesi: dict[str, dict] = {}
+    punti_eci: list[dict] = []
 
     for r in large:
         y = _anno(r["Publication date"])
@@ -188,6 +190,8 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
         if not y or y < DA_ECI or v is None:
             continue
         nome = r["Display name"].strip()
+        punti_eci.append({"m": nome, "d": r["date"].strip()[:10], "v": round(v, 2),
+                          "lo": _num(r["eci_ci_low"]), "hi": _num(r["eci_ci_high"])})
         paese = primo_paese(r[PAESE])
         if not paese:
             senza["eci"].append(nome)
@@ -210,6 +214,13 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
                 "org_eci": sorted(z["org_eci"]), "org_ls": sorted(z["org_ls"]), "contano_altrove": altrove[k],
                 "paesi_mappa": mappa}
 
+    # un record di capacità supera l'ECI di tutti i modelli usciti prima; lo stesso giorno conta solo il più alto
+    massimo = None
+    for p in sorted(punti_eci, key=lambda p: (p["d"], -p["v"])):
+        p["r"] = massimo is None or p["v"] > massimo
+        massimo = p["v"] if p["r"] else massimo
+    punti_eci.sort(key=lambda p: p["d"])
+
     paesi = {v[0]: v for v in PAESI_UE.values()}
     # i Paesi della mappa di ogni area; «Altri» è tutto il resto e resta vuota
     mappa_aree = {"usa": ["USA"], "cina": ["CHN"], "ue": sorted(v[4] for v in paesi.values()), "uk": ["GBR"], "altri": []}
@@ -231,6 +242,7 @@ def aggregate(large: list[dict], eci: list[dict], today: date) -> dict:
         "zone": out,
         "senza_paese": senza,
         "altri_paesi": dict(sorted(altri_paesi.items(), key=lambda kv: (-kv[1], kv[0]))),
+        "punti_eci": punti_eci,
         "eci_paesi": {"anno": chiuso, "valori": dict(sorted(eci_paesi.items(), key=lambda kv: -kv[1]["max"]))},
     }
 

@@ -68,6 +68,10 @@ _Avoid_: modello grande, modello di frontiera, modello notevole
 Quanto un modello è bravo nei compiti verificabili, misurata dall'Epoch Capabilities Index. Ha senso solo nel confronto tra modelli, non come valore assoluto. Dice quanto valgono i risultati di un'area.
 _Avoid_: competenza, intelligenza, potenza (per un modello)
 
+**Record di capacità**:
+Un modello che, quando è uscito, aveva la capacità più alta mai misurata, cioè un ECI più alto di tutti i modelli usciti prima. Fra due modelli usciti lo stesso giorno conta solo il più alto, e chi pareggia il record non lo batte.
+_Avoid_: modello di frontiera, modello migliore
+
 **Barriera**:
 Un motivo per cui un'impresa che ha considerato l'AI non la usa, per esempio i costi o la mancanza di competenze.
 _Avoid_: ostacolo, freno

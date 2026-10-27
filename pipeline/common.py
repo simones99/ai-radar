@@ -30,7 +30,7 @@ def load_yaml(name: str) -> dict:
         return yaml.safe_load(fh) or {}
 
 
-SECRET_ENV = ("ADZUNA_APP_ID", "ADZUNA_APP_KEY", "AA_API_KEY", "GITHUB_TOKEN")
+SECRET_ENV = ("ADZUNA_APP_ID", "ADZUNA_APP_KEY", "GITHUB_TOKEN")
 _SECRET_PARAM = re.compile(r"((?:app_id|app_key|api_key|key|token)=)[^&\s]+", re.IGNORECASE)
 
 

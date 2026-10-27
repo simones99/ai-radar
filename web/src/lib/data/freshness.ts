@@ -9,7 +9,6 @@ export interface TileState {
 
 const MOTIVI: Record<string, string> = {
   adzuna: 'Serve la chiave gratuita di Adzuna.',
-  artificial_analysis: 'Serve la chiave gratuita di Artificial Analysis.',
 };
 
 /** Stato di una card dalla sua fonte principale in status.json. */

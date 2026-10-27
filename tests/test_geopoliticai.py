@@ -3,7 +3,8 @@
 Dei file restano solo le colonne che il passo legge: tests/fixtures/epoch_large_scale.csv, epoch_eci.csv ed
 epoch_data_centers.csv (Epoch AI, «AI data centers», CC BY 4.0, registrato il 26 ottobre 2026). Della pagina della
 mappa di Epoch, epoch_mappa_data_center.html, registrata lo stesso giorno, restano l'isola di Astro con i siti, solo
-con `id` e `lngLat`, e un'altra isola da ignorare.
+con `id` e `lngLat`, e un'altra isola da ignorare. In epoch_eci.csv le colonne dell'intervallo (`eci_ci_low`, `eci_ci_high`)
+sono state aggiunte il 27 ottobre 2026 dal file di quel giorno, che aveva gli stessi ECI.
 """
 from __future__ import annotations
 
@@ -180,6 +181,25 @@ def test_eci_paesi_con_i_codici_della_mappa(data_dir):
     assert valori["KOR"] == {"max": 125.0, "modello": "KR"}
     assert "HKG" not in valori and "JPN" not in valori
     assert valori["USA"]["modello"] == "GPT-5.2 Pro"
+
+
+def test_capacita_dei_modelli_con_i_record(data_dir):
+    punti = run(data_dir)["punti_eci"]
+    assert len(punti) == 270 and punti[0]["d"] == "2023-02-24"
+    record = [p for p in punti if p["r"]]
+    assert [p["m"] for p in record[-3:]] == ["Claude Fable 5.1", "GPT-6 Astra", "Claude Opus 5.5"]
+    assert record[-1] == {"m": "Claude Opus 5.5", "d": "2026-09-22", "v": 168.83, "lo": 165.25, "hi": 173.95, "r": True}
+
+
+def test_record_solo_chi_supera_tutti_quelli_usciti_prima(data_dir):
+    def riga(modello, valore, giorno, paese="United States of America"):
+        return {**eci(modello, paese, valore), "date": giorno}
+    righe = [riga("Pari", "168.83", "2026-10-01"), riga("Alto", "170", "2026-10-02"), riga("Altissimo", "171", "2026-10-02"),
+             riga("Senza Paese", "172", "2026-10-03", paese=""), riga("Vecchio", "200", "2022-06-01"), riga("Senza ECI", "", "2026-10-04")]
+    punti = {p["m"]: p for p in run(data_dir, Session(eci=con_righe(ECI, righe)))["punti_eci"]}
+    assert not punti["Pari"]["r"] and not punti["Alto"]["r"]
+    assert punti["Altissimo"]["r"] and punti["Senza Paese"]["r"]
+    assert "Vecchio" not in punti and "Senza ECI" not in punti
 
 
 def test_hong_kong_e_macao_nella_cina_taiwan_in_altri(data_dir):

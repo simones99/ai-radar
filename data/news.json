@@ -55,6 +55,13 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "Meta gets $3 billion from Nvidia and plans to spend more on Nvidia chips",
+   "link": "https://the-decoder.com/meta-gets-3-billion-from-nvidia-and-plans-to-spend-more-on-nvidia-chips/",
+   "data": "2026-10-27",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "[AINews] Anthropic files for $2T IPO in 2 weeks: 1400% growth rate, 48% of revenue through cloud partners, 85% margin, $1B op profit in Q2, $134B cash in bank and $10B lifetime burn",
    "link": "https://latent.space/p/ainews-anthropic-s1/",
    "data": "2026-10-27",
@@ -183,13 +190,6 @@
   {
    "titolo": "Anthropic co-founder Jack Clark moves his prediction for self-improving AI forward to 2027",
    "link": "https://the-decoder.com/anthropic-co-founder-jack-clark-moves-his-prediction-for-self-improving-ai-forward-to-2027/",
-   "data": "2026-10-25",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Anthropic says one AI agent beats many subagents now that models can handle complexity alone",
-   "link": "https://the-decoder.com/anthropic-says-one-ai-agent-beats-many-subagents-now-that-models-can-handle-complexity-alone/",
    "data": "2026-10-25",
    "fonte": "The Decoder",
    "tema": "prodotti"

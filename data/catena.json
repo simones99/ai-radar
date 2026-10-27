@@ -191,8 +191,8 @@
      "iso": "USA",
      "lat": 32.5,
      "lon": -99.79,
-     "frase": "Data center di Oracle usato da OpenAI, operativo; secondo Epoch ha GPU NVIDIA B200 e B300.",
-     "fonte": "https://epoch.ai/data/ai-data-centers/directory/openai-stargate-abilene"
+     "frase": "Il sito Stargate di punta di OpenAI, operativo: gira su Oracle Cloud Infrastructure, con sistemi NVIDIA GB200.",
+     "fonte": "https://openai.com/index/building-the-compute-infrastructure-for-the-intelligence-age/"
     },
     {
      "anello": "modelli",
@@ -200,8 +200,8 @@
      "iso": "USA",
      "lat": 37.77,
      "lon": -122.39,
-     "frase": "Sviluppa i modelli GPT; secondo Epoch è OpenAI a usare i chip del sito di Abilene.",
-     "fonte": "https://epoch.ai/data/ai-data-centers/directory/openai-stargate-abilene"
+     "frase": "Sviluppa i modelli GPT: GPT-5.5 è stato addestrato nel sito di Abilene.",
+     "fonte": "https://openai.com/index/building-the-compute-infrastructure-for-the-intelligence-age/"
     }
    ]
   },

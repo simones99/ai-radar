@@ -8,9 +8,9 @@
    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 3277,
-   "download": 95889,
-   "trending": 1019,
+   "like": 3278,
+   "download": 105667,
+   "trending": 1020,
    "creato": "2026-10-17"
   },
   {
@@ -18,9 +18,9 @@
    "url": "https://huggingface.co/RecursiveSI/flint",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 938,
-   "download": 8470,
-   "trending": 898,
+   "like": 939,
+   "download": 10574,
+   "trending": 899,
    "creato": "2026-10-21"
   },
   {
@@ -28,9 +28,9 @@
    "url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 623,
-   "download": 2787,
-   "trending": 617,
+   "like": 624,
+   "download": 4785,
+   "trending": 618,
    "creato": "2026-10-24"
   },
   {
@@ -38,9 +38,9 @@
    "url": "https://huggingface.co/XHToken/Spark-X2.6-4B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 732,
-   "download": 4726,
-   "trending": 599,
+   "like": 733,
+   "download": 6191,
+   "trending": 600,
    "creato": "2026-10-19"
   },
   {
@@ -48,8 +48,8 @@
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
    "tipo": "image-to-image",
    "libreria": "diffusion-single-file",
-   "like": 1775,
-   "download": 700652,
+   "like": 1781,
+   "download": 750694,
    "trending": 424,
    "creato": "2026-10-14"
   },
@@ -69,7 +69,7 @@
    "tipo": "image-text-to-text",
    "libreria": "transformers",
    "like": 392,
-   "download": 8782,
+   "download": 11075,
    "trending": 378,
    "creato": "2026-10-17"
   },
@@ -78,9 +78,9 @@
    "url": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
    "tipo": "text-generation",
    "libreria": "gguf",
-   "like": 360,
-   "download": 891147,
-   "trending": 341,
+   "like": 361,
+   "download": 1105751,
+   "trending": 342,
    "creato": "2026-10-23"
   },
   {
@@ -88,9 +88,9 @@
    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 18494,
+   "like": 18495,
    "download": 7522728,
-   "trending": 321,
+   "trending": 322,
    "creato": "2026-08-05"
   },
   {
@@ -99,7 +99,7 @@
    "tipo": "text-generation",
    "libreria": "transformers",
    "like": 322,
-   "download": 5235,
+   "download": 6613,
    "trending": 312,
    "creato": "2026-10-15"
   },
@@ -108,9 +108,9 @@
    "url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
    "tipo": "text-to-image",
    "libreria": "gguf",
-   "like": 5132,
+   "like": 5133,
    "download": 2201569,
-   "trending": 309,
+   "trending": 310,
    "creato": "2026-09-20"
   },
   {
@@ -129,7 +129,7 @@
    "tipo": "text-generation",
    "libreria": null,
    "like": 277,
-   "download": 125188,
+   "download": 149888,
    "trending": 265,
    "creato": "2026-10-20"
   },
@@ -149,8 +149,8 @@
    "tipo": "altro",
    "libreria": "diffusion-single-file",
    "like": 493,
-   "download": 2442344,
-   "trending": 212,
+   "download": 2760550,
+   "trending": 211,
    "creato": "2026-10-16"
   },
   {
@@ -159,7 +159,7 @@
    "tipo": "text-generation",
    "libreria": "gguf",
    "like": 247,
-   "download": 9022,
+   "download": 13441,
    "trending": 209,
    "creato": "2026-10-22"
   },
@@ -169,7 +169,7 @@
    "tipo": "text-generation",
    "libreria": "transformers",
    "like": 212,
-   "download": 1128,
+   "download": 1595,
    "trending": 203,
    "creato": "2026-10-21"
   },
@@ -179,7 +179,7 @@
    "tipo": "altro",
    "libreria": "diffusion-single-file",
    "like": 198,
-   "download": 146049,
+   "download": 170383,
    "trending": 195,
    "creato": "2026-10-20"
   },
@@ -199,7 +199,7 @@
    "tipo": "image-text-to-text",
    "libreria": "transformers",
    "like": 394,
-   "download": 7557,
+   "download": 8282,
    "trending": 187,
    "creato": "2026-10-18"
   },
@@ -209,7 +209,7 @@
    "tipo": "text-generation",
    "libreria": "transformers",
    "like": 202,
-   "download": 1450,
+   "download": 2208,
    "trending": 187,
    "creato": "2026-10-21"
   },
@@ -219,7 +219,7 @@
    "tipo": "text-generation",
    "libreria": "transformers",
    "like": 191,
-   "download": 60210,
+   "download": 76295,
    "trending": 182,
    "creato": "2026-10-16"
   },
@@ -239,7 +239,7 @@
    "tipo": "time-series-forecasting",
    "libreria": "timestral",
    "like": 407,
-   "download": 10971,
+   "download": 12334,
    "trending": 177,
    "creato": "2026-10-14"
   },

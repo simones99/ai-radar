@@ -47,8 +47,8 @@
    "2026-05": 9459,
    "2026-06": 12365,
    "2026-07": 16272,
-   "2026-08": 17966,
-   "2026-09": 18011
+   "2026-08": 17973,
+   "2026-09": 18016
   },
   "coding-agenti": {
    "2025-09": 22,
@@ -62,7 +62,7 @@
    "2026-05": 694,
    "2026-06": 832,
    "2026-07": 984,
-   "2026-08": 1370,
+   "2026-08": 1372,
    "2026-09": 1179
   },
   "mcp": {
@@ -77,8 +77,8 @@
    "2026-05": 8595,
    "2026-06": 9161,
    "2026-07": 11008,
-   "2026-08": 11730,
-   "2026-09": 14414
+   "2026-08": 11737,
+   "2026-09": 14417
   },
   "rag": {
    "2025-09": 828,
@@ -92,8 +92,8 @@
    "2026-05": 4611,
    "2026-06": 5824,
    "2026-07": 6280,
-   "2026-08": 5908,
-   "2026-09": 5797
+   "2026-08": 5909,
+   "2026-09": 2385
   },
   "valutazione": {
    "2025-09": 33,
@@ -107,8 +107,8 @@
    "2026-05": 579,
    "2026-06": 729,
    "2026-07": 1064,
-   "2026-08": 1413,
-   "2026-09": 1528
+   "2026-08": 1414,
+   "2026-09": 1529
   },
   "post-training": {
    "2025-09": 91,
@@ -123,7 +123,7 @@
    "2026-06": 397,
    "2026-07": 382,
    "2026-08": 393,
-   "2026-09": 394
+   "2026-09": 393
   },
   "context-engineering": {
    "2025-09": 208,
@@ -137,8 +137,8 @@
    "2026-05": 1974,
    "2026-06": 2162,
    "2026-07": 2476,
-   "2026-08": 2341,
-   "2026-09": 2075
+   "2026-08": 2342,
+   "2026-09": 2077
   },
   "sicurezza": {
    "2025-09": 44,
@@ -168,7 +168,7 @@
    "2026-06": 751,
    "2026-07": 784,
    "2026-08": 915,
-   "2026-09": 805
+   "2026-09": 803
   },
   "dati-per-ai": {
    "2025-09": 277,
@@ -182,8 +182,8 @@
    "2026-05": 1437,
    "2026-06": 1668,
    "2026-07": 1937,
-   "2026-08": 2063,
-   "2026-09": 1999
+   "2026-08": 2064,
+   "2026-09": 2011
   },
   "text-to-sql": {
    "2025-09": 15,
@@ -197,7 +197,7 @@
    "2026-05": 103,
    "2026-06": 178,
    "2026-07": 198,
-   "2026-08": 186,
+   "2026-08": 185,
    "2026-09": 253
   },
   "vector-db": {
@@ -243,7 +243,7 @@
    "2026-06": 502,
    "2026-07": 474,
    "2026-08": 431,
-   "2026-09": 373
+   "2026-09": 374
   },
   "modelli-locali": {
    "2025-09": 59,
@@ -258,7 +258,7 @@
    "2026-06": 1042,
    "2026-07": 1052,
    "2026-08": 1173,
-   "2026-09": 1319
+   "2026-09": 1324
   },
   "robotica": {
    "2025-09": 21,
@@ -272,7 +272,7 @@
    "2026-05": 96,
    "2026-06": 80,
    "2026-07": 158,
-   "2026-08": 144,
+   "2026-08": 98,
    "2026-09": 188
   }
  },
@@ -295,8 +295,8 @@
    "2026-05": 12159,
    "2026-06": 16010,
    "2026-07": 17305,
-   "2026-08": 15721,
-   "2026-09": 16042
+   "2026-08": 15728,
+   "2026-09": 16059
   },
   "ai": {
    "2025-09": 3303,
@@ -310,8 +310,8 @@
    "2026-05": 12456,
    "2026-06": 13243,
    "2026-07": 13466,
-   "2026-08": 11059,
-   "2026-09": 11562
+   "2026-08": 11060,
+   "2026-09": 11567
   },
   "artificial-intelligence": {
    "2025-09": 590,
@@ -325,8 +325,8 @@
    "2026-05": 1443,
    "2026-06": 2246,
    "2026-07": 4497,
-   "2026-08": 3139,
-   "2026-09": 2032
+   "2026-08": 3140,
+   "2026-09": 2034
   },
   "generative-ai": {
    "2025-09": 451,
@@ -341,7 +341,7 @@
    "2026-06": 1608,
    "2026-07": 1973,
    "2026-08": 1967,
-   "2026-09": 1715
+   "2026-09": 1716
   }
  },
  "base": {
@@ -356,8 +356,8 @@
   "2026-05": 27497,
   "2026-06": 33107,
   "2026-07": 37241,
-  "2026-08": 31886,
-  "2026-09": 31351
+  "2026-08": 31895,
+  "2026-09": 31376
  },
  "in_crescita": {
   "agenti": [
@@ -365,21 +365,21 @@
     "nome": "deepseek-ai/deepseek-harness",
     "url": "https://github.com/deepseek-ai/deepseek-harness",
     "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-    "stelle": 263263,
+    "stelle": 263491,
     "creato": "2026-08-13"
    },
    {
     "nome": "Ebony-Vinyl/dsh-our-free-model",
     "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
     "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-    "stelle": 45978,
+    "stelle": 46492,
     "creato": "2026-09-24"
    },
    {
     "nome": "hypit-ai/hypit",
     "url": "https://github.com/hypit-ai/hypit",
     "descrizione": "Clone any viral video with AI agents. Not just a script, the whole workflow: swap the face, the words, the B-roll, ship 100 variants in one command, and get your 100M views.",
-    "stelle": 26002,
+    "stelle": 26041,
     "creato": "2026-07-29"
    }
   ],
@@ -388,14 +388,14 @@
     "nome": "ccch1mneyyy/dsh-TUI",
     "url": "https://github.com/ccch1mneyyy/dsh-TUI",
     "descrizione": "DSH's officially top-recommended TUI plugin — high performance, low overhead, cute pixel whale, smooth mouse interaction. One-command install via npm. / DSH 官方首推的 TUI 插件，高性能低占用，可爱像素鲸鱼，流畅鼠标交互，npm 一键安装",
-    "stelle": 5973,
+    "stelle": 5987,
     "creato": "2026-08-13"
    },
    {
     "nome": "HarnessRouter/harnessrouter",
     "url": "https://github.com/HarnessRouter/harnessrouter",
     "descrizione": "HarnessRouter Community Edition: the self-hosted, Apache-2.0 edition of the unified interface for agent harnesses. Run Codex, Claude Code, Hermes, PI, DSH, and more through one API, with sessions, st…",
-    "stelle": 3720,
+    "stelle": 3722,
     "creato": "2026-08-09"
    },
    {
@@ -411,21 +411,21 @@
     "nome": "tangency-labs/solidcraft",
     "url": "https://github.com/tangency-labs/solidcraft",
     "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-    "stelle": 10933,
+    "stelle": 11009,
     "creato": "2026-10-07"
    },
    {
     "nome": "rehan-remade/universal-modder",
     "url": "https://github.com/rehan-remade/universal-modder",
     "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
-    "stelle": 9043,
+    "stelle": 9059,
     "creato": "2026-09-30"
    },
    {
     "nome": "KKKKhazix/AIHOT",
     "url": "https://github.com/KKKKhazix/AIHOT",
     "descrizione": "一个自己找热点、自己写日报的网站框架。把信源和精选标准换成你的，它就是你的行业热点站。",
-    "stelle": 8717,
+    "stelle": 8726,
     "creato": "2026-09-28"
    }
   ],
@@ -434,14 +434,14 @@
     "nome": "deeplethe/utopia",
     "url": "https://github.com/deeplethe/utopia",
     "descrizione": "World's first open-source enterprise world model.",
-    "stelle": 8566,
+    "stelle": 8567,
     "creato": "2026-08-07"
    },
    {
     "nome": "youngyangyang04/llm-master",
     "url": "https://github.com/youngyangyang04/llm-master",
     "descrizione": "大模型（LLM）全栈学习路线与中文教程🔥：覆盖 Prompt Engineering、RAG、AI Agent、MCP、微调、模型部署、Transformer、AI 编程与大厂面试，从入门到生产实践。",
-    "stelle": 1440,
+    "stelle": 1444,
     "creato": "2026-09-12"
    },
    {
@@ -457,21 +457,21 @@
     "nome": "jwuthri-cloud/Tracely-ai",
     "url": "https://github.com/jwuthri-cloud/Tracely-ai",
     "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-    "stelle": 1195,
+    "stelle": 1199,
     "creato": "2026-10-11"
    },
    {
     "nome": "xinxuxin/keystone-bench",
     "url": "https://github.com/xinxuxin/keystone-bench",
     "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
-    "stelle": 960,
+    "stelle": 961,
     "creato": "2026-09-07"
    },
    {
     "nome": "superwesleyhys-ux/factcircuit",
     "url": "https://github.com/superwesleyhys-ux/factcircuit",
     "descrizione": "FactCircuit: an auditable claim-and-evidence verification loop with immutable provenance, staged checks, bounded retrieval, and reproducible evaluation.",
-    "stelle": 866,
+    "stelle": 875,
     "creato": "2026-09-06"
    }
   ],
@@ -526,7 +526,7 @@
     "nome": "trhhubsd/ARTEX",
     "url": "https://github.com/trhhubsd/ARTEX",
     "descrizione": "ARTEX · AI autonomous penetration testing system (multi-agent LLM, Go + Next.js) · AI 自主渗透测试系统 · 百度 agent+ 攻防挑战赛冠军",
-    "stelle": 2035,
+    "stelle": 2049,
     "creato": "2026-10-08"
    },
    {
@@ -537,11 +537,11 @@
     "creato": "2026-08-12"
    },
    {
-    "nome": "graygnatconsole/mcp-audit-tool",
-    "url": "https://github.com/graygnatconsole/mcp-audit-tool",
-    "descrizione": "🛡️ Security audit CLI for Model Context Protocol (MCP) servers — scan AI agent configs for tool poisoning, rug pulls, hardcoded secrets, command injection & supply-chain risks. Pure Python, SARIF + C…",
-    "stelle": 544,
-    "creato": "2026-09-26"
+    "nome": "securetron-gh/aifw",
+    "url": "https://github.com/securetron-gh/aifw",
+    "descrizione": "AI Agent Identity and Access Management and Inference Firewall",
+    "stelle": 454,
+    "creato": "2026-08-22"
    }
   ],
   "governance": [
@@ -569,13 +569,6 @@
   ],
   "dati-per-ai": [
    {
-    "nome": "Hebbian-Robotics/hflow",
-    "url": "https://github.com/Hebbian-Robotics/hflow",
-    "descrizione": "SDK for robotics teams to verify the quality of their data used for AI model training.",
-    "stelle": 302,
-    "creato": "2026-08-18"
-   },
-   {
     "nome": "jddevtime/open-lakehouse-compute-fabric",
     "url": "https://github.com/jddevtime/open-lakehouse-compute-fabric",
     "descrizione": "Open Lakehouse Compute Fabric: an open-source lakehouse platform with Microsoft Fabric Compute Extension.",
@@ -583,11 +576,18 @@
     "creato": "2026-10-12"
    },
    {
-    "nome": "ashishsinha1602/schemagate",
-    "url": "https://github.com/ashishsinha1602/schemagate",
-    "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
-    "stelle": 175,
-    "creato": "2026-09-06"
+    "nome": "hugues31/duckpad",
+    "url": "https://github.com/hugues31/duckpad",
+    "descrizione": "The data transformation tool the open-source community deserves.",
+    "stelle": 264,
+    "creato": "2026-10-25"
+   },
+   {
+    "nome": "schumannx/full-stack-data-engineering",
+    "url": "https://github.com/schumannx/full-stack-data-engineering",
+    "descrizione": "End-to-end streaming data platform on AWS: Kafka → Iceberg lake → Kimball model → Athena, orchestrated with Airflow 3. Terraform, Glue PySpark, dbt.",
+    "stelle": 154,
+    "creato": "2026-08-17"
    }
   ],
   "text-to-sql": [
@@ -602,7 +602,7 @@
     "nome": "ashishsinha1602/schemagate",
     "url": "https://github.com/ashishsinha1602/schemagate",
     "descrizione": "Text-to-SQL access control: schema selection that gives the LLM only the tables the caller is allowed to read. Row-level-security-aware table pruning for LangChain, MCP and any SQL agent. Postgres, O…",
-    "stelle": 175,
+    "stelle": 176,
     "creato": "2026-09-06"
    },
    {
@@ -618,7 +618,7 @@
     "nome": "kividbio/kividb",
     "url": "https://github.com/kividbio/kividb",
     "descrizione": "A fast, multi-threaded Redis® and Valkey alternative written in Rust: drop-in compatible, with full-text and vector search built in",
-    "stelle": 714,
+    "stelle": 731,
     "creato": "2026-10-16"
    },
    {
@@ -641,7 +641,7 @@
     "nome": "ARahim3/DigUp",
     "url": "https://github.com/ARahim3/DigUp",
     "descrizione": "Search your computer by what's in your files: photos, PDFs, documents, recordings, videos and code. On-device on Mac, Windows and Linux, built on Google DeepMind's EmbeddingGemma 2.",
-    "stelle": 5899,
+    "stelle": 5913,
     "creato": "2026-10-08"
    },
    {
@@ -655,7 +655,7 @@
     "nome": "Anionex/agent-vision-toolkit",
     "url": "https://github.com/Anionex/agent-vision-toolkit",
     "descrizione": "为纯文本模型\"看图“设计更好的视觉工具箱和技能，支持多图理解，图片问答，前端UI还原、GUI 自动化等，并可选无缝接入多个主流agent，直接识别粘贴图片｜ A vision toolkit and skill designed for text-only llms — image Q&A, long-screenshot OCR, frontend UI restoration, and GU…",
-    "stelle": 1249,
+    "stelle": 1250,
     "creato": "2026-08-01"
    }
   ],
@@ -664,7 +664,7 @@
     "nome": "jwuthri-cloud/Tracely-ai",
     "url": "https://github.com/jwuthri-cloud/Tracely-ai",
     "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-    "stelle": 1195,
+    "stelle": 1199,
     "creato": "2026-10-11"
    },
    {
@@ -678,31 +678,17 @@
     "nome": "respanai/respan-gateway",
     "url": "https://github.com/respanai/respan-gateway",
     "descrizione": "One endpoint for every LLM vendor. Any SDK, any model, any tool. One Rust binary.",
-    "stelle": 346,
+    "stelle": 348,
     "creato": "2026-09-25"
    }
   ],
   "modelli-locali": [
    {
-    "nome": "syv-ai/HyperQwen",
-    "url": "https://github.com/syv-ai/HyperQwen",
-    "descrizione": "Serve large Qwen models fast on the GPUs you actually own. Qwen3.8-27B on a single 24 GB card with vLLM: 127 tok/s single-user (381 when the answer quotes the prompt), ~1,035 tok/s at 64 concurrent, …",
-    "stelle": 2261,
-    "creato": "2026-08-15"
-   },
-   {
-    "nome": "mw00/project-maya",
-    "url": "https://github.com/mw00/project-maya",
-    "descrizione": "Project Maya - run GLM-5.3-Flash (321B MoE) and DeepSeek-V4.1-Flash-1017 (748B MoE) privately on your own GPU(s), from one card to 16, NVIDIA or AMD, Linux or Windows. Engine, server, dashboard, Open…",
-    "stelle": 2021,
-    "creato": "2026-10-06"
-   },
-   {
-    "nome": "StayLameBro/backburner",
-    "url": "https://github.com/StayLameBro/backburner",
-    "descrizione": "Your iPhone helps your Mac run a 27B model: faster prompt reading and more context over a USB-C cable",
-    "stelle": 1125,
-    "creato": "2026-10-01"
+    "nome": "peonist-ai/halogen-flash-server",
+    "url": "https://github.com/peonist-ai/halogen-flash-server",
+    "descrizione": "The fastest way to run Qwen3.8-Flash-Next on Strix Halo (gfx1151)",
+    "stelle": 1120,
+    "creato": "2026-08-26"
    }
   ],
   "robotica": [
@@ -710,7 +696,7 @@
     "nome": "cobanov/awesome-fly",
     "url": "https://github.com/cobanov/awesome-fly",
     "descrizione": "A curated list of fruit fly connectome projects: MaleCNS, FlyWire, brain simulations, embodied models, games, and research tools.",
-    "stelle": 725,
+    "stelle": 726,
     "creato": "2026-09-12"
    },
    {
@@ -734,7 +720,7 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-10-27T11:14:44Z",
+   "ultimo_push": "2026-10-27T15:40:27Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -762,7 +748,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 168233
+     "stelle": 168242
     }
    ]
   },
@@ -770,7 +756,7 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-10-27T11:15:05Z",
+   "ultimo_push": "2026-10-27T15:32:28Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -798,7 +784,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 95675
+     "stelle": 95691
     }
    ]
   },
@@ -834,7 +820,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 184958
+     "stelle": 184994
     }
    ]
   },
@@ -842,7 +828,7 @@
    "repo": "langchain-ai/langgraph",
    "url": "https://github.com/langchain-ai/langgraph",
    "descrizione": "Build resilient agents.",
-   "ultimo_push": "2026-10-27T02:47:39Z",
+   "ultimo_push": "2026-10-27T15:36:30Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -870,7 +856,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 43981
+     "stelle": 43991
     }
    ]
   },
@@ -906,7 +892,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 52684
+     "stelle": 52689
     }
    ]
   },
@@ -914,7 +900,7 @@
    "repo": "modelcontextprotocol/servers",
    "url": "https://github.com/modelcontextprotocol/servers",
    "descrizione": "Model Context Protocol Servers",
-   "ultimo_push": "2026-10-27T06:07:02Z",
+   "ultimo_push": "2026-10-27T13:43:37Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -942,7 +928,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 91597
+     "stelle": 91601
     }
    ]
   },
@@ -978,7 +964,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 30324
+     "stelle": 30330
     }
    ]
   },
@@ -1014,7 +1000,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 61584
+     "stelle": 61587
     }
    ]
   },
@@ -1022,7 +1008,7 @@
    "repo": "crewAIInc/crewAI",
    "url": "https://github.com/crewAIInc/crewAI",
    "descrizione": "Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.",
-   "ultimo_push": "2026-10-27T07:08:26Z",
+   "ultimo_push": "2026-10-27T15:25:35Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1050,7 +1036,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 60160
+     "stelle": 60172
     }
    ]
   },
@@ -1086,7 +1072,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 153524
+     "stelle": 153563
     }
    ]
   },
@@ -1094,7 +1080,7 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-10-27T11:14:42Z",
+   "ultimo_push": "2026-10-27T15:28:00Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1122,7 +1108,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 132501
+     "stelle": 132531
     }
    ]
   },
@@ -1130,7 +1116,7 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4.1, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-10-27T11:15:40Z",
+   "ultimo_push": "2026-10-27T15:40:48Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1158,7 +1144,7 @@
     },
     {
      "data": "2026-10-27",
-     "stelle": 78616
+     "stelle": 78624
     }
    ]
   }

@@ -97,6 +97,13 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "Coding From the Himalayas With an Offline AI Agent",
+   "link": "https://latent.space/p/offline-coding/",
+   "data": "2026-10-27",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
    "titolo": "[AINews] Anthropic files for $2T IPO in 2 weeks: 1400% growth rate, 48% of revenue through cloud partners, 85% margin, $1B op profit in Q2, $134B cash in bank and $10B lifetime burn",
    "link": "https://latent.space/p/ainews-anthropic-s1/",
    "data": "2026-10-27",
@@ -372,13 +379,6 @@
   {
    "titolo": "The Programmable Data Center — Evan Conrad, SF Compute",
    "link": "https://latent.space/p/sfcompute2/",
-   "data": "2026-10-20",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "[AINews] not much happened today",
-   "link": "https://latent.space/p/ainews-not-much-happened-today-f09/",
    "data": "2026-10-20",
    "fonte": "Latent Space",
    "tema": "business"

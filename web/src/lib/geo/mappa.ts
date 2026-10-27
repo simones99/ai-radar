@@ -254,7 +254,21 @@ export function nomeFilo(f: CatenaFilo, iso: string): string {
 export const dominio = (url: string): string => new URL(url).hostname.replace(/^www\./, '');
 
 /** Sotto la mappa del filo: le fonti stanno nelle tappe, qui solo chi ha scelto l'esempio e i confini. */
-export const CITE_FILO: Cite = [{ t: "Filo della catena: un esempio scelto da AI Radar, con la fonte di ogni tappa nell'elenco." }, ...CONFINI_CITE];
+const CHI_FILO = { t: "Filo della catena: un esempio scelto da AI Radar, con la fonte di ogni tappa nell'elenco." };
+export const CITE_FILO: Cite = [CHI_FILO, ...CONFINI_CITE];
+
+/** «Vedi i dati» nel filo: la tabella delle quote della fermata scelta, con la sua fonte dopo chi ha scelto l'esempio e i confini una volta sola.
+ *  Una fermata senza dati non ha tabella: vista() ripiegherebbe sui modelli. Nelle materie prime il selettore non c'è, e la colonna
+ *  dei valori prende il nome del materiale. */
+export function datiFilo(g: Geopoliticai, c: Catena | undefined, k: AnelloKey, materiale?: string): { tabella: TableData; cite: Cite } | null {
+  if (!attivi(g, c).includes(k)) return null;
+  const v = vista(g, c, k, materiale);
+  const nome = k === 'materie' ? c?.anelli.materie?.materiali[materialeDi(materiale, c)]?.nome : undefined;
+  return {
+    tabella: nome ? { ...v.tabella, cols: v.tabella.cols.map((x) => (x === 'Valore' ? nome : x)) } : v.tabella,
+    cite: [CHI_FILO, { t: ' ' }, ...v.cite],
+  };
+}
 
 // ---------------------------------------------------------------- materie prime e chip: le quote per Paese, con il valore unico dell'Europa dove c'è
 

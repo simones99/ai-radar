@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/lib/tiles/GeoMappa.svelte"
+        ],
+        "createdAt": "2026-10-27T13:55:11.196Z",
+        "reason": "user confirmed: il bordo a sinistra porta il colore dell'anello della catena (titolo, fumetto, tappe del filo)"
+      }
+    ]
+  }
+}

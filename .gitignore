@@ -10,6 +10,7 @@ web/node_modules/
 web/public/data/
 web/test-results/
 web/playwright-report/
+web/.impeccable/hook.cache.json
 .superpowers/
 .scratch/
 .playwright-mcp/

@@ -55,6 +55,34 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "Former Deepmind researcher thinks AlphaGo's playbook can cure AI hallucinations",
+   "link": "https://the-decoder.com/former-deepmind-researcher-thinks-alphagos-playbook-can-cure-ai-hallucinations/",
+   "data": "2026-10-27",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "OpenAI asks outside experts, including a Nobel laureate, to check proofs its AI produced in math, computer science, and physics",
+   "link": "https://the-decoder.com/openai-asks-outside-experts-including-a-nobel-laureate-to-check-proofs-its-ai-produced-in-math-computer-science-and-physics/",
+   "data": "2026-10-27",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "OpenAI's partner content arrives in ChatGPT pre-summarized while the rest of the web gets raw scraps",
+   "link": "https://the-decoder.com/openais-partner-content-arrives-in-chatgpt-pre-summarized-while-the-rest-of-the-web-gets-raw-scraps/",
+   "data": "2026-10-27",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic uses its IPO letter to renew its pledge that Claude will never show ads",
+   "link": "https://the-decoder.com/anthropic-uses-its-ipo-letter-to-renew-its-pledge-that-claude-will-never-show-ads/",
+   "data": "2026-10-27",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "OpenAI's Ted Sanders shares a rule of thumb for picking the right GPT-model",
    "link": "https://the-decoder.com/openais-ted-sanders-shares-a-rule-of-thumb-for-picking-the-right-gpt-model/",
    "data": "2026-10-27",
@@ -99,27 +127,6 @@
   {
    "titolo": "Reddit's r/opensource bans all AI-related projects, sparking backlash and a rival subreddit",
    "link": "https://the-decoder.com/reddits-r-opensource-bans-all-ai-related-projects-sparking-backlash-and-a-rival-subreddit/",
-   "data": "2026-10-26",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Meta plans up to $95 billion in stock sales to fund its AI buildout",
-   "link": "https://the-decoder.com/meta-plans-up-to-95-billion-in-stock-sales-to-fund-its-ai-buildout/",
-   "data": "2026-10-26",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Wall Street's fastest traders are building data centers and backing chip startups to stay ahead in AI",
-   "link": "https://the-decoder.com/wall-streets-fastest-traders-are-building-data-centers-and-backing-chip-startups-to-stay-ahead-in-ai/",
-   "data": "2026-10-26",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Toyota is betting $6.4 billion a year on humanoid robots and factory automation",
-   "link": "https://the-decoder.com/toyota-is-betting-6-4-billion-a-year-on-humanoid-robots-and-factory-automation/",
    "data": "2026-10-26",
    "fonte": "The Decoder",
    "tema": "prodotti"
@@ -185,13 +192,6 @@
    "link": "https://blog.google/products-and-platforms/products/education/ai-quests-polar-peaks/",
    "data": "2026-10-26",
    "fonte": "Google AI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Nvidia open-sources Flora to make robot video labeling 125x cheaper than GPT-6 Astra",
-   "link": "https://the-decoder.com/nvidia-open-sources-flora-to-make-robot-video-labeling-125x-cheaper-than-gpt-6-astra/",
-   "data": "2026-10-25",
-   "fonte": "The Decoder",
    "tema": "prodotti"
   },
   {

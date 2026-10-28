@@ -231,14 +231,13 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
-const aree = (page: Page) => page.getByRole('group', { name: 'Area' });
-const paesiUe = (page: Page) => page.getByRole('group', { name: "Paesi dell'UE" });
+const menuArea = (page: Page) => page.getByRole('combobox', { name: 'Area' });
 const scheda = (page: Page) => page.locator('#geo-scheda h3');
 
 test('area: il link apre il Paese, il ricaricamento lo tiene, un link con un’altra area vince sul ricordo', async ({ page }) => {
   await page.goto('/#geopoliticai?area=italia');
   await expect(scheda(page)).toHaveText("Italia, nell'UE");
-  await expect(paesiUe(page).locator('button[aria-pressed="true"]')).toHaveText('Italia');
+  await expect(menuArea(page)).toHaveValue('italia');
   await page.reload();
   await expect(scheda(page)).toHaveText("Italia, nell'UE");
   await page.goto('about:blank');
@@ -248,7 +247,7 @@ test('area: il link apre il Paese, il ricaricamento lo tiene, un link con un’a
   await page.goto('about:blank');
   await page.goto('/#geopoliticai?area=cina');
   await expect(scheda(page)).toHaveText('Cina');
-  await expect(aree(page).locator('button[aria-pressed="true"]')).toHaveText('Cina');
+  await expect(menuArea(page)).toHaveValue('cina');
 });
 
 test('area non valida: si apre l’UE, senza errori', async ({ page }) => {
@@ -256,40 +255,33 @@ test('area non valida: si apre l’UE, senza errori', async ({ page }) => {
   page.on('pageerror', (e) => errori.push(e.message));
   await page.goto('/#geopoliticai?area=atlantide');
   await expect(scheda(page)).toHaveText('UE');
-  await expect(aree(page).locator('button[aria-pressed="true"]')).toHaveText('UE');
+  await expect(menuArea(page)).toHaveValue('ue');
   await expect(page).toHaveURL(/#geopoliticai$/);
   expect(errori).toEqual([]);
 });
 
-test('area da tastiera: Tab tra i pulsanti, Invio sceglie; «Tutta l’UE» toglie l’area dal link', async ({ page }) => {
+test('area dal menu accanto al titolo della scheda, anche da tastiera; «UE, tutta» toglie l’area dal link', async ({ page }) => {
   await page.goto('/#geopoliticai');
-  await aree(page).getByRole('button', { name: 'USA' }).focus();
-  await page.keyboard.press('Tab');
-  await expect(aree(page).getByRole('button', { name: 'Cina' })).toBeFocused();
-  await page.keyboard.press('Enter');
+  await menuArea(page).selectOption('cina');
   await expect(scheda(page)).toHaveText('Cina');
   await expect(page).toHaveURL(/#geopoliticai\?area=cina$/);
-  await aree(page).getByRole('button', { name: 'UE' }).focus();
-  await page.keyboard.press('Enter');
-  await paesiUe(page).getByRole('button', { name: "Tutta l'UE" }).focus();
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Enter');
+  await menuArea(page).focus();
+  await page.keyboard.press('ArrowDown'); // dopo la Cina viene l'UE
+  await expect(scheda(page)).toHaveText('UE');
+  await expect(page).toHaveURL(/#geopoliticai$/);
+  await page.keyboard.press('ArrowDown');
   await expect(scheda(page)).toHaveText("Francia, nell'UE");
   await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
-  await page.keyboard.press('Shift+Tab');
-  await page.keyboard.press('Space');
-  await expect(scheda(page)).toHaveText('UE');
+  await menuArea(page).selectOption('ue');
   await expect(page).toHaveURL(/#geopoliticai$/);
 });
 
-test('area a 320px: le file vanno a capo, niente scorrimento orizzontale', async ({ page }) => {
+test('area a 320px: il menu sta accanto o sotto il titolo, niente scorrimento orizzontale', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#geopoliticai?area=italia');
   await expect(scheda(page)).toHaveText("Italia, nell'UE");
-  for (const fila of [aree(page), paesiUe(page)]) {
-    const tops = await fila.getByRole('button').evaluateAll((bs) => new Set(bs.map((b) => b.getBoundingClientRect().top)).size);
-    expect(tops).toBeGreaterThan(1);
-  }
+  const menu = (await menuArea(page).boundingBox())!;
+  expect(menu.height).toBeGreaterThanOrEqual(44);
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
@@ -350,31 +342,29 @@ test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette n
 });
 
 test('mappa: ?anello=fabbricazione apre l’anello dei chip, e un clic su una fermata aggiorna il link', async ({ page }) => {
-  await page.goto('/#geopoliticai?anello=fabbricazione');
+  await page.goto('/#geopoliticai?vista=quote&anello=fabbricazione');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('3. Fabbricazione dei chip');
   await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: Europa, dato unico, 8%');
   await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?anello=macchinari$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&anello=macchinari$/);
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('4. Macchinari');
   await expect(mappa(page).getByText(/Le macchine EUV/)).toBeVisible();
-  await mappa(page).getByRole('button', { name: 'Anello precedente' }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?anello=fabbricazione$/);
 });
 
 test('mappa: ?anello=materie&materiale=terre apre le terre rare, e un clic su un materiale aggiorna il link', async ({ page }) => {
-  await page.goto('/#geopoliticai?anello=materie&materiale=terre');
+  await page.goto('/#geopoliticai?vista=quote&anello=materie&materiale=terre');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('1. Materie prime');
   const materiali = mappa(page).getByRole('group', { name: 'Materiale' });
   await expect(materiali.getByRole('button', { name: 'Terre rare' })).toHaveAttribute('aria-pressed', 'true');
   await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: nessuna produzione');
   await materiali.getByRole('button', { name: 'Germanio' }).focus();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/#geopoliticai\?anello=materie&materiale=germanio$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&anello=materie&materiale=germanio$/);
   await expect(materiali.getByRole('button', { name: 'Germanio' })).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('mappa: ?anello=datacenter apre le quote dei data center, con la nota sulla copertura', async ({ page }) => {
-  await page.goto('/#geopoliticai?anello=datacenter');
+  await page.goto('/#geopoliticai?vista=quote&anello=datacenter');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('5. Data center');
   await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: nessun sito noto a Epoch');
   await expect(mappa(page).getByText(/coprono circa il 44% del calcolo AI mondiale/)).toBeVisible();
@@ -394,12 +384,12 @@ async function tocca(page: Page, svg: ReturnType<typeof europa>, [x, y]: [number
 const FRANCIA: [number, number] = [505.8, -163.6]; // il centro della Francia metropolitana, da confini.json
 
 test('mappa: un tocco sulla Francia apre il fumetto senza coprirla né l’Europa e sceglie ?area=francia; Esc chiude solo il fumetto', async ({ page }) => {
-  await page.goto('/#geopoliticai');
+  await page.goto('/#geopoliticai?vista=quote');
   const mondo = mappa(page).getByRole('group', { name: /^Mappa del mondo/ });
   const punto = await tocca(page, mondo, FRANCIA);
   const fumetto = mappa(page).getByRole('dialog', { name: 'Francia' });
   await expect(fumetto).toBeFocused();
-  await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=francia$/);
   await expect(scheda(page)).toHaveText("Francia, nell'UE");
   const box = (await fumetto.boundingBox())!;
   const riquadro = (await europa(page).boundingBox())!;
@@ -433,7 +423,7 @@ test('mappa a 320px: il fumetto è un pannello sotto le mappe, con il pulsante p
 test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la evidenzia', async ({ page }) => {
   await page.goto('/#geopoliticai');
   await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true'); // dentro l'UE
-  await paesiUe(page).getByRole('button', { name: 'Francia' }).click();
+  await menuArea(page).selectOption('francia');
   await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'false');
   await italiaInEuropa(page).click();
   await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
@@ -456,16 +446,16 @@ test('mappa a 320px: il riquadro dell’Europa sta sotto la mappa, l’Italia si
 
 test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=modelli&siti=1 no', async ({ page }) => {
   const cerchi = () => mappa(page).getByRole('button', { name: /: (.+ H100 equivalenti|in costruzione)$/ });
-  await page.goto('/#geopoliticai?anello=datacenter');
+  await page.goto('/#geopoliticai?vista=quote&anello=datacenter');
   await expect(cerchi()).toHaveCount(0);
   await mappa(page).getByRole('button', { name: 'Siti' }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?anello=datacenter&siti=1$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&anello=datacenter&siti=1$/);
   await expect(mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByRole('button', { name: /^Colossus 2:/ })).toBeVisible();
   await europa(page).getByRole('button', { name: /^Google Waltham Cross:/ }).click();
   await expect(mappa(page).getByRole('dialog', { name: 'Google Waltham Cross' })).toBeFocused();
   expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
   await page.goto('about:blank'); // a card aperta un hash nuovo tiene i parametri: si riparte
-  await page.goto('/#geopoliticai?anello=modelli&siti=1');
+  await page.goto('/#geopoliticai?vista=quote&anello=modelli&siti=1');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
   await expect(cerchi()).toHaveCount(0);
   await expect(mappa(page).getByRole('button', { name: 'Siti' })).toHaveCount(0);
@@ -474,26 +464,28 @@ test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=model
 /** I tratti degli archi del filo nel riquadro dell'Europa, nell'ordine delle fermate: null è un arco pieno. */
 const tratti = (page: Page) => europa(page).getByTestId('arco').evaluateAll((as) => as.map((a) => a.getAttribute('stroke-dasharray')));
 
-test('filo: ?vista=filo&filo=cina apre l’esempio cinese, e un clic su una fermata sposta l’arco pieno', async ({ page }) => {
-  await page.goto('/#geopoliticai?vista=filo&filo=cina');
+test('filo: si parte dal filo, ?filo=cina apre l’esempio cinese, e un clic su una fermata sposta l’arco pieno', async ({ page }) => {
+  await page.goto('/#geopoliticai?filo=cina');
   await expect(mappa(page).getByRole('group', { name: 'Vista' }).getByRole('button', { name: 'Filo della catena' })).toHaveAttribute('aria-pressed', 'true');
   await expect(mappa(page).getByRole('group', { name: 'Esempio' }).getByRole('button', { name: 'Un modello cinese' })).toHaveAttribute('aria-pressed', 'true');
   await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello cinese' })).toBeVisible();
   await expect(mappa(page).getByText(/^Un esempio scelto da noi, non un dato/)).toBeVisible();
   expect(await tratti(page)).toEqual([null, null, null, null, null]);
   await mappa(page).getByRole('button', { name: '3 Fabbricazione dei chip', exact: true }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?vista=filo&filo=cina&anello=fabbricazione$/);
-  await expect.poll(() => tratti(page)).toEqual([null, null, '3 2', '3 2', '3 2']);
-  // di nuovo alle quote: il filo resta nel link, ma la vista è quella delle quote
-  await mappa(page).getByRole('button', { name: 'Quote per Paese' }).click();
   await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione$/);
+  await expect.poll(() => tratti(page)).toEqual([null, null, '3 2', '3 2', '3 2']);
+  // alle quote: il filo resta nel link, ma la vista è quella delle quote; e si torna
+  await mappa(page).getByRole('button', { name: 'Quote per Paese' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione&vista=quote$/);
   await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
   await expect(europa(page).getByTestId('arco')).toHaveCount(0);
+  await mappa(page).getByRole('button', { name: 'Filo della catena' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione$/);
 });
 
 test('filo a 320px: nessuno scorrimento orizzontale, e gli archi d’Europa nel riquadro sotto la mappa', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
-  await page.goto('/#geopoliticai?vista=filo');
+  await page.goto('/#geopoliticai');
   await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello europeo' })).toBeVisible();
   await expect(europa(page).getByTestId('arco').first()).toBeAttached();
   expect(await noHorizontalScroll(page)).toBe(true);
@@ -502,14 +494,14 @@ test('filo a 320px: nessuno scorrimento orizzontale, e gli archi d’Europa nel 
 
 test('filo con «riduci movimento»: gli archi non si animano', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/#geopoliticai?vista=filo');
+  await page.goto('/#geopoliticai');
   await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
   await expect(page).toHaveURL(/anello=macchinari/);
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
 });
 
 test('filo senza «riduci movimento»: l’arco che arriva alla fermata scelta si disegna', async ({ page }) => {
-  await page.goto('/#geopoliticai?vista=filo');
+  await page.goto('/#geopoliticai');
   await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
   await expect(page).toHaveURL(/anello=macchinari/);
   expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(0);

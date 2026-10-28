@@ -224,10 +224,11 @@ export type Filo = { key: FiloKey } & CatenaFilo;
 /** Gli esempi nel file della catena; un file del giro prima non ne ha. */
 export const filiDi = (c: Catena | undefined): Filo[] =>
   FILI.flatMap((key) => { const f = c?.fili?.[key]; return f ? [{ key, ...f }] : []; });
-/** ?vista=filo&filo=: il filo da mostrare, o null per la vista «Quote per Paese». Un esempio non valido torna a quello europeo. */
-export function filoDi(vista: string | undefined, p: string | undefined, c: Catena | undefined): Filo | null {
+/** ?filo=: il filo da mostrare, che è la vista di partenza; null per la vista «Quote per Paese» (?vista=quote). Un link di prima
+ *  con ?siti=1 e senza ?vista= era nelle quote, e ci resta. Un esempio non valido torna a quello europeo. */
+export function filoDi(vista: string | undefined, p: string | undefined, c: Catena | undefined, siti?: string): Filo | null {
   const fili = filiDi(c);
-  if (vista !== 'filo' || !fili.length) return null;
+  if (vista === 'quote' || (vista !== 'filo' && siti === '1') || !fili.length) return null;
   return fili.find((f) => f.key === p) ?? fili.find((f) => f.key === 'ue') ?? fili[0];
 }
 

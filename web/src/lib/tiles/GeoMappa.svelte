@@ -3,8 +3,8 @@
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
   // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
-  // Con ?vista=filo, al posto delle quote il Filo della catena: un esempio scelto da noi (?filo=), con gli archi tra le sei tappe e il loro elenco.
-  // Nel filo restano la tabella delle quote della fermata scelta e le note che non parlano delle quote.
+  // Si apre sul Filo della catena: un esempio scelto da noi (?filo=, quello europeo se manca), con gli archi tra le sei tappe e il loro elenco;
+  // nel filo resta la tabella delle quote della fermata scelta. Con ?vista=quote, la mappa delle quote per Paese con le sue note.
   import { tick } from 'svelte';
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
@@ -13,7 +13,7 @@
     nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
-  import { NOTA_FILO, NOTA_GPU, NOTA_ITALIA } from '../text/geopoliticai';
+  import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
 
   let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, vista: paramVista, filo: paramFilo, onscegli }: {
     g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; siti: string | undefined;
@@ -21,20 +21,20 @@
   } = $props();
 
   const fili = $derived(filiDi(catena));
-  const filo = $derived(filoDi(paramVista, paramFilo, catena));
+  const filo = $derived(filoDi(paramVista, paramFilo, catena, paramSiti));
   // nel filo ogni fermata ha la sua tappa, anche quella di un anello senza dati
   const ok = $derived(filo ? ANELLI.map((a) => a.key) : attivi(g, catena));
   const anello = $derived(anelloDi(param, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
   const attivo = (k: AnelloKey) => ok.includes(k);
-  /** La fermata attiva più vicina in quella direzione, se c'è. */
-  const vicino = (d: number): AnelloKey | null => {
-    for (let i = idx + d; i >= 0 && i < ANELLI.length; i += d) if (attivo(ANELLI[i].key)) return ANELLI[i].key;
-    return null;
-  };
-  const prima = $derived(vicino(-1));
-  const dopo = $derived(vicino(1));
-  const vai = (k: AnelloKey | null) => k && imposta('anello', k);
+  const vai = (k: AnelloKey) => imposta('anello', k);
+  /** «Un modello europeo» diventa «Europeo»: i tre esempi stanno in una riga anche sul telefono; il nome intero resta per chi non vede. */
+  const corto = (n: string) => { const c = n.replace(/^un modello /i, ''); return c.charAt(0).toUpperCase() + c.slice(1); };
+  /** Al filo si torna togliendo ?vista=; ?siti=1 senza ?vista= vorrebbe dire le quote, e nel filo non vale. */
+  function alFilo() {
+    imposta('siti', null);
+    imposta('vista', null);
+  }
 
   const materiali = $derived(materialiDi(catena));
   const materiale = $derived(materialeDi(paramMateriale, catena));
@@ -113,7 +113,6 @@
   }
 
   const cifre = $derived(v.tabellone(zona));
-  const italiaAZero = $derived(!Object.keys(g.zone.italia?.calcolo ?? {}).length && !Object.keys(g.zone.italia?.eci ?? {}).length);
 </script>
 
 {#snippet paese(p: Paese)}
@@ -154,18 +153,17 @@
     {#if fili.length}
       <div class="viste">
         <div class="scelte" role="group" aria-label="Vista">
-          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', null)}>Quote per Paese</button>
-          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={() => imposta('vista', 'filo')}>Filo della catena</button>
+          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={alFilo}>Filo della catena</button>
+          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', 'quote')}>Quote per Paese</button>
         </div>
         {#if filo}
           <div class="scelte" role="group" aria-label="Esempio">
-            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} onclick={() => imposta('filo', f.key)}>{f.nome}</button>{/each}
+            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} aria-label={f.nome} onclick={() => imposta('filo', f.key)}>{corto(f.nome)}</button>{/each}
           </div>
         {/if}
       </div>
     {/if}
     <nav class="linea" aria-label="Gli anelli della catena dell'AI">
-      <button type="button" class="fr" disabled={!prima} onclick={() => vai(prima)} aria-label="Anello precedente">←</button>
       <ol>
         {#each ANELLI as a, i (a.key)}
           <li class:on={a.key === anello} style:--c="var(--k-{a.key})">
@@ -176,7 +174,6 @@
           </li>
         {/each}
       </ol>
-      <button type="button" class="fr" disabled={!dopo} onclick={() => vai(dopo)} aria-label="Anello successivo">→</button>
     </nav>
 
     <div class="titolo">
@@ -284,12 +281,14 @@
       {/each}
     </dl>
     {/if}
-    <!-- le note dell'anello parlano delle quote: nel filo restano solo le due generali -->
-    <ul class="note">
-      {#if italiaAZero}<li>{NOTA_ITALIA}</li>{/if}
-      <li>{NOTA_GPU}</li>
-      {#if !filo}{#each v.note as n (n)}<li>{n}</li>{/each}{/if}
-    </ul>
+    <!-- le note parlano delle quote, e nel filo non ci sono; il censimento dei cluster sta con i data center, che lo citano.
+         Dei modelli italiani dicono già la matrice e la scheda dell'Italia -->
+    {#if !filo && (anello === 'datacenter' || v.note.length)}
+      <ul class="note">
+        {#if anello === 'datacenter'}<li>{NOTA_GPU}</li>{/if}
+        {#each v.note as n (n)}<li>{n}</li>{/each}
+      </ul>
+    {/if}
   </div>
 </Block>
 
@@ -298,9 +297,6 @@
   .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #a8432c; --k-modelli: #b2461f;
     --sito: color-mix(in srgb, var(--fg) 55%, transparent);
     display: grid; gap: var(--s2); min-width: 0; }
-  .linea { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: start; gap: var(--s1); }
-  .fr { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--card); cursor: pointer; font-size: 20px; }
-  .fr:disabled { cursor: default; color: var(--fg-3); opacity: .5; }
   .linea ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: relative; }
   .linea ol::before { content: ''; position: absolute; left: 8%; right: 8%; top: 20px; height: 4px; background: var(--line-2); border-radius: 2px; }
   .linea li button { position: relative; display: grid; justify-items: center; gap: 4px; width: 100%; min-height: 44px; border: 0; background: none; cursor: pointer; padding: 0 2px; }
@@ -311,7 +307,8 @@
   .lab { font-size: 12px; line-height: 16px; color: var(--fg-2); text-align: center; }
   .arriva { display: block; color: var(--fg-3); }
   li.on .lab { font-weight: 700; color: var(--fg); }
-  .titolo { display: grid; gap: 4px; border-left: 5px solid var(--c); padding-left: 10px; }
+  /* il colore dell'anello è già nel tondo acceso della linea, sopra: il titolo non lo ripete */
+  .titolo { display: grid; gap: 4px; }
   .titolo h4 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 600; }
   .scelte { display: flex; flex-wrap: wrap; gap: var(--s1); }
   .scelte button { background: var(--bg); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; min-height: 44px; font-size: 14px; line-height: 20px; cursor: pointer; color: var(--fg-2); }
@@ -351,7 +348,7 @@
   .fumetto h5 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 700; }
   .chiudi { min-width: 44px; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
   .fumetto dl { margin: 0; display: grid; gap: 6px; }
-  .fumetto .anelli-righe > div { border-left: 4px solid var(--c); padding-left: 8px; }
+  .fumetto .anelli-righe dt::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 6px; vertical-align: 1px; }
   .fumetto dd { display: block; font-size: 13px; line-height: 18px; }
   .fumetto dd b { font-size: 13px; line-height: 18px; font-weight: 600; }
   .fumetto .data { color: var(--fg-3); }
@@ -371,8 +368,7 @@
     .fumetto.destra, .fumetto.sinistra { position: relative; inset: auto; width: auto; margin-top: var(--s1); box-shadow: none; }
   }
   @media (max-width: 560px) {
-    .linea { grid-template-columns: 36px minmax(0, 1fr) 36px; gap: 4px; padding-bottom: 20px; }
-    .fr { width: 36px; height: 44px; font-size: 16px; border-radius: 18px; }
+    .linea { padding-bottom: 20px; }
     .pal { width: 36px; height: 36px; font-size: 13px; border-width: 2px; }
     .linea ol::before { top: 16px; }
     .lab { display: none; }
@@ -396,7 +392,8 @@
   .tappa:focus-visible circle { stroke: var(--accent); stroke-width: 2.4; }
   .esempio { margin: 0; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); }
   .tappe { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-  .tappe li { display: grid; gap: 2px; padding: 6px 8px; border-radius: var(--r-sm); border-left: 4px solid var(--c); }
+  /* il colore della tappa sta nel suo tondo numerato */
+  .tappe li { display: grid; gap: 2px; padding: 6px 8px; border-radius: var(--r-sm); }
   .tappe li[aria-current='step'] { background: color-mix(in srgb, var(--c) 7%, var(--card)); }
   .tappe button { display: flex; align-items: center; gap: 10px; min-height: 44px; width: 100%; padding: 0; border: 0; background: none; text-align: left;
     font: inherit; font-size: 15px; line-height: 20px; color: var(--fg); cursor: pointer; }

@@ -3,7 +3,7 @@
   import DataTable from './DataTable.svelte';
   import type { Cite, TableData } from './types';
 
-  let { title, note = null, span = 6, cite = null, table = null, missing = null, id = null, children }: {
+  let { title, note = null, span = 6, cite = null, table = null, missing = null, id = null, azione, children }: {
     title: string;
     note?: string | null;
     span?: 4 | 6 | 8 | 12;
@@ -12,13 +12,19 @@
     missing?: string | null;
     /** con un id il blocco è una regione con il suo titolo, e può ricevere il focus */
     id?: string | null;
+    /** un comando accanto al titolo, che cambia quello che il blocco mostra */
+    azione?: Snippet;
     children?: Snippet;
   } = $props();
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex: tabindex è -1 o assente, serve a dare il focus al blocco da codice -->
 <section class="blk w{span}" id={id} tabindex={id ? -1 : undefined} aria-labelledby={id ? `${id}-t` : undefined}>
-  <h3 id={id ? `${id}-t` : undefined}>{title}</h3>
+  {#if azione}
+    <div class="testa"><h3 id={id ? `${id}-t` : undefined}>{title}</h3>{@render azione()}</div>
+  {:else}
+    <h3 id={id ? `${id}-t` : undefined}>{title}</h3>
+  {/if}
   {#if note}<p class="note">{note}</p>{/if}
   {#if missing}
     <p class="note">{missing}</p>
@@ -45,6 +51,7 @@
   @media (max-width: 560px) { .blk { padding: var(--s2); } }
   /* da 1200px le colonne del dettaglio sono di larghezza fissa: 8 diventa due colonne, 12 tutta la riga */
   @media (min-width: 1200px) { .blk { grid-column: auto; } .w8 { grid-column: span 2; } .w12 { grid-column: 1 / -1; } }
+  .testa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s1) var(--s2); }
   h3 { font-weight: 600; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
   .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
   .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: 72ch; }

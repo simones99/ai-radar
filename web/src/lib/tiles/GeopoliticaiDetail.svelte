@@ -17,7 +17,6 @@
   const validi = $derived(Object.keys(g?.zone ?? {}));
   const zona = $derived(params.area && validi.includes(params.area) ? params.area : 'ue'); // senza una scelta valida, l'UE
   onMount(() => areaRicordata.allinea(params.area, validi));
-  const nellUe = $derived(zona === 'ue' || g?.zone[zona]?.tipo === 'paese-ue');
   const paesi = $derived(g ? paesiUe(g) : []);
   const scegli = (k: string) => areaRicordata.scegli(k === 'ue' ? null : k); // l'UE è la scelta di partenza
   const s = $derived(g && g.zone[zona] ? scheda(g, zona) : null);
@@ -43,17 +42,28 @@
   {#if g}
     <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
       vista={params.vista} filo={params.filo} onscegli={scegli} />
-    <div class="chips" role="group" aria-label="Area">
-      {#each AREE as k (k)}<button type="button" aria-pressed={k === 'ue' ? nellUe : zona === k} onclick={() => scegli(k)}>{g.zone[k].nome}</button>{/each}
-    </div>
-    {#if nellUe}
-      <div class="chips" role="group" aria-label="Paesi dell'UE">
-        <button type="button" aria-pressed={zona === 'ue'} onclick={() => scegli('ue')}>Tutta l'UE</button>
-        {#each paesi as k (k)}<button type="button" aria-pressed={zona === k} onclick={() => scegli(k)}>{g.zone[k].nome}</button>{/each}
-      </div>
-    {/if}
   {/if}
   <Block span={12} id="geo-scheda" title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'}>
+    {#snippet azione()}
+      <!-- un solo menu per l'area: le aree, e dentro l'UE i suoi Paesi; l'area si sceglie anche dalla mappa e dalla matrice -->
+      {#if g}
+        <label class="area">
+          <span>Area</span>
+          <select value={zona} onchange={(e) => scegli(e.currentTarget.value)}>
+            {#each AREE as k (k)}
+              {#if k === 'ue'}
+                <option value="ue">UE, tutta</option>
+                {#if paesi.length}
+                  <optgroup label="Paesi dell'UE">
+                    {#each paesi as p (p)}<option value={p}>{g.zone[p].nome}</option>{/each}
+                  </optgroup>
+                {/if}
+              {:else}<option value={k}>{g.zone[k].nome}</option>{/if}
+            {/each}
+          </select>
+        </label>
+      {/if}
+    {/snippet}
     {#if s}
       <p class="frase"><strong>{s.frase}</strong></p>
       {#if s.situazione !== 'zero'}
@@ -87,9 +97,13 @@
 </Detail>
 
 <style>
-  .chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s1); }
-  .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
-  .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
+  .area { display: inline-flex; align-items: center; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  /* il segno di apertura disegnato con due sfumature, nel colore del testo, in tutti e due i temi */
+  .area select { appearance: none; font: inherit; font-weight: 500; color: var(--fg); background-color: var(--bg); border: 1px solid var(--line-2); border-radius: 999px;
+    min-height: 44px; padding: 0 40px 0 var(--s2); cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: right 20px center, right 15px center; background-size: 5px 5px; background-repeat: no-repeat; }
+  @media (hover: hover) { .area select:hover { border-color: var(--fg-3); } }
   .frase { font-size: 18px; line-height: 28px; max-width: 60ch; }
   .due { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s3); }
   h4 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-2); }

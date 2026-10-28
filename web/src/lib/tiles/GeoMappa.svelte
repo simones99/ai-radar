@@ -153,8 +153,8 @@
     {#if fili.length}
       <div class="viste">
         <div class="scelte" role="group" aria-label="Vista">
-          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={alFilo}>Filo della catena</button>
-          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', 'quote')}>Quote per Paese</button>
+          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={alFilo}>Filo <span class="lungo">della catena</span></button>
+          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', 'quote')}>Quote <span class="lungo">per Paese</span></button>
         </div>
         {#if filo}
           <div class="scelte" role="group" aria-label="Esempio">
@@ -381,6 +381,12 @@
 
   .viste { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
   .viste .scelte button[aria-pressed='true'] { background: var(--fg); border-color: var(--fg); color: var(--card); }
+  /* sul telefono la vista e l'esempio stanno su una riga ciascuno: «Filo» e «Quote» bastano, il resto del nome resta per chi usa un lettore di schermo */
+  @media (max-width: 560px) {
+    .viste .scelte { flex-wrap: nowrap; }
+    .viste .scelte button { padding-inline: var(--s1); }
+    .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  }
   /* l'arco che arriva alla fermata scelta si disegna; con «riduci movimento» no (app.css) */
   .arco { fill: none; stroke: var(--c); stroke-width: 1.2; stroke-linecap: round; opacity: .6; pointer-events: none; }
   .arco.on { stroke-width: 2.2; opacity: 1; animation: traccia .8s ease-out; }

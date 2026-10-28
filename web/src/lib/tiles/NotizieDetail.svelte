@@ -19,6 +19,15 @@
   });
   const shown = $derived(all.filter((n) => (!fonte || n.fonte === fonte) && (!tema || (n.tema ?? 'altro') === tema)));
   const errori = $derived(Object.keys(data.news?.errori ?? {}));
+  // sul telefono le fonti scorrono di lato: la fonte scelta da un link resta a vista, senza muovere la pagina
+  let striscia = $state<HTMLDivElement>();
+  $effect(() => {
+    void fonte;
+    const b = striscia?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!striscia || !b) return;
+    const s = striscia.getBoundingClientRect(), r = b.getBoundingClientRect();
+    if (r.left < s.left || r.right > s.right) striscia.scrollLeft += r.left - s.left - 16;
+  });
   function pickFonte(f: string | null) {
     fonte = f;
     history.replaceState(history.state, '', toHash('notizie', f ? slug(f) : null, parseHash(location.hash)?.params)); // i parametri restano
@@ -28,7 +37,7 @@
 <Detail {tile} {head} {onclose}>
   <Block span={12} title="Tutte le notizie" note="Le notizie degli ultimi {data.news?.giorni ?? 45} giorni, dalla più recente.">
     <div class="filters">
-      <div class="chips" role="group" aria-label="Filtra per fonte">
+      <div class="chips" role="group" aria-label="Filtra per fonte" bind:this={striscia}>
         <button type="button" aria-pressed={fonte === null} onclick={() => pickFonte(null)}>Tutte le fonti</button>
         {#each fonti as f (f)}<button type="button" aria-pressed={fonte === f} onclick={() => pickFonte(f)}>{f}</button>{/each}
       </div>
@@ -55,6 +64,12 @@
   .chips { display: flex; flex-wrap: wrap; gap: var(--s1); }
   .chips button { background: var(--bg); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
   .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
+  /* sul telefono ogni gruppo sta su una riga che scorre di lato fino al bordo della card, come le pillole dei temi: la prima notizia arriva subito */
+  @media (max-width: 560px) {
+    .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: -4px calc(-1 * var(--s2)); padding: 4px var(--s4) 4px var(--s2); /* 4px sopra e sotto: l'anello del fuoco non si taglia */
+      mask-image: linear-gradient(to right, transparent, #000 var(--s2), #000 calc(100% - 32px), transparent); }
+    .chips button { flex: none; white-space: nowrap; }
+  }
   .news { list-style: none; margin: 0; padding: 0; display: grid; }
   .news li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: var(--s2); padding-block: var(--s2); }
   .news li + li { border-top: 1px solid var(--line); }

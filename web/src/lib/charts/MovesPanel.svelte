@@ -65,7 +65,7 @@
   .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); }
   .row:focus-visible { background: var(--accent-soft); outline: 2px solid var(--accent); }
   @media (hover: hover) { .row:hover { background: var(--accent-soft); } }
-  .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .n { overflow-wrap: anywhere; font-weight: 500; } /* il nome breve va a capo invece di finire con i puntini: la colonna è stretta sul telefono e accanto al radar */
   .v { text-align: right; position: relative; white-space: nowrap; }
   .ar { display: inline-block; width: 1em; text-align: right; }
   .up { color: var(--accent); font-weight: 600; }

@@ -41,7 +41,7 @@
 <Block span={12} title={TITOLO} cite={citeGeo(g)}>
   <div class="tog" role="group" aria-label="Misura">
     <button type="button" aria-pressed={misura === 'eci'} onclick={() => (misura = 'eci')}>Capacità (ECI)</button>
-    <button type="button" aria-pressed={misura === 'calcolo'} onclick={() => (misura = 'calcolo')}>Calcolo di addestramento (FLOP)</button>
+    <button type="button" aria-pressed={misura === 'calcolo'} onclick={() => (misura = 'calcolo')}>Calcolo <span class="lungo">di addestramento</span> (FLOP)</button>
   </div>
   <!-- svelte-ignore a11y_no_noninteractive_tabindex: la matrice scorre in orizzontale e deve essere raggiungibile da tastiera -->
   <div class="scroll scorre" tabindex="0" role="region" aria-label="{TITOLO}, scorre in orizzontale">
@@ -78,7 +78,12 @@
   .tog { display: inline-flex; justify-self: start; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 3px; }
   .tog button { border: 0; background: none; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; cursor: pointer; font: inherit; font-size: 14px; color: var(--fg-2); }
   .tog button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
-  @media (max-width: 560px) { .tog { border: 0; padding: 0; } }
+  /* sul telefono le due scelte stanno affiancate a tutta larghezza: «di addestramento» resta solo per chi usa un lettore di schermo */
+  @media (max-width: 560px) {
+    .tog { display: grid; grid-template-columns: 1fr 1fr; justify-self: stretch; }
+    .tog button { padding-inline: var(--s1); }
+    .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  }
   table { border-collapse: separate; border-spacing: 3px; width: 100%; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
   thead th { font-weight: 500; color: var(--fg-3); font-size: 12px; line-height: 16px; text-align: left; padding: var(--s1); white-space: nowrap; }
   thead th small { font-size: inherit; }

@@ -79,16 +79,17 @@
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
       <div class="tw scorre" tabindex="0" role="region" aria-label="Le competenze una per una">
-        <table>
-          <thead><tr><th scope="col">Competenza</th><th scope="col">Cosa è</th><th scope="col">Quadrante</th><th scope="col">Slancio</th><th scope="col">Annunci ogni 10mila</th></tr></thead>
-          <tbody>
+        <!-- svelte-ignore a11y_no_redundant_roles: i ruoli ripetono quelli della tabella, perché impilata cambia il display e alcuni browser altrimenti la leggono come testo -->
+        <table role="table">
+          <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Competenza</th><th scope="col" role="columnheader">Cosa è</th><th scope="col" role="columnheader">Quadrante</th><th scope="col" role="columnheader">Slancio</th><th scope="col" role="columnheader">Annunci ogni 10mila</th></tr></thead>
+          <tbody role="rowgroup">
             {#each elenco as c (c.id)}
-              <tr class:altro={altro(c.id)}>
-                <th scope="row">{#if placed.has(c.id)}<a href={toHash('competenze', c.id)}>{c.nome}</a>{:else}{c.nome}{/if}</th>
-                <td class="desc">{c.descrizione}</td>
-                <td>{c.quadrante ? quadranti[c.quadrante] : 'dati insufficienti'}{c.incerto ? ' · incerto' : ''}</td>
-                <td class="num">{c.slancio != null ? signedPct(c.slancio) : '—'}</td>
-                <td class="num">{c.domanda != null ? per10k(c.domanda) : '—'}</td>
+              <tr role="row" class:altro={altro(c.id)}>
+                <th scope="row" role="rowheader">{#if placed.has(c.id)}<a href={toHash('competenze', c.id)}>{c.nome}</a>{:else}{c.nome}{/if}</th>
+                <td role="cell" class="desc">{c.descrizione}</td>
+                <td role="cell" data-label="Quadrante">{c.quadrante ? quadranti[c.quadrante] : 'dati insufficienti'}{c.incerto ? ' · incerto' : ''}</td>
+                <td role="cell" class="num" data-label="Slancio">{c.slancio != null ? signedPct(c.slancio) : '—'}</td>
+                <td role="cell" class="num" data-label="Annunci ogni 10mila">{c.domanda != null ? per10k(c.domanda) : '—'}</td>
               </tr>
             {/each}
           </tbody>
@@ -118,6 +119,19 @@
   tbody th { font-weight: 500; }
   td.desc { white-space: normal; min-width: 24ch; color: var(--fg-2); }
   td.num { text-align: right; }
+  /* sul telefono ogni competenza si impila: il nome, cosa è, e sotto le tre misure con il loro nome */
+  .tw { container-type: inline-size; }
+  @container (max-width: 480px) {
+    :is(table, tbody) { display: block; }
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    tbody tr { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); gap: 4px var(--s2); padding-block: 12px; border-bottom: 1px solid var(--line); }
+    :is(th, td, td.num) { padding: 0; border: 0; white-space: normal; text-align: left; }
+    tbody th, td.desc { grid-column: 1 / -1; }
+    td.desc { min-width: 0; font-size: 13px; line-height: 20px; }
+    /* nome della misura e valore su due righe comuni alle tre celle: i valori stanno in fila anche quando un nome va a capo */
+    td[data-label] { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 2px; }
+    td[data-label]::before { content: attr(data-label); align-self: end; font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  }
   /* altri ruoli: colore più chiaro invece dell'opacità, il contrasto resta AA */
   tr.altro :is(th, td, a) { color: var(--fg-3); font-weight: 400; }
 </style>

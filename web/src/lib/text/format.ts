@@ -1,7 +1,10 @@
+// per useGrouping: 'always' in nf
+/// <reference lib="es2023.intl" />
 const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
 
+/** Il punto delle migliaia anche sulle quattro cifre (9.059 come 11.009): l'italiano di Intl lo toglie sotto le diecimila. */
 export const nf = (v: number, d = 0): string =>
-  v.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+  v.toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
 /** Valore come pubblicato dalla fonte: niente arrotondamenti, solo il rumore dei float oltre la 4ª cifra decimale. */
 export const exact = (v: number): string => v.toLocaleString('it-IT', { maximumFractionDigits: 4 });
 /** Importi grandi in forma breve: M = milioni, B = miliardi (una cifra decimale sotto il 10). */

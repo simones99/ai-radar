@@ -62,7 +62,7 @@
       <ul>
         {#each TILES as t (t.id)}
           {@const p = PHOTOS[t.id]}
-          <li>{t.label}: <a href={p.pagina} target="_blank" rel="noopener">{p.titolo}</a> · {p.autore} · {#if p.licenzaUrl}<a href={p.licenzaUrl} target="_blank" rel="noopener">{p.licenza}</a>{:else}{p.licenza}{/if} · Wikimedia Commons</li>
+          <li>{t.label}: <a href={p.pagina} target="_blank" rel="noopener">{p.titolo}</a>&nbsp;· {p.autore}&nbsp;· {#if p.licenzaUrl}<a href={p.licenzaUrl} target="_blank" rel="noopener">{p.licenza}</a>{:else}{p.licenza}{/if}&nbsp;· Wikimedia Commons</li>
         {/each}
       </ul>
       <p class="small muted">
@@ -76,12 +76,13 @@
 </div>
 
 <style>
-  .bar { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); }
-  .logo { display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
+  /* dove non stanno in una riga i link vanno sotto il nome, ognuno intero */
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s2); }
+  .logo { white-space: nowrap; display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
   .logo i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--fg); position: relative; }
   .logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
   nav { display: flex; gap: var(--s3); font-size: 14px; }
-  nav a { text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
+  nav a { white-space: nowrap; text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
   @media (hover: hover) { nav a:hover { color: var(--fg); } }
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
@@ -106,5 +107,7 @@
   .credits { display: grid; gap: var(--s3); align-content: start; }
   .credits h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
   .credits > p { max-width: 72ch; }
-  .credits ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s1) var(--s3); font-size: 12px; line-height: 16px; color: var(--fg-2); }
+  /* in colonne di giornale: ogni credito segue il precedente, senza i vuoti di una griglia allineata al più lungo della riga */
+  .credits ul { list-style: none; margin: 0; padding: 0; columns: 220px; column-gap: var(--s3); font-size: 12px; line-height: 16px; color: var(--fg-2); }
+  .credits li { break-inside: avoid; margin-bottom: var(--s1); }
 </style>

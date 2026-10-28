@@ -53,7 +53,7 @@
       <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
     </figure>
     {/if}
-    <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}>×</button>
+    <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
   </div>
   <div class="blocks">{@render children()}</div>
 </section>
@@ -65,8 +65,8 @@
   .d-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); position: relative; padding-bottom: var(--s4); border-bottom: 1px solid var(--line-2); }
   @media (min-width: 720px) { .d-hero:has(figure) { grid-template-columns: minmax(0, 1fr) clamp(220px, 30%, 360px); gap: var(--s5); align-items: start; } }
   .d-text { display: grid; gap: var(--s2); align-content: start; padding-top: var(--s2); }
-  .copertina .d-text { padding-right: var(--s8); }
-  @media (max-width: 860px) { .copertina .d-text { padding-right: var(--s6); } }
+  /* il posto del pulsante di chiusura, che c'è solo da 1200px */
+  @media (min-width: 1200px) { .copertina .d-text { padding-right: var(--s8); } }
   .lab { font-size: 14px; color: var(--fg-2); font-weight: 600; }
   h2 { font-weight: 600; font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: -.015em; max-width: 20ch; outline: none; }
   h2 em { font-style: normal; color: var(--accent); }
@@ -83,9 +83,11 @@
   .copy { background: var(--card); color: var(--fg); border: 0; border-radius: 999px; padding: var(--s1) var(--s2); min-height: 40px; cursor: pointer; font-size: 14px; box-shadow: var(--shadow); }
   .copy-url { font: inherit; font-size: 14px; border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: var(--s1); min-width: 0; flex: 1 1 240px; background: var(--card); color: var(--fg); }
   /* in alto a destra: sull'angolo della foto, o accanto al titolo nella copertina */
-  .close { position: absolute; top: var(--s1); right: var(--s1); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--card); color: var(--fg); box-shadow: var(--shadow); cursor: pointer; font-size: 24px; line-height: 40px; }
+  .close { position: absolute; top: var(--s1); right: var(--s1); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--card); color: var(--fg); box-shadow: var(--shadow); cursor: pointer; display: grid; place-items: center; padding: 0; }
   .copertina .close { top: 0; right: 0; }
-  @media (max-width: 860px) { .close { display: none; } }
+  /* sotto i 1200px chiude la × accanto alle pillole: una sola chiusura per volta */
+  @media (max-width: 1199px) { .close { display: none; } }
+  .ico { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; }
   @media (hover: hover) { .copy:hover, .close:hover { background: var(--line-2); } }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }

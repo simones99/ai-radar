@@ -55,20 +55,21 @@
   .f-lab { display: flex; justify-content: space-between; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .f-lab .small { color: var(--fg-3); }
   .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-  .u { font-size: 20px; letter-spacing: -.01em; margin-left: 4px; color: var(--fg-2); font-weight: 500; }
+  .u { display: inline-block; white-space: nowrap; font-size: 20px; letter-spacing: -.01em; margin-left: 4px; color: var(--fg-2); font-weight: 500; }
   .sent { font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .stale { font-size: 12px; line-height: 16px; color: var(--fg-3); }
   @media (hover: hover) {
     .face:hover { box-shadow: var(--shadow-up); transform: translateY(-2px); }
     .face:hover .ph img { transform: scale(1.03); }
   }
-  .face.compact { grid-template-columns: 64px minmax(0, 1fr); align-items: center; gap: 12px; padding: var(--s1); border-radius: var(--r-md); background: transparent; box-shadow: none; }
+  .face.compact { grid-template-columns: 56px minmax(0, 1fr); align-items: center; gap: 12px; padding: var(--s1); border-radius: var(--r-md); background: transparent; box-shadow: none; }
   .compact .ph { aspect-ratio: 1; border-radius: var(--r-sm); }
   .compact .f-body { padding-inline: 0; gap: 0; }
   .compact .f-lab .small, .compact .sent { display: none; }
   .compact .fig { font-size: 22px; line-height: 28px; }
   .compact .u { font-size: 13px; }
-  .face.compact[aria-expanded="true"] { background: var(--card); box-shadow: var(--shadow), inset 3px 0 0 var(--accent); }
+  /* la card aperta è la riga sulla carta, le altre stanno sul fondo */
+  .face.compact[aria-expanded="true"] { background: var(--card); box-shadow: var(--shadow); }
   @media (hover: hover) {
     .face.compact:hover { background: var(--card); transform: none; }
     .face.compact:hover .ph img { transform: none; }

@@ -98,12 +98,8 @@
 
 <style>
   .area { display: inline-flex; align-items: center; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
-  /* il segno di apertura disegnato con due sfumature, nel colore del testo, in tutti e due i temi */
-  .area select { appearance: none; font: inherit; font-weight: 500; color: var(--fg); background-color: var(--bg); border: 1px solid var(--line-2); border-radius: 999px;
-    min-height: 44px; padding: 0 40px 0 var(--s2); cursor: pointer;
-    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
-    background-position: right 20px center, right 15px center; background-size: 5px 5px; background-repeat: no-repeat; }
-  @media (hover: hover) { .area select:hover { border-color: var(--fg-3); } }
+  /* il menu è sulla carta: prende il fondo della pagina, come le pillole della mappa */
+  .area select { background-color: var(--bg); }
   .frase { font-size: 18px; line-height: 28px; max-width: 60ch; }
   .due { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s3); }
   h4 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-2); }

@@ -14,8 +14,8 @@
 </script>
 
 {#snippet body(g: (typeof TESTE)[number], d: Door)}
-  <span class="eyebrow">{g.eyebrow}{d.scelta ? ` · ${d.scelta}` : ''}</span>
-  <span class="name">{g.label}</span>
+  <!-- la testa in una riga sola, il suo nome e il nome della porta: sopra la notizia non c'è un'occhiello in maiuscoletto -->
+  <span class="testa"><b>{g.eyebrow}{d.scelta ? ` · ${d.scelta}` : ''}</b>{' '}<span>{g.label}</span></span>
   {#if d.title.length}
     <span class="news">{#each d.title as p, i (i)}{#if p.em}<em>{p.t}</em>{:else}{p.t}{/if}{/each}</span>
   {/if}
@@ -38,8 +38,9 @@
   .door { display: grid; gap: var(--s1); align-content: start; padding: var(--s3); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); color: inherit; text-decoration: none; transition: box-shadow .25s var(--ease), transform .25s var(--ease); }
   a.door:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   @media (hover: hover) { a.door:hover { box-shadow: var(--shadow-up); transform: translateY(-2px); } }
-  .eyebrow { font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-2); font-weight: 600; }
-  .name { font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .testa { font-size: 14px; line-height: 20px; color: var(--fg-2); }
+  .testa b { font-weight: 600; color: var(--fg); }
+  .testa span { white-space: nowrap; }
   .news { font-weight: 500; font-size: clamp(24px, 2.8vw, 32px); line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; overflow-wrap: anywhere; }
   .news em { font-style: normal; color: var(--accent); font-weight: 700; }
   @media (min-width: 1200px) { .news { font-size: 26px; } }

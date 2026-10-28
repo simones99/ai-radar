@@ -50,7 +50,7 @@
     const x = unico.has(iso) ? v.europa : quote[iso];
     if (x == null) return 'var(--line)';
     const [lo, hi] = v.scala;
-    return `color-mix(in srgb, var(--c) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
+    return `color-mix(in srgb, var(--alto) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
   }
   const nome = (iso: string) => (filo ? nomeFilo(filo, iso) : `${NOMI[iso] ?? iso}: ${v.testo(iso)}`);
 
@@ -297,6 +297,8 @@
      il verde e l'arancio si distinguono anche per chi non vede il rosso o il verde */
   .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #3e7232; --k-modelli: #b2461f;
     --sito: color-mix(in srgb, var(--fg) 55%, transparent);
+    /* il valore più alto della scala: il colore dell'anello sulla carta chiara, schiarito sulla carta scura, dove verso la carta si scurirebbe */
+    --alto: light-dark(var(--c), color-mix(in oklab, var(--c) 60%, #fff));
     display: grid; gap: var(--s2); min-width: 0; }
   .linea ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: relative; }
   .linea ol::before { content: ''; position: absolute; left: 8%; right: 8%; top: 20px; height: 4px; background: var(--line-2); border-radius: 2px; }
@@ -408,7 +410,7 @@
   dd { margin: 0; display: grid; }
   dd b { font-size: 16px; line-height: 20px; }
   dd strong { font-size: 24px; line-height: 32px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .cifra.primo strong { font-size: 32px; line-height: 40px; color: var(--c); }
+  .cifra.primo strong { font-size: 32px; line-height: 40px; color: var(--alto); }
   .mod { font-size: 13px; line-height: 18px; color: var(--fg-2); }
   .vuoto { font-size: 15px; line-height: 22px; font-style: italic; color: var(--fg-2); }
   /* l'Italia ha accanto al nome il tratteggio del suo contorno sulla mappa */

@@ -28,7 +28,7 @@
   function fill(iso: string): string {
     const a = aree.find((x) => x.paesi.has(iso));
     if (!a) return 'var(--line)';
-    return `color-mix(in srgb, var(--k-modelli) ${Math.round(25 + (75 * (a.v - lo)) / (hi - lo || 1))}%, var(--card))`;
+    return `color-mix(in srgb, var(--alto) ${Math.round(25 + (75 * (a.v - lo)) / (hi - lo || 1))}%, var(--card))`;
   }
   const etichette = $derived(aree.map((a) => {
     const [iso, dx, dy] = DOVE[a.k];
@@ -50,7 +50,8 @@
 
 <style>
   /* lo stesso colore dell'anello dei modelli nella mappa del dettaglio (GeoMappa) */
-  .mappa { --k-modelli: #b2461f; display: grid; align-items: center; width: 100%; height: 100%; overflow: hidden;
+  /* il valore più alto: il colore pieno sulla carta chiara, schiarito sulla carta scura, così la scala sale verso la luce in tutti e due i temi */
+  .mappa { --k-modelli: #b2461f; --alto: light-dark(var(--k-modelli), color-mix(in oklab, var(--k-modelli) 60%, #fff)); display: grid; align-items: center; width: 100%; height: 100%; overflow: hidden;
     background: color-mix(in srgb, var(--bg) 70%, #9fc3d9); }
   .carta { position: relative; display: block; width: 100%; }
   svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }

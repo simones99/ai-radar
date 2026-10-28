@@ -15,7 +15,7 @@
   const head = $derived(tile.head(data, today));
   const o = $derived(data.owid);
   const s = (id: string) => o?.serie?.[id];
-  const pctF = (v: number) => `${nf(v, v < 10 ? 1 : 0)}%`;
+  const pctF = (v: number) => `${nf(v, v && v < 10 ? 1 : 0)}%`;
   const lines = (id: string, ents: string[]) => ents
     .map((e) => ({ name: paese(e), hot: e === 'Italy', pts: owidPoints(o, id, e).map((p) => ({ x: tNum(p.t), y: p.v })) }))
     .filter((x) => x.pts.length);
@@ -53,7 +53,7 @@
     <Bars label="Sviluppatori che usano strumenti AI" data={dev} format={pctF} />
   </Block>
   <Block title="Annunci di lavoro che chiedono l'AI" note="Quota degli annunci online che chiedono competenze AI, %." missing={annunci.length ? null : MISSING} cite={owidCite(s('annunci_ai'))} table={{ ...seriesTable(annunci, 'Anno'), format: exact }}>
-    <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={(v) => `${exact(v)}%`} />
+    <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={pctF} />
   </Block>
   <Block title="Competenze più chieste negli annunci" note="Annunci che citano la competenza ogni 10.000, media tra i Paesi."
     missing={jobs.length ? null : 'Serve la chiave gratuita di Adzuna (ADZUNA_APP_ID e ADZUNA_APP_KEY nei secret del repository).'}

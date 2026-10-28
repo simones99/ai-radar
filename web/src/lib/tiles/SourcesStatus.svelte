@@ -45,5 +45,4 @@
   .problemi { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s1); font-size: 14px; line-height: 20px; max-width: 72ch; }
   .problemi b { font-weight: 600; }
   .nota { display: block; font-size: 12px; line-height: 16px; color: var(--fg-2); overflow-wrap: anywhere; }
-  summary { cursor: pointer; font-size: 14px; color: var(--fg-2); min-height: 40px; display: flex; align-items: center; }
 </style>

@@ -23,6 +23,8 @@
   const RH = 28;
   const ml = $derived(Math.min(w * 0.45, Math.max(...data.map((d) => measureText(d.k, `600 12px ${FONT}`))) + 12));
   const xh = $derived(scaleLinear([0, max(data, (d) => d.v) ?? 1], [ml, w - 48]));
+  /** Si scrive la barra in evidenza e una ogni "step", ma non quella che starebbe a meno di uno "step" dall'evidenza: le due etichette si toccherebbero. */
+  const scritta = (i: number) => (hotLast && i === data.length - 1) || (i % step === 0 && (!hotLast || data.length - 1 - i >= step));
   const rows = $derived(data.map((d, i) => ({ ...d, hot: hotLast && i === data.length - 1 })).reverse());
 </script>
 
@@ -41,7 +43,7 @@
       {#each data as d, i (d.k)}
         {@const hot = hotLast && i === data.length - 1}
         <rect class="bar" class:hot x={x(d.k)} y={y(d.v)} width={x.bandwidth()} height={y(0) - y(d.v)} rx="6" />
-        {#if hot || i % step === 0}
+        {#if scritta(i)}
           <text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>
           <text class="t10" x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={height - 8} text-anchor="middle">{d.k}</text>
         {/if}

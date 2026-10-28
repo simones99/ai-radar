@@ -43,7 +43,7 @@
   /* un colore per area, uno per tema: ≥ 3:1 sulla carta, e distinti anche per chi non vede il rosso o il verde. L'area scelta ha il suo colore pieno,
      le altre lo tengono schiarito verso la carta */
   .legenda, .barre { --a-usa: light-dark(#98397e, #d073b3); --a-cina: light-dark(#b58b22, #e7bf57); --a-ue: light-dark(#238ea9, #71c5df);
-    --a-uk: light-dark(#bf4f34, #e77b60); --a-altri: light-dark(#8f8f8e, #737372); }
+    --a-uk: light-dark(#bf4f34, #e77b60); --a-altri: light-dark(#8f8f8e, #8a8a89); }
   .legenda { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .legenda li { display: flex; align-items: center; gap: 6px; }
   .legenda li[aria-current='true'] { color: var(--fg); font-weight: 600; }

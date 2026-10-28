@@ -78,7 +78,7 @@
     </Block>
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
-      <div class="tw" tabindex="0" role="region" aria-label="Le competenze una per una">
+      <div class="tw scorre" tabindex="0" role="region" aria-label="Le competenze una per una">
         <table>
           <thead><tr><th scope="col">Competenza</th><th scope="col">Cosa è</th><th scope="col">Quadrante</th><th scope="col">Slancio</th><th scope="col">Annunci ogni 10mila</th></tr></thead>
           <tbody>
@@ -112,7 +112,6 @@
   .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
   .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
   .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: 80ch; }
-  .tw { overflow-x: auto; }
   table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; }
   th, td { text-align: left; padding: var(--s1); border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
   thead th { font-size: 12px; line-height: 16px; color: var(--fg-3); font-weight: 500; }

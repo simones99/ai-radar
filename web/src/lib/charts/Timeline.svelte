@@ -44,6 +44,13 @@
   .tl { list-style: none; margin: 0; padding: 0; display: grid; }
   li { display: grid; grid-template-columns: 112px 24px minmax(0, 1fr); gap: 0 var(--s2); }
   @media (max-width: 560px) { li { grid-template-columns: 88px 16px minmax(0, 1fr); gap: 0 var(--s1); } }
+  /* sul telefono stretto la data va sopra il titolo, che così ha tutta la riga */
+  @media (max-width: 400px) {
+    li { grid-template-columns: 16px minmax(0, 1fr); }
+    .rail { grid-column: 1; grid-row: 1 / span 2; }
+    .when { grid-column: 2; grid-row: 1; padding-block: var(--s2) 0; }
+    .what { grid-column: 2; grid-row: 2; padding-top: 2px; }
+  }
   .when { font-weight: 600; font-size: 14px; padding-block: var(--s2); font-variant-numeric: tabular-nums; }
   .rail { position: relative; }
   .rail::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--line-2); }

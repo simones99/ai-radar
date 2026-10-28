@@ -49,7 +49,7 @@
     </div>
     {#if !copertina}
     <figure>
-      <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 720px) 100vw, 400px" alt={photo.alt} /></span>
+      <span class="ph" style:background-image="url({photo.anteprima})"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 720px) 100vw, 400px" alt={photo.alt} /></span>
       <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
     </figure>
     {/if}
@@ -75,7 +75,7 @@
   .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: 62ch; }
   .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 56ch; }
   figure { display: grid; gap: var(--s1); }
-  .ph { display: block; aspect-ratio: 2 / 1; border-radius: var(--r-md); overflow: hidden; background: var(--line); }
+  .ph { display: block; aspect-ratio: 2 / 1; border-radius: var(--r-md); overflow: hidden; background: var(--line) center / cover no-repeat; } /* sotto la foto, finché arriva, la sua anteprima */
   @media (min-width: 720px) { .ph { aspect-ratio: 4 / 3; } }
   .ph img { width: 100%; height: 100%; object-fit: cover; }
   .credit { font-size: 12px; line-height: 16px; color: var(--fg-3); }

@@ -10,7 +10,7 @@
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
     ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
-    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
+    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
   import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
@@ -89,6 +89,12 @@
   const punti = $derived(conSiti ? puntiSiti(g.data_center!) : []);
   const puntiEuropa = $derived(punti.filter((q) => nelRiquadro(q.x, q.y)));
   const tappeEuropa = $derived(tappe.filter((t) => nelRiquadro(t.x, t.y)));
+  // le tappe della mappa del mondo hanno almeno 6 px di raggio a ogni larghezza. Sotto i 600 px (la mappa è larga meno di 520 px) l'Europa
+  // ingrandita sta sotto, a tutta larghezza: lì ci sono le tappe europee, e sul mondo resta solo il riquadro che le indica
+  let largo = $state(0);
+  const kMondo = $derived(largo ? Math.max(1, (6 * vw) / (8 * largo)) : 1);
+  const sotto = $derived(largo > 0 && largo < 520);
+  const tappeMondo = $derived(sotto ? tappe.filter((t) => !nelRiquadro(t.x, t.y)) : tappe);
 
   // il fumetto, di un Paese o di un sito, si apre dal lato opposto rispetto al centro della mappa; l'Europa è anche nel riquadro,
   // a sinistra, e si apre sempre a destra, così il fumetto non la copre
@@ -136,10 +142,16 @@
     <path d={a.d} class="arco" class:on={a.verso === idx} style:--c="var(--k-{ANELLI[a.verso].key})" stroke-dasharray={a.pieno ? undefined : '3 2'}
       pathLength="100" data-testid="arco" aria-hidden="true" />
   {/each}
-  <!-- la tappa scelta sta sopra le altre: due tappe possono stare nello stesso posto -->
-  {#each [...dentro.filter((t) => t.i !== idx), ...dentro.filter((t) => t.i === idx)] as t (t.i)}
+  <!-- due tappe vicine si allontanano quanto basta per leggerle tutte e due: una linea le lega al loro posto vero, segnato da un punto -->
+  {@const sep = separa(dentro, 19 * k)}
+  {#each sep.filter((t) => Math.hypot(t.px - t.x, t.py - t.y) > 0.5) as t (t.i)}
+    <line class="richiamo" x1={t.x} y1={t.y} x2={t.px} y2={t.py} style:--c="var(--k-{t.anello})" aria-hidden="true" />
+    <circle class="vero" cx={t.x} cy={t.y} r={1.6 * k} style:--c="var(--k-{t.anello})" aria-hidden="true" />
+  {/each}
+  <!-- la tappa scelta sta sopra le altre -->
+  {#each [...sep.filter((t) => t.i !== idx), ...sep.filter((t) => t.i === idx)] as t (t.i)}
     <!-- come i Paesi, fuori dal Tab: da tastiera le tappe si scelgono dall'elenco sotto la mappa -->
-    <g class="tappa" class:on={t.i === idx} transform="translate({t.x} {t.y}) scale({k})" style:--c="var(--k-{t.anello})" role="button" tabindex="-1"
+    <g class="tappa" class:on={t.i === idx} transform="translate({t.px} {t.py}) scale({k})" style:--c="var(--k-{t.anello})" role="button" tabindex="-1"
       aria-label="{t.i + 1}. {ANELLI[t.i].nome}: {t.luogo}" onclick={() => vai(t.anello)}
       onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vai(t.anello); } }}>
       <circle r={t.i === idx ? 9.5 : 8} /><text y="3.2" text-anchor="middle" aria-hidden="true">{t.i + 1}</text>
@@ -193,7 +205,7 @@
     </div>
 
     <div class="cornice">
-      <div class="mondo">
+      <div class="mondo" bind:clientWidth={largo}>
         <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {filo ? `Filo della catena, ${filo.nome.toLowerCase()}` : v.misura.split(' · ')[0]}">
           <defs>
             <pattern id="geo-tratteggio" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2" /></pattern>
@@ -203,7 +215,8 @@
           {#each PAESI.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
           {#each punti as q (q.sito.nome)}{@render cerchio(q, !nelRiquadro(q.x, q.y))}{/each}
-          {#if filo}{@render filoSvg(tappe, 1)}{/if}
+          {#if sotto}<rect class="zona" x={EUROPA.x} y={EUROPA.y} width={EUROPA.w} height={EUROPA.h} rx="4" aria-hidden="true" />{/if}
+          {#if filo}{@render filoSvg(tappeMondo, kMondo)}{/if}
         </svg>
         {#each etichette as e (e.iso)}
           <span class="et" data-testid="etichetta" style:left={e.left} style:top={e.top}>
@@ -341,8 +354,10 @@
   .europa { position: absolute; border-radius: var(--r-sm); border: 1px solid var(--fg-3); overflow: hidden; background: color-mix(in srgb, var(--bg) 60%, #9fc3d9); }
   .europa .pz { stroke-width: .3; }
   .europa .italia { stroke-width: 1; stroke-dasharray: 1.5 .8; }
-  .in-t { position: absolute; left: 6px; top: 4px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; text-shadow: 0 0 3px var(--card), 0 0 2px var(--card); }
-  .et.it { font-size: 11px; font-weight: 700; color: var(--accent); }
+  /* le due scritte del riquadro hanno un fondo di carta: sopra i confini si leggono */
+  .in-t { position: absolute; left: 0; top: 0; padding: 2px 6px; border-bottom-right-radius: var(--r-sm); background: color-mix(in srgb, var(--card) 88%, transparent);
+    font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; }
+  .et.it { font-size: 11px; font-weight: 700; color: var(--accent); padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--card) 85%, transparent); text-shadow: none; }
   .fumetto { position: absolute; top: 8px; z-index: 2; width: min(340px, 44%); display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
     background: var(--card); border: 1px solid var(--line-2); box-shadow: 0 6px 20px rgb(0 0 0 / .18); }
   .fumetto.destra { right: 8px; }
@@ -393,6 +408,9 @@
   @keyframes traccia { from { stroke-dasharray: 100; stroke-dashoffset: 100; } to { stroke-dasharray: 100; stroke-dashoffset: 0; } }
   .europa .arco { stroke-width: .8; }
   .europa .arco.on { stroke-width: 1.5; }
+  .richiamo { stroke: var(--c); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .vero { fill: var(--c); stroke: var(--card); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .zona { fill: none; stroke: var(--fg-2); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
   .tappa { cursor: pointer; }
   .tappa circle { fill: var(--c); stroke: #fff; stroke-width: 1.2; }
   .tappa.on circle { stroke: var(--fg); stroke-width: 1.8; }

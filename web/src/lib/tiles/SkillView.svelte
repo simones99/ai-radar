@@ -35,7 +35,8 @@
     const q = p.competenze[row.id]?.pubblicato;
     return q ? [{ mese: p.mese, q }] : [];
   }));
-  const yf = (v: number) => nf(v, v < 10 ? 1 : 0);
+  /** Le cifre di un grafico hanno tutte gli stessi decimali, tacche ed etichetta: uno se il valore più alto sta sotto 10, nessuno se no. */
+  const yf = (s: Series[]) => { const d = Math.max(0, ...s.flatMap((x) => x.pts.map((p) => p.y))) < 10 ? 1 : 0; return (v: number) => nf(v, d); };
   const monthAt = (mens: { mese: string }[]) => (i: number) => (mens[i] ? monthShort(mens[i].mese) : '');
   const dayAt = (i: number) => (ril[i] ? day(ril[i].data).replace(/ \d{4}$/, '') : '');
 </script>
@@ -61,17 +62,17 @@
 <Block span={4} title="Paper" note="Paper su arXiv che ne parlano ogni 1.000 paper AI, mese per mese." cite={cite('arXiv', 'https://arxiv.org')}
   missing={paperM.length ? null : 'Nessun dato da arXiv.'}
   table={{ cols: ['Mese', 'Paper', 'Paper AI'], rows: paperM.map((m) => [m.mese, m.n, m.totale]) }}>
-  <LineChart series={paper} label="Paper su {row.breve} ogni 1.000 paper AI" height={200} yFormat={yf} xFormat={monthAt(paperM)} />
+  <LineChart series={paper} label="Paper su {row.breve} ogni 1.000 paper AI" height={200} yFormat={yf(paper)} xFormat={monthAt(paperM)} />
 </Block>
 <Block span={4} title="Repository" note="Nuovi repository GitHub con il suo topic ogni 1.000 nuovi repository AI." cite={cite('GitHub', 'https://github.com')}
   missing={repoM.length ? null : 'Nessun dato da GitHub.'}
   table={{ cols: ['Mese', 'Repository', 'Repository AI'], rows: repoM.map((m) => [m.mese, m.n, m.base]) }}>
-  <LineChart series={repo} label="Repository su {row.breve} ogni 1.000 repository AI" height={200} yFormat={yf} xFormat={monthAt(repoM)} />
+  <LineChart series={repo} label="Repository su {row.breve} ogni 1.000 repository AI" height={200} yFormat={yf(repo)} xFormat={monthAt(repoM)} />
 </Block>
 <Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila, media dei Paesi e Italia." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
   missing={ril.length < 2 ? 'Serve un mese di rilevazioni.' : null}
   table={{ cols: ['Rilevazione', 'Media', 'Italia'], rows: ril.map((r) => [r.data, r.media, r.it ?? '—']) }}>
-  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={yf} xFormat={dayAt} />
+  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={yf(annunci)} xFormat={dayAt} />
 </Block>
 
 <Block span={12} title="Il percorso sul radar" note="Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo."
@@ -114,7 +115,7 @@
   .path { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
   .path li { display: grid; gap: 2px; padding: var(--s1) var(--s2); border-radius: var(--r-md); background: var(--bg); font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .path b { font-weight: 600; color: var(--fg); }
-  .path li.hot b { color: var(--accent); }
+  .path li.hot { background: var(--accent-soft); } /* i mesi in Impara ora hanno il fondo del loro quadrante nel radar; il testo resta nel colore del testo */
   .res { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
   .res li { display: grid; gap: 2px; font-size: 14px; line-height: 24px; min-width: 0; overflow-wrap: anywhere; }
   .meta, .desc { font-size: 12px; line-height: 16px; color: var(--fg-3); }

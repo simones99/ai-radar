@@ -245,6 +245,25 @@ export function archi(f: CatenaFilo, scelta: number): Arco[] {
   });
 }
 
+/** I segni a meno di `d` l'uno dall'altro si allontanano quanto basta, ognuno della metà, lungo la retta che li unisce;
+ *  due nello stesso posto si aprono in orizzontale. `px` e `py` sono la posizione del segno, `x` e `y` restano quella vera. */
+export function separa<T extends { x: number; y: number }>(punti: T[], d: number): (T & { px: number; py: number })[] {
+  const p = punti.map((t) => ({ ...t, px: t.x, py: t.y }));
+  for (let giro = 0, mosso = true; mosso && giro < 50; giro++) {
+    mosso = false;
+    for (let i = 0; i < p.length; i++) for (let j = i + 1; j < p.length; j++) {
+      const a = p[i], b = p[j];
+      const n = Math.hypot(b.px - a.px, b.py - a.py);
+      if (n >= d - 0.01) continue;
+      const [ux, uy] = n < 0.01 ? [1, 0] : [(b.px - a.px) / n, (b.py - a.py) / n];
+      const m = (d - n) / 2;
+      a.px -= ux * m; a.py -= uy * m; b.px += ux * m; b.py += uy * m;
+      mosso = true;
+    }
+  }
+  return p;
+}
+
 /** Il nome di un Paese nella vista del filo: le sue tappe, o nessuna. */
 export function nomeFilo(f: CatenaFilo, iso: string): string {
   const qui = f.tappe.flatMap((t, i) => (t.iso === iso ? [`${i + 1}. ${t.luogo}`] : []));

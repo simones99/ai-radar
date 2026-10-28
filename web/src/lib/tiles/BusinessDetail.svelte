@@ -116,7 +116,7 @@
     <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
       missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
       table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
-      <DotPlot label="Imprese che usano l'AI, per area" data={imprese} />
+      <DotPlot label="Imprese che usano l'AI, per area" data={imprese} sopra />
     </Block>
     <Block title="Imprese europee che usano l'AI, {euYear}" note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI. Punto vuoto: anno prima."
       missing={euRows.length ? null : MISSING} cite={eu ? [{ t: 'Fonte: ' }, { t: 'Eurostat, isoc_eb_ai', href: eu.url }, { t: '.' }] : null}

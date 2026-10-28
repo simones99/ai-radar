@@ -4,7 +4,7 @@
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import { owidLatestByEntity, owidPoints, radarRows, tNum } from '../data/derive';
-  import { exact, nf } from '../text/format';
+  import { exact, monthShort, nf } from '../text/format';
   import { paese } from '../text/paesi';
   import { barsTable, dotsTable, fmtYm, owidCite, seriesTable, MISSING } from './cite';
   import Detail from './Detail.svelte';
@@ -16,6 +16,8 @@
   const o = $derived(data.owid);
   const s = (id: string) => o?.serie?.[id];
   const pctF = (v: number) => `${nf(v, v && v < 10 ? 1 : 0)}%`;
+  /** Sull'asse x un anno intero si scrive com'è; una data dentro l'anno, quando i dati coprono poco più di un anno, come «dic 2025». */
+  const quando = (x: number) => (Number.isInteger(x) ? String(x) : `${monthShort(fmtYm(x))} ${Math.floor(x)}`);
   const lines = (id: string, ents: string[]) => ents
     .map((e) => ({ name: paese(e), hot: e === 'Italy', pts: owidPoints(o, id, e).map((p) => ({ x: tNum(p.t), y: p.v })) }))
     .filter((x) => x.pts.length);
@@ -40,7 +42,7 @@
 
 <Detail {tile} {head} {onclose}>
   <Block span={8} title="Chi usa l'AI generativa" note="Quota stimata della popolazione che usa strumenti di AI generativa, %." missing={uso.length ? null : MISSING} cite={owidCite(s('uso_genai'))} table={seriesTable(uso, 'Mese', fmtYm)}>
-    <LineChart label="Uso dell'AI generativa" series={uso} yFormat={pctF} />
+    <LineChart label="Uso dell'AI generativa" series={uso} yFormat={pctF} xFormat={quando} />
   </Block>
   <Block span={4} title="In Europa, 16-74 anni" note="Persone che hanno usato l'AI generativa, ultimo anno. Punto vuoto: anno prima." missing={ue.length ? null : MISSING} cite={owidCite(s('uso_genai_ue'))} table={dotsTable(ue, ['Paese', 'Ultimo anno', 'Anno prima'])}>
     <DotPlot label="Uso dell'AI generativa in Europa" data={ue} />
@@ -53,7 +55,7 @@
     <Bars label="Sviluppatori che usano strumenti AI" data={dev} format={pctF} />
   </Block>
   <Block title="Annunci di lavoro che chiedono l'AI" note="Quota degli annunci online che chiedono competenze AI, %." missing={annunci.length ? null : MISSING} cite={owidCite(s('annunci_ai'))} table={{ ...seriesTable(annunci, 'Anno'), format: exact }}>
-    <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={pctF} />
+    <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={pctF} xFormat={quando} />
   </Block>
   <Block title="Competenze più chieste negli annunci" note="Annunci che citano la competenza ogni 10.000, media tra i Paesi."
     missing={jobs.length ? null : 'Serve la chiave gratuita di Adzuna (ADZUNA_APP_ID e ADZUNA_APP_KEY nei secret del repository).'}

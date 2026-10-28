@@ -3,7 +3,7 @@
   import { nf } from '../text/format';
   import { FONT, measureText } from './labels';
 
-  let { data, label, unit = '%', maxV = 100, altro = null }: {
+  let { data, label, unit = '%', maxV = 100, altro = null, sopra = false }: {
     /** now null: si disegna solo il punto vuoto, senza zero; la nota la scrive chi usa il grafico */
     data: { k: string; now: number | null; was?: number | null; hot?: boolean }[];
     label: string;
@@ -11,13 +11,15 @@
     maxV?: number;
     /** Il punto vuoto è un'altra serie (es. «UE»), non l'anno prima: si scrivono i due valori, «51 · UE 63», dopo il punto più a destra. */
     altro?: string | null;
+    /** I nomi sopra le righe anche quando starebbero a sinistra: come il grafico accanto, nella stessa riga della pagina. */
+    sopra?: boolean;
   } = $props();
 
   let cw = $state(0);
   const w = $derived(Math.max(cw, 280));
   const lw = $derived(Math.max(48, ...data.map((d) => measureText(d.k, `12px ${FONT}`))) + 16);
   // nomi più larghi di metà grafico (settori, barriere): il nome va sopra la riga dei punti, che prende tutta la larghezza
-  const above = $derived(lw > w * 0.45);
+  const above = $derived(sopra || lw > w * 0.45);
   const rh = $derived(above ? 40 : 24);
   const m = $derived({ l: above ? 8 : lw, r: 40, t: 8, b: 24 });
   const H = $derived(m.t + m.b + data.length * rh);

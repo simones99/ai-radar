@@ -152,6 +152,11 @@ export function headNorme(d: Dataset, today: Date): Head {
 }
 
 // ---------------------------------------------------------------- competenze
+/** Le competenze che la card Competenze nomina in home: chi entra in Impara ora e, se qualcuna entra, chi esce. La porta Per te non le ripete. */
+export function nomiFacciaCompetenze(rows: RadarRowM[]): Set<string> {
+  const { inn, out } = radarChanges(rows);
+  return new Set(inn.length ? [...inn, ...out].map((r) => r.id) : []);
+}
 export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return null;
@@ -267,7 +272,7 @@ const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: 
 const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
 
-// Regole 1-3 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
+// Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
 function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM } | null {
   // 1. entrate e uscite da Impara ora
   const { inn, out } = radarChanges(sure);
@@ -298,6 +303,10 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
       : [{ t: 'Domanda di ' }, { t: big.breve, em: true }, { t: ` da ${per10k(big.dp as number)} a ${per10k(big.domanda)} annunci ogni 10mila` }];
     return { title, competenza: big };
   }
+
+  // 4. la competenza con più slancio, se cresce più dell'AI
+  const top = sure.slice().sort((a, b) => b.slancio - a.slancio)[0];
+  if (top && top.slancio > 0) return { title: [{ t: top.breve, em: true }, { t: ` ${verbo([top], 'cresce', 'crescono')} più di tutte: ${signedPct(top.slancio)} sull'AI in 6 mesi` }], competenza: top };
   return null;
 }
 
@@ -306,7 +315,10 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!d.radar || !rows.length) return NO_DATA;
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
-  const sure = rows.filter((r) => !r.incerto); // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
+  // i dati incerti non fanno notizia (spec Radar 2.0, 7.4); le competenze che la card Competenze nomina accanto, nemmeno:
+  // la porta dice un'altra cosa (così la regola 1 resta per le uscite delle settimane in cui non entra nessuno)
+  const nellaCard = nomiFacciaCompetenze(rows);
+  const sure = rows.filter((r) => !r.incerto && !nellaCard.has(r.id));
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza
   const conRuolo = ruolo ? { scelta: ruolo.nome } : {};
   const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...(ruolo && { params: { ruolo: ruolo.id } }) });
@@ -314,7 +326,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
   if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo };
 
-  // 4. riserva: con un ruolo, quante delle sue competenze
+  // 5. riserva, quando non resta nessuna competenza: con un ruolo, quante delle sue competenze
   const base = ruolo ? rows.filter((r) => r.ruoli?.includes(ruolo.id)) : rows;
   const daImparare = base.filter((r) => r.quadrante === 'impara-ora').length;
   const quante = ruolo ? `${daImparare} delle ${base.length} competenze di ${ruolo.nome}` : `${daImparare} ${daImparare === 1 ? 'competenza' : 'competenze'} su ${rows.length}`;

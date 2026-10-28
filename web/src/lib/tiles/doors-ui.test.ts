@@ -9,9 +9,9 @@ import Doors from './Doors.svelte';
 describe('Doors', () => {
   it('due porte come link alla card della notizia', () => {
     render(Doors, { data: FIXTURE as Dataset, today });
-    const perTe = screen.getByRole('link', { name: /Per te.*Su cosa formarti.*MCP entra tra le competenze da imparare ora/ });
-    expect(perTe).toHaveAttribute('href', '#competenze/mcp');
-    expect(perTe.querySelector('em')).toHaveTextContent('MCP');
+    const perTe = screen.getByRole('link', { name: /Per te.*Su cosa formarti.*Agenti AI crescono più di tutte/ });
+    expect(perTe).toHaveAttribute('href', '#competenze/agenti');
+    expect(perTe.querySelector('em')).toHaveTextContent('Agenti AI');
     const italia = screen.getByRole('link', { name: /Per la tua organizzazione.*L'AI in Italia.*A ottobre esce State of AI Report/ });
     expect(italia).toHaveAttribute('href', '#rapporti/state-of-ai-report');
     expect(screen.getByText('Radar delle competenze · dati al 15 ott 2026')).toBeInTheDocument();
@@ -28,15 +28,15 @@ describe('Doors', () => {
     it('l’etichetta dice il ruolo e il link apre la card con il ruolo', () => {
       ruolo.scegli('prodotto');
       render(Doors, { data: FIXTURE as Dataset, today });
-      const perTe = screen.getByRole('link', { name: /Per te · Prodotto.*Su cosa formarti.*RAG esce da Impara ora/ });
-      expect(perTe).toHaveAttribute('href', '#competenze/rag?ruolo=prodotto');
+      const perTe = screen.getByRole('link', { name: /Per te · Prodotto.*Su cosa formarti.*Agenti AI crescono più di tutte/ });
+      expect(perTe).toHaveAttribute('href', '#competenze/agenti?ruolo=prodotto');
     });
     it('senza storage del browser: la porta di oggi', () => {
       ruolo.scegli('prodotto');
       vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('SecurityError'); });
       try {
         render(Doors, { data: FIXTURE as Dataset, today });
-        expect(screen.getByRole('link', { name: /^Per te Su cosa formarti MCP entra/ })).toHaveAttribute('href', '#competenze/mcp');
+        expect(screen.getByRole('link', { name: /^Per te Su cosa formarti Agenti AI crescono/ })).toHaveAttribute('href', '#competenze/agenti');
       } finally {
         vi.restoreAllMocks();
       }
@@ -45,10 +45,10 @@ describe('Doors', () => {
       render(Doors, { data: FIXTURE as Dataset, today });
       ruolo.scegli('prodotto');
       await tick();
-      expect(screen.getByRole('link', { name: /Per te · Prodotto/ })).toHaveAttribute('href', '#competenze/rag?ruolo=prodotto');
+      expect(screen.getByRole('link', { name: /Per te · Prodotto/ })).toHaveAttribute('href', '#competenze/agenti?ruolo=prodotto');
       ruolo.scegli(null);
       await tick();
-      expect(screen.getByRole('link', { name: /Per te.*MCP entra/ })).toHaveAttribute('href', '#competenze/mcp');
+      expect(screen.getByRole('link', { name: /^Per te Su cosa formarti Agenti AI crescono/ })).toHaveAttribute('href', '#competenze/agenti');
     });
   });
   describe('con un settore ricordato', () => {

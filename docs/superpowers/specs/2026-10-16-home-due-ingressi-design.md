@@ -91,10 +91,13 @@ Vince la prima regola che trova qualcosa.
 
 ### Porta "Per te · Su cosa formarti" (da `radar.json`)
 
+La porta non ripete la card Competenze, che le sta accanto: le competenze che la card nomina (chi entra in "Impara ora" e, se qualcuna entra, chi esce) non fanno notizia nella porta, in nessuna regola. Così la regola 1 vale per le settimane in cui escono competenze e non ne entra nessuna, e una competenza uscita non torna come "passa a Da consolidare". *(Aggiunto il 2026-10-28, passo grafico dopo il polish.)*
+
 1. Una o più competenze entrano o escono da "Impara ora" (`radarChanges`). Titolo: "**MCP** entra tra le competenze da imparare ora"; con più nomi "**MCP** e **RAG** entrano…"; se ci sono anche uscite: "…; **LLMOps** esce". Target: Competenze, elemento = la prima competenza che entra (o esce, se nessuna entra).
 2. Altri cambi di quadrante. Titolo: "**MCP** e **Multimodali** passano a Da provare" se il quadrante d'arrivo è lo stesso; altrimenti "**MCP** passa a Da provare" per la competenza con lo spostamento più grande. Target: quella competenza.
 3. Lo spostamento più grande, se è di almeno `MOVE_MIN` (10 punti) su slancio o domanda. Titolo: "**DB vettoriali** perde 33 punti di slancio" oppure "guadagna". Target: quella competenza.
-4. Riserva: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento.
+4. La competenza con più slancio, se cresce più dell'AI. Titolo: "**Agenti AI** crescono più di tutte: +52% sull'AI in 6 mesi". Target: quella competenza.
+5. Riserva, quando non resta nessuna competenza: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento.
 
 Riga meta: "Radar delle competenze · dati al {data di radar.generato}".
 Senza radar: titolo vuoto, meta "Dati non ancora disponibili", target `null`.

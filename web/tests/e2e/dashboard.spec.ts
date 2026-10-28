@@ -29,7 +29,7 @@ const seriousViolations = async (page: Page) =>
 test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText("Su cosa formarti e cosa succede all'AI in Italia");
-  await expect(page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Agenti AI crescono più di tutte/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /A ottobre esce State of AI Report/ })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Su cosa formarti' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: "L'AI in Italia" })).toBeVisible();
@@ -44,10 +44,10 @@ test('la settimana dell’8: articolo eliso nella data in testa', async ({ page 
 
 test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await page.getByRole('link', { name: /Agenti AI crescono più di tutte/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
-  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page).toHaveURL(/#competenze\/agenti$/);
+  await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
 });
 
 test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza', async ({ page }) => {
@@ -61,14 +61,14 @@ test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza'
 
 test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await page.getByRole('link', { name: /Agenti AI crescono più di tutte/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
   await page.goForward();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page).toHaveURL(/#competenze\/agenti$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -79,9 +79,9 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
   await page.goto('/');
   await page.locator('#tile-business .face').click();
   await expect(page.locator('#detail-business')).toBeVisible();
-  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await page.getByRole('link', { name: /Agenti AI crescono più di tutte/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page).toHaveURL(/#competenze\/agenti$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -90,13 +90,13 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
 test('porta verso la card già aperta: riapre la competenza e porta il focus al titolo', async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
   await page.goto('/');
-  const porta = page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ });
+  const porta = page.getByRole('link', { name: /Agenti AI crescono più di tutte/ });
   await porta.click();
-  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
   await page.getByRole('link', { name: '← Tutte le competenze' }).click();
   await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await porta.click();
-  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
   await expect(page.locator('#h-competenze')).toBeFocused();
   await scrollSettled(page);
   await expect(page.locator('#h-competenze')).toBeInViewport();
@@ -214,9 +214,9 @@ test('porta Per te: scelto un ruolo nella card, la home lo mostra e la porta ria
   await page.keyboard.press('Escape');
   await expect(page.locator('section.detail')).toHaveCount(0);
   const porta = page.getByRole('link', { name: /Per te · Prodotto/ });
-  await expect(porta).toContainText('RAG esce da Impara ora');
+  await expect(porta).toContainText('Agenti AI crescono più di tutte');
   await porta.click();
-  await expect(page).toHaveURL(/#competenze\/rag\?ruolo=prodotto$/);
+  await expect(page).toHaveURL(/#competenze\/agenti\?ruolo=prodotto$/);
   await page.getByRole('link', { name: '← Tutte le competenze' }).click();
   await expect(premuto(page)).toHaveText('Prodotto');
 });

@@ -14,12 +14,20 @@ const radar = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({
 });
 
 describe('porta Per te', () => {
-  it('1. chi entra e chi esce da Impara ora', () => {
-    const p = doorPerTe(d, today);
-    expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
-    expect(p.title[0]).toEqual({ t: 'MCP', em: true });
+  it('non ripete la card Competenze: chi entra e chi esce lo dice la card, la porta dice un’altra notizia', () => {
+    const p = doorPerTe(d, today); // la card: «MCP entra tra le competenze da imparare ora; RAG esce»
+    expect(text(p.title)).toBe("Agenti AI crescono più di tutte: +52% sull'AI in 6 mesi");
+    expect(p.title[0]).toEqual({ t: 'Agenti AI', em: true });
     expect(p.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
-    expect(p.target).toEqual({ tema: 'competenze', elemento: 'mcp' });
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'agenti' });
+  });
+  it('non ripete la card nemmeno con altre parole: chi esce da Impara ora non «passa a Da consolidare»', () => {
+    const p = doorPerTe(radar([
+      { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' },
+      { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' },
+      { quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' },
+    ]), today);
+    expect(text(p.title)).toBe('C2 passa a Da provare');
   });
   it('1. solo uscite', () => {
     const p = doorPerTe(radar([{ quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' }]), today);
@@ -31,12 +39,12 @@ describe('porta Per te', () => {
     const p = doorPerTe({ radar: { ...r.radar!, generato: '2026-10-11' } }, today);
     expect(p.meta).toBe('Radar delle competenze · dati all’11 ott 2026');
   });
-  it('1. più competenze che entrano, nessuna esce', () => {
+  it('1. più competenze che escono, nessuna entra', () => {
     const p = doorPerTe(radar([
-      { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' },
-      { quadrante: 'impara-ora', slancio: 0.6, domanda: 0.8, slancio_prec: 0.6, domanda_prec: 0.45, quadrante_prec: 'consolida' },
+      { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' },
+      { quadrante: 'consolida', slancio: 0.35, domanda: 0.8, slancio_prec: 0.6, domanda_prec: 0.8, quadrante_prec: 'impara-ora' },
     ]), today);
-    expect(text(p.title)).toBe('C0 e C1 entrano tra le competenze da imparare ora');
+    expect(text(p.title)).toBe('C0 e C1 escono da Impara ora');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
   it('2. altri cambi verso lo stesso quadrante: tutti i nomi', () => {
@@ -75,11 +83,13 @@ describe('porta Per te', () => {
   describe('nomi plurali: il verbo al plurale anche con una sola competenza', () => {
     const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
     const esce = { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' } as const;
-    it('1. entrano, escono', () => {
-      expect(text(doorPerTe(radar([{ ...entra, breve: 'Multimodali', plurale: true }]), today).title)).toBe('Multimodali entrano tra le competenze da imparare ora');
+    it('1. escono', () => {
       expect(text(doorPerTe(radar([{ ...esce, breve: 'DB vettoriali', plurale: true }]), today).title)).toBe('DB vettoriali escono da Impara ora');
-      expect(text(doorPerTe(radar([{ ...entra, breve: 'Multimodali', plurale: true }, esce]), today).title))
-        .toBe('Multimodali entrano tra le competenze da imparare ora; C1 esce');
+    });
+    it('4. crescono', () => {
+      // chi entra lo dice la card: la porta passa alla competenza con più slancio, che qui è un'altra
+      const p = doorPerTe(radar([entra, { breve: 'Agenti AI', plurale: true, quadrante: 'prova', slancio: 0.65, domanda: 0.2 }]), today);
+      expect(text(p.title)).toMatch(/^Agenti AI crescono più di tutte: \+\d+% sull'AI in 6 mesi$/);
     });
     it('2. passano', () => {
       const p = doorPerTe(radar([{ breve: 'Multimodali', plurale: true, quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' }]), today);
@@ -115,14 +125,18 @@ describe('porta Per te con un ruolo', () => {
     expect(p.scelta).toBe('Prodotto');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1', params: { ruolo: 'prodotto' } });
   });
-  it('1. sul ruolo: solo le entrate e uscite delle sue competenze', () => {
+  it('1. sul ruolo: solo le uscite delle sue competenze', () => {
     const esce = { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' } as const;
-    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['prodotto'] }, { ...esce, ruoli: ['dati'] }]), today, 'prodotto');
-    expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
+    const p = doorPerTe(conRuoli([{ ...esce, ruoli: ['prodotto'] }, { ...esce, ruoli: ['dati'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C0 esce da Impara ora');
+  });
+  it('sul ruolo non ripete la card: chi entra lo dice la card, anche se è del ruolo', () => {
+    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['prodotto'] }, { ...passa, ruoli: ['prodotto'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C1 passa a Da provare');
   });
   it('nessuna regola scatta sul ruolo: le stesse regole su tutte le competenze, con il ruolo nell’etichetta e nel link', () => {
-    const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['dati'] }, { ruoli: ['prodotto'] }]), today, 'prodotto');
-    expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
+    const p = doorPerTe(conRuoli([{ ...passa, ruoli: ['dati'] }, { ruoli: ['prodotto'] }]), today, 'prodotto');
+    expect(text(p.title)).toBe('C0 passa a Da provare');
     expect(p.scelta).toBe('Prodotto');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0', params: { ruolo: 'prodotto' } });
   });
@@ -133,8 +147,8 @@ describe('porta Per te con un ruolo', () => {
   it('senza ruolo («Tutti») o con un ruolo che non c’è: la porta di oggi', () => {
     for (const r of [null, 'boh']) {
       const p = doorPerTe(d, today, r);
-      expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
-      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: 'mcp' });
+      expect(text(p.title)).toBe("Agenti AI crescono più di tutte: +52% sull'AI in 6 mesi");
+      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: 'agenti' });
       expect(p).not.toHaveProperty('ruolo');
     }
   });

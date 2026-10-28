@@ -749,7 +749,7 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
   await expect(page.locator('.intro')).toBeVisible();
 });
 
-test('1920px: foto piccola accanto al titolo, il primo grafico nella finestra, grafici almeno 3 per riga', async ({ page }) => {
+test('1920px: foto piccola accanto al titolo, il primo grafico nella finestra, nessuna riga di blocchi lasciata a metà', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/#modelli');
   await expect(page.locator('#detail-modelli')).toBeVisible();
@@ -759,7 +759,16 @@ test('1920px: foto piccola accanto al titolo, il primo grafico nella finestra, g
   expect(foto.width).toBeLessThan(hero.width / 2);
   expect(titolo.x + titolo.width).toBeLessThanOrEqual(foto.x);
   await expect(page.locator('#detail-modelli .blk').first()).toBeInViewport();
-  const tops = await page.locator('#detail-modelli .blk').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
-  const perRiga = Math.max(...Object.values(tops.reduce<Record<number, number>>((m, t) => ({ ...m, [t]: (m[t] ?? 0) + 1 }), {})));
-  expect(perRiga).toBeGreaterThanOrEqual(3);
+  // dodici colonne a ogni larghezza: in ogni riga i blocchi vanno dal bordo sinistro della griglia al destro
+  const griglia = await box(page, '#detail-modelli .blocks');
+  const blocchi = await page.locator('#detail-modelli .blk').evaluateAll((els) => els.map((e) => {
+    const r = e.getBoundingClientRect();
+    return { top: Math.round(r.top), x0: r.left, x1: r.right };
+  }));
+  const righe = Object.values(blocchi.reduce<Record<number, { x0: number; x1: number }[]>>((m, b) => ({ ...m, [b.top]: [...(m[b.top] ?? []), b] }), {}));
+  expect(righe.length).toBeGreaterThan(1);
+  for (const riga of righe) {
+    expect(Math.min(...riga.map((b) => b.x0))).toBeCloseTo(griglia.x, 0);
+    expect(Math.max(...riga.map((b) => b.x1))).toBeCloseTo(griglia.x + griglia.width, 0);
+  }
 });

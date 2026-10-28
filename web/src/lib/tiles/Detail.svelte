@@ -90,7 +90,6 @@
   .ico { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; }
   @media (hover: hover) { .copy:hover, .close:hover { background: var(--line-2); } }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* dodici colonne a ogni larghezza: i blocchi tengono le loro misure (4, 6, 8, 12) e le coppie restano affiancate */
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }
-  /* da 1200px: grafici in colonne da almeno 360px */
-  @media (min-width: 1200px) { .blocks { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); grid-auto-flow: dense; } }
 </style>

@@ -73,7 +73,7 @@
 {/snippet}
 
 <Detail {tile} {head} {onclose}>
-  <!-- ogni sezione è una sottogriglia: da 1200px il riempimento «dense» non porta i blocchi fuori dalla loro sezione -->
+  <!-- ogni sezione è una sottogriglia con il suo titolo: i blocchi non escono dalla loro sezione -->
   <div class="sezione" role="group" aria-labelledby="bz-investimenti">
     <h3 class="group" id="bz-investimenti">Investimenti</h3>
     <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
@@ -146,7 +146,8 @@
 
 <style>
   .sezione { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; gap: var(--s2); }
-  @media (min-width: 1200px) { .sezione { grid-auto-flow: dense; } }
+  /* con un numero dispari di blocchi da metà riga l'ultimo, da solo, prende tutta la riga (Adozione con «Tutti») */
+  .sezione > :global(section.blk.w6:last-of-type:nth-of-type(odd)) { grid-column: 1 / -1; }
   .group { grid-column: 1 / -1; font-weight: 600; font-size: 14px; line-height: 24px; color: var(--fg-2); padding-top: var(--s2); }
   .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
   .scelta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); font-size: 14px; line-height: 24px; color: var(--fg-2); }

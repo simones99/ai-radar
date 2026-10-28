@@ -59,7 +59,7 @@
     cite={epCite} table={{ cols: ['Anno', '% con pesi aperti'], rows: open.map((o) => [o.k, o.v]) }}>
     <Bars label="Quota di modelli con pesi aperti" data={open} format={(v) => `${nf(v)}%`} />
   </Block>
-  <Block span={12} breve title="Chi costruisce i modelli, area per area" note="USA, Cina, UE, Regno Unito e gli altri Paesi: capacità, calcolo e quanti modelli di grande scala addestra ognuno sono in GeopoliticAI.">
+  <Block span={12} title="Chi costruisce i modelli, area per area" note="USA, Cina, UE, Regno Unito e gli altri Paesi: capacità, calcolo e quanti modelli di grande scala addestra ognuno sono in GeopoliticAI.">
     <p><a class="vai" href={toHash('geopoliticai')}>Vai a GeopoliticAI →</a></p>
   </Block>
   <Block span={12} title="Ultimi modelli notevoli" missing={ep?.recenti?.length ? null : 'Dati di Epoch AI non disponibili.'} cite={epCite}>

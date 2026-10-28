@@ -4,7 +4,7 @@
   import { scaleLinear } from 'd3-scale';
   import { radarRows, type RadarRowM } from '../data/derive';
   import type { Dataset, Quadrant } from '../data/types';
-  import { FONT, measureText, placeLabels, type Box } from '../charts/labels';
+  import { FONT, leader, measureText, placeLabels, type Box } from '../charts/labels';
 
   let { data }: { data: Dataset } = $props();
 
@@ -16,8 +16,9 @@
   const h = $derived(Math.max(ch, 180));
   const P = 12; // margine interno dei quadranti
   const G = 3; // la fuga tra i quadranti
+  const B = P + 18; // la fascia dei nomi, in alto e in basso: i punti non ci arrivano
   const x = $derived(scaleLinear([-0.04, 1.04], [0, w]));
-  const y = $derived(scaleLinear([-0.04, 1.04], [h, 0]));
+  const y = $derived(scaleLinear([-0.04, 1.04], [h - B, B]));
   const quad = $derived([
     { id: 'consolida' as Quadrant, x0: 0, y0: 0, x1: x(0.5) - G / 2, y1: y(0.5) - G / 2, a: 'start', ty: 'top' },
     { id: 'impara-ora' as Quadrant, x0: x(0.5) + G / 2, y0: 0, x1: w, y1: y(0.5) - G / 2, a: 'end', ty: 'top' },
@@ -39,9 +40,11 @@
     const items = rows.filter((r) => r.quadrante === 'impara-ora')
       .sort((a, b) => Number(b.changed) - Number(a.changed))
       .map((r) => ({ id: r.id, x: x(r.x), y: y(r.y), w: measureText(r.breve, `600 13px ${FONT}`), h: LH, r }));
-    const boxes = placeLabels(items, { x0: x(0.5) + G, y0: 2, x1: w - 2, y1: y(0.5) - G }, obstacles, 9, () => true);
+    // Il nome va accanto al suo punto anche se la competenza è già uscita dal quadrante (lo cambia solo dopo due mesi).
+    const boxes = placeLabels(items, { x0: 2, y0: 2, x1: w - 2, y1: h - 2 }, obstacles, 9, () => true);
     return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });
+  const suBlu = (b: Box) => (b.x0 + b.x1) / 2 > x(0.5) && (b.y0 + b.y1) / 2 < y(0.5); // per il colore dell'alone
 </script>
 
 <span class="radar" bind:clientWidth={cw} bind:clientHeight={ch}>
@@ -64,7 +67,11 @@
       <circle class="dot hot" cx={x(r.x)} cy={y(r.y)} r="6" />
     {/each}
     {#each etichette as it (it.id)}
-      <text class="lbl halo" x={it.box.x0} y={it.box.y0 + LH - 4}>{it.r.breve}</text>
+      {@const l = leader(it, it.box)}
+      {#if l}<line class="leader" x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
+    {/each}
+    {#each etichette as it (it.id)}
+      <text class="lbl halo" class:blu={suBlu(it.box)} x={it.box.x0} y={it.box.y0 + LH - 4}>{it.r.breve}</text>
     {/each}
   </svg>
 </span>
@@ -81,6 +88,8 @@
   .anello { fill: none; stroke: var(--accent); stroke-width: 1.5; }
   .scia { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 2 3; stroke-linecap: round; }
   .prev { fill: var(--card); stroke: var(--accent); stroke-width: 1.25; }
+  .leader { stroke: var(--line-2); }
   .lbl { font: 600 13px var(--font); fill: var(--fg); }
-  .halo { stroke: color-mix(in srgb, var(--accent) 14%, var(--card)); }
+  .halo { stroke: color-mix(in srgb, var(--fg) 4%, var(--card)); }
+  .halo.blu { stroke: color-mix(in srgb, var(--accent) 14%, var(--card)); }
 </style>

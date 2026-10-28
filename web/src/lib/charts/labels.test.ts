@@ -31,6 +31,30 @@ describe('placeLabels', () => {
     const m = placeLabels(items, band, [band]);
     expect(overlap(m.get('a')!, m.get('b')!)).toBe(false);
   });
+  it('attorno al punto è tutto occupato: va nel posto libero più vicino, non sopra gli ostacoli', () => {
+    const ring = { x0: 120, y0: 100, x1: 280, y1: 200 };
+    const b = placeLabels([{ id: 'a', x: 200, y: 150, w: 60, h: 16 }], bounds, [ring]).get('a')!;
+    expect(overlap(b, ring)).toBe(false);
+    expect(Math.min(Math.abs(b.y1 - 100), Math.abs(b.y0 - 200), Math.abs(b.x1 - 120), Math.abs(b.x0 - 280))).toBeLessThanOrEqual(4);
+  });
+  it('oltre il raggio non cerca: ripiega sulla posizione che copre meno', () => {
+    const ring = { x0: 120, y0: 100, x1: 280, y1: 200 };
+    const b = placeLabels([{ id: 'a', x: 200, y: 150, w: 60, h: 16 }], bounds, [ring], 10, undefined, 20).get('a')!;
+    expect(overlap(b, ring)).toBe(true);
+  });
+  it('un’etichetta lontana tiene libera la sua linea di richiamo', () => {
+    const ring = { x0: 120, y0: 100, x1: 280, y1: 200 };
+    const items = [{ id: 'a', x: 200, y: 150, w: 60, h: 16 }, { id: 'b', x: 200, y: 150, w: 60, h: 16 }];
+    const m = placeLabels(items, bounds, [ring]);
+    const a = m.get('a')!, b = m.get('b')!;
+    const l = leader(items[0], a)!;
+    const crosses = (bx: Box) => [0.25, 0.5, 0.75].some((t) => {
+      const px = 200 + (l.x2 - 200) * t, py = 150 + (l.y2 - 150) * t;
+      return px > bx.x0 && px < bx.x1 && py > bx.y0 && py < bx.y1 && !(px > ring.x0 && px < ring.x1 && py > ring.y0 && py < ring.y1);
+    });
+    expect(overlap(a, b)).toBe(false);
+    expect(crosses(b)).toBe(false);
+  });
   it('linea di richiamo solo se l’etichetta è lontana', () => {
     expect(leader({ id: 'a', x: 10, y: 10, w: 10, h: 10 }, { x0: 20, y0: 5, x1: 40, y1: 15 })).toBeNull();
     expect(leader({ id: 'a', x: 10, y: 10, w: 10, h: 10 }, { x0: 60, y0: 60, x1: 80, y1: 76 })).toEqual({ x2: 60, y2: 60 });

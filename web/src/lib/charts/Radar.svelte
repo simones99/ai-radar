@@ -89,7 +89,8 @@
       return { x0: x0 - 4, y0: q.y - 14, x1: x0 + tw + 4, y1: q.y + 4 };
     });
     obstacles.push(...SL.map((s) => s.box), ...segni);
-    const order = (r: RadarRowM) => (r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
+    // Sul telefono le etichette di Impara ora, che si disegnano sempre, scelgono il posto prima di quelle che possono saltare.
+    const order = (r: RadarRowM) => (narrow ? (r.quadrante === 'impara-ora' ? 0 : 2) - Number(r.changed) : r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
       const hot = r.quadrante === 'impara-ora';
       const lines = [r.breve, ...(r.changed && !narrow ? [cambio(r, quadranti)] : [])];
@@ -152,14 +153,17 @@
       <text class="t12" transform="translate(12,{(y(0) + y(1)) / 2}) rotate(-90)" text-anchor="middle">Annunci ogni 10mila →</text>
     </g>
 
+    <!-- prima tutte le scie, poi tutti i punti: una scia non passa mai sopra il punto di un'altra competenza -->
+    {#each scie as s (s.id)}
+      {@const hot = rows.find((r) => r.id === s.id)?.quadrante === 'impara-ora'}
+      <g class="sc" class:dim={dim(s.id)} class:altro={altro(s.id)} aria-hidden="true">
+        <path class="scia" d={s.d} fill="url(#{uid}-s-{s.id})" />
+        <circle class="prev" class:hot cx={s.x0} cy={s.y0} r="1.75" />
+      </g>
+    {/each}
     {#each rows as r (r.id)}
       {@const hot = r.quadrante === 'impara-ora'}
-      {@const s = scia.get(r.id)}
       <g class="pt" class:dim={dim(r.id)} class:altro={altro(r.id)}>
-        {#if s}
-          <path class="scia" d={s.d} fill="url(#{uid}-s-{r.id})" aria-hidden="true" />
-          <circle class="prev" class:hot cx={s.x0} cy={s.y0} r="1.75" aria-hidden="true" />
-        {/if}
         <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={rr(r)} aria-hidden="true" />
         <!-- il punto è un link: Tab lo raggiunge, Invio lo apre; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
         <a class="pick" href={href?.(r.id)} onclick={(e) => { if (onpick) { e.preventDefault(); onpick(r.id); } }}
@@ -172,10 +176,13 @@
     {/each}
 
     <g class="lbls" aria-hidden="true">
+      <!-- prima tutte le linee di richiamo, poi tutti i nomi: una linea non passa mai sopra un nome -->
       {#each layout as it (it.id)}
         {@const l = leader(it, it.box)}
-        {@const tono = hotAt(it.box) ? 'halo-hot' : 'halo-q'}
         {#if l}<line class="leader" class:dim={dim(it.id)} class:altro={altro(it.id)} x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
+      {/each}
+      {#each layout as it (it.id)}
+        {@const tono = hotAt(it.box) ? 'halo-hot' : 'halo-q'}
         <text class:dim={dim(it.id)} class:altro={altro(it.id)} x={it.box.x0} y={it.box.y0 + LH - 4}>
           {#each it.lines as t, i (i)}
             <tspan x={it.box.x0} dy={i ? LH : 0} class="halo {tono} {i === 0 ? (it.hot ? 'lb-hot' : 't12') : 'note'}">{t}</tspan>
@@ -213,10 +220,10 @@
   .halo-q { stroke: var(--q); } .halo-hot { stroke: var(--q-hot); }
   .lb-hot { font: 600 13px var(--font); fill: var(--fg); }
   .note { font: 400 12px var(--font); fill: var(--fg-3); }
-  .pt, .lbls text, .leader { transition: opacity .15s; }
+  .pt, .sc, .lbls text, .leader { transition: opacity .15s; }
   /* altri ruoli: i segni si attenuano con l'opacità, il testo con il colore, che resta AA */
-  .pt.altro, .leader.altro { opacity: .35; }
+  .pt.altro, .sc.altro, .leader.altro { opacity: .35; }
   .lbls text.altro tspan { fill: var(--fg-3); font-weight: 400; }
   .dim { opacity: .18; }
-  @media (prefers-reduced-motion: reduce) { .pt, .lbls text, .leader, .ring { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .pt, .sc, .lbls text, .leader, .ring { transition: none; } }
 </style>

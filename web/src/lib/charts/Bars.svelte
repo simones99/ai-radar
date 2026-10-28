@@ -25,6 +25,15 @@
   const xh = $derived(scaleLinear([0, max(data, (d) => d.v) ?? 1], [ml, w - 48]));
   /** Si scrive la barra in evidenza e una ogni "step", ma non quella che starebbe a meno di uno "step" dall'evidenza: le due etichette si toccherebbero. */
   const scritta = (i: number) => (hotLast && i === data.length - 1) || (i % step === 0 && (!hotLast || data.length - 1 - i >= step));
+  /** Il valore sopra la barra non si scrive se, largo com'è, toccherebbe una barra vicina più alta: resta nella tabella. */
+  const valore = (i: number) => {
+    if (hotLast && i === data.length - 1) return true;
+    const c = (x(data[i].k) ?? 0) + x.bandwidth() / 2, half = measureText(format(data[i].v), `400 12px ${FONT}`) / 2 + 2;
+    return data.every((d, j) => {
+      const x0 = x(d.k) ?? 0;
+      return j === i || x0 > c + half || x0 + x.bandwidth() < c - half || y(d.v) > y(data[i].v) - 4;
+    });
+  };
   const rows = $derived(data.map((d, i) => ({ ...d, hot: hotLast && i === data.length - 1 })).reverse());
 </script>
 
@@ -44,7 +53,7 @@
         {@const hot = hotLast && i === data.length - 1}
         <rect class="bar" class:hot x={x(d.k)} y={y(d.v)} width={x.bandwidth()} height={y(0) - y(d.v)} rx="6" />
         {#if scritta(i)}
-          <text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>
+          {#if valore(i)}<text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>{/if}
           <text class="t10" x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={height - 8} text-anchor="middle">{d.k}</text>
         {/if}
       {/each}

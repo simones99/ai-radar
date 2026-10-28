@@ -26,10 +26,12 @@
   const xTicks = $derived(powers(x.ticks(5), xLog).slice(0, 7));
   const yTicks = $derived(powers(y.ticks(5), yLog).slice(0, 7));
   const labelled = $derived(pts.filter((p) => p.label));
+  // I punti con il nome stanno di solito nella nuvola: il nome va nel posto libero più vicino, in tutto il grafico, mai sopra un punto.
   const boxes = $derived(placeLabels(
     labelled.map((p, i) => ({ id: String(i), x: x(p.x), y: y(p.y), w: measureText(p.label as string, `600 12px ${FONT}`), h: 16 })),
     { x0: m.l, y0: m.t, x1: w - m.r, y1: height - m.b },
-    pts.map((p) => ({ x0: x(p.x) - 5, y0: y(p.y) - 5, x1: x(p.x) + 5, y1: y(p.y) + 5 })),
+    pts.map((p) => { const r = p.hot ? 7 : 5; return { x0: x(p.x) - r, y0: y(p.y) - r, x1: x(p.x) + r, y1: y(p.y) + r }; }),
+    10, undefined, Infinity,
   ));
 </script>
 
@@ -43,13 +45,15 @@
     <text class="t12" x={(m.l + w - m.r) / 2} y={height - 4} text-anchor="middle">{xTitle}</text>
     <text class="t12" x={m.l} y={m.t - 4}>{yTitle}</text>
     {#each pts as p, i (i)}<circle class="pt" class:hot={p.hot} cx={x(p.x)} cy={y(p.y)} r={p.hot ? 4.5 : 3} />{/each}
+    <!-- prima tutte le linee di richiamo, poi tutti i nomi: una linea non passa mai sopra un nome -->
     {#each labelled as p, i (i)}
       {@const b = boxes.get(String(i))}
-      {#if b}
-        {@const l = leader({ id: '', x: x(p.x), y: y(p.y), w: 0, h: 0 }, b)}
-        {#if l}<line class="leader" x1={x(p.x)} y1={y(p.y)} x2={l.x2} y2={l.y2} />{/if}
-        <text class="t12b halo" class:hot={p.hot} x={b.x0} y={b.y1 - 4}>{p.label}</text>
-      {/if}
+      {@const l = b && leader({ id: '', x: x(p.x), y: y(p.y), w: 0, h: 0 }, b)}
+      {#if l}<line class="leader" x1={x(p.x)} y1={y(p.y)} x2={l.x2} y2={l.y2} />{/if}
+    {/each}
+    {#each labelled as p, i (i)}
+      {@const b = boxes.get(String(i))}
+      {#if b}<text class="t12b halo" class:hot={p.hot} x={b.x0} y={b.y1 - 4}>{p.label}</text>{/if}
     {/each}
   </svg>
 </div>

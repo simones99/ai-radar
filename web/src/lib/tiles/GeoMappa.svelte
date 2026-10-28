@@ -293,8 +293,9 @@
 </Block>
 
 <style>
-  /* un colore per anello, con il testo bianco sopra a ≥ 4,5:1 */
-  .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #a8432c; --k-modelli: #b2461f;
+  /* un colore per anello, con il testo bianco sopra a ≥ 4,5:1. Data center e Modelli stanno accanto, sulla linea e nel filo europeo:
+     il verde e l'arancio si distinguono anche per chi non vede il rosso o il verde */
+  .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #3e7232; --k-modelli: #b2461f;
     --sito: color-mix(in srgb, var(--fg) 55%, transparent);
     display: grid; gap: var(--s2); min-width: 0; }
   .linea ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: relative; }
@@ -410,6 +411,7 @@
   .cifra.primo strong { font-size: 32px; line-height: 40px; color: var(--c); }
   .mod { font-size: 13px; line-height: 18px; color: var(--fg-2); }
   .vuoto { font-size: 15px; line-height: 22px; font-style: italic; color: var(--fg-2); }
-  .cifra.it { border-left: 3px dashed var(--accent); }
+  /* l'Italia ha accanto al nome il tratteggio del suo contorno sulla mappa */
+  .cifra.it dt::before { content: ''; display: inline-block; width: 16px; margin-right: 6px; vertical-align: middle; border-top: 2px dashed var(--accent); }
   .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; max-width: 72ch; }
 </style>

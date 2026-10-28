@@ -12,11 +12,15 @@
   const st = $derived(tileState(tile.source, data.status, face !== null));
   const photo = $derived(PHOTOS[tile.id]);
   let imgFailed = $state(false);
+  // nell'elenco accanto alla card aperta anche le card di spicco tornano alla foto
+  const Figura = $derived(compact ? undefined : tile.Figura);
 </script>
 
 <!-- aperta, il nome della transizione passa al dettaglio: due elementi con lo stesso nome annullano l'animazione -->
-<button type="button" class="face" class:compact aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
-  {#if imgFailed}
+<button type="button" class="face" class:compact class:spicco={Figura !== undefined} class:largo={tile.largo && !compact} aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
+  {#if Figura}
+    <span class="viz"><Figura {data} /></span>
+  {:else if imgFailed}
     <span class="ph ph-empty" aria-hidden="true">{photo.alt}</span>
   {:else}
     <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 560px) 88px, (max-width: 1040px) 50vw, 25vw"
@@ -69,8 +73,33 @@
     .face.compact:hover { background: var(--card); transform: none; }
     .face.compact:hover .ph img { transform: none; }
   }
+  /* la card di spicco: la figura al posto della foto, la cifra più grande */
+  .viz { display: block; aspect-ratio: 4 / 3; border-radius: var(--r-md); overflow: hidden; background: var(--card); min-height: 0; }
+  .spicco { grid-template-rows: minmax(0, 1fr) auto; }
+  .spicco .viz { aspect-ratio: auto; min-height: 240px; }
+  .spicco .fig { font-size: 48px; line-height: 52px; letter-spacing: -.04em; text-wrap: balance; }
+  .spicco .sent { color: var(--fg); max-width: 46ch; }
+  .spicco .u { display: block; margin: var(--s1) 0 0; font-size: 22px; line-height: 28px; }
+  /* larga: il testo accanto alla foto, più piccola */
+  @container (min-width: 480px) {
+    .largo { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-content: stretch; gap: var(--s3); }
+    .largo .ph { order: 2; aspect-ratio: auto; height: 100%; min-height: 200px; }
+    .largo .f-body { order: 1; align-content: end; padding: var(--s3) 0 var(--s2) var(--s2); }
+  }
+  /* di spicco e larga abbastanza: la figura è una striscia in alto, sotto la cifra e la frase affiancate */
+  @container (min-width: 720px) {
+    .spicco .viz { width: 100%; aspect-ratio: 5 / 2; min-height: 0; max-height: 360px; }
+    .spicco .f-body { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: var(--s4); align-items: end; padding: var(--s1) var(--s3) 0; }
+    .spicco .f-lab, .spicco .stale { grid-column: 1 / -1; }
+    .spicco .fig { font-size: clamp(44px, 6cqi, 64px); line-height: 1.05; }
+    .spicco .sent { padding-bottom: 4px; }
+  }
   @media (max-width: 560px) {
     .face { grid-template-columns: 88px minmax(0, 1fr); align-items: center; padding: var(--s1); border-radius: var(--r-md); }
+    .face.spicco { grid-template-columns: minmax(0, 1fr); align-items: stretch; padding: var(--s1) var(--s1) var(--s2); }
+    .spicco .viz { min-height: 0; aspect-ratio: 4 / 3; }
+    .spicco .f-body { padding-inline: var(--s1); gap: 4px; }
+    .spicco .fig { font-size: 36px; line-height: 40px; }
     .ph { aspect-ratio: 1; border-radius: var(--r-sm); }
     .f-body { padding-inline: 0 var(--s1); gap: 0; }
     .fig { font-size: 28px; line-height: 32px; }

@@ -7,6 +7,8 @@
   let { tile, head, onclose, children }: { tile: TileDef; head: Head; onclose: () => void; children: Snippet } = $props();
 
   const photo = $derived(PHOTOS[tile.id]);
+  // le card di spicco si aprono sul titolo, senza foto: subito sotto c'è il loro grafico
+  const copertina = $derived(tile.Figura !== undefined);
   let h2: HTMLHeadingElement;
   let urlInput: HTMLInputElement | undefined = $state();
   let copied = $state(false);
@@ -30,12 +32,14 @@
   }
 </script>
 
-<section class="detail" id="detail-{tile.id}" aria-labelledby="h-{tile.id}" style:view-transition-name="t-{tile.id}">
+<section class="detail" class:copertina id="detail-{tile.id}" aria-labelledby="h-{tile.id}" style:view-transition-name="t-{tile.id}">
   <div class="d-hero">
+    {#if !copertina}
     <figure>
       <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 860px) 100vw, (min-width: 1200px) 80vw, 40vw" alt={photo.alt} /></span>
       <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
     </figure>
+    {/if}
     <div class="d-text">
       <span class="lab">{tile.label}</span>
       <h2 id="h-{tile.id}" tabindex="-1" bind:this={h2}>
@@ -95,4 +99,16 @@
     @media (hover: hover) { .copy:hover { background: rgba(255, 255, 255, .3); } .close:hover { background: #fff; } }
     .blocks { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); grid-auto-flow: dense; }
   }
+  /* la copertina: niente foto né card, il titolo da prima pagina sulla carta e un filetto sotto; il grafico viene subito dopo */
+  .copertina .d-hero { display: block; position: relative; min-height: 0; background: none; box-shadow: none; border-radius: 0; padding: 0 0 var(--s4); border-bottom: 1px solid var(--line-2); overflow: visible; }
+  .copertina .d-text { display: grid; gap: var(--s2); padding: var(--s2) var(--s8) 0 0; color: var(--fg); background: none; }
+  .copertina .lab { color: var(--fg-2); font-weight: 600; }
+  .copertina h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.035em; max-width: 17ch; }
+  .copertina h2 em { color: var(--accent); }
+  .copertina .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: 62ch; }
+  .copertina .nota { color: var(--fg-2); }
+  .copertina .copy { background: var(--card); color: var(--fg); box-shadow: var(--shadow); }
+  .copertina .close { top: 0; right: 0; background: var(--card); color: var(--fg); box-shadow: var(--shadow); }
+  @media (hover: hover) { .copertina .copy:hover, .copertina .close:hover { background: var(--line-2); } }
+  @media (max-width: 860px) { .copertina .d-text { padding: 0 var(--s6) 0 0; } }
 </style>

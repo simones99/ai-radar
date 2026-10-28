@@ -15,6 +15,11 @@ export interface TileDef {
   face: (d: Dataset, today: Date) => Face | null;
   head: (d: Dataset, today: Date) => Head;
   Detail: Component<DetailProps>;
+  /** Le card di spicco, una per testa: in home la figura prende il posto della foto e la card è larga due colonne,
+   *  e il dettaglio si apre sul titolo, senza foto. Solo span e svg: sta dentro il pulsante della card. */
+  Figura?: Component<{ data: Dataset }>;
+  /** Larga due colonne, con la foto accanto al testo: chiude la riga lasciata a metà dalla card di spicco. */
+  largo?: boolean;
 }
 
 export interface DetailProps {

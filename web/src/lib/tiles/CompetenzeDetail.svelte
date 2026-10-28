@@ -60,17 +60,21 @@
         {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => ruoloRicordato.scegli(r.id)}>{r.nome}</button>{/each}
       </div>
     {/if}
-    <Block span={8} title="Radar delle competenze"
+    <Block span={12} title="Radar delle competenze"
       note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Le frecce partono da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprire la competenza."
       cite={arxivDown ? [{ t: arxivDown }, ...sources] : sources}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)', ...(delRuolo ? ['Per il tuo ruolo'] : [])],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], signedPct(r.slancio), per10k(r.domanda),
                                       r.hasPrev ? `${signedPct(r.sp as number)} · ${r.dp != null ? per10k(r.dp) : '—'}` : '—',
                                       ...(delRuolo ? [delRuolo.includes(r.id) ? 'sì' : 'no'] : [])]) }}>
-      <Radar {rows} {quadranti} highlight={hovered} {delRuolo} onpick={(id) => apri('competenze', id)} />
-    </Block>
-    <Block span={4} title="Movimenti del mese" cite={sources}>
-      <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
+      <!-- il radar a tutta larghezza, e accanto, quando c'è posto, i movimenti che ci si leggono: le stesse fonti -->
+      <div class="rm"><div class="radar-mov">
+        <Radar {rows} {quadranti} highlight={hovered} {delRuolo} onpick={(id) => apri('competenze', id)} />
+        <div class="mov">
+          <h4>Movimenti del mese</h4>
+          <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
+        </div>
+      </div></div>
     </Block>
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
@@ -99,6 +103,12 @@
 
 <style>
   .chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .rm { container-type: inline-size; min-width: 0; }
+  .radar-mov { display: grid; gap: var(--s4); min-width: 0; }
+  .radar-mov > :global(*) { min-width: 0; }
+  .mov { display: grid; gap: var(--s2); align-content: start; max-width: 640px; }
+  .mov h4 { margin: 0; font-weight: 600; font-size: 16px; line-height: 24px; }
+  @container (min-width: 960px) { .radar-mov { grid-template-columns: minmax(0, 1fr) 320px; } .mov { max-width: none; border-left: 1px solid var(--line); padding-left: var(--s3); } }
   .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
   .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
   .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: 80ch; }

@@ -233,7 +233,7 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
 
 const aree = (page: Page) => page.getByRole('group', { name: 'Area' });
 const paesiUe = (page: Page) => page.getByRole('group', { name: "Paesi dell'UE" });
-const scheda = (page: Page) => page.locator('#detail-geopoliticai h3').first();
+const scheda = (page: Page) => page.locator('#geo-scheda h3');
 
 test('area: il link apre il Paese, il ricaricamento lo tiene, un link con un’altra area vince sul ricordo', async ({ page }) => {
   await page.goto('/#geopoliticai?area=italia');

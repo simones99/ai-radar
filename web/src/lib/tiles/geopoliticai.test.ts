@@ -24,17 +24,22 @@ const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
 const laScheda = (titolo: string) => within(screen.getByRole('region', { name: titolo }));
 
 describe('GeopoliticAI: card in home', () => {
-  it("la capacità del miglior modello europeo, contro USA e Cina nell'anno in corso", () => {
+  it("la distanza del miglior modello europeo dalla prima area, contro USA e Cina nell'anno in corso", () => {
     expect(faceGeopoliticai(data, today)).toEqual({
-      fig: '150,0', unit: 'ECI',
-      sent: 'Capacità del miglior modello europeo, Mistral Large 4, nel 2026, anno in corso. Gli USA arrivano a 168,8, la Cina a 157,9.',
+      fig: '18,8', unit: 'punti sotto gli USA',
+      sent: 'Capacità del miglior modello europeo, Mistral Large 4, nel 2026, anno in corso: 150,0 ECI. Gli USA arrivano a 168,8, la Cina a 157,9.',
     });
   });
   it("senza un valore UE nell'anno in corso, tutte e tre le aree passano all'ultimo anno chiuso", () => {
     expect(faceGeopoliticai(ueSenzaAnnoInCorso(), today)).toEqual({
-      fig: '134,0', unit: 'ECI',
-      sent: 'Capacità del miglior modello europeo, Mistral Medium 3, nel 2025. Gli USA arrivano a 156,3, la Cina a 146,1.',
+      fig: '22,3', unit: 'punti sotto gli USA',
+      sent: 'Capacità del miglior modello europeo, Mistral Medium 3, nel 2025: 134,0 ECI. Gli USA arrivano a 156,3, la Cina a 146,1.',
     });
+  });
+  it("con l'UE prima, la cifra è il suo valore", () => {
+    const eci = { ...geo.zone.ue.eci, '2026': { ...geo.zone.ue.eci['2026'], max: 170 } };
+    const prima: Dataset = { ...data, geopoliticai: { ...geo, zone: { ...geo.zone, ue: { ...geo.zone.ue, eci } } } };
+    expect(faceGeopoliticai(prima, today)).toMatchObject({ fig: '170,0', unit: 'ECI' });
   });
   it('senza il file la card non ha un numero', () => {
     expect(faceGeopoliticai({}, today)).toBeNull();
@@ -53,7 +58,7 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
     show();
     expect(screen.getByRole('heading', { level: 3, name: 'UE' })).toBeInTheDocument();
     expect(screen.getByText('Il miglior modello europeo, Mistral Large 4, ha 150,0 ECI nel 2026, anno in corso: 18,8 punti sotto Claude Opus 5.5 (USA).').tagName).toBe('STRONG');
-    const [cap, calc] = screen.getAllByRole('heading', { level: 4 });
+    const [cap, calc] = laScheda('UE').getAllByRole('heading', { level: 4 });
     expect(cap).toHaveTextContent('Capacità');
     expect(calc).toHaveTextContent('Calcolo di addestramento');
     expect(laScheda('UE').getByText('150,0')).toBeInTheDocument();
@@ -66,8 +71,8 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
     expect(screen.getByText("Per l'UE l'ECI valuta solo Mistral AI.")).toBeInTheDocument();
   });
   it('la fonte di Epoch, con i link e la data, è una sola, sotto la matrice', () => {
-    const { container } = show();
-    const cite = container.querySelector('.cite') as HTMLElement;
+    show();
+    const cite = screen.getByRole('link', { name: 'Data on AI models' }).closest('.cite') as HTMLElement;
     expect(cite).toHaveTextContent('Fonte: Epoch AI, Data on AI models ed Epoch Capabilities Index (CC BY 4.0), aggregati per area da AI Radar. Dati scaricati il 15 ott 2026.');
     expect(within(cite).getByRole('link', { name: 'Data on AI models' })).toHaveAttribute('href', 'https://epoch.ai/data/ai-models');
     expect(within(cite).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');

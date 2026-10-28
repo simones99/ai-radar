@@ -39,7 +39,10 @@
 </script>
 
 <Detail {tile} {head} {onclose}>
+  <!-- prima la mappa della catena, la vista che risponde al titolo; poi la scheda dell'area scelta, la matrice e chi addestra -->
   {#if g}
+    <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
+      vista={params.vista} filo={params.filo} onscegli={scegli} />
     <div class="chips" role="group" aria-label="Area">
       {#each AREE as k (k)}<button type="button" aria-pressed={k === 'ue' ? nellUe : zona === k} onclick={() => scegli(k)}>{g.zone[k].nome}</button>{/each}
     </div>
@@ -79,8 +82,6 @@
   </Block>
   {#if g}
     <GeoMatrice {g} {zona} onscegli={apriScheda} />
-    <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
-      vista={params.vista} filo={params.filo} onscegli={scegli} />
     <GeoChiAddestra {g} {zona} />
   {/if}
 </Detail>

@@ -190,7 +190,7 @@
         <h2 id="g-{g.id}" class="g-h">{g.label}</h2>
         <div class="tiles">
           {#each TILES.filter((t) => t.testa === g.id) as t (t.id)}
-            <article class="tile" id="tile-{t.id}">
+            <article class="tile" class:spicco={t.Figura !== undefined} class:largo={t.largo} id="tile-{t.id}">
               <TileFace tile={t} {data} {today} expanded={openId === t.id} compact={open !== undefined} onopen={() => toggleTile(t.id)} />
             </article>
           {/each}
@@ -214,6 +214,11 @@
   @media (max-width: 1040px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); } }
   .tile, .pane { min-width: 0; }
+  .tile { container-type: inline-size; }
+  /* la card di spicco apre la sua testa su tutta la riga; la card larga, su due colonne, chiude la riga che resterebbe a metà */
+  .tile.spicco { grid-column: 1 / -1; }
+  .tile.largo { grid-column: span 2; }
+  @media (max-width: 560px) { .tile.largo { grid-column: auto; } }
   .has-open .groups { display: none; }
   @media (min-width: 1200px) {
     .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -221,6 +226,7 @@
     /* l'elenco resta a vista mentre si scorre il dettaglio */
     .has-open .groups { display: grid; gap: var(--s3); position: sticky; top: var(--s3); max-height: calc(100vh - var(--s6)); overflow-y: auto; padding: 4px; margin: -4px; }
     .has-open .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+    .has-open .tile.largo { grid-column: auto; }
     .has-open .g-h { font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-2); padding-inline: var(--s1); }
   }
   @media (min-width: 1680px) { .board:not(.has-open) .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

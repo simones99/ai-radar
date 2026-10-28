@@ -19,7 +19,7 @@
   let cw = $state(0);
   const w = $derived(Math.max(cw, 300));
   const narrow = $derived(w < 520);
-  const H = $derived(Math.round(Math.max(384, Math.min(w * 0.72, 544))));
+  const H = $derived(Math.round(Math.max(384, Math.min(w * 0.7, 680))));
   const m = { l: 48, r: 8, t: 24, b: 64 };
   const x = $derived(scaleLinear([-0.04, 1.04], [m.l, w - m.r]));
   const y = $derived(scaleLinear([-0.04, 1.04], [H - m.b, m.t]));

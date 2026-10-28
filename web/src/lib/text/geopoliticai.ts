@@ -271,5 +271,5 @@ export function fraseFaccia(g: Geopoliticai, y: number): string | null {
     if (i > 0) return `${z.con_articolo} a ${eci(v.v)}`;
     return `${capitalize(z.con_articolo)} ${v.zona === 'usa' ? 'arrivano' : 'arriva'} a ${eci(v.v)}`;
   });
-  return `Capacità del miglior modello europeo, ${ue.modello}, nel ${annoTesto(g, y)}.${confronto.length ? ` ${confronto.join(', ')}.` : ''}`;
+  return `Capacità del miglior modello europeo, ${ue.modello}, nel ${annoTesto(g, y)}: ${eci(ue.v)} ECI.${confronto.length ? ` ${confronto.join(', ')}.` : ''}`;
 }

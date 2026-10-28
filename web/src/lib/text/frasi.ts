@@ -2,7 +2,7 @@ import {
   MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
-import { annoFaccia, valore } from '../data/geopoliticai';
+import { annoFaccia, classifica, valore } from '../data/geopoliticai';
 import type { Dataset, Quadrant, Ruolo } from '../data/types';
 import { eci as eciFmt, fraseFaccia } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
@@ -238,7 +238,12 @@ export function faceGeopoliticai(d: Dataset, _today?: Date): Face | null {
   const y = annoFaccia(g);
   const ue = valore(g, 'ue', 'eci', y);
   const sent = fraseFaccia(g, y);
-  return ue && sent ? { fig: eciFmt(ue.v), unit: 'ECI', sent } : null;
+  if (!ue || !sent) return null;
+  // la cifra è la distanza dalla prima area, come nella scheda; se la prima è l'UE, il suo valore
+  const [primo] = classifica(g, 'eci', y);
+  return primo && primo.zona !== 'ue'
+    ? { fig: nf(primo.v - ue.v, 1), unit: `punti sotto ${g.zone[primo.zona].con_articolo}`, sent }
+    : { fig: eciFmt(ue.v), unit: 'ECI', sent };
 }
 export function headGeopoliticai(d: Dataset, _today?: Date): Head {
   if (!d.geopoliticai) return { title: plain('GeopoliticAI'), deck: null };

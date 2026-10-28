@@ -1,5 +1,7 @@
 # AI Radar
 
+**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, on business adoption, people and jobs, AI Act deadlines and upcoming reports. A third view, GeopoliticAI, follows the supply chain country by country, from raw materials and chips to data centres and model capability. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
+
 Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli ogni settimana:
 
 1. **Su cosa formarti**, per le persone. Un radar di 16 competenze che incrocia ricerca (arXiv), open source (GitHub) e mercato del lavoro (Adzuna), con un confronto tra Europa e USA. Accanto, i temi che lo alimentano: modelli e ricerca, open source, notizie dai laboratori e dalle newsletter di riferimento.

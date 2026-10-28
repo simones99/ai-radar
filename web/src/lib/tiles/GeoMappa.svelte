@@ -402,7 +402,7 @@
     font: inherit; font-size: 15px; line-height: 20px; color: var(--fg); cursor: pointer; }
   .tn { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #fff; font-weight: 700; font-size: 13px; }
   .tappe p { margin: 0 0 0 38px; font-size: 13px; line-height: 20px; color: var(--fg-2); overflow-wrap: anywhere; }
-  .tappe a { color: var(--accent); }
+  .tappe a { color: inherit; }
 
   .tabellone { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--s1); margin: 0; }
   .cifra { display: grid; gap: 2px; align-content: start; padding: 12px; border-radius: var(--r-sm); background: var(--bg); }
@@ -414,5 +414,5 @@
   .mod { font-size: 13px; line-height: 18px; color: var(--fg-2); }
   .vuoto { font-size: 15px; line-height: 22px; font-style: italic; color: var(--fg-2); }
   .cifra.it { border-left: 3px dashed var(--accent); }
-  .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; }
+  .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; max-width: 72ch; }
 </style>

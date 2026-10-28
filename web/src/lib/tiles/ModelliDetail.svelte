@@ -68,5 +68,5 @@
 </Detail>
 
 <style>
-  .vai { font-size: 14px; line-height: 24px; color: var(--accent); }
+  .vai { font-size: 14px; line-height: 24px; }
 </style>

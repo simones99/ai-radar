@@ -1,12 +1,13 @@
-/* Token: un neutro (fondo e card), il testo, un blu. Spazi multipli di 8. Un solo font. */
+/* Token: un neutro (fondo e card), il testo, un blu. Spazi multipli di 8. Un solo font.
+   Il blu segna il dato in evidenza (cifre, punti caldi), non etichette né link. */
 :root {
   color-scheme: light;
   --bg: #f4f4f2;
   --card: #ffffff;
   --fg: #121211;
   --accent: #0068d6;
-  --fg-2: color-mix(in srgb, var(--fg) 68%, var(--card));
-  --fg-3: color-mix(in srgb, var(--fg) 66%, var(--card)); /* ≥ 4,5:1 anche sullo sfondo --bg (AA) */
+  --fg-2: color-mix(in srgb, var(--fg) 78%, var(--card)); /* testo secondario: frasi, note */
+  --fg-3: color-mix(in srgb, var(--fg) 62%, var(--card)); /* metadati: date, fonti; ≥ 4,5:1 anche sullo sfondo --bg (AA) */
   --line: color-mix(in srgb, var(--fg) 9%, var(--card));
   --line-2: color-mix(in srgb, var(--fg) 18%, var(--card));
   --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--card));
@@ -34,6 +35,8 @@
 html { scroll-padding-top: var(--s8); }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/24px var(--font); -webkit-font-smoothing: antialiased; }
 h1, h2, h3, p, figure { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+p, li, figcaption { text-wrap: pretty; }
 button { font: inherit; color: inherit; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-underline-offset: 3px; }

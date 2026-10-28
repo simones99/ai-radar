@@ -209,7 +209,7 @@
   .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
   .groups { display: grid; gap: var(--s4); }
   .group { display: grid; gap: var(--s2); }
-  .g-h { font-weight: 600; font-size: 20px; line-height: 24px; }
+  .g-h { font-weight: 700; font-size: 24px; line-height: 32px; letter-spacing: -.01em; }
   .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); }
   @media (max-width: 1040px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); } }

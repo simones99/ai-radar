@@ -50,7 +50,7 @@
   .rail::after { content: ""; position: absolute; left: calc(50% - 5px); top: 23px; width: 10px; height: 10px; border-radius: 50%; background: var(--fg); }
   .future .rail::after { background: var(--card); border: 1.5px solid var(--fg-3); }
   .next .rail::after { background: var(--accent); border: 0; box-shadow: 0 0 0 4px var(--accent-soft); }
-  .next .when, .next .what a { color: var(--accent); }
+  .next .when { color: var(--accent); }
   .what { padding-block: var(--s2); display: grid; gap: 4px; }
   .what a, .what b { font-weight: 600; }
   .what span { color: var(--fg-2); font-size: 14px; }

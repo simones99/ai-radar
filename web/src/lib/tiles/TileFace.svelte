@@ -54,7 +54,7 @@
   .f-body { display: grid; gap: var(--s1); padding-inline: var(--s2); }
   .f-lab { display: flex; justify-content: space-between; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .f-lab .small { color: var(--fg-3); }
-  .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.035em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
   .u { font-size: 20px; letter-spacing: -.01em; margin-left: 4px; color: var(--fg-2); font-weight: 500; }
   .sent { font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .stale { font-size: 12px; line-height: 16px; color: var(--fg-3); }
@@ -77,7 +77,7 @@
   .viz { display: block; aspect-ratio: 4 / 3; border-radius: var(--r-md); overflow: hidden; background: var(--card); min-height: 0; }
   .spicco { grid-template-rows: minmax(0, 1fr) auto; }
   .spicco .viz { aspect-ratio: auto; min-height: 240px; }
-  .spicco .fig { font-size: 48px; line-height: 52px; letter-spacing: -.04em; text-wrap: balance; }
+  .spicco .fig { font-size: 48px; line-height: 52px; letter-spacing: -.015em; text-wrap: balance; }
   .spicco .sent { color: var(--fg); max-width: 46ch; }
   .spicco .u { display: block; margin: var(--s1) 0 0; font-size: 22px; line-height: 28px; }
   /* larga: il testo accanto alla foto, più piccola */

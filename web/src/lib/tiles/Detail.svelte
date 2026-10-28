@@ -71,7 +71,7 @@
   .d-text { display: grid; gap: var(--s2); align-content: center; padding: var(--s3) var(--s8) var(--s3) 0; position: relative; }
   @media (max-width: 860px) { .d-text { padding: 0 var(--s2) var(--s3); } }
   .lab { font-size: 14px; color: var(--fg-2); }
-  h2 { font-weight: 600; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; max-width: 22ch; outline: none; }
+  h2 { font-weight: 600; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.15; letter-spacing: -.015em; text-wrap: balance; max-width: 22ch; outline: none; }
   h2 em { font-style: normal; color: var(--accent); }
   .deck { color: var(--fg-2); max-width: 56ch; }
   .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 56ch; }
@@ -103,7 +103,8 @@
   .copertina .d-hero { display: block; position: relative; min-height: 0; background: none; box-shadow: none; border-radius: 0; padding: 0 0 var(--s4); border-bottom: 1px solid var(--line-2); overflow: visible; }
   .copertina .d-text { display: grid; gap: var(--s2); padding: var(--s2) var(--s8) 0 0; color: var(--fg); background: none; }
   .copertina .lab { color: var(--fg-2); font-weight: 600; }
-  .copertina h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.035em; max-width: 17ch; }
+  /* il taglio da titolo di Bricolage è già stretto: la spaziatura resta appena negativa */
+  .copertina h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.012em; max-width: 17ch; }
   .copertina h2 em { color: var(--accent); }
   .copertina .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: 62ch; }
   .copertina .nota { color: var(--fg-2); }

@@ -93,10 +93,13 @@
     .wrap > :global(.board.has-open) { grid-column: 1 / -1; }
     .hero { padding-top: 0; }
   }
-  h1 { font-weight: 400; font-size: 20px; line-height: 32px; color: var(--fg-2); max-width: 60ch; }
+  h1 { font-weight: 600; font-size: clamp(28px, 3.4vw, 36px); line-height: 1.15; letter-spacing: -.01em; max-width: 24ch; }
+  /* nella colonna stretta accanto alle card */
+  @media (min-width: 1200px) { h1 { font-size: 28px; } }
   .alert { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s3); }
   .alert button { border: 0; border-radius: 999px; background: var(--fg); color: var(--card); padding: var(--s1) var(--s3); min-height: 40px; cursor: pointer; }
   .credits { display: grid; gap: var(--s3); border-top: 1px solid var(--line-2); padding-top: var(--s3); }
   .credits h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
+  .credits > p { max-width: 72ch; }
   .credits ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s1) var(--s3); font-size: 12px; line-height: 16px; color: var(--fg-2); }
 </style>

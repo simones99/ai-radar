@@ -93,6 +93,6 @@
   .v { display: block; padding: var(--s1); border-radius: 6px; white-space: nowrap; background: color-mix(in srgb, var(--accent) calc(var(--a) * 45%), transparent); }
   tr.sel .v:not(.na) { outline: 2px solid var(--fg); }
   td.zero { padding: var(--s1) 12px; font-size: 14px; line-height: 20px; color: var(--fg-2); border-left: 3px solid var(--accent); background: var(--bg); }
-  .nota-matrice { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 80ch; }
+  .nota-matrice { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
   .na { color: var(--fg-3); font-size: 12px; }
 </style>

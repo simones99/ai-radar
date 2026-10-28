@@ -151,5 +151,5 @@
   .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
   .scelta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .scelta select { max-width: 100%; min-height: 40px; padding: 0 var(--s1); font: inherit; font-size: 16px; color: var(--fg); background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r-sm); }
-  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
 </style>

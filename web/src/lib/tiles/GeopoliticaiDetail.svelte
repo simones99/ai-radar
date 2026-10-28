@@ -96,7 +96,7 @@
   h4 span { display: block; font-weight: 400; color: var(--fg-3); }
   .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
   .sotto { font-size: 14px; line-height: 20px; color: var(--fg-2); }
-  .vai { background: none; border: 0; padding: 0; font: inherit; font-size: 14px; line-height: 24px; color: var(--accent); text-decoration: underline; cursor: pointer; }
+  .vai { background: none; border: 0; padding: 0; font: inherit; font-size: 14px; line-height: 24px; color: var(--fg); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .riga { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }
   @media (max-width: 560px) { .fig { font-size: 28px; line-height: 32px; } }
 </style>

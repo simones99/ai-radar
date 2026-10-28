@@ -46,8 +46,8 @@
   /* da 1200px le colonne del dettaglio sono di larghezza fissa: 8 diventa due colonne, 12 tutta la riga */
   @media (min-width: 1200px) { .blk { grid-column: auto; } .w8 { grid-column: span 2; } .w12 { grid-column: 1 / -1; } }
   h3 { font-weight: 600; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
-  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); }
-  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: 72ch; }
   .cite a { color: inherit; }
   details summary { cursor: pointer; font-size: 14px; color: var(--fg-2); min-height: 40px; display: flex; align-items: center; }
 </style>

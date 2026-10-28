@@ -56,19 +56,21 @@
     <p class="muted">Caricamento dei dati…</p>
   {/if}
 
-  <footer class="credits" id="crediti">
-    <h2>Foto e fonti</h2>
-    <ul>
-      {#each TILES as t (t.id)}
-        {@const p = PHOTOS[t.id]}
-        <li>{t.label}: <a href={p.pagina} target="_blank" rel="noopener">{p.titolo}</a> · {p.autore} · {#if p.licenzaUrl}<a href={p.licenzaUrl} target="_blank" rel="noopener">{p.licenza}</a>{:else}{p.licenza}{/if} · Wikimedia Commons</li>
-      {/each}
-    </ul>
-    <p class="small muted">
-      Dati di {#each FONTI as [n, u], i (n)}<a href={u} target="_blank" rel="noopener">{n}</a>{i < FONTI.length - 1 ? ', ' : '.'}{/each}
-      Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
-      <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
-    </p>
+  <footer class="colophon">
+    <section class="credits" id="crediti" aria-labelledby="crediti-h">
+      <h2 id="crediti-h">Foto e fonti</h2>
+      <ul>
+        {#each TILES as t (t.id)}
+          {@const p = PHOTOS[t.id]}
+          <li>{t.label}: <a href={p.pagina} target="_blank" rel="noopener">{p.titolo}</a> · {p.autore} · {#if p.licenzaUrl}<a href={p.licenzaUrl} target="_blank" rel="noopener">{p.licenza}</a>{:else}{p.licenza}{/if} · Wikimedia Commons</li>
+        {/each}
+      </ul>
+      <p class="small muted">
+        Dati di {#each FONTI as [n, u], i (n)}<a href={u} target="_blank" rel="noopener">{n}</a>{i < FONTI.length - 1 ? ', ' : '.'}{/each}
+        Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
+        <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
+      </p>
+    </section>
     <SourcesStatus status={data.status} />
   </footer>
 </div>
@@ -98,8 +100,11 @@
   @media (min-width: 1200px) { h1 { font-size: 28px; } }
   .alert { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s3); }
   .alert button { border: 0; border-radius: 999px; background: var(--fg); color: var(--card); padding: var(--s1) var(--s3); min-height: 40px; cursor: pointer; }
-  .credits { display: grid; gap: var(--s3); border-top: 1px solid var(--line-2); padding-top: var(--s3); }
+  /* il colophon: crediti e stato delle fonti affiancati da 960px */
+  .colophon { display: grid; gap: var(--s5); border-top: 1px solid var(--line-2); padding-top: var(--s3); }
+  @media (min-width: 960px) { .colophon { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s6); } }
+  .credits { display: grid; gap: var(--s3); align-content: start; }
   .credits h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
   .credits > p { max-width: 72ch; }
-  .credits ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s1) var(--s3); font-size: 12px; line-height: 16px; color: var(--fg-2); }
+  .credits ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s1) var(--s3); font-size: 12px; line-height: 16px; color: var(--fg-2); }
 </style>

@@ -7,7 +7,7 @@
   let { tile, head, onclose, children }: { tile: TileDef; head: Head; onclose: () => void; children: Snippet } = $props();
 
   const photo = $derived(PHOTOS[tile.id]);
-  // le card di spicco si aprono sul titolo, senza foto: subito sotto c'è il loro grafico
+  // le card di spicco si aprono sul titolo senza foto; le altre con la foto piccola accanto. In tutte il grafico viene subito dopo
   const copertina = $derived(tile.Figura !== undefined);
   let h2: HTMLHeadingElement;
   let urlInput: HTMLInputElement | undefined = $state();
@@ -34,12 +34,6 @@
 
 <section class="detail" class:copertina id="detail-{tile.id}" aria-labelledby="h-{tile.id}" style:view-transition-name="t-{tile.id}">
   <div class="d-hero">
-    {#if !copertina}
-    <figure>
-      <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 860px) 100vw, (min-width: 1200px) 80vw, 40vw" alt={photo.alt} /></span>
-      <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
-    </figure>
-    {/if}
     <div class="d-text">
       <span class="lab">{tile.label}</span>
       <h2 id="h-{tile.id}" tabindex="-1" bind:this={h2}>
@@ -52,8 +46,14 @@
         <span class="sr" aria-live="polite">{copied ? 'Link copiato' : ''}</span>
         {#if fallbackUrl}<input class="copy-url" readonly value={fallbackUrl} bind:this={urlInput} aria-label="Link da copiare" />{/if}
       </div>
-      <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}>×</button>
     </div>
+    {#if !copertina}
+    <figure>
+      <span class="ph"><img src={photo.src} srcset={photo.srcset} sizes="(max-width: 720px) 100vw, 400px" alt={photo.alt} /></span>
+      <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
+    </figure>
+    {/if}
+    <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}>×</button>
   </div>
   <div class="blocks">{@render children()}</div>
 </section>
@@ -61,55 +61,34 @@
 <style>
   .detail { display: grid; gap: var(--s3); scroll-margin-top: var(--s2); }
   @media (max-width: 560px) { .detail { scroll-margin-top: var(--s8); } }
-  .d-hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s4); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s1); }
-  @media (max-width: 860px) { .d-hero { grid-template-columns: minmax(0, 1fr); gap: var(--s2); } }
-  figure { display: grid; gap: var(--s1); }
-  .ph { display: block; min-height: 280px; height: 100%; border-radius: var(--r-md); overflow: hidden; background: var(--line); }
-  @media (max-width: 860px) { .ph { min-height: 0; aspect-ratio: 16 / 9; } }
-  .ph img { width: 100%; height: 100%; object-fit: cover; }
-  .credit { font-size: 12px; line-height: 16px; color: var(--fg-3); padding-inline: var(--s1); }
-  .d-text { display: grid; gap: var(--s2); align-content: center; padding: var(--s3) var(--s8) var(--s3) 0; position: relative; }
-  @media (max-width: 860px) { .d-text { padding: 0 var(--s2) var(--s3); } }
-  .lab { font-size: 14px; color: var(--fg-2); }
-  h2 { font-weight: 600; font-size: clamp(28px, 3.6vw, 40px); line-height: 1.15; letter-spacing: -.015em; text-wrap: balance; max-width: 22ch; outline: none; }
+  /* l'intestazione da giornale: titolo sulla carta, la foto piccola accanto con il suo credito, un filetto sotto; il grafico viene subito dopo */
+  .d-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); position: relative; padding-bottom: var(--s4); border-bottom: 1px solid var(--line-2); }
+  @media (min-width: 720px) { .d-hero:has(figure) { grid-template-columns: minmax(0, 1fr) clamp(220px, 30%, 360px); gap: var(--s5); align-items: start; } }
+  .d-text { display: grid; gap: var(--s2); align-content: start; padding-top: var(--s2); }
+  .copertina .d-text { padding-right: var(--s8); }
+  @media (max-width: 860px) { .copertina .d-text { padding-right: var(--s6); } }
+  .lab { font-size: 14px; color: var(--fg-2); font-weight: 600; }
+  h2 { font-weight: 600; font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: -.015em; max-width: 20ch; outline: none; }
   h2 em { font-style: normal; color: var(--accent); }
-  .deck { color: var(--fg-2); max-width: 56ch; }
+  /* il taglio da titolo di Bricolage è già stretto: la spaziatura resta appena negativa */
+  .copertina h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.012em; max-width: 17ch; }
+  .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: 62ch; }
   .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 56ch; }
+  figure { display: grid; gap: var(--s1); }
+  .ph { display: block; aspect-ratio: 2 / 1; border-radius: var(--r-md); overflow: hidden; background: var(--line); }
+  @media (min-width: 720px) { .ph { aspect-ratio: 4 / 3; } }
+  .ph img { width: 100%; height: 100%; object-fit: cover; }
+  .credit { font-size: 12px; line-height: 16px; color: var(--fg-3); }
   .actions { display: flex; flex-wrap: wrap; gap: var(--s1); align-items: center; }
-  .copy { background: var(--bg); border: 0; border-radius: 999px; padding: var(--s1) var(--s2); min-height: 40px; cursor: pointer; font-size: 14px; }
+  .copy { background: var(--card); color: var(--fg); border: 0; border-radius: 999px; padding: var(--s1) var(--s2); min-height: 40px; cursor: pointer; font-size: 14px; box-shadow: var(--shadow); }
   .copy-url { font: inherit; font-size: 14px; border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: var(--s1); min-width: 0; flex: 1 1 240px; background: var(--card); color: var(--fg); }
-  .close { position: absolute; top: var(--s2); right: var(--s2); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--bg); cursor: pointer; font-size: 24px; line-height: 40px; }
+  /* in alto a destra: sull'angolo della foto, o accanto al titolo nella copertina */
+  .close { position: absolute; top: var(--s1); right: var(--s1); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--card); color: var(--fg); box-shadow: var(--shadow); cursor: pointer; font-size: 24px; line-height: 40px; }
+  .copertina .close { top: 0; right: 0; }
   @media (max-width: 860px) { .close { display: none; } }
   @media (hover: hover) { .copy:hover, .close:hover { background: var(--line-2); } }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }
-  /* da 1200px: foto a tutta larghezza dietro il testo, grafici in colonne da almeno 360px */
-  @media (min-width: 1200px) {
-    .d-hero { grid-template-columns: minmax(0, 1fr); position: relative; min-height: 400px; padding: 0; overflow: hidden; }
-    figure { position: absolute; inset: 0; }
-    .ph { border-radius: 0; min-height: 0; }
-    .credit { position: absolute; right: var(--s2); bottom: var(--s1); color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(0, 0, 0, .6); }
-    .d-text { align-content: end; padding: var(--s8) var(--s12) var(--s5) var(--s6); color: #fff;
-      background: linear-gradient(90deg, rgba(0, 0, 0, .8) 0%, rgba(0, 0, 0, .6) 45%, rgba(0, 0, 0, 0) 85%); }
-    .lab, .deck, .nota { color: rgba(255, 255, 255, .9); }
-    h2 { font-size: clamp(40px, 3.2vw, 56px); max-width: 18ch; }
-    h2 em { color: #8fc4ff; }
-    .copy { background: rgba(255, 255, 255, .18); color: #fff; }
-    .close { background: rgba(255, 255, 255, .92); color: #121211; }
-    @media (hover: hover) { .copy:hover { background: rgba(255, 255, 255, .3); } .close:hover { background: #fff; } }
-    .blocks { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); grid-auto-flow: dense; }
-  }
-  /* la copertina: niente foto né card, il titolo da prima pagina sulla carta e un filetto sotto; il grafico viene subito dopo */
-  .copertina .d-hero { display: block; position: relative; min-height: 0; background: none; box-shadow: none; border-radius: 0; padding: 0 0 var(--s4); border-bottom: 1px solid var(--line-2); overflow: visible; }
-  .copertina .d-text { display: grid; gap: var(--s2); padding: var(--s2) var(--s8) 0 0; color: var(--fg); background: none; }
-  .copertina .lab { color: var(--fg-2); font-weight: 600; }
-  /* il taglio da titolo di Bricolage è già stretto: la spaziatura resta appena negativa */
-  .copertina h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.012em; max-width: 17ch; }
-  .copertina h2 em { color: var(--accent); }
-  .copertina .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: 62ch; }
-  .copertina .nota { color: var(--fg-2); }
-  .copertina .copy { background: var(--card); color: var(--fg); box-shadow: var(--shadow); }
-  .copertina .close { top: 0; right: 0; background: var(--card); color: var(--fg); box-shadow: var(--shadow); }
-  @media (hover: hover) { .copertina .copy:hover, .copertina .close:hover { background: var(--line-2); } }
-  @media (max-width: 860px) { .copertina .d-text { padding: 0 var(--s6) 0 0; } }
+  /* da 1200px: grafici in colonne da almeno 360px */
+  @media (min-width: 1200px) { .blocks { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); grid-auto-flow: dense; } }
 </style>

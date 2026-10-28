@@ -757,16 +757,16 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
   await expect(page.locator('.intro')).toBeVisible();
 });
 
-test('1920px: foto a tutta larghezza dietro il titolo, grafici almeno 3 per riga', async ({ page }) => {
+test('1920px: foto piccola accanto al titolo, il primo grafico nella finestra, grafici almeno 3 per riga', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/#modelli');
   await expect(page.locator('#detail-modelli')).toBeVisible();
   const foto = await box(page, '#detail-modelli figure');
   const hero = await box(page, '#detail-modelli .d-hero');
   const titolo = await box(page, '#h-modelli');
-  expect(foto.width).toBeGreaterThan(hero.width - 2);
-  expect(titolo.x).toBeGreaterThanOrEqual(foto.x);
-  expect(titolo.y + titolo.height).toBeLessThanOrEqual(foto.y + foto.height);
+  expect(foto.width).toBeLessThan(hero.width / 2);
+  expect(titolo.x + titolo.width).toBeLessThanOrEqual(foto.x);
+  await expect(page.locator('#detail-modelli .blk').first()).toBeInViewport();
   const tops = await page.locator('#detail-modelli .blk').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
   const perRiga = Math.max(...Object.values(tops.reduce<Record<number, number>>((m, t) => ({ ...m, [t]: (m[t] ?? 0) + 1 }), {})));
   expect(perRiga).toBeGreaterThanOrEqual(3);

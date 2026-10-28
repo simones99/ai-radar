@@ -14,3 +14,8 @@ web/.impeccable/hook.cache.json
 .superpowers/
 .scratch/
 .playwright-mcp/
+
+# File di lavoro dell'agente: restano in locale, fuori dal repo pubblico
+CLAUDE.md
+docs/agents/
+.claude/

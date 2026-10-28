@@ -61,7 +61,7 @@
       </div>
     {/if}
     <Block span={12} title="Radar delle competenze"
-      note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Le frecce partono da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprire la competenza."
+      note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Le scie partono da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprire la competenza."
       cite={arxivDown ? [{ t: arxivDown }, ...sources] : sources}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)', ...(delRuolo ? ['Per il tuo ruolo'] : [])],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], signedPct(r.slancio), per10k(r.domanda),
@@ -69,7 +69,7 @@
                                       ...(delRuolo ? [delRuolo.includes(r.id) ? 'sì' : 'no'] : [])]) }}>
       <!-- il radar a tutta larghezza, e accanto, quando c'è posto, i movimenti che ci si leggono: le stesse fonti -->
       <div class="rm"><div class="radar-mov">
-        <Radar {rows} {quadranti} highlight={hovered} {delRuolo} onpick={(id) => apri('competenze', id)} />
+        <Radar {rows} {quadranti} highlight={hovered} {delRuolo} href={(id) => toHash('competenze', id)} onpick={(id) => apri('competenze', id)} />
         <div class="mov">
           <h4>Movimenti del mese</h4>
           <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />

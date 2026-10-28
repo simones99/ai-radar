@@ -94,7 +94,7 @@ test('porta verso la card già aperta: riapre la competenza e porta il focus al 
   await porta.click();
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await page.getByRole('link', { name: '← Tutte le competenze' }).click();
-  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await porta.click();
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await expect(page.locator('#h-competenze')).toBeFocused();
@@ -102,7 +102,7 @@ test('porta verso la card già aperta: riapre la competenza e porta il focus al 
   await expect(page.locator('#h-competenze')).toBeInViewport();
   await page.goBack();
   await expect(page).toHaveURL(/#competenze$/);
-  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -164,7 +164,7 @@ test('dal radar alla competenza e ritorno: clic sul punto, Indietro, Esc', async
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await page.goBack();
   await expect(page).toHaveURL(/#competenze$/);
-  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await page.getByRole('link', { name: /^RAG/ }).first().click(); // movimenti del mese ed elenco portano alla stessa pagina
   await expect(page.locator('#h-competenze')).toHaveText('RAG e ricerca semantica');
   await page.keyboard.press('Escape');

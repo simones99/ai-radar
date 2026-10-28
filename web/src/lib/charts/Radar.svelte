@@ -6,13 +6,14 @@
   import { cambio } from '../text/frasi';
   import { FONT, leader, measureText, placeLabels, type Box } from './labels';
 
-  let { rows, quadranti, highlight = null, delRuolo = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', onpick }: {
+  let { rows, quadranti, highlight = null, delRuolo = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', href, onpick }: {
     rows: RadarRowM[];
     quadranti: Record<Quadrant, string>;
     highlight?: string | null;
     delRuolo?: string[] | null; // competenze del ruolo scelto: le altre si attenuano; null con «Tutti»
     label?: string;
-    onpick?: (id: string) => void; // tocco o clic su un punto
+    href?: (id: string) => string; // il link di ogni punto: lo rende raggiungibile da tastiera
+    onpick?: (id: string) => void; // tocco, clic o Invio su un punto
   } = $props();
 
   const uid = $props.id();
@@ -28,110 +29,194 @@
   const YT = [0.1, 1, 3, 10, 90];
   const xLabel = (v: number) => (v === 0 ? '0' : signedPct(v));
   const yLabel = (v: number) => nf(v, v < 1 ? 1 : 0);
+  const G = 2; // mezza fuga tra i quadranti: ci passa la linea della soglia
+  const QR = $derived([
+    { id: 'consolida' as Quadrant, x0: x(-0.04), y0: y(1.04), x1: x(0.5) - G, y1: y(0.5) - G },
+    { id: 'impara-ora' as Quadrant, x0: x(0.5) + G, y0: y(1.04), x1: x(1.04), y1: y(0.5) - G },
+    { id: 'osserva' as Quadrant, x0: x(-0.04), y0: y(0.5) + G, x1: x(0.5) - G, y1: y(-0.04) },
+    { id: 'prova' as Quadrant, x0: x(0.5) + G, y0: y(0.5) + G, x1: x(1.04), y1: y(-0.04) },
+  ]);
   const QL = $derived([
     { id: 'consolida' as Quadrant, x: m.l, y: m.t - 8, a: 'start' },
     { id: 'impara-ora' as Quadrant, x: w - m.r, y: m.t - 8, a: 'end' },
     { id: 'osserva' as Quadrant, x: m.l, y: H - m.b + 16, a: 'start' },
     { id: 'prova' as Quadrant, x: w - m.r, y: H - m.b + 16, a: 'end' },
   ]);
+  const hotAt = (b: Box) => (b.x0 + b.x1) / 2 > x(0.5) && (b.y0 + b.y1) / 2 < y(0.5); // per il colore dell'alone
+  const rr = (r: RadarRowM) => (r.quadrante === 'impara-ora' ? 6 : 4.5);
+  // La scia di un mese: un cuneo da dove era (sottile) a dove è (largo quanto il punto); il verso si legge senza punta.
+  const scie = $derived(rows.filter((r) => r.hasPrev && r.move >= MOVE_MIN).map((r) => {
+    const x0 = x(r.px as number), y0 = y(r.py as number), x1 = x(r.x), y1 = y(r.y);
+    const len = Math.hypot(x1 - x0, y1 - y0) || 1;
+    const nX = -(y1 - y0) / len, nY = (x1 - x0) / len;
+    const a = 0.75, b = rr(r) - 1.5;
+    const d = `M${x0 + nX * a},${y0 + nY * a} L${x1 + nX * b},${y1 + nY * b} L${x1 - nX * b},${y1 - nY * b} L${x0 - nX * a},${y0 - nY * a} Z`;
+    return { id: r.id, x0, y0, x1, y1, len, d };
+  }));
+  const scia = $derived(new Map(scie.map((s) => [s.id, s])));
+  // Punti e scie, a tratti di 6 px: né le soglie scritte né le etichette ci si posano sopra.
+  const segni = $derived.by(() => {
+    const b: Box[] = rows.map((r) => ({ x0: x(r.x) - 7, y0: y(r.y) - 7, x1: x(r.x) + 7, y1: y(r.y) + 7 }));
+    scie.forEach((s) => {
+      for (let t = 0; t < s.len - 8; t += 6) {
+        const px = s.x0 + ((s.x1 - s.x0) * t) / s.len, py = s.y0 + ((s.y1 - s.y0) * t) / s.len;
+        b.push({ x0: px - 3, y0: py - 3, x1: px + 3, y1: py + 3 });
+      }
+    });
+    return b;
+  });
+  const hits = (a: Box, bs: Box[]) => bs.some((o) => a.x0 < o.x1 && a.x1 > o.x0 && a.y0 < o.y1 && a.y1 > o.y0);
+  // Le soglie scritte sulle loro linee, nel primo posto libero dai punti e fuori da Impara ora; senza posto non si scrivono:
+  // le dice anche la nota sopra il grafico.
+  const SL = $derived.by(() => {
+    const spot = (t: string, c: { x: number; y: number; a: 'start' | 'end' }[]) => {
+      const tw = measureText(t, `500 11px ${FONT}`);
+      return c.map((p) => ({ t, ...p, box: { x0: (p.a === 'start' ? p.x : p.x - tw) - 4, y0: p.y - 11, x1: (p.a === 'start' ? p.x + tw : p.x) + 4, y1: p.y + 4 } }))
+        .find((p) => !hits(p.box, segni));
+    };
+    return [
+      spot('↑ almeno 3 annunci ogni 10mila', [
+        { x: x(-0.04) + 8, y: y(0.5) - 8, a: 'start' }, { x: x(-0.04) + 8, y: y(0.5) + 16, a: 'start' }, { x: x(1.04) - 8, y: y(0.5) + 16, a: 'end' }]),
+      spot('cresce più dell’AI →', [
+        { x: x(0.5) + 8, y: y(-0.04) - 8, a: 'start' }, { x: x(0.5) - 8, y: y(-0.04) - 8, a: 'end' }, { x: x(0.5) - 8, y: y(1.04) + 16, a: 'end' }]),
+    ].filter((p) => p != null);
+  });
   const LH = 16;
   const layout = $derived.by(() => {
     const obstacles: Box[] = QL.map((q) => {
-      const tw = measureText(quadranti[q.id], `600 12px ${FONT}`);
+      const tw = measureText(quadranti[q.id], `500 12px ${FONT}`);
       const x0 = q.a === 'end' ? q.x - tw : q.x;
       return { x0: x0 - 4, y0: q.y - 14, x1: x0 + tw + 4, y1: q.y + 4 };
     });
-    rows.forEach((r) => obstacles.push({ x0: x(r.x) - 7, y0: y(r.y) - 7, x1: x(r.x) + 7, y1: y(r.y) + 7 }));
+    obstacles.push(...SL.map((s) => s.box), ...segni);
     const order = (r: RadarRowM) => (r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
+      const hot = r.quadrante === 'impara-ora';
       const lines = [r.breve, ...(r.changed && !narrow ? [cambio(r, quadranti)] : [])];
-      const wd = Math.max(...lines.map((t, i) => measureText(t, `${i === 0 && r.quadrante === 'impara-ora' ? 600 : 400} 12px ${FONT}`)));
-      return { id: r.id, x: x(r.x), y: y(r.y), w: wd, h: lines.length * LH, lines, r };
+      const wd = Math.max(...lines.map((t, i) => measureText(t, i === 0 && hot ? `600 13px ${FONT}` : `400 12px ${FONT}`)));
+      return { id: r.id, x: x(r.x), y: y(r.y), w: wd, h: lines.length * LH, lines, r, hot };
     });
     // Sul telefono un'etichetta senza posto libero, se non è di Impara ora, non si disegna: resta il suggerimento sul punto.
     const skip = (id: string) => narrow && rows.find((r) => r.id === id)?.quadrante !== 'impara-ora';
     const boxes = placeLabels(items, { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, obstacles, 10, skip);
     return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });
+  // Da tastiera: se il punto col focus non ha l'etichetta (sul telefono), il nome compare accanto finché resta lì.
+  let focused = $state<string | null>(null);
+  const tip = $derived.by(() => {
+    const r = focused != null && !layout.some((it) => it.id === focused) ? rows.find((q) => q.id === focused) : null;
+    if (!r) return null;
+    const it = { id: r.id, x: x(r.x), y: y(r.y), w: measureText(r.breve, `600 13px ${FONT}`), h: LH };
+    const taken = [...layout.map((l) => l.box), ...SL.map((l) => l.box), ...segni];
+    const b = placeLabels([it], { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, taken, 10).get(r.id) as Box;
+    return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: hotAt(b), px: it.x, py: it.y, l: leader(it, b) };
+  });
   const dim = (id: string) => highlight != null && highlight !== id;
   const altro = (id: string) => highlight == null && delRuolo != null && !delRuolo.includes(id); // durante l'anteprima conta solo quella
 </script>
 
 <div class="chart" bind:clientWidth={cw}>
-  <svg viewBox="0 0 {w} {H}" width={w} height={H} role="img" aria-label={label}>
+  <svg viewBox="0 0 {w} {H}" width={w} height={H} role="group" aria-label={label}>
     <defs>
-      <marker id="{uid}-hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="mk hot" /></marker>
-      <marker id="{uid}-cold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="mk" /></marker>
+      {#each rows as r (r.id)}
+        {@const s = scia.get(r.id)}
+        {#if s}
+          <linearGradient id="{uid}-s-{r.id}" gradientUnits="userSpaceOnUse" x1={s.x0} y1={s.y0} x2={s.x1} y2={s.y1}>
+            <stop offset="0" class="st0" class:hot={r.quadrante === 'impara-ora'} />
+            <stop offset="1" class="st1" class:hot={r.quadrante === 'impara-ora'} />
+          </linearGradient>
+        {/if}
+      {/each}
     </defs>
-    <rect class="quad" x={x(0.5)} y={y(1.04)} width={x(1.04) - x(0.5)} height={y(0.5) - y(1.04)} rx="12" />
-    {#each XT as v (v)}
-      {#if v !== 0}<line class="tick" x1={x(nx(v))} x2={x(nx(v))} y1={y(1.04)} y2={y(-0.04)} />{/if}
-      <text class="t10" x={x(nx(v))} y={H - m.b + 34} text-anchor="middle">{xLabel(v)}</text>
-    {/each}
-    {#each YT as v (v)}
-      {#if v !== 3}<line class="tick" x1={x(-0.04)} x2={x(1.04)} y1={y(ny(v))} y2={y(ny(v))} />{/if}
-      <text class="t10" x={m.l - 6} y={y(ny(v)) + 3} text-anchor="end">{yLabel(v)}</text>
-    {/each}
-    <line class="soglia" x1={x(0.5)} x2={x(0.5)} y1={y(1.04)} y2={y(-0.04)} />
-    <line class="soglia" x1={x(-0.04)} x2={x(1.04)} y1={y(0.5)} y2={y(0.5)} />
-    {#each QL as q (q.id)}
-      <text class="ql" class:hot={q.id === 'impara-ora'} x={q.x} y={q.y} text-anchor={q.a}>{quadranti[q.id]}</text>
-    {/each}
-    <text class="t12" x={(x(0) + x(1)) / 2} y={H - 4} text-anchor="middle">Slancio in 6 mesi, rispetto all’AI →</text>
-    <text class="t12" transform="translate(12,{(y(0) + y(1)) / 2}) rotate(-90)" text-anchor="middle">Annunci ogni 10mila →</text>
+    <g aria-hidden="true">
+      {#each QR as q (q.id)}
+        <rect class="quad" class:hot={q.id === 'impara-ora'} x={q.x0} y={q.y0} width={Math.max(0, q.x1 - q.x0)} height={Math.max(0, q.y1 - q.y0)} rx="12" />
+      {/each}
+      {#each XT as v (v)}
+        {#if v !== 0}<line class="tick" x1={x(nx(v))} x2={x(nx(v))} y1={y(1.04)} y2={y(-0.04)} />{/if}
+        <text class="t10" x={x(nx(v))} y={H - m.b + 34} text-anchor="middle">{xLabel(v)}</text>
+      {/each}
+      {#each YT as v (v)}
+        {#if v !== 3}<line class="tick" x1={x(-0.04)} x2={x(1.04)} y1={y(ny(v))} y2={y(ny(v))} />{/if}
+        <text class="t10" x={m.l - 6} y={y(ny(v)) + 3} text-anchor="end">{yLabel(v)}</text>
+      {/each}
+      <line class="soglia" x1={x(0.5)} x2={x(0.5)} y1={y(1.04)} y2={y(-0.04)} />
+      <line class="soglia" x1={x(-0.04)} x2={x(1.04)} y1={y(0.5)} y2={y(0.5)} />
+      {#each SL as s (s.t)}
+        <text class="sl halo" x={s.x} y={s.y} text-anchor={s.a}>{s.t}</text>
+      {/each}
+      {#each QL as q (q.id)}
+        <text class="ql" class:hot={q.id === 'impara-ora'} x={q.x} y={q.y} text-anchor={q.a}>{quadranti[q.id]}</text>
+      {/each}
+      <text class="t12" x={(x(0) + x(1)) / 2} y={H - 4} text-anchor="middle">Slancio in 6 mesi, rispetto all’AI →</text>
+      <text class="t12" transform="translate(12,{(y(0) + y(1)) / 2}) rotate(-90)" text-anchor="middle">Annunci ogni 10mila →</text>
+    </g>
 
     {#each rows as r (r.id)}
       {@const hot = r.quadrante === 'impara-ora'}
+      {@const s = scia.get(r.id)}
       <g class="pt" class:dim={dim(r.id)} class:altro={altro(r.id)}>
-        {#if r.hasPrev && r.move >= MOVE_MIN}
-          {@const x0 = x(r.px as number)}
-          {@const y0 = y(r.py as number)}
-          {@const len = Math.hypot(x(r.x) - x0, y(r.y) - y0) || 1}
-          {@const k = (len - 9) / len}
-          <circle class="prev" class:hot cx={x0} cy={y0} r="3.5" />
-          <line class="arrow" class:hot x1={x0} y1={y0} x2={x0 + (x(r.x) - x0) * k} y2={y0 + (y(r.y) - y0) * k}
-            marker-end="url(#{uid}-{hot ? 'hot' : 'cold'})" />
+        {#if s}
+          <path class="scia" d={s.d} fill="url(#{uid}-s-{r.id})" aria-hidden="true" />
+          <circle class="prev" class:hot cx={s.x0} cy={s.y0} r="1.75" aria-hidden="true" />
         {/if}
-        <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={hot ? 6 : 4.5} />
-        <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-        <!-- la tastiera usa il pannello dei movimenti; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
-        <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" onclick={() => onpick?.(r.id)}>
-          <title>{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}.</title>
-        </circle>
+        <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={rr(r)} aria-hidden="true" />
+        <!-- il punto è un link: Tab lo raggiunge, Invio lo apre; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
+        <a class="pick" href={href?.(r.id)} onclick={(e) => { if (onpick) { e.preventDefault(); onpick(r.id); } }}
+          onfocus={() => (focused = r.id)} onblur={() => { if (focused === r.id) focused = null; }} aria-labelledby="{uid}-n-{r.id}">
+          <title id="{uid}-n-{r.id}">{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}.</title>
+          <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" />
+          <circle class="ring" class:hot cx={x(r.x)} cy={y(r.y)} r={rr(r) + 4} />
+        </a>
       </g>
     {/each}
 
-    <g class="lbls">
+    <g class="lbls" aria-hidden="true">
       {#each layout as it (it.id)}
         {@const l = leader(it, it.box)}
+        {@const tono = hotAt(it.box) ? 'halo-hot' : 'halo-q'}
         {#if l}<line class="leader" class:dim={dim(it.id)} class:altro={altro(it.id)} x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
         <text class:dim={dim(it.id)} class:altro={altro(it.id)} x={it.box.x0} y={it.box.y0 + LH - 4}>
           {#each it.lines as t, i (i)}
-            <tspan x={it.box.x0} dy={i ? LH : 0} class="halo {i === 0 ? (it.r.quadrante === 'impara-ora' ? 't12b' : 't12') : 'note'}">{t}</tspan>
+            <tspan x={it.box.x0} dy={i ? LH : 0} class="halo {tono} {i === 0 ? (it.hot ? 'lb-hot' : 't12') : 'note'}">{t}</tspan>
           {/each}
         </text>
       {/each}
+      {#if tip}
+        {#if tip.l}<line class="leader" x1={tip.px} y1={tip.py} x2={tip.l.x2} y2={tip.l.y2} />{/if}
+        <text class="halo lb-hot {tip.hot ? 'halo-hot' : 'halo-q'}" x={tip.x} y={tip.y}>{tip.t}</text>
+      {/if}
     </g>
   </svg>
 </div>
 
 <style>
+  /* i toni dei quadranti: Impara ora nel blu dei dati, gli altri tre in un grigio appena sopra la carta */
+  .chart { --q: color-mix(in srgb, var(--fg) 4%, var(--card)); --q-hot: var(--accent-soft); }
   svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .quad { fill: var(--accent-soft); }
+  .quad { fill: var(--q); } .quad.hot { fill: var(--q-hot); }
   .soglia { stroke: var(--line-2); stroke-dasharray: 2 4; }
   .tick { stroke: var(--line); }
   .ql { font: 500 12px var(--font); fill: var(--fg-3); } .ql.hot { fill: var(--accent); font-weight: 600; }
+  .sl { font: 500 11px var(--font); fill: var(--fg-3); stroke: var(--q); }
   .dot { fill: var(--fg-3); stroke: var(--card); stroke-width: 2; } .dot.hot { fill: var(--accent); }
   .dot.hollow { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.5; } .dot.hollow.hot { stroke: var(--accent); }
-  .hit { fill: transparent; cursor: pointer; }
-  .prev { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.25; stroke-dasharray: 2 2; } .prev.hot { stroke: var(--accent); }
-  .arrow { stroke: var(--fg-3); stroke-width: 1.5; } .arrow.hot { stroke: var(--accent); }
-  .mk { fill: var(--fg-3); } .mk.hot { fill: var(--accent); }
+  .st0 { stop-color: var(--fg-3); stop-opacity: .12; } .st1 { stop-color: var(--fg-3); stop-opacity: .5; }
+  .st0.hot, .st1.hot { stop-color: var(--accent); }
+  .prev { fill: var(--fg-3); opacity: .55; } .prev.hot { fill: var(--accent); }
+  .pick { outline: none; cursor: pointer; }
+  .hit { fill: transparent; }
+  .ring { fill: none; stroke: var(--fg-2); stroke-width: 1.5; opacity: 0; transition: opacity .15s; } .ring.hot { stroke: var(--accent); }
+  @media (hover: hover) { .pick:hover .ring { opacity: .6; } }
+  .pick:focus-visible .ring { opacity: 1; stroke-width: 2; }
   .leader { stroke: var(--line-2); }
+  .halo-q { stroke: var(--q); } .halo-hot { stroke: var(--q-hot); }
+  .lb-hot { font: 600 13px var(--font); fill: var(--fg); }
   .note { font: 400 12px var(--font); fill: var(--fg-3); }
   .pt, .lbls text, .leader { transition: opacity .15s; }
   /* altri ruoli: i segni si attenuano con l'opacità, il testo con il colore, che resta AA */
   .pt.altro, .leader.altro { opacity: .35; }
   .lbls text.altro tspan { fill: var(--fg-3); font-weight: 400; }
   .dim { opacity: .18; }
+  @media (prefers-reduced-motion: reduce) { .pt, .lbls text, .leader, .ring { transition: none; } }
 </style>

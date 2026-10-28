@@ -36,15 +36,15 @@
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
             onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
             <span class="n">{r.breve}</span>
-            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}<span class="ar" aria-hidden="true">{arrow(cs)}</span>{#if arrow(cs)}<span class="sr">{verso(cs)}</span>{/if}</span>
-            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span><span class="ar" aria-hidden="true">{arrow(cd)}</span>{#if arrow(cd)}<span class="sr">{verso(cd)}</span>{/if}</span>
+            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}<span class="ar" aria-hidden="true">{arrow(cs)}</span>{#if arrow(cs)}<span class="sr">{verso(cs)},</span> <span class="era">era {signedPct(r.sp as number)}</span>{/if}</span>
+            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span><span class="ar" aria-hidden="true">{arrow(cd)}</span>{#if arrow(cd)}<span class="sr">{verso(cd)},</span> <span class="era">era {per10k(r.dp as number)}</span>{/if}</span>
             {#if r.changed && r.qp}<span class="chip">{quadranti[r.qp]} → {quadranti[r.quadrante]}</span>{/if}
             {#if r.moving}<span class="chip">in movimento verso {quadranti[r.moving]}</span>{/if}
           </a>
         </li>
       {/each}
     </ul>
-    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese. Passa sopra una riga per trovarla nel grafico; aprila con un clic.</p>
+    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese; sotto, il valore di allora. Passa sopra una riga per trovarla nel grafico; aprila con un clic.</p>
   </div>
 {/if}
 
@@ -72,6 +72,7 @@
   .down { color: var(--fg-2); }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .flat { color: var(--fg-3); }
+  .era { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--fg-3); padding-right: 1em; } /* sotto la cifra, allineato alla cifra e non alla freccia */
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

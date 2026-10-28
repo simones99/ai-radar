@@ -11,10 +11,10 @@ const radar = FIXTURE.radar as RadarT;
 const rows = radarRows(radar);
 
 describe('Radar', () => {
-  it('una freccia per ogni spostamento di almeno 10 punti', () => {
+  it('una scia per ogni spostamento di almeno 10 punti', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     expect(container.querySelectorAll('g.pt')).toHaveLength(5);
-    expect(container.querySelectorAll('line.arrow')).toHaveLength(3); // MCP, RAG, Robotica
+    expect(container.querySelectorAll('path.scia')).toHaveLength(3); // MCP, RAG, Robotica
     expect(screen.getByText('MCP')).toBeInTheDocument();
   });
   it('evidenzia una competenza e attenua le altre', () => {
@@ -34,7 +34,7 @@ describe('Radar', () => {
   });
   it('lettore di schermo: i punti del ruolo dicono «del tuo ruolo», gli altri niente', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti, delRuolo: ['rag', 'vector-db'] });
-    const del = [...container.querySelectorAll('circle.hit > title')].filter((t) => /del tuo ruolo/.test(t.textContent ?? '')).map((t) => t.textContent?.split(',')[0]);
+    const del = [...container.querySelectorAll('a.pick > title')].filter((t) => /del tuo ruolo/.test(t.textContent ?? '')).map((t) => t.textContent?.split(',')[0]);
     expect(del.sort()).toEqual(['Database vettoriali', 'RAG e ricerca semantica']);
   });
   it('con «Tutti» niente di attenuato e niente «del tuo ruolo»', () => {
@@ -51,7 +51,7 @@ describe('Radar', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     const pts = container.querySelectorAll('g.pt');
     for (const g of pts) {
-      expect(g.querySelector('circle.hit > title')?.textContent).toMatch(/Slancio [+−±]\d+% in 6 mesi, [\d,]+ annunci ogni 10mila/);
+      expect(g.querySelector('a.pick > title')?.textContent).toMatch(/Slancio [+−±]\d+% in 6 mesi, [\d,]+ annunci ogni 10mila/);
       expect(g.querySelector('circle.dot > title')).toBeNull();
     }
   });
@@ -64,18 +64,20 @@ describe('Radar', () => {
   it('punto vuoto per i dati incerti', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     expect(container.querySelectorAll('circle.dot.hollow')).toHaveLength(1); // Robotica
-    const unc = [...container.querySelectorAll('circle.hit > title')].filter((t) => /Dato incerto/.test(t.textContent ?? ''));
+    const unc = [...container.querySelectorAll('a.pick > title')].filter((t) => /Dato incerto/.test(t.textContent ?? ''));
     expect(unc).toHaveLength(1);
     expect(unc[0].textContent).toMatch(/^AI fisica e robotica/);
   });
-  it('tacche 0 e 3: etichetta sì, linea piena no; marcatore di un mese fa tratteggiato', () => {
+  it('tacche 0 e 3: etichetta sì, linea piena no; le soglie scritte sulle linee', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     expect(container.querySelectorAll('line.tick')).toHaveLength(8);
+    expect(screen.getByText('↑ almeno 3 annunci ogni 10mila')).toBeInTheDocument();
+    expect(screen.getByText('cresce più dell’AI →')).toBeInTheDocument();
   });
-  it('radar senza posizione precedente: nessuna freccia', () => {
+  it('radar senza posizione precedente: nessuna scia', () => {
     const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) });
     const { container } = render(Radar, { rows: old, quadranti: radar.quadranti });
-    expect(container.querySelectorAll('line.arrow')).toHaveLength(0);
+    expect(container.querySelectorAll('path.scia')).toHaveLength(0);
   });
 });
 
@@ -100,6 +102,12 @@ describe('Radar onpick', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti, onpick });
     await fireEvent.click(container.querySelectorAll('g.pt')[1].querySelector('circle.hit')!);
     expect(onpick).toHaveBeenCalledWith('mcp');
+  });
+  it('ogni punto è un link con il suo nome per la tastiera e i lettori di schermo', () => {
+    render(Radar, { rows, quadranti: radar.quadranti, href: (id: string) => `#competenze/${id}` });
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(5);
+    expect(screen.getByRole('link', { name: /^Model Context Protocol \(MCP\): Impara ora/ })).toHaveAttribute('href', '#competenze/mcp');
   });
 });
 

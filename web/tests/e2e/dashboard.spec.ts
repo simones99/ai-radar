@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { TEMI } from '../../src/lib/router';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
@@ -517,6 +517,34 @@ test('mappa in tema scuro: nessuna violazione grave', async ({ page }) => {
   await page.reload();
   await expect(mappa(page)).toBeVisible();
   expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+});
+
+/** Il contrasto WCAG tra il testo di un elemento con uno sfondo pieno e quello sfondo, con i colori come li disegna il browser. */
+const contrasto = (l: Locator) => l.evaluate((el) => {
+  const ctx = document.createElement('canvas').getContext('2d')!;
+  const lum = (css: string) => {
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillStyle = css;
+    ctx.fillRect(0, 0, 1, 1);
+    const [r, g, b] = [...ctx.getImageData(0, 0, 1, 1).data].map((v) => v / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const s = getComputedStyle(el);
+  const [a, b] = [lum(s.color), lum(s.backgroundColor)].sort((x, y) => y - x);
+  return (a + 0.05) / (b + 0.05);
+});
+
+test('menu «Area» e quote per Paese in tema scuro: nessuna violazione grave', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/#geopoliticai?vista=quote');
+  await page.reload();
+  await menuArea(page).selectOption('italia'); // un Paese dentro il gruppo dell'UE
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=italia$/);
+  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
+  expect(await new AxeBuilder({ page: page as never }).include('#geo-scheda').include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  // axe lascia il menu in sospeso, per il gradiente della freccia sullo sfondo: il contrasto del testo lo misura il test
+  expect(await contrasto(menuArea(page))).toBeGreaterThanOrEqual(4.5);
 });
 
 test('mappa con «riduci movimento»: nessuna animazione nel scegliere un Paese', async ({ page }) => {

@@ -22,9 +22,10 @@ const scrollSettled = (page: Page) =>
     await page.waitForTimeout(300);
     return a === (await page.evaluate(() => window.scrollY));
   }).toBe(true);
+// Le violazioni gravi di axe, in tutta la pagina o solo nelle parti dei selettori.
 // cast: @axe-core/playwright usa playwright-core 1.64, @playwright/test 1.63: tipi Page nominalmente diversi
-const seriousViolations = async (page: Page) =>
-  (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+const seriousViolations = async (page: Page, ...parti: string[]) =>
+  (await parti.reduce((axe, p) => axe.include(p), new AxeBuilder({ page: page as never })).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
 
 test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
   await page.goto('/');
@@ -457,7 +458,7 @@ test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=model
   await expect(mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByRole('button', { name: /^Colossus 2:/ })).toBeVisible();
   await europa(page).getByRole('button', { name: /^Google Waltham Cross:/ }).click();
   await expect(mappa(page).getByRole('dialog', { name: 'Google Waltham Cross' })).toBeFocused();
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-mappa')).toEqual([]);
   await page.goto('about:blank'); // a card aperta un hash nuovo tiene i parametri: si riparte
   await page.goto('/#geopoliticai?vista=quote&anello=modelli&siti=1');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
@@ -493,7 +494,7 @@ test('filo a 320px: nessuno scorrimento orizzontale, e gli archi d’Europa nel 
   await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello europeo' })).toBeVisible();
   await expect(europa(page).getByTestId('arco').first()).toBeAttached();
   expect(await noHorizontalScroll(page)).toBe(true);
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-mappa')).toEqual([]);
 });
 
 test('filo con «riduci movimento»: gli archi non si animano', async ({ page }) => {
@@ -516,7 +517,7 @@ test('mappa in tema scuro: nessuna violazione grave', async ({ page }) => {
   await page.goto('/#geopoliticai?area=cina');
   await page.reload();
   await expect(mappa(page)).toBeVisible();
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-mappa')).toEqual([]);
 });
 
 /** Il contrasto WCAG tra il testo di un elemento con uno sfondo pieno e quello sfondo, con i colori come li disegna il browser. */
@@ -542,7 +543,7 @@ test('menu «Area» e quote per Paese in tema scuro: nessuna violazione grave', 
   await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=italia$/);
   await expect(scheda(page)).toHaveText("Italia, nell'UE");
   await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-scheda').include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-scheda', '#geo-mappa')).toEqual([]);
   // axe lascia il menu in sospeso, per il gradiente della freccia sullo sfondo: il contrasto del testo lo misura il test
   expect(await contrasto(menuArea(page))).toBeGreaterThanOrEqual(4.5);
 });

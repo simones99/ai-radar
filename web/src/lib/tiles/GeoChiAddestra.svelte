@@ -40,10 +40,11 @@
 </Block>
 
 <style>
-  /* un colore per area, uno per tema: ≥ 3:1 sulla carta, e distinti anche per chi non vede il rosso o il verde. L'area scelta ha il suo colore pieno,
-     le altre lo tengono schiarito verso la carta */
-  .legenda, .barre { --a-usa: light-dark(#98397e, #d073b3); --a-cina: light-dark(#b58b22, #e7bf57); --a-ue: light-dark(#238ea9, #71c5df);
-    --a-uk: light-dark(#bf4f34, #e77b60); --a-altri: light-dark(#8f8f8e, #8a8a89); }
+  /* un colore per area, uno per tema. L'area scelta ha il suo colore pieno, le altre lo tengono al 70% verso la carta: anche così ≥ 3:1 sulla carta,
+     in chiaro e in scuro. Distinti anche per chi non vede il rosso o il verde: USA e UE, Cina e Regno Unito, che lì hanno quasi la stessa tinta,
+     si separano per luminosità */
+  .legenda, .barre { --a-usa: light-dark(#85266c, #d073b3); --a-cina: light-dark(#865e00, #e7bf57); --a-ue: light-dark(#006f89, #71c5df);
+    --a-uk: light-dark(#972a0d, #e77b60); --a-altri: light-dark(#656564, #8d8d8c); }
   .legenda { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .legenda li { display: flex; align-items: center; gap: 6px; }
   .legenda li[aria-current='true'] { color: var(--fg); font-weight: 600; }
@@ -53,7 +54,7 @@
   .anno small { font-size: inherit; }
   .barra { display: flex; height: 20px; gap: 2px; border-radius: 4px; overflow: hidden; min-width: 0; }
   .seg { flex-basis: 0; min-width: 2px; }
-  .sw, .seg { background: color-mix(in oklab, var(--a) 60%, var(--card)); }
+  .sw, .seg { background: color-mix(in oklab, var(--a) 70%, var(--card)); }
   .sw.hot, .seg.hot { background: var(--a); }
   .tot { color: var(--fg-2); text-align: right; }
   .frase { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }

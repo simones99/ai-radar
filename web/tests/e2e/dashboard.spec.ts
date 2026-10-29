@@ -756,23 +756,26 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
 test('1920px: foto piccola accanto al titolo, il primo grafico nella finestra, nessuna riga di blocchi lasciata a metà', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/#modelli');
-  await expect(page.locator('#detail-modelli')).toBeVisible();
-  const foto = await box(page, '#detail-modelli figure');
-  const hero = await box(page, '#detail-modelli .d-hero');
-  const titolo = await box(page, '#h-modelli');
-  expect(foto.width).toBeLessThan(hero.width / 2);
+  const det = page.locator('#detail-modelli');
+  await expect(det).toBeVisible();
+  const pagina = (await det.boundingBox())!;
+  const foto = (await det.getByRole('figure').boundingBox())!;
+  const titolo = (await det.getByRole('heading', { level: 2 }).boundingBox())!;
+  expect(foto.width).toBeLessThan(pagina.width / 2);
   expect(titolo.x + titolo.width).toBeLessThanOrEqual(foto.x);
-  await expect(page.locator('#detail-modelli .blk').first()).toBeInViewport();
-  // dodici colonne a ogni larghezza: in ogni riga i blocchi vanno dal bordo sinistro della griglia al destro
-  const griglia = await box(page, '#detail-modelli .blocks');
-  const blocchi = await page.locator('#detail-modelli .blk').evaluateAll((els) => els.map((e) => {
+  // i blocchi sono le regioni della pagina, ognuna col titolo del suo grafico
+  const regioni = det.getByRole('region').filter({ has: page.getByRole('heading', { level: 3 }) });
+  await expect(regioni).toHaveCount(await det.getByRole('heading', { level: 3 }).count());
+  await expect(regioni.first()).toBeInViewport();
+  // dodici colonne a ogni larghezza: in ogni riga i blocchi vanno dal bordo sinistro della pagina al destro
+  const blocchi = await regioni.evaluateAll((els) => els.map((e) => {
     const r = e.getBoundingClientRect();
     return { top: Math.round(r.top), x0: r.left, x1: r.right };
   }));
   const righe = Object.values(blocchi.reduce<Record<number, { x0: number; x1: number }[]>>((m, b) => ({ ...m, [b.top]: [...(m[b.top] ?? []), b] }), {}));
   expect(righe.length).toBeGreaterThan(1);
   for (const riga of righe) {
-    expect(Math.min(...riga.map((b) => b.x0))).toBeCloseTo(griglia.x, 0);
-    expect(Math.max(...riga.map((b) => b.x1))).toBeCloseTo(griglia.x + griglia.width, 0);
+    expect(Math.min(...riga.map((b) => b.x0))).toBeCloseTo(pagina.x, 0);
+    expect(Math.max(...riga.map((b) => b.x1))).toBeCloseTo(pagina.x + pagina.width, 0);
   }
 });

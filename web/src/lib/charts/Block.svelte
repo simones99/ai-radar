@@ -10,20 +10,23 @@
     cite?: Cite | null;
     table?: TableData | null;
     missing?: string | null;
-    /** con un id il blocco è una regione con il suo titolo, e può ricevere il focus */
+    /** con un id il blocco può ricevere il focus */
     id?: string | null;
     /** un comando accanto al titolo, che cambia quello che il blocco mostra */
     azione?: Snippet;
     children?: Snippet;
   } = $props();
+  // ogni blocco è una regione con il suo titolo: i lettori di schermo ci arrivano per nome
+  const uid = $props.id();
+  const tid = $derived(`${id ?? uid}-t`);
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex: tabindex è -1 o assente, serve a dare il focus al blocco da codice -->
-<section class="blk w{span}" id={id} tabindex={id ? -1 : undefined} aria-labelledby={id ? `${id}-t` : undefined}>
+<section class="blk w{span}" id={id} tabindex={id ? -1 : undefined} aria-labelledby={tid}>
   {#if azione}
-    <div class="testa"><h3 id={id ? `${id}-t` : undefined}>{title}</h3>{@render azione()}</div>
+    <div class="testa"><h3 id={tid}>{title}</h3>{@render azione()}</div>
   {:else}
-    <h3 id={id ? `${id}-t` : undefined}>{title}</h3>
+    <h3 id={tid}>{title}</h3>
   {/if}
   {#if note}<p class="note">{note}</p>{/if}
   {#if missing}

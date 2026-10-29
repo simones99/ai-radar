@@ -39,7 +39,7 @@ describe('Competenze', () => {
   it('passando il mouse su una riga del pannello, nel radar le altre si attenuano', async () => {
     const { container } = show(CompetenzeDetail, tile);
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(0);
-    const link = within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getAllByRole('link').filter((a) => a.matches('a.row'))[0];
+    const link = within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getByRole('link', { name: /^MCP slancio/ });
     const ev = new Event('pointerenter');
     Object.defineProperty(ev, 'pointerType', { value: 'mouse' });
     await fireEvent(link, ev);

@@ -74,7 +74,7 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
   });
   it('la fonte di Epoch, con i link e la data, è una sola, sotto la matrice', () => {
     show();
-    const cite = screen.getByRole('link', { name: 'Data on AI models' }).closest('.cite') as HTMLElement;
+    const cite = screen.getByText(/^Fonte: Epoch AI/);
     expect(cite).toHaveTextContent('Fonte: Epoch AI, Data on AI models ed Epoch Capabilities Index (CC BY 4.0), aggregati per area da AI Radar. Dati scaricati il 15 ott 2026.');
     expect(within(cite).getByRole('link', { name: 'Data on AI models' })).toHaveAttribute('href', 'https://epoch.ai/data/ai-models');
     expect(within(cite).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
@@ -97,22 +97,23 @@ describe('GeopoliticAI: scegliere l’area', () => {
   });
 
   const menu = () => screen.getByRole('combobox', { name: 'Area' }) as HTMLSelectElement;
-  const scelta = () => menu().selectedOptions[0].textContent;
-  const voci = () => [...menu().querySelectorAll('option')].map((o) => o.textContent);
+  const scelta = () => within(menu()).getByRole('option', { selected: true }).textContent;
+  const voci = () => within(menu()).getAllByRole('option').map((o) => o.textContent);
+  const paesiUe = () => within(menu()).getByRole('group', { name: "Paesi dell'UE" });
   /** Un Paese UE che nel file viene dopo l'Italia, in ordine di nome. */
   const conSpagna = (): Dataset => ({ ...data, geopoliticai: { ...geo, zone: { ...geo.zone, spagna: { ...geo.zone.germania, nome: 'Spagna', aggettivo: 'spagnolo', con_articolo: 'la Spagna' } } } });
 
   it('un solo menu accanto al titolo della scheda: le cinque aree, e dentro l’UE i suoi Paesi; senza una scelta, l’UE', () => {
     show();
     expect(voci()).toEqual(['USA', 'Cina', 'UE, tutta', 'Francia', 'Germania', 'Italia', 'Regno Unito', 'Altri']);
-    expect(menu().querySelector('optgroup')).toHaveAttribute('label', "Paesi dell'UE");
+    expect(within(paesiUe()).getAllByRole('option').map((o) => o.textContent)).toEqual(['Francia', 'Germania', 'Italia']);
     expect(scelta()).toBe('UE, tutta');
     expect(laScheda('UE').getByRole('combobox', { name: 'Area' })).toBe(menu());
   });
 
   it('tra i Paesi dell’UE quelli del file, con l’Italia sempre in fondo', () => {
     area('francia', conSpagna());
-    expect([...menu().querySelectorAll('optgroup option')].map((o) => o.textContent)).toEqual(['Francia', 'Germania', 'Spagna', 'Italia']);
+    expect(within(paesiUe()).getAllByRole('option').map((o) => o.textContent)).toEqual(['Francia', 'Germania', 'Spagna', 'Italia']);
     expect(scelta()).toBe('Francia');
     expect(screen.getByRole('heading', { level: 3, name: "Francia, nell'UE" })).toBeInTheDocument();
   });

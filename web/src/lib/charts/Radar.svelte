@@ -54,6 +54,8 @@
     return { id: r.id, x0, y0, x1, y1, len, d };
   }));
   const scia = $derived(new Map(scie.map((s) => [s.id, s])));
+  // La scia detta a parole: chi non la vede sente dove era il punto un mese fa.
+  const mese = (r: RadarRowM) => (scia.has(r.id) ? `. Un mese fa: slancio ${signedPct(r.sp as number)}${r.dp != null ? `, ${per10k(r.dp)} annunci` : ''}` : '');
   // Punti e scie, a tratti di 6 px: né le soglie scritte né le etichette ci si posano sopra.
   const segni = $derived.by(() => {
     const b: Box[] = rows.map((r) => ({ x0: x(r.x) - 7, y0: y(r.y) - 7, x1: x(r.x) + 7, y1: y(r.y) + 7 }));
@@ -168,7 +170,7 @@
         <!-- il punto è un link: Tab lo raggiunge, Invio lo apre; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
         <a class="pick" href={href?.(r.id)} onclick={(e) => { if (onpick) { e.preventDefault(); onpick(r.id); } }}
           onfocus={() => (focused = r.id)} onblur={() => { if (focused === r.id) focused = null; }} aria-labelledby="{uid}-n-{r.id}">
-          <title id="{uid}-n-{r.id}">{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}.</title>
+          <title id="{uid}-n-{r.id}">{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}{mese(r)}.</title>
           <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" />
           <circle class="ring" class:hot cx={x(r.x)} cy={y(r.y)} r={rr(r) + 4} />
         </a>

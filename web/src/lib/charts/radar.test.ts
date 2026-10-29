@@ -9,12 +9,16 @@ import Radar from './Radar.svelte';
 
 const radar = FIXTURE.radar as RadarT;
 const rows = radarRows(radar);
+const href = (id: string) => `#competenze/${id}`;
 
 describe('Radar', () => {
-  it('una scia per ogni spostamento di almeno 10 punti', () => {
-    const { container } = render(Radar, { rows, quadranti: radar.quadranti });
-    expect(container.querySelectorAll('g.pt')).toHaveLength(5);
-    expect(container.querySelectorAll('path.scia')).toHaveLength(3); // MCP, RAG, Robotica
+  it('una scia per ogni spostamento di almeno 10 punti, detta anche a parole', () => {
+    render(Radar, { rows, quadranti: radar.quadranti, href });
+    expect(screen.getAllByRole('link')).toHaveLength(5);
+    const mossi = screen.getAllByRole('link', { name: /Un mese fa/ }).map((a) => a.textContent?.split(':')[0]);
+    expect(mossi.sort()).toEqual(['AI fisica e robotica', 'Model Context Protocol (MCP)', 'RAG e ricerca semantica']);
+    expect(screen.getByRole('link', { name: /^Model Context Protocol/ })).toHaveAccessibleName(
+      'Model Context Protocol (MCP): Impara ora (era Da consolidare). Slancio +15% in 6 mesi, 3,4 annunci ogni 10mila. Un mese fa: slancio −27%, 3,4 annunci.');
     expect(screen.getByText('MCP')).toBeInTheDocument();
   });
   it('evidenzia una competenza e attenua le altre', () => {
@@ -33,8 +37,8 @@ describe('Radar', () => {
     expect(onpick).toHaveBeenCalledTimes(1);
   });
   it('lettore di schermo: i punti del ruolo dicono «del tuo ruolo», gli altri niente', () => {
-    const { container } = render(Radar, { rows, quadranti: radar.quadranti, delRuolo: ['rag', 'vector-db'] });
-    const del = [...container.querySelectorAll('a.pick > title')].filter((t) => /del tuo ruolo/.test(t.textContent ?? '')).map((t) => t.textContent?.split(',')[0]);
+    render(Radar, { rows, quadranti: radar.quadranti, delRuolo: ['rag', 'vector-db'], href });
+    const del = screen.getAllByRole('link', { name: /del tuo ruolo/ }).map((a) => a.textContent?.split(',')[0]);
     expect(del.sort()).toEqual(['Database vettoriali', 'RAG e ricerca semantica']);
   });
   it('con «Tutti» niente di attenuato e niente «del tuo ruolo»', () => {
@@ -47,13 +51,9 @@ describe('Radar', () => {
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(4);
     expect(container.querySelectorAll('.altro')).toHaveLength(0);
   });
-  it('il suggerimento di ogni punto sta sul cerchio di tocco, quello sopra il punto', () => {
-    const { container } = render(Radar, { rows, quadranti: radar.quadranti });
-    const pts = container.querySelectorAll('g.pt');
-    for (const g of pts) {
-      expect(g.querySelector('a.pick > title')?.textContent).toMatch(/Slancio [+−±]\d+% in 6 mesi, [\d,]+ annunci ogni 10mila/);
-      expect(g.querySelector('circle.dot > title')).toBeNull();
-    }
+  it('il suggerimento di ogni punto è il nome del suo link', () => {
+    render(Radar, { rows, quadranti: radar.quadranti, href });
+    for (const a of screen.getAllByRole('link')) expect(a).toHaveAccessibleName(/Slancio [+−±]\d+% in 6 mesi, [\d,]+ annunci ogni 10mila/);
   });
   it('assi con le tacche in unità vere e le soglie al centro', () => {
     render(Radar, { rows, quadranti: radar.quadranti });
@@ -62,11 +62,11 @@ describe('Radar', () => {
     expect(screen.getByText('Annunci ogni 10mila →')).toBeInTheDocument();
   });
   it('punto vuoto per i dati incerti', () => {
-    const { container } = render(Radar, { rows, quadranti: radar.quadranti });
+    const { container } = render(Radar, { rows, quadranti: radar.quadranti, href });
     expect(container.querySelectorAll('circle.dot.hollow')).toHaveLength(1); // Robotica
-    const unc = [...container.querySelectorAll('a.pick > title')].filter((t) => /Dato incerto/.test(t.textContent ?? ''));
+    const unc = screen.getAllByRole('link', { name: /Dato incerto/ });
     expect(unc).toHaveLength(1);
-    expect(unc[0].textContent).toMatch(/^AI fisica e robotica/);
+    expect(unc[0]).toHaveAccessibleName(/^AI fisica e robotica/);
   });
   it('tacche 0 e 3: etichetta sì, linea piena no; le soglie scritte sulle linee', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
@@ -76,8 +76,9 @@ describe('Radar', () => {
   });
   it('radar senza posizione precedente: nessuna scia', () => {
     const old = radarRows({ ...radar, competenze: radar.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) });
-    const { container } = render(Radar, { rows: old, quadranti: radar.quadranti });
-    expect(container.querySelectorAll('path.scia')).toHaveLength(0);
+    render(Radar, { rows: old, quadranti: radar.quadranti, href });
+    expect(screen.getAllByRole('link')).toHaveLength(5);
+    expect(screen.queryAllByRole('link', { name: /Un mese fa/ })).toHaveLength(0);
   });
 });
 

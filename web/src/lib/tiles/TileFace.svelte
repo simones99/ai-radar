@@ -46,7 +46,7 @@
 </button>
 
 <style>
-  .face { all: unset; box-sizing: border-box; display: grid; gap: var(--s2); width: 100%; height: 100%; align-content: start; padding: var(--s1) var(--s1) var(--s3); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); cursor: pointer; transition: box-shadow .25s var(--ease), transform .25s var(--ease); }
+  .face { all: unset; box-sizing: border-box; display: grid; gap: var(--s2); width: 100%; align-content: start; padding: var(--s1) var(--s1) var(--s3); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); cursor: pointer; transition: box-shadow .25s var(--ease), transform .25s var(--ease); }
   .face:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .ph { display: block; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; background: var(--line) center / cover no-repeat; } /* sotto la foto, finché arriva, la sua anteprima */
   .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }

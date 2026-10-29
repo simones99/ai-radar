@@ -2,7 +2,7 @@ import {
   MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
-import { annoFaccia, classifica, valore } from '../data/geopoliticai';
+import { annoFaccia, classifica, quota, valore } from '../data/geopoliticai';
 import type { AiActItem, Dataset, Quadrant, Ruolo } from '../data/types';
 import { eci as eciFmt, fraseFaccia } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
@@ -406,11 +406,27 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
     };
   }
 
-  // 4. riserva: la scadenza dopo quella della card, anche lontana
+  // 4. GeopoliticAI: quanti modelli di grande scala dell'anno in corso sono europei, o dell'ultimo anno chiuso se nell'anno in corso
+  // non ce n'è ancora nessuno. La card GeopoliticAI dice la capacità e il distacco dagli USA: la porta dice un'altra cosa
+  const geo = d.geopoliticai;
+  const q = geo && [geo.anno_corrente, geo.anno_corrente - 1].map((y) => ({ y, ...quota(geo, 'ue', y) })).find((x) => x.tot > 0);
+  if (geo && q) {
+    const pct = (100 * q.n) / q.tot;
+    const finora = q.y === geo.anno_corrente ? ', finora' : '';
+    return {
+      title: q.n
+        ? [{ t: `${q.n} dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} ${q.n === 1 ? 'è europeo' : 'sono europei'} (${nf(pct, pct < 1 ? 1 : 0)}%)${finora}` }]
+        : [{ t: `Nessuno dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} è europeo${finora}` }],
+      meta: `Epoch AI · dati scaricati ${dayWith('il', geo.scaricato)}`,
+      target: { tema: 'geopoliticai', elemento: null, params: { area: 'ue' } },
+    };
+  }
+
+  // 5. riserva: la scadenza dopo quella della card, anche lontana
   const dopo = scad.find((s) => ahead(s.data) > 0);
   if (dopo) return scadenza(dopo);
 
-  // 5. ultima riserva, quando resta solo la scadenza della card
+  // 6. ultima riserva, quando resta solo la scadenza della card
   if (nellaCard) {
     const n = ahead(nellaCard.data);
     return {

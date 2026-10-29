@@ -50,16 +50,17 @@ test('porta Per te: apre Competenze sulla competenza della notizia', async ({ pa
   await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
 });
 
-test('porta L’AI in Italia: non ripete la scadenza della card Norme e apre Norme su quella dopo', async ({ page }) => {
+test('porta L’AI in Italia: non ripete le card Norme e GeopoliticAI, e apre GeopoliticAI sull’UE', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
   await page.goto('/');
   await expect(page.getByRole('button', { name: /Norme/ })).toContainText('fine della transizione per la marcatura');
+  await expect(page.getByRole('button', { name: /GeopoliticAI/ })).toContainText('punti sotto gli USA');
   const porta = page.getByRole('link', { name: /Per la tua organizzazione/ });
   await expect(porta).not.toContainText('fine della transizione');
-  await porta.getByText(/Tra 377 giorni/).click();
-  await expect(page.locator('#detail-norme')).toBeVisible();
-  await expect(page).toHaveURL(/#norme\/2027-12-02$/);
-  await expect(page.locator('#detail-norme li[aria-current="true"]')).toContainText('Sistemi ad alto rischio (allegato III)');
+  await expect(porta).not.toContainText('punti sotto');
+  await porta.getByText('Nessuno dei 35').click();
+  await expect(page.locator('#detail-geopoliticai')).toBeVisible();
+  await expect(page).toHaveURL(/#geopoliticai\?area=ue$/);
 });
 
 test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude', async ({ page }) => {

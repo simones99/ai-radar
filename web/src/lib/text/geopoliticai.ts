@@ -1,4 +1,4 @@
-import { AREE, classifica, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
+import { AREE, classifica, quota, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
 import type { Geopoliticai, GeoZona } from '../data/types';
 import { capitalize, dayWith, nf } from './format';
 import type { Cite } from '../charts/types';
@@ -245,9 +245,7 @@ export function notaMatrice(g: Geopoliticai, misura: Misura): string {
 /** «Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).»: sempre per l'ultimo anno chiuso, il totale è delle cinque aree. */
 export function fraseChiAddestra(g: Geopoliticai, k: string): string {
   const y = g.anno_corrente - 1;
-  const n = (z: string) => g.zone[z].calcolo[String(y)]?.n ?? 0;
-  const tot = AREE.reduce((t, z) => t + n(z), 0);
-  const mio = n(k);
+  const { n: mio, tot } = quota(g, k, y);
   const dove = di(g.zone[k].con_articolo);
   if (!mio) return `Nel ${y} nessuno dei ${tot} modelli di grande scala è ${dove}.`;
   const pct = (100 * mio) / tot;

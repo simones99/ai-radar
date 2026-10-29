@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today, fromNorm } from '../test/fixtures';
-import { doorItalia, doorPerTe, faceNorme } from './frasi';
+import { doorItalia, doorPerTe, faceGeopoliticai, faceNorme } from './frasi';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -184,11 +184,13 @@ describe('porta L’AI in Italia', () => {
     const e = { ...d, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-11-25' }, { ...d.ai_act!.scadenze[1], data: '2026-12-11' }] } };
     expect(doorItalia(e, at('2026-11-20')).meta).toBe('AI Act · scadenza dell’11 dic 2026');
   });
+  // senza GeopoliticAI la regola 4 non scatta: si arriva alle riserve
+  const senzaGeo = { ...d, geopoliticai: undefined };
   it('non ripete la scadenza della card Norme, in nessuna regola', () => {
     const card = faceNorme(d, at('2026-11-20'))!.sent; // «… il 2 dic 2026: fine della transizione per la marcatura.»
     expect(card).toContain('fine della transizione per la marcatura');
     for (const giorno of ['2026-11-20', '2026-12-01']) {
-      const p = doorItalia(d, at(giorno));
+      const p = doorItalia(senzaGeo, at(giorno));
       expect(text(p.title)).not.toContain('fine della transizione per la marcatura');
       expect(p.target).toEqual({ tema: 'norme', elemento: '2027-12-02' });
     }
@@ -270,25 +272,51 @@ describe('porta L’AI in Italia', () => {
     expect(tema).not.toBe('persone');
     expect(tema).toBe('rapporti');
   });
-  it('3. rapporto lontano: la regola 3 non scatta, resta la riserva', () => {
+  it('3. rapporto lontano: la regola 3 non scatta, tocca a GeopoliticAI', () => {
     const r = { rapporti: [{ ...d.rapporti!.rapporti[0], prossima_prevista: '2027-10' }] };
-    const p = doorItalia({ ...d, rapporti: r }, today);
-    expect(p.target?.tema).toBe('norme');
-    expect(text(p.title)).toBe('Tra 413 giorni: sistemi ad alto rischio (allegato III)');
+    expect(doorItalia({ ...d, rapporti: r }, today).target?.tema).toBe('geopoliticai');
   });
   it('3. davanti ad aprile si scrive «Ad»', () => {
     const p = doorItalia(d, at('2027-03-20'));
     expect(text(p.title)).toBe('Ad aprile esce AI Index Report');
   });
-  it('4. riserva: la scadenza dopo quella della card, anche lontana', () => {
-    const p = doorItalia({ ...d, rapporti: undefined }, today);
+  describe('4. GeopoliticAI: quanti modelli di grande scala sono europei', () => {
+    const conUe = (n: number) => {
+      const x = structuredClone({ ...d, rapporti: undefined });
+      x.geopoliticai!.zone.ue.calcolo['2026'] = { n, nc: n, max: null, modello: null };
+      return x;
+    };
+    it('nell’anno in corso, nessuno: la frase lo dice, con «finora», e apre GeopoliticAI sull’UE', () => {
+      const p = doorItalia({ ...d, rapporti: undefined }, today);
+      expect(text(p.title)).toBe('Nessuno dei 35 modelli di grande scala del 2026 è europeo, finora');
+      expect(p.title[0]).toEqual({ t: 'Nessuno dei 35', em: true });
+      expect(p.meta).toBe('Epoch AI · dati scaricati il 15 ott 2026');
+      expect(p.target).toEqual({ tema: 'geopoliticai', elemento: null, params: { area: 'ue' } });
+    });
+    it('nell’anno in corso, uno o più', () => {
+      expect(text(doorItalia(conUe(2), today).title)).toBe('2 dei 37 modelli di grande scala del 2026 sono europei (5%), finora');
+      expect(text(doorItalia(conUe(1), today).title)).toBe('1 dei 36 modelli di grande scala del 2026 è europeo (3%), finora');
+    });
+    it('nessun modello nell’anno in corso, di nessuna area: l’ultimo anno chiuso, senza «finora»', () => {
+      const x = structuredClone({ ...d, rapporti: undefined });
+      for (const z of Object.values(x.geopoliticai!.zone)) delete z.calcolo['2026'];
+      expect(text(doorItalia(x, today).title)).toBe('5 dei 165 modelli di grande scala del 2025 sono europei (3%)');
+    });
+    it('non ripete la card GeopoliticAI: né il distacco, né la capacità, né il modello', () => {
+      const card = faceGeopoliticai(d, today)!;
+      const porta = text(doorItalia({ ...d, rapporti: undefined }, today).title);
+      for (const t of [card.fig, card.unit, 'ECI', 'Mistral']) expect(porta).not.toContain(t);
+    });
+  });
+  it('5. riserva: la scadenza dopo quella della card, anche lontana', () => {
+    const p = doorItalia({ ...senzaGeo, rapporti: undefined }, today);
     expect(text(p.title)).toBe('Tra 413 giorni: sistemi ad alto rischio (allegato III)');
     expect(p.title[0]).toEqual({ t: 'Tra 413 giorni', em: true });
     expect(p.meta).toBe('AI Act · scadenza del 2 dic 2027');
     expect(p.target).toEqual({ tema: 'norme', elemento: '2027-12-02' });
   });
-  it('5. resta solo la scadenza della card: la porta dice i giorni che mancano', () => {
-    const p = doorItalia({ ...d, rapporti: undefined, ai_act: { scadenze: [d.ai_act!.scadenze[1]] } }, today);
+  it('6. resta solo la scadenza della card: la porta dice i giorni che mancano', () => {
+    const p = doorItalia({ ...senzaGeo, rapporti: undefined, ai_act: { scadenze: [d.ai_act!.scadenze[1]] } }, today);
     expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
     expect(p.meta).toBe('AI Act · Fine della transizione per la marcatura');
     expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });

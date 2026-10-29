@@ -371,7 +371,13 @@ describe('Norme', () => {
 
 describe('Notizie', () => {
   const tile = mk('notizie', 'Notizie', headNotizie, NotizieDetail);
-  const items = () => within(screen.getByRole('list', { name: 'Elenco delle notizie' })).queryAllByRole('listitem');
+  const items = () => screen.queryAllByRole('list', { name: /^Notizie:/ }).flatMap((l) => within(l).queryAllByRole('listitem'));
+  it('le notizie della settimana in testa, come il numero del titolo, poi le altre', () => {
+    show(NotizieDetail, tile);
+    expect(screen.getAllByRole('heading', { level: 4 }).map((h) => h.textContent)).toEqual(['Questa settimana', 'Prima']);
+    expect(within(screen.getByRole('list', { name: 'Notizie: questa settimana' })).getAllByRole('listitem')).toHaveLength(2);
+    expect(within(screen.getByRole('list', { name: 'Notizie: prima' })).getByRole('link', { name: 'Una notizia vecchia' })).toBeInTheDocument();
+  });
   it('tutte le notizie, poi filtro per tema', async () => {
     show(NotizieDetail, tile);
     expect(items()).toHaveLength(3);

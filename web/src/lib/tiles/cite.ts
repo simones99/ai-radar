@@ -14,8 +14,10 @@ export function owidCite(s: OwidSeries | undefined): Cite {
   if (!s) return [];
   const owid = { t: 'Our World in Data', href: s.url };
   const cit = s.citazione?.trim();
+  // la citazione che nomina già OWID resta parola per parola (serie CC BY-ND): il link al grafico va sul nome
+  const i = cit?.lastIndexOf(owid.t) ?? -1;
   const out: Cite = !cit ? [{ t: 'Fonte: ' }, owid, { t: '.' }]
-    : cit.includes('Our World in Data') ? [{ t: `${cit}. Grafico: ` }, owid, { t: '.' }]
+    : i >= 0 ? [{ t: cit.slice(0, i) }, owid, { t: `${cit.slice(i + owid.t.length)}.` }]
     : [{ t: `${cit}. Elaborazione: ` }, owid, { t: '.' }];
   if (s.licenza) out.push({ t: ' Licenza: ' }, { t: s.licenza, href: LICENZE[s.licenza] }, { t: '.' });
   return out;

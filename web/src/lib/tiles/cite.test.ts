@@ -7,9 +7,9 @@ const serie = (citazione: string, licenza?: string): OwidSeries =>
 const text = (c: ReturnType<typeof owidCite>) => c.map((p) => p.t).join('');
 
 describe('owidCite', () => {
-  it('citazione che nomina già OWID: niente "Elaborazione", OWID resta il link al grafico, licenza con link', () => {
+  it('citazione che nomina già OWID: resta parola per parola, il nome di OWID è il link al grafico, licenza con link', () => {
     const c = owidCite(serie('Quid via AI Index Report (2026) – with major processing by Our World in Data', 'CC BY-ND 4.0'));
-    expect(text(c)).not.toContain('Elaborazione');
+    expect(text(c)).toBe('Quid via AI Index Report (2026) – with major processing by Our World in Data. Licenza: CC BY-ND 4.0.');
     expect(c.find((p) => p.t === 'Our World in Data')?.href).toBe('https://ourworldindata.org/grapher/x');
     expect(c.find((p) => p.t === 'CC BY-ND 4.0')?.href).toBe('https://creativecommons.org/licenses/by-nd/4.0/');
   });

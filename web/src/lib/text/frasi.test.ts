@@ -138,6 +138,7 @@ describe('titoli', () => {
   });
   it('etichette dei tipi Hugging Face', () => {
     expect(tipoLabel('text-generation')).toBe('generazione di testo');
+    expect(tipoLabel('image-to-video')).toBe('da immagine a video');
     expect(tipoLabel('sconosciuto')).toBe('sconosciuto');
   });
 });

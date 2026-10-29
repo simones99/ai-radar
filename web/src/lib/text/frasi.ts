@@ -3,7 +3,7 @@ import {
   type RadarRowM,
 } from '../data/derive';
 import { annoFaccia, classifica, valore } from '../data/geopoliticai';
-import type { Dataset, Quadrant, Ruolo } from '../data/types';
+import type { AiActItem, Dataset, Quadrant, Ruolo } from '../data/types';
 import { eci as eciFmt, fraseFaccia } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
@@ -344,18 +344,22 @@ const SOON = 30; // giorni: scadenze vicine, dati appena usciti, rapporti in arr
 export function doorItalia(d: Dataset, today: Date, settoreId: string | null = null): Door {
   const ahead = (iso: string) => daysTo(iso, today);
   const recent = (iso: string | null | undefined) => !!iso && ahead(iso) <= 0 && ahead(iso) >= -SOON;
-  const scad = (d.ai_act?.scadenze ?? []).slice().sort((a, b) => a.data.localeCompare(b.data));
+  const tutte = (d.ai_act?.scadenze ?? []).slice().sort((a, b) => a.data.localeCompare(b.data));
+  // la scadenza che la card Norme dice accanto non fa notizia: la porta dice un'altra cosa, come Per te con le competenze
+  const nellaCard = nextDeadline(tutte, today);
+  const scad = tutte.filter((s) => s !== nellaCard);
+  const scadenza = (s: AiActItem): Door => {
+    const n = ahead(s.data);
+    return {
+      title: [{ t: n === 0 ? 'Oggi' : n === 1 ? 'Domani' : `Tra ${n} giorni`, em: true }, { t: `: ${lowerFirst(s.titolo)}` }],
+      meta: `AI Act · scadenza ${dayWith('del', s.data)}`,
+      target: { tema: 'norme', elemento: s.data },
+    };
+  };
 
   // 1. una scadenza entro 30 giorni (anche oggi)
   const near = scad.find((s) => ahead(s.data) >= 0 && ahead(s.data) <= SOON);
-  if (near) {
-    const n = ahead(near.data);
-    return {
-      title: [{ t: n === 0 ? 'Oggi' : n === 1 ? 'Domani' : `Tra ${n} giorni`, em: true }, { t: `: ${lowerFirst(near.titolo)}` }],
-      meta: `AI Act · scadenza ${dayWith('del', near.data)}`,
-      target: { tema: 'norme', elemento: near.data },
-    };
-  }
+  if (near) return scadenza(near);
 
   // 2. un dato italiano uscito negli ultimi 30 giorni: Eurostat (prima il settore ricordato), poi uso dell'AI generativa (OWID)
   const es = d.eurostat_settori;
@@ -402,14 +406,17 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
     };
   }
 
-  // 4. riserva: la prossima scadenza, anche lontana
-  const next = scad.find((s) => ahead(s.data) > 0);
-  if (next) {
-    const n = ahead(next.data);
+  // 4. riserva: la scadenza dopo quella della card, anche lontana
+  const dopo = scad.find((s) => ahead(s.data) > 0);
+  if (dopo) return scadenza(dopo);
+
+  // 5. ultima riserva, quando resta solo la scadenza della card
+  if (nellaCard) {
+    const n = ahead(nellaCard.data);
     return {
       title: [{ t: `${n} ${n === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }],
-      meta: `AI Act · ${next.titolo}`,
-      target: { tema: 'norme', elemento: next.data },
+      meta: `AI Act · ${nellaCard.titolo}`,
+      target: { tema: 'norme', elemento: nellaCard.data },
     };
   }
   return NO_DATA;

@@ -50,13 +50,16 @@ test('porta Per te: apre Competenze sulla competenza della notizia', async ({ pa
   await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
 });
 
-test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza', async ({ page }) => {
+test('porta L’AI in Italia: non ripete la scadenza della card Norme e apre Norme su quella dopo', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
   await page.goto('/');
-  await page.getByRole('link', { name: /Tra 12 giorni/ }).click();
+  await expect(page.getByRole('button', { name: /Norme/ })).toContainText('fine della transizione per la marcatura');
+  const porta = page.getByRole('link', { name: /Per la tua organizzazione/ });
+  await expect(porta).not.toContainText('fine della transizione');
+  await porta.getByText(/Tra 377 giorni/).click();
   await expect(page.locator('#detail-norme')).toBeVisible();
-  await expect(page).toHaveURL(/#norme\/2026-12-02$/);
-  await expect(page.locator('#detail-norme li[aria-current="true"]')).toContainText('Fine della transizione per la marcatura');
+  await expect(page).toHaveURL(/#norme\/2027-12-02$/);
+  await expect(page.locator('#detail-norme li[aria-current="true"]')).toContainText('Sistemi ad alto rischio (allegato III)');
 });
 
 test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude', async ({ page }) => {

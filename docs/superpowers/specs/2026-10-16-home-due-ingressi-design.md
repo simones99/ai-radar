@@ -104,12 +104,15 @@ Senza radar: titolo vuoto, meta "Dati non ancora disponibili", target `null`.
 
 ### Porta "Per la tua organizzazione · L'AI in Italia"
 
-1. Una scadenza di `ai_act.scadenze` tra oggi e 30 giorni. Titolo: "**Tra 12 giorni**: {titolo della scadenza, iniziale minuscola}" ("**Domani**" a 1 giorno, "**Oggi**" a 0). Target: Norme, elemento = data della scadenza (`2026-12-02`). Meta: "AI Act · scadenza del {data}".
+La porta non ripete la card Norme, che sta nella stessa testa: la scadenza che la card dice (la prossima, da domani in poi, `nextDeadline`) non fa notizia nella porta, in nessuna regola. Così la regola 1 vale per una scadenza di oggi o per una seconda scadenza entro 30 giorni, e la riserva dice la scadenza successiva a quella della card. *(Aggiunto il 2026-10-29, passo grafico dopo la code review.)*
+
+1. Una scadenza di `ai_act.scadenze`, diversa da quella della card, tra oggi e 30 giorni. Titolo: "**Tra 12 giorni**: {titolo della scadenza, iniziale minuscola}" ("**Domani**" a 1 giorno, "**Oggi**" a 0). Target: Norme, elemento = data della scadenza (`2026-12-02`). Meta: "AI Act · scadenza del {data}".
 2. Un dato italiano uscito negli ultimi 30 giorni. Si guardano, in quest'ordine:
    - Eurostat: `aggiornato_eurostat` negli ultimi 30 giorni e valore `IT` presente. Titolo: "**16% delle imprese italiane** usa l'AI (UE: 20%)". Target: Business. Meta: "Eurostat · aggiornato il {data}".
    - OWID `uso_genai`: `aggiornato_owid` negli ultimi 30 giorni e punto `Italy` presente. Titolo: "**30% degli italiani** usa l'AI generativa (mondo: 18%)". Target: Persone e lavoro. Meta: "Microsoft via Our World in Data · aggiornato il {data}".
 3. Un rapporto previsto entro 30 giorni (`nextReport`). Titolo: "A {mese} esce **{nome del rapporto}**". Target: Rapporti, elemento = `slug(nome)`. Meta: "Data stimata, dai rapporti degli anni scorsi".
-4. Riserva: la prossima scadenza, anche lontana. Titolo: "**47 giorni** alla prossima scadenza dell'AI Act". Target: Norme, elemento = data della scadenza. Meta: "AI Act · {titolo della scadenza}".
+4. Riserva: la scadenza dopo quella della card, anche lontana. Titolo e meta come nella regola 1: "**Tra 413 giorni**: sistemi ad alto rischio (allegato III)", "AI Act · scadenza del {data}". Target: Norme, elemento = data della scadenza.
+5. Ultima riserva, quando resta solo la scadenza della card: "**47 giorni** alla prossima scadenza dell'AI Act". Target: Norme, elemento = data della scadenza. Meta: "AI Act · {titolo della scadenza}".
 
 Senza scadenze, dati e rapporti: titolo vuoto, meta "Dati non ancora disponibili", target `null`.
 
@@ -141,7 +144,7 @@ Le altre card non cambiano: Competenze, Modelli, Open source, Notizie, Rapporti.
 Unità (vitest):
 
 - `doorPerTe`: un caso per ognuna delle 4 regole, più il caso senza radar.
-- `doorItalia`: un caso per ognuna delle 4 regole, compresi "Oggi" e "Domani", il caso Eurostat senza `IT`, il caso senza dati.
+- `doorItalia`: un caso per ognuna delle 5 regole, compresi "Oggi" e "Domani", il caso Eurostat senza `IT`, il caso senza dati, e la scadenza della card Norme che non torna in nessuna regola.
 - Card Business e Persone: Italia presente, Italia assente.
 - `parseHash('#politica')` e `parseHash('#politica/2026-12-02')` aprono Norme.
 - Griglia: due sezioni con 4 card ciascuna, nell'ordine giusto; pillole in due gruppi.
@@ -152,12 +155,12 @@ End-to-end (Playwright):
 
 - home: due porte, due `h2` di sezione, 8 card;
 - clic sulla porta "Per te": si apre Competenze con l'elemento evidenziato;
-- clic sulla porta "L'AI in Italia" con i dati di prova: si apre Norme sulla scadenza;
+- clic sulla porta "L'AI in Italia" con i dati di prova: si apre Norme sulla scadenza dopo quella della card;
 - `#politica` apre Norme;
 - accessibilità senza violazioni gravi; nessuno scorrimento orizzontale a 320 e 360 px; tema scuro.
 
 ## 9. Rischi
 
-- **Porte vuote o ferme.** La porta Italia oggi ha poche notizie vere: spesso vincerà la riserva (giorni alla prossima scadenza). È accettato: migliora con l'Osservatorio.
+- **Porte vuote o ferme.** La porta Italia oggi ha poche notizie vere: spesso vincerà la riserva (la scadenza dopo quella della card Norme). È accettato: migliora con l'Osservatorio.
 - **Date di aggiornamento delle fonti.** `aggiornato_owid` e `aggiornato_eurostat` dicono quando la fonte ha aggiornato la serie, non quando è uscito un dato italiano nuovo. Un aggiornamento che corregge solo altri Paesi farebbe vincere la regola 2 senza un dato italiano nuovo. Si accetta per ora; se diventa un problema, la pipeline potrà salvare la data in cui ha visto per la prima volta l'ultimo valore italiano.
 - **Link vecchi.** `#politica` resta valido grazie all'alias; nessun altro id cambia.

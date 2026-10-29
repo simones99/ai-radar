@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today, fromNorm } from '../test/fixtures';
-import { doorItalia, doorPerTe } from './frasi';
+import { doorItalia, doorPerTe, faceNorme } from './frasi';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -166,18 +166,32 @@ describe('porta Per te con un ruolo', () => {
 
 describe('porta L’AI in Italia', () => {
   const at = (iso: string) => new Date(`${iso}T10:00:00`);
+  // le scadenze del FIXTURE più una: la card Norme dice quella del 25 novembre, la porta può dire quella del 2 dicembre
+  const conScadenza = (data: string, titolo = 'Codici di buone pratiche'): Dataset =>
+    ({ ...d, ai_act: { scadenze: [...d.ai_act!.scadenze, { ...d.ai_act!.scadenze[1], data, titolo }] } });
   it('1. scadenza entro 30 giorni, con Oggi e Domani', () => {
-    const p = doorItalia(d, at('2026-11-20'));
+    const p = doorItalia(conScadenza('2026-11-25'), at('2026-11-20'));
     expect(text(p.title)).toBe('Tra 12 giorni: fine della transizione per la marcatura');
     expect(p.title[0]).toEqual({ t: 'Tra 12 giorni', em: true });
     expect(p.meta).toBe('AI Act · scadenza del 2 dic 2026');
     expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });
-    expect(text(doorItalia(d, at('2026-12-01')).title)).toBe('Domani: fine della transizione per la marcatura');
+    // due scadenze lo stesso giorno: la card ne dice una, la porta l'altra
+    expect(text(doorItalia(conScadenza('2026-12-02'), at('2026-12-01')).title)).toBe('Domani: codici di buone pratiche');
+    // il giorno della scadenza la card passa alla successiva, la porta dice quella di oggi
     expect(text(doorItalia(d, at('2026-12-02')).title)).toBe('Oggi: fine della transizione per la marcatura');
   });
   it('1. scadenza dell’11: «scadenza dell’11»', () => {
-    const e = { ...d, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-12-11' }] } };
+    const e = { ...d, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-11-25' }, { ...d.ai_act!.scadenze[1], data: '2026-12-11' }] } };
     expect(doorItalia(e, at('2026-11-20')).meta).toBe('AI Act · scadenza dell’11 dic 2026');
+  });
+  it('non ripete la scadenza della card Norme, in nessuna regola', () => {
+    const card = faceNorme(d, at('2026-11-20'))!.sent; // «… il 2 dic 2026: fine della transizione per la marcatura.»
+    expect(card).toContain('fine della transizione per la marcatura');
+    for (const giorno of ['2026-11-20', '2026-12-01']) {
+      const p = doorItalia(d, at(giorno));
+      expect(text(p.title)).not.toContain('fine della transizione per la marcatura');
+      expect(p.target).toEqual({ tema: 'norme', elemento: '2027-12-02' });
+    }
   });
   it('2. dato Eurostat italiano aggiornato negli ultimi 30 giorni', () => {
     const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
@@ -223,7 +237,7 @@ describe('porta L’AI in Italia', () => {
       expect(text(doorItalia(x, today, 'ict').title)).toBe("51% delle imprese di informazione e comunicazione italiane usa l'AI");
     });
     it('le regole 1, 3 e 4 non cambiano con un settore', () => {
-      const vicina = { ...s, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-10-20' }] } }; // tra 5 giorni
+      const vicina = { ...s, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-10-18' }, { ...d.ai_act!.scadenze[1], data: '2026-10-20' }] } }; // la card dice la prima, la porta la seconda, tra 5 giorni
       expect(doorItalia(vicina, today, 'manifattura').target?.tema).toBe('norme');
       expect(doorItalia(vicina, today, 'manifattura')).toEqual(doorItalia(vicina, today));
       expect(doorItalia(d, today, 'manifattura')).toEqual(doorItalia(d, today));
@@ -260,14 +274,21 @@ describe('porta L’AI in Italia', () => {
     const r = { rapporti: [{ ...d.rapporti!.rapporti[0], prossima_prevista: '2027-10' }] };
     const p = doorItalia({ ...d, rapporti: r }, today);
     expect(p.target?.tema).toBe('norme');
-    expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
+    expect(text(p.title)).toBe('Tra 413 giorni: sistemi ad alto rischio (allegato III)');
   });
   it('3. davanti ad aprile si scrive «Ad»', () => {
     const p = doorItalia(d, at('2027-03-20'));
     expect(text(p.title)).toBe('Ad aprile esce AI Index Report');
   });
-  it('4. riserva: la prossima scadenza, anche lontana', () => {
+  it('4. riserva: la scadenza dopo quella della card, anche lontana', () => {
     const p = doorItalia({ ...d, rapporti: undefined }, today);
+    expect(text(p.title)).toBe('Tra 413 giorni: sistemi ad alto rischio (allegato III)');
+    expect(p.title[0]).toEqual({ t: 'Tra 413 giorni', em: true });
+    expect(p.meta).toBe('AI Act · scadenza del 2 dic 2027');
+    expect(p.target).toEqual({ tema: 'norme', elemento: '2027-12-02' });
+  });
+  it('5. resta solo la scadenza della card: la porta dice i giorni che mancano', () => {
+    const p = doorItalia({ ...d, rapporti: undefined, ai_act: { scadenze: [d.ai_act!.scadenze[1]] } }, today);
     expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
     expect(p.meta).toBe('AI Act · Fine della transizione per la marcatura');
     expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });

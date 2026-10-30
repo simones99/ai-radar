@@ -221,18 +221,25 @@ export const citeSiti = (dc: GeoDataCenter): Cite => [
 
 // ---------------------------------------------------------------- il Filo della catena: un esempio di percorso, una tappa per anello
 
-/** Gli esempi del filo, nell'ordine del selettore. */
-const FILI: readonly FiloKey[] = ['usa', 'ue', 'cina'];
-/** Un esempio del filo, con la sua chiave di ?filo=. */
-export type Filo = { key: FiloKey } & CatenaFilo;
+/** Gli esempi del filo, nell'ordine del selettore, con il nome del selettore: «Europeo» per «Un modello europeo»,
+ *  così i tre stanno in una riga anche sul telefono; il nome intero resta per chi non vede. */
+const FILI: readonly { key: FiloKey; corto: string }[] = [{ key: 'usa', corto: 'Americano' }, { key: 'ue', corto: 'Europeo' }, { key: 'cina', corto: 'Cinese' }];
+/** Un esempio del filo, con la sua chiave di ?filo= e il nome del selettore. */
+export type Filo = { key: FiloKey; corto: string } & CatenaFilo;
 /** Gli esempi nel file della catena; un file del giro prima non ne ha. */
 export const filiDi = (c: Catena | undefined): Filo[] =>
-  FILI.flatMap((key) => { const f = c?.fili?.[key]; return f ? [{ key, ...f }] : []; });
-/** ?filo=: il filo da mostrare, che è la vista di partenza; null per la vista «Quote per Paese» (?vista=quote). Un link di prima
- *  con ?siti=1 e senza ?vista= era nelle quote, e ci resta. Un esempio non valido torna a quello europeo. */
-export function filoDi(vista: string | undefined, p: string | undefined, c: Catena | undefined, siti?: string): Filo | null {
+  FILI.flatMap(({ key, corto }) => { const f = c?.fili?.[key]; return f ? [{ key, corto, ...f }] : []; });
+
+/** Le due viste della mappa: il Filo della catena, da cui si parte, e le quote per Paese. */
+export type VistaMappa = 'filo' | 'quote';
+/** ?vista= letto in un posto solo. Un link di prima con ?siti=1 e senza ?vista= era nelle quote, e ci resta; ?vista=filo vince.
+ *  Per questo chi torna al filo toglie anche ?siti=. */
+export const vistaMappa = (vista: string | undefined, siti: string | undefined): VistaMappa =>
+  vista === 'quote' || (vista !== 'filo' && siti === '1') ? 'quote' : 'filo';
+/** ?filo=: il filo da mostrare; null nella vista delle quote, o se il file della catena non ha esempi. Un esempio non valido torna a quello europeo. */
+export function filoDi(vista: VistaMappa, p: string | undefined, c: Catena | undefined): Filo | null {
   const fili = filiDi(c);
-  if (vista === 'quote' || (vista !== 'filo' && siti === '1') || !fili.length) return null;
+  if (vista === 'quote' || !fili.length) return null;
   return fili.find((f) => f.key === p) ?? fili.find((f) => f.key === 'ue') ?? fili[0];
 }
 

@@ -10,7 +10,7 @@
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
     ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
-    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, tinta, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
+    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, tinta, VIEWBOX, vista, vistaMappa, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
   import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
@@ -21,16 +21,14 @@
   } = $props();
 
   const fili = $derived(filiDi(catena));
-  const filo = $derived(filoDi(paramVista, paramFilo, catena, paramSiti));
+  const filo = $derived(filoDi(vistaMappa(paramVista, paramSiti), paramFilo, catena));
   // nel filo ogni fermata ha la sua tappa, anche quella di un anello senza dati
   const ok = $derived(filo ? ANELLI.map((a) => a.key) : attivi(g, catena));
   const anello = $derived(anelloDi(param, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
   const attivo = (k: AnelloKey) => ok.includes(k);
   const vai = (k: AnelloKey) => imposta('anello', k);
-  /** «Un modello europeo» diventa «Europeo»: i tre esempi stanno in una riga anche sul telefono; il nome intero resta per chi non vede. */
-  const corto = (n: string) => { const c = n.replace(/^un modello /i, ''); return c.charAt(0).toUpperCase() + c.slice(1); };
-  /** Al filo si torna togliendo ?vista=; ?siti=1 senza ?vista= vorrebbe dire le quote, e nel filo non vale. */
+  /** Al filo si torna togliendo ?vista=; ?siti=1 senza ?vista= vorrebbe dire le quote (vistaMappa), e nel filo non vale. */
   function alFilo() {
     imposta('siti', null);
     imposta('vista', null);
@@ -167,7 +165,7 @@
         </div>
         {#if filo}
           <div class="scelte" role="group" aria-label="Esempio">
-            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} aria-label={f.nome} onclick={() => imposta('filo', f.key)}>{corto(f.nome)}</button>{/each}
+            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} aria-label={f.nome} onclick={() => imposta('filo', f.key)}>{f.corto}</button>{/each}
           </div>
         {/if}
       </div>

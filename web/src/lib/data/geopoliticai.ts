@@ -26,10 +26,10 @@ export function ultimo(g: Geopoliticai, zona: string, misura: Misura): Valore | 
 export const classifica = (g: Geopoliticai, misura: Misura, anno: number): Valore[] =>
   AREE.flatMap((k) => valore(g, k, misura, anno) ?? []).sort((a, b) => b.v - a.v);
 
-/** Quanti modelli di grande scala di un anno sono di una zona, sul totale delle cinque aree (Chi addestra). */
-export function quota(g: Geopoliticai, zona: string, anno: number): { n: number; tot: number } {
-  const n = (z: string) => g.zone[z]?.calcolo[String(anno)]?.n ?? 0;
-  return { n: n(zona), tot: AREE.reduce((t, z) => t + n(z), 0) };
+/** Quanti modelli di grande scala di un anno sono di un'area o di un Paese dell'UE, sul totale delle cinque aree (Chi addestra). */
+export function quota(g: Geopoliticai, area: string, anno: number): { n: number; tot: number } {
+  const n = (a: string) => g.zone[a]?.calcolo[String(anno)]?.n ?? 0;
+  return { n: n(area), tot: AREE.reduce((t, a) => t + n(a), 0) };
 }
 
 /** L'anno della card in home: quello in corso se l'UE ci ha già un valore, altrimenti l'ultimo chiuso. */

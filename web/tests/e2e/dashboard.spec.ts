@@ -237,21 +237,22 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
 });
 
 const menuArea = (page: Page) => page.getByRole('combobox', { name: 'Area' });
-const scheda = (page: Page) => page.locator('#geo-scheda h3');
+// la scheda dell'area è la regione che porta il nome dell'area: il suo titolo
+const scheda = (page: Page, area: string) => page.getByRole('region', { name: area, exact: true });
 
 test('area: il link apre il Paese, il ricaricamento lo tiene, un link con un’altra area vince sul ricordo', async ({ page }) => {
   await page.goto('/#geopoliticai?area=italia');
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await expect(menuArea(page)).toHaveValue('italia');
   await page.reload();
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await page.goto('about:blank');
   await page.goto('/#geopoliticai'); // senza area nel link: vale il ricordo, che entra nel link
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
   await page.goto('about:blank');
   await page.goto('/#geopoliticai?area=cina');
-  await expect(scheda(page)).toHaveText('Cina');
+  await expect(scheda(page, 'Cina')).toBeVisible();
   await expect(menuArea(page)).toHaveValue('cina');
 });
 
@@ -259,7 +260,7 @@ test('area non valida: si apre l’UE, senza errori', async ({ page }) => {
   const errori: string[] = [];
   page.on('pageerror', (e) => errori.push(e.message));
   await page.goto('/#geopoliticai?area=atlantide');
-  await expect(scheda(page)).toHaveText('UE');
+  await expect(scheda(page, 'UE')).toBeVisible();
   await expect(menuArea(page)).toHaveValue('ue');
   await expect(page).toHaveURL(/#geopoliticai$/);
   expect(errori).toEqual([]);
@@ -268,14 +269,14 @@ test('area non valida: si apre l’UE, senza errori', async ({ page }) => {
 test('area dal menu accanto al titolo della scheda, anche da tastiera; «UE, tutta» toglie l’area dal link', async ({ page }) => {
   await page.goto('/#geopoliticai');
   await menuArea(page).selectOption('cina');
-  await expect(scheda(page)).toHaveText('Cina');
+  await expect(scheda(page, 'Cina')).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=cina$/);
   await menuArea(page).focus();
   await page.keyboard.press('ArrowDown'); // dopo la Cina viene l'UE
-  await expect(scheda(page)).toHaveText('UE');
+  await expect(scheda(page, 'UE')).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai$/);
   await page.keyboard.press('ArrowDown');
-  await expect(scheda(page)).toHaveText("Francia, nell'UE");
+  await expect(scheda(page, "Francia, nell'UE")).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
   await menuArea(page).selectOption('ue');
   await expect(page).toHaveURL(/#geopoliticai$/);
@@ -284,7 +285,7 @@ test('area dal menu accanto al titolo della scheda, anche da tastiera; «UE, tut
 test('area a 320px: il menu sta accanto o sotto il titolo, niente scorrimento orizzontale', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#geopoliticai?area=italia');
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   const menu = (await menuArea(page).boundingBox())!;
   expect(menu.height).toBeGreaterThanOrEqual(44);
   expect(await noHorizontalScroll(page)).toBe(true);
@@ -295,7 +296,7 @@ test('Modelli e ricerca: il rimando apre GeopoliticAI, Indietro torna a Modelli 
   await page.locator('#tile-modelli .face').click();
   await page.getByRole('link', { name: 'Vai a GeopoliticAI →' }).click();
   await expect(page).toHaveURL(/#geopoliticai$/);
-  await expect(scheda(page)).toHaveText('UE');
+  await expect(scheda(page, 'UE')).toBeVisible();
   await page.goBack();
   await expect(page).toHaveURL(/#modelli$/);
   await expect(page.locator('#detail-modelli')).toBeVisible();
@@ -310,12 +311,11 @@ test('matrice: un clic su una riga cambia l’area nel link e porta il focus all
   await page.goto('/#geopoliticai');
   await matrice(page).getByRole('button', { name: 'Germania' }).click();
   await expect(page).toHaveURL(/#geopoliticai\?area=germania$/);
-  await expect(scheda(page)).toHaveText("Germania, nell'UE");
-  await expect(page.getByRole('region', { name: "Germania, nell'UE" })).toBeFocused();
+  await expect(scheda(page, "Germania, nell'UE")).toBeFocused();
   await matrice(page).getByRole('button', { name: 'USA' }).focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#geopoliticai\?area=usa$/);
-  await expect(page.getByRole('region', { name: 'USA' })).toBeFocused();
+  await expect(scheda(page, 'USA')).toBeFocused();
 });
 
 test('matrice a 320px: scorre dentro il suo contenitore, non la pagina', async ({ page }) => {
@@ -395,7 +395,7 @@ test('mappa: un tocco sulla Francia apre il fumetto senza coprirla né l’Europ
   const fumetto = mappa(page).getByRole('dialog', { name: 'Francia' });
   await expect(fumetto).toBeFocused();
   await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=francia$/);
-  await expect(scheda(page)).toHaveText("Francia, nell'UE");
+  await expect(scheda(page, "Francia, nell'UE")).toBeVisible();
   const box = (await fumetto.boundingBox())!;
   const riquadro = (await europa(page).boundingBox())!;
   expect(punto.x < box.x || punto.x > box.x + box.width || punto.y < box.y || punto.y > box.y + box.height).toBe(true);
@@ -403,7 +403,7 @@ test('mappa: un tocco sulla Francia apre il fumetto senza coprirla né l’Europ
   await page.keyboard.press('Escape');
   await expect(fumetto).toBeHidden();
   await expect(mondo.getByRole('button', { name: /^Francia:/ })).toBeFocused();
-  await expect(scheda(page)).toHaveText("Francia, nell'UE"); // il dettaglio resta aperto
+  await expect(scheda(page, "Francia, nell'UE")).toBeVisible(); // il dettaglio resta aperto
 });
 
 test('mappa a 320px: il fumetto è un pannello sotto le mappe, con il pulsante per chiuderlo', async ({ page }) => {
@@ -432,7 +432,7 @@ test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la e
   await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'false');
   await italiaInEuropa(page).click();
   await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true');
 });
 
@@ -541,7 +541,7 @@ test('menu «Area» e quote per Paese in tema scuro: nessuna violazione grave', 
   await page.reload();
   await menuArea(page).selectOption('italia'); // un Paese dentro il gruppo dell'UE
   await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=italia$/);
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
   expect(await seriousViolations(page, '#geo-scheda', '#geo-mappa')).toEqual([]);
   // axe lascia il menu in sospeso, per il gradiente della freccia sullo sfondo: il contrasto del testo lo misura il test

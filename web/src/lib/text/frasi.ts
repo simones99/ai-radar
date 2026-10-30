@@ -146,12 +146,13 @@ export function faceNorme(d: Dataset, today: Date): Face | null {
   const days = daysTo(n.data, today);
   return { fig: String(days), unit: days === 1 ? 'giorno' : 'giorni', sent: `Alla prossima scadenza dell'AI Act, ${dayWith('il', n.data)}: ${lowerFirst(n.titolo)}.` };
 }
+/** «48 giorni alla prossima scadenza dell'AI Act»: il titolo del dettaglio Norme, e della porta quando resta solo quella scadenza. */
+const giorniAllaScadenza = (days: number): TitleParts => [{ t: `${days} ${days === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }];
 export function headNorme(d: Dataset, today: Date): Head {
   const n = nextDeadline(d.ai_act?.scadenze, today);
   if (!n) return { title: plain("Nessuna scadenza dell'AI Act in arrivo"), deck: null };
-  const days = daysTo(n.data, today);
   return {
-    title: [{ t: `${days} ${days === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }],
+    title: giorniAllaScadenza(daysTo(n.data, today)),
     deck: `${dayWith('Il', n.data)}: ${lowerFirst(n.titolo)}. ${n.descrizione}`,
   };
 }
@@ -418,14 +419,9 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
   const dopo = scad.find((s) => ahead(s.data) > 0);
   if (dopo) return scadenza(dopo);
 
-  // 6. ultima riserva, quando resta solo la scadenza della card
+  // 6. ultima riserva, quando resta solo la scadenza della card: il titolo del dettaglio Norme
   if (nellaCard) {
-    const n = ahead(nellaCard.data);
-    return {
-      title: [{ t: `${n} ${n === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }],
-      meta: `AI Act · ${nellaCard.titolo}`,
-      target: { tema: 'norme', elemento: nellaCard.data },
-    };
+    return { title: giorniAllaScadenza(ahead(nellaCard.data)), meta: `AI Act · ${nellaCard.titolo}`, target: { tema: 'norme', elemento: nellaCard.data } };
   }
   return NO_DATA;
 }

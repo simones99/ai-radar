@@ -5,6 +5,7 @@
   import { radarRows, type RadarRowM } from '../data/derive';
   import type { Dataset, Quadrant } from '../data/types';
   import { FONT, leader, measureText, placeLabels, type Box } from '../charts/labels';
+  import { inImparaOra, riquadriDelRadar } from '../charts/quadranti';
 
   let { data }: { data: Dataset } = $props();
 
@@ -19,18 +20,12 @@
   const B = P + 18; // la fascia dei nomi, in alto e in basso: i punti non ci arrivano
   const x = $derived(scaleLinear([-0.04, 1.04], [0, w]));
   const y = $derived(scaleLinear([-0.04, 1.04], [h - B, B]));
-  const quad = $derived([
-    { id: 'consolida' as Quadrant, x0: 0, y0: 0, x1: x(0.5) - G / 2, y1: y(0.5) - G / 2, a: 'start', ty: 'top' },
-    { id: 'impara-ora' as Quadrant, x0: x(0.5) + G / 2, y0: 0, x1: w, y1: y(0.5) - G / 2, a: 'end', ty: 'top' },
-    { id: 'osserva' as Quadrant, x0: 0, y0: y(0.5) + G / 2, x1: x(0.5) - G / 2, y1: h, a: 'start', ty: 'bottom' },
-    { id: 'prova' as Quadrant, x0: x(0.5) + G / 2, y0: y(0.5) + G / 2, x1: w, y1: h, a: 'end', ty: 'bottom' },
-  ]);
-  const nomi = $derived(quad.map((q) => {
+  const nomi = $derived(riquadriDelRadar({ x0: 0, y0: 0, x1: w, y1: h }, x(0.5), y(0.5), G / 2).map((q) => {
     const hot = q.id === 'impara-ora';
     const tw = measureText(quadranti[q.id], `${hot ? 700 : 600} 13px ${FONT}`);
-    const tx = q.a === 'start' ? q.x0 + P : q.x1 - P;
-    const ty = q.ty === 'top' ? q.y0 + P + 12 : q.y1 - P;
-    return { ...q, hot, tx, ty, box: { x0: (q.a === 'start' ? tx : tx - tw) - 4, y0: ty - 14, x1: (q.a === 'start' ? tx + tw : tx) + 4, y1: ty + 4 } };
+    const tx = q.sinistra ? q.x0 + P : q.x1 - P;
+    const ty = q.alto ? q.y0 + P + 12 : q.y1 - P;
+    return { ...q, hot, tx, ty, box: { x0: (q.sinistra ? tx : tx - tw) - 4, y0: ty - 14, x1: (q.sinistra ? tx + tw : tx) + 4, y1: ty + 4 } };
   }));
   const scia = (r: RadarRowM) => r.changed && r.quadrante === 'impara-ora' && r.hasPrev;
   const LH = 16;
@@ -44,7 +39,6 @@
     const boxes = placeLabels(items, { x0: 2, y0: 2, x1: w - 2, y1: h - 2 }, obstacles, 9, () => true);
     return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });
-  const suBlu = (b: Box) => (b.x0 + b.x1) / 2 > x(0.5) && (b.y0 + b.y1) / 2 < y(0.5); // per il colore dell'alone
 </script>
 
 <span class="radar" bind:clientWidth={cw} bind:clientHeight={ch}>
@@ -53,7 +47,7 @@
       <rect class="q" class:hot={q.hot} x={q.x0} y={q.y0} width={Math.max(0, q.x1 - q.x0)} height={Math.max(0, q.y1 - q.y0)} rx="12" />
     {/each}
     {#each nomi as q (q.id)}
-      <text class="ql" class:hot={q.hot} x={q.tx} y={q.ty} text-anchor={q.a}>{quadranti[q.id]}</text>
+      <text class="ql" class:hot={q.hot} x={q.tx} y={q.ty} text-anchor={q.sinistra ? 'start' : 'end'}>{quadranti[q.id]}</text>
     {/each}
     {#each rows.filter((r) => r.quadrante !== 'impara-ora') as r (r.id)}
       <circle class="dot" cx={x(r.x)} cy={y(r.y)} r="3.5" />
@@ -71,7 +65,7 @@
       {#if l}<line class="leader" x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
     {/each}
     {#each etichette as it (it.id)}
-      <text class="lbl halo" class:blu={suBlu(it.box)} x={it.box.x0} y={it.box.y0 + LH - 4}>{it.r.breve}</text>
+      <text class="lbl halo" class:blu={inImparaOra(it.box, x(0.5), y(0.5))} x={it.box.x0} y={it.box.y0 + LH - 4}>{it.r.breve}</text>
     {/each}
   </svg>
 </span>

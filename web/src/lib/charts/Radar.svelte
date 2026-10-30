@@ -5,6 +5,7 @@
   import { nf, per10k, signedPct } from '../text/format';
   import { cambio } from '../text/frasi';
   import { FONT, hits, leader, measureText, placeLabels, tratti, type Box } from './labels';
+  import { inImparaOra, riquadriDelRadar } from './quadranti';
 
   let { rows, quadranti, highlight = null, delRuolo = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', href, onpick }: {
     rows: RadarRowM[];
@@ -31,12 +32,7 @@
   const yLabel = (v: number) => nf(v, v < 1 ? 1 : 0);
   const MEZZA_FUGA = 2; // px, tra i quadranti: ci passa la linea della soglia
   // i quattro quadranti a tono, staccati dalla fuga
-  const riquadri = $derived([
-    { id: 'consolida' as Quadrant, x0: x(-0.04), y0: y(1.04), x1: x(0.5) - MEZZA_FUGA, y1: y(0.5) - MEZZA_FUGA },
-    { id: 'impara-ora' as Quadrant, x0: x(0.5) + MEZZA_FUGA, y0: y(1.04), x1: x(1.04), y1: y(0.5) - MEZZA_FUGA },
-    { id: 'osserva' as Quadrant, x0: x(-0.04), y0: y(0.5) + MEZZA_FUGA, x1: x(0.5) - MEZZA_FUGA, y1: y(-0.04) },
-    { id: 'prova' as Quadrant, x0: x(0.5) + MEZZA_FUGA, y0: y(0.5) + MEZZA_FUGA, x1: x(1.04), y1: y(-0.04) },
-  ]);
+  const riquadri = $derived(riquadriDelRadar({ x0: x(-0.04), y0: y(1.04), x1: x(1.04), y1: y(-0.04) }, x(0.5), y(0.5), MEZZA_FUGA));
   // i nomi dei quadranti, fuori agli angoli
   const angoli = $derived([
     { id: 'consolida' as Quadrant, x: m.l, y: m.t - 8, a: 'start' },
@@ -44,7 +40,6 @@
     { id: 'osserva' as Quadrant, x: m.l, y: H - m.b + 16, a: 'start' },
     { id: 'prova' as Quadrant, x: w - m.r, y: H - m.b + 16, a: 'end' },
   ]);
-  const hotAt = (b: Box) => (b.x0 + b.x1) / 2 > x(0.5) && (b.y0 + b.y1) / 2 < y(0.5); // per il colore dell'alone
   const raggio = (r: RadarRowM) => (r.quadrante === 'impara-ora' ? 6 : 4.5);
   // La scia di un mese: un cuneo da dove era (sottile) a dove è (largo quanto il punto); il verso si legge senza punta.
   const scie = $derived(rows.filter((r) => r.hasPrev && r.move >= MOVE_MIN).map((r) => {
@@ -107,7 +102,7 @@
     const it = { id: r.id, x: x(r.x), y: y(r.y), w: measureText(r.breve, `600 13px ${FONT}`), h: LH };
     const taken = [...layout.map((l) => l.box), ...soglie.map((l) => l.box), ...segni];
     const b = placeLabels([it], { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, taken, 10).get(r.id) as Box;
-    return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: hotAt(b), px: it.x, py: it.y, l: leader(it, b) };
+    return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: inImparaOra(b, x(0.5), y(0.5)), px: it.x, py: it.y, l: leader(it, b) };
   });
   const dim = (id: string) => highlight != null && highlight !== id;
   const altro = (id: string) => highlight == null && delRuolo != null && !delRuolo.includes(id); // durante l'anteprima conta solo quella
@@ -179,7 +174,7 @@
         {#if l}<line class="leader" class:dim={dim(it.id)} class:altro={altro(it.id)} x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
       {/each}
       {#each layout as it (it.id)}
-        {@const tono = hotAt(it.box) ? 'halo-hot' : 'halo-q'}
+        {@const tono = inImparaOra(it.box, x(0.5), y(0.5)) ? 'halo-hot' : 'halo-q'}
         <text class:dim={dim(it.id)} class:altro={altro(it.id)} x={it.box.x0} y={it.box.y0 + LH - 4}>
           {#each it.lines as t, i (i)}
             <tspan x={it.box.x0} dy={i ? LH : 0} class="halo {tono} {i === 0 ? (it.hot ? 'lb-hot' : 't12') : 'note'}">{t}</tspan>

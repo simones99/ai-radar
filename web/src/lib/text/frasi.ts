@@ -2,9 +2,9 @@ import {
   MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
-import { annoFaccia, classifica, quota, valore } from '../data/geopoliticai';
+import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, Quadrant, Ruolo } from '../data/types';
-import { eci as eciFmt, fraseFaccia } from './geopoliticai';
+import { faccia } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
@@ -244,17 +244,7 @@ export function headRapporti(d: Dataset, today: Date): Head {
 // ---------------------------------------------------------------- geopoliticai
 /** Sempre l'UE, anche con un'altra area scelta nel dettaglio (ticket 04, Q12). */
 export function faceGeopoliticai(d: Dataset, _today?: Date): Face | null {
-  const g = d.geopoliticai;
-  if (!g) return null;
-  const y = annoFaccia(g);
-  const ue = valore(g, 'ue', 'eci', y);
-  const sent = fraseFaccia(g, y);
-  if (!ue || !sent) return null;
-  // la cifra è la distanza dalla prima area, come nella scheda; se la prima è l'UE, il suo valore
-  const [primo] = classifica(g, 'eci', y);
-  return primo && primo.zona !== 'ue'
-    ? { fig: nf(primo.v - ue.v, 1), unit: `punti sotto ${g.zone[primo.zona].con_articolo}`, sent }
-    : { fig: eciFmt(ue.v), unit: 'ECI', sent };
+  return d.geopoliticai ? faccia(d.geopoliticai) : null;
 }
 export function headGeopoliticai(d: Dataset, _today?: Date): Head {
   if (!d.geopoliticai) return { title: plain('GeopoliticAI'), deck: null };

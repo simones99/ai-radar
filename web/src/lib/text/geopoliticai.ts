@@ -1,4 +1,4 @@
-import { AREE, classifica, quota, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
+import { annoFaccia, AREE, classifica, quota, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
 import type { Geopoliticai, GeoZona } from '../data/types';
 import { capitalize, dayWith, nf } from './format';
 import type { Cite } from '../charts/types';
@@ -10,6 +10,8 @@ export function flop(v: number): string {
   return `${nf(v / 10 ** e, 1)} × 10${String(e).split('').map((c) => SUP[Number(c)]).join('')}`;
 }
 export const eci = (v: number): string => nf(v, 1);
+/** Il distacco in punti di ECI tra due valori: «18,8». */
+const punti = (piu: Valore, meno: Valore): string => nf(piu.v - meno.v, 1);
 /** Quante volte: una cifra decimale sotto 10, due cifre significative sopra («420», «2.400»). */
 export const volte = (r: number): string =>
   r < 10 ? nf(r, 1) : String(Number(r.toPrecision(2))).replace(/\B(?=(\d{3})+$)/g, '.'); // «2.400», non «2400» come darebbe nf
@@ -185,10 +187,10 @@ export function scheda(g: Geopoliticai, k: string): Scheda {
     if (primo?.zona === k) {
       situazione = 'prima';
       frase = secondo
-        ? `${e.modello} ha la capacità più alta del ${anno}: ${eci(e.v)} ECI, ${nf(e.v - secondo.v, 1)} punti più del migliore ${di(g.zone[secondo.zona].con_articolo)}.`
+        ? `${e.modello} ha la capacità più alta del ${anno}: ${eci(e.v)} ECI, ${punti(e, secondo)} punti più del migliore ${di(g.zone[secondo.zona].con_articolo)}.`
         : `${e.modello} ha la capacità più alta del ${anno}: ${eci(e.v)} ECI.`;
     } else if (primo) {
-      frase = `Il miglior modello ${delModello(z)}, ${e.modello}, ha ${eci(e.v)} ECI nel ${anno}: ${nf(primo.v - e.v, 1)} punti sotto ${primo.modello} (${g.zone[primo.zona].nome}).`;
+      frase = `Il miglior modello ${delModello(z)}, ${e.modello}, ha ${eci(e.v)} ECI nel ${anno}: ${punti(primo, e)} punti sotto ${primo.modello} (${g.zone[primo.zona].nome}).`;
     }
   }
   const senza = senzaCalcolo(z);
@@ -259,8 +261,10 @@ export const citeGeo = (g: Geopoliticai): Cite => [
   { t: `), aggregati per area da AI Radar. Dati scaricati ${dayWith('il', g.scaricato)}.` },
 ];
 
-/** La frase della card in home: l'UE contro USA e Cina, nello stesso anno. */
-export function fraseFaccia(g: Geopoliticai, y: number): string | null {
+/** La card in home, sempre sull'UE: la cifra è la distanza dalla prima area, come nella scheda, o il valore dell'UE se è prima;
+ *  la frase mette l'UE contro USA e Cina, nello stesso anno. */
+export function faccia(g: Geopoliticai): { fig: string; unit: string; sent: string } | null {
+  const y = annoFaccia(g);
   const ue = valore(g, 'ue', 'eci', y);
   if (!ue) return null;
   const altri = (['usa', 'cina'] as const).flatMap((k) => valore(g, k, 'eci', y) ?? []);
@@ -269,5 +273,9 @@ export function fraseFaccia(g: Geopoliticai, y: number): string | null {
     if (i > 0) return `${z.con_articolo} a ${eci(v.v)}`;
     return `${capitalize(z.con_articolo)} ${v.zona === 'usa' ? 'arrivano' : 'arriva'} a ${eci(v.v)}`;
   });
-  return `Capacità del miglior modello europeo, ${ue.modello}, nel ${annoTesto(g, y)}: ${eci(ue.v)} ECI.${confronto.length ? ` ${confronto.join(', ')}.` : ''}`;
+  const sent = `Capacità del miglior modello europeo, ${ue.modello}, nel ${annoTesto(g, y)}: ${eci(ue.v)} ECI.${confronto.length ? ` ${confronto.join(', ')}.` : ''}`;
+  const [primo] = classifica(g, 'eci', y);
+  return primo && primo.zona !== 'ue'
+    ? { fig: punti(primo, ue), unit: `punti sotto ${g.zone[primo.zona].con_articolo}`, sent }
+    : { fig: eci(ue.v), unit: 'ECI', sent };
 }

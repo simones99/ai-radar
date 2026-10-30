@@ -1,6 +1,7 @@
 import { annoFaccia, AREE, classifica, quota, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
 import type { Geopoliticai, GeoZona } from '../data/types';
 import { capitalize, dayWith, nf } from './format';
+import type { Face } from './frasi';
 import type { Cite } from '../charts/types';
 
 const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
@@ -263,7 +264,7 @@ export const citeGeo = (g: Geopoliticai): Cite => [
 
 /** La card in home, sempre sull'UE: la cifra è la distanza dalla prima area, come nella scheda, o il valore dell'UE se è prima;
  *  la frase mette l'UE contro USA e Cina, nello stesso anno. */
-export function faccia(g: Geopoliticai): { fig: string; unit: string; sent: string } | null {
+export function faccia(g: Geopoliticai): Face | null {
   const y = annoFaccia(g);
   const ue = valore(g, 'ue', 'eci', y);
   if (!ue) return null;

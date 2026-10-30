@@ -5,6 +5,7 @@
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
   import TileFace from './TileFace.svelte';
+  import { diSpicco } from './types';
 
   let { data, today }: { data: Dataset; today: Date } = $props();
 
@@ -190,7 +191,7 @@
         <h2 id="g-{g.id}" class="g-h">{g.label}</h2>
         <div class="tiles">
           {#each TILES.filter((t) => t.testa === g.id) as t (t.id)}
-            <article class="tile" class:spicco={t.Figura !== undefined} class:largo={t.largo} id="tile-{t.id}">
+            <article class="tile" class:spicco={diSpicco(t)} class:largo={t.largo} id="tile-{t.id}">
               <TileFace tile={t} {data} {today} expanded={openId === t.id} compact={open !== undefined} onopen={() => toggleTile(t.id)} />
             </article>
           {/each}

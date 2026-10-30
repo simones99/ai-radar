@@ -146,7 +146,7 @@ Le altre card non cambiano: Competenze, Modelli, Open source, Notizie, Rapporti.
 
 Unità (vitest):
 
-- `doorPerTe`: un caso per ognuna delle 4 regole, più il caso senza radar.
+- `doorPerTe`: un caso per ognuna delle 5 regole, più il caso senza radar.
 - `doorItalia`: un caso per ognuna delle 6 regole, compresi "Oggi" e "Domani", il caso Eurostat senza `IT`, il caso senza dati, la scadenza della card Norme che non torna in nessuna regola, e la regola GeopoliticAI con nessuno, uno o più modelli europei, il ritorno all'anno chiuso e nessun numero della card GeopoliticAI.
 - Card Business e Persone: Italia presente, Italia assente.
 - `parseHash('#politica')` e `parseHash('#politica/2026-12-02')` aprono Norme.

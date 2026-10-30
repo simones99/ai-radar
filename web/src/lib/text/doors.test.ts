@@ -102,7 +102,7 @@ describe('porta Per te', () => {
       expect(text(guadagna.title)).toBe('Domanda di Agenti AI da 5,9 a 46 annunci ogni 10mila');
     });
   });
-  it('4. riserva: quante competenze da imparare ora', () => {
+  it('5. riserva: quante competenze da imparare ora', () => {
     const p = doorPerTe(radar([{}, { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }]), today);
     expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');
     expect(p.title[0]).toEqual({ t: '1 competenza su 2', em: true });

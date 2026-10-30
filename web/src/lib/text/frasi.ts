@@ -324,7 +324,14 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
   if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo };
 
-  // 5. riserva, quando non resta nessuna competenza: con un ruolo, quante delle sue competenze
+  // 5. riserva, quando nessuna regola scatta. Senza ruolo e senza entrate quante competenze sono da imparare ora lo dice già la card:
+  // la porta dice la competenza con più annunci, se non è incerta
+  const piuCercata = rows.slice().sort((a, b) => b.domanda - a.domanda)[0];
+  if (!ruolo && !nellaCard.size && !piuCercata.incerto) {
+    const title: TitleParts = [{ t: piuCercata.breve, em: true }, { t: ` ${verbo([piuCercata], 'ha', 'hanno')} più annunci di tutte: ${per10k(piuCercata.domanda)} ogni 10mila` }];
+    return { title, meta, target: to(piuCercata) };
+  }
+  // altrimenti, quante competenze da imparare ora: con un ruolo, quante delle sue
   const base = ruolo ? rows.filter((r) => r.ruoli?.includes(ruolo.id)) : rows;
   const daImparare = base.filter((r) => r.quadrante === 'impara-ora').length;
   const quante = ruolo ? `${daImparare} delle ${base.length} competenze di ${ruolo.nome}` : `${daImparare} ${daImparare === 1 ? 'competenza' : 'competenze'} su ${rows.length}`;

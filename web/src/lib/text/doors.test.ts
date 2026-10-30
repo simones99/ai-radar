@@ -95,6 +95,9 @@ describe('porta Per te', () => {
       const p = doorPerTe(radar([{ breve: 'Multimodali', plurale: true, quadrante: 'prova', slancio: 0.7, domanda: 0.2, slancio_prec: 0.3, domanda_prec: 0.2, quadrante_prec: 'osserva' }]), today);
       expect(text(p.title)).toBe('Multimodali passano a Da provare');
     });
+    it('5. hanno più annunci', () => {
+      expect(text(doorPerTe(radar([{ breve: 'DB vettoriali', plurale: true }]), today).title)).toMatch(/^DB vettoriali hanno più annunci di tutte: /);
+    });
     it('3. regola 3 senza accordo del verbo', () => {
       const perde = doorPerTe(radar([{ breve: 'DB vettoriali', plurale: true, quadrante: 'osserva', slancio: 0.0, domanda: 0.3, slancio_prec: 0.33, domanda_prec: 0.3, quadrante_prec: 'osserva' }]), today);
       expect(text(perde.title)).toBe('Slancio di DB vettoriali da −21% a −50%');
@@ -102,11 +105,22 @@ describe('porta Per te', () => {
       expect(text(guadagna.title)).toBe('Domanda di Agenti AI da 5,9 a 46 annunci ogni 10mila');
     });
   });
-  it('5. riserva: quante competenze da imparare ora', () => {
-    const p = doorPerTe(radar([{}, { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }]), today);
+  it('5. riserva: la competenza con più annunci, perché quante sono da imparare ora lo dice già la card', () => {
+    const p = doorPerTe(radar([{ quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }, {}]), today);
+    expect(text(p.title)).toMatch(/^C1 ha più annunci di tutte: [\d,]+ ogni 10mila$/);
+    expect(p.title[0]).toEqual({ t: 'C1', em: true });
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1' });
+  });
+  it('5. riserva: quante competenze da imparare ora, se la card nomina chi entra', () => {
+    const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
+    const p = doorPerTe(radar([entra, { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }]), today);
     expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');
     expect(p.title[0]).toEqual({ t: '1 competenza su 2', em: true });
     expect(p.target).toEqual({ tema: 'competenze', elemento: null });
+  });
+  it('5. riserva: quante competenze da imparare ora, se la competenza con più annunci è incerta', () => {
+    const p = doorPerTe(radar([{ quadrante: 'osserva', slancio: 0.2, domanda: 0.9, incerto: true }, {}]), today);
+    expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');
   });
   it('senza radar: porta vuota e non cliccabile', () => {
     expect(doorPerTe({}, today)).toEqual({ title: [], meta: 'Dati non ancora disponibili', target: null });

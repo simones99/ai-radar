@@ -97,7 +97,7 @@ La porta non ripete la card Competenze, che le sta accanto: le competenze che la
 2. Altri cambi di quadrante. Titolo: "**MCP** e **Multimodali** passano a Da provare" se il quadrante d'arrivo è lo stesso; altrimenti "**MCP** passa a Da provare" per la competenza con lo spostamento più grande. Target: quella competenza.
 3. Lo spostamento più grande, se è di almeno `MOVE_MIN` (10 punti) su slancio o domanda. Titolo: "**DB vettoriali** perde 33 punti di slancio" oppure "guadagna". Target: quella competenza.
 4. La competenza con più slancio, se cresce più dell'AI. Titolo: "**Agenti AI** crescono più di tutte: +52% sull'AI in 6 mesi". Target: quella competenza.
-5. Riserva, quando non resta nessuna competenza: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento.
+5. Riserva, quando nessuna regola scatta. Senza ruolo e senza competenze che entrano, la card Competenze dice già quante sono da imparare ora: la porta dice la competenza con più annunci, tra tutte, "**Python per l'AI** ha più annunci di tutte: 46 ogni 10mila" (con un nome plurale "hanno"). Target: quella competenza. Se quella competenza è incerta, se la card nomina chi entra o se c'è un ruolo, la porta dice quante sono da imparare ora: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento. *(Il conteggio senza condizioni ripeteva la card; cambiato il 2026-10-30 dopo la code review, scelta dell'utente.)*
 
 Riga meta: "Radar delle competenze · dati al {data di radar.generato}".
 Senza radar: titolo vuoto, meta "Dati non ancora disponibili", target `null`.

@@ -29,27 +29,29 @@
   const YT = [0.1, 1, 3, 10, 90];
   const xLabel = (v: number) => (v === 0 ? '0' : signedPct(v));
   const yLabel = (v: number) => nf(v, v < 1 ? 1 : 0);
-  const G = 2; // mezza fuga tra i quadranti: ci passa la linea della soglia
-  const QR = $derived([
-    { id: 'consolida' as Quadrant, x0: x(-0.04), y0: y(1.04), x1: x(0.5) - G, y1: y(0.5) - G },
-    { id: 'impara-ora' as Quadrant, x0: x(0.5) + G, y0: y(1.04), x1: x(1.04), y1: y(0.5) - G },
-    { id: 'osserva' as Quadrant, x0: x(-0.04), y0: y(0.5) + G, x1: x(0.5) - G, y1: y(-0.04) },
-    { id: 'prova' as Quadrant, x0: x(0.5) + G, y0: y(0.5) + G, x1: x(1.04), y1: y(-0.04) },
+  const MEZZA_FUGA = 2; // px, tra i quadranti: ci passa la linea della soglia
+  // i quattro quadranti a tono, staccati dalla fuga
+  const riquadri = $derived([
+    { id: 'consolida' as Quadrant, x0: x(-0.04), y0: y(1.04), x1: x(0.5) - MEZZA_FUGA, y1: y(0.5) - MEZZA_FUGA },
+    { id: 'impara-ora' as Quadrant, x0: x(0.5) + MEZZA_FUGA, y0: y(1.04), x1: x(1.04), y1: y(0.5) - MEZZA_FUGA },
+    { id: 'osserva' as Quadrant, x0: x(-0.04), y0: y(0.5) + MEZZA_FUGA, x1: x(0.5) - MEZZA_FUGA, y1: y(-0.04) },
+    { id: 'prova' as Quadrant, x0: x(0.5) + MEZZA_FUGA, y0: y(0.5) + MEZZA_FUGA, x1: x(1.04), y1: y(-0.04) },
   ]);
-  const QL = $derived([
+  // i nomi dei quadranti, fuori agli angoli
+  const angoli = $derived([
     { id: 'consolida' as Quadrant, x: m.l, y: m.t - 8, a: 'start' },
     { id: 'impara-ora' as Quadrant, x: w - m.r, y: m.t - 8, a: 'end' },
     { id: 'osserva' as Quadrant, x: m.l, y: H - m.b + 16, a: 'start' },
     { id: 'prova' as Quadrant, x: w - m.r, y: H - m.b + 16, a: 'end' },
   ]);
   const hotAt = (b: Box) => (b.x0 + b.x1) / 2 > x(0.5) && (b.y0 + b.y1) / 2 < y(0.5); // per il colore dell'alone
-  const rr = (r: RadarRowM) => (r.quadrante === 'impara-ora' ? 6 : 4.5);
+  const raggio = (r: RadarRowM) => (r.quadrante === 'impara-ora' ? 6 : 4.5);
   // La scia di un mese: un cuneo da dove era (sottile) a dove è (largo quanto il punto); il verso si legge senza punta.
   const scie = $derived(rows.filter((r) => r.hasPrev && r.move >= MOVE_MIN).map((r) => {
     const x0 = x(r.px as number), y0 = y(r.py as number), x1 = x(r.x), y1 = y(r.y);
     const len = Math.hypot(x1 - x0, y1 - y0) || 1;
     const nX = -(y1 - y0) / len, nY = (x1 - x0) / len;
-    const a = 0.75, b = rr(r) - 1.5;
+    const a = 0.75, b = raggio(r) - 1.5;
     const d = `M${x0 + nX * a},${y0 + nY * a} L${x1 + nX * b},${y1 + nY * b} L${x1 - nX * b},${y1 - nY * b} L${x0 - nX * a},${y0 - nY * a} Z`;
     return { id: r.id, x0, y0, x1, y1, d };
   }));
@@ -63,7 +65,7 @@
   ]);
   // Le soglie scritte sulle loro linee, nel primo posto libero dai punti e fuori da Impara ora; senza posto non si scrivono:
   // le dice anche la nota sopra il grafico.
-  const SL = $derived.by(() => {
+  const soglie = $derived.by(() => {
     const spot = (t: string, c: { x: number; y: number; a: 'start' | 'end' }[]) => {
       const tw = measureText(t, `500 11px ${FONT}`);
       return c.map((p) => ({ t, ...p, box: { x0: (p.a === 'start' ? p.x : p.x - tw) - 4, y0: p.y - 11, x1: (p.a === 'start' ? p.x + tw : p.x) + 4, y1: p.y + 4 } }))
@@ -78,12 +80,12 @@
   });
   const LH = 16;
   const layout = $derived.by(() => {
-    const obstacles: Box[] = QL.map((q) => {
+    const obstacles: Box[] = angoli.map((q) => {
       const tw = measureText(quadranti[q.id], `500 12px ${FONT}`);
       const x0 = q.a === 'end' ? q.x - tw : q.x;
       return { x0: x0 - 4, y0: q.y - 14, x1: x0 + tw + 4, y1: q.y + 4 };
     });
-    obstacles.push(...SL.map((s) => s.box), ...segni);
+    obstacles.push(...soglie.map((s) => s.box), ...segni);
     // Sul telefono le etichette di Impara ora, che si disegnano sempre, scelgono il posto prima di quelle che possono saltare.
     const order = (r: RadarRowM) => (narrow ? (r.quadrante === 'impara-ora' ? 0 : 2) - Number(r.changed) : r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
@@ -103,7 +105,7 @@
     const r = focused != null && !layout.some((it) => it.id === focused) ? rows.find((q) => q.id === focused) : null;
     if (!r) return null;
     const it = { id: r.id, x: x(r.x), y: y(r.y), w: measureText(r.breve, `600 13px ${FONT}`), h: LH };
-    const taken = [...layout.map((l) => l.box), ...SL.map((l) => l.box), ...segni];
+    const taken = [...layout.map((l) => l.box), ...soglie.map((l) => l.box), ...segni];
     const b = placeLabels([it], { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, taken, 10).get(r.id) as Box;
     return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: hotAt(b), px: it.x, py: it.y, l: leader(it, b) };
   });
@@ -125,7 +127,7 @@
       {/each}
     </defs>
     <g aria-hidden="true">
-      {#each QR as q (q.id)}
+      {#each riquadri as q (q.id)}
         <rect class="quad" class:hot={q.id === 'impara-ora'} x={q.x0} y={q.y0} width={Math.max(0, q.x1 - q.x0)} height={Math.max(0, q.y1 - q.y0)} rx="12" />
       {/each}
       {#each XT as v (v)}
@@ -138,10 +140,10 @@
       {/each}
       <line class="soglia" x1={x(0.5)} x2={x(0.5)} y1={y(1.04)} y2={y(-0.04)} />
       <line class="soglia" x1={x(-0.04)} x2={x(1.04)} y1={y(0.5)} y2={y(0.5)} />
-      {#each SL as s (s.t)}
+      {#each soglie as s (s.t)}
         <text class="sl halo" x={s.x} y={s.y} text-anchor={s.a}>{s.t}</text>
       {/each}
-      {#each QL as q (q.id)}
+      {#each angoli as q (q.id)}
         <text class="ql" class:hot={q.id === 'impara-ora'} x={q.x} y={q.y} text-anchor={q.a}>{quadranti[q.id]}</text>
       {/each}
       <text class="t12" x={(x(0) + x(1)) / 2} y={H - 4} text-anchor="middle">Slancio in 6 mesi, rispetto all’AI →</text>
@@ -159,13 +161,13 @@
     {#each rows as r (r.id)}
       {@const hot = r.quadrante === 'impara-ora'}
       <g class="pt" class:dim={dim(r.id)} class:altro={altro(r.id)}>
-        <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={rr(r)} aria-hidden="true" />
+        <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={raggio(r)} aria-hidden="true" />
         <!-- il punto è un link: Tab lo raggiunge, Invio lo apre; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
         <a class="pick" href={href?.(r.id)} onclick={(e) => { if (onpick) { e.preventDefault(); onpick(r.id); } }}
           onfocus={() => (focused = r.id)} onblur={() => { if (focused === r.id) focused = null; }} aria-labelledby="{uid}-n-{r.id}">
           <title id="{uid}-n-{r.id}">{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}{mese(r)}.</title>
           <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" />
-          <circle class="ring" class:hot cx={x(r.x)} cy={y(r.y)} r={rr(r) + 4} />
+          <circle class="ring" class:hot cx={x(r.x)} cy={y(r.y)} r={raggio(r) + 4} />
         </a>
       </g>
     {/each}

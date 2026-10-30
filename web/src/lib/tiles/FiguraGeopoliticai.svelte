@@ -10,8 +10,8 @@
 
   const g = $derived(data.geopoliticai);
   // l'inquadratura: dalla costa ovest degli USA alla Cina, dalla Scandinavia al Tropico; il mare riempie il resto della card
-  const vx = proietta(-136, 48)[0], vy = proietta(0, 72)[1];
-  const vw = proietta(146, 42)[0] - vx, VH = proietta(0, 4)[1] - vy;
+  const sinistra = proietta(-136, 48)[0], cima = proietta(0, 72)[1];
+  const larga = proietta(146, 42)[0] - sinistra, alta = proietta(0, 4)[1] - cima;
   // dove mettere l'etichetta di ogni area: l'UE sulla Germania, come il dato unico dell'Europa nella mappa del dettaglio
   const DOVE: Record<string, [string, number, number]> = { usa: ['USA', 0, 0], cina: ['CHN', 0, 0], ue: ['DEU', 6, -16] };
   const aree = $derived.by(() => {
@@ -31,13 +31,13 @@
   }
   const etichette = $derived(aree.map((a) => {
     const [iso, dx, dy] = DOVE[a.k];
-    const [cx, cy] = CENTRO[iso] ?? [vx + vw / 2, vy + VH / 2];
-    return { ...a, left: `${((cx + dx - vx) / vw) * 100}%`, top: `${((cy + dy - vy) / VH) * 100}%` };
+    const [cx, cy] = CENTRO[iso] ?? [sinistra + larga / 2, cima + alta / 2];
+    return { ...a, left: `${((cx + dx - sinistra) / larga) * 100}%`, top: `${((cy + dy - cima) / alta) * 100}%` };
   }));
 </script>
 
-<span class="mappa scala"><span class="carta" style:aspect-ratio="{vw} / {VH}">
-  <svg viewBox="{vx} {vy} {vw} {VH}" aria-hidden="true" focusable="false">
+<span class="mappa scala"><span class="carta" style:aspect-ratio="{larga} / {alta}">
+  <svg viewBox="{sinistra} {cima} {larga} {alta}" aria-hidden="true" focusable="false">
     {#each PAESI as p (p.id)}<path d={p.d} fill={fill(p.id)} />{/each}
   </svg>
   {#each etichette as e (e.k)}

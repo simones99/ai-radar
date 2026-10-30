@@ -6,7 +6,17 @@ export interface LabelItem { id: string; x: number; y: number; w: number; h: num
 /** Il font delle etichette (--font in app.css): le misure vanno prese con questo. */
 export const FONT = '"Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI", sans-serif';
 
-const hits = (b: Box, taken: Box[]) => taken.some((o) => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
+/** La box si sovrappone ad almeno una delle altre. */
+export const hits = (b: Box, taken: Box[]) => taken.some((o) => b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
+/** Una linea come ostacolo: una box di lato 2·`r` ogni 6 px, dal primo punto fino a `stop` px prima del secondo. */
+export function tratti(x0: number, y0: number, x1: number, y1: number, r: number, stop = 0): Box[] {
+  const n = Math.hypot(x1 - x0, y1 - y0), out: Box[] = [];
+  for (let t = 0; t < n - stop; t += 6) {
+    const px = x0 + ((x1 - x0) * t) / n, py = y0 + ((y1 - y0) * t) / n;
+    out.push({ x0: px - r, y0: py - r, x1: px + r, y1: py + r });
+  }
+  return out;
+}
 /** Sposta la box dentro i bordi senza cambiarne le misure. */
 const clamp = (b: Box, r: Box): Box => {
   const w = b.x1 - b.x0, h = b.y1 - b.y0;
@@ -55,10 +65,7 @@ export function placeLabels(items: LabelItem[], bounds: Box, obstacles: Box[], g
     placed.push(best);
     // la linea di richiamo resta libera: le etichette dopo non ci si posano sopra
     const l = leader(it, best);
-    if (l) for (let t = 0, n = Math.hypot(l.x2 - x, l.y2 - y); t < n; t += 6) {
-      const px = x + ((l.x2 - x) * t) / n, py = y + ((l.y2 - y) * t) / n;
-      taken.push({ x0: px - 2, y0: py - 2, x1: px + 2, y1: py + 2 });
-    }
+    if (l) taken.push(...tratti(x, y, l.x2, l.y2, 2));
   }
   return out;
 }

@@ -4,7 +4,7 @@
   import type { Quadrant } from '../data/types';
   import { nf, per10k, signedPct } from '../text/format';
   import { cambio } from '../text/frasi';
-  import { FONT, leader, measureText, placeLabels, type Box } from './labels';
+  import { FONT, hits, leader, measureText, placeLabels, tratti, type Box } from './labels';
 
   let { rows, quadranti, highlight = null, delRuolo = null, label = 'Radar delle competenze con il movimento dall’ultimo mese', href, onpick }: {
     rows: RadarRowM[];
@@ -51,23 +51,16 @@
     const nX = -(y1 - y0) / len, nY = (x1 - x0) / len;
     const a = 0.75, b = rr(r) - 1.5;
     const d = `M${x0 + nX * a},${y0 + nY * a} L${x1 + nX * b},${y1 + nY * b} L${x1 - nX * b},${y1 - nY * b} L${x0 - nX * a},${y0 - nY * a} Z`;
-    return { id: r.id, x0, y0, x1, y1, len, d };
+    return { id: r.id, x0, y0, x1, y1, d };
   }));
   const scia = $derived(new Map(scie.map((s) => [s.id, s])));
   // La scia detta a parole: chi non la vede sente dove era il punto un mese fa.
   const mese = (r: RadarRowM) => (scia.has(r.id) ? `. Un mese fa: slancio ${signedPct(r.sp as number)}${r.dp != null ? `, ${per10k(r.dp)} annunci` : ''}` : '');
   // Punti e scie, a tratti di 6 px: né le soglie scritte né le etichette ci si posano sopra.
-  const segni = $derived.by(() => {
-    const b: Box[] = rows.map((r) => ({ x0: x(r.x) - 7, y0: y(r.y) - 7, x1: x(r.x) + 7, y1: y(r.y) + 7 }));
-    scie.forEach((s) => {
-      for (let t = 0; t < s.len - 8; t += 6) {
-        const px = s.x0 + ((s.x1 - s.x0) * t) / s.len, py = s.y0 + ((s.y1 - s.y0) * t) / s.len;
-        b.push({ x0: px - 3, y0: py - 3, x1: px + 3, y1: py + 3 });
-      }
-    });
-    return b;
-  });
-  const hits = (a: Box, bs: Box[]) => bs.some((o) => a.x0 < o.x1 && a.x1 > o.x0 && a.y0 < o.y1 && a.y1 > o.y0);
+  const segni = $derived<Box[]>([
+    ...rows.map((r) => ({ x0: x(r.x) - 7, y0: y(r.y) - 7, x1: x(r.x) + 7, y1: y(r.y) + 7 })),
+    ...scie.flatMap((s) => tratti(s.x0, s.y0, s.x1, s.y1, 3, 8)),
+  ]);
   // Le soglie scritte sulle loro linee, nel primo posto libero dai punti e fuori da Impara ora; senza posto non si scrivono:
   // le dice anche la nota sopra il grafico.
   const SL = $derived.by(() => {

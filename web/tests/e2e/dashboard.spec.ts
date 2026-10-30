@@ -723,6 +723,29 @@ test('ancora interna con una card aperta: la pagina va all’ancora, non alle ca
   await expect(page.locator('#stato')).toBeInViewport();
 });
 
+test('Stato delle fonti, tabella impilata: ogni valore resta sotto il nome della sua colonna, e una nota lunga non spezza le parole', async ({ page }) => {
+  await page.goto('/');
+  const stato = page.getByRole('region', { name: 'Stato delle fonti' });
+  await stato.getByText(/Vedi le \d+ fonti/).click();
+  const adzuna = stato.getByRole('row', { name: /^Adzuna/ });
+  // sotto il nome della colonna (16px), anche se la nota accanto è più alta
+  const dalNome = await adzuna.getByRole('cell', { name: /non configurata/ }).evaluate((td) => {
+    const r = document.createRange();
+    r.selectNodeContents(td);
+    return r.getBoundingClientRect().top - td.getBoundingClientRect().top;
+  });
+  expect(dalNome).toBeLessThan(24);
+  const righe = await adzuna.getByRole('cell', { name: /ADZUNA_APP_KEY/ }).evaluate((td) => {
+    const parola = 'ADZUNA_APP_ID/ADZUNA_APP_KEY';
+    const t = [...td.childNodes].find((n): n is Text => n instanceof Text && n.data.includes(parola))!;
+    const r = document.createRange();
+    r.setStart(t, t.data.indexOf(parola));
+    r.setEnd(t, t.data.indexOf(parola) + parola.length);
+    return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+  });
+  expect(righe).toBe(1);
+});
+
 test('360px: all’apertura il titolo della card è nella finestra, sotto le pillole', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 780 });
   await page.goto('/');

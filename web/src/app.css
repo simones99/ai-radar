@@ -79,10 +79,11 @@ select { appearance: none; max-width: 100%; font: inherit; font-size: 16px; font
 .segnalino::after { content: '1º'; }
 
 /* una tabella più larga del suo riquadro scorre, e un'ombra sul bordo dice da che parte c'è altro: le due coperture viaggiano con il contenuto
-   e la nascondono quando si arriva in fondo */
+   e la nascondono quando si arriva in fondo. Le coperture hanno il colore di quello che sta sotto: la card, o --fondo dove la tabella non è
+   in una card (il colophon) */
 .scorre { overflow-x: auto; background:
-  linear-gradient(to right, var(--card) 40%, transparent) left / 32px 100% no-repeat local,
-  linear-gradient(to left, var(--card) 40%, transparent) right / 32px 100% no-repeat local,
+  linear-gradient(to right, var(--fondo, var(--card)) 40%, transparent) left / 32px 100% no-repeat local,
+  linear-gradient(to left, var(--fondo, var(--card)) 40%, transparent) right / 32px 100% no-repeat local,
   radial-gradient(farthest-side at 0 50%, color-mix(in srgb, var(--fg) 16%, transparent), transparent) left / 12px 100% no-repeat scroll,
   radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--fg) 16%, transparent), transparent) right / 12px 100% no-repeat scroll; }
 

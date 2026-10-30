@@ -3,7 +3,7 @@
   // del loro miglior modello nell'anno della card, come l'anello dei modelli nel dettaglio. Decorativa: i numeri sono nel testo della card.
   import { annoFaccia, valore } from '../data/geopoliticai';
   import type { Dataset } from '../data/types';
-  import { CENTRO, PAESI, proietta } from '../geo/mappa';
+  import { CENTRO, PAESI, proietta, tinta } from '../geo/mappa';
   import { eci } from '../text/geopoliticai';
 
   let { data }: { data: Dataset } = $props();
@@ -27,8 +27,7 @@
   const primo = $derived(aree.find((a) => a.v === hi)?.k);
   function fill(iso: string): string {
     const a = aree.find((x) => x.paesi.has(iso));
-    if (!a) return 'var(--line)';
-    return `color-mix(in srgb, var(--alto) ${Math.round(25 + (75 * (a.v - lo)) / (hi - lo || 1))}%, var(--card))`;
+    return a ? tinta(a.v, lo, hi) : 'var(--line)';
   }
   const etichette = $derived(aree.map((a) => {
     const [iso, dx, dy] = DOVE[a.k];
@@ -37,7 +36,7 @@
   }));
 </script>
 
-<span class="mappa"><span class="carta" style:aspect-ratio="{vw} / {VH}">
+<span class="mappa scala"><span class="carta" style:aspect-ratio="{vw} / {VH}">
   <svg viewBox="{vx} {vy} {vw} {VH}" aria-hidden="true" focusable="false">
     {#each PAESI as p (p.id)}<path d={p.d} fill={fill(p.id)} />{/each}
   </svg>
@@ -49,9 +48,8 @@
 </span></span>
 
 <style>
-  /* lo stesso colore dell'anello dei modelli nella mappa del dettaglio (GeoMappa) */
-  /* il valore più alto: il colore pieno sulla carta chiara, schiarito sulla carta scura, così la scala sale verso la luce in tutti e due i temi */
-  .mappa { --k-modelli: #b2461f; --alto: light-dark(var(--k-modelli), color-mix(in oklab, var(--k-modelli) 60%, #fff)); display: grid; align-items: center; width: 100%; height: 100%; overflow: hidden;
+  /* la scala nel colore dell'anello dei modelli, come nella mappa del dettaglio; colori, scala e segnalino stanno in app.css */
+  .mappa { --c: var(--k-modelli); display: grid; align-items: center; width: 100%; height: 100%; overflow: hidden;
     background: color-mix(in srgb, var(--bg) 70%, #9fc3d9); }
   .carta { position: relative; display: block; width: 100%; }
   svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
@@ -61,8 +59,4 @@
   .et .n { color: var(--fg-2); }
   .et b { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
   .et.ue .n { color: var(--fg); font-weight: 700; }
-  /* il primo: lo stesso «1º» della mappa del dettaglio */
-  .segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--fg);
-    box-shadow: 0 0 0 1.5px var(--card); color: var(--card); font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
-  .segnalino::after { content: '1º'; }
 </style>

@@ -65,6 +65,19 @@ select { appearance: none; max-width: 100%; font: inherit; font-size: 16px; font
   background-position: right 20px center, right 15px center; background-size: 5px 5px; background-repeat: no-repeat; }
 @media (hover: hover) { select:hover { border-color: var(--fg-3); } }
 
+/* Le mappe di GeopoliticAI: quella del dettaglio (GeoMappa) e la figura della card in home.
+   Un colore per anello della catena, con il testo bianco sopra a ≥ 4,5:1. Data center e Modelli stanno accanto, sulla linea e nel filo europeo:
+   il verde e l'arancio si distinguono anche per chi non vede il rosso o il verde. */
+:root { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #3e7232; --k-modelli: #b2461f; }
+/* il valore più alto della scala, sull'elemento che porta il colore dell'anello in --c: il colore pieno sulla carta chiara,
+   schiarito sulla carta scura, così la scala sale verso la luce in tutti e due i temi (tinta() in geo/mappa.ts) */
+.scala { --alto: light-dark(var(--c), color-mix(in oklab, var(--c) 60%, #fff)); }
+/* il primo: «1º» nel colore della carta su un tondino nel colore del testo, che si stacca da qualunque Paese in tutti e due i temi.
+   Il testo sta nel CSS: chi non vede la mappa ha il nome del segnalino, e il numero dell'etichetta resta solo */
+.segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; align-self: center; border-radius: 50%; background: var(--fg);
+  box-shadow: 0 0 0 1.5px var(--card); color: var(--card); font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
+.segnalino::after { content: '1º'; }
+
 /* una tabella più larga del suo riquadro scorre, e un'ombra sul bordo dice da che parte c'è altro: le due coperture viaggiano con il contenuto
    e la nascondono quando si arriva in fondo */
 .scorre { overflow-x: auto; background:

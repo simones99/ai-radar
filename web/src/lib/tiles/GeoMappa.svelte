@@ -10,7 +10,7 @@
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
     ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
-    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
+    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, tinta, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
   import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
@@ -44,13 +44,10 @@
   /** I Paesi UE che prendono il valore unico dell'Europa, tratteggiati. */
   const unico = $derived(new Set(v.europa != null && !filo ? g.zone.ue?.paesi_mappa ?? [] : []));
   const quote = $derived(Object.fromEntries(v.valori));
-  // il colore: dal valore più basso della scala (appena sopra il grigio) al più alto
   function fill(iso: string): string {
     if (filo) return fillFilo(iso);
     const x = unico.has(iso) ? v.europa : quote[iso];
-    if (x == null) return 'var(--line)';
-    const [lo, hi] = v.scala;
-    return `color-mix(in srgb, var(--alto) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
+    return x == null ? 'var(--line)' : tinta(x, ...v.scala);
   }
   const nome = (iso: string) => (filo ? nomeFilo(filo, iso) : `${NOMI[iso] ?? iso}: ${v.testo(iso)}`);
 
@@ -161,7 +158,7 @@
 
 <Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note={filo ? 'Sei anelli, dalla miniera al modello: il filo mostra da quali Paesi passa un modello.' : 'Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese.'}
   table={filo ? dati?.tabella ?? null : v.tabella} cite={filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
-  <div class="anello" style:--c="var(--k-{anello})">
+  <div class="anello scala" style:--c="var(--k-{anello})">
     {#if fili.length}
       <div class="viste">
         <div class="scelte" role="group" aria-label="Vista">
@@ -306,12 +303,8 @@
 </Block>
 
 <style>
-  /* un colore per anello, con il testo bianco sopra a ≥ 4,5:1. Data center e Modelli stanno accanto, sulla linea e nel filo europeo:
-     il verde e l'arancio si distinguono anche per chi non vede il rosso o il verde */
-  .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #3e7232; --k-modelli: #b2461f;
-    --sito: color-mix(in srgb, var(--fg) 55%, transparent);
-    /* il valore più alto della scala: il colore dell'anello sulla carta chiara, schiarito sulla carta scura, dove verso la carta si scurirebbe */
-    --alto: light-dark(var(--c), color-mix(in oklab, var(--c) 60%, #fff));
+  /* i colori degli anelli, la scala (--alto) e il segnalino del primo stanno in app.css: li usa anche la figura della card in home */
+  .anello { --sito: color-mix(in srgb, var(--fg) 55%, transparent);
     display: grid; gap: var(--s2); min-width: 0; }
   .linea ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: relative; }
   .linea ol::before { content: ''; position: absolute; left: 8%; right: 8%; top: 20px; height: 4px; background: var(--line-2); border-radius: 2px; }
@@ -346,11 +339,6 @@
     font-size: 12px; line-height: 16px; color: var(--fg); text-shadow: 0 0 3px var(--card), 0 0 3px var(--card), 0 0 2px var(--card); }
   .et .n { color: var(--fg-2); }
   .et b { font-size: 14px; font-weight: 800; }
-  /* il primo: «1º» nel colore della carta su un tondino nel colore del testo, che si stacca da qualunque Paese in tutti e due i temi. Il testo sta nel CSS:
-     chi non vede la mappa ha il nome del segnalino, e il numero dell'etichetta resta solo */
-  .segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; align-self: center; border-radius: 50%; background: var(--fg);
-    box-shadow: 0 0 0 1.5px var(--card); color: var(--card); font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
-  .segnalino::after { content: '1º'; }
   .europa { position: absolute; border-radius: var(--r-sm); border: 1px solid var(--fg-3); overflow: hidden; background: color-mix(in srgb, var(--bg) 60%, #9fc3d9); }
   .europa .pz { stroke-width: .3; }
   .europa .italia { stroke-width: 1; stroke-dasharray: 1.5 .8; }

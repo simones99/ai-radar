@@ -22,6 +22,10 @@ export const ANELLI = [
   { key: 'modelli', nome: 'Modelli' },
 ] as const;
 export type AnelloKey = (typeof ANELLI)[number]['key'];
+
+/** Il colore di un valore sulla scala delle mappe: dal più basso, appena sopra la carta, a --alto (la classe .scala in app.css). */
+export const tinta = (x: number, lo: number, hi: number): string =>
+  `color-mix(in srgb, var(--alto) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
 type Chip = 'progettazione' | 'fabbricazione' | 'macchinari';
 const CHIP: readonly Chip[] = ['progettazione', 'fabbricazione', 'macchinari'];
 /** La frase onesta di un Paese senza quota, per anello dei chip. */

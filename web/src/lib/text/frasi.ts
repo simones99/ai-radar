@@ -157,15 +157,16 @@ export function headNorme(d: Dataset, today: Date): Head {
 }
 
 // ---------------------------------------------------------------- competenze
-/** Le competenze che la card Competenze nomina in home: chi entra in Impara ora e, se qualcuna entra, chi esce. La porta Per te non le ripete. */
-export function nomiFacciaCompetenze(rows: RadarRowM[]): Set<string> {
-  const { inn, out } = radarChanges(rows);
-  return new Set(inn.length ? [...inn, ...out].map((r) => r.id) : []);
+/** Le competenze che la card Competenze nomina in home: chi entra in Impara ora e, se qualcuna entra, chi esce; altrimenti nessuna.
+ *  La card le dice, la porta Per te non le ripete. */
+function nomiInFaccia(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {
+  const cambi = radarChanges(rows);
+  return cambi.inn.length ? cambi : { inn: [], out: [] };
 }
 export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return null;
-  const { inn, out } = radarChanges(rows);
+  const { inn, out } = nomiInFaccia(rows);
   if (inn.length) {
     return {
       fig: inn.map((r) => r.breve).join(', '), unit: '',
@@ -322,7 +323,8 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
   // i dati incerti non fanno notizia (spec Radar 2.0, 7.4); le competenze che la card Competenze nomina accanto, nemmeno:
   // la porta dice un'altra cosa (così la regola 1 resta per le uscite delle settimane in cui non entra nessuno)
-  const nellaCard = nomiFacciaCompetenze(rows);
+  const { inn, out } = nomiInFaccia(rows);
+  const nellaCard = new Set([...inn, ...out].map((r) => r.id));
   const sure = rows.filter((r) => !r.incerto && !nellaCard.has(r.id));
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza
   const conRuolo = ruolo ? { scelta: ruolo.nome } : {};

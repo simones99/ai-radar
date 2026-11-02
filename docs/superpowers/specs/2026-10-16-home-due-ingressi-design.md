@@ -38,7 +38,7 @@ Criteri di successo:
 | Tema | Decisione |
 | --- | --- |
 | Pubblico | Il radar per le persone, l'osservatorio per le organizzazioni |
-| Architettura | Un sito, home a due ingressi, le 8 card divise 4 e 4 |
+| Architettura | Un sito, home a due ingressi, le 9 card divise 4 e 5 (GeopoliticAI è arrivata dopo questa spec) |
 | Sopra le porte | Nessun titolo della settimana: data, una riga che spiega il sito, poi le porte |
 | Notizia delle porte | Regole a priorità, scritte dai dati senza LLM (sezione 5) |
 | Clic sulla porta | Apre la card da cui viene la notizia, sull'elemento giusto |
@@ -57,7 +57,7 @@ Dall'alto in basso:
 3. `h1` con la riga che spiega il sito: "Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì." In stile testo grande, non titolo enorme: le porte sono il titolo visivo.
 4. Le due porte affiancate, stessa larghezza e stessa altezza. Sotto 720 px vanno una sotto l'altra, prima "Per te".
 5. Sezione "Su cosa formarti", titolo `h2`, 4 card in questo ordine: Competenze, Modelli e ricerca, Open source, Notizie.
-6. Sezione "L'AI in Italia", titolo `h2`, 4 card in questo ordine: Business, Persone e lavoro, Norme, Rapporti.
+6. Sezione "L'AI in Italia", titolo `h2`, 5 card in questo ordine: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti. *(Allineato al codice il 2026-11-02 dopo la terza code review.)*
 7. Foto e fonti, stato delle fonti: come oggi.
 
 Ogni porta contiene:
@@ -97,7 +97,7 @@ Dalla regola 2 alla 4 una competenza con meno di 3 annunci ogni 10mila, la sogli
 
 1. Una o più competenze entrano o escono da "Impara ora" (`radarChanges`). Titolo: "**MCP** entra tra le competenze da imparare ora"; con più nomi "**MCP** e **RAG** entrano…"; se ci sono anche uscite: "…; **LLMOps** esce". Target: Competenze, elemento = la prima competenza che entra (o esce, se nessuna entra).
 2. Altri cambi di quadrante. Titolo: "**MCP** e **Multimodali** passano a Da provare" se il quadrante d'arrivo è lo stesso; altrimenti "**MCP** passa a Da provare" per la competenza con lo spostamento più grande. Target: quella competenza.
-3. Lo spostamento più grande, se è di almeno `MOVE_MIN` (10 punti) su slancio o domanda. Sullo slancio, un valore di un mese fa dentro il margine di oggi non è una notizia: il principio di prudenza vale anche qui. *(Aggiunto il 2026-11-02 dopo la seconda critica.)* Titolo: "**DB vettoriali** perde 33 punti di slancio" oppure "guadagna". Target: quella competenza.
+3. Lo spostamento più grande, se è di almeno `MOVE_MIN` (10 punti) su slancio o domanda. Sullo slancio, un valore di un mese fa dentro il margine di oggi non è una notizia: il principio di prudenza vale anche qui. *(Aggiunto il 2026-11-02 dopo la seconda critica.)* Titolo in unità vere, come in Radar 2.0 (7.4): "Slancio di **DB vettoriali** da +12% a −20%" oppure "Domanda di **MCP** da 2,1 a 3,4 annunci ogni 10mila". Target: quella competenza. *(Allineato al codice il 2026-11-02 dopo la terza code review.)*
 4. La competenza con più slancio, se cresce più dell'AI. Titolo: "**Agenti AI** crescono più di tutte: +52% sull'AI in 6 mesi". Target: quella competenza.
 5. Riserva, quando nessuna regola scatta. Senza ruolo la card Competenze dice già quante sono da imparare ora: la porta dice la competenza con più annunci, tra tutte, "**Python per l'AI** ha più annunci di tutte: 46 ogni 10mila" (con un nome plurale "hanno"). Target: quella competenza. Se quella competenza è incerta o se c'è un ruolo, la porta dice quante sono da imparare ora: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento. *(Il conteggio senza condizioni ripeteva la card; cambiato il 2026-10-30 dopo la code review, scelta dell'utente.)*
 
@@ -133,7 +133,7 @@ Se la fonte non ha l'Italia, la card mostra il dato UE (Business) o mondiale (Pe
 
 Numeri interi su porte e facce delle card, arrotondati all'unità (`nf(v, 0)`). Le tabelle "Vedi i dati" restano con i valori esatti (`exact`). Le serie CC BY-ND dell'AI Index restano come pubblicate nelle tabelle; nei grafici e nei titoli valgono le forme brevi già in uso.
 
-Le altre card non cambiano: Competenze, Modelli, Open source, Notizie, Rapporti. Norme cambia solo nome e id.
+Le altre card non cambiano: Modelli, Open source, Notizie, Rapporti. Norme cambia solo nome e id. Competenze in home non mostra la cifra, che è già nella frase, sotto la figura del radar. *(Cambiato il 2026-11-02 dopo la seconda critica prima del rilascio, scelta dell'utente.)*
 
 ## 7. Norme e link diretti
 
@@ -151,13 +151,13 @@ Unità (vitest):
 - `doorItalia`: un caso per ognuna delle 5 regole, compresi "Oggi" e "Domani", la scadenza vicina prima del dato italiano, il caso Eurostat senza `IT`, il caso senza dati, e la regola GeopoliticAI con nessuno, uno o più modelli europei, il ritorno all'anno chiuso e nessun numero della card GeopoliticAI.
 - Card Business e Persone: Italia presente, Italia assente.
 - `parseHash('#politica')` e `parseHash('#politica/2026-12-02')` aprono Norme.
-- Griglia: due sezioni con 4 card ciascuna, nell'ordine giusto; pillole in due gruppi.
+- Griglia: due sezioni, con 4 e 5 card, nell'ordine giusto; pillole in due gruppi.
 - Norme e Rapporti evidenziano l'elemento del link diretto.
 - I test esistenti su `heroThesis` si tolgono con la funzione.
 
 End-to-end (Playwright):
 
-- home: due porte, due `h2` di sezione, 8 card;
+- home: due porte, due `h2` di sezione, 9 card;
 - clic sulla porta "Per te": si apre Competenze con l'elemento evidenziato;
 - clic sulla porta "L'AI in Italia": il dato italiano apre Business; al 20 novembre, la scadenza vicina apre Norme; senza un dato italiano, la quota dell'UE apre GeopoliticAI sull'UE;
 - `#politica` apre Norme;

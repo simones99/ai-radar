@@ -155,17 +155,21 @@ test('sul telefono la foto viene dopo il primo blocco; da 720px sta accanto al t
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/#modelli');
   await scrollSettled(page);
-  const foto = page.locator('#detail-modelli figure');
-  const blocco = page.locator('#detail-modelli section.blk');
-  const su = (await blocco.first().boundingBox())!;
-  const titolo = (await page.locator('#h-modelli').boundingBox())!;
-  expect(su.y).toBeGreaterThan(titolo.y);
-  expect((await foto.boundingBox())!.y).toBeGreaterThanOrEqual(su.y + su.height);
-  expect((await foto.boundingBox())!.y + (await foto.boundingBox())!.height).toBeLessThanOrEqual((await blocco.nth(1).boundingBox())!.y);
+  // tutto nello stesso istante: tra due misure separate la pagina può ancora scorrere
+  const misure = () => page.evaluate(() => {
+    const box = (e: Element) => { const r = e.getBoundingClientRect(); return { y: r.y, bottom: r.bottom }; };
+    const [su, giu] = [...document.querySelectorAll('#detail-modelli section.blk')].map(box);
+    return { su, giu, foto: box(document.querySelector('#detail-modelli figure')!), titolo: box(document.querySelector('#h-modelli')!) };
+  });
+  const telefono = await misure();
+  expect(telefono.su.y).toBeGreaterThan(telefono.titolo.y);
+  expect(telefono.foto.y).toBeGreaterThanOrEqual(telefono.su.bottom);
+  expect(telefono.foto.bottom).toBeLessThanOrEqual(telefono.giu.y);
   expect(await noHorizontalScroll(page)).toBe(true);
   await page.setViewportSize({ width: 800, height: 640 });
   await scrollSettled(page);
-  expect((await foto.boundingBox())!.y).toBeLessThan((await blocco.first().boundingBox())!.y);
+  const largo = await misure();
+  expect(largo.foto.y).toBeLessThan(largo.su.y);
 });
 
 test('mappa a 1280px: il fumetto si legge tutto e non copre il tabellone', async ({ page }) => {

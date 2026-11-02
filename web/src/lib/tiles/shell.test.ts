@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { createRawSnippet, type Component } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
+import { imposta } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import Detail from './Detail.svelte';
 import Pills from './Pills.svelte';
@@ -89,6 +90,14 @@ describe('Detail', () => {
     await fireEvent.click(screen.getByRole('button', { name: 'Copia link' }));
     expect(writeText).toHaveBeenCalledWith(location.href);
     expect(await screen.findByRole('button', { name: 'Link copiato' })).toBeInTheDocument();
+  });
+  it('copia link: cambiato un parametro della card, il pulsante torna a «Copia link»', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn(async () => {}) }, configurable: true });
+    render(Detail, { tile: tile(), head: tile().head({}, today), onclose: () => {}, children: blocks });
+    await fireEvent.click(screen.getByRole('button', { name: 'Copia link' }));
+    await screen.findByRole('button', { name: 'Link copiato' });
+    imposta('ruolo', 'dati');
+    expect(await screen.findByRole('button', { name: 'Copia link' })).toBeInTheDocument();
   });
   it('copia link: se gli appunti rifiutano, mostra il link selezionato', async () => {
     Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn(async () => { throw new Error('no'); }) }, configurable: true });

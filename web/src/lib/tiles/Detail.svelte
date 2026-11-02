@@ -2,6 +2,7 @@
   import { onMount, tick, type Snippet } from 'svelte';
   import { scorrimento } from '../movimento';
   import { PHOTOS } from '../photos';
+  import { IMPOSTA } from '../router';
   import type { Head } from '../text/frasi';
   import IconaChiudi from './IconaChiudi.svelte';
   import { diSpicco, type TileDef } from './types';
@@ -19,6 +20,10 @@
   onMount(() => {
     h2.focus({ preventScroll: true });
     h2.closest('.detail')?.scrollIntoView?.({ block: 'start', behavior: scorrimento() });
+    // cambiato un parametro della card, il link non è più quello copiato
+    const azzera = () => { copied = false; fallbackUrl = null; };
+    document.addEventListener(IMPOSTA, azzera);
+    return () => document.removeEventListener(IMPOSTA, azzera);
   });
 
   async function copy() {

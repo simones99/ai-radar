@@ -14,12 +14,17 @@
   let imgFailed = $state(false);
   // nell'elenco accanto alla card aperta anche le card di spicco tornano alla foto
   const Figura = $derived(compact ? undefined : tile.Figura);
+  // per un lettore di schermo la card è il suo nome e la sua cifra; la frase e la data arrivano come descrizione, non come un nome lungo tutta la card
+  const nomeCard = $derived(face ? `${tile.label}: ${face.fig}${face.unit ? ` ${face.unit}` : ''}` : tile.label);
+  const stale = $derived(st.state === 'vecchio' && !!st.fallito && !!st.aggiornato);
+  const conData = $derived(st.state === 'assente' || !!st.aggiornato);
+  const descritta = $derived([`${tile.id}-frase`, conData && `${tile.id}-data`, stale && `${tile.id}-stale`].filter(Boolean).join(' '));
 </script>
 
 <!-- aperta, il nome della transizione passa al dettaglio: due elementi con lo stesso nome annullano l'animazione -->
-<button type="button" class="face" class:compact class:spicco={Figura !== undefined} class:largo={tile.largo && !compact} aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
+<button type="button" class="face" class:compact class:spicco={Figura !== undefined} class:largo={tile.largo && !compact} aria-label={nomeCard} aria-describedby={descritta} aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
   {#if Figura}
-    <span class="viz"><Figura {data} /></span>
+    <span class="viz" aria-hidden="true"><Figura {data} /></span>
   {:else if imgFailed}
     <span class="ph ph-empty" aria-hidden="true">{photo.alt}</span>
   {:else}
@@ -29,18 +34,18 @@
   <span class="f-body">
     <span class="f-lab">
       <span>{tile.label}</span>
-      <span class="small">
+      <span class="small" id="{tile.id}-data">
         {#if st.state === 'assente'}non disponibile{:else if st.aggiornato}agg. {day(st.aggiornato)}{/if}
       </span>
     </span>
     {#if face}
       <span class="fig">{face.fig}{#if face.unit}<span class="u">{face.unit}</span>{/if}</span>
-      <span class="sent">{face.sent}</span>
+      <span class="sent" id="{tile.id}-frase">{face.sent}</span>
     {:else}
-      <span class="sent">{st.motivo}</span>
+      <span class="sent" id="{tile.id}-frase">{st.motivo}</span>
     {/if}
-    {#if st.state === 'vecchio' && st.fallito && st.aggiornato}
-      <span class="stale">Aggiornamento non riuscito {dayWith('il', st.fallito)}. Dati aggiornati {dayWith('al', st.aggiornato)}.</span>
+    {#if stale && st.fallito && st.aggiornato}
+      <span class="stale" id="{tile.id}-stale">Aggiornamento non riuscito {dayWith('il', st.fallito)}. Dati aggiornati {dayWith('al', st.aggiornato)}.</span>
     {/if}
   </span>
 </button>

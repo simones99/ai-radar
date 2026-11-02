@@ -35,6 +35,7 @@
     <nav aria-label="Pagina"><a href="#crediti">Foto e fonti</a><a href="#stato">Stato delle fonti</a></nav>
   </header>
 
+  <main>
   {#if phase === 'error'}
     <section class="alert" role="alert">
       <p>Non riesco a caricare i dati.</p>
@@ -55,6 +56,7 @@
   {:else if phase === 'loading'}
     <p class="muted">Caricamento dei dati…</p>
   {/if}
+  </main>
 
   <footer class="colophon">
     <section class="credits" id="crediti" aria-labelledby="crediti-h">
@@ -86,14 +88,19 @@
   @media (hover: hover) { nav a:hover { color: var(--fg); } }
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
-  /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto */
+  /* main non fa una scatola sua: i suoi figli stanno nella griglia di .wrap, come la testata e il colophon */
+  main { display: contents; }
+  /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto, e la h1 resta per i lettori di schermo */
   @media (min-width: 1200px) {
     .wrap { max-width: 1920px; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); column-gap: var(--s5); }
-    .wrap > :global(*) { grid-column: 1 / -1; }
-    .wrap > .intro { grid-column: 1; align-self: start; position: sticky; top: var(--s3); gap: var(--s4); }
-    .wrap > :global(.board) { grid-column: 2; }
-    .wrap:has(:global(.board.has-open)) > .intro { display: none; }
-    .wrap > :global(.board.has-open) { grid-column: 1 / -1; }
+    .wrap > :global(*), main > :global(*) { grid-column: 1 / -1; }
+    main > .intro { grid-column: 1; align-self: start; position: sticky; top: var(--s3); gap: var(--s4); }
+    main > :global(.board) { grid-column: 2; }
+    .wrap:has(:global(.board.has-open)) .intro { display: contents; }
+    .wrap:has(:global(.board.has-open)) .intro :global(.doors) { display: none; }
+    .wrap:has(:global(.board.has-open)) .hero p { display: none; }
+    .wrap:has(:global(.board.has-open)) .hero { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    main > :global(.board.has-open) { grid-column: 1 / -1; }
     .hero { padding-top: 0; }
   }
   h1 { font-weight: 600; font-size: clamp(28px, 3.4vw, 36px); line-height: 1.15; letter-spacing: -.01em; max-width: 24ch; }

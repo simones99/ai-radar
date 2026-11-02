@@ -94,33 +94,40 @@
   // il fumetto, di un Paese o di un sito, si apre dal lato opposto rispetto al centro della mappa; l'Europa è anche nel riquadro,
   // a sinistra, e si apre sempre a destra, così il fumetto non la copre
   const EUROPEI = new Set(europei.map((p) => p.id));
-  let aperto = $state<{ titolo: string; iso?: string; sito?: GeoSito; lato: 'destra' | 'sinistra'; da: SVGElement } | null>(null);
+  let aperto = $state<{ titolo: string; iso?: string; sito?: GeoSito; lato: 'destra' | 'sinistra'; da: Element | undefined } | null>(null);
   let pannello = $state<HTMLElement>();
   const anelliPaese = $derived(aperto?.iso ? fumetto(g, catena, aperto.iso) : []);
-  async function apri(cosa: { titolo: string; iso?: string; sito?: GeoSito }, x: number, europeo: boolean, da: SVGElement) {
+  async function apri(cosa: { titolo: string; iso?: string; sito?: GeoSito }, x: number, europeo: boolean, da: Element | undefined) {
     aperto = { ...cosa, lato: europeo || x < vx + vw / 2 ? 'destra' : 'sinistra', da };
     await tick();
     pannello?.focus();
   }
-  function tocca(p: Paese, da: SVGElement) {
+  // sulla mappa i Paesi si toccano e basta; da tastiera e con un lettore di schermo si aprono dal menu sotto la mappa, dove torna il focus
+  let menuPaese = $state<HTMLSelectElement>();
+  let paeseScelto = $state('');
+  const paesiMenu = [...PAESI].filter((p) => NOMI[p.id]).sort((a, b) => NOMI[a.id].localeCompare(NOMI[b.id], 'it'));
+  function tocca(p: Paese) {
     if (scelte[p.id]) onscegli(scelte[p.id]);
-    return apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), da);
+    return apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), menuPaese);
   }
-  const toccaSito = (q: PuntoSito, da: SVGElement) => apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
+  function apriDalMenu(e: SubmitEvent) {
+    e.preventDefault();
+    const p = PAESI.find((x) => x.id === paeseScelto);
+    if (p) tocca(p);
+  }
+  const toccaSito = (q: PuntoSito, da: Element) => apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
   function chiudi() {
-    const da = aperto?.da;
+    const da = aperto?.da as HTMLElement | SVGElement | undefined;
     aperto = null;
-    da?.focus();
+    da?.focus({ preventScroll: true });
   }
 
   const cifre = $derived(v.tabellone(zona));
 </script>
 
 {#snippet paese(p: Paese)}
-  <!-- aria-pressed solo per i Paesi che sono una scelta di ?area=: quelli di «Altri» aprono solo il fumetto -->
-  <path d={p.d} fill={fill(p.id)} class="pz" class:ev={ev.has(p.id)} role="button" tabindex="-1" aria-label={nome(p.id)} aria-haspopup="dialog"
-    aria-pressed={scelte[p.id] ? (ev.has(p.id) ? 'true' : 'false') : undefined} onclick={(e) => tocca(p, e.currentTarget)}
-    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tocca(p, e.currentTarget); } }}><title>{nome(p.id)}</title></path>
+  <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions: i Paesi sono centinaia: da tastiera e con un lettore di schermo si aprono dal menu sotto la mappa -->
+  <path d={p.d} fill={fill(p.id)} class="pz" class:ev={ev.has(p.id)} data-testid="paese-{p.id}" aria-hidden="true" onclick={() => tocca(p)}><title>{nome(p.id)}</title></path>
 {/snippet}
 
 {#snippet cerchio(q: PuntoSito, tab: boolean)}
@@ -264,6 +271,17 @@
     </div>
     {#if conSiti}<p class="didascalia">{didascaliaSiti(g.data_center!)}</p>{/if}
 
+    <form class="paese" onsubmit={apriDalMenu}>
+      <label>
+        <span>Un Paese</span>
+        <select bind:this={menuPaese} bind:value={paeseScelto}>
+          <option value="">Scegli</option>
+          {#each paesiMenu as p (p.id)}<option value={p.id}>{nome(p.id)}</option>{/each}
+        </select>
+      </label>
+      <button type="submit" disabled={!paeseScelto}>Apri</button>
+    </form>
+
     {#if filo}
       <p class="esempio">{NOTA_FILO}</p>
       <ol class="tappe" aria-label="Le tappe del filo: {filo.nome.toLowerCase()}">
@@ -364,6 +382,13 @@
   .sito { stroke: var(--card); stroke-width: .6; cursor: pointer; pointer-events: all; }
   .sito[fill='none'] { stroke: var(--fg); stroke-width: .8; }
   .sito:hover, .sito:focus-visible { outline: none; stroke: var(--accent); stroke-width: 1.4; }
+  .paese { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); }
+  /* le voci del menu sono lunghe: non decidono loro la larghezza, altrimenti a 320px la pagina scorre */
+  .paese label { display: flex; align-items: center; gap: var(--s1); flex: 0 1 28rem; min-width: 0; font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .paese span { white-space: nowrap; }
+  .paese select { flex: 1 1 0; width: 0; min-width: 0; background-color: var(--bg); }
+  .paese button { min-height: 44px; padding: 0 var(--s2); border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
+  .paese button:disabled { cursor: default; opacity: .6; }
   .didascalia { margin: 0; font-size: 13px; line-height: 20px; color: var(--fg-2); }
   @media (max-width: 599px) {
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */

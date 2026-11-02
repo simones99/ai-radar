@@ -75,8 +75,8 @@
       const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
       const [dx, dy] = SPOSTA[iso] ?? [0, 0];
       const e = { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
-      if (!largo) return [e];
-      const px = ((cx + dx - vx) / vw) * largo, py = ((cy + dy - vy) / vw) * largo;
+      if (!larghezza) return [e];
+      const px = ((cx + dx - vx) / vw) * larghezza, py = ((cy + dy - vy) / vw) * larghezza;
       const mezza = (measureText(`${e.nome} ${e.testo}`, `800 14px ${FONT}`) + (e.primo ? SEGNALINO : 0)) / 2;
       const box = { x0: px - mezza, y0: py - ALTA / 2, x1: px + mezza, y1: py + ALTA / 2 };
       if (hits(box, prese)) return [];
@@ -101,9 +101,9 @@
   const tappeEuropa = $derived(tappe.filter((t) => nelRiquadro(t.x, t.y)));
   // le tappe della mappa del mondo hanno almeno 6 px di raggio a ogni larghezza. Sotto i 600 px (la mappa è larga meno di 520 px) l'Europa
   // ingrandita sta sotto, a tutta larghezza: lì ci sono le tappe europee, e sul mondo resta solo il riquadro che le indica
-  let largo = $state(0);
-  const kMondo = $derived(largo ? Math.max(1, (6 * vw) / (8 * largo)) : 1);
-  const sotto = $derived(largo > 0 && largo < 520);
+  let larghezza = $state(0);
+  const kMondo = $derived(larghezza ? Math.max(1, (6 * vw) / (8 * larghezza)) : 1);
+  const sotto = $derived(larghezza > 0 && larghezza < 520);
   const tappeMondo = $derived(sotto ? tappe.filter((t) => !nelRiquadro(t.x, t.y)) : tappe);
 
   // il fumetto, di un Paese o di un sito, si apre dal lato opposto rispetto al centro della mappa; l'Europa è anche nel riquadro,
@@ -234,7 +234,7 @@
     </div>
 
     <div class="cornice">
-      <div class="mondo" bind:clientWidth={largo}>
+      <div class="mondo" bind:clientWidth={larghezza}>
         <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {filo ? `Filo della catena, ${filo.nome.toLowerCase()}` : v.misura.split(' · ')[0]}">
           <defs>
             <pattern id="geo-tratteggio" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2" /></pattern>

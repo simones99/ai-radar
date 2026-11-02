@@ -99,6 +99,14 @@ for (const [w, h] of [[1280, 800], [320, 640]]) {
   });
 }
 
+test('Norme a 1280px: le notizie di policy restano a vista accanto alla scadenza', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/#norme');
+  await scrollSettled(page);
+  await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
+  await expect(page.getByRole('region', { name: 'Notizie di policy' })).toBeInViewport();
+});
+
 test('Norme da una porta: si apre sulla scadenza del link', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
   await page.goto('/');

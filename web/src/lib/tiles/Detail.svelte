@@ -2,6 +2,7 @@
   import { onMount, tick, type Snippet } from 'svelte';
   import { PHOTOS } from '../photos';
   import type { Head } from '../text/frasi';
+  import IconaChiudi from './IconaChiudi.svelte';
   import { diSpicco, type TileDef } from './types';
 
   let { tile, head, onclose, children }: { tile: TileDef; head: Head; onclose: () => void; children: Snippet } = $props();
@@ -53,7 +54,7 @@
       <figcaption class="credit"><a href={photo.pagina} target="_blank" rel="noopener">Foto</a>: {photo.autore}, {#if photo.licenzaUrl}<a href={photo.licenzaUrl} target="_blank" rel="noopener">{photo.licenza}</a>{:else}{photo.licenza}{/if}</figcaption>
     </figure>
     {/if}
-    <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
+    <button type="button" class="close" aria-label="Chiudi {tile.label}" onclick={onclose}><IconaChiudi /></button>
   </div>
   <div class="blocks">{@render children()}</div>
 </section>
@@ -88,7 +89,6 @@
   .spicco .close { top: 0; right: 0; }
   /* sotto i 1200px chiude la × accanto alle pillole: una sola chiusura per volta */
   @media (max-width: 1199px) { .close { display: none; } }
-  .ico { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; }
   @media (hover: hover) { .copy:hover { color: var(--fg); } .close:hover { background: var(--line-2); } }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   /* dodici colonne a ogni larghezza: i blocchi tengono le loro misure (4, 6, 8, 12) e le coppie restano affiancate */

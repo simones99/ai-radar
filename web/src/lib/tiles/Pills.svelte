@@ -1,5 +1,6 @@
 <script lang="ts">
   import { PHOTOS } from '../photos';
+  import IconaChiudi from './IconaChiudi.svelte';
   import type { TileId } from '../router';
   import { TESTE } from './registry';
   import type { TileDef } from './types';
@@ -23,7 +24,7 @@
       {/if}
     {/each}
   </div>
-  <button type="button" class="x" aria-label="Chiudi" onclick={onclose}><svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg></button>
+  <button type="button" class="x" aria-label="Chiudi" onclick={onclose}><IconaChiudi /></button>
 </nav>
 
 <style>
@@ -35,7 +36,6 @@
   .pill { display: inline-flex; align-items: center; gap: var(--s1); min-height: 40px; padding: 4px var(--s2) 4px 4px; border: 0; border-radius: 999px; background: var(--card); box-shadow: var(--shadow); cursor: pointer; font-size: 14px; font-weight: 500; white-space: nowrap; }
   .pill img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
   .x { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--card); box-shadow: var(--shadow); cursor: pointer; display: grid; place-items: center; padding: 0; color: var(--fg); }
-  .ico { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; }
   @media (hover: hover) { .pill:hover, .x:hover { box-shadow: var(--shadow-up); } }
   @media (max-width: 560px) {
     .pills { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: var(--s1); margin-inline: calc(-1 * var(--s2)); padding-inline: var(--s2); }

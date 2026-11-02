@@ -1,6 +1,6 @@
 <script lang="ts">
   // La figura della card Competenze in home: il radar ridotto ai suoi quattro quadranti, con i punti di tutte le competenze
-  // e i nomi di quelle da imparare ora; chi è appena entrato porta la scia da dove era un mese fa. Decorativa: la notizia è nel testo della card.
+  // e i nomi di quelle da imparare ora; chi è appena entrato porta la scia da dove era un mese fa; punto vuoto: dato incerto, come nel radar. Decorativa: la notizia è nel testo della card.
   import { scaleLinear } from 'd3-scale';
   import { radarRows, type RadarRowM } from '../data/derive';
   import type { Dataset, Quadrant } from '../data/types';
@@ -50,7 +50,7 @@
       <text class="ql" class:hot={q.hot} x={q.tx} y={q.ty} text-anchor={q.sinistra ? 'start' : 'end'}>{quadranti[q.id]}</text>
     {/each}
     {#each rows.filter((r) => r.quadrante !== 'impara-ora') as r (r.id)}
-      <circle class="dot" cx={x(r.x)} cy={y(r.y)} r="3.5" />
+      <circle class="dot" class:vuoto={r.incerto} cx={x(r.x)} cy={y(r.y)} r="3.5" />
     {/each}
     {#each rows.filter(scia) as r (r.id)}
       <line class="scia" x1={x(r.px as number)} y1={y(r.py as number)} x2={x(r.x)} y2={y(r.y)} />
@@ -58,7 +58,7 @@
     {/each}
     {#each rows.filter((r) => r.quadrante === 'impara-ora') as r (r.id)}
       {#if r.changed}<circle class="anello" cx={x(r.x)} cy={y(r.y)} r="11" />{/if}
-      <circle class="dot hot" cx={x(r.x)} cy={y(r.y)} r="6" />
+      <circle class="dot hot" class:vuoto={r.incerto} cx={x(r.x)} cy={y(r.y)} r="6" />
     {/each}
     {#each etichette as it (it.id)}
       {@const l = leader(it, it.box)}
@@ -78,7 +78,7 @@
   .ql { font: 600 13px var(--font); fill: var(--fg-2); }
   .ql.hot { font-weight: 700; fill: var(--accent); }
   .dot { fill: var(--fg-3); stroke: var(--card); stroke-width: 1.5; }
-  .dot.hot { fill: var(--accent); stroke-width: 2; }
+  .dot.hot { fill: var(--accent); stroke-width: 2; } .dot.vuoto { fill: var(--card); stroke: var(--fg-3); } .dot.hot.vuoto { stroke: var(--accent); }
   .anello { fill: none; stroke: var(--accent); stroke-width: 1.5; }
   .scia { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 2 3; stroke-linecap: round; }
   .prev { fill: var(--card); stroke: var(--accent); stroke-width: 1.25; }

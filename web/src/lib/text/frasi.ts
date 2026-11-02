@@ -164,6 +164,15 @@ function nomiInFaccia(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] }
   const cambi = radarChanges(rows);
   return cambi.inn.length ? cambi : { inn: [], out: [] };
 }
+/** Chi è ancora in Impara ora ma per il calcolo del mese è già altrove: il quadrante cambia solo dopo due mesi, e la frase non può dire che cresce. */
+function inBilico(rows: RadarRowM[]): string {
+  return rows.filter((r) => r.quadrante === 'impara-ora' && r.moving).map((r) => {
+    const motivo = r.moving === 'prova'
+      ? `${verbo([r], 'ha', 'hanno')} meno di 3 annunci ogni 10mila`
+      : `${verbo([r], 'sta', 'stanno')} perdendo slancio (${signedPct(r.slancio)})`;
+    return `${r.breve} ${motivo} e ${verbo([r], 'può', 'possono')} uscirne`;
+  }).join('; ');
+}
 export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return null;
@@ -176,7 +185,8 @@ export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
     };
   }
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  return { fig: String(n), unit: `su ${rows.length}`, sent: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." };
+  const bilico = inBilico(rows);
+  return { fig: String(n), unit: `su ${rows.length}`, sent: bilico ? `Competenze da imparare ora; ${bilico}.` : "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." };
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
@@ -188,9 +198,12 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   if (!rows.length) return { title: plain('Competenze'), deck: null };
   const { inn, out } = radarChanges(rows);
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  const tail = n === 1
-    ? `Oggi 1 competenza su ${rows.length} cresce più dell'AI e ha almeno 3 annunci ogni 10mila.`
-    : `Oggi ${n} competenze su ${rows.length} crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.`;
+  const bilico = inBilico(rows);
+  const tail = bilico
+    ? `Oggi ${n === 1 ? '1 competenza' : `${n} competenze`} su ${rows.length} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.`
+    : n === 1
+      ? `Oggi 1 competenza su ${rows.length} cresce più dell'AI e ha almeno 3 annunci ogni 10mila.`
+      : `Oggi ${n} competenze su ${rows.length} crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.`;
   if (!inn.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` }],

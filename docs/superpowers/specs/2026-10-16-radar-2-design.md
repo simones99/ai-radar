@@ -234,6 +234,8 @@ Componenti nuovi in `web/src/lib/tiles/`: `SkillView.svelte` (la vista) e, se se
 
 "3 su 16" resta. Frase: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila."
 
+Se una competenza è ancora in Impara ora ma il calcolo del mese la dà già altrove (il quadrante cambia solo dopo due mesi), la frase non dice che tutte crescono, né qui né nel sottotitolo del dettaglio: "Competenze da imparare ora; RAG sta perdendo slancio (−34%) e può uscirne." Con il calcolo in Da provare: "X ha meno di 3 annunci ogni 10mila e può uscirne." Nella figura in home i dati incerti hanno il punto vuoto, come nel radar. *(Aggiunto il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
+
 ### 7.4 Porta "Per te"
 
 Le regole restano quelle della spec della home, con due cambi:

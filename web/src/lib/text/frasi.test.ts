@@ -66,6 +66,16 @@ describe('numeri chiave delle card', () => {
     const one: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.filter((r) => r.id !== 'agenti') } };
     expect(headCompetenze(one, today).deck).toBe("RAG esce da Impara ora. Oggi 1 competenza su 4 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
   });
+  it('competenze: chi resta in Impara ora ma per il calcolo è altrove non «cresce più dell’AI»', () => {
+    const conAgenti = (r: object): Dataset => ({ radar: { ...d.radar!, competenze: d.radar!.competenze.map((c) => (c.id === 'agenti' ? { ...c, ...r } : c)) } });
+    const giu = conAgenti({ breve: 'LLMOps', plurale: false, slancio: -0.34, quadrante_calcolato: 'consolida' });
+    expect(headCompetenze(giu, today).deck).toContain('Oggi 2 competenze su 5 sono in Impara ora; LLMOps sta perdendo slancio (−34%) e può uscirne.');
+    expect(headCompetenze(giu, today).deck).not.toContain("crescono più dell'AI");
+    const pochi = conAgenti({ breve: 'Multimodali', plurale: true, quadrante_calcolato: 'prova' });
+    expect(headCompetenze(pochi, today).deck).toContain('Multimodali hanno meno di 3 annunci ogni 10mila e possono uscirne.');
+    const senzaCambi = { radar: { ...giu.radar!, competenze: giu.radar!.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) } };
+    expect(faceCompetenze(senzaCambi, today)?.sent).toBe('Competenze da imparare ora; LLMOps sta perdendo slancio (−34%) e può uscirne.');
+  });
   it('pagina di una competenza: nome nel titolo, quadrante e movimento nel sottotitolo', () => {
     const rows = radarRows(d.radar!);
     const by = (id: string) => rows.find((r) => r.id === id)!;

@@ -111,6 +111,13 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "Qodo builds context into AI code review with Codex",
+   "link": "https://openai.com/index/qodo-codex-plugin",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Import AI 479: Spacewar; low-latency tasks versus LLMs; Genie 4",
    "link": "https://jack-clark.net/2026/11/02/import-ai-479-spacewar-low-latency-tasks-versus-llms-genie-4/",
    "data": "2026-11-02",
@@ -323,13 +330,6 @@
   {
    "titolo": "The future of the firm",
    "link": "https://openai.com/index/the-future-of-the-firm",
-   "data": "2026-10-28",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Legora is building the agentic operating system for legal work",
-   "link": "https://openai.com/index/legora",
    "data": "2026-10-28",
    "fonte": "OpenAI",
    "tema": "prodotti"

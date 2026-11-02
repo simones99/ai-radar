@@ -47,8 +47,8 @@
    "2026-06": 12365,
    "2026-07": 16272,
    "2026-08": 17973,
-   "2026-09": 18225,
-   "2026-10": 23284
+   "2026-09": 18228,
+   "2026-10": 23293
   },
   "coding-agenti": {
    "2025-10": 27,
@@ -77,8 +77,8 @@
    "2026-06": 9161,
    "2026-07": 11008,
    "2026-08": 11737,
-   "2026-09": 14542,
-   "2026-10": 21361
+   "2026-09": 14543,
+   "2026-10": 21368
   },
   "rag": {
    "2025-10": 954,
@@ -93,7 +93,7 @@
    "2026-07": 6280,
    "2026-08": 5909,
    "2026-09": 5885,
-   "2026-10": 6589
+   "2026-10": 6591
   },
   "valutazione": {
    "2025-10": 51,
@@ -123,7 +123,7 @@
    "2026-07": 382,
    "2026-08": 393,
    "2026-09": 401,
-   "2026-10": 470
+   "2026-10": 469
   },
   "context-engineering": {
    "2025-10": 230,
@@ -153,7 +153,7 @@
    "2026-07": 773,
    "2026-08": 800,
    "2026-09": 909,
-   "2026-10": 965
+   "2026-10": 966
   },
   "governance": {
    "2025-10": 39,
@@ -183,7 +183,7 @@
    "2026-07": 1937,
    "2026-08": 2064,
    "2026-09": 2034,
-   "2026-10": 2281
+   "2026-10": 2282
   },
   "text-to-sql": {
    "2025-10": 20,
@@ -258,7 +258,7 @@
    "2026-07": 1052,
    "2026-08": 1173,
    "2026-09": 1354,
-   "2026-10": 1874
+   "2026-10": 1877
   },
   "robotica": {
    "2025-10": 13,
@@ -295,7 +295,7 @@
    "2026-06": 16010,
    "2026-07": 17305,
    "2026-08": 15728,
-   "2026-09": 16270,
+   "2026-09": 16272,
    "2026-10": 20413
   },
   "ai": {
@@ -310,8 +310,8 @@
    "2026-06": 13243,
    "2026-07": 13466,
    "2026-08": 11060,
-   "2026-09": 11682,
-   "2026-10": 9234
+   "2026-09": 11684,
+   "2026-10": 9235
   },
   "artificial-intelligence": {
    "2025-10": 615,
@@ -341,7 +341,7 @@
    "2026-07": 1973,
    "2026-08": 1967,
    "2026-09": 1752,
-   "2026-10": 1934
+   "2026-10": 1935
   }
  },
  "base": {
@@ -356,8 +356,8 @@
   "2026-06": 33107,
   "2026-07": 37241,
   "2026-08": 31895,
-  "2026-09": 31769,
-  "2026-10": 33620
+  "2026-09": 31773,
+  "2026-10": 33622
  },
  "in_crescita": {
   "agenti": [
@@ -365,21 +365,21 @@
     "nome": "deepseek-ai/deepseek-harness",
     "url": "https://github.com/deepseek-ai/deepseek-harness",
     "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-    "stelle": 269442,
+    "stelle": 269459,
     "creato": "2026-08-13"
    },
    {
     "nome": "Ebony-Vinyl/dsh-our-free-model",
     "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
     "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-    "stelle": 57201,
+    "stelle": 57213,
     "creato": "2026-09-24"
    },
    {
     "nome": "lexmount/moli",
     "url": "https://github.com/lexmount/moli",
     "descrizione": "Best headless browser for AI agents. Lite, Fast, High-Compatibility. Built in Rust",
-    "stelle": 22222,
+    "stelle": 22225,
     "creato": "2026-08-10"
    }
   ],
@@ -388,21 +388,21 @@
     "nome": "ccch1mneyyy/dsh-TUI",
     "url": "https://github.com/ccch1mneyyy/dsh-TUI",
     "descrizione": "DSH's officially top-recommended TUI plugin — high performance, low overhead, cute pixel whale, smooth mouse interaction. One-command install via npm. / DSH 官方首推的 TUI 插件，高性能低占用，可爱像素鲸鱼，流畅鼠标交互，npm 一键安装",
-    "stelle": 6597,
+    "stelle": 6598,
     "creato": "2026-08-13"
    },
    {
     "nome": "ccch1mneyyy/dsh-Go",
     "url": "https://github.com/ccch1mneyyy/dsh-Go",
     "descrizione": "dsh-go — DeepSeek Harness 装进口袋：手机本机运行，也能遥控你的电脑。",
-    "stelle": 5759,
+    "stelle": 5766,
     "creato": "2026-10-25"
    },
    {
     "nome": "microsoft/TokenEconomizer",
     "url": "https://github.com/microsoft/TokenEconomizer",
     "descrizione": "Experience-Driven Black-Box Cost Control for Coding Agents",
-    "stelle": 4423,
+    "stelle": 4424,
     "creato": "2026-10-13"
    }
   ],
@@ -411,21 +411,21 @@
     "nome": "tangency-labs/solidcraft",
     "url": "https://github.com/tangency-labs/solidcraft",
     "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-    "stelle": 13124,
+    "stelle": 13127,
     "creato": "2026-10-07"
    },
    {
     "nome": "CopilotKit/OpenBot",
     "url": "https://github.com/CopilotKit/OpenBot",
     "descrizione": "Open-source AI coworkers that each get a computer of their own: a browser, files and tools, with every action decided before it happens and recorded after. Bring any AG-UI agent.",
-    "stelle": 9872,
+    "stelle": 9878,
     "creato": "2026-08-17"
    },
    {
     "nome": "rehan-remade/universal-modder",
     "url": "https://github.com/rehan-remade/universal-modder",
     "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
-    "stelle": 9335,
+    "stelle": 9336,
     "creato": "2026-09-30"
    }
   ],
@@ -434,7 +434,7 @@
     "nome": "deeplethe/utopia",
     "url": "https://github.com/deeplethe/utopia",
     "descrizione": "World's first open-source enterprise world model.",
-    "stelle": 8668,
+    "stelle": 8669,
     "creato": "2026-08-07"
    },
    {
@@ -464,7 +464,7 @@
     "nome": "xinxuxin/keystone-bench",
     "url": "https://github.com/xinxuxin/keystone-bench",
     "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
-    "stelle": 1093,
+    "stelle": 1094,
     "creato": "2026-09-07"
    },
    {
@@ -503,7 +503,7 @@
     "nome": "google/elephant-goldfish-model",
     "url": "https://github.com/google/elephant-goldfish-model",
     "descrizione": "Open-source skills for designing and reviewing software with AI agents",
-    "stelle": 10420,
+    "stelle": 10445,
     "creato": "2026-09-13"
    },
    {
@@ -618,7 +618,7 @@
     "nome": "kividbio/kividb",
     "url": "https://github.com/kividbio/kividb",
     "descrizione": "A fast, multi-threaded Redis® and Valkey alternative written in Rust: drop-in compatible, with full-text and vector search built in",
-    "stelle": 1049,
+    "stelle": 1050,
     "creato": "2026-10-16"
    },
    {
@@ -632,7 +632,7 @@
     "nome": "glincker/awesome-selfhosted-ai",
     "url": "https://github.com/glincker/awesome-selfhosted-ai",
     "descrizione": "Curated list of self-hosted open-source AI: local LLMs, chat UIs, agents, MCP servers, RAG, speech and image generation. Health-checked weekly, dead projects removed automatically.",
-    "stelle": 85,
+    "stelle": 87,
     "creato": "2026-10-31"
    }
   ],
@@ -687,7 +687,7 @@
     "nome": "AienTech/dossier",
     "url": "https://github.com/AienTech/dossier",
     "descrizione": "A self-hosted job search app that writes tailored resumes and cover letters from your profile.",
-    "stelle": 4023,
+    "stelle": 4029,
     "creato": "2026-10-03"
    },
    {
@@ -701,7 +701,7 @@
     "nome": "mw00/project-maya",
     "url": "https://github.com/mw00/project-maya",
     "descrizione": "Project Maya - run GLM-5.3-Flash (321B MoE), DeepSeek-V4.1-Flash-1017 (748B MoE) and MiniMax-M3.1-Flash (428B MoE) privately on your own GPU(s), from one card to 16, NVIDIA or AMD, Linux or Windows. …",
-    "stelle": 2412,
+    "stelle": 2417,
     "creato": "2026-10-06"
    }
   ],
@@ -717,7 +717,7 @@
     "nome": "muellerberndt/cadence",
     "url": "https://github.com/muellerberndt/cadence",
     "descrizione": "A brain that learns from live experience. System 1 by default: perception, memory, plasticity and action. Optional System 2 for self-observation and slow corrections.",
-    "stelle": 476,
+    "stelle": 477,
     "creato": "2026-09-07"
    },
    {
@@ -766,7 +766,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 168451
+     "stelle": 168452
     }
    ]
   },
@@ -774,7 +774,7 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-11-02T18:10:41Z",
+   "ultimo_push": "2026-11-02T18:55:09Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -806,7 +806,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 96151
+     "stelle": 96155
     }
    ]
   },
@@ -846,7 +846,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 185693
+     "stelle": 185694
     }
    ]
   },
@@ -1006,7 +1006,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 30460
+     "stelle": 30461
     }
    ]
   },
@@ -1054,7 +1054,7 @@
    "repo": "crewAIInc/crewAI",
    "url": "https://github.com/crewAIInc/crewAI",
    "descrizione": "Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.",
-   "ultimo_push": "2026-11-02T17:57:11Z",
+   "ultimo_push": "2026-11-02T19:16:41Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1086,7 +1086,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 60427
+     "stelle": 60428
     }
    ]
   },
@@ -1126,7 +1126,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 154276
+     "stelle": 154280
     }
    ]
   },
@@ -1134,7 +1134,7 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-11-02T18:44:01Z",
+   "ultimo_push": "2026-11-02T19:05:49Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1166,7 +1166,7 @@
     },
     {
      "data": "2026-11-02",
-     "stelle": 133175
+     "stelle": 133176
     }
    ]
   },

@@ -53,7 +53,7 @@ Criteri di successo:
 Dall'alto in basso:
 
 1. Barra con logo e link a "Foto e fonti" e "Stato delle fonti", come oggi.
-2. Data: "Settimana del 16 ott 2026": la data di `status.aggiornato`, non quella dell'orologio di chi legge; senza `status.json` la riga non c'è. *(Cambiato il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
+2. Data: "Settimana del 12 ott 2026": il lunedì della settimana di `status.aggiornato`, non quella dell'orologio di chi legge, anche quando il giro è partito un altro giorno; senza `status.json` la riga non c'è. *(Cambiato il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
 3. `h1` con la riga che spiega il sito: "Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì." In stile testo grande, non titolo enorme: le porte sono il titolo visivo.
 4. Le due porte affiancate, stessa larghezza e stessa altezza. Sotto 720 px vanno una sotto l'altra, prima "Per te".
 5. Sezione "Su cosa formarti", titolo `h2`, 4 card in questo ordine: Competenze, Modelli e ricerca, Open source, Notizie.
@@ -102,7 +102,7 @@ Dalla regola 2 alla 4 una competenza con meno di 3 annunci ogni 10mila, la sogli
 5. Riserva, quando nessuna regola scatta. Senza ruolo la card Competenze dice già quante sono da imparare ora: la porta dice la competenza con più annunci, tra tutte, "**Python per l'AI** ha più annunci di tutte: 46 ogni 10mila" (con un nome plurale "hanno"). Target: quella competenza. Se quella competenza è incerta o se c'è un ruolo, la porta dice quante sono da imparare ora: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento. *(Il conteggio senza condizioni ripeteva la card; cambiato il 2026-10-30 dopo la code review, scelta dell'utente.)*
 
 Riga meta: "Radar delle competenze · dati al {data di radar.generato}".
-Senza radar: titolo vuoto, meta "Dati non ancora disponibili", target `null`.
+Senza radar: titolo vuoto, meta "Dati non disponibili", target `null`.
 
 ### Porta "Per la tua organizzazione · L'AI in Italia"
 
@@ -118,7 +118,7 @@ I rapporti vengono per ultimi: la loro data è un mese stimato, e tutto il resto
 4. Riserva: la prossima scadenza, anche lontana. Titolo e meta come nella regola 1: "**Tra 413 giorni**: sistemi ad alto rischio (allegato III)", "AI Act · scadenza del {data}". Target: Norme, elemento = data della scadenza.
 5. Un rapporto previsto entro 30 giorni (`nextReport`). Titolo: "A {mese} esce **{nome del rapporto}**". Target: Rapporti, elemento = `slug(nome)`. Meta: "Data stimata, dai rapporti degli anni scorsi".
 
-Senza scadenze, dati, rapporti e GeopoliticAI: titolo vuoto, meta "Dati non ancora disponibili", target `null`.
+Senza scadenze, dati, rapporti e GeopoliticAI: titolo vuoto, meta "Dati non disponibili", target `null`.
 
 Le regole Italia useranno, quando arriverà l'Osservatorio, anche le scadenze della legge italiana e gli annunci con "IA": entreranno come regole nuove in questa lista, non come una porta diversa.
 

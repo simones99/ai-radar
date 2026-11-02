@@ -32,7 +32,7 @@
   {/if}
   {#if rows.length}
     <p class="muted small">
-      {#if problemi.length}{problemi.length} {problemi.length === 1 ? 'fonte' : 'fonti'} su {rows.length} da controllare.{:else if mancanti.length}L'ultimo aggiornamento delle {rows.length} fonti non ha dato errori.{:else}Tutte le {rows.length} fonti sono aggiornate.{/if}
+      {#if problemi.length}{problemi.length} {problemi.length === 1 ? 'fonte' : 'fonti'} su {rows.length} da controllare.{:else if mancanti.length}Le {rows.length} fonti non hanno dato errori.{:else}Tutte le {rows.length} fonti sono aggiornate.{/if}
       Ultimo aggiornamento: {status ? day(status.aggiornato) : '—'}. Una fonte in errore mostra l'ultimo dato valido.
     </p>
     {#if problemi.length}

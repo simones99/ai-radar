@@ -262,6 +262,7 @@ Ogni generatore riceve i dati della sua fonte e restituisce una frase o `null`. 
 
 - JSON non raggiungibile: fonte assente.
 - Nessun JSON raggiungibile: avviso con "Riprova".
+- Solo una parte dei JSON raggiungibile: avviso in testa con "Riprova", e in "Stato delle fonti" i dati che non sono arrivati, con il loro "Riprova". *(Aggiunto il 2026-11-02 dopo la terza critica.)*
 - Errore in un grafico: "Grafico non disponibile" nel blocco, errore in console, il resto funziona.
 - Foto non caricata: riquadro neutro con il testo alternativo.
 

@@ -62,16 +62,16 @@
   .detail { display: grid; gap: var(--s3); scroll-margin-top: var(--s2); }
   @media (max-width: 560px) { .detail { scroll-margin-top: var(--s8); } }
   /* l'intestazione da giornale: titolo sulla carta, la foto piccola accanto con il suo credito, un filetto sotto; il grafico viene subito dopo */
-  .d-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); position: relative; padding-bottom: var(--s4); border-bottom: 1px solid var(--line-2); }
+  .d-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); position: relative; padding-bottom: var(--s2); border-bottom: 1px solid var(--line-2); }
   @media (min-width: 720px) { .d-hero:has(figure) { grid-template-columns: minmax(0, 1fr) clamp(220px, 30%, 360px); gap: var(--s5); align-items: start; } }
-  .d-text { display: grid; gap: var(--s2); align-content: start; padding-top: var(--s2); }
+  .d-text { display: grid; gap: var(--s1); align-content: start; padding-top: var(--s2); }
   /* il posto del pulsante di chiusura, che c'è solo da 1200px */
   @media (min-width: 1200px) { .spicco .d-text { padding-right: var(--s8); } }
   .lab { font-size: 14px; color: var(--fg-2); font-weight: 600; }
   h2 { font-weight: 600; font-size: clamp(32px, 4vw, 48px); line-height: 1.1; letter-spacing: -.015em; max-width: 20ch; outline: none; }
   h2 em { font-style: normal; color: var(--accent); }
   /* il taglio da titolo di Bricolage è già stretto: la spaziatura resta appena negativa */
-  .spicco h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.012em; max-width: 17ch; }
+  .spicco h2 { font-size: clamp(32px, 4.4vw, 56px); line-height: 1.06; letter-spacing: -.012em; max-width: 24ch; }
   .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: var(--misura); }
   .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   figure { display: grid; gap: var(--s1); }
@@ -80,7 +80,8 @@
   .ph img { width: 100%; height: 100%; object-fit: cover; }
   .credit { font-size: 12px; line-height: 16px; color: var(--fg-3); }
   .actions { display: flex; flex-wrap: wrap; gap: var(--s1); align-items: center; }
-  .copy { background: var(--card); color: var(--fg); border: 0; border-radius: 999px; padding: var(--s1) var(--s2); min-height: 40px; cursor: pointer; font-size: 14px; box-shadow: var(--shadow); }
+  /* un'azione di servizio: non sta tra il titolo e il dato con il peso di un pulsante */
+  .copy { background: none; color: var(--fg-2); border: 0; padding: 0; min-height: 40px; cursor: pointer; font: inherit; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
   .copy-url { font: inherit; font-size: 14px; border: 1px solid var(--line-2); border-radius: var(--r-sm); padding: var(--s1); min-width: 0; flex: 1 1 240px; background: var(--card); color: var(--fg); }
   /* in alto a destra: sull'angolo della foto, o accanto al titolo in una card di spicco */
   .close { position: absolute; top: var(--s1); right: var(--s1); width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--card); color: var(--fg); box-shadow: var(--shadow); cursor: pointer; display: grid; place-items: center; padding: 0; }
@@ -88,7 +89,7 @@
   /* sotto i 1200px chiude la × accanto alle pillole: una sola chiusura per volta */
   @media (max-width: 1199px) { .close { display: none; } }
   .ico { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; }
-  @media (hover: hover) { .copy:hover, .close:hover { background: var(--line-2); } }
+  @media (hover: hover) { .copy:hover { color: var(--fg); } .close:hover { background: var(--line-2); } }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   /* dodici colonne a ogni larghezza: i blocchi tengono le loro misure (4, 6, 8, 12) e le coppie restano affiancate */
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }

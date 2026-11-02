@@ -780,6 +780,12 @@ test('Business a 320px: i grafici dei settori senza scorrimento orizzontale', as
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+test('Business: si legge prima l’adozione, la risposta al titolo, poi gli investimenti', async ({ page }) => {
+  await page.goto('/#business');
+  const y = async (name: string) => (await page.getByRole('group', { name }).boundingBox())!.y;
+  expect(await y('Adozione')).toBeLessThan(await y('Investimenti'));
+});
+
 test('Business a 1440px: «Adozione per settore» resta sotto il titolo «Adozione», non sale fra gli investimenti', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/#business');

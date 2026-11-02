@@ -152,8 +152,8 @@ describe('Business', () => {
   it('grafici con fonte cliccabile e serie mancanti dichiarate', () => {
     show(BusinessDetail, tile);
     expect(screen.getByRole('img', { name: 'Investimenti privati per regione' })).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'Our World in Data' })[0]).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
     const inv = screen.getByRole('img', { name: 'Investimenti privati per regione' }).closest('section')!;
+    expect(within(inv).getByRole('link', { name: 'Our World in Data' })).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
     expect(within(inv).getByRole('link', { name: 'CC BY-ND 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nd/4.0/');
     // CC BY-ND: valori come pubblicati, in dollari e senza arrotondamenti
     expect(within(inv).getByText('230.000.000.000')).toBeInTheDocument();

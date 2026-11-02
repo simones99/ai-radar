@@ -130,7 +130,7 @@
   /* sulla carta, come il titolo: la riga del giornale tra il titolo e la mappa */
   .distacco { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--s2) var(--s5); padding-bottom: var(--s3); border-bottom: 1px solid var(--line-2); }
   .cifra { font-size: 22px; line-height: 28px; color: var(--fg-2); }
-  .cifra strong { font-weight: 600; font-size: clamp(44px, 6vw, 64px); line-height: 1.05; letter-spacing: -.015em; font-variant-numeric: tabular-nums; color: var(--fg); }
+  .cifra strong { font-weight: 600; font-size: clamp(36px, 4.4vw, 48px); line-height: 1.05; letter-spacing: -.015em; font-variant-numeric: tabular-nums; color: var(--fg); }
   .distacco dl { display: flex; gap: var(--s4); margin: 0; }
   .distacco dt { font-size: 14px; line-height: 20px; color: var(--fg-2); }
   .distacco dd { margin: 0; font-weight: 600; font-size: 24px; line-height: 28px; font-variant-numeric: tabular-nums; }

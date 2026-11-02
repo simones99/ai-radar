@@ -74,23 +74,6 @@
 
 <Detail {tile} {head} {onclose}>
   <!-- ogni sezione è una sottogriglia con il suo titolo: i blocchi non escono dalla loro sezione -->
-  <div class="sezione" role="group" aria-labelledby="bz-investimenti">
-    <h3 class="group" id="bz-investimenti">Investimenti</h3>
-    <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
-      missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
-      table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
-      <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
-    </Block>
-    <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
-      cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
-      <Bars label="Investimenti in AI generativa" data={gen} format={short} />
-    </Block>
-    <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
-      cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
-      <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
-    </Block>
-  </div>
-
   <div class="sezione" role="group" aria-labelledby="bz-adozione">
     <h3 class="group" id="bz-adozione">Adozione</h3>
     {#if es}
@@ -122,6 +105,23 @@
       missing={euRows.length ? null : MISSING} cite={eu ? [{ t: 'Fonte: ' }, { t: 'Eurostat, isoc_eb_ai', href: eu.url }, { t: '.' }] : null}
       table={{ cols: ['Paese', euYear, String(Number(euYear) - 1)], rows: euRows.map((r) => [r.k, r.now, r.was ?? '—']) }}>
       <DotPlot label="Imprese europee che usano l'AI" data={euRows} />
+    </Block>
+  </div>
+
+  <div class="sezione" role="group" aria-labelledby="bz-investimenti">
+    <h3 class="group" id="bz-investimenti">Investimenti</h3>
+    <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
+      missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
+      table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
+      <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
+    </Block>
+    <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
+      cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
+      <Bars label="Investimenti in AI generativa" data={gen} format={short} />
+    </Block>
+    <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
+      cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
+      <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
     </Block>
   </div>
 

@@ -229,6 +229,30 @@ test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude
   await expect(page).toHaveURL(/\/$/);
 });
 
+test('porta: Esc e Indietro tornano alla porta, non alla card', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
+  await page.goto('/');
+  const porta = page.getByRole('link', { name: /Per la tua organizzazione/ });
+  await porta.click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await scrollSettled(page);
+  await page.keyboard.press('Escape');
+  await expect(porta).toBeFocused();
+  await scrollSettled(page);
+  await expect(porta).toBeInViewport();
+  await porta.click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await scrollSettled(page);
+  await page.goBack();
+  await expect(porta).toBeFocused();
+  await scrollSettled(page);
+  await expect(porta).toBeInViewport();
+  // aperta dalla card, si torna alla card
+  await page.locator('#tile-norme .face').click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#tile-norme .face')).toBeFocused();
+});
+
 test('porta con una card aperta: come una pillola, un solo indietro torna alla home', async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
   await page.goto('/');

@@ -16,6 +16,7 @@
   let elemento = $state<string | null>(start?.elemento ?? null);
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
+  let porta: HTMLElement | null = null; // il link della home da cui si è aperta la card: alla chiusura si torna lì
   let currentEl: string | null = start?.elemento ?? null; // sincrono, come current
   let params = $state<Params>(start?.params ?? {}); // ?ruolo=…: restano nel link finché la card è aperta, anche cambiando card
   let depth = 0; // passi aggiunti alla cronologia da quando la card è aperta (0: aperta da un link diretto)
@@ -67,12 +68,17 @@
   async function refocus(done: Promise<void>) {
     await done;
     await tick();
-    if (lastOpened) document.querySelector<HTMLButtonElement>(`#tile-${lastOpened} .face`)?.focus();
+    const da = porta?.isConnected ? porta : lastOpened ? document.querySelector<HTMLButtonElement>(`#tile-${lastOpened} .face`) : null;
+    porta = null;
+    da?.focus();
   }
 
   function toggleTile(id: TileId) {
     if (current === id) closeTile();
-    else openTile(id);
+    else {
+      if (current === null) porta = null;
+      openTile(id);
+    }
   }
 
   // I parametri di un link si aggiungono a quelli già nel link; a parità di nome vince il link.
@@ -106,6 +112,7 @@
     const h = href ? parseHash(href) : null;
     if (!h) return;
     e.preventDefault();
+    if (current === null && !jumping) porta = a as HTMLElement;
     openTile(h.tema, h.elemento, h.params, !!a?.closest('section.detail'));
   }
 

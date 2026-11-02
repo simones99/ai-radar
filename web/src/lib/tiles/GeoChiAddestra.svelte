@@ -1,5 +1,5 @@
 <script lang="ts">
-  // «Chi addestra i modelli di grande scala»: per ogni anno una barra al 100% con la quota per area. È un conteggio, non una misura di potenza.
+  // «Chi addestra i modelli di grande scala»: per ogni anno una barra al 100% con la quota per area. È un conteggio, non una misura di capacità.
   import Block from '../charts/Block.svelte';
   import { AREE } from '../data/geopoliticai';
   import type { Geopoliticai } from '../data/types';
@@ -20,17 +20,17 @@
   const nome = (k: string) => g.zone[k].nome;
 </script>
 
-<Block span={12} title="Chi addestra i modelli di grande scala" note="Quota dei modelli di grande scala usciti ogni anno, per area. È un conteggio: non dice quanto sono potenti."
+<Block span={12} id="geo-chi-addestra" title="Chi addestra i modelli di grande scala" note="Di grande scala: almeno 10²³ operazioni di calcolo (FLOP) per addestrarlo, e il miglior modello per capacità può restare sotto. Qui la quota dei modelli usciti ogni anno, per area: è un conteggio, non dice quanto valgono."
   table={{ cols: ['Anno', ...AREE.map(nome), 'Totale'], rows: anni.map((a) => [String(a.y), ...a.per.map((p) => p.n), a.tot]) }}>
   <ul class="legenda">
-    {#each AREE as k, i (k)}<li aria-current={k === scelta ? 'true' : undefined}><span class="sw s{i % 2}" class:hot={k === scelta}></span>{nome(k)}</li>{/each}
+    {#each AREE as k (k)}<li aria-current={k === scelta ? 'true' : undefined}><span class="sw" class:hot={k === scelta} style:--a="var(--a-{k})"></span>{nome(k)}</li>{/each}
   </ul>
   <div class="barre">
     {#each anni as a (a.y)}
       <span class="anno">{a.y}{#if a.y === g.anno_corrente}{' '}<small>in corso</small>{/if}</span>
       <div class="barra" role="img" aria-label="{a.y}: {a.per.map((p) => `${nome(p.k)} ${p.n}`).join(', ')}. Totale {a.tot}.">
-        {#each a.per as p, i (p.k)}
-          {#if p.n}<span class="seg s{i % 2}" class:hot={p.k === scelta} style:flex-grow={p.n} title="{nome(p.k)}: {p.n} ({nf((100 * p.n) / a.tot)}%)"></span>{/if}
+        {#each a.per as p (p.k)}
+          {#if p.n}<span class="seg" class:hot={p.k === scelta} style:--a="var(--a-{p.k})" style:flex-grow={p.n} title="{nome(p.k)}: {p.n} ({nf((100 * p.n) / a.tot)}%)"></span>{/if}
         {/each}
       </div>
       <span class="tot">{a.tot}</span>
@@ -40,6 +40,11 @@
 </Block>
 
 <style>
+  /* un colore per area, uno per tema. L'area scelta ha il suo colore pieno, le altre lo tengono al 70% verso la carta: anche così ≥ 3:1 sulla carta,
+     in chiaro e in scuro. Distinti anche per chi non vede il rosso o il verde: USA e UE, Cina e Regno Unito, che lì hanno quasi la stessa tinta,
+     si separano per luminosità */
+  .legenda, .barre { --a-usa: light-dark(#85266c, #d073b3); --a-cina: light-dark(#865e00, #e7bf57); --a-ue: light-dark(#006f89, #71c5df);
+    --a-uk: light-dark(#972a0d, #e77b60); --a-altri: light-dark(#656564, #8d8d8c); }
   .legenda { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .legenda li { display: flex; align-items: center; gap: 6px; }
   .legenda li[aria-current='true'] { color: var(--fg); font-weight: 600; }
@@ -49,9 +54,8 @@
   .anno small { font-size: inherit; }
   .barra { display: flex; height: 20px; gap: 2px; border-radius: 4px; overflow: hidden; min-width: 0; }
   .seg { flex-basis: 0; min-width: 2px; }
-  .s0 { background: color-mix(in srgb, var(--fg-3) 45%, var(--card)); }
-  .s1 { background: color-mix(in srgb, var(--fg-3) 25%, var(--card)); }
-  .hot { background: var(--accent); }
+  .sw, .seg { background: color-mix(in oklab, var(--a) 70%, var(--card)); }
+  .sw.hot, .seg.hot { background: var(--a); }
   .tot { color: var(--fg-2); text-align: right; }
-  .frase { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }
+  .frase { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
 </style>

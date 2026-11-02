@@ -1,12 +1,12 @@
 import {
-  MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
+  MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
-import { annoFaccia, valore } from '../data/geopoliticai';
-import type { Dataset, Quadrant, Ruolo } from '../data/types';
-import { eci as eciFmt, fraseFaccia } from './geopoliticai';
+import { quota } from '../data/geopoliticai';
+import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/types';
+import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
-import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
+import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, parseDay, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -16,6 +16,11 @@ const TIPI: Record<string, string> = {
   'image-text-to-text': 'immagine e testo',
   'text-generation': 'generazione di testo',
   'text-to-image': 'da testo a immagine',
+  'image-to-image': 'da immagine a immagine',
+  'image-to-text': 'da immagine a testo',
+  'image-to-video': 'da immagine a video',
+  'video-to-video': 'da video a video',
+  'text-to-audio': 'da testo ad audio',
   'text-classification': 'classificazione di testo',
   'text-to-speech': 'sintesi vocale',
   'automatic-speech-recognition': 'riconoscimento vocale',
@@ -31,18 +36,21 @@ const plain = (t: string): TitleParts => [{ t }];
 /** Verbo accordato ai nomi brevi: plurale con più competenze o con un nome plurale («Multimodali entrano»). */
 const verbo = (rows: { plurale?: boolean }[], sing: string, plur: string): string =>
   rows.length > 1 || rows[0]?.plurale ? plur : sing;
+/** Chi entra in Impara ora, o ci torna se c'era già stato. */
+const verboEntra = (rows: RadarRowM[]): string =>
+  rows.every((r) => r.rientra) ? verbo(rows, 'torna', 'tornano') : verbo(rows, 'entra', 'entrano');
 
 // ---------------------------------------------------------------- modelli
 export function faceModelli(d: Dataset, _today?: Date): Face | null {
   const g = d.epoch ? computeGrowth(d.epoch.punti) : null;
-  return g && { fig: `×${nf(g.fattore, 1)}`, unit: "all'anno", sent: 'Quanto cresce il calcolo per addestrare i modelli di frontiera, dal 2018.' };
+  return g && { fig: `×${nf(g.fattore, 1)}`, unit: "all'anno", sent: 'Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.' };
 }
 export function headModelli(d: Dataset, _today?: Date): Head {
   const g = d.epoch ? computeGrowth(d.epoch.punti) : null;
   if (!g) return { title: plain('Modelli e ricerca'), deck: null };
   return {
-    title: [{ t: 'Il calcolo dei modelli di frontiera cresce di ' }, { t: `${nf(g.fattore, 1)} volte`, em: true }, { t: " all'anno" }],
-    deck: `Stima su ${g.n} modelli di frontiera dal 2018, dai dati di Epoch AI.`,
+    title: [{ t: 'Il calcolo dei modelli più grandi cresce di ' }, { t: `${nf(g.fattore, 1)} volte`, em: true }, { t: " all'anno" }],
+    deck: `Stima su ${g.n} modelli, i più grandi del loro momento, dal 2018, dai dati di Epoch AI.`,
   };
 }
 
@@ -152,45 +160,63 @@ export function headNorme(d: Dataset, today: Date): Head {
 }
 
 // ---------------------------------------------------------------- competenze
+const MIN_ANNUNCI = 3; // ogni 10mila, la soglia del radar: sotto, un cambio non è una notizia per chi deve scegliere su cosa formarsi
+/** Perché n competenze sono da imparare ora: la frase della card e del titolo. */
+const perche = (n: number) => `${n === 1 ? "cresce più dell'AI e ha" : "crescono più dell'AI e hanno"} almeno ${MIN_ANNUNCI} annunci ogni 10mila`;
+/** Chi è ancora in Impara ora ma per il calcolo del mese è già altrove: il quadrante cambia solo dopo due mesi, e la frase non può dire che cresce. */
+function inBilico(rows: RadarRowM[]): string {
+  return rows.filter((r) => r.quadrante === 'impara-ora' && r.moving).map((r) => {
+    const motivo = r.moving === 'prova'
+      ? `${verbo([r], 'ha', 'hanno')} meno di ${MIN_ANNUNCI} annunci ogni 10mila`
+      : `${verbo([r], 'sta', 'stanno')} perdendo slancio (${signedPct(r.slancio)})`;
+    return `${r.breve} ${motivo} e ${verbo([r], 'può', 'possono')} uscirne`;
+  }).join('; ');
+}
+/** Chi entra e chi esce lo dice la porta Per te: la card dice quante sono, sotto il radar che le mostra. */
 export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return null;
-  const { inn, out } = radarChanges(rows);
-  if (inn.length) {
-    return {
-      fig: inn.map((r) => r.breve).join(', '), unit: '',
-      sent: `${verbo(inn, 'Entra', 'Entrano')} tra le competenze da imparare ora` +
-        (out.length ? `; ${out.map((r) => r.breve).join(', ')} ${verbo(out, 'esce', 'escono')}.` : '.'),
-    };
-  }
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  return { fig: String(n), unit: `su ${rows.length}`, sent: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." };
+  const quante = `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length} da imparare ora`;
+  const bilico = inBilico(rows);
+  return { fig: String(n), unit: `su ${rows.length}`, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche(n)}.` };
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
-  r.quadrante === 'impara-ora' ? `${verbo([r], 'entra', 'entrano')} in Impara ora`
+  r.quadrante === 'impara-ora' ? `${verboEntra([r])} in Impara ora`
     : r.qp === 'impara-ora' ? `${verbo([r], 'esce', 'escono')} da Impara ora`
       : `${verbo([r], 'passa', 'passano')} a ${quadranti[r.quadrante]}`;
+/** Chi entra con un margine che comprende lo zero: la frase lo dice, il quadrante resta quello del calcolo. */
+const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((r) => {
+  const [da, a] = r.slancio_margine as [number, number];
+  return `Il margine di ${r.breve}, da ${signedPct(da)} a ${signedPct(a)}, include lo zero: ${verbo([r], 'potrebbe', 'potrebbero')} non crescere più dell'AI. `;
+}).join('');
+/** La soglia guarda la media dei Paesi: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
+const sottoSogliaInItalia = (inn: RadarRowM[]): string =>
+  inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci, sotto soglia`).join('; ');
 export function headCompetenze(d: Dataset, _today?: Date): Head {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };
   const { inn, out } = radarChanges(rows);
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  const tail = n === 1
-    ? `Oggi 1 competenza su ${rows.length} cresce più dell'AI e ha almeno 3 annunci ogni 10mila.`
-    : `Oggi ${n} competenze su ${rows.length} crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.`;
-  if (!inn.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
+  const bilico = inBilico(rows);
+  const quante = `Oggi ${n === 1 ? '1 competenza' : `${n} competenze`} su ${rows.length}`;
+  const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
+  if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
+  if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
+  const italia = sottoSogliaInItalia(inn);
   return {
-    title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` }],
-    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + tail,
+    title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verboEntra(inn)} tra le competenze da imparare ora` }],
+    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + (italia && `${italia}. `) + tail,
   };
 }
 
-/** Titolo della pagina di una competenza: il nome; sotto, quadrante, eventuale movimento e descrizione. */
+/** Titolo della pagina di una competenza: il nome; sotto, quadrante, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
 export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = []): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
+  const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
   const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
-  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
+  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${prima}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }
 
 // ---------------------------------------------------------------- notizie
@@ -199,18 +225,23 @@ const fontiDi = (items: { fonte: string }[]): string => {
   const k = new Set(items.map((x) => x.fonte)).size;
   return `${k} ${k === 1 ? 'fonte' : 'fonti'}`;
 };
-export function faceNotizie(d: Dataset, today: Date): Face | null {
-  if (!d.news) return null;
-  const week = newsInLastDays(d.news, today);
-  if (!week.length) return { fig: '0', unit: '', sent: 'Nessuna notizia negli ultimi 7 giorni.' };
-  return { fig: String(week.length), unit: '', sent: `Notizie negli ultimi 7 giorni da ${fontiDi(week)}.` };
+/** Le notizie dei 7 giorni fino all'ultimo aggiornamento: il numero resta lo stesso per tutta la settimana. */
+export function settimanaDelleNotizie(d: Dataset): { periodo: string; voci: NewsItem[] } {
+  const fine = fineDelleNotizie(d);
+  return { periodo: `nei 7 giorni${fine ? ` fino ${dayWith('al', fine)}` : ''}`, voci: fine ? newsInLastDays(d.news, parseDay(fine)) : [] };
 }
-export function headNotizie(d: Dataset, today: Date): Head {
+export function faceNotizie(d: Dataset): Face | null {
+  if (!d.news) return null;
+  const { periodo, voci } = settimanaDelleNotizie(d);
+  if (!voci.length) return { fig: '0', unit: '', sent: `Nessuna notizia ${periodo}.` };
+  return { fig: String(voci.length), unit: '', sent: `Notizie ${periodo}, da ${fontiDi(voci)}.` };
+}
+export function headNotizie(d: Dataset): Head {
   if (!d.news) return { title: plain('Notizie'), deck: null };
-  const n = newsInLastDays(d.news, today).length;
+  const { periodo, voci } = settimanaDelleNotizie(d);
   return {
-    title: [{ t: String(n), em: true }, { t: n === 1 ? ' notizia in una settimana' : ' notizie in una settimana' }],
-    deck: `Solo titolo, data e link agli articoli originali, da ${fontiDi(d.news.notizie)}.`,
+    title: [{ t: String(voci.length), em: true }, { t: ` ${voci.length === 1 ? 'notizia' : 'notizie'} ${periodo}` }],
+    deck: `Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi ${d.news.giorni} giorni, da ${fontiDi(d.news.notizie)}.`,
   };
 }
 
@@ -233,17 +264,12 @@ export function headRapporti(d: Dataset, today: Date): Head {
 // ---------------------------------------------------------------- geopoliticai
 /** Sempre l'UE, anche con un'altra area scelta nel dettaglio (ticket 04, Q12). */
 export function faceGeopoliticai(d: Dataset, _today?: Date): Face | null {
-  const g = d.geopoliticai;
-  if (!g) return null;
-  const y = annoFaccia(g);
-  const ue = valore(g, 'ue', 'eci', y);
-  const sent = fraseFaccia(g, y);
-  return ue && sent ? { fig: eciFmt(ue.v), unit: 'ECI', sent } : null;
+  return d.geopoliticai ? faccia(d.geopoliticai) : null;
 }
 export function headGeopoliticai(d: Dataset, _today?: Date): Head {
   if (!d.geopoliticai) return { title: plain('GeopoliticAI'), deck: null };
   return {
-    title: [{ t: 'Chi costruisce i modelli più potenti, ' }, { t: "e dov'è l'Europa", em: true }],
+    title: [{ t: 'Chi costruisce i modelli più capaci, ' }, { t: "e dov'è l'Europa", em: true }],
     deck: "Calcolo di addestramento e capacità dei modelli AI per area, dal 2020. Un modello conta per il Paese della prima organizzazione che l'ha sviluppato.",
   };
 }
@@ -253,46 +279,58 @@ export function headGeopoliticai(d: Dataset, _today?: Date): Head {
 export interface Door {
   title: TitleParts; // vuoto se non ci sono dati
   meta: string; // fonte e data del dato
+  nota?: string; // riga piccola sotto la notizia: chi entra in Impara ora ma in Italia sta sotto soglia
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
   scelta?: string; // nome del ruolo o del settore ricordato, per l'etichetta (Per te · Prodotto)
 }
-const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: null };
+const NO_DATA: Door = { title: [], meta: 'Dati non disponibili', target: null };
 
 /** "A", "A e B", "A, B e C", con i nomi in evidenza. */
 const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
 
-// Regole 1-3 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
-function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM } | null {
+// Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta (null: alla pagina di tutte).
+function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM | null; nota?: string } | null {
   // 1. entrate e uscite da Impara ora
   const { inn, out } = radarChanges(sure);
   if (inn.length || out.length) {
     const title: TitleParts = [];
-    if (inn.length) title.push(...names(inn), { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` });
+    // «di misura» se il margine di tutti comprende lo zero: la pagina dice perché
+    if (inn.length) title.push(...names(inn), { t: ` ${verboEntra(inn)} tra le competenze da imparare ora${inn.every(margineSuZero) ? ', di misura' : ''}` });
     if (out.length) {
       if (inn.length) title.push({ t: '; ' });
       title.push(...names(out), { t: ` ${verbo(out, 'esce', 'escono')}${inn.length ? '' : ' da Impara ora'}` });
     }
-    return { title, competenza: inn[0] ?? out[0] };
+    // chi entra e chi esce insieme stanno solo sul radar: la pagina di una competenza mostrerebbe metà della notizia
+    const nota = sottoSogliaInItalia(inn);
+    return { title, competenza: inn.length && out.length ? null : inn[0] ?? out[0], ...(nota && { nota }) };
   }
 
+  const cercate = sure.filter((r) => r.domanda >= MIN_ANNUNCI);
+
   // 2. altri cambi di quadrante
-  const changed = sure.filter((r) => r.changed).sort((a, b) => b.move - a.move);
+  const changed = cercate.filter((r) => r.changed).sort((a, b) => b.move - a.move);
   if (changed.length) {
     const dest = changed[0].quadrante;
     const who = changed.every((r) => r.quadrante === dest) ? changed : [changed[0]];
     return { title: [...names(who), { t: ` ${verbo(who, 'passa', 'passano')} a ${quadranti[dest]}` }], competenza: who[0] };
   }
 
-  // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse)
-  const big = sure.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
+  // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse). Sullo slancio, il valore di un mese fa
+  // dentro il margine di oggi non è una notizia: i due numeri non si distinguono
+  const suSlancio = (r: RadarRowM) => Math.abs(r.dS) >= Math.abs(r.dD);
+  const dentroMargine = ({ sp, slancio_margine: m }: RadarRowM) => sp != null && !!m && sp >= m[0] && sp <= m[1];
+  const big = cercate.filter((r) => r.hasPrev && r.move >= MOVE_MIN && !(suSlancio(r) && dentroMargine(r))).sort((a, b) => b.move - a.move)[0];
   if (big) {
-    const onSlancio = Math.abs(big.dS) >= Math.abs(big.dD);
-    const title: TitleParts = onSlancio
+    const title: TitleParts = suSlancio(big)
       ? [{ t: 'Slancio di ' }, { t: big.breve, em: true }, { t: ` da ${signedPct(big.sp as number)} a ${signedPct(big.slancio)}` }]
       : [{ t: 'Domanda di ' }, { t: big.breve, em: true }, { t: ` da ${per10k(big.dp as number)} a ${per10k(big.domanda)} annunci ogni 10mila` }];
     return { title, competenza: big };
   }
+
+  // 4. la competenza con più slancio, se cresce più dell'AI
+  const top = cercate.slice().sort((a, b) => b.slancio - a.slancio)[0];
+  if (top && top.slancio > 0) return { title: [{ t: top.breve, em: true }, { t: ` ${verbo([top], 'cresce', 'crescono')} più di tutte: ${signedPct(top.slancio)} sull'AI in 6 mesi` }], competenza: top };
   return null;
 }
 
@@ -301,75 +339,102 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!d.radar || !rows.length) return NO_DATA;
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
-  const sure = rows.filter((r) => !r.incerto); // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
+  // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
+  const sure = rows.filter((r) => !r.incerto);
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza
   const conRuolo = ruolo ? { scelta: ruolo.nome } : {};
   const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...(ruolo && { params: { ruolo: ruolo.id } }) });
 
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
-  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo };
+  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo, ...(notizia.nota && { nota: notizia.nota }) };
 
-  // 4. riserva: con un ruolo, quante delle sue competenze
+  // 5. riserva, quando nessuna regola scatta. Senza ruolo quante competenze sono da imparare ora lo dice già la card:
+  // la porta dice la competenza con più annunci, se non è incerta
+  const piuCercata = rows.slice().sort((a, b) => b.domanda - a.domanda)[0];
+  if (!ruolo && !piuCercata.incerto) {
+    const title: TitleParts = [{ t: piuCercata.breve, em: true }, { t: ` ${verbo([piuCercata], 'ha', 'hanno')} più annunci di tutte: ${per10k(piuCercata.domanda)} ogni 10mila` }];
+    return { title, meta, target: to(piuCercata) };
+  }
+  // altrimenti, quante competenze da imparare ora: con un ruolo, quante delle sue
   const base = ruolo ? rows.filter((r) => r.ruoli?.includes(ruolo.id)) : rows;
   const daImparare = base.filter((r) => r.quadrante === 'impara-ora').length;
   const quante = ruolo ? `${daImparare} delle ${base.length} competenze di ${ruolo.nome}` : `${daImparare} ${daImparare === 1 ? 'competenza' : 'competenze'} su ${rows.length}`;
   return { title: [{ t: quante, em: true }, { t: ' da imparare ora' }], meta, target: to(null), ...conRuolo };
 }
 
-const SOON = 30; // giorni: scadenze vicine, dati appena usciti, rapporti in arrivo
+const SOON = 30; // giorni: scadenze vicine, rapporti in arrivo
+/** La riga meta di un dato: una fonte che non dice quando si è aggiornata resta senza data. */
+const aggiornato = (fonte: string, iso: string | null | undefined): string => (iso ? `${fonte} · aggiornato ${dayWith('il', iso)}` : fonte);
 
 /** Con un settore ricordato la regola 2 dice prima il dato del settore (spec Settori, sezione 6). */
 export function doorItalia(d: Dataset, today: Date, settoreId: string | null = null): Door {
   const ahead = (iso: string) => daysTo(iso, today);
-  const recent = (iso: string | null | undefined) => !!iso && ahead(iso) <= 0 && ahead(iso) >= -SOON;
   const scad = (d.ai_act?.scadenze ?? []).slice().sort((a, b) => a.data.localeCompare(b.data));
+  const scadenza = (s: AiActItem): Door => {
+    const n = ahead(s.data);
+    return {
+      title: [{ t: n === 0 ? 'Oggi' : n === 1 ? 'Domani' : `Tra ${n} giorni`, em: true }, { t: `: ${lowerFirst(s.titolo)}` }],
+      meta: `AI Act · scadenza ${dayWith('del', s.data)}`,
+      target: { tema: 'norme', elemento: s.data },
+    };
+  };
 
   // 1. una scadenza entro 30 giorni (anche oggi)
   const near = scad.find((s) => ahead(s.data) >= 0 && ahead(s.data) <= SOON);
-  if (near) {
-    const n = ahead(near.data);
-    return {
-      title: [{ t: n === 0 ? 'Oggi' : n === 1 ? 'Domani' : `Tra ${n} giorni`, em: true }, { t: `: ${lowerFirst(near.titolo)}` }],
-      meta: `AI Act · scadenza ${dayWith('del', near.data)}`,
-      target: { tema: 'norme', elemento: near.data },
-    };
-  }
+  if (near) return scadenza(near);
 
-  // 2. un dato italiano uscito negli ultimi 30 giorni: Eurostat (prima il settore ricordato), poi uso dell'AI generativa (OWID)
+  // 2. il dato italiano, anche se non è appena uscito: Eurostat (prima il settore ricordato), poi uso dell'AI generativa (OWID)
   const es = d.eurostat_settori;
   const settore = settoreScelto(es, settoreId); // «Tutti» o un settore sconosciuto: come senza
   const g = settore && es?.adozione[settore.id];
   const anno = g && ultimoAnno([g.IT, g.EU27_2020]);
-  if (settore && g && anno && g.IT[anno] != null && recent(es.aggiornato_eurostat)) {
+  if (settore && g && anno && g.IT[anno] != null) {
     const ue = g.EU27_2020[anno];
     return {
       title: [{ t: `${nf(g.IT[anno], 0)}% ${settore.nella_frase} italiane`, em: true }, { t: ` usa l'AI${ue != null ? ` (UE: ${nf(ue, 0)}%)` : ''}` }],
-      meta: `Eurostat · aggiornato ${dayWith('il', es.aggiornato_eurostat as string)}`,
+      meta: aggiornato('Eurostat', es.aggiornato_eurostat),
       target: { tema: 'business', elemento: null, params: { settore: settore.id } },
       scelta: settore.nome,
     };
   }
   const e = impreseUe(d);
-  const euAgg = d.eurostat?.aggiornato_eurostat;
-  if (e?.it != null && recent(euAgg)) {
+  if (e?.it != null) {
     return {
       title: [{ t: `${nf(e.it, 0)}% delle imprese italiane`, em: true }, { t: ` usa l'AI (UE: ${nf(e.v, 0)}%)` }],
-      meta: `Eurostat · aggiornato ${dayWith('il', euAgg as string)}`,
+      meta: aggiornato('Eurostat', d.eurostat?.aggiornato_eurostat),
       target: { tema: 'business', elemento: null },
     };
   }
-  const genAgg = d.owid?.serie?.uso_genai?.aggiornato_owid;
   const it = owidLatest(d.owid, 'uso_genai', 'Italy');
-  if (it && recent(genAgg)) {
+  if (it) {
     const w = owidLatest(d.owid, 'uso_genai', 'World');
     return {
       title: [{ t: `${nf(it.v, 0)}% degli italiani`, em: true }, { t: ` usa l'AI generativa${w ? ` (mondo: ${nf(w.v, 0)}%)` : ''}` }],
-      meta: `Microsoft via Our World in Data · aggiornato ${dayWith('il', genAgg as string)}`,
+      meta: aggiornato('Microsoft via Our World in Data', d.owid?.serie?.uso_genai?.aggiornato_owid),
       target: { tema: 'persone', elemento: null },
     };
   }
 
-  // 3. un rapporto previsto entro 30 giorni (le date dei rapporti sono mesi stimati)
+  // 3. senza un dato italiano, GeopoliticAI: quanti modelli di grande scala dell'anno in corso sono europei, o dell'ultimo anno chiuso se nell'anno in corso
+  // non ce n'è ancora nessuno
+  const geo = d.geopoliticai;
+  const q = geo && [geo.anno_corrente, geo.anno_corrente - 1].map((y) => ({ y, ...quota(geo, 'ue', y) })).find((x) => x.tot > 0);
+  if (geo && q) {
+    const finora = q.y === geo.anno_corrente ? ', finora' : '';
+    return {
+      title: q.n
+        ? [{ t: `${q.n} dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} ${q.n === 1 ? 'è europeo' : 'sono europei'} (${percento(q.n, q.tot)})${finora}` }]
+        : [{ t: `Nessuno dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} è europeo${finora}` }],
+      meta: `Epoch AI · dati scaricati ${dayWith('il', geo.scaricato)}`,
+      target: { tema: 'geopoliticai', elemento: CHI_ADDESTRA, params: { area: 'ue' } },
+    };
+  }
+
+  // 4. riserva: la prossima scadenza, anche lontana
+  const dopo = scad.find((s) => ahead(s.data) > 0);
+  if (dopo) return scadenza(dopo);
+
+  // 5. un rapporto previsto entro 30 giorni: la data è un mese stimato, viene dopo tutto quello che è un fatto
   const r = nextReport(d.rapporti, today);
   if (r && r.ym <= ym(new Date(today.getTime() + SOON * 864e5))) {
     const mese = monthName(r.ym);
@@ -377,17 +442,6 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
       title: [{ t: `${mese.startsWith('a') ? 'Ad' : 'A'} ${mese} esce ` }, { t: r.report.nome, em: true }],
       meta: 'Data stimata, dai rapporti degli anni scorsi',
       target: { tema: 'rapporti', elemento: slug(r.report.nome) },
-    };
-  }
-
-  // 4. riserva: la prossima scadenza, anche lontana
-  const next = scad.find((s) => ahead(s.data) > 0);
-  if (next) {
-    const n = ahead(next.data);
-    return {
-      title: [{ t: `${n} ${n === 1 ? 'giorno' : 'giorni'}`, em: true }, { t: " alla prossima scadenza dell'AI Act" }],
-      meta: `AI Act · ${next.titolo}`,
-      target: { tema: 'norme', elemento: next.data },
     };
   }
   return NO_DATA;

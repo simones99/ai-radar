@@ -22,14 +22,14 @@ describe('Competenze', () => {
   it('titolo, radar, pannello, tabella e metodo', () => {
     show(CompetenzeDetail, tile);
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('MCP entra tra le competenze da imparare ora');
-    expect(screen.getByRole('img', { name: /Radar delle competenze/ })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Movimenti del mese' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: /Radar delle competenze/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Movimenti di settembre' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Le competenze una per una' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Come si calcola' })).toBeInTheDocument();
   });
   it('radar e movimenti con fonti cliccabili, Adzuna compresa', () => {
     show(CompetenzeDetail, tile);
-    for (const name of ['Radar delle competenze', 'Movimenti del mese']) {
+    for (const name of ['Radar delle competenze', 'Movimenti di settembre']) {
       const blk = screen.getByRole('heading', { name }).closest('section')!;
       expect(within(blk).getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com');
       expect(within(blk).getByRole('link', { name: 'arXiv' })).toHaveAttribute('href', 'https://arxiv.org');
@@ -39,7 +39,7 @@ describe('Competenze', () => {
   it('passando il mouse su una riga del pannello, nel radar le altre si attenuano', async () => {
     const { container } = show(CompetenzeDetail, tile);
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(0);
-    const link = within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getAllByRole('link')[0];
+    const link = within(screen.getByRole('heading', { name: 'Movimenti di settembre' }).closest('section')!).getByRole('link', { name: /^MCP slancio/ });
     const ev = new Event('pointerenter');
     Object.defineProperty(ev, 'pointerType', { value: 'mouse' });
     await fireEvent(link, ev);
@@ -54,8 +54,8 @@ describe('Competenze', () => {
   it('link diretto a una competenza: la sua pagina al posto del radar', () => {
     show(CompetenzeDetail, tile, 'mcp');
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Model Context Protocol (MCP)');
-    expect(screen.getByText('Impara ora. Lo standard per collegare strumenti.')).toBeInTheDocument();
-    expect(screen.queryByRole('img', { name: /Radar delle competenze/ })).toBeNull();
+    expect(screen.getByText('Impara ora, un mese fa Da consolidare. Lo standard per collegare strumenti.')).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: /Radar delle competenze/ })).toBeNull();
   });
   it('radar.json della pipeline vecchia: avviso', () => {
     const old = { ...data, radar: { ...data.radar!, versione: undefined } } as Dataset;
@@ -64,7 +64,7 @@ describe('Competenze', () => {
   });
   it('link diretto a una competenza che non esiste: il radar, nessun errore', () => {
     show(CompetenzeDetail, tile, 'inesistente');
-    expect(screen.getByRole('img', { name: /Radar delle competenze/ })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: /Radar delle competenze/ })).toBeInTheDocument();
   });
 });
 
@@ -96,8 +96,8 @@ describe('Competenze: il ruolo', () => {
     expect(within(tab).queryByRole('columnheader', { name: 'Per il tuo ruolo' })).toBeNull();
   });
 
-  it('Movimenti del mese: prima le competenze del ruolo, poi le altre attenuate, ognuna nell’ordine di «Tutti»', () => {
-    const movimenti = () => within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getAllByRole('link').filter((a) => a.matches('a.row'));
+  it('Movimenti: prima le competenze del ruolo, poi le altre attenuate, ognuna nell’ordine di «Tutti»', () => {
+    const movimenti = () => within(screen.getByRole('heading', { name: 'Movimenti di settembre' }).closest('section')!).getAllByRole('link').filter((a) => a.matches('a.row'));
     const nomi = (as: HTMLElement[]) => as.map((a) => a.getAttribute('title'));
     const { unmount } = show(CompetenzeDetail, tile);
     const tutti = nomi(movimenti());
@@ -149,18 +149,24 @@ describe('Competenze: il ruolo', () => {
 
 describe('Business', () => {
   const tile = mk('business', 'Business', headBusiness, BusinessDetail);
+  it('il sondaggio McKinsey dice di chi è il numero, di che anno, e che non è la misura di Eurostat', () => {
+    show(BusinessDetail, tile);
+    const blocco = screen.getByRole('region', { name: 'Chi risponde al sondaggio McKinsey dice di usarla, 2025' });
+    expect(blocco).toHaveTextContent("Non è la stessa misura dell'adozione Eurostat.");
+    expect(within(blocco).getByRole('img', { name: /sondaggio McKinsey/ })).toBeInTheDocument();
+  });
   it('grafici con fonte cliccabile e serie mancanti dichiarate', () => {
     show(BusinessDetail, tile);
-    expect(screen.getByRole('img', { name: 'Investimenti privati per regione' })).toBeInTheDocument();
-    expect(screen.getAllByRole('link', { name: 'Our World in Data' })[0]).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
-    const inv = screen.getByRole('img', { name: 'Investimenti privati per regione' }).closest('section')!;
+    expect(screen.getByRole('img', { name: 'Investimenti privati per area' })).toBeInTheDocument();
+    const inv = screen.getByRole('img', { name: 'Investimenti privati per area' }).closest('section')!;
+    expect(within(inv).getByRole('link', { name: 'Our World in Data' })).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
     expect(within(inv).getByRole('link', { name: 'CC BY-ND 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nd/4.0/');
     // CC BY-ND: valori come pubblicati, in dollari e senza arrotondamenti
     expect(within(inv).getByText('230.000.000.000')).toBeInTheDocument();
     const gen = screen.getByRole('img', { name: 'Investimenti in AI generativa' }).closest('section')!;
     expect(within(gen).getByText('143.800.000.000')).toBeInTheDocument();
     expect(within(screen.getByRole('img', { name: 'Investimenti in AI generativa' })).getByText('144 B')).toBeInTheDocument();
-    expect(within(screen.getByRole('img', { name: 'Investimenti privati per regione' })).getByText(/^Europa/)).toHaveClass('hot');
+    expect(within(screen.getByRole('img', { name: 'Investimenti privati per area' })).getByText(/^Europa/)).toHaveClass('hot');
     expect(screen.getAllByText('Dati non disponibili in questo aggiornamento.').length).toBeGreaterThan(0);
     expect(within(screen.getByRole('img', { name: "Imprese europee che usano l'AI" })).getByText('Italia')).toHaveClass('hot');
   });
@@ -174,7 +180,7 @@ describe('Business', () => {
       for (const [title, img] of [
         ['Adozione per settore, 2025', "Adozione per settore, Italia e UE"],
         ["A cosa serve l'AI, 2025", "A cosa serve l'AI, Italia e UE"],
-        ['Cosa frena chi non la usa, 2025', 'Cosa frena chi non la usa, Italia e UE'],
+        ['Le barriere di chi non la usa, 2025', 'Le barriere di chi non la usa, Italia e UE'],
       ]) {
         const b = blk(title);
         expect(within(b).getByRole('img', { name: img })).toBeInTheDocument();
@@ -183,13 +189,13 @@ describe('Business', () => {
         expect(b).toHaveTextContent('Punto pieno: Italia; vuoto: UE.');
       }
       expect(blk("A cosa serve l'AI, 2025")).toHaveTextContent("% delle imprese che usano l'AI");
-      expect(blk('Cosa frena chi non la usa, 2025')).toHaveTextContent("% delle imprese che hanno considerato l'AI senza usarla");
+      expect(blk('Le barriere di chi non la usa, 2025')).toHaveTextContent("% delle imprese che hanno considerato l'AI senza usarla");
       // ordinati per valore italiano; le tabelle danno Italia e UE
       expect(righe('Adozione per settore, 2025')).toEqual([
         ['Informazione e comunicazione', '51,3', '62,5'], ['Manifattura', '14,7', '17,3'], ['Immobiliare', '14,0', '24,8'],
       ]);
       expect(righe("A cosa serve l'AI, 2025")[0]).toEqual(['Marketing e vendite', '33,1', '34,7']);
-      expect(righe('Cosa frena chi non la usa, 2025')).toHaveLength(8);
+      expect(righe('Le barriere di chi non la usa, 2025')).toHaveLength(8);
       expect(screen.queryByText(/Dato italiano non affidabile/)).toBeNull();
     });
 
@@ -246,7 +252,7 @@ describe('Business', () => {
       show(BusinessDetail, tile);
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("16% delle imprese italiane usa l'AI");
       expect(screen.getByText("Nel 2025, imprese con almeno 10 addetti. UE: 20%. Nel 2024 in Italia l'8%.")).toBeInTheDocument();
-      for (const name of ["Imprese che usano l'AI, per area", "Imprese europee che usano l'AI, 2025", 'Investimenti privati per regione', 'Ricavi di TSMC'])
+      for (const name of ['Chi risponde al sondaggio McKinsey dice di usarla, 2025', "Imprese europee che usano l'AI, 2025", 'Investimenti privati per area', 'Ricavi di TSMC'])
         expect(screen.getByRole('heading', { name })).toBeInTheDocument();
     });
 
@@ -288,12 +294,12 @@ describe('Business: il settore', () => {
     expect(within(confronto).getByText('Immobiliare')).not.toHaveClass('hot');
     expect(blk('Adozione per settore, 2025')).toHaveTextContent('In evidenza: Manifattura.');
     const titoli = within(screen.getByRole('group', { name: 'Adozione' })).getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
-    expect(titoli.slice(0, 5)).toEqual(['Adozione', 'Adozione per settore, 2025', 'Adozione in Manifattura, 2021-2025', "A cosa serve l'AI in Manifattura, 2025", 'Cosa frena chi non la usa in Manifattura, 2025']);
+    expect(titoli.slice(0, 5)).toEqual(['Adozione', 'Adozione per settore, 2025', 'Adozione in Manifattura, 2021-2025', "A cosa serve l'AI in Manifattura, 2025", 'Le barriere di chi non la usa in Manifattura, 2025']);
     expect(within(blk('Adozione in Manifattura, 2021-2025')).getByRole('img', { name: 'Adozione in Manifattura, Italia e UE' })).toBeInTheDocument();
     expect(blk('Adozione in Manifattura, 2021-2025')).toHaveTextContent('Dati 2021-2025.');
     expect(righe('Adozione in Manifattura, 2021-2025')).toEqual([['2021', '6,6', '6,9'], ['2023', '4,9', '6,8'], ['2024', '8,0', '10,6'], ['2025', '14,7', '17,3']]);
     expect(righe("A cosa serve l'AI in Manifattura, 2025")[0]).toEqual(['Marketing e vendite', '28,7', '30,4']);
-    expect(righe('Cosa frena chi non la usa in Manifattura, 2025')[0]).toEqual(['Mancano le competenze', '62,5', '71,1']);
+    expect(righe('Le barriere di chi non la usa in Manifattura, 2025')[0]).toEqual(['Mancano le competenze', '62,5', '71,1']);
   });
 
   it("l'andamento non disegna il 2022, né come punto né come tratto", () => {
@@ -371,7 +377,13 @@ describe('Norme', () => {
 
 describe('Notizie', () => {
   const tile = mk('notizie', 'Notizie', headNotizie, NotizieDetail);
-  const items = () => within(screen.getByRole('list', { name: 'Elenco delle notizie' })).queryAllByRole('listitem');
+  const items = () => screen.queryAllByRole('list', { name: /^Notizie:/ }).flatMap((l) => within(l).queryAllByRole('listitem'));
+  it('le notizie della settimana in testa, come il numero del titolo, poi le altre', () => {
+    show(NotizieDetail, tile);
+    expect(screen.getAllByRole('heading', { level: 4 }).map((h) => h.textContent)).toEqual(['Nei 7 giorni fino al 15 ott 2026', 'Prima']);
+    expect(within(screen.getByRole('list', { name: 'Notizie: nei 7 giorni fino al 15 ott 2026' })).getAllByRole('listitem')).toHaveLength(2);
+    expect(within(screen.getByRole('list', { name: 'Notizie: prima' })).getByRole('link', { name: 'Una notizia vecchia' })).toBeInTheDocument();
+  });
   it('tutte le notizie, poi filtro per tema', async () => {
     show(NotizieDetail, tile);
     expect(items()).toHaveLength(3);

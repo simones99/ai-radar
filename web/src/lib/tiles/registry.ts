@@ -4,6 +4,8 @@ import {
 } from '../text/frasi';
 import BusinessDetail from './BusinessDetail.svelte';
 import CompetenzeDetail from './CompetenzeDetail.svelte';
+import FiguraCompetenze from './FiguraCompetenze.svelte';
+import FiguraGeopoliticai from './FiguraGeopoliticai.svelte';
 import GeopoliticaiDetail from './GeopoliticaiDetail.svelte';
 import ModelliDetail from './ModelliDetail.svelte';
 import NotizieDetail from './NotizieDetail.svelte';
@@ -19,12 +21,12 @@ export const TESTE: readonly { id: Testa; eyebrow: string; label: string }[] = [
 ];
 
 export const TILES: TileDef[] = [
-  { id: 'competenze', label: 'Competenze', source: 'radar', eager: true, testa: 'per-te', face: faceCompetenze, head: headCompetenze, Detail: CompetenzeDetail },
+  { id: 'competenze', label: 'Competenze', source: 'radar', eager: true, testa: 'per-te', face: faceCompetenze, head: headCompetenze, Detail: CompetenzeDetail, Figura: FiguraCompetenze, senzaCifra: true },
   { id: 'modelli', label: 'Modelli e ricerca', source: 'epoch', eager: true, testa: 'per-te', face: faceModelli, head: headModelli, Detail: ModelliDetail },
   { id: 'open', label: 'Open source', source: 'huggingface', eager: true, testa: 'per-te', face: faceOpen, head: headOpen, Detail: OpenDetail },
-  { id: 'notizie', label: 'Notizie', source: 'feeds', eager: true, testa: 'per-te', face: faceNotizie, head: headNotizie, Detail: NotizieDetail },
+  { id: 'notizie', label: 'Notizie', source: 'feeds', eager: true, testa: 'per-te', face: faceNotizie, head: headNotizie, Detail: NotizieDetail, largo: true },
+  { id: 'geopoliticai', label: 'GeopoliticAI', source: 'geopoliticai', eager: false, testa: 'italia', face: faceGeopoliticai, head: headGeopoliticai, Detail: GeopoliticaiDetail, Figura: FiguraGeopoliticai },
   { id: 'business', label: 'Business', source: 'owid', eager: false, testa: 'italia', face: faceBusiness, head: headBusiness, Detail: BusinessDetail },
-  { id: 'geopoliticai', label: 'GeopoliticAI', source: 'geopoliticai', eager: false, testa: 'italia', face: faceGeopoliticai, head: headGeopoliticai, Detail: GeopoliticaiDetail },
   { id: 'persone', label: 'Persone e lavoro', source: 'owid', eager: false, testa: 'italia', face: facePersone, head: headPersone, Detail: PersoneDetail },
   { id: 'norme', label: 'Norme', source: 'ai_act', eager: false, testa: 'italia', face: faceNorme, head: headNorme, Detail: NormeDetail },
   { id: 'rapporti', label: 'Rapporti', source: 'rapporti', eager: false, testa: 'italia', face: faceRapporti, head: headRapporti, Detail: RapportiDetail },

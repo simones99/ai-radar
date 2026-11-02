@@ -1,5 +1,5 @@
 import { daysTo, ym } from '../text/format';
-import type { AiActItem, EpochPoint, EurostatSettori, News, NewsItem, Owid, OwidPoint, PerGeo, Quadrant, Radar, RadarRow, Rapporti, Report, Settore } from './types';
+import type { AiActItem, EpochPoint, EurostatSettori, News, NewsItem, Owid, OwidPoint, PerGeo, Quadrant, Radar, RadarRow, Rapporti, Report, Settore, Status } from './types';
 
 export const MOVE_MIN = 0.1; // spostamento minimo per disegnare una freccia: un decimo dell'asse
 /** Domini fissi degli assi, simmetrici attorno alle soglie: slancio 0 e 3 annunci ogni 10mila stanno al centro. */
@@ -34,7 +34,12 @@ export interface RadarRowM extends RadarRow {
   dC: number;
   changed: boolean;
   hasPrev: boolean;
+  /** Entra in Impara ora e c'era già stata: lo dice lo storico, prima di questo mese. */
+  rientra: boolean;
 }
+
+/** Il margine dello slancio comprende lo zero: la competenza potrebbe non crescere più dell'AI. */
+export const margineSuZero = ({ slancio_margine: m }: RadarRow): boolean => !!m && m[0] < 0 && m[1] > 0;
 
 export function radarRows(r: Radar): RadarRowM[] {
   if (r.versione !== 2) return []; // radar.json della pipeline vecchia: ranghi, non unità vere
@@ -51,11 +56,13 @@ export function radarRows(r: Radar): RadarRowM[] {
       const dS = px != null ? x - px : 0;
       const dD = hasPrev && dp != null ? y - ny(dp) : 0;
       const calc = c.quadrante_calcolato ?? null;
+      const changed = hasPrev && qp != null && qp !== c.quadrante;
       return {
         ...c, breve: c.breve || c.nome, slancio: s, domanda: d, quadrante: c.quadrante as Quadrant,
         incerto: !!c.incerto, moving: calc && calc !== c.quadrante ? calc : null,
         x, y, px, py, sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
-        changed: hasPrev && qp != null && qp !== c.quadrante, hasPrev,
+        changed, hasPrev,
+        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => p.competenze[c.id]?.pubblicato === 'impara-ora'),
       };
     });
 }
@@ -67,7 +74,7 @@ export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarR
   };
 }
 
-/** Crescita annua del calcolo dei modelli di frontiera: regressione su log10(FLOP). */
+/** Crescita annua del calcolo dei modelli tra i più grandi del loro momento («Frontier model» per Epoch): regressione su log10(FLOP). */
 export function computeGrowth(punti: EpochPoint[], since = 2018): { fattore: number; n: number } | null {
   const pts = punti.filter((p) => p.f && p.c && p.c > 0 && p.d >= `${since}-01-01`).map((p) => [tNum(p.d), Math.log10(p.c as number)]);
   if (pts.length < 5) return null;
@@ -118,6 +125,10 @@ export function newsInLastDays(news: News | undefined, today: Date, days = 7): N
     const ago = -daysTo(n.data, today);
     return ago >= 0 && ago < days;
   });
+}
+/** L'ultimo giorno che i dati coprono: l'ultimo aggiornamento o, senza lo stato delle fonti, la notizia più recente. Non l'orologio di chi legge: i dati arrivano una volta a settimana. */
+export function fineDelleNotizie(d: { news?: News; status?: Status }): string | null {
+  return d.status?.aggiornato || (d.news?.notizie ?? []).map((n) => n.data).filter((x) => ISO_DAY.test(x)).sort().at(-1) || null;
 }
 
 export function nextReport(r: Rapporti | undefined, today: Date): { report: Report; ym: string } | null {

@@ -8,6 +8,10 @@ Una dashboard pubblica sull'AI, costruita su dati aperti che si aggiornano ogni 
 Una delle due metà del prodotto, ciascuna con il suo pubblico: *Per te* (le persone) e *Per la tua organizzazione* (le organizzazioni).
 _Avoid_: sezione, ingresso
 
+**Card di spicco**:
+La card che apre una testa, una per testa (Competenze e GeopoliticAI): in home prende tutta la riga, con una figura disegnata dai dati al posto della foto e senza un titolo che faccia concorrenza alla porta, e il suo dettaglio si apre sul titolo grande, senza foto.
+_Avoid_: copertina, card in evidenza
+
 **Competenza**:
 Una delle capacità sull'AI che il radar segue, misurata su ricerca, open source e lavoro.
 _Avoid_: skill, tema
@@ -64,6 +68,10 @@ _Avoid_: anno corrente, ultimo anno
 Un modello AI addestrato con almeno 1e23 FLOP di calcolo di addestramento. Sono i modelli su cui si contano le aree.
 _Avoid_: modello grande, modello di frontiera, modello notevole
 
+**Modello tra i più grandi**:
+Un modello che Epoch segna come «Frontier model»: quando è uscito era tra i più grandi per calcolo di addestramento. Dipende dal momento in cui è uscito, mentre il modello di grande scala ha una soglia fissa, e i due insiemi non coincidono.
+_Avoid_: modello di frontiera
+
 **Capacità**:
 Quanto un modello è bravo nei compiti verificabili, misurata dall'Epoch Capabilities Index. Ha senso solo nel confronto tra modelli, non come valore assoluto. Dice quanto valgono i risultati di un'area.
 _Avoid_: competenza, intelligenza, potenza (per un modello)
@@ -71,6 +79,10 @@ _Avoid_: competenza, intelligenza, potenza (per un modello)
 **Record di capacità**:
 Un modello che, quando è uscito, aveva la capacità più alta mai misurata, cioè un ECI più alto di tutti i modelli usciti prima. Fra due modelli usciti lo stesso giorno conta solo il più alto, e chi pareggia il record non lo batte.
 _Avoid_: modello di frontiera, modello migliore
+
+**Distacco**:
+Quanti punti di capacità separano l'UE dalla prima area, confrontando il miglior modello di ciascuna nello stesso anno. Quando la prima area è l'UE non c'è distacco.
+_Avoid_: divario, gap, ritardo
 
 **Barriera**:
 Un motivo per cui un'impresa che ha considerato l'AI non la usa, per esempio i costi o la mancanza di competenze.

@@ -44,16 +44,23 @@
   .tl { list-style: none; margin: 0; padding: 0; display: grid; }
   li { display: grid; grid-template-columns: 112px 24px minmax(0, 1fr); gap: 0 var(--s2); }
   @media (max-width: 560px) { li { grid-template-columns: 88px 16px minmax(0, 1fr); gap: 0 var(--s1); } }
+  /* sul telefono stretto la data va sopra il titolo, che così ha tutta la riga */
+  @media (max-width: 400px) {
+    li { grid-template-columns: 16px minmax(0, 1fr); }
+    .rail { grid-column: 1; grid-row: 1 / span 2; }
+    .when { grid-column: 2; grid-row: 1; padding-block: var(--s2) 0; }
+    .what { grid-column: 2; grid-row: 2; padding-top: 2px; }
+  }
   .when { font-weight: 600; font-size: 14px; padding-block: var(--s2); font-variant-numeric: tabular-nums; }
   .rail { position: relative; }
   .rail::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--line-2); }
   .rail::after { content: ""; position: absolute; left: calc(50% - 5px); top: 23px; width: 10px; height: 10px; border-radius: 50%; background: var(--fg); }
   .future .rail::after { background: var(--card); border: 1.5px solid var(--fg-3); }
   .next .rail::after { background: var(--accent); border: 0; box-shadow: 0 0 0 4px var(--accent-soft); }
-  .next .when, .next .what a { color: var(--accent); }
+  .next .when { color: var(--accent); }
   .what { padding-block: var(--s2); display: grid; gap: 4px; }
   .what a, .what b { font-weight: 600; }
-  .what span { color: var(--fg-2); font-size: 14px; }
+  .what span { color: var(--fg-2); font-size: 14px; max-width: var(--misura); }
   .future:not(.next) .what a, .future:not(.next) .what b { font-weight: 500; color: var(--fg-2); }
   .hl { background: var(--accent-soft); border-radius: var(--r-sm); }
   .today .when, .today .what { color: var(--fg-3); font-weight: 400; font-size: 12px; }

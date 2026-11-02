@@ -20,9 +20,23 @@
   const step = $derived(Math.max(1, Math.ceil(data.length / Math.max(1, Math.floor(w / 48)))));
   // nomi più larghi dello spazio che hanno anche scrivendone uno ogni "step": barre orizzontali, l'ultima (in evidenza) in cima
   const across = $derived(data.some((d) => measureText(d.k, `400 10px ${FONT}`) > step * x.step() - 4));
-  const RH = 28;
-  const ml = $derived(Math.min(w * 0.45, Math.max(...data.map((d) => measureText(d.k, `600 12px ${FONT}`))) + 12));
+  // un nome più largo di metà grafico (come «riconoscimento vocale» in una card stretta) va sopra la sua barra, che prende tutta la larghezza
+  const lungo = $derived(Math.max(...data.map((d) => measureText(d.k, `600 12px ${FONT}`))) + 12);
+  const sopra = $derived(lungo > w * 0.45);
+  const RH = $derived(sopra ? 40 : 28);
+  const ml = $derived(sopra ? 0 : lungo);
   const xh = $derived(scaleLinear([0, max(data, (d) => d.v) ?? 1], [ml, w - 48]));
+  /** Si scrive la barra in evidenza e una ogni "step", ma non quella che starebbe a meno di uno "step" dall'evidenza: le due etichette si toccherebbero. */
+  const scritta = (i: number) => (hotLast && i === data.length - 1) || (i % step === 0 && (!hotLast || data.length - 1 - i >= step));
+  /** Il valore sopra la barra non si scrive se, largo com'è, toccherebbe una barra vicina più alta: resta nella tabella. */
+  const valoreCiSta = (i: number) => {
+    if (hotLast && i === data.length - 1) return true;
+    const c = (x(data[i].k) ?? 0) + x.bandwidth() / 2, half = measureText(format(data[i].v), `400 12px ${FONT}`) / 2 + 2;
+    return data.every((d, j) => {
+      const x0 = x(d.k) ?? 0;
+      return j === i || x0 > c + half || x0 + x.bandwidth() < c - half || y(d.v) > y(data[i].v) - 4;
+    });
+  };
   const rows = $derived(data.map((d, i) => ({ ...d, hot: hotLast && i === data.length - 1 })).reverse());
 </script>
 
@@ -30,8 +44,8 @@
   {#if across}
     <svg viewBox="0 0 {w} {rows.length * RH}" width={w} height={rows.length * RH} role="img" aria-label={label}>
       {#each rows as d, i (d.k)}
-        {@const yy = i * RH + RH / 2}
-        <text class={d.hot ? 't12b hot' : 't12'} x={ml - 12} y={yy + 4} text-anchor="end">{d.k}</text>
+        {@const yy = i * RH + (sopra ? 28 : RH / 2)}
+        <text class={d.hot ? 't12b hot' : 't12'} x={sopra ? 0 : ml - 12} y={sopra ? yy - 14 : yy + 4} text-anchor={sopra ? 'start' : 'end'}>{d.k}</text>
         <rect class="bar" class:hot={d.hot} x={ml} y={yy - 8} width={Math.max(0, xh(d.v) - ml)} height="16" rx="4" />
         <text class={d.hot ? 't12b hot' : 't12'} x={xh(d.v) + 8} y={yy + 4}>{format(d.v)}</text>
       {/each}
@@ -41,8 +55,8 @@
       {#each data as d, i (d.k)}
         {@const hot = hotLast && i === data.length - 1}
         <rect class="bar" class:hot x={x(d.k)} y={y(d.v)} width={x.bandwidth()} height={y(0) - y(d.v)} rx="6" />
-        {#if hot || i % step === 0}
-          <text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>
+        {#if scritta(i)}
+          {#if valoreCiSta(i)}<text class={hot ? 't12b hot' : 't12'} x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={y(d.v) - 8} text-anchor="middle">{format(d.v)}</text>{/if}
           <text class="t10" x={(x(d.k) ?? 0) + x.bandwidth() / 2} y={height - 8} text-anchor="middle">{d.k}</text>
         {/if}
       {/each}

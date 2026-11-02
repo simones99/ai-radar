@@ -11,7 +11,7 @@
 
   const head = $derived(tile.head(data, today));
   const hf = $derived(data.huggingface);
-  const tipi = $derived(Object.entries(hf?.tipi_top100 ?? {}).filter(([k]) => k !== 'altro').sort((a, b) => a[1] - b[1]).slice(-6).map(([k, v]) => ({ k: tipoLabel(k), v })));
+  const tipi = $derived(Object.entries(hf?.tipi_top100 ?? {}).filter(([k]) => k !== 'altro').sort((a, b) => a[1] - b[1]).slice(-6).map(([k, v]) => ({ k: tipoLabel(k), hf: k, v })));
   const repos = $derived((data.github?.repos ?? []).map((r) => {
     const st = r.storico;
     const last = st[st.length - 1]?.stelle ?? 0;
@@ -31,7 +31,7 @@
   </Block>
   <Block span={4} title="Che compiti fanno" note="Tipi più frequenti tra i 100 modelli di tendenza." missing={tipi.length ? null : 'Dati di Hugging Face non disponibili.'}
     cite={hf ? [{ t: 'Fonte: ' }, { t: 'Hugging Face', href: hf.url }, { t: '.' }] : null}
-    table={{ cols: ['Tipo', 'Modelli su 100'], rows: tipi.map((t) => [t.k, t.v]) }}>
+    table={{ cols: ['Tipo', 'Nome su Hugging Face', 'Modelli su 100'], rows: tipi.map((t) => [t.k, t.hf, t.v]) }}>
     <Bars label="Tipi di compito dei modelli di tendenza" data={tipi} />
   </Block>
   <Block span={12} title="Progetti open source da seguire" note="Stelle su GitHub e variazione rispetto alla settimana prima."

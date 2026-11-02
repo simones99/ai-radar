@@ -85,7 +85,7 @@ Ogni card chiusa mostra: foto, nome del tema, data di aggiornamento, numero chia
 | Persone e lavoro | quota di persone nel mondo che usa l'AI generativa, con il dato italiano | uso dell'AI generativa (mondo, Italia, Paesi UE, giovani UE); sviluppatori che usano strumenti AI; quota di annunci AI (Lightcast); domanda di competenze (Adzuna) | OWID, Adzuna |
 | Politica | giorni alla prossima scadenza dell'AI Act | linea del tempo dell'AI Act con link ai testi ufficiali; notizie dei feed con tema "politica" | ai_act.yaml, feed |
 | Competenze | competenza che entra in "Impara ora" | radar (direzione A) con le frecce dal mese prima; pannello dei movimenti (direzione C); tabella delle competenze; metodo | radar.json |
-| Notizie | notizie degli ultimi 7 giorni | elenco con filtro per fonte e per tema | feed RSS |
+| Notizie | notizie dei 7 giorni fino all'ultimo aggiornamento (non dall'orologio di chi legge) | elenco con filtro per fonte e per tema | feed RSS |
 | Rapporti | prossimo rapporto previsto | linea del tempo delle uscite: editore, cadenza, ultima edizione con link, prossima prevista (stima dichiarata) | rapporti.yaml |
 
 Stato dei link alle fonti: non è una card. È raggiungibile dalla testata ("Stato delle fonti") e mostra la tabella di `status.json`.
@@ -224,9 +224,9 @@ Prototipo di riferimento: https://claude.ai/artifact/3D8t5JPfwAS71YXdLk9ERF
 
 ### Tastiera e lettori di schermo
 
-- Link "Vai ai temi" in cima.
+- Link "Vai al contenuto" in cima: porta al titolo della card aperta o a quello della pagina, senza chiudere la card.
 - Ordine di Tab: testata, card, crediti.
-- All'apertura il focus va al titolo della card (`tabindex="-1"`); alla chiusura torna alla card di partenza.
+- All'apertura il focus va al titolo della card (`tabindex="-1"`), in Norme alla scadenza su cui si arriva; alla chiusura torna alla card di partenza.
 - Ogni grafico ha "Vedi i dati": una tabella con gli stessi numeri.
 - Anello di focus blu da 2px sempre visibile.
 
@@ -262,6 +262,7 @@ Ogni generatore riceve i dati della sua fonte e restituisce una frase o `null`. 
 
 - JSON non raggiungibile: fonte assente.
 - Nessun JSON raggiungibile: avviso con "Riprova".
+- Solo una parte dei JSON raggiungibile: avviso in testa con "Riprova", e in "Stato delle fonti" i dati che non sono arrivati, con il loro "Riprova". *(Aggiunto il 2026-11-02 dopo la terza critica.)*
 - Errore in un grafico: "Grafico non disponibile" nel blocco, errore in console, il resto funziona.
 - Foto non caricata: riquadro neutro con il testo alternativo.
 

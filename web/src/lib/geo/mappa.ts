@@ -22,6 +22,10 @@ export const ANELLI = [
   { key: 'modelli', nome: 'Modelli' },
 ] as const;
 export type AnelloKey = (typeof ANELLI)[number]['key'];
+
+/** Il colore di un valore sulla scala delle mappe: dal più basso, appena sopra la carta, a --alto (la classe .scala in app.css). */
+export const tinta = (x: number, lo: number, hi: number): string =>
+  `color-mix(in srgb, var(--alto) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
 type Chip = 'progettazione' | 'fabbricazione' | 'macchinari';
 const CHIP: readonly Chip[] = ['progettazione', 'fabbricazione', 'macchinari'];
 /** La frase onesta di un Paese senza quota, per anello dei chip. */
@@ -87,16 +91,36 @@ export function vista(g: Geopoliticai, c: Catena | undefined, k: AnelloKey, mate
 /** Un anello nel fumetto del Paese: il valore di ogni materiale, o il valore unico, ognuno con la sua data. */
 export interface AnelloFumetto { key: AnelloKey; nome: string; voci: { materiale?: string; testo: string; data?: string }[] }
 
+/** Le viste di un anello: una per materiale nelle materie prime, una sola negli altri. */
+const visteAnello = (g: Geopoliticai, c: Catena | undefined, k: AnelloKey): { materiale?: string; v: Vista }[] =>
+  k === 'materie' ? materialiDi(c).map((m) => ({ materiale: m.nome, v: vista(g, c, k, m.key) })) : [{ v: vista(g, c, k) }];
+
 /** Il fumetto di un Paese: i sei anelli, con la frase onesta dove il Paese non ha niente e «dati in arrivo» dove l'anello non c'è. */
 export function fumetto(g: Geopoliticai, c: Catena | undefined, iso: string): AnelloFumetto[] {
   const ok = attivi(g, c);
-  const voce = (v: Vista, materiale?: string) => ({ materiale, testo: v.testo(iso), data: v.data });
   return ANELLI.map(({ key, nome }) => ({
     key, nome,
-    voci: !ok.includes(key) ? [{ testo: 'dati in arrivo' }]
-      : key === 'materie' ? materialiDi(c).map((m) => voce(vista(g, c, key, m.key), m.nome))
-      : [voce(vista(g, c, key))],
+    voci: ok.includes(key) ? visteAnello(g, c, key).map(({ materiale, v }) => ({ materiale, testo: v.testo(iso), data: v.data })) : [{ testo: 'dati in arrivo' }],
   }));
+}
+
+const unaDopoLaltra = (fonti: Cite[]): Cite => fonti.flatMap((cite, i) => [...(i ? [{ t: ' ' }] : []), ...cite]);
+
+/** Sotto la mappa, con il fumetto di un Paese aperto: le fonti di `gia` e la dicitura di ETO con il divieto di uso commerciale, una volta sola per tutti i suoi anelli,
+ *  che resta a vista (ADR 0001). Le fonti degli altri anelli che il fumetto mostra sono `altre`, da tenere chiuse. */
+export function citeFumetto(g: Geopoliticai, c: Catena | undefined, gia: Cite): { cite: Cite; altre: Cite } {
+  const altre = attivi(g, c).flatMap((k) => visteAnello(g, c, k).map((x) => x.v.cite)).filter((cite) => !gia.some((p) => p.t === cite[0].t)).map((cite) => cite.filter((p) => !CONFINI_CITE.includes(p)));
+  const nc = (cite: Cite) => cite.some((p) => /BY-NC/.test(p.t));
+  if (nc(gia)) return { cite: gia, altre: unaDopoLaltra(altre) };
+  const chip = attivi(g, c).filter((k): k is Chip => (CHIP as readonly string[]).includes(k)).filter((k) => /BY-NC/.test(c?.anelli[k]?.licenza ?? ''));
+  const a = c?.anelli[chip[0]];
+  if (!a) return { cite: gia, altre: unaDopoLaltra(altre) };
+  // i suoi anelli possono avere date diverse: ognuna è accanto al suo valore, nel fumetto
+  const nomi = chip.map((k) => ANELLI.find((x) => x.key === k)!.nome).join(', ');
+  return {
+    cite: [...gia, { t: ` ${nomi}: ${a.fonte}, ` }, { t: a.titolo, href: a.url }, { t: ' (' }, { t: a.licenza, href: a.url_licenza }, { t: ', uso commerciale non consentito), quote rielaborate da AI Radar.' }],
+    altre: unaDopoLaltra(altre.filter((cite) => !nc(cite))),
+  };
 }
 
 /** I Paesi della mappa di una zona: «Altri» è tutto quello che non sta nelle altre aree. */
@@ -217,17 +241,25 @@ export const citeSiti = (dc: GeoDataCenter): Cite => [
 
 // ---------------------------------------------------------------- il Filo della catena: un esempio di percorso, una tappa per anello
 
-/** Gli esempi del filo, nell'ordine del selettore. */
-const FILI: readonly FiloKey[] = ['usa', 'ue', 'cina'];
-/** Un esempio del filo, con la sua chiave di ?filo=. */
-export type Filo = { key: FiloKey } & CatenaFilo;
+/** Gli esempi del filo, nell'ordine del selettore, con il nome del selettore: «Europeo» per «Un modello europeo»,
+ *  così i tre stanno in una riga anche sul telefono; il nome intero resta per chi non vede. */
+const FILI: readonly { key: FiloKey; corto: string }[] = [{ key: 'usa', corto: 'Americano' }, { key: 'ue', corto: 'Europeo' }, { key: 'cina', corto: 'Cinese' }];
+/** Un esempio del filo, con la sua chiave di ?filo= e il nome del selettore. */
+export type Filo = { key: FiloKey; corto: string } & CatenaFilo;
 /** Gli esempi nel file della catena; un file del giro prima non ne ha. */
 export const filiDi = (c: Catena | undefined): Filo[] =>
-  FILI.flatMap((key) => { const f = c?.fili?.[key]; return f ? [{ key, ...f }] : []; });
-/** ?vista=filo&filo=: il filo da mostrare, o null per la vista «Quote per Paese». Un esempio non valido torna a quello europeo. */
-export function filoDi(vista: string | undefined, p: string | undefined, c: Catena | undefined): Filo | null {
+  FILI.flatMap(({ key, corto }) => { const f = c?.fili?.[key]; return f ? [{ key, corto, ...f }] : []; });
+
+/** Le due viste della mappa: il Filo della catena, da cui si parte, e le quote per Paese. */
+export type VistaMappa = 'filo' | 'quote';
+/** ?vista= letto in un posto solo. Un link di prima con ?siti=1 e senza ?vista= era nelle quote, e ci resta; ?vista=filo vince.
+ *  Per questo chi torna al filo toglie anche ?siti=. */
+export const vistaMappa = (vista: string | undefined, siti: string | undefined): VistaMappa =>
+  vista === 'quote' || (vista !== 'filo' && siti === '1') ? 'quote' : 'filo';
+/** ?filo=: il filo da mostrare; null nella vista delle quote, o se il file della catena non ha esempi. Un esempio non valido torna a quello europeo. */
+export function filoDi(vista: VistaMappa, p: string | undefined, c: Catena | undefined): Filo | null {
   const fili = filiDi(c);
-  if (vista !== 'filo' || !fili.length) return null;
+  if (vista === 'quote' || !fili.length) return null;
   return fili.find((f) => f.key === p) ?? fili.find((f) => f.key === 'ue') ?? fili[0];
 }
 
@@ -244,10 +276,30 @@ export function archi(f: CatenaFilo, scelta: number): Arco[] {
   });
 }
 
-/** Il nome di un Paese nella vista del filo: le sue tappe, o nessuna. */
+/** I segni a meno di `d` l'uno dall'altro si allontanano quanto basta, ognuno della metà, lungo la retta che li unisce;
+ *  due nello stesso posto si aprono in orizzontale. `px` e `py` sono la posizione del segno, `x` e `y` restano quella vera. */
+export function separa<T extends { x: number; y: number }>(punti: T[], d: number): (T & { px: number; py: number })[] {
+  const p = punti.map((t) => ({ ...t, px: t.x, py: t.y }));
+  for (let giro = 0, mosso = true; mosso && giro < 50; giro++) {
+    mosso = false;
+    for (let i = 0; i < p.length; i++) for (let j = i + 1; j < p.length; j++) {
+      const a = p[i], b = p[j];
+      const n = Math.hypot(b.px - a.px, b.py - a.py);
+      if (n >= d - 0.01) continue;
+      const [ux, uy] = n < 0.01 ? [1, 0] : [(b.px - a.px) / n, (b.py - a.py) / n];
+      const m = (d - n) / 2;
+      a.px -= ux * m; a.py -= uy * m; b.px += ux * m; b.py += uy * m;
+      mosso = true;
+    }
+  }
+  return p;
+}
+
+/** Il nome di un Paese nella vista del filo, con le sue tappe se ne ha. */
 export function nomeFilo(f: CatenaFilo, iso: string): string {
   const qui = f.tappe.flatMap((t, i) => (t.iso === iso ? [`${i + 1}. ${t.luogo}`] : []));
-  return `${NOMI[iso] ?? iso}: ${qui.length ? qui.join('; ') : 'nessuna tappa del filo'}`;
+  const nome = NOMI[iso] ?? iso;
+  return qui.length ? `${nome}: ${qui.join('; ')}` : nome;
 }
 
 /** Il dominio della fonte di una tappa, per il testo del link: «Fonte: epoch.ai». */

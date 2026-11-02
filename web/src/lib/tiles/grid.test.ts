@@ -23,17 +23,26 @@ describe('TileGrid', () => {
     const sezione = (name: string) => screen.getByRole('heading', { level: 2, name }).closest('section')!;
     const ids = (s: Element) => [...s.querySelectorAll('article.tile')].map((a) => a.id);
     expect(ids(sezione('Su cosa formarti'))).toEqual(['tile-competenze', 'tile-modelli', 'tile-open', 'tile-notizie']);
-    expect(ids(sezione("L'AI in Italia"))).toEqual(['tile-business', 'tile-geopoliticai', 'tile-persone', 'tile-norme', 'tile-rapporti']);
+    expect(ids(sezione("L'AI in Italia"))).toEqual(['tile-geopoliticai', 'tile-business', 'tile-persone', 'tile-norme', 'tile-rapporti']);
   });
 
   it('pillole in due gruppi con il nome della testa', async () => {
     render(TileGrid, { data, today });
     await fireEvent.click(face('Business'));
-    const nav = screen.getByRole('navigation', { name: 'Altri temi' });
+    const nav = screen.getByRole('navigation', { name: 'Altre card' });
     const perTe = within(nav).getByRole('group', { name: 'Su cosa formarti' });
     const italia = within(nav).getByRole('group', { name: "L'AI in Italia" });
     expect(within(perTe).getAllByRole('button').map((b) => b.textContent)).toEqual(['Competenze', 'Modelli e ricerca', 'Open source', 'Notizie']);
     expect(within(italia).getAllByRole('button').map((b) => b.textContent)).toEqual(['GeopoliticAI', 'Persone e lavoro', 'Norme', 'Rapporti']);
+  });
+
+  it('le pillole partono dalla testa della card aperta', async () => {
+    render(TileGrid, { data, today });
+    const teste = () => within(screen.getByRole('navigation', { name: 'Altre card' })).getAllByRole('group').map((g) => g.getAttribute('aria-label'));
+    await fireEvent.click(face('Business'));
+    expect(teste()).toEqual(["L'AI in Italia", 'Su cosa formarti']);
+    await fireEvent.click(within(screen.getByRole('navigation', { name: 'Altre card' })).getByRole('button', { name: 'Competenze' }));
+    expect(teste()).toEqual(['Su cosa formarti', "L'AI in Italia"]);
   });
 
   it('9 card chiuse', () => {
@@ -49,7 +58,7 @@ describe('TileGrid', () => {
     expect(location.hash).toBe('#business');
     expect(document.title).toBe('Business · AI Radar');
     expect(face('Business')).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('navigation', { name: 'Altri temi' }).querySelectorAll('button.pill')).toHaveLength(8);
+    expect(screen.getByRole('navigation', { name: 'Altre card' }).querySelectorAll('button.pill')).toHaveLength(8);
   });
 
   it('card aperta: le 9 card restano come elenco compatto, il dettaglio sta accanto e prende il nome della transizione', async () => {

@@ -11,11 +11,23 @@ const by = (id: string) => rows.find((r) => r.id === id)!;
 const figs = (c: HTMLElement) => [...c.querySelectorAll('.fig')].map((e) => e.textContent);
 
 describe('SkillView', () => {
+  it('annunci: con la media sopra 10, l’Italia sotto la soglia tiene il decimale', () => {
+    const row = by('mcp');
+    const rilevazioni = [{ data: '2026-09-14', media: 12, it: 2.4 }, { data: '2026-10-12', media: 12.4, it: 2.6 }];
+    render(SkillView, { row: { ...row, segnali: { ...row.segnali, lavoro: { ...row.segnali!.lavoro!, rilevazioni } } }, quadranti: radar.quadranti, storico: radar.storico });
+    expect(screen.getByRole('img', { name: 'Annunci su MCP ogni 10mila' })).toHaveTextContent('2,6');
+  });
+  it('un margine che comprende lo zero lo dice accanto al numero', () => {
+    render(SkillView, { row: { ...by('mcp'), slancio_margine: [-0.09, 0.32] }, quadranti: radar.quadranti, storico: radar.storico });
+    expect(screen.getByText(/margine: da −9% a \+32%, include lo zero$/)).toBeInTheDocument();
+  });
   it('tre numeri, tre andamenti, percorso e risorse', () => {
     const { container } = render(SkillView, { row: by('mcp'), quadranti: radar.quadranti, storico: radar.storico });
-    expect(figs(container)).toEqual(['3,4', '+15%', 'solida']);
+    expect(figs(container)).toEqual(['3,4', '+15%', 'normale']);
     expect(screen.getByText(/Italia: 2,6/)).toBeInTheDocument();
-    expect(screen.getByText(/margine: da \+5% a \+27%/)).toBeInTheDocument();
+    expect(screen.getByText(/margine: da \+5% a \+27%$/)).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Incertezza del dato' })).toBeInTheDocument();
+    expect(screen.getByText(/era [+−]\d+% un mese fa/)).toBeInTheDocument();
     expect(screen.getByText('pesa di più: repository su GitHub')).toBeInTheDocument();
     for (const name of ['Paper su MCP ogni 1.000 paper AI', 'Repository su MCP ogni 1.000 repository AI', 'Annunci su MCP ogni 10mila']) {
       expect(screen.getByRole('img', { name })).toBeInTheDocument();
@@ -25,7 +37,7 @@ describe('SkillView', () => {
     expect(screen.getByText('documentazione · in inglese')).toBeInTheDocument();
     expect(screen.getByText('corso')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'acme/mcp-kit' })).toHaveAttribute('href', 'https://github.com/acme/mcp-kit');
-    expect(screen.getByText(/1200 stelle · creato il 2 ago 2026/)).toBeInTheDocument();
+    expect(screen.getByText(/1\.200 stelle · creato il 2 ago 2026/)).toBeInTheDocument();
     const path = screen.getByRole('list', { name: 'Il percorso sul radar' });
     expect(path.querySelectorAll('li')).toHaveLength(3);
     expect(path.lastElementChild).toHaveTextContent('set 2026Impara ora');
@@ -34,7 +46,7 @@ describe('SkillView', () => {
   it('competenza incerta, senza risorse, con una sola rilevazione e senza storico', () => {
     const { container } = render(SkillView, { row: by('robotica'), quadranti: radar.quadranti, storico: [] });
     expect(screen.getByRole('note')).toHaveTextContent('Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.');
-    expect(figs(container)[2]).toBe('incerta');
+    expect(figs(container)[2]).toBe('alta');
     expect(screen.getByText('Nessuna risorsa disponibile.')).toBeInTheDocument();
     expect(screen.getByText('Nessun repository nuovo con questo topic negli ultimi 90 giorni.')).toBeInTheDocument();
     expect(screen.getByText('Serve un mese di rilevazioni.')).toBeInTheDocument();

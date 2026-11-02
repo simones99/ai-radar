@@ -14,6 +14,8 @@ const tile: TileDef = {
 };
 const show = (d: Dataset = data, params: Record<string, string> = {}) => render(GeopoliticaiDetail, { data: d, today, tile, elemento: null, params, onclose: () => {} });
 const area = (area: string, d: Dataset = data) => show(d, { area });
+/** La mappa nella vista delle quote per Paese: si apre sul filo, le quote stanno in ?vista=quote. */
+const quote = (d: Dataset = data, params: Record<string, string> = {}) => show(d, { vista: 'quote', ...params });
 /** Il dataset con l'UE senza modelli valutati nell'anno in corso, come a gennaio. */
 const ueSenzaAnnoInCorso = (): Dataset => {
   const { '2026': _, ...eci } = geo.zone.ue.eci;
@@ -24,17 +26,22 @@ const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
 const laScheda = (titolo: string) => within(screen.getByRole('region', { name: titolo }));
 
 describe('GeopoliticAI: card in home', () => {
-  it("la capacità del miglior modello europeo, contro USA e Cina nell'anno in corso", () => {
+  it("la distanza del miglior modello europeo dalla prima area, contro USA e Cina nell'anno in corso", () => {
     expect(faceGeopoliticai(data, today)).toEqual({
-      fig: '150,0', unit: 'ECI',
-      sent: 'Capacità del miglior modello europeo, Mistral Large 4, nel 2026, anno in corso. Gli USA arrivano a 168,8, la Cina a 157,9.',
+      fig: '18,8', unit: 'punti sotto gli USA',
+      sent: 'Capacità del miglior modello europeo, Mistral Large 4, nel 2026, anno in corso: 150,0 ECI. Gli USA arrivano a 168,8, la Cina a 157,9.',
     });
   });
   it("senza un valore UE nell'anno in corso, tutte e tre le aree passano all'ultimo anno chiuso", () => {
     expect(faceGeopoliticai(ueSenzaAnnoInCorso(), today)).toEqual({
-      fig: '134,0', unit: 'ECI',
-      sent: 'Capacità del miglior modello europeo, Mistral Medium 3, nel 2025. Gli USA arrivano a 156,3, la Cina a 146,1.',
+      fig: '22,3', unit: 'punti sotto gli USA',
+      sent: 'Capacità del miglior modello europeo, Mistral Medium 3, nel 2025: 134,0 ECI. Gli USA arrivano a 156,3, la Cina a 146,1.',
     });
+  });
+  it("con l'UE prima, la cifra è il suo valore", () => {
+    const eci = { ...geo.zone.ue.eci, '2026': { ...geo.zone.ue.eci['2026'], max: 170 } };
+    const prima: Dataset = { ...data, geopoliticai: { ...geo, zone: { ...geo.zone, ue: { ...geo.zone.ue, eci } } } };
+    expect(faceGeopoliticai(prima, today)).toMatchObject({ fig: '170,0', unit: 'ECI' });
   });
   it('senza il file la card non ha un numero', () => {
     expect(faceGeopoliticai({}, today)).toBeNull();
@@ -42,9 +49,33 @@ describe('GeopoliticAI: card in home', () => {
   });
   it("la testa del dettaglio dice dov'è l'Europa", () => {
     const h = headGeopoliticai(data, today);
-    expect(text(h.title)).toBe("Chi costruisce i modelli più potenti, e dov'è l'Europa");
+    expect(text(h.title)).toBe("Chi costruisce i modelli più capaci, e dov'è l'Europa");
     expect(h.title.find((p) => p.em)?.t).toBe("e dov'è l'Europa");
     expect(h.deck).toContain('prima organizzazione');
+  });
+});
+
+describe('GeopoliticAI: il distacco sotto il titolo', () => {
+  it('dice la cifra della card e le tre aree, con la fonte', () => {
+    show();
+    expect(screen.getByText('18,8')).toBeInTheDocument();
+    expect(screen.getByText('punti sotto gli USA', { exact: false })).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/USA\s*168,8\s*Cina\s*157,9\s*UE\s*150,0/); // ogni area accanto al suo valore, come si legge
+    expect(screen.getByText(/nel 2026, anno in corso, in punti/)).toBeInTheDocument();
+  });
+  it("resta sull'UE anche con un'altra area scelta", () => {
+    area('cina');
+    expect(screen.getByText('18,8')).toBeInTheDocument();
+  });
+  it("senza un valore UE nell'anno in corso passa all'ultimo anno chiuso, come la card", () => {
+    show(ueSenzaAnnoInCorso());
+    expect(screen.getByText('22,3')).toBeInTheDocument();
+    expect(screen.getByText(/nel 2025, in punti/)).toBeInTheDocument();
+  });
+  it('senza un valore UE non c’è', () => {
+    const senzaEci: Dataset = { ...data, geopoliticai: { ...geo, zone: { ...geo.zone, ue: { ...geo.zone.ue, eci: {} } } } };
+    show(senzaEci);
+    expect(screen.queryByRole('button', { name: "Vai alla scheda dell'UE" })).not.toBeInTheDocument();
   });
 });
 
@@ -53,7 +84,7 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
     show();
     expect(screen.getByRole('heading', { level: 3, name: 'UE' })).toBeInTheDocument();
     expect(screen.getByText('Il miglior modello europeo, Mistral Large 4, ha 150,0 ECI nel 2026, anno in corso: 18,8 punti sotto Claude Opus 5.5 (USA).').tagName).toBe('STRONG');
-    const [cap, calc] = screen.getAllByRole('heading', { level: 4 });
+    const [cap, calc] = laScheda('UE').getAllByRole('heading', { level: 4 });
     expect(cap).toHaveTextContent('Capacità');
     expect(calc).toHaveTextContent('Calcolo di addestramento');
     expect(laScheda('UE').getByText('150,0')).toBeInTheDocument();
@@ -66,8 +97,8 @@ describe('GeopoliticAI: la scheda dell’UE', () => {
     expect(screen.getByText("Per l'UE l'ECI valuta solo Mistral AI.")).toBeInTheDocument();
   });
   it('la fonte di Epoch, con i link e la data, è una sola, sotto la matrice', () => {
-    const { container } = show();
-    const cite = container.querySelector('.cite') as HTMLElement;
+    show();
+    const cite = screen.getByText(/^Fonte: Epoch AI/);
     expect(cite).toHaveTextContent('Fonte: Epoch AI, Data on AI models ed Epoch Capabilities Index (CC BY 4.0), aggregati per area da AI Radar. Dati scaricati il 15 ott 2026.');
     expect(within(cite).getByRole('link', { name: 'Data on AI models' })).toHaveAttribute('href', 'https://epoch.ai/data/ai-models');
     expect(within(cite).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
@@ -89,31 +120,31 @@ describe('GeopoliticAI: scegliere l’area', () => {
     expect(screen.getByText('Calcolo: GPT-6 Astra, 9,4 × 10²⁶ FLOP nel 2026, anno in corso, 47 volte il più grande della Cina.')).toBeInTheDocument();
   });
 
-  const aree = () => screen.getByRole('group', { name: 'Area' });
-  const paesi = () => screen.getByRole('group', { name: "Paesi dell'UE" });
-  const premuti = (g: HTMLElement) => within(g).getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent);
+  const menu = () => screen.getByRole('combobox', { name: 'Area' }) as HTMLSelectElement;
+  const scelta = () => within(menu()).getByRole('option', { selected: true }).textContent;
+  const voci = () => within(menu()).getAllByRole('option').map((o) => o.textContent);
+  const paesiUe = () => within(menu()).getByRole('group', { name: "Paesi dell'UE" });
   /** Un Paese UE che nel file viene dopo l'Italia, in ordine di nome. */
   const conSpagna = (): Dataset => ({ ...data, geopoliticai: { ...geo, zone: { ...geo.zone, spagna: { ...geo.zone.germania, nome: 'Spagna', aggettivo: 'spagnolo', con_articolo: 'la Spagna' } } } });
 
-  it('i pulsanti delle cinque aree; senza una scelta è in evidenza l’UE, con la fila dei suoi Paesi', () => {
+  it('un solo menu accanto al titolo della scheda: le cinque aree, e dentro l’UE i suoi Paesi; senza una scelta, l’UE', () => {
     show();
-    expect(within(aree()).getAllByRole('button').map((b) => b.textContent)).toEqual(['USA', 'Cina', 'UE', 'Regno Unito', 'Altri']);
-    expect(premuti(aree())).toEqual(['UE']);
-    expect(premuti(paesi())).toEqual(["Tutta l'UE"]);
+    expect(voci()).toEqual(['USA', 'Cina', 'UE, tutta', 'Francia', 'Germania', 'Italia', 'Regno Unito', 'Altri']);
+    expect(within(paesiUe()).getAllByRole('option').map((o) => o.textContent)).toEqual(['Francia', 'Germania', 'Italia']);
+    expect(scelta()).toBe('UE, tutta');
+    expect(laScheda('UE').getByRole('combobox', { name: 'Area' })).toBe(menu());
   });
 
-  it('nella fila dell’UE ci sono i Paesi del file, con l’Italia sempre in fondo', () => {
+  it('tra i Paesi dell’UE quelli del file, con l’Italia sempre in fondo', () => {
     area('francia', conSpagna());
-    expect(within(paesi()).getAllByRole('button').map((b) => b.textContent)).toEqual(["Tutta l'UE", 'Francia', 'Germania', 'Spagna', 'Italia']);
-    expect(premuti(aree())).toEqual(['UE']);
-    expect(premuti(paesi())).toEqual(['Francia']);
+    expect(within(paesiUe()).getAllByRole('option').map((o) => o.textContent)).toEqual(['Francia', 'Germania', 'Spagna', 'Italia']);
+    expect(scelta()).toBe('Francia');
     expect(screen.getByRole('heading', { level: 3, name: "Francia, nell'UE" })).toBeInTheDocument();
   });
 
-  it('fuori dall’UE la fila dei Paesi non c’è', () => {
+  it('fuori dall’UE il menu dice l’area', () => {
     area('cina');
-    expect(premuti(aree())).toEqual(['Cina']);
-    expect(screen.queryByRole('group', { name: "Paesi dell'UE" })).toBeNull();
+    expect(scelta()).toBe('Cina');
   });
 
   it('prima in capacità ma non nel calcolo: la frase dice la prima, la riga del calcolo la distanza dal più grande', () => {
@@ -135,17 +166,17 @@ describe('GeopoliticAI: scegliere l’area', () => {
 
   it('un’area non valida apre l’UE', () => {
     area('atlantide');
-    expect(premuti(aree())).toEqual(['UE']);
+    expect(scelta()).toBe('UE, tutta');
     expect(screen.getByRole('heading', { level: 3, name: 'UE' })).toBeInTheDocument();
   });
 
-  it('un clic sceglie l’area e la ricorda; «UE» toglie la scelta', async () => {
+  it('il menu sceglie l’area e la ricorda; «UE, tutta» toglie la scelta', async () => {
     show();
-    await fireEvent.click(within(aree()).getByRole('button', { name: 'Regno Unito' }));
+    await fireEvent.change(menu(), { target: { value: 'uk' } });
     expect(localStorage.getItem('ai-radar:area')).toBe('uk');
-    await fireEvent.click(within(paesi()).getByRole('button', { name: 'Italia' }));
+    await fireEvent.change(menu(), { target: { value: 'italia' } });
     expect(localStorage.getItem('ai-radar:area')).toBe('italia');
-    await fireEvent.click(within(aree()).getByRole('button', { name: 'UE' }));
+    await fireEvent.change(menu(), { target: { value: 'ue' } });
     expect(localStorage.getItem('ai-radar:area')).toBeNull();
   });
 });
@@ -352,7 +383,7 @@ describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
 
   it('una barra per anno con la quota delle cinque aree e il totale, l’area scelta in evidenza', () => {
     show();
-    expect(blocco().getByText('Quota dei modelli di grande scala usciti ogni anno, per area. È un conteggio: non dice quanto sono potenti.')).toBeInTheDocument();
+    expect(blocco().getByText(/^Di grande scala: almeno 10²³ operazioni di calcolo.*è un conteggio, non dice quanto valgono\.$/)).toBeInTheDocument();
     const barre = blocco().getAllByRole('img');
     expect(barre.map((b) => b.getAttribute('aria-label')?.slice(0, 4))).toEqual(['2023', '2024', '2025', '2026']);
     const barra2025 = blocco().getByRole('img', { name: '2025: USA 66, Cina 84, UE 5, Regno Unito 0, Altri 10. Totale 165.' });
@@ -368,25 +399,25 @@ describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
     expect(inEvidenza()).toEqual(['Cina']);
   });
 
-  it('la frase sull’area scelta, sempre per l’ultimo anno chiuso', () => {
+  it('la frase sull’area scelta: l’anno in corso, se ha modelli, e l’ultimo anno chiuso', () => {
     show();
-    expect(blocco().getByText("Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).")).toBeInTheDocument();
+    expect(blocco().getByText("Nel 2026, finora, nessuno dei 35 modelli di grande scala è dell'UE. Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).")).toBeInTheDocument();
     cleanup();
     area('usa');
-    expect(blocco().getByText('Nel 2025, 66 dei 165 modelli di grande scala sono degli USA (40%).')).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025, 66 dei 165 modelli di grande scala sono degli USA \(40%\)\.$/)).toBeInTheDocument();
   });
 
   it('per un Paese UE usa il suo nome; con un modello solo al singolare, sotto l’1% con un decimale', () => {
     area('francia');
-    expect(blocco().getByText('Nel 2025, 3 dei 165 modelli di grande scala sono della Francia (2%).')).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025, 3 dei 165 modelli di grande scala sono della Francia \(2%\)\.$/)).toBeInTheDocument();
     cleanup();
     area('germania');
-    expect(blocco().getByText('Nel 2025, 1 dei 165 modelli di grande scala è della Germania (0,6%).')).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025, 1 dei 165 modelli di grande scala è della Germania \(0,6%\)\.$/)).toBeInTheDocument();
   });
 
   it('a zero lo dice a parole', () => {
     area('italia');
-    expect(blocco().getByText("Nel 2025 nessuno dei 165 modelli di grande scala è dell'Italia.")).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025 nessuno dei 165 modelli di grande scala è dell'Italia\.$/)).toBeInTheDocument();
   });
 });
 
@@ -400,45 +431,44 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
   const fermate = () => linea().getAllByRole('listitem').map((li) => within(li).getByRole('button'));
 
   it('sei fermate, tutte attive, e si parte dai modelli', () => {
-    show();
+    quote();
     expect(fermate().map((b) => b.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
       '1 Materie prime', '2 Progettazione dei chip', '3 Fabbricazione dei chip',
       '4 Macchinari', '5 Data center', '6 Modelli',
     ]);
     expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([false, false, false, false, false, false]);
     expect(fermate()[5]).toHaveAttribute('aria-current', 'step');
-    expect(linea().getByRole('button', { name: 'Anello precedente' })).toBeEnabled();
-    expect(linea().getByRole('button', { name: 'Anello successivo' })).toBeDisabled();
+    expect(linea().getAllByRole('button')).toHaveLength(6); // le sei fermate, senza frecce che le ripetono
   });
 
   it('senza il file della catena materie prime e chip restano disabilitati', () => {
     const { catena: _, ...senza } = data;
-    show(senza, { anello: 'fabbricazione' });
+    quote(senza, { anello: 'fabbricazione' });
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
     expect(fermate().map((b) => (b as HTMLButtonElement).disabled)).toEqual([true, true, true, true, false, false]);
   });
 
   it('senza i data center nel file di Epoch, la fermata 5 resta disabilitata e lo dice', () => {
     const { data_center: _, ...g } = geo;
-    show({ ...data, geopoliticai: g }, { anello: 'datacenter' });
+    quote({ ...data, geopoliticai: g }, { anello: 'datacenter' });
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
     expect(fermate()[4]).toBeDisabled();
     expect(fermate()[4]).toHaveTextContent('Data center (in arrivo)');
   });
 
   it('il titolo dell’anello ha numero, nome, misura, fonte e data', () => {
-    show();
+    quote();
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
     expect(mappa().getByText('ECI del miglior modello del 2025 · Epoch AI, dati scaricati il 15 ott 2026')).toBeInTheDocument();
   });
 
   it('un anello non valido apre i modelli', () => {
-    show(data, { anello: 'boh' });
+    quote(data, { anello: 'boh' });
     expect(mappa().getByRole('heading', { level: 4, name: '6. Modelli' })).toBeInTheDocument();
   });
 
   it('il tabellone: il primo, l’UE e l’Italia, con le frasi oneste al posto dei vuoti', () => {
-    show();
+    quote();
     expect(cifra('Il primo')).toHaveTextContent(/^USA 156,3 ECI GPT-5\.2 Pro$/);
     expect(cifra('UE')).toHaveTextContent(/^134,0 ECI Mistral Medium 3$/);
     expect(cifra('Italia')).toHaveTextContent(/^nessun modello valutato nel 2025$/);
@@ -446,18 +476,18 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
   });
 
   it('il tabellone aggiunge l’area scelta, se non è già lì', () => {
-    area('cina');
+    quote(data, { area: 'cina' });
     expect(cifra('Cina')).toHaveTextContent(/^146,1 ECI DeepSeek-V3\.2$/);
     cleanup();
-    area('germania');
+    quote(data, { area: 'germania' });
     expect(cifra('Germania')).toHaveTextContent(/^nessun modello valutato nel 2025$/);
     cleanup();
-    area('usa'); // gli USA sono già «Il primo»
+    quote(data, { area: 'usa' }); // gli USA sono già «Il primo»
     expect(mappa().getAllByText(/./, { selector: 'dt' }).map((d) => d.textContent)).toEqual(['Il primo', 'UE', 'Italia']);
   });
 
   it('la tabella dei Paesi dell’anello: Paese, valore, data', () => {
-    show();
+    quote();
     const tabella = within(mappa().getByRole('table'));
     expect(tabella.getAllByRole('columnheader').map((c) => c.textContent)).toEqual(['Paese', 'Valore', 'Data']);
     expect(tabella.getAllByRole('row').slice(1).map((r) => [...r.children].map((c) => c.textContent))).toEqual([
@@ -468,33 +498,29 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
   });
 
   it('sulla mappa i numeri dei primi Paesi, con il segnalino accanto al primo', () => {
-    show();
+    quote();
     const etichette = mappa().getAllByTestId('etichetta').map((e) => e.textContent?.replace(/\s+/g, ' ').trim());
     expect(etichette).toEqual(['USA 156,3', 'Cina 146,1', 'Francia 134,0']);
     expect(mappa().getByTestId('segnalino')).toHaveAccessibleName('Il primo: USA');
   });
 
   it('l’Italia nel riquadro dell’Europa: si può toccare, e sceglie l’Italia', async () => {
-    const europa = () => within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
-    const italia = () => europa().getByRole('button', { name: 'Italia: nessun modello valutato nel 2025' });
-    const francia = () => europa().getByRole('button', { name: 'Francia: 134,0 ECI, Mistral Medium 3' });
-    area('francia');
-    expect(italia()).toHaveAttribute('aria-pressed', 'false');
-    expect(francia()).toHaveAttribute('aria-pressed', 'true');
+    quote(data, { area: 'francia' });
+    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
     const scelto = new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
-    await fireEvent.click(italia());
+    await fireEvent.click(europa.getByTestId('paese-ITA'));
     expect((await scelto).detail).toEqual({ chiave: 'area', valore: 'italia' });
-    cleanup();
-    area('italia');
-    expect(italia()).toHaveAttribute('aria-pressed', 'true');
-    expect(francia()).toHaveAttribute('aria-pressed', 'false');
-    cleanup();
-    show(); // con tutta l'UE, l'Italia è dentro l'area scelta
-    expect(italia()).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('ogni Paese ha il suo valore nel menu sotto la mappa, e sulla mappa non è un pulsante', () => {
+    quote();
+    expect(mappa().getByRole('option', { name: 'Italia: nessun modello valutato nel 2025' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Francia: 134,0 ECI, Mistral Medium 3' })).toBeInTheDocument();
+    expect(mappa().queryByRole('button', { name: /^Italia:/ })).toBeNull();
   });
 
   it('sotto la mappa le fonti e le licenze dell’anello aperto', () => {
-    show();
+    quote();
     const fonte = mappa().getByText(/^Modelli: Epoch AI/);
     expect(fonte).toHaveTextContent("Modelli: Epoch AI, Epoch Capabilities Index (CC BY 4.0), ECI massimo per Paese aggregato da AI Radar. Confini: Natural Earth, pubblico dominio.");
     expect(within(fonte).getByRole('link', { name: 'Epoch Capabilities Index' })).toHaveAttribute('href', 'https://epoch.ai/eci');
@@ -504,7 +530,7 @@ describe('GeopoliticAI: la mappa con l’anello dei modelli', () => {
 describe('GeopoliticAI: gli anelli dei chip', () => {
   const mappa = () => within(screen.getByRole('region', { name: "Chi controlla la catena dell'AI" }));
   const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
-  const anello = (anello: string, extra: Record<string, string> = {}) => show(data, { anello, ...extra });
+  const anello = (anello: string, extra: Record<string, string> = {}) => quote(data, { anello, ...extra });
 
   it('?anello= apre progettazione, fabbricazione e macchinari, con misura, fonte e data', () => {
     anello('progettazione');
@@ -518,9 +544,8 @@ describe('GeopoliticAI: gli anelli dei chip', () => {
 
   it('progettazione e fabbricazione: i Paesi UE con lo stesso valore, «Europa, dato unico», e la nota', () => {
     anello('fabbricazione');
-    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
-    expect(europa.getByRole('button', { name: 'Italia: Europa, dato unico, 8%' })).toBeInTheDocument();
-    expect(europa.getByRole('button', { name: 'Francia: Europa, dato unico, 8%' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Italia: Europa, dato unico, 8%' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Francia: Europa, dato unico, 8%' })).toBeInTheDocument();
     expect(cifra('UE')).toHaveTextContent(/^8% Europa, dato unico$/);
     expect(cifra('Italia')).toHaveTextContent(/^8% Europa, dato unico$/);
     expect(mappa().getByText(/^Europa, dato unico: la fonte dà 8% per l'Europa intera/)).toBeInTheDocument();
@@ -529,8 +554,7 @@ describe('GeopoliticAI: gli anelli dei chip', () => {
 
   it('macchinari: ogni Paese UE ha il suo valore, l’UE è la loro somma, e c’è la nota EUV', () => {
     anello('macchinari');
-    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
-    expect(europa.getByRole('button', { name: 'Italia: nessuna produzione' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Italia: nessuna produzione' })).toBeInTheDocument();
     expect(cifra('Il primo')).toHaveTextContent(/^Paesi Bassi 81,5%$/);
     expect(cifra('UE')).toHaveTextContent(/^83,1%$/);
     expect(cifra('Italia')).toHaveTextContent(/^nessuna produzione$/);
@@ -579,7 +603,7 @@ describe('GeopoliticAI: l’anello delle materie prime', () => {
   const premuto = () => materiali().getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent);
 
   it('si apre sul gallio, con il selettore dei materiali nel titolo dell’anello', () => {
-    show(data, { anello: 'materie' });
+    quote(data, { anello: 'materie' });
     expect(mappa().getByRole('heading', { level: 4, name: '1. Materie prime' })).toBeInTheDocument();
     expect(materiali().getAllByRole('button').map((b) => b.textContent)).toEqual(['Gallio', 'Terre rare', 'Germanio']);
     expect(premuto()).toEqual(['Gallio']);
@@ -588,25 +612,24 @@ describe('GeopoliticAI: l’anello delle materie prime', () => {
   });
 
   it('?materiale= sceglie il materiale, e un valore non valido torna al gallio', () => {
-    show(data, { anello: 'materie', materiale: 'terre' });
+    quote(data, { anello: 'materie', materiale: 'terre' });
     expect(premuto()).toEqual(['Terre rare']);
     expect(cifra('Il primo')).toHaveTextContent(/^Cina 69,2%$/);
     cleanup();
-    show(data, { anello: 'materie', materiale: 'oro' });
+    quote(data, { anello: 'materie', materiale: 'oro' });
     expect(premuto()).toEqual(['Gallio']);
   });
 
   it('un clic su un materiale lo mette nel link', async () => {
-    show(data, { anello: 'materie' });
+    quote(data, { anello: 'materie' });
     const scelto = new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
     await fireEvent.click(materiali().getByRole('button', { name: 'Germanio' }));
     expect((await scelto).detail).toEqual({ chiave: 'materiale', valore: 'germanio' });
   });
 
   it('mappa, tabellone, tabella e fonte seguono il materiale, e l’Italia ha la sua frase onesta', () => {
-    show(data, { anello: 'materie', materiale: 'germanio' });
-    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
-    expect(europa.getByRole('button', { name: 'Italia: nessuna produzione' })).toBeInTheDocument();
+    quote(data, { anello: 'materie', materiale: 'germanio' });
+    expect(mappa().getByRole('option', { name: 'Italia: nessuna produzione' })).toBeInTheDocument();
     expect(cifra('Italia')).toHaveTextContent(/^nessuna produzione$/);
     expect(cifra('UE')).toHaveTextContent(/^7,2%$/); // Belgio e Germania
     const tabella = within(mappa().getByRole('table'));
@@ -624,7 +647,7 @@ describe('GeopoliticAI: l’anello dei data center', () => {
   const cifra = (etichetta: string) => mappa().getByText(etichetta, { selector: 'dt' }).nextElementSibling;
 
   it('?anello=datacenter apre le quote degli H100 equivalenti dei siti noti', () => {
-    show(data, { anello: 'datacenter' });
+    quote(data, { anello: 'datacenter' });
     expect(mappa().getByRole('heading', { level: 4, name: '5. Data center' })).toBeInTheDocument();
     expect(mappa().getByText('Quota degli H100 equivalenti dei siti noti · Epoch AI, dati scaricati il 15 ott 2026')).toBeInTheDocument();
     expect(cifra('Il primo')).toHaveTextContent(/^USA 86,5%$/);
@@ -632,14 +655,13 @@ describe('GeopoliticAI: l’anello dei data center', () => {
   });
 
   it('l’Italia, che non ha siti, ha la sua frase onesta', () => {
-    show(data, { anello: 'datacenter' });
+    quote(data, { anello: 'datacenter' });
     expect(cifra('Italia')).toHaveTextContent(/^nessun sito noto a Epoch$/);
-    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
-    expect(europa.getByRole('button', { name: 'Italia: nessun sito noto a Epoch' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Italia: nessun sito noto a Epoch' })).toBeInTheDocument();
   });
 
   it('sotto la mappa la nota sulla copertura del 44% e l’attribuzione di Epoch', () => {
-    show(data, { anello: 'datacenter' });
+    quote(data, { anello: 'datacenter' });
     expect(mappa().getByText('I siti noti a Epoch coprono circa il 44% del calcolo AI mondiale: le quote sono calcolate solo su questi siti.')).toBeInTheDocument();
     const fonte = mappa().getByText(/^Data center: Epoch AI/);
     expect(fonte).toHaveTextContent('Data center: Epoch AI, AI data centers (CC BY 4.0), dati scaricati il 15 ott 2026, quote rielaborate da AI Radar. Confini: Natural Earth, pubblico dominio.');
@@ -647,7 +669,7 @@ describe('GeopoliticAI: l’anello dei data center', () => {
   });
 
   it('la tabella dei Paesi, con le quote sotto lo 0,1% dette così', () => {
-    show(data, { anello: 'datacenter' });
+    quote(data, { anello: 'datacenter' });
     const righe = within(mappa().getByRole('table')).getAllByRole('row').slice(1).map((r) => [...r.children].map((c) => c.textContent));
     expect(righe[0]).toEqual(['USA', '86,5%', '15 ott 2026']);
     expect(righe.at(-1)).toEqual(['Islanda', 'meno dello 0,1%', '15 ott 2026']);
@@ -663,8 +685,8 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
     [...mappa().getByRole('dialog', { name: nome }).querySelectorAll('dl > div')].map((d) => [...d.children].map((c) => c.textContent?.replace(/\s+/g, ' ').trim()));
 
   it('un clic su un Paese apre il fumetto con i sei anelli, ognuno con il valore e la data', async () => {
-    show();
-    await fireEvent.click(mondo().getByRole('button', { name: 'Cina: 146,1 ECI, DeepSeek-V3.2' }));
+    quote();
+    await fireEvent.click(mondo().getByTestId('paese-CHN'));
     expect(anelli('Cina')).toEqual([
       ['1. Materie prime', 'Gallio: 99% · 2025', 'Terre rare: 69,2% · 2025', 'Germanio: 83,1% · 2016-2020'],
       ['2. Progettazione dei chip', '6% · 2022'],
@@ -676,8 +698,8 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
   });
 
   it('il fumetto dell’Italia, dal riquadro dell’Europa: «Europa, dato unico» e le frasi oneste al posto dei vuoti', async () => {
-    show();
-    await fireEvent.click(europa().getByRole('button', { name: /^Italia:/ }));
+    quote();
+    await fireEvent.click(europa().getByTestId('paese-ITA'));
     expect(anelli('Italia')).toEqual([
       ['1. Materie prime', 'Gallio: nessuna produzione · 2025', 'Terre rare: nessuna produzione · 2025', 'Germanio: nessuna produzione · 2016-2020'],
       ['2. Progettazione dei chip', 'Europa, dato unico, 10% · 2022'],
@@ -690,8 +712,8 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
 
   it('senza il file della catena, gli anelli che mancano dicono «dati in arrivo»', async () => {
     const { catena: _, ...senza } = data;
-    show(senza);
-    await fireEvent.click(mondo().getByRole('button', { name: /^USA:/ }));
+    quote(senza);
+    await fireEvent.click(mondo().getByTestId('paese-USA'));
     expect(anelli('USA').map((a) => a.join(' | '))).toEqual([
       '1. Materie prime | dati in arrivo', '2. Progettazione dei chip | dati in arrivo', '3. Fabbricazione dei chip | dati in arrivo',
       '4. Macchinari | dati in arrivo', '5. Data center | 86,5% · 15 ott 2026', '6. Modelli | 156,3 ECI, GPT-5.2 Pro · 2025',
@@ -709,40 +731,116 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
   }
 
   it('un Paese che è una scelta di area sceglie anche l’area; uno di «Altri» apre solo il fumetto', async () => {
-    show();
-    expect(await aree(() => fireEvent.click(europa().getByRole('button', { name: /^Francia:/ })))).toEqual(['francia']);
+    quote();
+    expect(await aree(() => fireEvent.click(europa().getByTestId('paese-FRA')))).toEqual(['francia']);
     expect(mappa().getByRole('dialog', { name: 'Francia' })).toBeInTheDocument();
-    const corea = mondo().getByRole('button', { name: 'Corea del Sud: nessun modello valutato nel 2025' });
-    expect(corea).not.toHaveAttribute('aria-pressed');
-    expect(await aree(() => fireEvent.click(corea))).toEqual([]);
+    expect(await aree(() => fireEvent.click(mondo().getByTestId('paese-KOR')))).toEqual([]);
     expect(anelli('Corea del Sud')[1]).toEqual(['2. Progettazione dei chip', '13% · 2022']);
     expect(mappa().queryByRole('dialog', { name: 'Francia' })).toBeNull();
   });
 
-  it('Invio su un Paese apre il fumetto e gli dà il focus; Esc lo chiude e riporta il focus al Paese', async () => {
-    show();
-    const usa = mondo().getByRole('button', { name: /^USA:/ });
-    usa.focus();
-    await fireEvent.keyDown(usa, { key: 'Enter' });
+  it('dal menu sotto la mappa si apre il fumetto di un Paese, con il focus; Esc lo chiude e riporta il focus al menu', async () => {
+    quote();
+    const menu = mappa().getByRole('combobox', { name: 'Un Paese' });
+    const apri = mappa().getByRole('button', { name: 'Apri' });
+    expect(apri).toBeDisabled();
+    await fireEvent.change(menu, { target: { value: 'USA' } });
+    await fireEvent.click(apri);
     const fumetto = mappa().getByRole('dialog', { name: 'USA' });
     await waitFor(() => expect(fumetto).toHaveFocus());
     await fireEvent.keyDown(fumetto, { key: 'Escape' });
     expect(mappa().queryByRole('dialog')).toBeNull();
-    expect(usa).toHaveFocus();
+    expect(menu).toHaveFocus();
+  });
+  it('anche dal menu un Paese che è una scelta di area sceglie l’area', async () => {
+    quote();
+    await fireEvent.change(mappa().getByRole('combobox', { name: 'Un Paese' }), { target: { value: 'FRA' } });
+    expect(await aree(() => fireEvent.click(mappa().getByRole('button', { name: 'Apri' })))).toEqual(['francia']);
+  });
+
+  /** I valori di ?paese= che la mappa manda mentre si fa `fai`. */
+  async function paesi(fai: () => Promise<unknown>): Promise<(string | null)[]> {
+    const visti: (string | null)[] = [];
+    const ascolta = (e: Event) => { const d = (e as CustomEvent).detail; if (d.chiave === 'paese') visti.push(d.valore); };
+    document.addEventListener('ai-radar:imposta', ascolta);
+    await fai();
+    document.removeEventListener('ai-radar:imposta', ascolta);
+    return visti;
+  }
+
+  it('«Vedi l’Italia» apre il suo fumetto senza passare dal menu, e il Filo resta la vista', async () => {
+    show(data);
+    const vedi = () => fireEvent.click(mappa().getByRole('button', { name: "Vedi l'Italia" }));
+    expect(await paesi(vedi)).toEqual(['ITA']);
+    expect(mappa().getByRole('dialog', { name: 'Italia' })).toBeInTheDocument();
+    expect(mappa().getByRole('group', { name: 'Esempio' })).toBeInTheDocument();
+  });
+
+  it('il Paese aperto sta nel link, dalla mappa e dal menu; chiudendo il fumetto il link torna senza', async () => {
+    quote();
+    expect(await paesi(() => fireEvent.click(mondo().getByTestId('paese-USA')))).toEqual(['USA']);
+    await fireEvent.change(mappa().getByRole('combobox', { name: 'Un Paese' }), { target: { value: 'CHN' } });
+    expect(await paesi(() => fireEvent.click(mappa().getByRole('button', { name: 'Apri' })))).toEqual(['CHN']);
+    cleanup();
+    quote(data, { paese: 'USA' });
+    expect(await paesi(() => fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' })))).toEqual([null]);
+  });
+
+  it('un sito aperto toglie dal link il Paese di prima', async () => {
+    quote(data, { anello: 'datacenter', siti: '1', paese: 'USA' });
+    const sito = mondo().getAllByRole('button', { name: /H100 equivalenti|in costruzione/ })[0];
+    expect(await paesi(() => fireEvent.click(sito))).toEqual([null]);
+  });
+  it('il fumetto dice tutti gli anelli: sotto la mappa a vista la fonte della vista e la dicitura di ETO, una volta sola, e le altre fonti in un elemento chiuso', async () => {
+    quote(data, { anello: 'modelli' });
+    const fonte = () => mappa().getByText(/^Modelli: /);
+    const altre = () => mappa().queryByText('Vedi le altre fonti')?.closest('details');
+    expect(fonte()).not.toHaveTextContent('uso commerciale');
+    expect(altre()).toBeFalsy();
+    await fireEvent.click(mondo().getByTestId('paese-CHN'));
+    expect(fonte()).toHaveTextContent('Progettazione dei chip, Fabbricazione dei chip, Macchinari: ETO, Advanced Semiconductor Supply Chain Dataset (CC BY-NC 4.0, uso commerciale non consentito), quote rielaborate da AI Radar.');
+    expect(fonte().textContent?.match(/ETO, /g)).toHaveLength(1);
+    expect(fonte().textContent?.match(/Confini: /g)).toHaveLength(1);
+    expect(fonte()).not.toHaveTextContent('Data center: ');
+    expect(altre()).not.toHaveAttribute('open');
+    expect(altre()).toHaveTextContent('Data center: ');
+    expect(altre()).not.toHaveTextContent('ETO');
+    await fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' }));
+    expect(fonte()).not.toHaveTextContent('uso commerciale');
+    expect(altre()).toBeFalsy();
+  });
+  it('sull’anello di un chip la dicitura di ETO è già quella della vista; gli altri anelli di ETO stanno nell’elemento chiuso', async () => {
+    quote(data, { anello: 'macchinari' });
+    await fireEvent.click(mondo().getByTestId('paese-CHN'));
+    expect(mappa().getByText(/^Macchinari: /)).toHaveTextContent('uso commerciale non consentito');
+    expect(mappa().getByText('Vedi le altre fonti').closest('details')).toHaveTextContent('Fabbricazione dei chip: ETO');
+  });
+
+  it('anche il fumetto aperto dal link ?paese= porta le sue fonti', () => {
+    quote(data, { anello: 'modelli', paese: 'ITA' });
+    expect(mappa().getByText(/^Modelli: /)).toHaveTextContent('CC BY-NC 4.0, uso commerciale non consentito');
+  });
+
+  it('il menu dice il Paese del link, e con «Apri» acceso', () => {
+    quote(data, { anello: 'modelli', paese: 'ITA' });
+    expect(mappa().getByRole('combobox', { name: 'Un Paese' })).toHaveValue('ITA');
+    expect(mappa().getByRole('button', { name: 'Apri' })).toBeEnabled();
   });
 
   it('il pulsante Chiudi chiude il fumetto', async () => {
-    show();
-    await fireEvent.click(mondo().getByRole('button', { name: /^USA:/ }));
+    quote();
+    await fireEvent.click(mondo().getByTestId('paese-USA'));
     await fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' }));
     expect(mappa().queryByRole('dialog')).toBeNull();
   });
 
-  it('sotto la mappa, in ogni anello, la nota sui modelli italiani e quella sul censimento GPU clusters', () => {
+  it('la nota sul censimento GPU clusters sta con i data center; quella sui modelli italiani la dicono matrice e scheda, non la mappa', () => {
     for (const anello of ['modelli', 'fabbricazione', 'datacenter']) {
-      show(data, { anello });
-      expect(mappa().getByText('Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database.')).toBeInTheDocument();
-      expect(mappa().getByText('Fuori dai dati della mappa: il censimento GPU clusters di Epoch conta in Italia 9 cluster, tra cui Leonardo al CINECA ed Eni HPC6 (dato di marzo 2026).')).toBeInTheDocument();
+      quote(data, { anello });
+      expect(mappa().queryByText(/^Epoch non conta nessun modello italiano/)).toBeNull();
+      const gpu = mappa().queryByText('Fuori dai dati della mappa: il censimento GPU clusters di Epoch conta in Italia 9 cluster, tra cui Leonardo al CINECA ed Eni HPC6 (dato di marzo 2026).');
+      if (anello === 'datacenter') expect(gpu).toBeInTheDocument();
+      else expect(gpu).toBeNull();
       cleanup();
     }
   });
@@ -755,26 +853,26 @@ describe('GeopoliticAI: i Siti dei data center', () => {
   const siti = () => mappa().queryByRole('button', { name: 'Siti' });
 
   it('l’interruttore «Siti» c’è solo nei data center, e acceso mette un cerchio per ogni sito con la posizione', async () => {
-    show(data, { anello: 'datacenter' });
+    quote(data, { anello: 'datacenter' });
     expect(siti()).toHaveAttribute('aria-pressed', 'false');
     expect(mondo().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
     const acceso = new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
     await fireEvent.click(siti()!);
     expect((await acceso).detail).toEqual({ chiave: 'siti', valore: '1' });
     cleanup();
-    show(data, { anello: 'datacenter', siti: '1' });
+    quote(data, { anello: 'datacenter', siti: '1' });
     expect(siti()).toHaveAttribute('aria-pressed', 'true');
     const colossus = mondo().getByRole('button', { name: 'Colossus 2: 1.111.673 H100 equivalenti' });
     // la stessa proiezione dei confini: Equal Earth di scripts/confini.py
     expect([Number(colossus.getAttribute('cx')).toFixed(1), Number(colossus.getAttribute('cy')).toFixed(1)]).toEqual(['271.8', '-126.6']);
     expect(mondo().queryByRole('button', { name: /^DayOne Nusajaya/ })).toBeNull(); // senza posizione, senza cerchio
     cleanup();
-    show(data, { anello: 'modelli', siti: '1' });
+    quote(data, { anello: 'modelli', siti: '1' });
     expect(siti()).toBeNull();
     expect(mondo().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
   });
 
-  const conSiti = (d: Dataset = data) => show(d, { anello: 'datacenter', siti: '1' });
+  const conSiti = (d: Dataset = data) => quote(d, { anello: 'datacenter', siti: '1' });
   /** Le righe del fumetto di un sito: etichetta e valore. */
   const righe = (nome: string) =>
     within(mappa().getByRole('dialog', { name: nome })).getAllByRole('term').map((dt) => [dt.textContent, dt.nextElementSibling?.textContent]);
@@ -835,7 +933,7 @@ describe('GeopoliticAI: i Siti dei data center', () => {
     expect(mappa().getByText(/^Data center: Epoch AI/)).toHaveTextContent(/dati rielaborati da AI Radar\.$/);
     expect(mappa().queryByRole('link', { name: 'OpenStreetMap' })).toBeNull();
     cleanup();
-    show(data, { anello: 'datacenter' }); // senza i Siti, nessuna attribuzione dei Siti
+    quote(data, { anello: 'datacenter' }); // senza i Siti, nessuna attribuzione dei Siti
     expect(mappa().queryByText(/Siti dei data center/)).toBeNull();
   });
 });
@@ -847,32 +945,54 @@ describe('GeopoliticAI: il Filo della catena', () => {
   const premuto = (g: ReturnType<typeof viste>) => g.getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent);
   const imposta = () => new Promise<CustomEvent>((ok) => document.addEventListener('ai-radar:imposta', (e) => ok(e as CustomEvent), { once: true }));
 
-  it('l’interruttore «Quote per Paese / Filo della catena»: si parte dalle quote, e un clic mette ?vista=filo nel link', async () => {
+  it('l’interruttore «Filo della catena / Quote per Paese»: si parte dal filo, un clic mette ?vista=quote nel link, e il filo lo toglie', async () => {
     show();
+    expect(viste().getAllByRole('button').map((b) => b.textContent)).toEqual(['Filo della catena', 'Quote per Paese']);
+    expect(premuto(viste())).toEqual(['Filo della catena']);
+    const evento = imposta();
+    await fireEvent.click(viste().getByRole('button', { name: 'Quote per Paese' }));
+    expect((await evento).detail).toEqual({ chiave: 'vista', valore: 'quote' });
+    cleanup();
+    quote();
     expect(premuto(viste())).toEqual(['Quote per Paese']);
     expect(mappa().queryByRole('group', { name: 'Esempio' })).toBeNull();
-    const evento = imposta();
+    const eventi: unknown[] = [];
+    const ascolta = (e: Event) => eventi.push((e as CustomEvent).detail);
+    document.addEventListener('ai-radar:imposta', ascolta);
     await fireEvent.click(viste().getByRole('button', { name: 'Filo della catena' }));
-    expect((await evento).detail).toEqual({ chiave: 'vista', valore: 'filo' });
+    document.removeEventListener('ai-radar:imposta', ascolta);
+    expect(eventi).toEqual([{ chiave: 'siti', valore: null }, { chiave: 'vista', valore: null }]);
   });
 
-  it('?vista=filo apre il filo dell’esempio europeo; ?filo= sceglie l’esempio, e i valori non validi si ignorano', async () => {
-    show(data, { vista: 'filo' });
+  it('un link di prima con ?siti=1 e senza ?vista= resta nelle quote; ?vista=filo vince', () => {
+    show(data, { anello: 'datacenter', siti: '1' });
+    expect(premuto(viste())).toEqual(['Quote per Paese']);
+    cleanup();
+    show(data, { vista: 'filo', anello: 'datacenter', siti: '1' });
     expect(premuto(viste())).toEqual(['Filo della catena']);
-    expect(premuto(esempi())).toEqual(['Un modello europeo']);
-    expect(esempi().getAllByRole('button').map((b) => b.textContent)).toEqual(['Un modello americano', 'Un modello europeo', 'Un modello cinese']);
+  });
+
+  it('il filo parte dall’esempio europeo; ?filo= sceglie l’esempio, e i valori non validi si ignorano', async () => {
+    show();
+    expect(premuto(viste())).toEqual(['Filo della catena']);
+    expect(premuto(esempi())).toEqual(['Europeo']);
+    expect(esempi().getAllByRole('button').map((b) => b.textContent)).toEqual(['Americano', 'Europeo', 'Cinese']); // corti a vista
+    for (const [nome, corto] of [['Un modello americano', 'Americano'], ['Un modello europeo', 'Europeo'], ['Un modello cinese', 'Cinese']]) {
+      expect(esempi().getByRole('button', { name: nome })).toHaveTextContent(corto);
+    }
     cleanup();
     show(data, { vista: 'filo', filo: 'cina' });
-    expect(premuto(esempi())).toEqual(['Un modello cinese']);
+    expect(premuto(esempi())).toEqual(['Cinese']);
     const evento = imposta();
     await fireEvent.click(esempi().getByRole('button', { name: 'Un modello americano' }));
     expect((await evento).detail).toEqual({ chiave: 'filo', valore: 'usa' });
     cleanup();
     show(data, { vista: 'filo', filo: 'giappone' });
-    expect(premuto(esempi())).toEqual(['Un modello europeo']);
+    expect(premuto(esempi())).toEqual(['Europeo']);
     cleanup();
     show(data, { vista: 'boh', filo: 'cina' });
-    expect(premuto(viste())).toEqual(['Quote per Paese']);
+    expect(premuto(viste())).toEqual(['Filo della catena']);
+    expect(premuto(esempi())).toEqual(['Cinese']);
   });
 
   const elenco = () => within(mappa().getByRole('list', { name: /^Le tappe del filo/ }));
@@ -909,9 +1029,8 @@ describe('GeopoliticAI: il Filo della catena', () => {
     expect(mappa().queryAllByTestId('etichetta')).toEqual([]);
     expect(mappa().queryByRole('button', { name: 'Siti' })).toBeNull();
     expect(mappa().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
-    const europa = within(mappa().getByRole('group', { name: 'Europa, ingrandita' }));
-    expect(europa.getByRole('button', { name: 'Svezia: 5. EcoDataCenter 2' })).toBeInTheDocument();
-    expect(europa.getByRole('button', { name: 'Italia: nessuna tappa del filo' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Svezia: 5. EcoDataCenter 2' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Italia' })).toBeInTheDocument();
   });
 
   it('nel filo «Vedi i dati» ha le quote della fermata scelta, e la fonte viene dopo chi ha scelto l’esempio, con i confini una volta sola', () => {
@@ -924,10 +1043,10 @@ describe('GeopoliticAI: il Filo della catena', () => {
     expect(fonte.textContent?.match(/Confini:/g)).toHaveLength(1);
   });
 
-  it('nel filo restano le due note generali, non quelle delle quote', () => {
+  it('nel filo le note delle quote non ci sono', () => {
     show(data, { vista: 'filo', anello: 'macchinari' });
-    expect(mappa().getByText(/^Fuori dai dati della mappa: il censimento GPU clusters/)).toBeInTheDocument();
-    expect(mappa().getByText(/^Epoch non conta nessun modello italiano/, { selector: 'li' })).toBeInTheDocument();
+    expect(mappa().queryByText(/^Fuori dai dati della mappa: il censimento GPU clusters/)).toBeNull();
+    expect(mappa().queryByText(/^Epoch non conta nessun modello italiano/, { selector: 'li' })).toBeNull();
     expect(mappa().queryByText('Le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML nei Paesi Bassi.')).toBeNull();
   });
 
@@ -964,8 +1083,11 @@ describe('GeopoliticAI: il Filo della catena', () => {
     expect(tratti('Europa, ingrandita')).toEqual([null, null, null, null, null]);
   });
 
-  it('senza gli esempi nel file della catena non c’è l’interruttore, e ?vista=filo si ignora', () => {
+  it('senza gli esempi nel file della catena non c’è l’interruttore, e la mappa apre sulle quote anche con ?vista=filo', () => {
     const { fili: _, ...catena } = data.catena!;
+    show({ ...data, catena });
+    expect(mappa().getByText('Il primo', { selector: 'dt' })).toBeInTheDocument();
+    cleanup();
     show({ ...data, catena }, { vista: 'filo' });
     expect(mappa().queryByRole('group', { name: 'Vista' })).toBeNull();
     expect(mappa().getByText('Il primo', { selector: 'dt' })).toBeInTheDocument();

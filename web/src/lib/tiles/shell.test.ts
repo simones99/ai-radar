@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { createRawSnippet, type Component } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
+import { imposta } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import Detail from './Detail.svelte';
 import Pills from './Pills.svelte';
@@ -18,16 +19,24 @@ const tile = (over: Partial<TileDef> = {}): TileDef => ({
 const blocks = createRawSnippet(() => ({ render: () => '<p>blocchi</p>' }));
 
 describe('TileFace', () => {
-  it('numero, unità, frase e data di aggiornamento', async () => {
+  it('numero, unità e frase; la data solo se è diversa da quella di tutte, in testa alla pagina', async () => {
     const onopen = vi.fn();
     render(TileFace, { tile: tile(), data: FIXTURE as Dataset, today, expanded: false, onopen });
     const b = screen.getByRole('button', { name: /Business/ });
     expect(b).toHaveAttribute('aria-expanded', 'false');
     expect(b).toHaveAttribute('aria-controls', 'detail-business');
     expect(b).toHaveTextContent('290mld $');
-    expect(b).toHaveTextContent('agg. 15 ott 2026');
+    expect(b).not.toHaveTextContent('agg.');
+    expect(b).toHaveAccessibleDescription('Investimenti privati.');
     await fireEvent.click(b);
     expect(onopen).toHaveBeenCalledOnce();
+  });
+  it('una fonte aggiornata in un altro giorno dice la sua data', () => {
+    const f = FIXTURE as Dataset;
+    render(TileFace, { tile: tile(), data: { ...f, status: { ...f.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, today, expanded: false, onopen: () => {} });
+    const b = screen.getByRole('button', { name: /Business/ });
+    expect(b).toHaveTextContent('agg. 15 ott 2026');
+    expect(b).toHaveAccessibleDescription('Investimenti privati. agg. 15 ott 2026');
   });
   it('fonte assente: spiega il motivo', () => {
     render(TileFace, { tile: tile({ source: 'adzuna', face: () => null }), data: FIXTURE as Dataset, today, expanded: false, onopen: () => {} });
@@ -90,6 +99,14 @@ describe('Detail', () => {
     expect(writeText).toHaveBeenCalledWith(location.href);
     expect(await screen.findByRole('button', { name: 'Link copiato' })).toBeInTheDocument();
   });
+  it('copia link: cambiato un parametro della card, il pulsante torna a «Copia link»', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn(async () => {}) }, configurable: true });
+    render(Detail, { tile: tile(), head: tile().head({}, today), onclose: () => {}, children: blocks });
+    await fireEvent.click(screen.getByRole('button', { name: 'Copia link' }));
+    await screen.findByRole('button', { name: 'Link copiato' });
+    imposta('ruolo', 'dati');
+    expect(await screen.findByRole('button', { name: 'Copia link' })).toBeInTheDocument();
+  });
   it('copia link: se gli appunti rifiutano, mostra il link selezionato', async () => {
     Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn(async () => { throw new Error('no'); }) }, configurable: true });
     render(Detail, { tile: tile(), head: tile().head({}, today), onclose: () => {}, children: blocks });
@@ -100,9 +117,9 @@ describe('Detail', () => {
 });
 
 describe('Pills', () => {
-  it('sceglie un altro tema o chiude', async () => {
+  it('sceglie un’altra card o chiude', async () => {
     const onpick = vi.fn(), onclose = vi.fn();
-    render(Pills, { tiles: [tile(), tile({ id: 'norme', label: 'Norme' })], onpick, onclose });
+    render(Pills, { tiles: [tile(), tile({ id: 'norme', label: 'Norme' })], testa: 'per-te', onpick, onclose });
     await fireEvent.click(screen.getByRole('button', { name: 'Norme' }));
     expect(onpick).toHaveBeenCalledWith('norme');
     await fireEvent.click(screen.getByRole('button', { name: 'Chiudi' }));

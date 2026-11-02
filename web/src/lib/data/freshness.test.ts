@@ -23,7 +23,7 @@ describe('tileState', () => {
   });
   it('assente senza dati, con il motivo leggibile', () => {
     expect(tileState('adzuna', status, false)).toMatchObject({ state: 'assente', motivo: 'Serve la chiave gratuita di Adzuna.' });
-    expect(tileState('owid', status, false)).toMatchObject({ state: 'assente', motivo: 'Dati non ancora disponibili.' });
+    expect(tileState('owid', status, false)).toMatchObject({ state: 'assente', motivo: 'Dati non disponibili.' });
     expect(tileState('epoch', undefined, false).state).toBe('assente');
   });
 });

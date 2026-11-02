@@ -3,54 +3,48 @@
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
   // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
-  // Con ?vista=filo, al posto delle quote il Filo della catena: un esempio scelto da noi (?filo=), con gli archi tra le sei tappe e il loro elenco.
-  // Nel filo restano la tabella delle quote della fermata scelta e le note che non parlano delle quote.
-  import { tick } from 'svelte';
+  // Il Paese aperto sta in ?paese=: con ?paese=ITA il fumetto di quel Paese è già aperto.
+  // Si apre sul Filo della catena: un esempio scelto da noi (?filo=, quello europeo se manca), con gli archi tra le sei tappe e il loro elenco;
+  // nel filo resta la tabella delle quote della fermata scelta. Con ?vista=quote, la mappa delle quote per Paese con le sue note.
+  import { tick, untrack } from 'svelte';
   import Block from '../charts/Block.svelte';
+  import { FONT, hits, measureText, type Box } from '../charts/labels';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
-    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
-    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, VIEWBOX, vista, zonaDi, type AnelloKey, type Paese, type PuntoSito,
+    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeFumetto, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
+    nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, tinta, VIEWBOX, vista, vistaMappa, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
-  import { imposta } from '../router';
-  import { NOTA_FILO, NOTA_GPU, NOTA_ITALIA } from '../text/geopoliticai';
+  import { imposta, type Params } from '../router';
+  import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
 
-  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, vista: paramVista, filo: paramFilo, onscegli }: {
-    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; siti: string | undefined;
-    vista: string | undefined; filo: string | undefined; onscegli: (k: string) => void;
-  } = $props();
+  let { g, catena, zona, params, onscegli }: { g: Geopoliticai; catena: Catena | undefined; zona: string; params: Params; onscegli: (k: string) => void } = $props();
 
   const fili = $derived(filiDi(catena));
-  const filo = $derived(filoDi(paramVista, paramFilo, catena));
+  const filo = $derived(filoDi(vistaMappa(params.vista, params.siti), params.filo, catena));
   // nel filo ogni fermata ha la sua tappa, anche quella di un anello senza dati
   const ok = $derived(filo ? ANELLI.map((a) => a.key) : attivi(g, catena));
-  const anello = $derived(anelloDi(param, ok));
+  const anello = $derived(anelloDi(params.anello, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
   const attivo = (k: AnelloKey) => ok.includes(k);
-  /** La fermata attiva più vicina in quella direzione, se c'è. */
-  const vicino = (d: number): AnelloKey | null => {
-    for (let i = idx + d; i >= 0 && i < ANELLI.length; i += d) if (attivo(ANELLI[i].key)) return ANELLI[i].key;
-    return null;
-  };
-  const prima = $derived(vicino(-1));
-  const dopo = $derived(vicino(1));
-  const vai = (k: AnelloKey | null) => k && imposta('anello', k);
+  const vai = (k: AnelloKey) => imposta('anello', k);
+  /** Al filo si torna togliendo ?vista=; ?siti=1 senza ?vista= vorrebbe dire le quote (vistaMappa), e nel filo non vale. */
+  function alFilo() {
+    imposta('siti', null);
+    imposta('vista', null);
+  }
 
   const materiali = $derived(materialiDi(catena));
-  const materiale = $derived(materialeDi(paramMateriale, catena));
+  const materiale = $derived(materialeDi(params.materiale, catena));
   const v = $derived(vista(g, catena, anello, materiale));
   const ev = $derived(paesiZona(g, zona));
   const scelte = $derived(zonaDi(g));
   /** I Paesi UE che prendono il valore unico dell'Europa, tratteggiati. */
   const unico = $derived(new Set(v.europa != null && !filo ? g.zone.ue?.paesi_mappa ?? [] : []));
   const quote = $derived(Object.fromEntries(v.valori));
-  // il colore: dal valore più basso della scala (appena sopra il grigio) al più alto
   function fill(iso: string): string {
     if (filo) return fillFilo(iso);
     const x = unico.has(iso) ? v.europa : quote[iso];
-    if (x == null) return 'var(--line)';
-    const [lo, hi] = v.scala;
-    return `color-mix(in srgb, var(--c) ${Math.round(25 + (75 * (x - lo)) / (hi - lo || 1))}%, var(--card))`;
+    return x == null ? 'var(--line)' : tinta(x, ...v.scala);
   }
   const nome = (iso: string) => (filo ? nomeFilo(filo, iso) : `${NOMI[iso] ?? iso}: ${v.testo(iso)}`);
 
@@ -61,19 +55,32 @@
     tappa?.iso === iso ? `color-mix(in srgb, var(--k-${tappa.anello}) 45%, var(--card))`
     : tappe.some((t) => t.iso === iso) ? 'color-mix(in srgb, var(--fg) 16%, var(--card))' : 'var(--line)';
   const linee = $derived(filo ? archi(filo, idx) : []);
-  const dati = $derived(filo ? datiFilo(g, catena, anello, paramMateriale) : null);
+  const dati = $derived(filo ? datiFilo(g, catena, anello, params.materiale) : null);
 
   const [vx, vy, vw, vh] = VIEWBOX.split(' ').map(Number);
   /** La posizione di un punto della mappa, in percentuale del riquadro che la contiene. */
   const pos = (x: number, y: number, b = { x: vx, y: vy, w: vw, h: vh }) => ({ left: `${((x - b.x) / b.w) * 100}%`, top: `${((y - b.y) / b.h) * 100}%` });
+  const SEGNALINO = 28, ALTA = 24; // px: il segnalino del primo con il suo stacco, e l'altezza di un'etichetta sulla mappa
   // dove i Paesi sono piccoli o affollati l'etichetta si sposta: [dx, dy]
   const SPOSTA: Record<string, [number, number]> = { FRA: [-30, 4], GBR: [-30, -6], DEU: [6, -10], KOR: [14, -2], JPN: [18, 4], TWN: [14, 6], ISR: [-12, 6], ARE: [10, 8] };
   // l'Europa del dato unico ha la sua etichetta sulla Germania
-  const etichette = $derived(filo ? [] : [...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([iso, x]) => {
-    const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
-    const [dx, dy] = SPOSTA[iso] ?? [0, 0];
-    return { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
-  }));
+  // Sul telefono le etichette non ci stanno tutte: dal valore più alto, una che ne coprirebbe un'altra non si disegna, e il suo valore resta nel tabellone e nel menu
+  const etichette = $derived.by(() => {
+    if (filo) return [];
+    const prese: Box[] = [];
+    return [...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).flatMap(([iso, x]) => {
+      const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
+      const [dx, dy] = SPOSTA[iso] ?? [0, 0];
+      const e = { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
+      if (!larghezza) return [e];
+      const px = ((cx + dx - vx) / vw) * larghezza, py = ((cy + dy - vy) / vw) * larghezza;
+      const mezza = (measureText(`${e.nome} ${e.testo}`, `800 14px ${FONT}`) + (e.primo ? SEGNALINO : 0)) / 2;
+      const box = { x0: px - mezza, y0: py - ALTA / 2, x1: px + mezza, y1: py + ALTA / 2 };
+      if (hits(box, prese)) return [];
+      prese.push(box);
+      return [e];
+    });
+  });
 
   // il riquadro dell'Europa, nell'oceano Pacifico del sud; sotto i 600 px diventa una seconda mappa sotto quella del mondo
   const EUROPA = { x: 462, y: -228, w: 165, h: 108 }; // abbastanza stretto da dare all'Italia 44 px a 320 px
@@ -85,42 +92,68 @@
   const nelRiquadro = (x: number, y: number) => x >= EUROPA.x && x <= EUROPA.x + EUROPA.w && y >= EUROPA.y && y <= EUROPA.y + EUROPA.h;
 
   // i Siti valgono solo nei data center: con un altro anello ?siti=1 si ignora
-  const conSiti = $derived(!filo && anello === 'datacenter' && paramSiti === '1' && !!g.data_center);
+  const conSiti = $derived(!filo && anello === 'datacenter' && params.siti === '1' && !!g.data_center);
   const punti = $derived(conSiti ? puntiSiti(g.data_center!) : []);
   const puntiEuropa = $derived(punti.filter((q) => nelRiquadro(q.x, q.y)));
   const tappeEuropa = $derived(tappe.filter((t) => nelRiquadro(t.x, t.y)));
+  // le tappe della mappa del mondo hanno almeno 6 px di raggio a ogni larghezza. Sotto i 600 px (la mappa è larga meno di 520 px) l'Europa
+  // ingrandita sta sotto, a tutta larghezza: lì ci sono le tappe europee, e sul mondo resta solo il riquadro che le indica
+  let larghezza = $state(0);
+  const kMondo = $derived(larghezza ? Math.max(1, (6 * vw) / (8 * larghezza)) : 1);
+  const sotto = $derived(larghezza > 0 && larghezza < 520);
+  const tappeMondo = $derived(sotto ? tappe.filter((t) => !nelRiquadro(t.x, t.y)) : tappe);
 
   // il fumetto, di un Paese o di un sito, si apre dal lato opposto rispetto al centro della mappa; l'Europa è anche nel riquadro,
   // a sinistra, e si apre sempre a destra, così il fumetto non la copre
   const EUROPEI = new Set(europei.map((p) => p.id));
-  let aperto = $state<{ titolo: string; iso?: string; sito?: GeoSito; lato: 'destra' | 'sinistra'; da: SVGElement } | null>(null);
+  let aperto = $state<{ titolo: string; iso?: string; sito?: GeoSito; lato: 'destra' | 'sinistra'; da: Element | undefined } | null>(null);
   let pannello = $state<HTMLElement>();
   const anelliPaese = $derived(aperto?.iso ? fumetto(g, catena, aperto.iso) : []);
-  async function apri(cosa: { titolo: string; iso?: string; sito?: GeoSito }, x: number, europeo: boolean, da: SVGElement) {
+  async function apri(cosa: { titolo: string; iso?: string; sito?: GeoSito }, x: number, europeo: boolean, da: Element | undefined) {
     aperto = { ...cosa, lato: europeo || x < vx + vw / 2 ? 'destra' : 'sinistra', da };
     await tick();
     pannello?.focus();
   }
-  function tocca(p: Paese, da: SVGElement) {
+  // sulla mappa i Paesi si toccano e basta; da tastiera e con un lettore di schermo si aprono dal menu sotto la mappa, dove torna il focus
+  let menuPaese = $state<HTMLSelectElement>();
+  let paeseScelto = $state('');
+  const paesiMenu = [...PAESI].filter((p) => NOMI[p.id]).sort((a, b) => NOMI[a.id].localeCompare(NOMI[b.id], 'it'));
+  const apriPaese = (p: Paese) => apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), menuPaese);
+  function tocca(p: Paese) {
     if (scelte[p.id]) onscegli(scelte[p.id]);
-    return apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), da);
+    imposta('paese', p.id);
+    return apriPaese(p);
   }
-  const toccaSito = (q: PuntoSito, da: SVGElement) => apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
+  // il link apre il suo fumetto; se è già aperto, perché il link l'ha appena scritto tocca(), niente. Il menu dice il Paese del link
+  $effect(() => {
+    const p = PAESI.find((x) => x.id === params.paese);
+    paeseScelto = p && NOMI[p.id] ? p.id : '';
+    if (p) untrack(() => { if (aperto?.iso !== p.id) apriPaese(p); });
+  });
+  function apriDalMenu(e: SubmitEvent) {
+    e.preventDefault();
+    const p = PAESI.find((x) => x.id === paeseScelto);
+    if (p) tocca(p);
+  }
+  function toccaSito(q: PuntoSito, da: Element) {
+    if (params.paese) imposta('paese', null); // il link diceva un Paese
+    return apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
+  }
   function chiudi() {
-    const da = aperto?.da;
+    const da = aperto?.da as HTMLElement | SVGElement | undefined;
     aperto = null;
-    da?.focus();
+    if (params.paese) imposta('paese', null);
+    da?.focus({ preventScroll: true });
   }
 
   const cifre = $derived(v.tabellone(zona));
-  const italiaAZero = $derived(!Object.keys(g.zone.italia?.calcolo ?? {}).length && !Object.keys(g.zone.italia?.eci ?? {}).length);
+  const citeVista = $derived(filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite);
+  const fontiPaese = $derived(aperto?.iso ? citeFumetto(g, catena, citeVista) : null);
 </script>
 
 {#snippet paese(p: Paese)}
-  <!-- aria-pressed solo per i Paesi che sono una scelta di ?area=: quelli di «Altri» aprono solo il fumetto -->
-  <path d={p.d} fill={fill(p.id)} class="pz" class:ev={ev.has(p.id)} role="button" tabindex="-1" aria-label={nome(p.id)} aria-haspopup="dialog"
-    aria-pressed={scelte[p.id] ? (ev.has(p.id) ? 'true' : 'false') : undefined} onclick={(e) => tocca(p, e.currentTarget)}
-    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tocca(p, e.currentTarget); } }}><title>{nome(p.id)}</title></path>
+  <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions: i Paesi sono centinaia: da tastiera e con un lettore di schermo si aprono dal menu sotto la mappa -->
+  <path d={p.d} fill={fill(p.id)} class="pz" class:ev={ev.has(p.id)} data-testid="paese-{p.id}" aria-hidden="true" onclick={() => tocca(p)}><title>{nome(p.id)}</title></path>
 {/snippet}
 
 {#snippet cerchio(q: PuntoSito, tab: boolean)}
@@ -137,10 +170,16 @@
     <path d={a.d} class="arco" class:on={a.verso === idx} style:--c="var(--k-{ANELLI[a.verso].key})" stroke-dasharray={a.pieno ? undefined : '3 2'}
       pathLength="100" data-testid="arco" aria-hidden="true" />
   {/each}
-  <!-- la tappa scelta sta sopra le altre: due tappe possono stare nello stesso posto -->
-  {#each [...dentro.filter((t) => t.i !== idx), ...dentro.filter((t) => t.i === idx)] as t (t.i)}
+  <!-- due tappe vicine si allontanano quanto basta per leggerle tutte e due: una linea le lega al loro posto vero, segnato da un punto -->
+  {@const sep = separa(dentro, 19 * k)}
+  {#each sep.filter((t) => Math.hypot(t.px - t.x, t.py - t.y) > 0.5) as t (t.i)}
+    <line class="richiamo" x1={t.x} y1={t.y} x2={t.px} y2={t.py} style:--c="var(--k-{t.anello})" aria-hidden="true" />
+    <circle class="vero" cx={t.x} cy={t.y} r={1.6 * k} style:--c="var(--k-{t.anello})" aria-hidden="true" />
+  {/each}
+  <!-- la tappa scelta sta sopra le altre -->
+  {#each [...sep.filter((t) => t.i !== idx), ...sep.filter((t) => t.i === idx)] as t (t.i)}
     <!-- come i Paesi, fuori dal Tab: da tastiera le tappe si scelgono dall'elenco sotto la mappa -->
-    <g class="tappa" class:on={t.i === idx} transform="translate({t.x} {t.y}) scale({k})" style:--c="var(--k-{t.anello})" role="button" tabindex="-1"
+    <g class="tappa" class:on={t.i === idx} transform="translate({t.px} {t.py}) scale({k})" style:--c="var(--k-{t.anello})" role="button" tabindex="-1"
       aria-label="{t.i + 1}. {ANELLI[t.i].nome}: {t.luogo}" onclick={() => vai(t.anello)}
       onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vai(t.anello); } }}>
       <circle r={t.i === idx ? 9.5 : 8} /><text y="3.2" text-anchor="middle" aria-hidden="true">{t.i + 1}</text>
@@ -149,23 +188,23 @@
 {/snippet}
 
 <Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note={filo ? 'Sei anelli, dalla miniera al modello: il filo mostra da quali Paesi passa un modello.' : 'Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese.'}
-  table={filo ? dati?.tabella ?? null : v.tabella} cite={filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
-  <div class="anello" style:--c="var(--k-{anello})">
+  table={filo ? dati?.tabella ?? null : v.tabella} cite={fontiPaese?.cite ?? citeVista} altreFonti={fontiPaese?.altre}>
+  <div class="anello scala" style:--c="var(--k-{anello})">
     {#if fili.length}
       <div class="viste">
         <div class="scelte" role="group" aria-label="Vista">
-          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', null)}>Quote per Paese</button>
-          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={() => imposta('vista', 'filo')}>Filo della catena</button>
+          <button type="button" aria-pressed={filo ? 'true' : 'false'} onclick={alFilo}>Filo <span class="lungo">della catena</span></button>
+          <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', 'quote')}>Quote <span class="lungo">per Paese</span></button>
         </div>
         {#if filo}
-          <div class="scelte" role="group" aria-label="Esempio">
-            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} onclick={() => imposta('filo', f.key)}>{f.nome}</button>{/each}
+          <div class="scelte esempi" role="group" aria-label="Esempio">
+            <span class="eti" aria-hidden="true">Esempio:</span>
+            {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} aria-label={f.nome} onclick={() => imposta('filo', f.key)}>{f.corto}</button>{/each}
           </div>
         {/if}
       </div>
     {/if}
     <nav class="linea" aria-label="Gli anelli della catena dell'AI">
-      <button type="button" class="fr" disabled={!prima} onclick={() => vai(prima)} aria-label="Anello precedente">←</button>
       <ol>
         {#each ANELLI as a, i (a.key)}
           <li class:on={a.key === anello} style:--c="var(--k-{a.key})">
@@ -176,7 +215,6 @@
           </li>
         {/each}
       </ol>
-      <button type="button" class="fr" disabled={!dopo} onclick={() => vai(dopo)} aria-label="Anello successivo">→</button>
     </nav>
 
     <div class="titolo">
@@ -195,8 +233,9 @@
       <span>{tappa ? `${tappa.luogo}, ${NOMI[tappa.iso] ?? tappa.iso}` : v.misura}</span>
     </div>
 
+    <div class="palco">
     <div class="cornice">
-      <div class="mondo">
+      <div class="mondo" bind:clientWidth={larghezza}>
         <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {filo ? `Filo della catena, ${filo.nome.toLowerCase()}` : v.misura.split(' · ')[0]}">
           <defs>
             <pattern id="geo-tratteggio" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2" /></pattern>
@@ -206,7 +245,8 @@
           {#each PAESI.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
           {#each punti as q (q.sito.nome)}{@render cerchio(q, !nelRiquadro(q.x, q.y))}{/each}
-          {#if filo}{@render filoSvg(tappe, 1)}{/if}
+          {#if sotto}<rect class="riquadro" x={EUROPA.x} y={EUROPA.y} width={EUROPA.w} height={EUROPA.h} rx="4" aria-hidden="true" />{/if}
+          {#if filo}{@render filoSvg(tappeMondo, kMondo)}{/if}
         </svg>
         {#each etichette as e (e.iso)}
           <span class="et" data-testid="etichetta" style:left={e.left} style:top={e.top}>
@@ -229,6 +269,7 @@
         <span class="in-t" aria-hidden="true">Europa, ingrandita</span>
         <span class="et it" style:left={etItalia.left} style:top={etItalia.top} aria-hidden="true">Italia</span>
       </div>
+    </div>
       {#if aperto}
         <!-- sotto i 600 px non galleggia: è un pannello sotto le mappe -->
         <div class="fumetto {aperto.lato}" role="dialog" aria-labelledby="geo-fumetto-t" tabindex="-1" bind:this={pannello}
@@ -259,6 +300,18 @@
     </div>
     {#if conSiti}<p class="didascalia">{didascaliaSiti(g.data_center!)}</p>{/if}
 
+    <form class="paese" onsubmit={apriDalMenu}>
+      <label>
+        <span>Un Paese</span>
+        <select bind:this={menuPaese} bind:value={paeseScelto}>
+          <option value="">Scegli</option>
+          {#each paesiMenu as p (p.id)}<option value={p.id}>{nome(p.id)}</option>{/each}
+        </select>
+      </label>
+      <button type="submit" disabled={!paeseScelto}>Apri</button>
+      {#if ita}<button type="button" onclick={() => tocca(ita)}>Vedi l'Italia</button>{/if}
+    </form>
+
     {#if filo}
       <p class="esempio">{NOTA_FILO}</p>
       <ol class="tappe" aria-label="Le tappe del filo: {filo.nome.toLowerCase()}">
@@ -284,23 +337,21 @@
       {/each}
     </dl>
     {/if}
-    <!-- le note dell'anello parlano delle quote: nel filo restano solo le due generali -->
-    <ul class="note">
-      {#if italiaAZero}<li>{NOTA_ITALIA}</li>{/if}
-      <li>{NOTA_GPU}</li>
-      {#if !filo}{#each v.note as n (n)}<li>{n}</li>{/each}{/if}
-    </ul>
+    <!-- le note parlano delle quote, e nel filo non ci sono; il censimento dei cluster sta con i data center, che lo citano.
+         Dei modelli italiani dicono già la matrice e la scheda dell'Italia -->
+    {#if !filo && (anello === 'datacenter' || v.note.length)}
+      <ul class="note">
+        {#if anello === 'datacenter'}<li>{NOTA_GPU}</li>{/if}
+        {#each v.note as n (n)}<li>{n}</li>{/each}
+      </ul>
+    {/if}
   </div>
 </Block>
 
 <style>
-  /* un colore per anello, con il testo bianco sopra a ≥ 4,5:1 */
-  .anello { --k-materie: #8a6210; --k-progettazione: #2f5f9e; --k-fabbricazione: #1f6f66; --k-macchinari: #6a4a96; --k-datacenter: #a8432c; --k-modelli: #b2461f;
-    --sito: color-mix(in srgb, var(--fg) 55%, transparent);
+  /* i colori degli anelli, la scala (--alto) e il segnalino del primo stanno in app.css: li usa anche la figura della card in home */
+  .anello { --sito: color-mix(in srgb, var(--fg) 55%, transparent);
     display: grid; gap: var(--s2); min-width: 0; }
-  .linea { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: start; gap: var(--s1); }
-  .fr { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--card); cursor: pointer; font-size: 20px; }
-  .fr:disabled { cursor: default; color: var(--fg-3); opacity: .5; }
   .linea ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: relative; }
   .linea ol::before { content: ''; position: absolute; left: 8%; right: 8%; top: 20px; height: 4px; background: var(--line-2); border-radius: 2px; }
   .linea li button { position: relative; display: grid; justify-items: center; gap: 4px; width: 100%; min-height: 44px; border: 0; background: none; cursor: pointer; padding: 0 2px; }
@@ -311,14 +362,18 @@
   .lab { font-size: 12px; line-height: 16px; color: var(--fg-2); text-align: center; }
   .arriva { display: block; color: var(--fg-3); }
   li.on .lab { font-weight: 700; color: var(--fg); }
-  .titolo { display: grid; gap: 4px; border-left: 5px solid var(--c); padding-left: 10px; }
+  /* il colore dell'anello è già nel tondo acceso della linea, sopra: il titolo non lo ripete */
+  .titolo { display: grid; gap: 4px; }
   .titolo h4 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 600; }
   .scelte { display: flex; flex-wrap: wrap; gap: var(--s1); }
   .scelte button { background: var(--bg); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 12px; min-height: 44px; font-size: 14px; line-height: 20px; cursor: pointer; color: var(--fg-2); }
   .scelte button[aria-pressed='true'] { background: var(--c); border-color: var(--c); color: #fff; }
   .titolo span { font-size: 13px; line-height: 20px; color: var(--fg-3); }
 
-  .cornice { position: relative; }
+  /* la mappa e il fumetto stanno nella stessa cella: un fumetto più alto della mappa la allunga, e sposta giù quello che viene dopo invece di coprirlo o di tagliarsi */
+  .palco { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .palco > * { grid-area: 1 / 1; min-width: 0; }
+  .cornice { position: relative; align-self: start; }
   .mondo { position: relative; }
   svg { display: block; width: 100%; height: auto; }
   .mondo > svg { background: color-mix(in srgb, var(--bg) 70%, #9fc3d9); border-radius: var(--r-md); }
@@ -333,25 +388,22 @@
     font-size: 12px; line-height: 16px; color: var(--fg); text-shadow: 0 0 3px var(--card), 0 0 3px var(--card), 0 0 2px var(--card); }
   .et .n { color: var(--fg-2); }
   .et b { font-size: 14px; font-weight: 800; }
-  /* il primo: «1º» nel colore della carta su un tondino nel colore del testo, che si stacca da qualunque Paese in tutti e due i temi. Il testo sta nel CSS:
-     chi non vede la mappa ha il nome del segnalino, e il numero dell'etichetta resta solo */
-  .segnalino { display: inline-grid; place-items: center; width: 18px; height: 18px; align-self: center; border-radius: 50%; background: var(--fg);
-    box-shadow: 0 0 0 1.5px var(--card); color: var(--card); font-size: 10px; line-height: 1; font-weight: 800; letter-spacing: -.02em; text-shadow: none; }
-  .segnalino::after { content: '1º'; }
   .europa { position: absolute; border-radius: var(--r-sm); border: 1px solid var(--fg-3); overflow: hidden; background: color-mix(in srgb, var(--bg) 60%, #9fc3d9); }
   .europa .pz { stroke-width: .3; }
   .europa .italia { stroke-width: 1; stroke-dasharray: 1.5 .8; }
-  .in-t { position: absolute; left: 6px; top: 4px; font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; text-shadow: 0 0 3px var(--card), 0 0 2px var(--card); }
-  .et.it { font-size: 11px; font-weight: 700; color: var(--accent); }
-  .fumetto { position: absolute; top: 8px; z-index: 2; width: min(340px, 44%); display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
+  /* le due scritte del riquadro hanno un fondo di carta: sopra i confini si leggono */
+  .in-t { position: absolute; left: 0; top: 0; padding: 2px 6px; border-bottom-right-radius: var(--r-sm); background: color-mix(in srgb, var(--card) 88%, transparent);
+    font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; }
+  .et.it { font-size: 11px; font-weight: 700; color: var(--accent); padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--card) 85%, transparent); text-shadow: none; }
+  .fumetto { position: relative; z-index: 2; align-self: start; margin-block: 8px; width: min(340px, 44%); display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
     background: var(--card); border: 1px solid var(--line-2); box-shadow: 0 6px 20px rgb(0 0 0 / .18); }
-  .fumetto.destra { right: 8px; }
-  .fumetto.sinistra { left: 8px; }
+  .fumetto.destra { justify-self: end; margin-right: 8px; }
+  .fumetto.sinistra { justify-self: start; margin-left: 8px; }
   .fumetto .testa { display: flex; align-items: center; justify-content: space-between; gap: var(--s1); }
   .fumetto h5 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 700; }
   .chiudi { min-width: 44px; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
   .fumetto dl { margin: 0; display: grid; gap: 6px; }
-  .fumetto .anelli-righe > div { border-left: 4px solid var(--c); padding-left: 8px; }
+  .fumetto .anelli-righe dt::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-right: 6px; vertical-align: 1px; }
   .fumetto dd { display: block; font-size: 13px; line-height: 18px; }
   .fumetto dd b { font-size: 13px; line-height: 18px; font-weight: 600; }
   .fumetto .data { color: var(--fg-3); }
@@ -363,16 +415,23 @@
   .sito { stroke: var(--card); stroke-width: .6; cursor: pointer; pointer-events: all; }
   .sito[fill='none'] { stroke: var(--fg); stroke-width: .8; }
   .sito:hover, .sito:focus-visible { outline: none; stroke: var(--accent); stroke-width: 1.4; }
-  .didascalia { margin: 0; font-size: 13px; line-height: 20px; color: var(--fg-2); }
+  .paese { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1); }
+  /* le voci del menu sono lunghe: non decidono loro la larghezza, altrimenti a 320px la pagina scorre */
+  .paese label { display: flex; align-items: center; gap: var(--s1); flex: 0 1 28rem; min-width: 0; font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .paese span { white-space: nowrap; }
+  .paese select { flex: 1 1 0; width: 0; min-width: 0; background-color: var(--bg); }
+  .paese button { min-height: 44px; padding: 0 var(--s2); border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
+  .paese button:disabled { cursor: default; opacity: .6; }
+  .didascalia { margin: 0; font-size: 13px; line-height: 20px; color: var(--fg-2); max-width: var(--misura); }
   @media (max-width: 599px) {
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */
     .europa { position: relative; left: auto !important; top: auto !important; width: auto !important; margin-top: var(--s1); }
     .in-t { font-size: 12px; }
-    .fumetto.destra, .fumetto.sinistra { position: relative; inset: auto; width: auto; margin-top: var(--s1); box-shadow: none; }
+    .palco { display: block; }
+    .fumetto.destra, .fumetto.sinistra { width: auto; justify-self: stretch; margin: var(--s1) 0 0; box-shadow: none; }
   }
   @media (max-width: 560px) {
-    .linea { grid-template-columns: 36px minmax(0, 1fr) 36px; gap: 4px; padding-bottom: 20px; }
-    .fr { width: 36px; height: 44px; font-size: 16px; border-radius: 18px; }
+    .linea { padding-bottom: 20px; }
     .pal { width: 36px; height: 36px; font-size: 13px; border-width: 2px; }
     .linea ol::before { top: 16px; }
     .lab { display: none; }
@@ -380,29 +439,44 @@
     li:first-child.on .lab { left: 0; } li:last-child.on .lab { right: 0; }
   }
 
-  .viste { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+  .viste { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); }
   .viste .scelte button[aria-pressed='true'] { background: var(--fg); border-color: var(--fg); color: var(--card); }
+  /* la vista cambia la mappa, l'esempio sceglie un filo dentro la vista: due scelte diverse, e non due pillole nere affiancate */
+  .esempi { align-items: center; }
+  .eti { font-size: 14px; line-height: 20px; color: var(--fg-2); white-space: nowrap; }
+  .viste .esempi button[aria-pressed='true'] { background: var(--card); border-color: var(--fg); color: var(--fg); box-shadow: inset 0 0 0 1px var(--fg); }
+  /* sul telefono la vista e l'esempio stanno su una riga ciascuno: «Filo» e «Quote» bastano, il resto del nome resta per chi usa un lettore di schermo */
+  @media (max-width: 560px) {
+    .viste .scelte { flex-wrap: nowrap; }
+    .viste .scelte button { padding-inline: var(--s1); }
+    .viste .esempi { flex-wrap: wrap; }
+    .viste .esempi .eti { flex-basis: 100%; }
+  }
   /* l'arco che arriva alla fermata scelta si disegna; con «riduci movimento» no (app.css) */
   .arco { fill: none; stroke: var(--c); stroke-width: 1.2; stroke-linecap: round; opacity: .6; pointer-events: none; }
   .arco.on { stroke-width: 2.2; opacity: 1; animation: traccia .8s ease-out; }
   @keyframes traccia { from { stroke-dasharray: 100; stroke-dashoffset: 100; } to { stroke-dasharray: 100; stroke-dashoffset: 0; } }
   .europa .arco { stroke-width: .8; }
   .europa .arco.on { stroke-width: 1.5; }
+  .richiamo { stroke: var(--c); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .vero { fill: var(--c); stroke: var(--card); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .riquadro { fill: none; stroke: var(--fg-2); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
   .tappa { cursor: pointer; }
   .tappa circle { fill: var(--c); stroke: #fff; stroke-width: 1.2; }
   .tappa.on circle { stroke: var(--fg); stroke-width: 1.8; }
   .tappa text { font-size: 9px; font-weight: 800; fill: #fff; pointer-events: none; }
   .tappa:focus-visible { outline: none; }
   .tappa:focus-visible circle { stroke: var(--accent); stroke-width: 2.4; }
-  .esempio { margin: 0; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); }
+  .esempio { margin: 0; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); max-width: var(--misura); }
   .tappe { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-  .tappe li { display: grid; gap: 2px; padding: 6px 8px; border-radius: var(--r-sm); border-left: 4px solid var(--c); }
+  /* il colore della tappa sta nel suo tondo numerato */
+  .tappe li { display: grid; gap: 2px; padding: 6px 8px; border-radius: var(--r-sm); }
   .tappe li[aria-current='step'] { background: color-mix(in srgb, var(--c) 7%, var(--card)); }
   .tappe button { display: flex; align-items: center; gap: 10px; min-height: 44px; width: 100%; padding: 0; border: 0; background: none; text-align: left;
     font: inherit; font-size: 15px; line-height: 20px; color: var(--fg); cursor: pointer; }
   .tn { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #fff; font-weight: 700; font-size: 13px; }
-  .tappe p { margin: 0 0 0 38px; font-size: 13px; line-height: 20px; color: var(--fg-2); overflow-wrap: anywhere; }
-  .tappe a { color: var(--accent); }
+  .tappe p { margin: 0 0 0 38px; font-size: 13px; line-height: 20px; color: var(--fg-2); overflow-wrap: anywhere; max-width: var(--misura); }
+  .tappe a { color: inherit; }
 
   .tabellone { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--s1); margin: 0; }
   .cifra { display: grid; gap: 2px; align-content: start; padding: 12px; border-radius: var(--r-sm); background: var(--bg); }
@@ -410,9 +484,10 @@
   dd { margin: 0; display: grid; }
   dd b { font-size: 16px; line-height: 20px; }
   dd strong { font-size: 24px; line-height: 32px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .cifra.primo strong { font-size: 32px; line-height: 40px; color: var(--c); }
+  .cifra.primo strong { font-size: 32px; line-height: 40px; color: var(--alto); }
   .mod { font-size: 13px; line-height: 18px; color: var(--fg-2); }
   .vuoto { font-size: 15px; line-height: 22px; font-style: italic; color: var(--fg-2); }
-  .cifra.it { border-left: 3px dashed var(--accent); }
-  .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; }
+  /* l'Italia ha accanto al nome il tratteggio del suo contorno sulla mappa */
+  .cifra.it dt::before { content: ''; display: inline-block; width: 16px; margin-right: 6px; vertical-align: middle; border-top: 2px dashed var(--accent); }
+  .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; max-width: var(--misura); }
 </style>

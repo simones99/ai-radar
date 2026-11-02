@@ -24,8 +24,18 @@
   const m = $derived({ l: 40, r, t: 16, b: 32 });
   const all = $derived(series.flatMap((s) => s.pts));
   const x = $derived(scaleLinear(extent(all, (p) => p.x) as [number, number], [m.l, w - m.r]));
-  const y = $derived(scaleLinear([0, max(all, (p) => p.y) ?? 1], [height - m.b, m.t]).nice());
-  const xTicks = $derived(passo ? [...new Set(all.map((p) => p.x))] : x.ticks(Math.max(2, Math.min(6, Math.floor(w / 96)))).filter(Number.isInteger));
+  const y = $derived(scaleLinear([0, max(all, (p) => p.y) ?? 1], [height - m.b, m.t]).nice(4)); // lo stesso numero delle tacche: la linea più alta della griglia sta sopra il valore più alto
+  const xTicks = $derived.by(() => {
+    const date = [...new Set(all.map((p) => p.x))].sort((a, b) => a - b);
+    if (passo) return date;
+    const interi = x.ticks(Math.max(2, Math.min(6, Math.floor(w / 96)))).filter(Number.isInteger);
+    if (interi.length >= 2 || !date.length) return interi;
+    // un periodo con meno di due inizi d'anno (dati di un anno o poco più): le date rilevate, dall'ultima indietro, quelle che ci stanno senza toccarsi
+    const largo = (v: number) => measureText(xFormat(v), `400 10px ${FONT}`) + 12;
+    const tenute = [date[date.length - 1]];
+    for (const v of date.slice(0, -1).reverse()) if (x(tenute[0]) - x(v) >= (largo(v) + largo(tenute[0])) / 2) tenute.unshift(v);
+    return tenute;
+  });
   const ordered = $derived(series.slice().sort((a, b) => Number(!!a.hot) - Number(!!b.hot)));
   const path = (pts: SeriesPt[]) => line<SeriesPt>().curve(curveMonotoneX).x((p) => x(p.x)).y((p) => y(p.y))(pts) ?? '';
   /** I tratti senza buchi; un punto isolato non fa tratto. */

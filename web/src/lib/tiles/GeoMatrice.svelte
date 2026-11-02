@@ -41,10 +41,10 @@
 <Block span={12} title={TITOLO} cite={citeGeo(g)}>
   <div class="tog" role="group" aria-label="Misura">
     <button type="button" aria-pressed={misura === 'eci'} onclick={() => (misura = 'eci')}>Capacità (ECI)</button>
-    <button type="button" aria-pressed={misura === 'calcolo'} onclick={() => (misura = 'calcolo')}>Calcolo di addestramento (FLOP)</button>
+    <button type="button" aria-pressed={misura === 'calcolo'} onclick={() => (misura = 'calcolo')}>Calcolo <span class="lungo">di addestramento</span> (FLOP)</button>
   </div>
   <!-- svelte-ignore a11y_no_noninteractive_tabindex: la matrice scorre in orizzontale e deve essere raggiungibile da tastiera -->
-  <div class="scroll" tabindex="0" role="region" aria-label="{TITOLO}, scorre in orizzontale">
+  <div class="scroll scorre" tabindex="0" role="region" aria-label="{TITOLO}, scorre in orizzontale">
     <table aria-label={TITOLO}>
       <thead>
         <tr>
@@ -78,8 +78,11 @@
   .tog { display: inline-flex; justify-self: start; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 3px; }
   .tog button { border: 0; background: none; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; cursor: pointer; font: inherit; font-size: 14px; color: var(--fg-2); }
   .tog button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
-  @media (max-width: 560px) { .tog { border: 0; padding: 0; } }
-  .scroll { overflow-x: auto; }
+  /* sul telefono le due scelte stanno affiancate a tutta larghezza: «di addestramento» resta solo per chi usa un lettore di schermo */
+  @media (max-width: 560px) {
+    .tog { display: grid; grid-template-columns: 1fr 1fr; justify-self: stretch; }
+    .tog button { padding-inline: var(--s1); }
+  }
   table { border-collapse: separate; border-spacing: 3px; width: 100%; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
   thead th { font-weight: 500; color: var(--fg-3); font-size: 12px; line-height: 16px; text-align: left; padding: var(--s1); white-space: nowrap; }
   thead th small { font-size: inherit; }
@@ -92,7 +95,8 @@
   td.cur { background: repeating-linear-gradient(135deg, transparent 0 6px, var(--line) 6px 7px); }
   .v { display: block; padding: var(--s1); border-radius: 6px; white-space: nowrap; background: color-mix(in srgb, var(--accent) calc(var(--a) * 45%), transparent); }
   tr.sel .v:not(.na) { outline: 2px solid var(--fg); }
-  td.zero { padding: var(--s1) 12px; font-size: 14px; line-height: 20px; color: var(--fg-2); border-left: 3px solid var(--accent); background: var(--bg); }
-  .nota-matrice { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 80ch; }
+  /* un dato che manca si dice in corsivo, come nel tabellone della mappa; la cella ha la forma delle altre */
+  td.zero { padding: var(--s1) 12px; border-radius: 6px; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); background: var(--bg); }
+  .nota-matrice { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .na { color: var(--fg-3); font-size: 12px; }
 </style>

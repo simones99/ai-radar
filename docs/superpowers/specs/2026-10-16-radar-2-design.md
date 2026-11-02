@@ -197,7 +197,7 @@ Dentro la card Competenze aperta, al posto del radar, dall'alto in basso:
 4. Tre numeri:
    - **Domanda**: "3,4 annunci ogni 10mila", sotto "Italia: 2,6";
    - **Slancio**: "+25% in 6 mesi", sotto "margine: da +10% a +42%";
-   - **Affidabilità**: "solida" o "incerta", sotto il segnale che pesa di più ("pesa di più: GitHub").
+   - **Incertezza del dato**: "normale" o "alta", sotto il segnale che pesa di più ("pesa di più: GitHub"). Dice solo se il margine è largo, come il punto vuoto sul radar. *(Prima "Affidabilità: solida o incerta", cambiato il 2026-11-02 dopo la terza critica: "solida" accanto a un margine che comprende lo zero si smentiva.)*
 5. **Andamento**, tre piccoli grafici a linea affiancati (uno sotto l'altro sotto 720 px):
    - paper che ne parlano ogni 1.000 paper AI, 13 mesi;
    - nuovi repository ogni 1.000 repository AI, 13 mesi;
@@ -232,13 +232,15 @@ Componenti nuovi in `web/src/lib/tiles/`: `SkillView.svelte` (la vista) e, se se
 
 ### 7.3 Faccia della card
 
-"3 su 16" resta. Frase: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila."
+In home la cifra non si mostra: la dice la frase, sotto la figura del radar. Frase: "3 competenze su 16 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." *(Cambiato il 2026-11-02 dopo la seconda critica prima del rilascio, scelta dell'utente.)*
+
+Se una competenza è ancora in Impara ora ma il calcolo del mese la dà già altrove (il quadrante cambia solo dopo due mesi), la frase non dice che tutte crescono, né qui né nel sottotitolo del dettaglio: "Competenze da imparare ora; RAG sta perdendo slancio (−34%) e può uscirne." Con il calcolo in Da provare: "X ha meno di 3 annunci ogni 10mila e può uscirne." Nella figura in home i dati incerti hanno il punto vuoto, come nel radar. *(Aggiunto il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
 
 ### 7.4 Porta "Per te"
 
 Le regole restano quelle della spec della home, con due cambi:
 
-- le competenze incerte non entrano nelle regole 1–3 (contano nella riserva);
+- le competenze incerte non entrano nelle regole 1–4 (contano nella riserva); *(Allineato al codice il 2026-11-02 dopo la terza code review.)*
 - la regola 3 parla in unità vere, senza accordo di genere: "Slancio di **DB vettoriali** da +12% a −20%" oppure "Domanda di **MCP** da 2,1 a 3,4 annunci ogni 10mila". Vince lo spostamento più grande in coordinate normalizzate, se almeno `MOVE_MIN`.
 
 ## 8. Errori e casi limite

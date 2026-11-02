@@ -36,21 +36,21 @@
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
             onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
             <span class="n">{r.breve}</span>
-            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}<span class="ar" aria-hidden="true">{arrow(cs)}</span>{#if arrow(cs)}<span class="sr">{verso(cs)}</span>{/if}</span>
-            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span><span class="ar" aria-hidden="true">{arrow(cd)}</span>{#if arrow(cd)}<span class="sr">{verso(cd)}</span>{/if}</span>
+            <span class="v {cs}"><span class="sr">slancio</span>{" "}{signedPct(r.slancio)}<span class="ar" aria-hidden="true">{arrow(cs)}</span>{#if arrow(cs)}<span class="sr">{verso(cs)},</span> <span class="era">era {signedPct(r.sp as number)}</span>{/if}</span>
+            <span class="v {cd}">{per10k(r.domanda)}{" "}<span class="sr">annunci ogni 10mila</span><span class="ar" aria-hidden="true">{arrow(cd)}</span>{#if arrow(cd)}<span class="sr">{verso(cd)},</span> <span class="era">era {per10k(r.dp as number)}</span>{/if}</span>
             {#if r.changed && r.qp}<span class="chip">{quadranti[r.qp]} → {quadranti[r.quadrante]}</span>{/if}
             {#if r.moving}<span class="chip">in movimento verso {quadranti[r.moving]}</span>{/if}
           </a>
         </li>
       {/each}
     </ul>
-    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese. Passa sopra una riga per trovarla nel grafico; aprila con un clic.</p>
+    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese; sotto, il valore di allora. <span class="mouse">Passa sopra una riga per trovarla nel grafico; aprila con un clic.</span><span class="tocco">Tocca una riga per aprirla.</span></p>
   </div>
 {/if}
 
 <style>
   .panel { display: grid; gap: var(--s2); align-content: start; }
-  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .sum { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s1); }
   .sum div { background: var(--bg); border-radius: var(--r-md); padding: var(--s2); display: grid; gap: 4px; }
   .sum b { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
@@ -65,13 +65,16 @@
   .row { all: unset; box-sizing: border-box; width: 100%; min-height: 40px; padding-block: var(--s1); border-radius: var(--r-sm); cursor: pointer; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; display: grid; grid-template-columns: minmax(0, 1fr) 64px 64px; gap: 0 var(--s1); padding-inline: var(--s1); }
   .row:focus-visible { background: var(--accent-soft); outline: 2px solid var(--accent); }
   @media (hover: hover) { .row:hover { background: var(--accent-soft); } }
-  .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+  .n { overflow-wrap: anywhere; font-weight: 500; } /* il nome breve va a capo invece di finire con i puntini: la colonna è stretta sul telefono e accanto al radar */
   .v { text-align: right; position: relative; white-space: nowrap; }
   .ar { display: inline-block; width: 1em; text-align: right; }
   .up { color: var(--accent); font-weight: 600; }
   .down { color: var(--fg-2); }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .flat { color: var(--fg-3); }
+  .era { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--fg-3); padding-right: 1em; } /* sotto la cifra, allineato alla cifra e non alla freccia */
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }
-  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: var(--misura); }
+  /* sul telefono non c'è un mouse da passare sopra */
+  .tocco { display: none; }
+  @media (hover: none) { .mouse { display: none; } .tocco { display: inline; } }
 </style>

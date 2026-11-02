@@ -27,7 +27,9 @@
     return Object.entries(TIPI).filter(([e]) => m.has(e)).map(([e, k]) => ({ k, v: m.get(e)?.now.v ?? 0 })).sort((a, b) => a.v - b.v);
   });
   const AREE: Record<string, string> = { 'All geographies': 'Mondo', 'Asia-Pacific': 'Asia-Pacifico', 'Developing markets': 'Paesi emergenti', Europe: 'Europa', 'Greater China': 'Cina', 'North America': 'Nord America' };
-  const imprese = $derived([...owidLatestByEntity(o, 'imprese_ai')].map(([e, x]) => ({ k: AREE[e] ?? e, now: x.now.v, was: x.was?.v ?? null, hot: e === 'Europe' })).sort((a, b) => b.now - a.now));
+  // un sondaggio, non la misura di Eurostat: nessuna area in evidenza, e il titolo dice di chi è il numero
+  const imprese = $derived([...owidLatestByEntity(o, 'imprese_ai')].map(([e, x]) => ({ k: AREE[e] ?? e, now: x.now.v, was: x.was?.v ?? null, t: x.now.t })).sort((a, b) => b.now - a.now));
+  const impreseAnno = $derived(imprese.map((r) => r.t).sort().at(-1));
   const eu = $derived(data.eurostat);
   const euYear = $derived((eu && ultimoAnno(Object.values(eu.serie))) ?? '');
   const euRows = $derived(eu ? Object.entries(eu.serie)
@@ -73,24 +75,7 @@
 {/snippet}
 
 <Detail {tile} {head} {onclose}>
-  <!-- ogni sezione è una sottogriglia: da 1200px il riempimento «dense» non porta i blocchi fuori dalla loro sezione -->
-  <div class="sezione" role="group" aria-labelledby="bz-investimenti">
-    <h3 class="group" id="bz-investimenti">Investimenti</h3>
-    <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
-      missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
-      table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
-      <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
-    </Block>
-    <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
-      cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
-      <Bars label="Investimenti in AI generativa" data={gen} format={short} />
-    </Block>
-    <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
-      cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
-      <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
-    </Block>
-  </div>
-
+  <!-- ogni sezione è una sottogriglia con il suo titolo: i blocchi non escono dalla loro sezione -->
   <div class="sezione" role="group" aria-labelledby="bz-adozione">
     <h3 class="group" id="bz-adozione">Adozione</h3>
     {#if es}
@@ -112,16 +97,33 @@
       </Block>
     {/if}
     {@render bloccoItUe(inSettore("A cosa serve l'AI"), es?.anno, settore ? "In % delle imprese del settore che usano l'AI." : "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}
-    {@render bloccoItUe(inSettore('Cosa frena chi non la usa'), es?.anno, settore ? "In % delle imprese del settore che hanno considerato l'AI senza usarla." : "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
-    <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
+    {@render bloccoItUe(inSettore('Le barriere di chi non la usa'), es?.anno, settore ? "In % delle imprese del settore che hanno considerato l'AI senza usarla." : "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
+    <Block title="Chi risponde al sondaggio McKinsey dice di usarla{impreseAnno ? `, ${impreseAnno}` : ''}" note="Aziende intervistate che usano l'AI in almeno una funzione. Non è la stessa misura dell'adozione Eurostat. Punto pieno: ultimo anno; vuoto: anno prima."
       missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
       table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
-      <DotPlot label="Imprese che usano l'AI, per area" data={imprese} />
+      <DotPlot label="Aziende che dicono di usare l'AI nel sondaggio McKinsey, per area" data={imprese} sopra />
     </Block>
     <Block title="Imprese europee che usano l'AI, {euYear}" note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI. Punto vuoto: anno prima."
       missing={euRows.length ? null : MISSING} cite={eu ? [{ t: 'Fonte: ' }, { t: 'Eurostat, isoc_eb_ai', href: eu.url }, { t: '.' }] : null}
       table={{ cols: ['Paese', euYear, String(Number(euYear) - 1)], rows: euRows.map((r) => [r.k, r.now, r.was ?? '—']) }}>
       <DotPlot label="Imprese europee che usano l'AI" data={euRows} />
+    </Block>
+  </div>
+
+  <div class="sezione" role="group" aria-labelledby="bz-investimenti">
+    <h3 class="group" id="bz-investimenti">Investimenti</h3>
+    <Block span={8} title="Investimenti privati per area" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
+      missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
+      table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
+      <LineChart label="Investimenti privati per area" series={inv} yFormat={short} />
+    </Block>
+    <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
+      cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>
+      <Bars label="Investimenti in AI generativa" data={gen} format={short} />
+    </Block>
+    <Block span={12} title="Investimenti delle aziende per tipo, ultimo anno" note={ND} missing={byType.length ? null : MISSING}
+      cite={owidCite(s('investimenti_tipo'))} table={{ cols: ['Tipo', 'Dollari'], rows: byType.map((b) => [b.k, b.v]), format: exact }}>
+      <Bars label="Investimenti delle aziende per tipo" data={byType} format={short} />
     </Block>
   </div>
 
@@ -146,10 +148,10 @@
 
 <style>
   .sezione { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; gap: var(--s2); }
-  @media (min-width: 1200px) { .sezione { grid-auto-flow: dense; } }
+  /* con un numero dispari di blocchi da metà riga l'ultimo, da solo, prende tutta la riga (Adozione con «Tutti») */
+  .sezione > :global(section.blk.w6:last-of-type:nth-of-type(odd)) { grid-column: 1 / -1; }
   .group { grid-column: 1 / -1; font-weight: 600; font-size: 14px; line-height: 24px; color: var(--fg-2); padding-top: var(--s2); }
-  .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .scelta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); font-size: 14px; line-height: 24px; color: var(--fg-2); }
-  .scelta select { max-width: 100%; min-height: 40px; padding: 0 var(--s1); font: inherit; font-size: 16px; color: var(--fg); background: var(--card); border: 1px solid var(--line-2); border-radius: var(--r-sm); }
-  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
 </style>

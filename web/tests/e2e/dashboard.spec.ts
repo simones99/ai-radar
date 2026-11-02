@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { TEMI } from '../../src/lib/router';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
@@ -22,56 +22,292 @@ const scrollSettled = (page: Page) =>
     await page.waitForTimeout(300);
     return a === (await page.evaluate(() => window.scrollY));
   }).toBe(true);
+// Le violazioni gravi di axe, in tutta la pagina o solo nelle parti dei selettori.
 // cast: @axe-core/playwright usa playwright-core 1.64, @playwright/test 1.63: tipi Page nominalmente diversi
-const seriousViolations = async (page: Page) =>
-  (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+const seriousViolations = async (page: Page, ...parti: string[]) =>
+  (await parti.reduce((axe, p) => axe.include(p), new AxeBuilder({ page: page as never })).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
 
 test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText("Su cosa formarti e cosa succede all'AI in Italia");
-  await expect(page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /A ottobre esce State of AI Report/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /MCP entra tra le competenze/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /16% delle imprese italiane usa l'AI/ })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Su cosa formarti' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: "L'AI in Italia" })).toBeVisible();
   await expect(page.locator('button.face')).toHaveCount(9);
 });
 
-test('la settimana dell’8: articolo eliso nella data in testa', async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-10-08T10:00:00'));
+test('home: il contenuto sta nel main, e una card si chiama con la sua cifra, con la frase come descrizione', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Settimana dell’8 ott 2026')).toBeVisible();
+  const card = page.getByRole('main').getByRole('button', { name: 'GeopoliticAI: 18,8 punti sotto gli USA', exact: true });
+  await expect(card).toHaveAccessibleDescription(/^Capacità del miglior modello europeo/);
 });
 
-test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {
+test('1920px: note, metodo e crediti restano nella misura di una riga di testo, circa 75 caratteri', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.goto('/#competenze');
+  for (const testo of [/^Le linee sono soglie fisse/, /^Quadranti a soglie fisse/, /Le notizie mostrano solo titolo/]) {
+    const em = await page.getByText(testo).evaluate((el) => el.getBoundingClientRect().width / parseFloat(getComputedStyle(el).fontSize));
+    expect(em).toBeLessThanOrEqual(34.01);
+  }
+});
+
+test('la settimana in testa è quella dei dati, non dell’orologio di chi legge: dal suo lunedì, con l’articolo eliso', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-05T10:00:00'));
+  await page.route('**/data/status.json', (route) => route.fulfill({ json: { ...(FIXTURE.status as object), aggiornato: '2026-06-10T08:00:00+00:00' } })); // un mercoledì
   await page.goto('/');
-  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await expect(page.getByText('Settimana dell’8 giu 2026')).toBeVisible();
+});
+
+test('senza lo stato delle fonti la riga della settimana non c’è', async ({ page }) => {
+  await page.route('**/data/status.json', (route) => route.fulfill({ status: 404, body: '' }));
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.getByText(/^Settimana /)).toHaveCount(0);
+});
+
+test('un file di dati bloccato: l’avviso e lo stato delle fonti lo dicono, e Riprova lo richiede', async ({ page }) => {
+  let bloccato = true;
+  await page.route('**/data/radar.json', (route) => (bloccato ? route.fulfill({ status: 500, body: '' }) : route.fulfill({ json: FIXTURE.radar })));
+  await page.goto('/');
+  await expect(page.getByRole('alert')).toContainText('Una parte dei dati non è arrivata');
+  const stato = page.getByRole('region', { name: 'Stato delle fonti' });
+  await expect(stato).toContainText('Radar (calcolo)');
+  await expect(stato).not.toContainText('sono aggiornate');
+  expect(await noHorizontalScroll(page)).toBe(true);
+  bloccato = false;
+  await page.getByRole('alert').getByRole('button', { name: 'Riprova' }).click();
+  await expect(page.getByRole('link', { name: /MCP entra/ })).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
+test('la prova prima delle parole: la legenda sta sotto il radar', async ({ page }) => {
+  await page.goto('/#competenze');
+  await scrollSettled(page);
+  const radar = (await page.getByRole('group', { name: /Radar delle competenze/ }).boundingBox())!;
+  const legenda = (await page.getByText(/^Le linee sono soglie fisse/).boundingBox())!;
+  expect(legenda.y).toBeGreaterThanOrEqual(radar.y + radar.height);
+});
+
+for (const [w, h] of [[1280, 800], [320, 640]]) {
+  test(`Norme a ${w}px: si apre sulla prossima scadenza`, async ({ page }) => {
+    await page.setViewportSize({ width: w, height: h });
+    await page.goto('/');
+    await page.locator('#tile-norme .face').click();
+    await expect(page.locator('#detail-norme .tl li.next')).toBeFocused();
+    await scrollSettled(page);
+    await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
+    // da tastiera si prosegue da lì: il primo Tab non riporta in cima alla pagina
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#detail-norme .tl li.next a')).toBeFocused();
+    await scrollSettled(page);
+    await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
+  });
+}
+
+test('Norme a 1280px: le notizie di policy restano a vista accanto alla scadenza', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/#norme');
+  await scrollSettled(page);
+  await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
+  await expect(page.getByRole('region', { name: 'Notizie di policy' })).toBeInViewport();
+});
+
+test('Norme da una porta: si apre sulla scadenza del link', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
+  await page.goto('/');
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Tra 12 giorni').click();
+  await scrollSettled(page);
+  await expect(page.locator('#detail-norme .tl li[aria-current="true"]')).toBeInViewport();
+});
+
+test('radar a 320px, con le posizioni di un radar vero: chi ha cambiato quadrante ha il suo nome, anche fuori da Impara ora', async ({ page }) => {
+  // id, nome, slancio e il suo valore di un mese fa, annunci e il loro valore di un mese fa, quadrante, calcolato, di un mese fa, incerto
+  const righe = [
+    ["agenti", "Agenti AI", 0.4257, 0.4658, 30.787, null, "impara-ora", "impara-ora", "impara-ora", false],
+    ["coding-agenti", "Agenti di coding", 0.8743, 1.6903, 1.913, null, "prova", "prova", "prova", false],
+    ["mcp", "MCP", 0.3022, 0.1221, 4.678, null, "impara-ora", "impara-ora", "impara-ora", false],
+    ["rag", "RAG", -0.3412, 0.1491, 9.545, null, "impara-ora", "consolida", "impara-ora", true],
+    ["valutazione", "Eval", 0.5339, 1.253, 1.269, null, "prova", "prova", "prova", false],
+    ["post-training", "Fine-tuning", 0.1356, 0.0801, 0.323, null, "prova", "prova", "osserva", false],
+    ["context-engineering", "Context engineering", -0.265, -0.0519, 14.342, null, "consolida", "consolida", "impara-ora", false],
+    ["sicurezza", "Sicurezza AI", 0.0346, 0.1244, 0.467, null, "prova", "prova", "prova", false],
+    ["governance", "Governance", -0.2422, -0.1061, 3.211, null, "consolida", "consolida", "impara-ora", true],
+    ["dati-per-ai", "Data engineering", 0.0958, -0.047, 3.268, null, "consolida", "impara-ora", "consolida", false],
+    ["text-to-sql", "AI per BI", 1.1455, 1.1254, 0.127, null, "prova", "prova", "prova", true],
+    ["vector-db", "DB vettoriali", -0.4834, -0.2222, 5.337, null, "consolida", "consolida", "consolida", true],
+    ["multimodale", "Multimodali", 0.0946, 0.0255, 8.866, null, "impara-ora", "impara-ora", "consolida", false],
+    ["llmops", "LLMOps", 0.2381, 0.5952, 17.719, null, "impara-ora", "impara-ora", "impara-ora", true],
+    ["modelli-locali", "Modelli locali", 0.184, 0.2605, 0.179, null, "prova", "prova", "prova", false],
+    ["robotica", "Robotica", 1.1953, 0.55, 0.232, null, "prova", "prova", "prova", true]
+  ] as const;
+  const base = FIXTURE.radar!.competenze[0];
+  const competenze = righe.map(([id, breve, slancio, slancio_prec, domanda, domanda_prec, quadrante, quadrante_calcolato, quadrante_prec, incerto]) =>
+    ({ ...base, id, nome: breve, breve, slancio, slancio_prec, domanda, domanda_prec, quadrante, quadrante_calcolato, quadrante_prec, incerto }));
+  await page.route('**/data/radar.json', (route) => route.fulfill({ json: { ...FIXTURE.radar, competenze } }));
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/#competenze');
+  const radar = page.getByRole('group', { name: /^Radar delle competenze/ });
+  for (const nome of ["Fine-tuning", "Context engineering", "Governance", "Multimodali"]) await expect(radar.getByText(nome, { exact: true })).toBeVisible();
+});
+
+test('sul telefono la foto viene dopo il primo blocco; da 720px sta accanto al titolo', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/#modelli');
+  await scrollSettled(page);
+  // tutto nello stesso istante: tra due misure separate la pagina può ancora scorrere
+  const misure = () => page.evaluate(() => {
+    const box = (e: Element) => { const r = e.getBoundingClientRect(); return { y: r.y, bottom: r.bottom }; };
+    const [su, giu] = [...document.querySelectorAll('#detail-modelli section.blk')].map(box);
+    return { su, giu, foto: box(document.querySelector('#detail-modelli figure')!), titolo: box(document.querySelector('#h-modelli')!) };
+  });
+  const telefono = await misure();
+  expect(telefono.su.y).toBeGreaterThan(telefono.titolo.y);
+  expect(telefono.foto.y).toBeGreaterThanOrEqual(telefono.su.bottom);
+  expect(telefono.foto.bottom).toBeLessThanOrEqual(telefono.giu.y);
+  expect(await noHorizontalScroll(page)).toBe(true);
+  await page.setViewportSize({ width: 800, height: 640 });
+  await scrollSettled(page);
+  const largo = await misure();
+  expect(largo.foto.y).toBeLessThan(largo.su.y);
+});
+
+test('mappa a 1280px: il fumetto si legge tutto e non copre il tabellone', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/#geopoliticai?vista=quote');
+  await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('combobox', { name: 'Un Paese' }).selectOption('CHN');
+  await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('button', { name: 'Apri' }).click();
+  await expect(page.getByRole('dialog', { name: 'Cina' })).toBeVisible();
+  await scrollSettled(page);
+  const dialogo = page.getByRole('dialog', { name: 'Cina' });
+  const fumetto = (await dialogo.boundingBox())!;
+  expect(await dialogo.evaluate((el) => el.scrollHeight <= el.clientHeight)).toBe(true);
+  const menu = (await page.getByRole('combobox', { name: 'Un Paese' }).boundingBox())!;
+  expect(fumetto.y + fumetto.height).toBeLessThanOrEqual(menu.y);
+  await expect(page.getByRole('combobox', { name: 'Un Paese' })).toHaveValue('CHN');
+  // la posizione del riquadro dell'Europa non dipende dall'altezza del fumetto
+  const riquadro = (await page.getByRole('group', { name: 'Europa, ingrandita' }).boundingBox())!;
+  const mondo = (await page.getByRole('group', { name: /^Mappa del mondo/ }).boundingBox())!;
+  expect(riquadro.y + riquadro.height).toBeLessThanOrEqual(mondo.y + mondo.height);
+  await dialogo.getByRole('button', { name: 'Chiudi' }).click();
+  await expect(page.getByRole('combobox', { name: 'Un Paese' })).toHaveValue('');
+});
+
+test('porta Per te: chi entra e chi esce insieme: apre il radar, dove si vedono tutti e due', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /MCP entra tra le competenze.*RAG esce/ }).click();
+  await expect(page).toHaveURL(/#competenze$/);
+  await expect(page.locator('#h-competenze')).toHaveText('MCP entra tra le competenze da imparare ora');
+  await expect(page.getByText(/^RAG esce da Impara ora\./)).toBeVisible();
+  const radar = page.getByRole('group', { name: /Radar delle competenze/ });
+  await expect(radar.getByRole('link', { name: /^Model Context Protocol \(MCP\): Impara ora/ })).toBeAttached();
+  await expect(radar.getByRole('link', { name: /^RAG e ricerca semantica: Da consolidare/ })).toBeAttached();
+});
+
+// nella fixture MCP entra e RAG esce: qui RAG era già fuori, e la notizia è di una competenza sola
+const soloMcpEntra = (page: Page) => page.route('**/data/radar.json', (route) => route.fulfill({
+  json: { ...FIXTURE.radar!, competenze: FIXTURE.radar!.competenze.map((c) => (c.id === 'rag' ? { ...c, quadrante_prec: 'consolida' } : c)) },
+}));
+
+test('porta Per te: solo chi entra: apre Competenze sulla competenza della notizia', async ({ page }) => {
+  await soloMcpEntra(page);
+  await page.goto('/');
+  await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
   await expect(page).toHaveURL(/#competenze\/mcp$/);
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page.getByText(/^Impara ora, un mese fa Da consolidare\./)).toBeVisible();
 });
 
-test('porta L’AI in Italia con una scadenza vicina: apre Norme sulla scadenza', async ({ page }) => {
+test('porta L’AI in Italia: il dato italiano apre Business', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('16% delle imprese italiane').click();
+  await expect(page.locator('#detail-business')).toBeVisible();
+  await expect(page).toHaveURL(/#business$/);
+});
+
+test('porta L’AI in Italia: una scadenza entro 30 giorni viene prima del dato italiano', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
   await page.goto('/');
-  await page.getByRole('link', { name: /Tra 12 giorni/ }).click();
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Tra 12 giorni').click();
   await expect(page.locator('#detail-norme')).toBeVisible();
   await expect(page).toHaveURL(/#norme\/2026-12-02$/);
-  await expect(page.locator('#detail-norme li[aria-current="true"]')).toContainText('Fine della transizione per la marcatura');
+});
+
+test('porta L’AI in Italia: senza un dato italiano dice la quota dell’UE e apre GeopoliticAI sull’UE', async ({ page }) => {
+  await page.route(/data\/(eurostat|owid)\.json$/, (route) => route.fulfill({ status: 404, body: '' }));
+  await page.goto('/');
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Nessuno dei 35').click();
+  await expect(page.locator('#detail-geopoliticai')).toBeVisible();
+  await expect(page).toHaveURL(/#geopoliticai\/chi-addestra\?area=ue$/);
+  // si arriva sul blocco della notizia, e il numero della porta è lì
+  const blocco = page.getByRole('region', { name: 'Chi addestra i modelli di grande scala' });
+  await expect(blocco).toBeFocused();
+  await scrollSettled(page);
+  await expect(blocco).toBeInViewport();
+  await expect(blocco).toContainText('nessuno dei 35');
+});
+
+test('una voce grande per testa: la card Competenze ha figura e frase, GeopoliticAI tiene la cifra alla misura delle altre', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  const competenze = page.getByRole('button', { name: 'Competenze: 2 su 5', exact: true });
+  await expect(competenze).toContainText('2 competenze su 5 da imparare ora');
+  await expect(competenze.getByText('su 5', { exact: true })).toHaveCount(0);
+  const corpo = (nome: RegExp) => page.getByRole('button', { name: nome }).getByText(/^(18,8|×\d)/).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(await corpo(/^GeopoliticAI/)).toBe(await corpo(/^Modelli e ricerca/));
+});
+
+test('elenco accanto a una card aperta: a 800px di altezza ci stanno tutte le card, senza scorrere', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/#business');
+  await expect(page.locator('#tile-rapporti .face')).toBeVisible();
+  expect(await page.locator('.has-open .groups').evaluate((el) => el.scrollHeight <= el.clientHeight)).toBe(true);
+});
+
+test('elenco accanto a una card aperta: Competenze dice la sua cifra', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/#business');
+  await expect(page.getByRole('button', { name: 'Competenze: 2 su 5', exact: true })).toContainText('su 5');
 });
 
 test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
   await page.goForward();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page).toHaveURL(/#competenze$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
+});
+
+test('porta: Esc e Indietro tornano alla porta, non alla card', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
+  await page.goto('/');
+  const porta = page.getByRole('link', { name: /Per la tua organizzazione/ });
+  await porta.click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await scrollSettled(page);
+  await page.keyboard.press('Escape');
+  await expect(porta).toBeFocused();
+  await scrollSettled(page);
+  await expect(porta).toBeInViewport();
+  await porta.click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await scrollSettled(page);
+  await page.goBack();
+  await expect(porta).toBeFocused();
+  await scrollSettled(page);
+  await expect(porta).toBeInViewport();
+  // aperta dalla card, si torna alla card
+  await page.locator('#tile-norme .face').click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#tile-norme .face')).toBeFocused();
 });
 
 test('porta con una card aperta: come una pillola, un solo indietro torna alla home', async ({ page }) => {
@@ -79,9 +315,9 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
   await page.goto('/');
   await page.locator('#tile-business .face').click();
   await expect(page.locator('#detail-business')).toBeVisible();
-  await page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ }).click();
+  await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page).toHaveURL(/#competenze$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -89,12 +325,13 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
 
 test('porta verso la card già aperta: riapre la competenza e porta il focus al titolo', async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
+  await soloMcpEntra(page);
   await page.goto('/');
-  const porta = page.getByRole('link', { name: /MCP entra tra le competenze da imparare ora/ });
+  const porta = page.getByRole('link', { name: /MCP entra tra le competenze/ });
   await porta.click();
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await page.getByRole('link', { name: '← Tutte le competenze' }).click();
-  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await porta.click();
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await expect(page.locator('#h-competenze')).toBeFocused();
@@ -102,7 +339,7 @@ test('porta verso la card già aperta: riapre la competenza e porta il focus al 
   await expect(page.locator('#h-competenze')).toBeInViewport();
   await page.goBack();
   await expect(page).toHaveURL(/#competenze$/);
-  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -133,7 +370,7 @@ test('indietro chiude; dopo un cambio di card un solo indietro torna alla home',
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await page.locator('#tile-business .face').click();
-  await page.getByRole('navigation', { name: 'Altri temi' }).getByRole('button', { name: 'Norme' }).click();
+  await page.getByRole('navigation', { name: 'Altre card' }).getByRole('button', { name: 'Norme' }).click();
   await expect(page).toHaveURL(/#norme$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
@@ -164,7 +401,7 @@ test('dal radar alla competenza e ritorno: clic sul punto, Indietro, Esc', async
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await page.goBack();
   await expect(page).toHaveURL(/#competenze$/);
-  await expect(page.getByRole('img', { name: /Radar delle competenze/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await page.getByRole('link', { name: /^RAG/ }).first().click(); // movimenti del mese ed elenco portano alla stessa pagina
   await expect(page.locator('#h-competenze')).toHaveText('RAG e ricerca semantica');
   await page.keyboard.press('Escape');
@@ -231,66 +468,148 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
-const aree = (page: Page) => page.getByRole('group', { name: 'Area' });
-const paesiUe = (page: Page) => page.getByRole('group', { name: "Paesi dell'UE" });
-const scheda = (page: Page) => page.locator('#detail-geopoliticai h3').first();
+const menuArea = (page: Page) => page.getByRole('combobox', { name: 'Area' });
+// la scheda dell'area è la regione che porta il nome dell'area: il suo titolo
+const scheda = (page: Page, area: string) => page.getByRole('region', { name: area, exact: true });
 
 test('area: il link apre il Paese, il ricaricamento lo tiene, un link con un’altra area vince sul ricordo', async ({ page }) => {
   await page.goto('/#geopoliticai?area=italia');
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
-  await expect(paesiUe(page).locator('button[aria-pressed="true"]')).toHaveText('Italia');
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
+  await expect(menuArea(page)).toHaveValue('italia');
   await page.reload();
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await page.goto('about:blank');
   await page.goto('/#geopoliticai'); // senza area nel link: vale il ricordo, che entra nel link
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
   await page.goto('about:blank');
   await page.goto('/#geopoliticai?area=cina');
-  await expect(scheda(page)).toHaveText('Cina');
-  await expect(aree(page).locator('button[aria-pressed="true"]')).toHaveText('Cina');
+  await expect(scheda(page, 'Cina')).toBeVisible();
+  await expect(menuArea(page)).toHaveValue('cina');
 });
 
 test('area non valida: si apre l’UE, senza errori', async ({ page }) => {
   const errori: string[] = [];
   page.on('pageerror', (e) => errori.push(e.message));
   await page.goto('/#geopoliticai?area=atlantide');
-  await expect(scheda(page)).toHaveText('UE');
-  await expect(aree(page).locator('button[aria-pressed="true"]')).toHaveText('UE');
+  await expect(scheda(page, 'UE')).toBeVisible();
+  await expect(menuArea(page)).toHaveValue('ue');
   await expect(page).toHaveURL(/#geopoliticai$/);
   expect(errori).toEqual([]);
 });
 
-test('area da tastiera: Tab tra i pulsanti, Invio sceglie; «Tutta l’UE» toglie l’area dal link', async ({ page }) => {
+test('area dal menu accanto al titolo della scheda, anche da tastiera; «UE, tutta» toglie l’area dal link', async ({ page }) => {
   await page.goto('/#geopoliticai');
-  await aree(page).getByRole('button', { name: 'USA' }).focus();
-  await page.keyboard.press('Tab');
-  await expect(aree(page).getByRole('button', { name: 'Cina' })).toBeFocused();
-  await page.keyboard.press('Enter');
-  await expect(scheda(page)).toHaveText('Cina');
+  await menuArea(page).selectOption('cina');
+  await expect(scheda(page, 'Cina')).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=cina$/);
-  await aree(page).getByRole('button', { name: 'UE' }).focus();
-  await page.keyboard.press('Enter');
-  await paesiUe(page).getByRole('button', { name: "Tutta l'UE" }).focus();
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Enter');
-  await expect(scheda(page)).toHaveText("Francia, nell'UE");
+  await menuArea(page).focus();
+  await page.keyboard.press('ArrowDown'); // dopo la Cina viene l'UE
+  await expect(scheda(page, 'UE')).toBeVisible();
+  await expect(page).toHaveURL(/#geopoliticai$/);
+  await page.keyboard.press('ArrowDown');
+  await expect(scheda(page, "Francia, nell'UE")).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
-  await page.keyboard.press('Shift+Tab');
-  await page.keyboard.press('Space');
-  await expect(scheda(page)).toHaveText('UE');
+  await menuArea(page).selectOption('ue');
   await expect(page).toHaveURL(/#geopoliticai$/);
 });
 
-test('area a 320px: le file vanno a capo, niente scorrimento orizzontale', async ({ page }) => {
+test('area a 320px: il menu sta accanto o sotto il titolo, niente scorrimento orizzontale', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#geopoliticai?area=italia');
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
-  for (const fila of [aree(page), paesiUe(page)]) {
-    const tops = await fila.getByRole('button').evaluateAll((bs) => new Set(bs.map((b) => b.getBoundingClientRect().top)).size);
-    expect(tops).toBeGreaterThan(1);
-  }
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
+  const menu = (await menuArea(page).boundingBox())!;
+  expect(menu.height).toBeGreaterThanOrEqual(44);
   expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+for (const width of [320, 1280]) {
+  test(`GeopoliticAI a ${width}px: il distacco è nello schermo del titolo, sopra la mappa`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/#geopoliticai');
+    await expect(page.getByRole('heading', { level: 2, name: /Chi costruisce i modelli/ })).toBeVisible();
+    await scrollSettled(page);
+    const titolo = (await page.getByRole('heading', { level: 2, name: /Chi costruisce i modelli/ }).boundingBox())!;
+    const cifra = (await page.getByText('18,8', { exact: true }).boundingBox())!;
+    expect(cifra.y).toBeGreaterThan(titolo.y);
+    expect(cifra.y - titolo.y).toBeLessThan(900);
+    const mappa = (await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).boundingBox())!;
+    expect(cifra.y).toBeLessThan(mappa.y);
+    expect(await noHorizontalScroll(page)).toBe(true);
+  });
+}
+
+test('GeopoliticAI: dal distacco alla scheda dell’UE, anche con un’altra area scelta', async ({ page }) => {
+  await page.goto('/#geopoliticai?area=cina');
+  await expect(scheda(page, 'Cina')).toBeVisible();
+  await page.getByRole('button', { name: "Vai alla scheda dell'UE" }).click();
+  await expect(scheda(page, 'UE')).toBeFocused();
+});
+
+for (const width of [320, 390, 480]) {
+  test(`card GeopoliticAI a ${width}px: i nomi delle aree stanno interi nella card`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 780 });
+    await page.goto('/');
+    const card = page.getByRole('button', { name: /GeopoliticAI/ });
+    await expect(card).toBeVisible();
+    const fuori = (await card.boundingBox())!;
+    for (const nome of ['USA', 'Cina', 'UE']) {
+      const box = (await card.getByText(nome, { exact: true }).boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(fuori.x);
+      expect(box.x + box.width).toBeLessThanOrEqual(fuori.x + fuori.width);
+    }
+    expect(await noHorizontalScroll(page)).toBe(true);
+  });
+}
+
+test('GeopoliticAI: «Dove sta l’Italia» apre le quote con il suo fumetto, il link lo dice, e chiudendolo il link torna senza', async ({ page }) => {
+  await page.goto('/#geopoliticai?area=italia');
+  await page.getByRole('button', { name: "Dove sta l'Italia nella catena dell'AI →" }).click();
+  const fumetto = page.getByRole('dialog', { name: 'Italia' });
+  await expect(fumetto).toBeFocused();
+  await expect(page).toHaveURL(/vista=quote/);
+  await expect(page).toHaveURL(/paese=ITA/);
+  await page.reload();
+  await expect(fumetto).toBeVisible();
+  await fumetto.getByRole('button', { name: 'Chiudi' }).click();
+  await expect(fumetto).toHaveCount(0);
+  await expect(page).not.toHaveURL(/paese=/);
+  await expect(page).toHaveURL(/vista=quote/);
+});
+
+test('GeopoliticAI: il Paese scelto dal menu e dalla mappa sta nel link, e il ricaricamento lo riapre', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=quote');
+  const mappa = page.getByRole('region', { name: "Chi controlla la catena dell'AI" });
+  await mappa.getByRole('combobox', { name: 'Un Paese' }).selectOption('CHN');
+  await mappa.getByRole('button', { name: 'Apri' }).click();
+  await expect(page).toHaveURL(/paese=CHN/);
+  await page.reload();
+  await expect(page.getByRole('dialog', { name: 'Cina' })).toBeVisible();
+  await mappa.getByRole('group', { name: /^Mappa del mondo/ }).getByTestId('paese-USA').dispatchEvent('click'); // il fumetto della Cina copre gli USA
+  await expect(page).toHaveURL(/paese=USA/);
+  await expect(page.getByRole('dialog', { name: 'USA' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Cina' })).toHaveCount(0);
+});
+for (const width of [320, 390, 480, 768, 1280]) {
+  test(`mappa delle quote a ${width}px: le etichette non si coprono, e la più alta c'è sempre`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/#geopoliticai?vista=quote');
+    const mappa = page.getByRole('region', { name: "Chi controlla la catena dell'AI" });
+    const etichette = mappa.getByTestId('etichetta');
+    await expect(etichette.first()).toContainText('USA 156,3');
+    const box = await Promise.all((await etichette.all()).map(async (e) => (await e.boundingBox())!));
+    for (const [i, a] of box.entries()) for (const b of box.slice(i + 1)) {
+      const insieme = a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+      expect(insieme).toBe(false);
+    }
+    await expect(mappa.getByRole('img', { name: 'Il primo: USA' })).toBeVisible();
+  });
+}
+
+test('GeopoliticAI: un ?paese= sconosciuto si ignora', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=quote&paese=XXX');
+  await expect(page.getByRole('region', { name: "Chi controlla la catena dell'AI" })).toBeVisible();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
 });
 
 test('Modelli e ricerca: il rimando apre GeopoliticAI, Indietro torna a Modelli e poi alla home', async ({ page }) => {
@@ -298,7 +617,7 @@ test('Modelli e ricerca: il rimando apre GeopoliticAI, Indietro torna a Modelli 
   await page.locator('#tile-modelli .face').click();
   await page.getByRole('link', { name: 'Vai a GeopoliticAI →' }).click();
   await expect(page).toHaveURL(/#geopoliticai$/);
-  await expect(scheda(page)).toHaveText('UE');
+  await expect(scheda(page, 'UE')).toBeVisible();
   await page.goBack();
   await expect(page).toHaveURL(/#modelli$/);
   await expect(page.locator('#detail-modelli')).toBeVisible();
@@ -313,12 +632,11 @@ test('matrice: un clic su una riga cambia l’area nel link e porta il focus all
   await page.goto('/#geopoliticai');
   await matrice(page).getByRole('button', { name: 'Germania' }).click();
   await expect(page).toHaveURL(/#geopoliticai\?area=germania$/);
-  await expect(scheda(page)).toHaveText("Germania, nell'UE");
-  await expect(page.getByRole('region', { name: "Germania, nell'UE" })).toBeFocused();
+  await expect(scheda(page, "Germania, nell'UE")).toBeFocused();
   await matrice(page).getByRole('button', { name: 'USA' }).focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/#geopoliticai\?area=usa$/);
-  await expect(page.getByRole('region', { name: 'USA' })).toBeFocused();
+  await expect(scheda(page, 'USA')).toBeFocused();
 });
 
 test('matrice a 320px: scorre dentro il suo contenitore, non la pagina', async ({ page }) => {
@@ -332,7 +650,9 @@ test('matrice a 320px: scorre dentro il suo contenitore, non la pagina', async (
 
 const mappa = (page: Page) => page.getByRole('region', { name: "Chi controlla la catena dell'AI" });
 const europa = (page: Page) => mappa(page).getByRole('group', { name: 'Europa, ingrandita' });
-const italiaInEuropa = (page: Page) => europa(page).getByRole('button', { name: /^Italia:/ });
+const italiaInEuropa = (page: Page) => europa(page).getByTestId('paese-ITA');
+const menuPaese = (page: Page) => mappa(page).getByRole('combobox', { name: 'Un Paese' });
+const valoreItalia = (page: Page, testo: string) => expect(menuPaese(page).getByRole('option', { name: `Italia: ${testo}` })).toBeAttached();
 
 test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette nel link', async ({ page }) => {
   await page.goto('/#geopoliticai?anello=modelli');
@@ -350,33 +670,31 @@ test('mappa: ?anello=modelli apre l’anello, e un clic sulla fermata lo mette n
 });
 
 test('mappa: ?anello=fabbricazione apre l’anello dei chip, e un clic su una fermata aggiorna il link', async ({ page }) => {
-  await page.goto('/#geopoliticai?anello=fabbricazione');
+  await page.goto('/#geopoliticai?vista=quote&anello=fabbricazione');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('3. Fabbricazione dei chip');
-  await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: Europa, dato unico, 8%');
+  await valoreItalia(page, 'Europa, dato unico, 8%');
   await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?anello=macchinari$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&anello=macchinari$/);
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('4. Macchinari');
   await expect(mappa(page).getByText(/Le macchine EUV/)).toBeVisible();
-  await mappa(page).getByRole('button', { name: 'Anello precedente' }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?anello=fabbricazione$/);
 });
 
 test('mappa: ?anello=materie&materiale=terre apre le terre rare, e un clic su un materiale aggiorna il link', async ({ page }) => {
-  await page.goto('/#geopoliticai?anello=materie&materiale=terre');
+  await page.goto('/#geopoliticai?vista=quote&anello=materie&materiale=terre');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('1. Materie prime');
   const materiali = mappa(page).getByRole('group', { name: 'Materiale' });
   await expect(materiali.getByRole('button', { name: 'Terre rare' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: nessuna produzione');
+  await valoreItalia(page, 'nessuna produzione');
   await materiali.getByRole('button', { name: 'Germanio' }).focus();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/#geopoliticai\?anello=materie&materiale=germanio$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&anello=materie&materiale=germanio$/);
   await expect(materiali.getByRole('button', { name: 'Germanio' })).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('mappa: ?anello=datacenter apre le quote dei data center, con la nota sulla copertura', async ({ page }) => {
-  await page.goto('/#geopoliticai?anello=datacenter');
+  await page.goto('/#geopoliticai?vista=quote&anello=datacenter');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('5. Data center');
-  await expect(italiaInEuropa(page)).toHaveAccessibleName('Italia: nessun sito noto a Epoch');
+  await valoreItalia(page, 'nessun sito noto a Epoch');
   await expect(mappa(page).getByText(/coprono circa il 44% del calcolo AI mondiale/)).toBeVisible();
 });
 
@@ -394,28 +712,43 @@ async function tocca(page: Page, svg: ReturnType<typeof europa>, [x, y]: [number
 const FRANCIA: [number, number] = [505.8, -163.6]; // il centro della Francia metropolitana, da confini.json
 
 test('mappa: un tocco sulla Francia apre il fumetto senza coprirla né l’Europa e sceglie ?area=francia; Esc chiude solo il fumetto', async ({ page }) => {
-  await page.goto('/#geopoliticai');
+  await page.goto('/#geopoliticai?vista=quote');
   const mondo = mappa(page).getByRole('group', { name: /^Mappa del mondo/ });
   const punto = await tocca(page, mondo, FRANCIA);
   const fumetto = mappa(page).getByRole('dialog', { name: 'Francia' });
   await expect(fumetto).toBeFocused();
-  await expect(page).toHaveURL(/#geopoliticai\?area=francia$/);
-  await expect(scheda(page)).toHaveText("Francia, nell'UE");
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=francia&paese=FRA$/);
+  await expect(scheda(page, "Francia, nell'UE")).toBeVisible();
   const box = (await fumetto.boundingBox())!;
   const riquadro = (await europa(page).boundingBox())!;
   expect(punto.x < box.x || punto.x > box.x + box.width || punto.y < box.y || punto.y > box.y + box.height).toBe(true);
   expect(box.x).toBeGreaterThan(riquadro.x + riquadro.width); // il riquadro dell'Europa resta scoperto
   await page.keyboard.press('Escape');
   await expect(fumetto).toBeHidden();
-  await expect(mondo.getByRole('button', { name: /^Francia:/ })).toBeFocused();
-  await expect(scheda(page)).toHaveText("Francia, nell'UE"); // il dettaglio resta aperto
+  await expect(menuPaese(page)).toBeFocused();
+  await expect(scheda(page, "Francia, nell'UE")).toBeVisible(); // il dettaglio resta aperto
+});
+
+test('mappa da tastiera: il menu sotto la mappa apre il fumetto del Paese, e Esc riporta al menu', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=quote');
+  await menuPaese(page).selectOption('DEU');
+  await menuPaese(page).focus();
+  await page.keyboard.press('Tab');
+  await expect(mappa(page).getByRole('button', { name: 'Apri' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  const fumetto = mappa(page).getByRole('dialog', { name: 'Germania' });
+  await expect(fumetto).toBeFocused();
+  await expect(page).toHaveURL(/area=germania/);
+  await page.keyboard.press('Escape');
+  await expect(fumetto).toBeHidden();
+  await expect(menuPaese(page)).toBeFocused();
 });
 
 test('mappa a 320px: il fumetto è un pannello sotto le mappe, con il pulsante per chiuderlo', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#geopoliticai');
   // l'Italia dal riquadro e la Cina dal mondo: sul desktop i loro fumetti si aprono da lati diversi
-  const paesi = [['Italia', italiaInEuropa(page)], ['Cina', mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByRole('button', { name: /^Cina:/ })]] as const;
+  const paesi = [['Italia', italiaInEuropa(page)], ['Cina', mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByTestId('paese-CHN')]] as const;
   for (const [nome, paese] of paesi) {
     await paese.click();
     const fumetto = mappa(page).getByRole('dialog', { name: nome });
@@ -430,15 +763,12 @@ test('mappa a 320px: il fumetto è un pannello sotto le mappe, con il pulsante p
   }
 });
 
-test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie e la evidenzia', async ({ page }) => {
+test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie', async ({ page }) => {
   await page.goto('/#geopoliticai');
-  await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true'); // dentro l'UE
-  await paesiUe(page).getByRole('button', { name: 'Francia' }).click();
-  await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'false');
+  await menuArea(page).selectOption('francia');
   await italiaInEuropa(page).click();
-  await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
-  await expect(scheda(page)).toHaveText("Italia, nell'UE");
-  await expect(italiaInEuropa(page)).toHaveAttribute('aria-pressed', 'true');
+  await expect(page).toHaveURL(/#geopoliticai\?area=italia&paese=ITA$/);
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
 });
 
 test('mappa a 320px: il riquadro dell’Europa sta sotto la mappa, l’Italia si tocca bene', async ({ page }) => {
@@ -456,16 +786,16 @@ test('mappa a 320px: il riquadro dell’Europa sta sotto la mappa, l’Italia si
 
 test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=modelli&siti=1 no', async ({ page }) => {
   const cerchi = () => mappa(page).getByRole('button', { name: /: (.+ H100 equivalenti|in costruzione)$/ });
-  await page.goto('/#geopoliticai?anello=datacenter');
+  await page.goto('/#geopoliticai?vista=quote&anello=datacenter');
   await expect(cerchi()).toHaveCount(0);
   await mappa(page).getByRole('button', { name: 'Siti' }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?anello=datacenter&siti=1$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&anello=datacenter&siti=1$/);
   await expect(mappa(page).getByRole('group', { name: /^Mappa del mondo/ }).getByRole('button', { name: /^Colossus 2:/ })).toBeVisible();
   await europa(page).getByRole('button', { name: /^Google Waltham Cross:/ }).click();
   await expect(mappa(page).getByRole('dialog', { name: 'Google Waltham Cross' })).toBeFocused();
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-mappa')).toEqual([]);
   await page.goto('about:blank'); // a card aperta un hash nuovo tiene i parametri: si riparte
-  await page.goto('/#geopoliticai?anello=modelli&siti=1');
+  await page.goto('/#geopoliticai?vista=quote&anello=modelli&siti=1');
   await expect(mappa(page).getByRole('heading', { level: 4 })).toHaveText('6. Modelli');
   await expect(cerchi()).toHaveCount(0);
   await expect(mappa(page).getByRole('button', { name: 'Siti' })).toHaveCount(0);
@@ -474,42 +804,44 @@ test('mappa: ?anello=datacenter&siti=1 mostra i cerchi dei siti, e ?anello=model
 /** I tratti degli archi del filo nel riquadro dell'Europa, nell'ordine delle fermate: null è un arco pieno. */
 const tratti = (page: Page) => europa(page).getByTestId('arco').evaluateAll((as) => as.map((a) => a.getAttribute('stroke-dasharray')));
 
-test('filo: ?vista=filo&filo=cina apre l’esempio cinese, e un clic su una fermata sposta l’arco pieno', async ({ page }) => {
-  await page.goto('/#geopoliticai?vista=filo&filo=cina');
+test('filo: si parte dal filo, ?filo=cina apre l’esempio cinese, e un clic su una fermata sposta l’arco pieno', async ({ page }) => {
+  await page.goto('/#geopoliticai?filo=cina');
   await expect(mappa(page).getByRole('group', { name: 'Vista' }).getByRole('button', { name: 'Filo della catena' })).toHaveAttribute('aria-pressed', 'true');
   await expect(mappa(page).getByRole('group', { name: 'Esempio' }).getByRole('button', { name: 'Un modello cinese' })).toHaveAttribute('aria-pressed', 'true');
   await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello cinese' })).toBeVisible();
   await expect(mappa(page).getByText(/^Un esempio scelto da noi, non un dato/)).toBeVisible();
   expect(await tratti(page)).toEqual([null, null, null, null, null]);
   await mappa(page).getByRole('button', { name: '3 Fabbricazione dei chip', exact: true }).click();
-  await expect(page).toHaveURL(/#geopoliticai\?vista=filo&filo=cina&anello=fabbricazione$/);
-  await expect.poll(() => tratti(page)).toEqual([null, null, '3 2', '3 2', '3 2']);
-  // di nuovo alle quote: il filo resta nel link, ma la vista è quella delle quote
-  await mappa(page).getByRole('button', { name: 'Quote per Paese' }).click();
   await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione$/);
+  await expect.poll(() => tratti(page)).toEqual([null, null, '3 2', '3 2', '3 2']);
+  // alle quote: il filo resta nel link, ma la vista è quella delle quote; e si torna
+  await mappa(page).getByRole('button', { name: 'Quote per Paese' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione&vista=quote$/);
   await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
   await expect(europa(page).getByTestId('arco')).toHaveCount(0);
+  await mappa(page).getByRole('button', { name: 'Filo della catena' }).click();
+  await expect(page).toHaveURL(/#geopoliticai\?filo=cina&anello=fabbricazione$/);
 });
 
 test('filo a 320px: nessuno scorrimento orizzontale, e gli archi d’Europa nel riquadro sotto la mappa', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
-  await page.goto('/#geopoliticai?vista=filo');
+  await page.goto('/#geopoliticai');
   await expect(mappa(page).getByRole('list', { name: 'Le tappe del filo: un modello europeo' })).toBeVisible();
   await expect(europa(page).getByTestId('arco').first()).toBeAttached();
   expect(await noHorizontalScroll(page)).toBe(true);
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-mappa')).toEqual([]);
 });
 
 test('filo con «riduci movimento»: gli archi non si animano', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/#geopoliticai?vista=filo');
+  await page.goto('/#geopoliticai');
   await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
   await expect(page).toHaveURL(/anello=macchinari/);
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
 });
 
 test('filo senza «riduci movimento»: l’arco che arriva alla fermata scelta si disegna', async ({ page }) => {
-  await page.goto('/#geopoliticai?vista=filo');
+  await page.goto('/#geopoliticai');
   await mappa(page).getByRole('button', { name: '4 Macchinari', exact: true }).click();
   await expect(page).toHaveURL(/anello=macchinari/);
   expect(await page.evaluate(() => document.getAnimations().length)).toBeGreaterThan(0);
@@ -520,7 +852,35 @@ test('mappa in tema scuro: nessuna violazione grave', async ({ page }) => {
   await page.goto('/#geopoliticai?area=cina');
   await page.reload();
   await expect(mappa(page)).toBeVisible();
-  expect(await new AxeBuilder({ page: page as never }).include('#geo-mappa').analyze().then((r) => r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'))).toEqual([]);
+  expect(await seriousViolations(page, '#geo-mappa')).toEqual([]);
+});
+
+/** Il contrasto WCAG tra il testo di un elemento con uno sfondo pieno e quello sfondo, con i colori come li disegna il browser. */
+const contrasto = (l: Locator) => l.evaluate((el) => {
+  const ctx = document.createElement('canvas').getContext('2d')!;
+  const lum = (css: string) => {
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillStyle = css;
+    ctx.fillRect(0, 0, 1, 1);
+    const [r, g, b] = [...ctx.getImageData(0, 0, 1, 1).data].map((v) => v / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const s = getComputedStyle(el);
+  const [a, b] = [lum(s.color), lum(s.backgroundColor)].sort((x, y) => y - x);
+  return (a + 0.05) / (b + 0.05);
+});
+
+test('menu «Area» e quote per Paese in tema scuro: nessuna violazione grave', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/#geopoliticai?vista=quote');
+  await page.reload();
+  await menuArea(page).selectOption('italia'); // un Paese dentro il gruppo dell'UE
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=italia$/);
+  await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
+  await expect(mappa(page).getByText('Il primo', { exact: true })).toBeVisible();
+  expect(await seriousViolations(page, '#geo-scheda', '#geo-mappa')).toEqual([]);
+  // axe lascia il menu in sospeso, per il gradiente della freccia sullo sfondo: il contrasto del testo lo misura il test
+  expect(await contrasto(menuArea(page))).toBeGreaterThanOrEqual(4.5);
 });
 
 test('mappa con «riduci movimento»: nessuna animazione nel scegliere un Paese', async ({ page }) => {
@@ -578,6 +938,12 @@ for (const id of TEMI) {
   });
 }
 
+test('accessibilità: in Competenze due regioni non hanno lo stesso nome', async ({ page }) => {
+  await page.goto('/#competenze');
+  const { violations } = await new AxeBuilder({ page: page as never }).withRules(['landmark-unique']).analyze();
+  expect(violations).toEqual([]);
+});
+
 test('accessibilità: nessuna violazione grave in competenze/mcp', async ({ page }) => {
   await page.goto('/#competenze/mcp');
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
@@ -594,7 +960,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
-const SETTORI = ['Adozione per settore, Italia e UE', "A cosa serve l'AI, Italia e UE", 'Cosa frena chi non la usa, Italia e UE'];
+const SETTORI = ['Adozione per settore, Italia e UE', "A cosa serve l'AI, Italia e UE", 'Le barriere di chi non la usa, Italia e UE'];
 
 test('Business in tema scuro: i grafici dei settori senza violazioni gravi', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
@@ -611,6 +977,12 @@ test('Business a 320px: i grafici dei settori senza scorrimento orizzontale', as
   for (const name of SETTORI) await expect(page.getByRole('img', { name })).toBeVisible();
   await expect(page.getByText(/^Eurostat non rileva finanza/)).toBeVisible();
   expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+test('Business: si legge prima l’adozione, la risposta al titolo, poi gli investimenti', async ({ page }) => {
+  await page.goto('/#business');
+  const y = async (name: string) => (await page.getByRole('group', { name }).boundingBox())!.y;
+  expect(await y('Adozione')).toBeLessThan(await y('Investimenti'));
 });
 
 test('Business a 1440px: «Adozione per settore» resta sotto il titolo «Adozione», non sale fra gli investimenti', async ({ page }) => {
@@ -698,6 +1070,98 @@ test('ancora interna con una card aperta: la pagina va all’ancora, non alle ca
   await expect(page.locator('#stato')).toBeInViewport();
 });
 
+for (const width of [768, 1280, 1920]) {
+  test(`${width}px, un file bloccato e una card aperta dal link: «Quali» porta allo stato delle fonti`, async ({ page }) => {
+    await page.route('**/data/radar.json', (route) => route.fulfill({ status: 500, body: '' }));
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/#competenze');
+    await scrollSettled(page);
+    await page.getByRole('alert').getByRole('link', { name: 'Quali' }).click();
+    await expect(page.locator('section.detail')).toHaveCount(0);
+    await scrollSettled(page);
+    await expect(page.getByRole('region', { name: 'Stato delle fonti' })).toBeInViewport();
+  });
+}
+
+test.describe('sul telefono, senza un mouse', () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } });
+  test('Movimenti: le istruzioni dicono di toccare, non di passare sopra', async ({ page }) => {
+    await page.goto('/#competenze');
+    const movimenti = page.getByRole('region', { name: 'Radar delle competenze' });
+    await expect(movimenti.getByText('Tocca una riga per aprirla.')).toBeVisible();
+    await expect(movimenti.getByText(/^Passa sopra una riga/)).toBeHidden();
+  });
+});
+
+test('il salto al contenuto: in home porta al titolo, e il Tab dopo alla prima porta', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Vai al contenuto' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: /^Per te/ })).toBeFocused();
+});
+
+for (const width of [390, 1280]) {
+  test(`${width}px, il salto al contenuto con una card aperta: porta al suo titolo, e la card resta aperta`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/#business');
+    await scrollSettled(page);
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.getByRole('link', { name: 'Vai al contenuto' }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#h-business')).toBeFocused();
+    await scrollSettled(page);
+    await expect(page.locator('#h-business')).toBeInViewport();
+    await expect(page).toHaveURL(/#business$/);
+  });
+}
+
+test('tutti i dati bloccati: il salto al contenuto ha ancora dove andare', async ({ page }) => {
+  await page.route('**/data/*.json', (route) => route.fulfill({ status: 500, body: '' }));
+  await page.goto('/');
+  await expect(page.getByRole('alert')).toContainText('Non riesco a caricare i dati.');
+  await page.getByRole('link', { name: 'Vai al contenuto' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('alert')).toBeFocused();
+});
+
+test('Stato delle fonti, tabella impilata: ogni valore resta sotto il nome della sua colonna, e una nota lunga non spezza le parole', async ({ page }) => {
+  await page.goto('/');
+  const stato = page.getByRole('region', { name: 'Stato delle fonti' });
+  await stato.getByText(/Vedi le \d+ fonti/).click();
+  const adzuna = stato.getByRole('row', { name: /^Adzuna/ });
+  // sotto il nome della colonna (16px), anche se la nota accanto è più alta
+  const dalNome = await adzuna.getByRole('cell', { name: /non configurata/ }).evaluate((td) => {
+    const r = document.createRange();
+    r.selectNodeContents(td);
+    return r.getBoundingClientRect().top - td.getBoundingClientRect().top;
+  });
+  expect(dalNome).toBeLessThan(24);
+  // la parola si cerca come con Ctrl+F: compare anche nell'elenco delle fonti da controllare, e sta su una riga dappertutto
+  const righe = await page.evaluate(() => {
+    const trovate: number[] = [];
+    getSelection()?.removeAllRanges();
+    while ((window as Window & { find?: (s: string) => boolean }).find?.('ADZUNA_APP_ID/ADZUNA_APP_KEY')) {
+      trovate.push(new Set([...getSelection()!.getRangeAt(0).getClientRects()].map((x) => Math.round(x.top))).size);
+    }
+    return trovate;
+  });
+  expect(new Set(righe)).toEqual(new Set([1]));
+});
+
+for (const width of [320, 360]) {
+  test(`${width}px: le pillole dicono il nome della loro testa, e la pagina non scorre di lato`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 640 });
+    await page.goto('/#rapporti');
+    const pillole = page.getByRole('navigation', { name: 'Altre card' });
+    // parte dalla testa della card aperta: si legge dove si è
+    await expect(pillole.getByRole('group', { name: "L'AI in Italia" }).getByText("L'AI in Italia")).toBeInViewport();
+    await expect(pillole.getByRole('group', { name: 'Su cosa formarti' }).getByText('Su cosa formarti')).toBeAttached();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+}
+
 test('360px: all’apertura il titolo della card è nella finestra, sotto le pillole', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 780 });
   await page.goto('/');
@@ -706,7 +1170,7 @@ test('360px: all’apertura il titolo della card è nella finestra, sotto le pil
   await scrollSettled(page);
   await expect(page.locator('#h-rapporti')).toBeInViewport();
   await expect.poll(async () => {
-    const pills = await page.locator('nav[aria-label="Altri temi"]').boundingBox();
+    const pills = await page.locator('nav[aria-label="Altre card"]').boundingBox();
     const det = await page.locator('#detail-rapporti').boundingBox();
     return pills && det ? det.y >= pills.y + pills.height : false;
   }).toBe(true);
@@ -741,8 +1205,9 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
   await page.goto('/');
   await page.locator('#tile-business .face').click();
   await expect(page.locator('#detail-business')).toBeVisible();
-  await expect(page.locator('.intro')).toBeHidden();
-  await expect(page.locator('nav[aria-label="Altri temi"]')).toBeHidden();
+  await expect(page.getByRole('link', { name: /Per te/ })).toBeHidden(); // né le porte
+  await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toBeAttached(); // la h1 resta per i lettori di schermo
+  await expect(page.locator('nav[aria-label="Altre card"]')).toBeHidden();
   await expect(page.locator('button.face:visible')).toHaveCount(9);
   await expect(page.locator('#tile-business .face')).toHaveAttribute('aria-expanded', 'true');
   const elenco = await box(page, '#temi');
@@ -757,17 +1222,29 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
   await expect(page.locator('.intro')).toBeVisible();
 });
 
-test('1920px: foto a tutta larghezza dietro il titolo, grafici almeno 3 per riga', async ({ page }) => {
+test('1920px: foto piccola accanto al titolo, il primo grafico nella finestra, nessuna riga di blocchi lasciata a metà', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/#modelli');
-  await expect(page.locator('#detail-modelli')).toBeVisible();
-  const foto = await box(page, '#detail-modelli figure');
-  const hero = await box(page, '#detail-modelli .d-hero');
-  const titolo = await box(page, '#h-modelli');
-  expect(foto.width).toBeGreaterThan(hero.width - 2);
-  expect(titolo.x).toBeGreaterThanOrEqual(foto.x);
-  expect(titolo.y + titolo.height).toBeLessThanOrEqual(foto.y + foto.height);
-  const tops = await page.locator('#detail-modelli .blk').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
-  const perRiga = Math.max(...Object.values(tops.reduce<Record<number, number>>((m, t) => ({ ...m, [t]: (m[t] ?? 0) + 1 }), {})));
-  expect(perRiga).toBeGreaterThanOrEqual(3);
+  const det = page.locator('#detail-modelli');
+  await expect(det).toBeVisible();
+  const pagina = (await det.boundingBox())!;
+  const foto = (await det.getByRole('figure').boundingBox())!;
+  const titolo = (await det.getByRole('heading', { level: 2 }).boundingBox())!;
+  expect(foto.width).toBeLessThan(pagina.width / 2);
+  expect(titolo.x + titolo.width).toBeLessThanOrEqual(foto.x);
+  // i blocchi sono le regioni della pagina, ognuna col titolo del suo grafico
+  const regioni = det.getByRole('region').filter({ has: page.getByRole('heading', { level: 3 }) });
+  await expect(regioni).toHaveCount(await det.getByRole('heading', { level: 3 }).count());
+  await expect(regioni.first()).toBeInViewport();
+  // dodici colonne a ogni larghezza: in ogni riga i blocchi vanno dal bordo sinistro della pagina al destro
+  const blocchi = await regioni.evaluateAll((els) => els.map((e) => {
+    const r = e.getBoundingClientRect();
+    return { top: Math.round(r.top), x0: r.left, x1: r.right };
+  }));
+  const righe = Object.values(blocchi.reduce<Record<number, { x0: number; x1: number }[]>>((m, b) => ({ ...m, [b.top]: [...(m[b.top] ?? []), b] }), {}));
+  expect(righe.length).toBeGreaterThan(1);
+  for (const riga of righe) {
+    expect(Math.min(...riga.map((b) => b.x0))).toBeCloseTo(pagina.x, 0);
+    expect(Math.max(...riga.map((b) => b.x1))).toBeCloseTo(pagina.x + pagina.width, 0);
+  }
 });

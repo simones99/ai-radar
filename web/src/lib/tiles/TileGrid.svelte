@@ -1,10 +1,12 @@
 <script lang="ts">
   import { flushSync, onDestroy, tick } from 'svelte';
   import type { Dataset } from '../data/types';
+  import { riduciMovimento, scorrimento } from '../movimento';
   import { APRI, IMPOSTA, parseHash, toHash, type Params, type TileId } from '../router';
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
   import TileFace from './TileFace.svelte';
+  import { diSpicco } from './types';
 
   let { data, today }: { data: Dataset; today: Date } = $props();
 
@@ -14,6 +16,7 @@
   let elemento = $state<string | null>(start?.elemento ?? null);
   let current: TileId | null = start?.tema ?? null; // sincrono, per le guardie
   let lastOpened: TileId | null = start?.tema ?? null;
+  let porta: HTMLElement | null = null; // il link della home da cui si è aperta la card: alla chiusura si torna lì
   let currentEl: string | null = start?.elemento ?? null; // sincrono, come current
   let params = $state<Params>(start?.params ?? {}); // ?ruolo=…: restano nel link finché la card è aperta, anche cambiando card
   let depth = 0; // passi aggiunti alla cronologia da quando la card è aperta (0: aperta da un link diretto)
@@ -41,8 +44,7 @@
 
   function withTransition(update: () => void): Promise<void> {
     const doc = document as Document & { startViewTransition?: (cb: () => void) => { updateCallbackDone?: Promise<void> } };
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (doc.startViewTransition && !reduce) {
+    if (doc.startViewTransition && !riduciMovimento()) {
       const t = doc.startViewTransition(() => flushSync(update));
       return (t?.updateCallbackDone ?? Promise.resolve()).catch(() => {});
     }
@@ -66,12 +68,17 @@
   async function refocus(done: Promise<void>) {
     await done;
     await tick();
-    if (lastOpened) document.querySelector<HTMLButtonElement>(`#tile-${lastOpened} .face`)?.focus();
+    const da = porta?.isConnected ? porta : lastOpened ? document.querySelector<HTMLButtonElement>(`#tile-${lastOpened} .face`) : null;
+    porta = null;
+    da?.focus();
   }
 
   function toggleTile(id: TileId) {
     if (current === id) closeTile();
-    else openTile(id);
+    else {
+      if (current === null) porta = null;
+      openTile(id);
+    }
   }
 
   // I parametri di un link si aggiungono a quelli già nel link; a parità di nome vince il link.
@@ -105,6 +112,7 @@
     const h = href ? parseHash(href) : null;
     if (!h) return;
     e.preventDefault();
+    if (current === null && !jumping) porta = a as HTMLElement;
     openTile(h.tema, h.elemento, h.params, !!a?.closest('section.detail'));
   }
 
@@ -137,7 +145,9 @@
     params = !h ? {} : current === null ? h.params : params;
     canonical(h && { ...h, params });
     if (!h && location.hash) {
-      show(null); // ancora interna (#stato, #crediti, #temi): chiude la card e lascia la pagina dove va il link
+      // ancora interna (#stato, #crediti, #temi): chiude la card. Il browser è già andato all'ancora, ma con la card ancora aperta: si torna a cercarla a pagina cambiata
+      const ancora = location.hash.slice(1);
+      show(null).then(tick).then(() => document.getElementById(ancora)?.scrollIntoView?.({ block: 'start', behavior: scorrimento() }));
       return;
     }
     const again = h != null && current === h.tema && currentEl !== h.elemento; // stessa card, altro elemento: scheda ricreata
@@ -181,7 +191,7 @@
 <!-- Card aperta: sotto 1200px pillole e dettaglio al posto delle card; da 1200px le card restano in elenco accanto al dettaglio. -->
 <div class="board" class:has-open={open !== undefined}>
   {#if open}
-    <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={(id) => openTile(id)} onclose={closeTile} />
+    <Pills tiles={TILES.filter((t) => t.id !== openId)} testa={open.testa} onpick={(id) => openTile(id)} onclose={closeTile} />
   {/if}
 
   <div class="groups" id="temi">
@@ -190,7 +200,7 @@
         <h2 id="g-{g.id}" class="g-h">{g.label}</h2>
         <div class="tiles">
           {#each TILES.filter((t) => t.testa === g.id) as t (t.id)}
-            <article class="tile" id="tile-{t.id}">
+            <article class="tile" class:spicco={diSpicco(t)} class:largo={t.largo} id="tile-{t.id}">
               <TileFace tile={t} {data} {today} expanded={openId === t.id} compact={open !== undefined} onopen={() => toggleTile(t.id)} />
             </article>
           {/each}
@@ -209,18 +219,25 @@
   .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
   .groups { display: grid; gap: var(--s4); }
   .group { display: grid; gap: var(--s2); }
-  .g-h { font-weight: 600; font-size: 20px; line-height: 24px; }
+  .g-h { font-weight: 700; font-size: 24px; line-height: 32px; letter-spacing: -.01em; }
   .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); }
   @media (max-width: 1040px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); } }
   .tile, .pane { min-width: 0; }
+  .tile { container-type: inline-size; }
+  /* la card di spicco apre la sua testa su tutta la riga; la card larga, su due colonne, chiude la riga che resterebbe a metà */
+  .tile.spicco { grid-column: 1 / -1; }
+  .tile.largo { grid-column: span 2; }
+  @media (max-width: 560px) { .tile.largo { grid-column: auto; } }
   .has-open .groups { display: none; }
   @media (min-width: 1200px) {
     .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .has-open { grid-template-columns: 300px minmax(0, 1fr); gap: var(--s4); align-items: start; }
     /* l'elenco resta a vista mentre si scorre il dettaglio */
     .has-open .groups { display: grid; gap: var(--s3); position: sticky; top: var(--s3); max-height: calc(100vh - var(--s6)); overflow-y: auto; padding: 4px; margin: -4px; }
-    .has-open .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+    /* le nove righe e le due teste stanno in 800px di altezza, senza scorrere */
+    .has-open .tiles { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .has-open .tile.largo { grid-column: auto; }
     .has-open .g-h { font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-2); padding-inline: var(--s1); }
   }
   @media (min-width: 1680px) { .board:not(.has-open) .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

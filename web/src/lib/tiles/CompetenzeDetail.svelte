@@ -8,7 +8,7 @@
   import type { Quadrant } from '../data/types';
   import { apri, toHash } from '../router';
   import { ruolo as ruoloRicordato } from '../scelta.svelte';
-  import { per10k, signedPct } from '../text/format';
+  import { monthName, per10k, signedPct } from '../text/format';
   import { headSkill } from '../text/frasi';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
@@ -29,6 +29,7 @@
   const delRuolo = $derived(ruolo ? all.filter((c) => c.ruoli?.includes(ruolo.id)).map((c) => c.id) : null);
   const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
   const elenco = $derived(delRuolo ? [...all.filter((c) => !altro(c.id)), ...all.filter((c) => altro(c.id))] : all); // prima il ruolo, l'ordine resta
+  const meseMovimenti = $derived(data.radar?.storico?.at(-1)?.mese); // i movimenti vanno di mese in mese: non è per forza il mese di chi legge
   let hovered = $state<string | null>(null); // anteprima al passaggio del mouse sui movimenti
   const arxivDown = $derived(data.status?.fonti?.arxiv?.stato === 'errore' ? 'In questo giro arXiv non ha risposto: lo slancio viene dagli altri segnali. ' : '');
   const sources: Cite = [
@@ -42,7 +43,7 @@
     'Domanda: annunci attivi che citano la competenza ogni 10.000 annunci del Paese, media tra i Paesi.',
     'Quadranti a soglie fisse. Slancio sopra 0 (cresce più dell’AI) e almeno 3 annunci ogni 10mila: Impara ora. Solo lo slancio: Da provare. Solo la domanda: Da consolidare. Nessuna delle due: Tieni d’occhio.',
     'Prudenza: il quadrante cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo. Nel frattempo la competenza è «in movimento verso» il quadrante nuovo.',
-    'Dato incerto (punto vuoto): il margine all’80% dello slancio è largo, l’estremo alto supera di oltre il 55% quello basso. Succede con pochi paper o repository, o con andamenti irregolari.',
+    'Dato incerto (punto vuoto): il margine all’80% dello slancio è largo, l’estremo alto supera di oltre il 55% quello basso. Succede con pochi paper o repository, o con andamenti irregolari. Un margine che comprende lo zero non basta a rendere incerto il dato, ma dice che la competenza potrebbe non crescere più dell’AI.',
     'Le parole cercate per ogni competenza sono in config/skills.yaml. Negli annunci si cerca per tutte una frase esatta in inglese, così le competenze sono confrontabili.',
   ];
 </script>
@@ -52,7 +53,7 @@
     <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} />
   {:else if !rows.length}
     <Block span={12} title="Radar delle competenze"
-      missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar si calcola dopo il primo aggiornamento di arXiv, GitHub e Adzuna.'} />
+      missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar non è disponibile in questo momento.'} />
   {:else}
     {#if ruoli.length}
       <div class="chips" role="group" aria-label="Il tuo ruolo">
@@ -60,31 +61,38 @@
         {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => ruoloRicordato.scegli(r.id)}>{r.nome}</button>{/each}
       </div>
     {/if}
-    <Block span={8} title="Radar delle competenze"
-      note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Le frecce partono da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprire la competenza."
+    <Block span={12} title="Radar delle competenze"
       cite={arxivDown ? [{ t: arxivDown }, ...sources] : sources}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)', ...(delRuolo ? ['Per il tuo ruolo'] : [])],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], signedPct(r.slancio), per10k(r.domanda),
                                       r.hasPrev ? `${signedPct(r.sp as number)} · ${r.dp != null ? per10k(r.dp) : '—'}` : '—',
                                       ...(delRuolo ? [delRuolo.includes(r.id) ? 'sì' : 'no'] : [])]) }}>
-      <Radar {rows} {quadranti} highlight={hovered} {delRuolo} onpick={(id) => apri('competenze', id)} />
-    </Block>
-    <Block span={4} title="Movimenti del mese" cite={sources}>
-      <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
+      <!-- il radar a tutta larghezza, con la legenda sotto: prima la figura. Accanto, quando c'è posto, i movimenti che ci si leggono: le stesse fonti -->
+      <div class="rm"><div class="radar-mov">
+        <div class="col">
+          <Radar {rows} {quadranti} highlight={hovered} {delRuolo} href={(id) => toHash('competenze', id)} onpick={(id) => apri('competenze', id)} />
+          <p class="legenda">Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo.</p>
+        </div>
+        <div class="mov">
+          <h4>Movimenti {meseMovimenti ? `di ${monthName(meseMovimenti)}` : 'del mese'}</h4>
+          <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
+        </div>
+      </div></div>
     </Block>
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
-      <div class="tw" tabindex="0" role="region" aria-label="Le competenze una per una">
-        <table>
-          <thead><tr><th scope="col">Competenza</th><th scope="col">Cosa è</th><th scope="col">Quadrante</th><th scope="col">Slancio</th><th scope="col">Annunci ogni 10mila</th></tr></thead>
-          <tbody>
+      <div class="tw scorre" tabindex="0" role="region" aria-label="Tabella delle competenze">
+        <!-- svelte-ignore a11y_no_redundant_roles: i ruoli ripetono quelli della tabella, perché impilata cambia il display e alcuni browser altrimenti la leggono come testo -->
+        <table role="table">
+          <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Competenza</th><th scope="col" role="columnheader">Cosa è</th><th scope="col" role="columnheader">Quadrante</th><th scope="col" role="columnheader">Slancio</th><th scope="col" role="columnheader">Annunci ogni 10mila</th></tr></thead>
+          <tbody role="rowgroup">
             {#each elenco as c (c.id)}
-              <tr class:altro={altro(c.id)}>
-                <th scope="row">{#if placed.has(c.id)}<a href={toHash('competenze', c.id)}>{c.nome}</a>{:else}{c.nome}{/if}</th>
-                <td class="desc">{c.descrizione}</td>
-                <td>{c.quadrante ? quadranti[c.quadrante] : 'dati insufficienti'}{c.incerto ? ' · incerto' : ''}</td>
-                <td class="num">{c.slancio != null ? signedPct(c.slancio) : '—'}</td>
-                <td class="num">{c.domanda != null ? per10k(c.domanda) : '—'}</td>
+              <tr role="row" class:altro={altro(c.id)}>
+                <th scope="row" role="rowheader">{#if placed.has(c.id)}<a href={toHash('competenze', c.id)}>{c.nome}</a>{:else}{c.nome}{/if}</th>
+                <td role="cell" class="desc">{c.descrizione}</td>
+                <td role="cell" data-label="Quadrante">{c.quadrante ? quadranti[c.quadrante] : 'dati insufficienti'}{c.incerto ? ' · incerto' : ''}</td>
+                <td role="cell" class="num" data-label="Slancio">{c.slancio != null ? signedPct(c.slancio) : '—'}</td>
+                <td role="cell" class="num" data-label="Annunci ogni 10mila">{c.domanda != null ? per10k(c.domanda) : '—'}</td>
               </tr>
             {/each}
           </tbody>
@@ -99,16 +107,36 @@
 
 <style>
   .chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .rm { container-type: inline-size; min-width: 0; }
+  .radar-mov { display: grid; gap: var(--s4); min-width: 0; }
+  .radar-mov > :global(*) { min-width: 0; }
+  .col { display: grid; gap: var(--s2); align-content: start; min-width: 0; }
+  .legenda { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
+  .mov { display: grid; gap: var(--s2); align-content: start; max-width: 640px; }
+  .mov h4 { margin: 0; font-weight: 600; font-size: 16px; line-height: 24px; }
+  @container (min-width: 960px) { .radar-mov { grid-template-columns: minmax(0, 1fr) 320px; } .mov { max-width: none; border-left: 1px solid var(--line); padding-left: var(--s3); } }
   .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
   .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
-  .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: 80ch; }
-  .tw { overflow-x: auto; }
+  .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: var(--misura); }
   table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; }
   th, td { text-align: left; padding: var(--s1); border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
   thead th { font-size: 12px; line-height: 16px; color: var(--fg-3); font-weight: 500; }
   tbody th { font-weight: 500; }
   td.desc { white-space: normal; min-width: 24ch; color: var(--fg-2); }
   td.num { text-align: right; }
+  /* sul telefono ogni competenza si impila: il nome, cosa è, e sotto le tre misure con il loro nome */
+  .tw { container-type: inline-size; }
+  @container (max-width: 480px) {
+    :is(table, tbody) { display: block; }
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    tbody tr { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); gap: 4px var(--s2); padding-block: 12px; border-bottom: 1px solid var(--line); }
+    :is(th, td, td.num) { padding: 0; border: 0; white-space: normal; text-align: left; }
+    tbody th, td.desc { grid-column: 1 / -1; }
+    td.desc { min-width: 0; font-size: 13px; line-height: 20px; }
+    /* nome della misura e valore su due righe comuni alle tre celle: i valori stanno in fila anche quando un nome va a capo */
+    td[data-label] { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 2px; }
+    td[data-label]::before { content: attr(data-label); align-self: end; font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  }
   /* altri ruoli: colore più chiaro invece dell'opacità, il contrasto resta AA */
   tr.altro :is(th, td, a) { color: var(--fg-3); font-weight: 400; }
 </style>

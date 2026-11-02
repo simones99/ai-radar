@@ -8,6 +8,7 @@
   // nel filo resta la tabella delle quote della fermata scelta. Con ?vista=quote, la mappa delle quote per Paese con le sue note.
   import { tick, untrack } from 'svelte';
   import Block from '../charts/Block.svelte';
+  import { FONT, hits, measureText, type Box } from '../charts/labels';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
     ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
@@ -62,14 +63,27 @@
   const [vx, vy, vw, vh] = VIEWBOX.split(' ').map(Number);
   /** La posizione di un punto della mappa, in percentuale del riquadro che la contiene. */
   const pos = (x: number, y: number, b = { x: vx, y: vy, w: vw, h: vh }) => ({ left: `${((x - b.x) / b.w) * 100}%`, top: `${((y - b.y) / b.h) * 100}%` });
+  const SEGNALINO = 28, ALTA = 24; // px: il segnalino del primo con il suo stacco, e l'altezza di un'etichetta sulla mappa
   // dove i Paesi sono piccoli o affollati l'etichetta si sposta: [dx, dy]
   const SPOSTA: Record<string, [number, number]> = { FRA: [-30, 4], GBR: [-30, -6], DEU: [6, -10], KOR: [14, -2], JPN: [18, 4], TWN: [14, 6], ISR: [-12, 6], ARE: [10, 8] };
   // l'Europa del dato unico ha la sua etichetta sulla Germania
-  const etichette = $derived(filo ? [] : [...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).map(([iso, x]) => {
-    const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
-    const [dx, dy] = SPOSTA[iso] ?? [0, 0];
-    return { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
-  }));
+  // Sul telefono le etichette non ci stanno tutte: dal valore più alto, una che ne coprirebbe un'altra non si disegna, e il suo valore resta nel tabellone e nel menu
+  const etichette = $derived.by(() => {
+    if (filo) return [];
+    const prese: Box[] = [];
+    return [...v.valori, ...(v.europa != null ? [[EUR, v.europa] as [string, number]] : [])].sort((a, b) => b[1] - a[1]).slice(0, 5).flatMap(([iso, x]) => {
+      const [cx, cy] = CENTRO[iso === EUR ? 'DEU' : iso] ?? [vx + vw / 2, 0];
+      const [dx, dy] = SPOSTA[iso] ?? [0, 0];
+      const e = { iso, nome: iso === EUR ? 'Europa' : NOMI[iso] ?? iso, testo: v.breve(x), primo: iso === v.valori[0]?.[0], ...pos(cx + dx, cy + dy) };
+      if (!largo) return [e];
+      const px = ((cx + dx - vx) / vw) * largo, py = ((cy + dy - vy) / vw) * largo;
+      const mezza = (measureText(`${e.nome} ${e.testo}`, `800 14px ${FONT}`) + (e.primo ? SEGNALINO : 0)) / 2;
+      const box = { x0: px - mezza, y0: py - ALTA / 2, x1: px + mezza, y1: py + ALTA / 2 };
+      if (hits(box, prese)) return [];
+      prese.push(box);
+      return [e];
+    });
+  });
 
   // il riquadro dell'Europa, nell'oceano Pacifico del sud; sotto i 600 px diventa una seconda mappa sotto quella del mondo
   const EUROPA = { x: 462, y: -228, w: 165, h: 108 }; // abbastanza stretto da dare all'Italia 44 px a 320 px

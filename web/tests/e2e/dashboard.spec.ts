@@ -413,6 +413,22 @@ test('GeopoliticAI: «Dove sta l’Italia» apre le quote con il suo fumetto, il
   await expect(page).toHaveURL(/vista=quote/);
 });
 
+for (const width of [320, 390, 480, 768, 1280]) {
+  test(`mappa delle quote a ${width}px: le etichette non si coprono, e la più alta c'è sempre`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/#geopoliticai?vista=quote');
+    const mappa = page.getByRole('region', { name: "Chi controlla la catena dell'AI" });
+    const etichette = mappa.getByTestId('etichetta');
+    await expect(etichette.first()).toContainText('USA 156,3');
+    const box = await Promise.all((await etichette.all()).map(async (e) => (await e.boundingBox())!));
+    for (const [i, a] of box.entries()) for (const b of box.slice(i + 1)) {
+      const insieme = a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+      expect(insieme).toBe(false);
+    }
+    await expect(mappa.getByRole('img', { name: 'Il primo: USA' })).toBeVisible();
+  });
+}
+
 test('GeopoliticAI: un ?paese= sconosciuto si ignora', async ({ page }) => {
   await page.goto('/#geopoliticai?vista=quote&paese=XXX');
   await expect(page.getByRole('region', { name: "Chi controlla la catena dell'AI" })).toBeVisible();

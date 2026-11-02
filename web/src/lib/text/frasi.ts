@@ -157,11 +157,14 @@ export function headNorme(d: Dataset, today: Date): Head {
 }
 
 // ---------------------------------------------------------------- competenze
+const MIN_ANNUNCI = 3; // ogni 10mila, la soglia del radar: sotto, un cambio non è una notizia per chi deve scegliere su cosa formarsi
+/** Perché n competenze sono da imparare ora: la frase della card e del titolo. */
+const perche = (n: number) => `${n === 1 ? "cresce più dell'AI e ha" : "crescono più dell'AI e hanno"} almeno ${MIN_ANNUNCI} annunci ogni 10mila`;
 /** Chi è ancora in Impara ora ma per il calcolo del mese è già altrove: il quadrante cambia solo dopo due mesi, e la frase non può dire che cresce. */
 function inBilico(rows: RadarRowM[]): string {
   return rows.filter((r) => r.quadrante === 'impara-ora' && r.moving).map((r) => {
     const motivo = r.moving === 'prova'
-      ? `${verbo([r], 'ha', 'hanno')} meno di 3 annunci ogni 10mila`
+      ? `${verbo([r], 'ha', 'hanno')} meno di ${MIN_ANNUNCI} annunci ogni 10mila`
       : `${verbo([r], 'sta', 'stanno')} perdendo slancio (${signedPct(r.slancio)})`;
     return `${r.breve} ${motivo} e ${verbo([r], 'può', 'possono')} uscirne`;
   }).join('; ');
@@ -173,8 +176,7 @@ export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
   const quante = `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length} da imparare ora`;
   const bilico = inBilico(rows);
-  const perche = n === 1 ? "cresce più dell'AI e ha almeno 3 annunci ogni 10mila" : "crescono più dell'AI e hanno almeno 3 annunci ogni 10mila";
-  return { fig: String(n), unit: `su ${rows.length}`, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche}.` };
+  return { fig: String(n), unit: `su ${rows.length}`, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche(n)}.` };
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
@@ -187,11 +189,8 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   const { inn, out } = radarChanges(rows);
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
   const bilico = inBilico(rows);
-  const tail = bilico
-    ? `Oggi ${n === 1 ? '1 competenza' : `${n} competenze`} su ${rows.length} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.`
-    : n === 1
-      ? `Oggi 1 competenza su ${rows.length} cresce più dell'AI e ha almeno 3 annunci ogni 10mila.`
-      : `Oggi ${n} competenze su ${rows.length} crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.`;
+  const quante = `Oggi ${n === 1 ? '1 competenza' : `${n} competenze`} su ${rows.length}`;
+  const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
   return {
@@ -271,8 +270,6 @@ const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: 
 /** "A", "A e B", "A, B e C", con i nomi in evidenza. */
 const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
-
-const MIN_ANNUNCI = 3; // ogni 10mila, la soglia del radar: sotto, un cambio non è una notizia per chi deve scegliere su cosa formarsi
 
 // Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
 function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM } | null {

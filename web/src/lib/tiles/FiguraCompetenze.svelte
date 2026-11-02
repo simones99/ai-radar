@@ -1,6 +1,6 @@
 <script lang="ts">
   // La figura della card Competenze in home: il radar ridotto ai suoi quattro quadranti, con i punti di tutte le competenze
-  // e i nomi di quelle da imparare ora; chi è appena entrato porta la scia da dove era un mese fa; punto vuoto: dato incerto, come nel radar. Decorativa: la notizia è nel testo della card.
+  // e i nomi di quelle da imparare ora; chi è appena entrato porta la scia da dove era un mese fa; punto vuoto: dato incerto, contorno tratteggiato: il calcolo dà già un altro quadrante, come nel radar. Decorativa: la notizia è nel testo della card.
   import { scaleLinear } from 'd3-scale';
   import { radarRows, type RadarRowM } from '../data/derive';
   import type { Dataset, Quadrant } from '../data/types';
@@ -50,6 +50,7 @@
       <text class="ql" class:hot={q.hot} x={q.tx} y={q.ty} text-anchor={q.sinistra ? 'start' : 'end'}>{quadranti[q.id]}</text>
     {/each}
     {#each rows.filter((r) => r.quadrante !== 'impara-ora') as r (r.id)}
+      {#if r.moving}<circle class="attesa" cx={x(r.x)} cy={y(r.y)} r="6.5" />{/if}
       <circle class="dot" class:vuoto={r.incerto} cx={x(r.x)} cy={y(r.y)} r="3.5" />
     {/each}
     {#each rows.filter(scia) as r (r.id)}
@@ -58,6 +59,7 @@
     {/each}
     {#each rows.filter((r) => r.quadrante === 'impara-ora') as r (r.id)}
       {#if r.changed}<circle class="anello" cx={x(r.x)} cy={y(r.y)} r="11" />{/if}
+      {#if r.moving}<circle class="attesa hot" cx={x(r.x)} cy={y(r.y)} r="9" />{/if}
       <circle class="dot hot" class:vuoto={r.incerto} cx={x(r.x)} cy={y(r.y)} r="6" />
     {/each}
     {#each etichette as it (it.id)}
@@ -80,6 +82,7 @@
   .dot { fill: var(--fg-3); stroke: var(--card); stroke-width: 1.5; }
   .dot.hot { fill: var(--accent); stroke-width: 2; } .dot.vuoto { fill: var(--card); stroke: var(--fg-3); } .dot.hot.vuoto { stroke: var(--accent); }
   .anello { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+  .attesa { fill: none; stroke: var(--fg-3); stroke-width: 1.25; stroke-dasharray: 2 2.5; } .attesa.hot { stroke: var(--accent); }
   .scia { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 2 3; stroke-linecap: round; }
   .prev { fill: var(--card); stroke: var(--accent); stroke-width: 1.25; }
   .leader { stroke: var(--line-2); }

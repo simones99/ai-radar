@@ -21,6 +21,12 @@ describe('Radar', () => {
       'Model Context Protocol (MCP): Impara ora (era Da consolidare). Slancio +15% in 6 mesi, 3,4 annunci ogni 10mila. Un mese fa: slancio −27%, 3,4 annunci.');
     expect(screen.getByText('MCP')).toBeInTheDocument();
   });
+  it('chi aspetta la conferma del quadrante lo dice anche a parole', () => {
+    render(Radar, { rows, quadranti: radar.quadranti, href });
+    expect(screen.getByRole('link', { name: /Tieni d'occhio\./ })).toHaveAccessibleName(/Il calcolo di oggi dà Da provare, da confermare/);
+    expect(screen.getByRole('link', { name: /^Agenti AI/ }).getAttribute('aria-labelledby')).toBeTruthy();
+    expect(screen.getByRole('link', { name: /^Agenti AI/ })).not.toHaveAccessibleName(/da confermare/);
+  });
   it('evidenzia una competenza e attenua le altre', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti, highlight: 'mcp' });
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(4);

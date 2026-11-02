@@ -61,7 +61,7 @@
       </div>
     {/if}
     <Block span={12} title="Radar delle competenze"
-      note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Le scie partono da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprire la competenza."
+      note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo."
       cite={arxivDown ? [{ t: arxivDown }, ...sources] : sources}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)', ...(delRuolo ? ['Per il tuo ruolo'] : [])],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], signedPct(r.slancio), per10k(r.domanda),

@@ -81,6 +81,11 @@
       return { x0: x0 - 4, y0: q.y - 14, x1: x0 + tw + 4, y1: q.y + 4 };
     });
     obstacles.push(...soglie.map((s) => s.box), ...segni);
+    // gli anelli: un nome non ci si posa sopra
+    rows.filter((r) => r.changed || r.moving).forEach((r) => {
+      const a = raggio(r) + (r.changed ? 7 : 5);
+      obstacles.push({ x0: x(r.x) - a, y0: y(r.y) - a, x1: x(r.x) + a, y1: y(r.y) + a });
+    });
     // Sul telefono le etichette di Impara ora, che si disegnano sempre, scelgono il posto prima di quelle che possono saltare.
     const order = (r: RadarRowM) => (narrow ? (r.quadrante === 'impara-ora' ? 0 : 2) - Number(r.changed) : r.changed ? 0 : r.quadrante === 'impara-ora' ? 1 : 2);
     const items = rows.slice().sort((a, b) => order(a) - order(b)).map((r) => {
@@ -156,11 +161,14 @@
     {#each rows as r (r.id)}
       {@const hot = r.quadrante === 'impara-ora'}
       <g class="pt" class:dim={dim(r.id)} class:altro={altro(r.id)}>
+        <!-- anello pieno: ha appena cambiato quadrante; tratteggiato: il colore è il quadrante confermato, il calcolo di oggi dà già un altro -->
+        {#if r.changed}<circle class="anello" class:hot cx={x(r.x)} cy={y(r.y)} r={raggio(r) + 5.5} aria-hidden="true" />{/if}
+        {#if r.moving}<circle class="attesa" class:hot cx={x(r.x)} cy={y(r.y)} r={raggio(r) + 3.5} aria-hidden="true" />{/if}
         <circle class="dot" class:hot class:hollow={r.incerto} cx={x(r.x)} cy={y(r.y)} r={raggio(r)} aria-hidden="true" />
         <!-- il punto è un link: Tab lo raggiunge, Invio lo apre; il cerchio trasparente allarga l'area di tocco e porta il suggerimento -->
         <a class="pick" href={href?.(r.id)} onclick={(e) => { if (onpick) { e.preventDefault(); onpick(r.id); } }}
           onfocus={() => (focused = r.id)} onblur={() => { if (focused === r.id) focused = null; }} aria-labelledby="{uid}-n-{r.id}">
-          <title id="{uid}-n-{r.id}">{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}{mese(r)}.</title>
+          <title id="{uid}-n-{r.id}">{r.nome}{delRuolo?.includes(r.id) ? ', del tuo ruolo' : ''}: {quadranti[r.quadrante]}{r.changed && r.qp ? ` (era ${quadranti[r.qp]})` : ''}. Slancio {signedPct(r.slancio)} in 6 mesi, {per10k(r.domanda)} annunci ogni 10mila{r.incerto ? '. Dato incerto' : ''}{r.moving ? `. Il calcolo di oggi dà ${quadranti[r.moving]}, da confermare` : ''}{mese(r)}.</title>
           <circle class="hit" cx={x(r.x)} cy={y(r.y)} r="20" />
           <circle class="ring" class:hot cx={x(r.x)} cy={y(r.y)} r={raggio(r) + 4} />
         </a>
@@ -200,6 +208,8 @@
   .sl { font: 500 11px var(--font); fill: var(--fg-3); stroke: var(--q); }
   .dot { fill: var(--fg-3); stroke: var(--card); stroke-width: 2; } .dot.hot { fill: var(--accent); }
   .dot.hollow { fill: var(--card); stroke: var(--fg-3); stroke-width: 1.5; } .dot.hollow.hot { stroke: var(--accent); }
+  .anello, .attesa { fill: none; stroke: var(--fg-3); stroke-width: 1.5; } .anello.hot, .attesa.hot { stroke: var(--accent); }
+  .attesa { stroke-dasharray: 2 2.5; }
   .st0 { stop-color: var(--fg-3); stop-opacity: .12; } .st1 { stop-color: var(--fg-3); stop-opacity: .5; }
   .st0.hot, .st1.hot { stop-color: var(--accent); }
   .prev { fill: var(--fg-3); opacity: .55; } .prev.hot { fill: var(--accent); }
@@ -209,6 +219,7 @@
   @media (hover: hover) { .pick:hover .ring { opacity: .6; } }
   .pick:focus-visible .ring { opacity: 1; stroke-width: 2; }
   .leader { stroke: var(--line-2); }
+  .lbls { pointer-events: none; } /* nomi e linee di richiamo non coprono i punti, che si toccano */
   .halo-q { stroke: var(--q); } .halo-hot { stroke: var(--q-hot); }
   .lb-hot { font: 600 13px var(--font); fill: var(--fg); }
   .note { font: 400 12px var(--font); fill: var(--fg-3); }

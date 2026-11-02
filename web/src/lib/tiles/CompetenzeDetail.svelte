@@ -61,15 +61,17 @@
       </div>
     {/if}
     <Block span={12} title="Radar delle competenze"
-      note="Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo."
       cite={arxivDown ? [{ t: arxivDown }, ...sources] : sources}
       table={{ cols: ['Competenza', 'Quadrante', 'Slancio in 6 mesi', 'Annunci ogni 10mila', 'Un mese fa (slancio · annunci)', ...(delRuolo ? ['Per il tuo ruolo'] : [])],
                rows: rows.map((r) => [r.nome, quadranti[r.quadrante], signedPct(r.slancio), per10k(r.domanda),
                                       r.hasPrev ? `${signedPct(r.sp as number)} · ${r.dp != null ? per10k(r.dp) : '—'}` : '—',
                                       ...(delRuolo ? [delRuolo.includes(r.id) ? 'sì' : 'no'] : [])]) }}>
-      <!-- il radar a tutta larghezza, e accanto, quando c'è posto, i movimenti che ci si leggono: le stesse fonti -->
+      <!-- il radar a tutta larghezza, con la legenda sotto: prima la figura. Accanto, quando c'è posto, i movimenti che ci si leggono: le stesse fonti -->
       <div class="rm"><div class="radar-mov">
-        <Radar {rows} {quadranti} highlight={hovered} {delRuolo} href={(id) => toHash('competenze', id)} onpick={(id) => apri('competenze', id)} />
+        <div class="col">
+          <Radar {rows} {quadranti} highlight={hovered} {delRuolo} href={(id) => toHash('competenze', id)} onpick={(id) => apri('competenze', id)} />
+          <p class="legenda">Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo.</p>
+        </div>
         <div class="mov">
           <h4>Movimenti del mese</h4>
           <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
@@ -107,6 +109,8 @@
   .rm { container-type: inline-size; min-width: 0; }
   .radar-mov { display: grid; gap: var(--s4); min-width: 0; }
   .radar-mov > :global(*) { min-width: 0; }
+  .col { display: grid; gap: var(--s2); align-content: start; min-width: 0; }
+  .legenda { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .mov { display: grid; gap: var(--s2); align-content: start; max-width: 640px; }
   .mov h4 { margin: 0; font-weight: 600; font-size: 16px; line-height: 24px; }
   @container (min-width: 960px) { .radar-mov { grid-template-columns: minmax(0, 1fr) 320px; } .mov { max-width: none; border-left: 1px solid var(--line); padding-left: var(--s3); } }

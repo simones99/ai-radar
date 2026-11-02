@@ -92,4 +92,13 @@
   @media (hover: hover) { .copy:hover { color: var(--fg); } .close:hover { background: var(--line-2); } }
   /* dodici colonne a ogni larghezza: i blocchi tengono le loro misure (4, 6, 8, 12) e le coppie restano affiancate */
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }
+  /* sul telefono la foto aspetta il primo blocco, con quello che lo precede: prima la prova. Una sezione conta come un blocco */
+  @media (max-width: 719px) {
+    .detail:has(figure) { grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+    .detail:has(figure) :is(.d-hero, .blocks) { display: contents; }
+    .detail:has(figure) .d-text { padding-bottom: var(--s2); border-bottom: 1px solid var(--line-2); }
+    figure { order: 1; }
+    .detail:has(figure) .blocks > :global(*) { order: 2; }
+    .detail:has(figure) .blocks > :global(:not(.blk ~ *, .sezione ~ *)) { order: 0; }
+  }
 </style>

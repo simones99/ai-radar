@@ -81,6 +81,47 @@ test('un file di dati bloccato: l’avviso e lo stato delle fonti lo dicono, e R
   await expect(page.getByRole('alert')).toHaveCount(0);
 });
 
+test('la prova prima delle parole: la legenda sta sotto il radar', async ({ page }) => {
+  await page.goto('/#competenze');
+  const radar = (await page.getByRole('group', { name: /Radar delle competenze/ }).boundingBox())!;
+  const legenda = (await page.getByText(/^Le linee sono soglie fisse/).boundingBox())!;
+  expect(legenda.y).toBeGreaterThanOrEqual(radar.y + radar.height);
+});
+
+for (const [w, h] of [[1280, 800], [320, 640]]) {
+  test(`Norme a ${w}px: si apre sulla prossima scadenza`, async ({ page }) => {
+    await page.setViewportSize({ width: w, height: h });
+    await page.goto('/');
+    await page.locator('#tile-norme .face').click();
+    await expect(page.locator('#h-norme')).toBeFocused();
+    await scrollSettled(page);
+    await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
+  });
+}
+
+test('Norme da una porta: si apre sulla scadenza del link', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
+  await page.goto('/');
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Tra 12 giorni').click();
+  await scrollSettled(page);
+  await expect(page.locator('#detail-norme .tl li[aria-current="true"]')).toBeInViewport();
+});
+
+test('sul telefono la foto viene dopo il primo blocco; da 720px sta accanto al titolo', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/#modelli');
+  const foto = page.locator('#detail-modelli figure');
+  const blocco = page.locator('#detail-modelli section.blk');
+  const su = (await blocco.first().boundingBox())!;
+  const titolo = (await page.locator('#h-modelli').boundingBox())!;
+  expect(su.y).toBeGreaterThan(titolo.y);
+  expect((await foto.boundingBox())!.y).toBeGreaterThanOrEqual(su.y + su.height);
+  expect((await foto.boundingBox())!.y + (await foto.boundingBox())!.height).toBeLessThanOrEqual((await blocco.nth(1).boundingBox())!.y);
+  expect(await noHorizontalScroll(page)).toBe(true);
+  await page.setViewportSize({ width: 800, height: 640 });
+  expect((await foto.boundingBox())!.y).toBeLessThan((await blocco.first().boundingBox())!.y);
+});
+
 test('mappa a 1280px: il fumetto si legge tutto e non copre il tabellone', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/#geopoliticai?vista=quote');

@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Block from '../charts/Block.svelte';
   import Timeline from '../charts/Timeline.svelte';
+  import { scorrimento } from '../movimento';
   import { day } from '../text/format';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
@@ -10,6 +12,11 @@
   const head = $derived(tile.head(data, today));
   const items = $derived((data.ai_act?.scadenze ?? []).map((s) => ({ date: s.data, title: s.titolo, text: s.descrizione, href: s.fonte })));
   const policy = $derived((data.news?.notizie ?? []).filter((n) => n.tema === 'politica').slice(0, 8));
+  // la linea parte dalle scadenze passate: si arriva su quella del link, o sulla prossima, che è il titolo. Dopo lo scorrimento di Detail, che si monta prima
+  onMount(() => {
+    const voce = document.querySelector('#detail-norme .tl .hl') ?? document.querySelector('#detail-norme .tl .next');
+    voce?.scrollIntoView?.({ block: 'center', behavior: scorrimento() });
+  });
 </script>
 
 <Detail {tile} {head} {onclose}>

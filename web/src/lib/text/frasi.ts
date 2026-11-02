@@ -224,7 +224,7 @@ export function headNotizie(d: Dataset, today: Date): Head {
   const n = newsInLastDays(d.news, today).length;
   return {
     title: [{ t: String(n), em: true }, { t: n === 1 ? ' notizia in una settimana' : ' notizie in una settimana' }],
-    deck: `Solo titolo, data e link agli articoli originali, da ${fontiDi(d.news.notizie)}.`,
+    deck: `Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi ${d.news.giorni} giorni, da ${fontiDi(d.news.notizie)}.`,
   };
 }
 

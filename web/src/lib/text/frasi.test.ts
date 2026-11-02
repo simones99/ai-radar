@@ -98,8 +98,8 @@ describe('numeri chiave delle card', () => {
     const news = { ...d.news!, fonti: [...d.news!.fonti, { nome: 'Feed muto', url: 'https://example.org/feed', tema: 'altro' }],
       notizie: d.news!.notizie.map((n) => ({ ...n, fonte: 'The Decoder' })) };
     expect(faceNotizie({ news }, today)?.sent).toBe('Notizie negli ultimi 7 giorni da 1 fonte.');
-    expect(headNotizie({ news }, today).deck).toBe('Solo titolo, data e link agli articoli originali, da 1 fonte.');
-    expect(headNotizie(d, today).deck).toBe('Solo titolo, data e link agli articoli originali, da 2 fonti.');
+    expect(headNotizie({ news }, today).deck).toBe("Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi 45 giorni, da 1 fonte.");
+    expect(headNotizie(d, today).deck).toBe("Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi 45 giorni, da 2 fonti.");
   });
   it('notizie: titolo di riserva senza dati', () => {
     expect(headNotizie({}, today)).toEqual({ title: [{ t: 'Notizie' }], deck: null });

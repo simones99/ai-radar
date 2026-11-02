@@ -192,7 +192,8 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
     : n === 1
       ? `Oggi 1 competenza su ${rows.length} cresce più dell'AI e ha almeno 3 annunci ogni 10mila.`
       : `Oggi ${n} competenze su ${rows.length} crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.`;
-  if (!inn.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
+  if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
+  if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` }],
     deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + tail,

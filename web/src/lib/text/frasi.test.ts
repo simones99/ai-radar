@@ -61,6 +61,14 @@ describe('numeri chiave delle card', () => {
     expect(faceCompetenze(noPrev, today)?.fig).toBe('2');
     expect(faceCompetenze({ radar: { ...d.radar!, versione: undefined } }, today)).toBeNull();
   });
+  it('competenze: con le sole uscite il titolo dice chi esce, come la porta che ci porta', () => {
+    const senza = (...ids: string[]): Dataset => ({ radar: { ...d.radar!, competenze: d.radar!.competenze.filter((r) => !ids.includes(r.id)) } });
+    const h = headCompetenze(senza('mcp'), today);
+    expect(text(h.title)).toBe('RAG esce da Impara ora');
+    expect(h.title[0]).toEqual({ t: 'RAG', em: true });
+    expect(h.deck).not.toContain('esce');
+    expect(text(headCompetenze(senza('mcp', 'rag'), today).title)).toBe('Nessun cambio tra le competenze da imparare ora');
+  });
   it('competenze: una sola da imparare ora, verbo al singolare', () => {
     const one: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.filter((r) => r.id !== 'agenti') } };
     expect(headCompetenze(one, today).deck).toBe("RAG esce da Impara ora. Oggi 1 competenza su 4 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");

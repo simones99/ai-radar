@@ -413,6 +413,19 @@ test('GeopoliticAI: «Dove sta l’Italia» apre le quote con il suo fumetto, il
   await expect(page).toHaveURL(/vista=quote/);
 });
 
+test('GeopoliticAI: il Paese scelto dal menu e dalla mappa sta nel link, e il ricaricamento lo riapre', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=quote');
+  const mappa = page.getByRole('region', { name: "Chi controlla la catena dell'AI" });
+  await mappa.getByRole('combobox', { name: 'Un Paese' }).selectOption('CHN');
+  await mappa.getByRole('button', { name: 'Apri' }).click();
+  await expect(page).toHaveURL(/paese=CHN/);
+  await page.reload();
+  await expect(page.getByRole('dialog', { name: 'Cina' })).toBeVisible();
+  await mappa.getByRole('group', { name: /^Mappa del mondo/ }).getByTestId('paese-USA').dispatchEvent('click'); // il fumetto della Cina copre gli USA
+  await expect(page).toHaveURL(/paese=USA/);
+  await expect(page.getByRole('dialog', { name: 'USA' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Cina' })).toHaveCount(0);
+});
 for (const width of [320, 390, 480, 768, 1280]) {
   test(`mappa delle quote a ${width}px: le etichette non si coprono, e la più alta c'è sempre`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
@@ -540,7 +553,7 @@ test('mappa: un tocco sulla Francia apre il fumetto senza coprirla né l’Europ
   const punto = await tocca(page, mondo, FRANCIA);
   const fumetto = mappa(page).getByRole('dialog', { name: 'Francia' });
   await expect(fumetto).toBeFocused();
-  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=francia$/);
+  await expect(page).toHaveURL(/#geopoliticai\?vista=quote&area=francia&paese=FRA$/);
   await expect(scheda(page, "Francia, nell'UE")).toBeVisible();
   const box = (await fumetto.boundingBox())!;
   const riquadro = (await europa(page).boundingBox())!;
@@ -590,7 +603,7 @@ test('mappa: un tocco sull’Italia nel riquadro dell’Europa la sceglie', asyn
   await page.goto('/#geopoliticai');
   await menuArea(page).selectOption('francia');
   await italiaInEuropa(page).click();
-  await expect(page).toHaveURL(/#geopoliticai\?area=italia$/);
+  await expect(page).toHaveURL(/#geopoliticai\?area=italia&paese=ITA$/);
   await expect(scheda(page, "Italia, nell'UE")).toBeVisible();
 });
 

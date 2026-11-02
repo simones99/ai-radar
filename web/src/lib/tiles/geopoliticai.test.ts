@@ -761,6 +761,31 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
     expect(await aree(() => fireEvent.click(mappa().getByRole('button', { name: 'Apri' })))).toEqual(['francia']);
   });
 
+  /** I valori di ?paese= che la mappa manda mentre si fa `fai`. */
+  async function paesi(fai: () => Promise<unknown>): Promise<(string | null)[]> {
+    const visti: (string | null)[] = [];
+    const ascolta = (e: Event) => { const d = (e as CustomEvent).detail; if (d.chiave === 'paese') visti.push(d.valore); };
+    document.addEventListener('ai-radar:imposta', ascolta);
+    await fai();
+    document.removeEventListener('ai-radar:imposta', ascolta);
+    return visti;
+  }
+
+  it('il Paese aperto sta nel link, dalla mappa e dal menu; chiudendo il fumetto il link torna senza', async () => {
+    quote();
+    expect(await paesi(() => fireEvent.click(mondo().getByTestId('paese-USA')))).toEqual(['USA']);
+    await fireEvent.change(mappa().getByRole('combobox', { name: 'Un Paese' }), { target: { value: 'CHN' } });
+    expect(await paesi(() => fireEvent.click(mappa().getByRole('button', { name: 'Apri' })))).toEqual(['CHN']);
+    cleanup();
+    quote(data, { paese: 'USA' });
+    expect(await paesi(() => fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' })))).toEqual([null]);
+  });
+
+  it('un sito aperto toglie dal link il Paese di prima', async () => {
+    quote(data, { anello: 'datacenter', siti: '1', paese: 'USA' });
+    const sito = mondo().getAllByRole('button', { name: /H100 equivalenti|in costruzione/ })[0];
+    expect(await paesi(() => fireEvent.click(sito))).toEqual([null]);
+  });
   it('il fumetto dice tutti gli anelli, e con lui sotto la mappa ci sono tutte le fonti: anche ETO, con il divieto di uso commerciale', async () => {
     quote(data, { anello: 'modelli' });
     const fonte = () => mappa().getByText(/^Modelli: /);

@@ -3,7 +3,7 @@
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
   // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
-  // Con ?paese=ITA il fumetto di quel Paese è già aperto.
+  // Il Paese aperto sta in ?paese=: con ?paese=ITA il fumetto di quel Paese è già aperto.
   // Si apre sul Filo della catena: un esempio scelto da noi (?filo=, quello europeo se manca), con gli archi tra le sei tappe e il loro elenco;
   // nel filo resta la tabella delle quote della fermata scelta. Con ?vista=quote, la mappa delle quote per Paese con le sue note.
   import { tick, untrack } from 'svelte';
@@ -124,19 +124,23 @@
   const apriPaese = (p: Paese) => apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), menuPaese);
   function tocca(p: Paese) {
     if (scelte[p.id]) onscegli(scelte[p.id]);
-    if (paramPaese) imposta('paese', null); // il link diceva un altro fumetto
+    imposta('paese', p.id);
     return apriPaese(p);
   }
+  // il link apre il suo fumetto; se è già aperto, perché il link l'ha appena scritto tocca(), niente
   $effect(() => {
     const p = PAESI.find((x) => x.id === paramPaese);
-    if (p) untrack(() => apriPaese(p));
+    if (p) untrack(() => { if (aperto?.iso !== p.id) apriPaese(p); });
   });
   function apriDalMenu(e: SubmitEvent) {
     e.preventDefault();
     const p = PAESI.find((x) => x.id === paeseScelto);
     if (p) tocca(p);
   }
-  const toccaSito = (q: PuntoSito, da: Element) => apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
+  function toccaSito(q: PuntoSito, da: Element) {
+    if (paramPaese) imposta('paese', null); // il link diceva un Paese
+    return apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
+  }
   function chiudi() {
     const da = aperto?.da as HTMLElement | SVGElement | undefined;
     aperto = null;

@@ -11,6 +11,7 @@
   --line: color-mix(in srgb, var(--fg) 9%, var(--card));
   --line-2: color-mix(in srgb, var(--fg) 18%, var(--card));
   --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--card));
+  --quadrante: light-dark(color-mix(in srgb, var(--fg) 4%, var(--card)), color-mix(in srgb, var(--fg) 8%, var(--card))); /* i quadranti del radar fuori da Impara ora: sulla carta scura il 4% sparisce, lì l'8% */
   --shadow: 0 1px 2px rgba(18, 18, 17, .04), 0 8px 24px rgba(18, 18, 17, .06);
   --shadow-up: 0 2px 4px rgba(18, 18, 17, .05), 0 16px 40px rgba(18, 18, 17, .10);
   --font: "Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI", sans-serif;

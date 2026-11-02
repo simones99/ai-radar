@@ -199,8 +199,8 @@
 </div>
 
 <style>
-  /* i toni dei quadranti: Impara ora nel blu dei dati, gli altri tre in un grigio appena sopra la carta; sulla carta scura il 4% sparisce, lì l'8% */
-  .chart { --q: light-dark(color-mix(in srgb, var(--fg) 4%, var(--card)), color-mix(in srgb, var(--fg) 8%, var(--card))); --q-hot: var(--accent-soft); }
+  /* i toni dei quadranti: Impara ora nel blu dei dati, gli altri tre in un grigio appena sopra la carta */
+  .chart { --q: var(--quadrante); --q-hot: var(--accent-soft); }
   svg { display: block; width: 100%; height: auto; overflow: visible; }
   .quad { fill: var(--q); } .quad.hot { fill: var(--q-hot); }
   .soglia { stroke: var(--line-2); stroke-dasharray: 2 4; }

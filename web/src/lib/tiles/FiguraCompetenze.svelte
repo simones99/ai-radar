@@ -75,7 +75,7 @@
 <style>
   .radar { display: block; width: 100%; height: 100%; } @media (max-width: 560px) { .radar { height: auto; aspect-ratio: 4 / 3; } }
   svg { display: block; }
-  .q { fill: color-mix(in srgb, var(--fg) 4%, var(--card)); }
+  .q { fill: var(--quadrante); }
   .q.hot { fill: color-mix(in srgb, var(--accent) 14%, var(--card)); }
   .ql { font: 600 13px var(--font); fill: var(--fg-2); }
   .ql.hot { font-weight: 700; fill: var(--accent); }
@@ -87,6 +87,6 @@
   .prev { fill: var(--card); stroke: var(--accent); stroke-width: 1.25; }
   .leader { stroke: var(--line-2); }
   .lbl { font: 600 13px var(--font); fill: var(--fg); }
-  .halo { stroke: color-mix(in srgb, var(--fg) 4%, var(--card)); }
+  .halo { stroke: var(--quadrante); }
   .halo.blu { stroke: color-mix(in srgb, var(--accent) 14%, var(--card)); }
 </style>

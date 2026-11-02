@@ -79,6 +79,10 @@ describe('Persone', () => {
     expect(screen.getByRole('img', { name: 'Competenze più chieste negli annunci' })).toBeInTheDocument();
     expect(screen.queryByText(/Serve la chiave gratuita di Adzuna/)).toBeNull();
   });
+  it('gli annunci sono in CC BY-ND: il grafico arrotonda e la nota rimanda alla tabella, con i valori come pubblicati', () => {
+    show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
+    expect(screen.getByRole('region', { name: "Annunci di lavoro che chiedono l'AI" })).toHaveTextContent('Valori esatti nella tabella.');
+  });
 });
 
 describe('Persone: Italia nei grafici europei', () => {

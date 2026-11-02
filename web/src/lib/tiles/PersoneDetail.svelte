@@ -54,7 +54,7 @@
     table={barsTable(dev, ['Anno', '%'])}>
     <Bars label="Sviluppatori che usano strumenti AI" data={dev} format={pctF} />
   </Block>
-  <Block title="Annunci di lavoro che chiedono l'AI" note="Quota degli annunci online che chiedono competenze AI, %." missing={annunci.length ? null : MISSING} cite={owidCite(s('annunci_ai'))} table={{ ...seriesTable(annunci, 'Anno'), format: exact }}>
+  <Block title="Annunci di lavoro che chiedono l'AI" note="Quota degli annunci online che chiedono competenze AI, %. Valori esatti nella tabella." missing={annunci.length ? null : MISSING} cite={owidCite(s('annunci_ai'))} table={{ ...seriesTable(annunci, 'Anno'), format: exact }}>
     <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={pctF} xFormat={quando} />
   </Block>
   <Block title="Competenze più chieste negli annunci" note="Annunci che citano la competenza ogni 10.000, media tra i Paesi."

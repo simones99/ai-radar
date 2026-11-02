@@ -108,19 +108,25 @@ describe('numeri chiave delle card', () => {
     expect(headSkill(by('agenti'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // radar senza il campo ruoli
     expect(headSkill(by('rag'), d.radar!.quadranti)).not.toHaveProperty('nota'); // radar senza elenco dei ruoli
   });
-  it('notizie: settimana e settimana vuota', () => {
-    expect(faceNotizie(d, today)).toEqual({ fig: '2', unit: '', sent: 'Notizie negli ultimi 7 giorni da 2 fonti.' });
-    expect(faceNotizie(d, new Date(2026, 11, 1))?.sent).toBe('Nessuna notizia negli ultimi 7 giorni.');
+  it('notizie: i 7 giorni fino all’ultimo aggiornamento, e nessuna notizia in quei giorni', () => {
+    expect(faceNotizie(d)).toEqual({ fig: '2', unit: '', sent: 'Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.' });
+    expect(headNotizie(d).title).toEqual([{ t: '2', em: true }, { t: ' notizie nei 7 giorni fino al 15 ott 2026' }]);
+    const dopo = { ...d, status: { ...d.status!, aggiornato: '2026-12-01T05:17:00+00:00' } };
+    expect(faceNotizie(dopo)).toEqual({ fig: '0', unit: '', sent: 'Nessuna notizia nei 7 giorni fino all’1 dic 2026.' });
+  });
+  it('notizie: senza lo stato delle fonti, la settimana finisce con la notizia più recente', () => {
+    expect(faceNotizie({ news: d.news })?.sent).toBe('Notizie nei 7 giorni fino al 14 ott 2026, da 2 fonti.');
+    expect(faceNotizie({ news: { ...d.news!, notizie: [] } })?.sent).toBe('Nessuna notizia nei 7 giorni.');
   });
   it('notizie: le fonti contate sono quelle che hanno davvero notizie', () => {
     const news = { ...d.news!, fonti: [...d.news!.fonti, { nome: 'Feed muto', url: 'https://example.org/feed', tema: 'altro' }],
       notizie: d.news!.notizie.map((n) => ({ ...n, fonte: 'The Decoder' })) };
-    expect(faceNotizie({ news }, today)?.sent).toBe('Notizie negli ultimi 7 giorni da 1 fonte.');
-    expect(headNotizie({ news }, today).deck).toBe("Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi 45 giorni, da 1 fonte.");
-    expect(headNotizie(d, today).deck).toBe("Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi 45 giorni, da 2 fonti.");
+    expect(faceNotizie({ news, status: d.status })?.sent).toBe('Notizie nei 7 giorni fino al 15 ott 2026, da 1 fonte.');
+    expect(headNotizie({ news }).deck).toBe("Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi 45 giorni, da 1 fonte.");
+    expect(headNotizie(d).deck).toBe("Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi 45 giorni, da 2 fonti.");
   });
   it('notizie: titolo di riserva senza dati', () => {
-    expect(headNotizie({}, today)).toEqual({ title: [{ t: 'Notizie' }], deck: null });
+    expect(headNotizie({})).toEqual({ title: [{ t: 'Notizie' }], deck: null });
   });
   it('rapporti: prossimo previsto', () => {
     expect(faceRapporti(d, today)).toEqual({ fig: 'Ottobre', unit: '2026', sent: 'Prossimo rapporto previsto: State of AI Report.' });

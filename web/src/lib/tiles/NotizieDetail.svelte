@@ -1,8 +1,8 @@
 <script lang="ts">
   import Block from '../charts/Block.svelte';
-  import { newsInLastDays } from '../data/derive';
   import { parseHash, slug, toHash } from '../router';
-  import { day, lowerFirst } from '../text/format';
+  import { capitalize, day, lowerFirst } from '../text/format';
+  import { settimanaDelleNotizie } from '../text/frasi';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
@@ -20,10 +20,10 @@
   });
   const shown = $derived(all.filter((n) => (!fonte || n.fonte === fonte) && (!tema || (n.tema ?? 'altro') === tema)));
   // le stesse 7 giornate del titolo: il numero in testa corrisponde al primo gruppo
-  const settimana = $derived(new Set(newsInLastDays(data.news, today)));
+  const settimana = $derived(settimanaDelleNotizie(data));
   const gruppi = $derived([
-    { nome: 'Questa settimana', voci: shown.filter((n) => settimana.has(n)) },
-    { nome: 'Prima', voci: shown.filter((n) => !settimana.has(n)) },
+    { nome: capitalize(settimana.periodo), voci: shown.filter((n) => settimana.voci.includes(n)) },
+    { nome: 'Prima', voci: shown.filter((n) => !settimana.voci.includes(n)) },
   ].filter((g) => g.voci.length));
   const errori = $derived(Object.keys(data.news?.errori ?? {}));
   // sul telefono le fonti scorrono di lato: la fonte scelta da un link resta a vista, senza muovere la pagina

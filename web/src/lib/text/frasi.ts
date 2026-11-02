@@ -1,12 +1,12 @@
 import {
-  MOVE_MIN, computeGrowth, margineSuZero, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
+  MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
-import type { AiActItem, Dataset, Quadrant, Ruolo } from '../data/types';
+import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/types';
 import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
-import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
+import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, parseDay, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string }
 export type TitleParts = { t: string; em?: boolean }[];
@@ -221,17 +221,22 @@ const fontiDi = (items: { fonte: string }[]): string => {
   const k = new Set(items.map((x) => x.fonte)).size;
   return `${k} ${k === 1 ? 'fonte' : 'fonti'}`;
 };
-export function faceNotizie(d: Dataset, today: Date): Face | null {
-  if (!d.news) return null;
-  const week = newsInLastDays(d.news, today);
-  if (!week.length) return { fig: '0', unit: '', sent: 'Nessuna notizia negli ultimi 7 giorni.' };
-  return { fig: String(week.length), unit: '', sent: `Notizie negli ultimi 7 giorni da ${fontiDi(week)}.` };
+/** Le notizie dei 7 giorni fino all'ultimo aggiornamento: il numero resta lo stesso per tutta la settimana. */
+export function settimanaDelleNotizie(d: Dataset): { periodo: string; voci: NewsItem[] } {
+  const fine = fineDelleNotizie(d);
+  return { periodo: `nei 7 giorni${fine ? ` fino ${dayWith('al', fine)}` : ''}`, voci: fine ? newsInLastDays(d.news, parseDay(fine)) : [] };
 }
-export function headNotizie(d: Dataset, today: Date): Head {
+export function faceNotizie(d: Dataset): Face | null {
+  if (!d.news) return null;
+  const { periodo, voci } = settimanaDelleNotizie(d);
+  if (!voci.length) return { fig: '0', unit: '', sent: `Nessuna notizia ${periodo}.` };
+  return { fig: String(voci.length), unit: '', sent: `Notizie ${periodo}, da ${fontiDi(voci)}.` };
+}
+export function headNotizie(d: Dataset): Head {
   if (!d.news) return { title: plain('Notizie'), deck: null };
-  const n = newsInLastDays(d.news, today).length;
+  const { periodo, voci } = settimanaDelleNotizie(d);
   return {
-    title: [{ t: String(n), em: true }, { t: n === 1 ? ' notizia in una settimana' : ' notizie in una settimana' }],
+    title: [{ t: String(voci.length), em: true }, { t: ` ${voci.length === 1 ? 'notizia' : 'notizie'} ${periodo}` }],
     deck: `Solo titolo, data e link agli articoli originali. L'elenco copre gli ultimi ${d.news.giorni} giorni, da ${fontiDi(d.news.notizie)}.`,
   };
 }

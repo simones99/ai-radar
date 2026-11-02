@@ -1,5 +1,5 @@
 import { daysTo, ym } from '../text/format';
-import type { AiActItem, EpochPoint, EurostatSettori, News, NewsItem, Owid, OwidPoint, PerGeo, Quadrant, Radar, RadarRow, Rapporti, Report, Settore } from './types';
+import type { AiActItem, EpochPoint, EurostatSettori, News, NewsItem, Owid, OwidPoint, PerGeo, Quadrant, Radar, RadarRow, Rapporti, Report, Settore, Status } from './types';
 
 export const MOVE_MIN = 0.1; // spostamento minimo per disegnare una freccia: un decimo dell'asse
 /** Domini fissi degli assi, simmetrici attorno alle soglie: slancio 0 e 3 annunci ogni 10mila stanno al centro. */
@@ -125,6 +125,10 @@ export function newsInLastDays(news: News | undefined, today: Date, days = 7): N
     const ago = -daysTo(n.data, today);
     return ago >= 0 && ago < days;
   });
+}
+/** L'ultimo giorno che i dati coprono: l'ultimo aggiornamento o, senza lo stato delle fonti, la notizia più recente. Non l'orologio di chi legge: i dati arrivano una volta a settimana. */
+export function fineDelleNotizie(d: { news?: News; status?: Status }): string | null {
+  return d.status?.aggiornato || (d.news?.notizie ?? []).map((n) => n.data).filter((x) => ISO_DAY.test(x)).sort().at(-1) || null;
 }
 
 export function nextReport(r: Rapporti | undefined, today: Date): { report: Report; ym: string } | null {

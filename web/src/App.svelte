@@ -83,7 +83,7 @@
       </p>
     </section>
     <!-- senza nessun file l'avviso e il suo Riprova stanno già in testa: qui basta dire che lo stato non è arrivato -->
-    <SourcesStatus status={data.status} {mancanti} onriprova={phase === 'ready' ? load : undefined} />
+    <SourcesStatus status={data.status} {today} {mancanti} onriprova={phase === 'ready' ? load : undefined} />
   </footer>
 </div>
 

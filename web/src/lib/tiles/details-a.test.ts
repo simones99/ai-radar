@@ -374,8 +374,8 @@ describe('Notizie', () => {
   const items = () => screen.queryAllByRole('list', { name: /^Notizie:/ }).flatMap((l) => within(l).queryAllByRole('listitem'));
   it('le notizie della settimana in testa, come il numero del titolo, poi le altre', () => {
     show(NotizieDetail, tile);
-    expect(screen.getAllByRole('heading', { level: 4 }).map((h) => h.textContent)).toEqual(['Questa settimana', 'Prima']);
-    expect(within(screen.getByRole('list', { name: 'Notizie: questa settimana' })).getAllByRole('listitem')).toHaveLength(2);
+    expect(screen.getAllByRole('heading', { level: 4 }).map((h) => h.textContent)).toEqual(['Nei 7 giorni fino al 15 ott 2026', 'Prima']);
+    expect(within(screen.getByRole('list', { name: 'Notizie: nei 7 giorni fino al 15 ott 2026' })).getAllByRole('listitem')).toHaveLength(2);
     expect(within(screen.getByRole('list', { name: 'Notizie: prima' })).getByRole('link', { name: 'Una notizia vecchia' })).toBeInTheDocument();
   });
   it('tutte le notizie, poi filtro per tema', async () => {

@@ -85,7 +85,7 @@ Ogni card chiusa mostra: foto, nome del tema, data di aggiornamento, numero chia
 | Persone e lavoro | quota di persone nel mondo che usa l'AI generativa, con il dato italiano | uso dell'AI generativa (mondo, Italia, Paesi UE, giovani UE); sviluppatori che usano strumenti AI; quota di annunci AI (Lightcast); domanda di competenze (Adzuna) | OWID, Adzuna |
 | Politica | giorni alla prossima scadenza dell'AI Act | linea del tempo dell'AI Act con link ai testi ufficiali; notizie dei feed con tema "politica" | ai_act.yaml, feed |
 | Competenze | competenza che entra in "Impara ora" | radar (direzione A) con le frecce dal mese prima; pannello dei movimenti (direzione C); tabella delle competenze; metodo | radar.json |
-| Notizie | notizie degli ultimi 7 giorni | elenco con filtro per fonte e per tema | feed RSS |
+| Notizie | notizie dei 7 giorni fino all'ultimo aggiornamento (non dall'orologio di chi legge) | elenco con filtro per fonte e per tema | feed RSS |
 | Rapporti | prossimo rapporto previsto | linea del tempo delle uscite: editore, cadenza, ultima edizione con link, prossima prevista (stima dichiarata) | rapporti.yaml |
 
 Stato dei link alle fonti: non è una card. È raggiungibile dalla testata ("Stato delle fonti") e mostra la tabella di `status.json`.

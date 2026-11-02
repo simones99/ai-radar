@@ -2,10 +2,10 @@
   import DataTable from '../charts/DataTable.svelte';
   import type { FileKey } from '../data/load';
   import type { Status } from '../data/types';
-  import { day } from '../text/format';
+  import { day, dayWith, daysTo } from '../text/format';
 
   // mancanti: i file di dati che questa pagina non ha ricevuto. Lo stato delle fonti dice com'è andato l'aggiornamento, non se i dati sono arrivati qui
-  let { status, mancanti = [], onriprova }: { status: Status | undefined; mancanti?: FileKey[]; onriprova?: () => void } = $props();
+  let { status, today, mancanti = [], onriprova }: { status: Status | undefined; today: Date; mancanti?: FileKey[]; onriprova?: () => void } = $props();
 
   const NOMI: Record<string, string> = {
     epoch: 'Epoch AI', geopoliticai: 'Epoch (GeopoliticAI)', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
@@ -20,6 +20,9 @@
   const rows = $derived(fonti.map((f) => [f.nome, f.stato, f.ultimo ?? '—', f.nota]));
   // con tutto in ordine basta una riga; le fonti in errore o con un avviso si leggono subito, la tabella intera resta chiusa
   const problemi = $derived(fonti.filter((f) => f.problema));
+  // il giro è settimanale: oltre 8 giorni uno è saltato, anche se l'ultimo era andato bene
+  const FERMI_MAX = 8;
+  const fermi = $derived(status ? -daysTo(status.aggiornato, today) : 0);
 </script>
 
 <section class="status" id="stato" aria-labelledby="stato-h">
@@ -32,8 +35,8 @@
   {/if}
   {#if rows.length}
     <p class="muted small">
-      {#if problemi.length}{problemi.length} {problemi.length === 1 ? 'fonte' : 'fonti'} su {rows.length} da controllare.{:else if mancanti.length}Le {rows.length} fonti non hanno dato errori.{:else}Tutte le {rows.length} fonti sono aggiornate.{/if}
-      Ultimo aggiornamento: {status ? day(status.aggiornato) : '—'}. Una fonte in errore mostra l'ultimo dato valido.
+      {#if problemi.length}{problemi.length} {problemi.length === 1 ? 'fonte' : 'fonti'} su {rows.length} da controllare.{:else if mancanti.length}Le {rows.length} fonti non hanno dato errori.{:else if fermi <= FERMI_MAX}Tutte le {rows.length} fonti sono aggiornate.{/if}
+      {#if status && fermi > FERMI_MAX}Ultimo aggiornamento {fermi} giorni fa, {dayWith('il', status.aggiornato)}.{:else}Ultimo aggiornamento: {status ? day(status.aggiornato) : '—'}.{/if} Una fonte in errore mostra l'ultimo dato valido.
     </p>
     {#if problemi.length}
       <ul class="problemi">

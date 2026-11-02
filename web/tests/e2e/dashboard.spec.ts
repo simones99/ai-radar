@@ -83,6 +83,7 @@ test('un file di dati bloccato: l’avviso e lo stato delle fonti lo dicono, e R
 
 test('la prova prima delle parole: la legenda sta sotto il radar', async ({ page }) => {
   await page.goto('/#competenze');
+  await scrollSettled(page);
   const radar = (await page.getByRole('group', { name: /Radar delle competenze/ }).boundingBox())!;
   const legenda = (await page.getByText(/^Le linee sono soglie fisse/).boundingBox())!;
   expect(legenda.y).toBeGreaterThanOrEqual(radar.y + radar.height);
@@ -118,6 +119,7 @@ test('Norme da una porta: si apre sulla scadenza del link', async ({ page }) => 
 test('sul telefono la foto viene dopo il primo blocco; da 720px sta accanto al titolo', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/#modelli');
+  await scrollSettled(page);
   const foto = page.locator('#detail-modelli figure');
   const blocco = page.locator('#detail-modelli section.blk');
   const su = (await blocco.first().boundingBox())!;
@@ -127,6 +129,7 @@ test('sul telefono la foto viene dopo il primo blocco; da 720px sta accanto al t
   expect((await foto.boundingBox())!.y + (await foto.boundingBox())!.height).toBeLessThanOrEqual((await blocco.nth(1).boundingBox())!.y);
   expect(await noHorizontalScroll(page)).toBe(true);
   await page.setViewportSize({ width: 800, height: 640 });
+  await scrollSettled(page);
   expect((await foto.boundingBox())!.y).toBeLessThan((await blocco.first().boundingBox())!.y);
 });
 

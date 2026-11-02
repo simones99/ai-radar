@@ -30,8 +30,8 @@ const seriousViolations = async (page: Page, ...parti: string[]) =>
 test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText("Su cosa formarti e cosa succede all'AI in Italia");
-  await expect(page.getByRole('link', { name: /Agenti AI crescono più di tutte/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Nessuno dei 35 modelli di grande scala/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /MCP entra tra le competenze/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /16% delle imprese italiane usa l'AI/ })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Su cosa formarti' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: "L'AI in Italia" })).toBeVisible();
   await expect(page.locator('button.face')).toHaveCount(9);
@@ -80,35 +80,61 @@ test('mappa a 1280px: il fumetto sta sulla mappa e non copre il tabellone', asyn
 
 test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: /Agenti AI crescono più di tutte/ }).click();
+  await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/agenti$/);
-  await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
 });
 
-test('porta L’AI in Italia: non ripete le card Norme e GeopoliticAI, e apre GeopoliticAI sull’UE', async ({ page }) => {
+test('porta L’AI in Italia: il dato italiano apre Business', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('16% delle imprese italiane').click();
+  await expect(page.locator('#detail-business')).toBeVisible();
+  await expect(page).toHaveURL(/#business$/);
+});
+
+test('porta L’AI in Italia: una scadenza entro 30 giorni viene prima del dato italiano', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-20T10:00:00'));
   await page.goto('/');
-  await expect(page.getByRole('button', { name: /Norme/ })).toContainText('fine della transizione per la marcatura');
-  await expect(page.getByRole('button', { name: /GeopoliticAI/ })).toContainText('punti sotto gli USA');
-  const porta = page.getByRole('link', { name: /Per la tua organizzazione/ });
-  await expect(porta).not.toContainText('fine della transizione');
-  await expect(porta).not.toContainText('punti sotto');
-  await porta.getByText('Nessuno dei 35').click();
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Tra 12 giorni').click();
+  await expect(page.locator('#detail-norme')).toBeVisible();
+  await expect(page).toHaveURL(/#norme\/2026-12-02$/);
+});
+
+test('porta L’AI in Italia: senza un dato italiano dice la quota dell’UE e apre GeopoliticAI sull’UE', async ({ page }) => {
+  await page.route(/data\/(eurostat|owid)\.json$/, (route) => route.fulfill({ status: 404, body: '' }));
+  await page.goto('/');
+  await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Nessuno dei 35').click();
   await expect(page.locator('#detail-geopoliticai')).toBeVisible();
   await expect(page).toHaveURL(/#geopoliticai\?area=ue$/);
 });
 
+test('una voce grande per testa: la card Competenze ha figura e frase, GeopoliticAI tiene la cifra alla misura delle altre', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  const competenze = page.getByRole('button', { name: 'Competenze: 2 su 5', exact: true });
+  await expect(competenze).toContainText('2 competenze su 5 da imparare ora');
+  await expect(competenze.getByText('su 5', { exact: true })).toHaveCount(0);
+  const corpo = (nome: RegExp) => page.getByRole('button', { name: nome }).getByText(/^(18,8|×\d)/).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(await corpo(/^GeopoliticAI/)).toBe(await corpo(/^Modelli e ricerca/));
+});
+
+test('elenco accanto a una card aperta: Competenze dice la sua cifra', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/#business');
+  await expect(page.getByRole('button', { name: 'Competenze: 2 su 5', exact: true })).toContainText('su 5');
+});
+
 test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: /Agenti AI crescono più di tutte/ }).click();
+  await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
   await page.goForward();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/agenti$/);
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -119,9 +145,9 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
   await page.goto('/');
   await page.locator('#tile-business .face').click();
   await expect(page.locator('#detail-business')).toBeVisible();
-  await page.getByRole('link', { name: /Agenti AI crescono più di tutte/ }).click();
+  await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/agenti$/);
+  await expect(page).toHaveURL(/#competenze\/mcp$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -130,13 +156,13 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
 test('porta verso la card già aperta: riapre la competenza e porta il focus al titolo', async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
   await page.goto('/');
-  const porta = page.getByRole('link', { name: /Agenti AI crescono più di tutte/ });
+  const porta = page.getByRole('link', { name: /MCP entra tra le competenze/ });
   await porta.click();
-  await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await page.getByRole('link', { name: '← Tutte le competenze' }).click();
   await expect(page.getByRole('group', { name: /Radar delle competenze/ })).toBeVisible();
   await porta.click();
-  await expect(page.locator('#h-competenze')).toHaveText('Agenti AI');
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
   await expect(page.locator('#h-competenze')).toBeFocused();
   await scrollSettled(page);
   await expect(page.locator('#h-competenze')).toBeInViewport();
@@ -254,9 +280,9 @@ test('porta Per te: scelto un ruolo nella card, la home lo mostra e la porta ria
   await page.keyboard.press('Escape');
   await expect(page.locator('section.detail')).toHaveCount(0);
   const porta = page.getByRole('link', { name: /Per te · Prodotto/ });
-  await expect(porta).toContainText('Agenti AI crescono più di tutte');
+  await expect(porta).toContainText('RAG esce da Impara ora');
   await porta.click();
-  await expect(page).toHaveURL(/#competenze\/agenti\?ruolo=prodotto$/);
+  await expect(page).toHaveURL(/#competenze\/rag\?ruolo=prodotto$/);
   await page.getByRole('link', { name: '← Tutte le competenze' }).click();
   await expect(premuto(page)).toHaveText('Prodotto');
 });

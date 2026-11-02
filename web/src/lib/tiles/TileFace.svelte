@@ -14,6 +14,7 @@
   let imgFailed = $state(false);
   // nell'elenco accanto alla card aperta anche le card di spicco tornano alla foto
   const Figura = $derived(compact ? undefined : tile.Figura);
+  const conCifra = $derived(compact || !tile.senzaCifra);
   // per un lettore di schermo la card è il suo nome e la sua cifra; la frase e la data arrivano come descrizione, non come un nome lungo tutta la card
   const nomeCard = $derived(face ? `${tile.label}: ${face.fig}${face.unit ? ` ${face.unit}` : ''}` : tile.label);
   const stale = $derived(st.state === 'vecchio' && !!st.fallito && !!st.aggiornato);
@@ -22,7 +23,7 @@
 </script>
 
 <!-- aperta, il nome della transizione passa al dettaglio: due elementi con lo stesso nome annullano l'animazione -->
-<button type="button" class="face" class:compact class:spicco={Figura !== undefined} class:largo={tile.largo && !compact} aria-label={nomeCard} aria-describedby={descritta} aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
+<button type="button" class="face" class:compact class:spicco={Figura !== undefined} class:sola-frase={!conCifra} class:largo={tile.largo && !compact} aria-label={nomeCard} aria-describedby={descritta} aria-expanded={expanded} aria-controls="detail-{tile.id}" style:view-transition-name={expanded ? null : `t-${tile.id}`} onclick={onopen}>
   {#if Figura}
     <span class="viz" aria-hidden="true"><Figura {data} /></span>
   {:else if imgFailed}
@@ -39,7 +40,7 @@
       </span>
     </span>
     {#if face}
-      <span class="fig">{face.fig}{#if face.unit}<span class="u">{face.unit}</span>{/if}</span>
+      {#if conCifra}<span class="fig">{face.fig}{#if face.unit}<span class="u">{face.unit}</span>{/if}</span>{/if}
       <span class="sent" id="{tile.id}-frase">{face.sent}</span>
     {:else}
       <span class="sent" id="{tile.id}-frase">{st.motivo}</span>
@@ -79,13 +80,11 @@
     .face.compact:hover { background: var(--card); transform: none; }
     .face.compact:hover .ph img { transform: none; }
   }
-  /* la card di spicco: la figura al posto della foto, la cifra più grande */
+  /* la card di spicco: la figura al posto della foto; l'unica voce grande della testa è la porta */
   .viz { display: block; aspect-ratio: 4 / 3; border-radius: var(--r-md); overflow: hidden; background: var(--card); min-height: 0; }
   .spicco { grid-template-rows: minmax(0, 1fr) auto; }
   .spicco .viz { aspect-ratio: auto; min-height: 240px; }
-  .spicco .fig { font-size: 48px; line-height: 52px; letter-spacing: -.015em; text-wrap: balance; }
   .spicco .sent { color: var(--fg); max-width: 46ch; }
-  .spicco .u { display: block; margin: var(--s1) 0 0; font-size: 22px; line-height: 28px; }
   /* larga: il testo accanto alla foto, più piccola */
   @container (min-width: 480px) {
     .largo { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-content: stretch; gap: var(--s3); }
@@ -97,7 +96,7 @@
     .spicco .viz { width: 100%; aspect-ratio: 5 / 2; min-height: 0; max-height: 360px; }
     .spicco .f-body { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: var(--s4); align-items: end; padding: var(--s1) var(--s3) 0; }
     .spicco .f-lab, .spicco .stale { grid-column: 1 / -1; }
-    .spicco .fig { font-size: clamp(44px, 6cqi, 64px); line-height: 1.05; }
+    .sola-frase .sent { grid-column: 1 / -1; }
     .spicco .sent { padding-bottom: 4px; }
   }
   @media (max-width: 560px) {
@@ -105,7 +104,6 @@
     .face.spicco { grid-template-columns: minmax(0, 1fr); align-items: stretch; padding: var(--s1) var(--s1) var(--s2); }
     .spicco .viz { min-height: 0; } /* l'altezza la decide la figura */
     .spicco .f-body { padding-inline: var(--s1); gap: 4px; }
-    .spicco .fig { font-size: 36px; line-height: 40px; }
     .ph { aspect-ratio: 1; border-radius: var(--r-sm); }
     .f-body { padding-inline: 0 var(--s1); gap: 0; }
     .fig { font-size: 28px; line-height: 32px; }

@@ -9,7 +9,7 @@ Una delle due metà del prodotto, ciascuna con il suo pubblico: *Per te* (le per
 _Avoid_: sezione, ingresso
 
 **Card di spicco**:
-La card che apre una testa, una per testa (Competenze e GeopoliticAI): in home prende tutta la riga, con una figura disegnata dai dati al posto della foto, e il suo dettaglio si apre sul titolo grande, senza foto.
+La card che apre una testa, una per testa (Competenze e GeopoliticAI): in home prende tutta la riga, con una figura disegnata dai dati al posto della foto e senza un titolo che faccia concorrenza alla porta, e il suo dettaglio si apre sul titolo grande, senza foto.
 _Avoid_: copertina, card in evidenza
 
 **Competenza**:

@@ -34,13 +34,12 @@ describe('numeri chiave delle card', () => {
     const late = new Date(2029, 0, 1);
     expect(faceNorme(d, late)).toEqual({ fig: '0', unit: 'scadenze in arrivo', sent: "Nessuna scadenza dell'AI Act in arrivo." });
   });
-  it('competenze: chi entra e chi esce', () => {
-    expect(faceCompetenze(d, today)).toEqual({ fig: 'MCP', unit: '', sent: 'Entra tra le competenze da imparare ora; RAG esce.' });
+  it('competenze: la card dice quante sono, chi entra lo dice la porta', () => {
+    expect(faceCompetenze(d, today)).toEqual({ fig: '2', unit: 'su 5', sent: "2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." });
   });
   it('competenze: nomi plurali, verbo al plurale anche da soli', () => {
     const comp = d.radar!.competenze.map((r) => (r.id === 'mcp' ? { ...r, breve: 'Multimodali', plurale: true } : r.id === 'rag' ? { ...r, breve: 'DB vettoriali', plurale: true } : r));
     const pl: Dataset = { radar: { ...d.radar!, competenze: comp } };
-    expect(faceCompetenze(pl, today)).toEqual({ fig: 'Multimodali', unit: '', sent: 'Entrano tra le competenze da imparare ora; DB vettoriali escono.' });
     const h = headCompetenze(pl, today);
     expect(text(h.title)).toBe('Multimodali entrano tra le competenze da imparare ora');
     expect(h.deck).toBe("DB vettoriali escono da Impara ora. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
@@ -59,12 +58,13 @@ describe('numeri chiave delle card', () => {
   });
   it('competenze: senza posizione precedente, e radar della pipeline vecchia', () => {
     const noPrev: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, breve, ...r }) => r) } };
-    expect(faceCompetenze(noPrev, today)).toEqual({ fig: '2', unit: 'su 5', sent: "Competenze da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." });
+    expect(faceCompetenze(noPrev, today)?.fig).toBe('2');
     expect(faceCompetenze({ radar: { ...d.radar!, versione: undefined } }, today)).toBeNull();
   });
   it('competenze: una sola da imparare ora, verbo al singolare', () => {
     const one: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.filter((r) => r.id !== 'agenti') } };
     expect(headCompetenze(one, today).deck).toBe("RAG esce da Impara ora. Oggi 1 competenza su 4 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
+    expect(faceCompetenze(one, today)?.sent).toBe("1 competenza su 4 da imparare ora: cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
   });
   it('competenze: chi resta in Impara ora ma per il calcolo è altrove non «cresce più dell’AI»', () => {
     const conAgenti = (r: object): Dataset => ({ radar: { ...d.radar!, competenze: d.radar!.competenze.map((c) => (c.id === 'agenti' ? { ...c, ...r } : c)) } });
@@ -74,7 +74,7 @@ describe('numeri chiave delle card', () => {
     const pochi = conAgenti({ breve: 'Multimodali', plurale: true, quadrante_calcolato: 'prova' });
     expect(headCompetenze(pochi, today).deck).toContain('Multimodali hanno meno di 3 annunci ogni 10mila e possono uscirne.');
     const senzaCambi = { radar: { ...giu.radar!, competenze: giu.radar!.competenze.map(({ slancio_prec, domanda_prec, quadrante_prec, ...r }) => r) } };
-    expect(faceCompetenze(senzaCambi, today)?.sent).toBe('Competenze da imparare ora; LLMOps sta perdendo slancio (−34%) e può uscirne.');
+    expect(faceCompetenze(senzaCambi, today)?.sent).toBe('2 competenze su 5 da imparare ora; LLMOps sta perdendo slancio (−34%) e può uscirne.');
   });
   it('pagina di una competenza: nome nel titolo, quadrante e movimento nel sottotitolo', () => {
     const rows = radarRows(d.radar!);

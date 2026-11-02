@@ -17,6 +17,8 @@ export interface TileDef {
   Detail: Component<DetailProps>;
   /** La figura disegnata con i dati che fa di questa una card di spicco (vedi diSpicco). Solo span e svg: sta dentro il pulsante della card. */
   Figura?: Component<{ data: Dataset }>;
+  /** La notizia di questa card di spicco la dice la porta della sua testa: in home figura e frase, e la cifra resta nell'elenco accanto a una card aperta. */
+  senzaCifra?: boolean;
   /** Larga due colonne, con la foto accanto al testo: chiude la riga lasciata a metà dalla card di spicco. */
   largo?: boolean;
 }

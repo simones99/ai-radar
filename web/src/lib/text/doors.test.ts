@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
 import { FIXTURE, FIXTURE_TODAY as today, fromNorm } from '../test/fixtures';
-import { doorItalia, doorPerTe, faceGeopoliticai, faceNorme } from './frasi';
+import { doorItalia, doorPerTe, faceGeopoliticai } from './frasi';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -14,20 +14,12 @@ const radar = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({
 });
 
 describe('porta Per te', () => {
-  it('non ripete la card Competenze: chi entra e chi esce lo dice la card, la porta dice un’altra notizia', () => {
-    const p = doorPerTe(d, today); // la card: «MCP entra tra le competenze da imparare ora; RAG esce»
-    expect(text(p.title)).toBe("Agenti AI crescono più di tutte: +52% sull'AI in 6 mesi");
-    expect(p.title[0]).toEqual({ t: 'Agenti AI', em: true });
+  it('1. chi entra e chi esce è la notizia della testa, e il link apre chi entra', () => {
+    const p = doorPerTe(d, today);
+    expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
+    expect(p.title[0]).toEqual({ t: 'MCP', em: true });
     expect(p.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
-    expect(p.target).toEqual({ tema: 'competenze', elemento: 'agenti' });
-  });
-  it('non ripete la card nemmeno con altre parole: chi esce da Impara ora non «passa a Da consolidare»', () => {
-    const p = doorPerTe(radar([
-      { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' },
-      { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' },
-      { quadrante: 'prova', slancio: 0.7, domanda: 0.6, slancio_prec: 0.3, domanda_prec: 0.6, quadrante_prec: 'osserva' },
-    ]), today);
-    expect(text(p.title)).toBe('C2 passa a Da provare');
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'mcp' });
   });
   it('1. solo uscite', () => {
     const p = doorPerTe(radar([{ quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' }]), today);
@@ -100,14 +92,12 @@ describe('porta Per te', () => {
     expect(text(p.title)).toBe('1 competenza su 1 da imparare ora');
   });
   describe('nomi plurali: il verbo al plurale anche con una sola competenza', () => {
-    const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
     const esce = { quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' } as const;
     it('1. escono', () => {
       expect(text(doorPerTe(radar([{ ...esce, breve: 'DB vettoriali', plurale: true }]), today).title)).toBe('DB vettoriali escono da Impara ora');
     });
     it('4. crescono', () => {
-      // chi entra lo dice la card: la porta passa alla competenza con più slancio, che qui è un'altra
-      const p = doorPerTe(radar([entra, { breve: 'Agenti AI', plurale: true, quadrante: 'prova', slancio: 0.65, domanda: 0.6 }]), today);
+      const p = doorPerTe(radar([{ breve: 'Agenti AI', plurale: true, quadrante: 'prova', slancio: 0.65, domanda: 0.6 }]), today);
       expect(text(p.title)).toMatch(/^Agenti AI crescono più di tutte: \+\d+% sull'AI in 6 mesi$/);
     });
     it('2. passano', () => {
@@ -130,16 +120,11 @@ describe('porta Per te', () => {
     expect(p.title[0]).toEqual({ t: 'C1', em: true });
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1' });
   });
-  it('5. riserva: quante competenze da imparare ora, se la card nomina chi entra', () => {
-    const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.4, quadrante_prec: 'consolida' } as const;
-    const p = doorPerTe(radar([entra, { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }]), today);
-    expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');
-    expect(p.title[0]).toEqual({ t: '1 competenza su 2', em: true });
-    expect(p.target).toEqual({ tema: 'competenze', elemento: null });
-  });
   it('5. riserva: quante competenze da imparare ora, se la competenza con più annunci è incerta', () => {
     const p = doorPerTe(radar([{ quadrante: 'osserva', slancio: 0.2, domanda: 0.9, incerto: true }, {}]), today);
     expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');
+    expect(p.title[0]).toEqual({ t: '1 competenza su 2', em: true });
+    expect(p.target).toEqual({ tema: 'competenze', elemento: null });
   });
   it('senza radar: porta vuota e non cliccabile', () => {
     expect(doorPerTe({}, today)).toEqual({ title: [], meta: 'Dati non ancora disponibili', target: null });
@@ -163,9 +148,9 @@ describe('porta Per te con un ruolo', () => {
     const p = doorPerTe(conRuoli([{ ...esce, ruoli: ['prodotto'] }, { ...esce, ruoli: ['dati'] }]), today, 'prodotto');
     expect(text(p.title)).toBe('C0 esce da Impara ora');
   });
-  it('sul ruolo non ripete la card: chi entra lo dice la card, anche se è del ruolo', () => {
+  it('sul ruolo: chi entra viene prima degli altri cambi', () => {
     const p = doorPerTe(conRuoli([{ ...entra, ruoli: ['prodotto'] }, { ...passa, ruoli: ['prodotto'] }]), today, 'prodotto');
-    expect(text(p.title)).toBe('C1 passa a Da provare');
+    expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
   });
   it('nessuna regola scatta sul ruolo: le stesse regole su tutte le competenze, con il ruolo nell’etichetta e nel link', () => {
     const p = doorPerTe(conRuoli([{ ...passa, ruoli: ['dati'] }, { ruoli: ['prodotto'] }]), today, 'prodotto');
@@ -180,8 +165,8 @@ describe('porta Per te con un ruolo', () => {
   it('senza ruolo («Tutti») o con un ruolo che non c’è: la porta di oggi', () => {
     for (const r of [null, 'boh']) {
       const p = doorPerTe(d, today, r);
-      expect(text(p.title)).toBe("Agenti AI crescono più di tutte: +52% sull'AI in 6 mesi");
-      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: 'agenti' });
+      expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
+      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: 'mcp' });
       expect(p).not.toHaveProperty('ruolo');
     }
   });
@@ -199,113 +184,85 @@ describe('porta Per te con un ruolo', () => {
 
 describe('porta L’AI in Italia', () => {
   const at = (iso: string) => new Date(`${iso}T10:00:00`);
-  // le scadenze del FIXTURE più una: la card Norme dice quella del 25 novembre, la porta può dire quella del 2 dicembre
   const conScadenza = (data: string, titolo = 'Codici di buone pratiche'): Dataset =>
     ({ ...d, ai_act: { scadenze: [...d.ai_act!.scadenze, { ...d.ai_act!.scadenze[1], data, titolo }] } });
-  it('1. scadenza entro 30 giorni, con Oggi e Domani', () => {
-    const p = doorItalia(conScadenza('2026-11-25'), at('2026-11-20'));
+  it('1. scadenza entro 30 giorni, prima del dato italiano, con Oggi e Domani', () => {
+    const p = doorItalia(d, at('2026-11-20'));
     expect(text(p.title)).toBe('Tra 12 giorni: fine della transizione per la marcatura');
     expect(p.title[0]).toEqual({ t: 'Tra 12 giorni', em: true });
     expect(p.meta).toBe('AI Act · scadenza del 2 dic 2026');
     expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });
-    // due scadenze lo stesso giorno: la card ne dice una, la porta l'altra
-    expect(text(doorItalia(conScadenza('2026-12-02'), at('2026-12-01')).title)).toBe('Domani: codici di buone pratiche');
-    // il giorno della scadenza la card passa alla successiva, la porta dice quella di oggi
+    expect(text(doorItalia(d, at('2026-12-01')).title)).toBe('Domani: fine della transizione per la marcatura');
     expect(text(doorItalia(d, at('2026-12-02')).title)).toBe('Oggi: fine della transizione per la marcatura');
   });
+  it('1. due scadenze vicine: la prima', () => {
+    expect(text(doorItalia(conScadenza('2026-11-25'), at('2026-11-20')).title)).toBe('Tra 5 giorni: codici di buone pratiche');
+  });
   it('1. scadenza dell’11: «scadenza dell’11»', () => {
-    const e = { ...d, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-11-25' }, { ...d.ai_act!.scadenze[1], data: '2026-12-11' }] } };
+    const e = { ...d, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-12-11' }] } };
     expect(doorItalia(e, at('2026-11-20')).meta).toBe('AI Act · scadenza dell’11 dic 2026');
   });
-  // senza GeopoliticAI la regola 3 non scatta: si arriva alle riserve
-  const senzaGeo = { ...d, geopoliticai: undefined };
-  it('non ripete la scadenza della card Norme, in nessuna regola', () => {
-    const card = faceNorme(d, at('2026-11-20'))!.sent; // «… il 2 dic 2026: fine della transizione per la marcatura.»
-    expect(card).toContain('fine della transizione per la marcatura');
-    for (const giorno of ['2026-11-20', '2026-12-01']) {
-      const p = doorItalia(senzaGeo, at(giorno));
-      expect(text(p.title)).not.toContain('fine della transizione per la marcatura');
-      expect(p.target).toEqual({ tema: 'norme', elemento: '2027-12-02' });
-    }
-  });
-  it('2. dato Eurostat italiano aggiornato negli ultimi 30 giorni', () => {
-    const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
-    const p = doorItalia(e, today);
+  it('2. oltre i 30 giorni dalla scadenza: il dato italiano, anche se non è appena uscito', () => {
+    const p = doorItalia(d, today); // la scadenza è tra 48 giorni, il dato Eurostat del 15 giugno
     expect(text(p.title)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
     expect(p.title[0]).toEqual({ t: '16% delle imprese italiane', em: true });
-    expect(p.meta).toBe('Eurostat · aggiornato l’1 ott 2026');
+    expect(p.meta).toBe('Eurostat');
     expect(p.target).toEqual({ tema: 'business', elemento: null });
+    const conData = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-06-15T11:00:00+0200' } };
+    expect(doorItalia(conData, today).meta).toBe('Eurostat · aggiornato il 15 giu 2026');
   });
   describe('2. con un settore ricordato', () => {
-    // dati dei settori usciti l'1 ottobre, cioè negli ultimi 30 giorni
-    const s = { ...d, eurostat_settori: { ...d.eurostat_settori!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
+    const generale = doorItalia(d, today);
     it('la notizia è quella del settore, con la sua forma nella frase, e il link apre la card con il settore', () => {
-      const p = doorItalia(s, today, 'manifattura');
+      const p = doorItalia(d, today, 'manifattura');
       expect(text(p.title)).toBe("15% delle imprese manifatturiere italiane usa l'AI (UE: 17%)");
       expect(p.title[0]).toEqual({ t: '15% delle imprese manifatturiere italiane', em: true });
-      expect(p.meta).toBe('Eurostat · aggiornato l’1 ott 2026');
+      expect(p.meta).toBe('Eurostat · aggiornato il 15 giu 2026');
       expect(p.target).toEqual({ tema: 'business', elemento: null, params: { settore: 'manifattura' } });
       expect(p.scelta).toBe('Manifattura');
     });
-    // anche il dato nazionale è uscito di recente: è la frase generale di oggi
-    const tutte = { ...s, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01T11:00:00+0200' } };
-    const generale = doorItalia(tutte, today);
     it('valore italiano del settore non affidabile: la frase generale, senza settore nell’etichetta', () => {
-      const x = structuredClone(tutte);
+      const x = structuredClone(d);
       x.eurostat_settori!.adozione.manifattura.IT['2025'] = null;
       const p = doorItalia(x, today, 'manifattura');
-      expect(text(p.title)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
       expect(p).toEqual(generale);
       expect(p.scelta).toBeUndefined();
     });
-    it('con «Tutti», con un settore sconosciuto o senza dati dei settori: la porta di oggi', () => {
-      for (const id of ['tutti', 'finanza', null]) expect(doorItalia(tutte, today, id)).toEqual(generale);
-      expect(doorItalia({ ...tutte, eurostat_settori: undefined }, today, 'manifattura')).toEqual(generale);
-    });
-    it('dati dei settori non recenti: la regola 2 del settore non scatta', () => {
-      expect(doorItalia({ ...tutte, eurostat_settori: d.eurostat_settori }, today, 'manifattura')).toEqual(generale);
-      expect(doorItalia({ ...d, eurostat_settori: d.eurostat_settori }, today, 'manifattura').target?.tema).toBe('geopoliticai');
+    it('con «Tutti», con un settore sconosciuto o senza dati dei settori: la frase generale', () => {
+      for (const id of ['tutti', 'finanza', null]) expect(doorItalia(d, today, id)).toEqual(generale);
+      expect(doorItalia({ ...d, eurostat_settori: undefined }, today, 'manifattura')).toEqual(generale);
     });
     it('valore UE del settore mancante: la frase senza il confronto UE', () => {
-      const x = structuredClone(s);
+      const x = structuredClone(d);
       x.eurostat_settori!.adozione.ict.EU27_2020['2025'] = null;
       expect(text(doorItalia(x, today, 'ict').title)).toBe("51% delle imprese di informazione e comunicazione italiane usa l'AI");
     });
-    it('le regole 1, 3 e 6 non cambiano con un settore', () => {
-      const vicina = { ...s, ai_act: { scadenze: [{ ...d.ai_act!.scadenze[1], data: '2026-10-18' }, { ...d.ai_act!.scadenze[1], data: '2026-10-20' }] } }; // la card dice la prima, la porta la seconda, tra 5 giorni
-      expect(doorItalia(vicina, today, 'manifattura').target?.tema).toBe('norme');
-      expect(doorItalia(vicina, today, 'manifattura')).toEqual(doorItalia(vicina, today));
-      expect(doorItalia(d, today, 'manifattura')).toEqual(doorItalia(d, today));
-      expect(doorItalia({ ...d, rapporti: undefined }, today, 'manifattura')).toEqual(doorItalia({ ...d, rapporti: undefined }, today));
+    it('una scadenza vicina viene prima anche del settore', () => {
+      expect(doorItalia(d, at('2026-11-20'), 'manifattura')).toEqual(doorItalia(d, at('2026-11-20')));
     });
   });
-  it('2. Eurostat aggiornato ma senza Italia: si passa oltre', () => {
-    const e = { ...d, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-10-01', serie: { EU27_2020: d.eurostat!.serie.EU27_2020 } } };
-    expect(doorItalia(e, today).target?.tema).toBe('geopoliticai');
-  });
-  it('2. uso dell’AI generativa in Italia aggiornato negli ultimi 30 giorni', () => {
-    const o = { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, aggiornato_owid: '2026-10-01' } } };
-    const p = doorItalia({ ...d, owid: o }, today);
+  it('2. Eurostat senza Italia: l’uso dell’AI generativa in Italia, anche senza una data di aggiornamento', () => {
+    const e = { ...d, eurostat: { ...d.eurostat!, serie: { EU27_2020: d.eurostat!.serie.EU27_2020 } } };
+    const p = doorItalia(e, today);
     expect(text(p.title)).toBe("30% degli italiani usa l'AI generativa (mondo: 18%)");
-    expect(p.meta).toBe('Microsoft via Our World in Data · aggiornato l’1 ott 2026');
+    expect(p.meta).toBe('Microsoft via Our World in Data');
     expect(p.target).toEqual({ tema: 'persone', elemento: null });
   });
-  it('2. dati vecchi di mesi: la regola 2 non scatta', () => {
-    const o = { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, aggiornato_owid: '2026-06-12' } } };
-    const e = { ...d, owid: o, eurostat: { ...d.eurostat!, aggiornato_eurostat: '2026-06-15T11:00:00+0200' } };
-    const tema = doorItalia(e, today).target?.tema;
-    expect(tema).not.toBe('business');
-    expect(tema).not.toBe('persone');
-    expect(tema).toBe('geopoliticai');
+  it('2. l’uso dell’AI generativa dice la sua data, quando la fonte la dà', () => {
+    const o = { ...d.owid!, serie: { ...d.owid!.serie, uso_genai: { ...d.owid!.serie.uso_genai, aggiornato_owid: '2026-10-01' } } };
+    expect(doorItalia({ ...d, eurostat: undefined, owid: o }, today).meta).toBe('Microsoft via Our World in Data · aggiornato l’1 ott 2026');
   });
+  // senza un dato italiano si arriva alla regola 3; senza GeopoliticAI, alle riserve
+  const senzaItalia = { ...d, eurostat: undefined, owid: undefined };
+  const senzaGeo = { ...senzaItalia, geopoliticai: undefined };
   describe('3. GeopoliticAI: quanti modelli di grande scala sono europei', () => {
     const conUe = (n: number) => {
-      const x = structuredClone({ ...d, rapporti: undefined });
+      const x = structuredClone({ ...senzaItalia, rapporti: undefined });
       x.geopoliticai!.zone.ue.calcolo['2026'] = { n, nc: n, max: null, modello: null };
       return x;
     };
     it('nell’anno in corso, nessuno: la frase lo dice, con «finora», e apre GeopoliticAI sull’UE, anche con un rapporto vicino', () => {
-      const p = doorItalia(d, today);
+      const p = doorItalia(senzaItalia, today);
       expect(text(p.title)).toBe('Nessuno dei 35 modelli di grande scala del 2026 è europeo, finora');
       expect(p.title[0]).toEqual({ t: 'Nessuno dei 35', em: true });
       expect(p.meta).toBe('Epoch AI · dati scaricati il 15 ott 2026');
@@ -316,30 +273,24 @@ describe('porta L’AI in Italia', () => {
       expect(text(doorItalia(conUe(1), today).title)).toBe('1 dei 36 modelli di grande scala del 2026 è europeo (3%), finora');
     });
     it('nessun modello nell’anno in corso, di nessuna area: l’ultimo anno chiuso, senza «finora»', () => {
-      const x = structuredClone({ ...d, rapporti: undefined });
+      const x = structuredClone({ ...senzaItalia, rapporti: undefined });
       for (const z of Object.values(x.geopoliticai!.zone)) delete z.calcolo['2026'];
       expect(text(doorItalia(x, today).title)).toBe('5 dei 165 modelli di grande scala del 2025 sono europei (3%)');
     });
     it('non ripete la card GeopoliticAI: né il distacco, né la capacità, né il modello', () => {
       const card = faceGeopoliticai(d, today)!;
-      const porta = text(doorItalia({ ...d, rapporti: undefined }, today).title);
+      const porta = text(doorItalia({ ...senzaItalia, rapporti: undefined }, today).title);
       for (const t of [card.fig, card.unit, 'ECI', 'Mistral']) expect(porta).not.toContain(t);
     });
   });
-  it('4. riserva: la scadenza dopo quella della card, anche lontana, anche con un rapporto vicino', () => {
+  it('4. riserva: la prossima scadenza, anche lontana, anche con un rapporto vicino', () => {
     const p = doorItalia(senzaGeo, today);
-    expect(text(p.title)).toBe('Tra 413 giorni: sistemi ad alto rischio (allegato III)');
-    expect(p.title[0]).toEqual({ t: 'Tra 413 giorni', em: true });
-    expect(p.meta).toBe('AI Act · scadenza del 2 dic 2027');
-    expect(p.target).toEqual({ tema: 'norme', elemento: '2027-12-02' });
-  });
-  it('5. resta solo la scadenza della card: la porta dice i giorni che mancano, anche con un rapporto vicino', () => {
-    const p = doorItalia({ ...senzaGeo, ai_act: { scadenze: [d.ai_act!.scadenze[1]] } }, today);
-    expect(text(p.title)).toBe("48 giorni alla prossima scadenza dell'AI Act");
-    expect(p.meta).toBe('AI Act · Fine della transizione per la marcatura');
+    expect(text(p.title)).toBe('Tra 48 giorni: fine della transizione per la marcatura');
+    expect(p.title[0]).toEqual({ t: 'Tra 48 giorni', em: true });
+    expect(p.meta).toBe('AI Act · scadenza del 2 dic 2026');
     expect(p.target).toEqual({ tema: 'norme', elemento: '2026-12-02' });
   });
-  describe('6. rapporto: solo quando non resta nient’altro', () => {
+  describe('5. rapporto: solo quando non resta nient’altro', () => {
     const soloRapporti = { rapporti: d.rapporti };
     it('previsto entro 30 giorni', () => {
       const p = doorItalia(soloRapporti, today);

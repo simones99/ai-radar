@@ -89,9 +89,9 @@ export function doorItalia(d: Dataset, today: Date): Door;
 
 Vince la prima regola che trova qualcosa.
 
-### Porta "Per te · Su cosa formarti" (da `radar.json`)
+Una notizia per testa: la porta dice la notizia e nessuna regola esclude quello che dicono le card. La card Competenze, sotto il radar, dice solo quante sono da imparare ora, senza un secondo titolo; la card GeopoliticAI tiene la sua cifra alla misura delle altre card, perché parla d'altro. *(Cambiato il 2026-11-02 dopo la seconda critica prima del rilascio, scelta dell'utente: prima le porte non ripetevano le card, e dicevano così la notizia minore.)*
 
-La porta non ripete la card Competenze, che le sta accanto: le competenze che la card nomina (chi entra in "Impara ora" e, se qualcuna entra, chi esce) non fanno notizia nella porta, in nessuna regola. Così la regola 1 vale per le settimane in cui escono competenze e non ne entra nessuna, e una competenza uscita non torna come "passa a Da consolidare". *(Aggiunto il 2026-10-28, passo grafico dopo il polish.)*
+### Porta "Per te · Su cosa formarti" (da `radar.json`)
 
 Dalla regola 2 alla 4 una competenza con meno di 3 annunci ogni 10mila, la soglia del radar, non fa notizia: un cambio di quadrante di una competenza che quasi nessuno chiede non aiuta a scegliere su cosa formarsi. La regola 1 resta per tutte, perché un'uscita da "Impara ora" è una notizia anche quando gli annunci sono scesi. *(Aggiunto il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
 
@@ -99,27 +99,24 @@ Dalla regola 2 alla 4 una competenza con meno di 3 annunci ogni 10mila, la sogli
 2. Altri cambi di quadrante. Titolo: "**MCP** e **Multimodali** passano a Da provare" se il quadrante d'arrivo è lo stesso; altrimenti "**MCP** passa a Da provare" per la competenza con lo spostamento più grande. Target: quella competenza.
 3. Lo spostamento più grande, se è di almeno `MOVE_MIN` (10 punti) su slancio o domanda. Titolo: "**DB vettoriali** perde 33 punti di slancio" oppure "guadagna". Target: quella competenza.
 4. La competenza con più slancio, se cresce più dell'AI. Titolo: "**Agenti AI** crescono più di tutte: +52% sull'AI in 6 mesi". Target: quella competenza.
-5. Riserva, quando nessuna regola scatta. Senza ruolo e senza competenze che entrano, la card Competenze dice già quante sono da imparare ora: la porta dice la competenza con più annunci, tra tutte, "**Python per l'AI** ha più annunci di tutte: 46 ogni 10mila" (con un nome plurale "hanno"). Target: quella competenza. Se quella competenza è incerta, se la card nomina chi entra o se c'è un ruolo, la porta dice quante sono da imparare ora: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento. *(Il conteggio senza condizioni ripeteva la card; cambiato il 2026-10-30 dopo la code review, scelta dell'utente.)*
+5. Riserva, quando nessuna regola scatta. Senza ruolo la card Competenze dice già quante sono da imparare ora: la porta dice la competenza con più annunci, tra tutte, "**Python per l'AI** ha più annunci di tutte: 46 ogni 10mila" (con un nome plurale "hanno"). Target: quella competenza. Se quella competenza è incerta o se c'è un ruolo, la porta dice quante sono da imparare ora: "**3 competenze su 16** da imparare ora". Target: Competenze, senza elemento. *(Il conteggio senza condizioni ripeteva la card; cambiato il 2026-10-30 dopo la code review, scelta dell'utente.)*
 
 Riga meta: "Radar delle competenze · dati al {data di radar.generato}".
 Senza radar: titolo vuoto, meta "Dati non ancora disponibili", target `null`.
 
 ### Porta "Per la tua organizzazione · L'AI in Italia"
 
-La porta non ripete la card Norme, che sta nella stessa testa: la scadenza che la card dice (la prossima, da domani in poi, `nextDeadline`) non fa notizia nella porta, in nessuna regola. Così la regola 1 vale per una scadenza di oggi o per una seconda scadenza entro 30 giorni, e la riserva dice la scadenza successiva a quella della card. *(Aggiunto il 2026-10-29, passo grafico dopo la code review.)*
+Una scadenza vicina è la notizia vera, e viene prima. Poi il dato italiano, anche se non è appena uscito: la testa si chiama "L'AI in Italia". La frase resta ferma finché la fonte non si aggiorna, circa un anno per Eurostat: è accettato. *(Cambiato il 2026-11-02 dopo la seconda critica prima del rilascio, scelta dell'utente.)*
 
-La porta dà anche una notizia di GeopoliticAI, che sta nella stessa testa, senza ripetere la card di spicco: la card dice la capacità del miglior modello europeo e il distacco dagli USA, la porta dice quanti modelli di grande scala sono europei (regola 3). *(Aggiunto il 2026-10-29, passo grafico dopo la code review.)*
+I rapporti vengono per ultimi: la loro data è un mese stimato, e tutto il resto è un fatto. *(Cambiato il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
 
-I rapporti vengono per ultimi: la loro data è un mese stimato, e tutto il resto è un fatto. La regola che li riguarda era la 3; la quota di GeopoliticAI e le scadenze lontane salgono di un posto. *(Cambiato il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
-
-1. Una scadenza di `ai_act.scadenze`, diversa da quella della card, tra oggi e 30 giorni. Titolo: "**Tra 12 giorni**: {titolo della scadenza, iniziale minuscola}" ("**Domani**" a 1 giorno, "**Oggi**" a 0). Target: Norme, elemento = data della scadenza (`2026-12-02`). Meta: "AI Act · scadenza del {data}".
-2. Un dato italiano uscito negli ultimi 30 giorni. Si guardano, in quest'ordine:
-   - Eurostat: `aggiornato_eurostat` negli ultimi 30 giorni e valore `IT` presente. Titolo: "**16% delle imprese italiane** usa l'AI (UE: 20%)". Target: Business. Meta: "Eurostat · aggiornato il {data}".
-   - OWID `uso_genai`: `aggiornato_owid` negli ultimi 30 giorni e punto `Italy` presente. Titolo: "**30% degli italiani** usa l'AI generativa (mondo: 18%)". Target: Persone e lavoro. Meta: "Microsoft via Our World in Data · aggiornato il {data}".
-3. GeopoliticAI: quanti modelli di grande scala dell'anno in corso sono dell'UE, sul totale delle cinque aree (`quota`, come in Chi addestra). Titolo: "**2 dei 37** modelli di grande scala del 2026 sono europei (5%), finora"; con uno "**1 dei 36** … è europeo (3%), finora"; con nessuno "**Nessuno dei 35** modelli di grande scala del 2026 è europeo, finora". Se nell'anno in corso non c'è ancora nessun modello di nessuna area, l'ultimo anno chiuso, senza "finora": "**5 dei 165** modelli di grande scala del 2025 sono europei (3%)". Target: GeopoliticAI con `area=ue` (il link vince sull'area ricordata), senza elemento. Meta: "Epoch AI · dati scaricati il {data}". Senza `geopoliticai.json` la regola non scatta.
-4. Riserva: la scadenza dopo quella della card, anche lontana. Titolo e meta come nella regola 1: "**Tra 413 giorni**: sistemi ad alto rischio (allegato III)", "AI Act · scadenza del {data}". Target: Norme, elemento = data della scadenza.
-5. Ultima riserva, quando resta solo la scadenza della card: "**47 giorni** alla prossima scadenza dell'AI Act". Target: Norme, elemento = data della scadenza. Meta: "AI Act · {titolo della scadenza}".
-6. Un rapporto previsto entro 30 giorni (`nextReport`). Titolo: "A {mese} esce **{nome del rapporto}**". Target: Rapporti, elemento = `slug(nome)`. Meta: "Data stimata, dai rapporti degli anni scorsi".
+1. La prima scadenza di `ai_act.scadenze` tra oggi e 30 giorni. Titolo: "**Tra 12 giorni**: {titolo della scadenza, iniziale minuscola}" ("**Domani**" a 1 giorno, "**Oggi**" a 0). Target: Norme, elemento = data della scadenza (`2026-12-02`). Meta: "AI Act · scadenza del {data}".
+2. Il dato italiano. Si guardano, in quest'ordine:
+   - Eurostat: valore `IT` presente, prima quello del settore ricordato. Titolo: "**16% delle imprese italiane** usa l'AI (UE: 20%)". Target: Business. Meta: "Eurostat · aggiornato il {data}", senza data se la fonte non la dà.
+   - OWID `uso_genai`: punto `Italy` presente. Titolo: "**30% degli italiani** usa l'AI generativa (mondo: 18%)". Target: Persone e lavoro. Meta: "Microsoft via Our World in Data · aggiornato il {data}", senza data se la fonte non la dà.
+3. Senza un dato italiano, GeopoliticAI: quanti modelli di grande scala dell'anno in corso sono dell'UE, sul totale delle cinque aree (`quota`, come in Chi addestra). Titolo: "**2 dei 37** modelli di grande scala del 2026 sono europei (5%), finora"; con uno "**1 dei 36** … è europeo (3%), finora"; con nessuno "**Nessuno dei 35** modelli di grande scala del 2026 è europeo, finora". Se nell'anno in corso non c'è ancora nessun modello di nessuna area, l'ultimo anno chiuso, senza "finora": "**5 dei 165** modelli di grande scala del 2025 sono europei (3%)". Target: GeopoliticAI con `area=ue` (il link vince sull'area ricordata), senza elemento. Meta: "Epoch AI · dati scaricati il {data}". Senza `geopoliticai.json` la regola non scatta.
+4. Riserva: la prossima scadenza, anche lontana. Titolo e meta come nella regola 1: "**Tra 413 giorni**: sistemi ad alto rischio (allegato III)", "AI Act · scadenza del {data}". Target: Norme, elemento = data della scadenza.
+5. Un rapporto previsto entro 30 giorni (`nextReport`). Titolo: "A {mese} esce **{nome del rapporto}**". Target: Rapporti, elemento = `slug(nome)`. Meta: "Data stimata, dai rapporti degli anni scorsi".
 
 Senza scadenze, dati, rapporti e GeopoliticAI: titolo vuoto, meta "Dati non ancora disponibili", target `null`.
 
@@ -151,7 +148,7 @@ Le altre card non cambiano: Competenze, Modelli, Open source, Notizie, Rapporti.
 Unità (vitest):
 
 - `doorPerTe`: un caso per ognuna delle 5 regole, più il caso senza radar.
-- `doorItalia`: un caso per ognuna delle 6 regole, compresi "Oggi" e "Domani", il caso Eurostat senza `IT`, il caso senza dati, la scadenza della card Norme che non torna in nessuna regola, e la regola GeopoliticAI con nessuno, uno o più modelli europei, il ritorno all'anno chiuso e nessun numero della card GeopoliticAI.
+- `doorItalia`: un caso per ognuna delle 5 regole, compresi "Oggi" e "Domani", la scadenza vicina prima del dato italiano, il caso Eurostat senza `IT`, il caso senza dati, e la regola GeopoliticAI con nessuno, uno o più modelli europei, il ritorno all'anno chiuso e nessun numero della card GeopoliticAI.
 - Card Business e Persone: Italia presente, Italia assente.
 - `parseHash('#politica')` e `parseHash('#politica/2026-12-02')` aprono Norme.
 - Griglia: due sezioni con 4 card ciascuna, nell'ordine giusto; pillole in due gruppi.
@@ -162,12 +159,11 @@ End-to-end (Playwright):
 
 - home: due porte, due `h2` di sezione, 8 card;
 - clic sulla porta "Per te": si apre Competenze con l'elemento evidenziato;
-- clic sulla porta "L'AI in Italia" con i dati di prova al 20 novembre: la porta non ripete le card Norme e GeopoliticAI, e si apre GeopoliticAI sull'UE;
+- clic sulla porta "L'AI in Italia": il dato italiano apre Business; al 20 novembre, la scadenza vicina apre Norme; senza un dato italiano, la quota dell'UE apre GeopoliticAI sull'UE;
 - `#politica` apre Norme;
 - accessibilità senza violazioni gravi; nessuno scorrimento orizzontale a 320 e 360 px; tema scuro.
 
 ## 9. Rischi
 
-- **Porte vuote o ferme.** La porta Italia oggi ha poche notizie vere: spesso vincerà la regola GeopoliticAI, che cambia solo quando Epoch aggiunge modelli. È accettato: migliora con l'Osservatorio.
-- **Date di aggiornamento delle fonti.** `aggiornato_owid` e `aggiornato_eurostat` dicono quando la fonte ha aggiornato la serie, non quando è uscito un dato italiano nuovo. Un aggiornamento che corregge solo altri Paesi farebbe vincere la regola 2 senza un dato italiano nuovo. Si accetta per ora; se diventa un problema, la pipeline potrà salvare la data in cui ha visto per la prima volta l'ultimo valore italiano.
+- **Porte vuote o ferme.** La porta Italia oggi ha poche notizie vere: fuori dalle scadenze vicine dice il dato Eurostat, che cambia circa una volta l'anno. È accettato: migliora con l'Osservatorio.
 - **Link vecchi.** `#politica` resta valido grazie all'alias; nessun altro id cambia.

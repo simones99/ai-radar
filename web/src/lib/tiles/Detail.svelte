@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick, type Snippet } from 'svelte';
+  import { scorrimento } from '../movimento';
   import { PHOTOS } from '../photos';
   import type { Head } from '../text/frasi';
   import IconaChiudi from './IconaChiudi.svelte';
@@ -17,8 +18,7 @@
 
   onMount(() => {
     h2.focus({ preventScroll: true });
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches; // jsdom non ha matchMedia
-    h2.closest('.detail')?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    h2.closest('.detail')?.scrollIntoView?.({ block: 'start', behavior: scorrimento() });
   });
 
   async function copy() {

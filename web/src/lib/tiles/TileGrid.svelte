@@ -1,6 +1,7 @@
 <script lang="ts">
   import { flushSync, onDestroy, tick } from 'svelte';
   import type { Dataset } from '../data/types';
+  import { riduciMovimento } from '../movimento';
   import { APRI, IMPOSTA, parseHash, toHash, type Params, type TileId } from '../router';
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
@@ -42,8 +43,7 @@
 
   function withTransition(update: () => void): Promise<void> {
     const doc = document as Document & { startViewTransition?: (cb: () => void) => { updateCallbackDone?: Promise<void> } };
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (doc.startViewTransition && !reduce) {
+    if (doc.startViewTransition && !riduciMovimento()) {
       const t = doc.startViewTransition(() => flushSync(update));
       return (t?.updateCallbackDone ?? Promise.resolve()).catch(() => {});
     }

@@ -3,6 +3,7 @@
   import Block from '../charts/Block.svelte';
   import { AREE, annoFaccia, areeFaccia, paesiUe } from '../data/geopoliticai';
   import { paesiZona } from '../geo/mappa';
+  import { scorrimento } from '../movimento';
   import { imposta } from '../router';
   import { area as areaRicordata } from '../scelta.svelte';
   import { annoTesto, CHI_ADDESTRA, eci, faccia, scheda } from '../text/geopoliticai';
@@ -30,8 +31,7 @@
   async function vaiAlBlocco(id: string) {
     await tick();
     const el = document.getElementById(id);
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    el?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    el?.scrollIntoView?.({ block: 'start', behavior: scorrimento() });
     el?.focus({ preventScroll: true });
   }
   /** Dalla matrice: sceglie l'area e porta alla scheda. */
@@ -47,9 +47,8 @@
     imposta('vista', 'quote');
     if (paesi.length === 1) imposta('paese', paesi[0]);
     await tick();
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const mappa = document.getElementById('geo-mappa');
-    (mappa ?? document.getElementById('detail-geopoliticai'))?.scrollIntoView?.({ block: mappa ? 'start' : 'end', behavior: reduce ? 'auto' : 'smooth' });
+    (mappa ?? document.getElementById('detail-geopoliticai'))?.scrollIntoView?.({ block: mappa ? 'start' : 'end', behavior: scorrimento() });
   }
 </script>
 

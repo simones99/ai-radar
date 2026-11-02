@@ -896,6 +896,12 @@ for (const id of TEMI) {
   });
 }
 
+test('accessibilità: in Competenze due regioni non hanno lo stesso nome', async ({ page }) => {
+  await page.goto('/#competenze');
+  const { violations } = await new AxeBuilder({ page: page as never }).withRules(['landmark-unique']).analyze();
+  expect(violations).toEqual([]);
+});
+
 test('accessibilità: nessuna violazione grave in competenze/mcp', async ({ page }) => {
   await page.goto('/#competenze/mcp');
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');

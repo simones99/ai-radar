@@ -80,7 +80,7 @@
     </Block>
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->
-      <div class="tw scorre" tabindex="0" role="region" aria-label="Le competenze una per una">
+      <div class="tw scorre" tabindex="0" role="region" aria-label="Tabella delle competenze">
         <!-- svelte-ignore a11y_no_redundant_roles: i ruoli ripetono quelli della tabella, perché impilata cambia il display e alcuni browser altrimenti la leggono come testo -->
         <table role="table">
           <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Competenza</th><th scope="col" role="columnheader">Cosa è</th><th scope="col" role="columnheader">Quadrante</th><th scope="col" role="columnheader">Slancio</th><th scope="col" role="columnheader">Annunci ogni 10mila</th></tr></thead>

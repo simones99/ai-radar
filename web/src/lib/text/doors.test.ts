@@ -169,7 +169,7 @@ describe('porta Per te', () => {
 
 describe('porta Per te e l’Italia', () => {
   it('chi entra in Impara ora sotto soglia in Italia: lo dice una riga sotto la notizia', () => {
-    expect(doorPerTe(conMcp(2.602), today).nota).toBe('MCP: in Italia 2,6 annunci, sotto soglia');
+    expect(doorPerTe(conMcp(2.602), today).nota).toBe('MCP: in Italia 2,6 annunci ogni 10mila, sotto soglia');
   });
   it('alla soglia, o senza il dato italiano, nessuna riga', () => {
     expect(doorPerTe(conMcp(3), today)).not.toHaveProperty('nota');

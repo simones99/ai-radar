@@ -193,7 +193,7 @@ const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((
 }).join('');
 /** La soglia guarda la media dei Paesi: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
 const sottoSogliaInItalia = (inn: RadarRowM[]): string =>
-  inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci, sotto soglia`).join('; ');
+  inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci ogni 10mila, sotto soglia`).join('; ');
 export function headCompetenze(d: Dataset, _today?: Date): Head {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };

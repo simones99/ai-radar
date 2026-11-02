@@ -69,8 +69,7 @@
     </div>
   {/if}
   {#if g}
-    <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
-      vista={params.vista} filo={params.filo} paese={params.paese} onscegli={scegli} />
+    <GeoMappa {g} catena={data.catena} {zona} {params} onscegli={scegli} />
   {/if}
   <Block span={12} id="geo-scheda" title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'}>
     {#snippet azione()}

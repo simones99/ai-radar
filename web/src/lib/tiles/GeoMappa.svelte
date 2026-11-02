@@ -14,19 +14,16 @@
     ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeFumetto, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
     nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, tinta, VIEWBOX, vista, vistaMappa, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
-  import { imposta } from '../router';
+  import { imposta, type Params } from '../router';
   import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
 
-  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, vista: paramVista, filo: paramFilo, paese: paramPaese, onscegli }: {
-    g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; siti: string | undefined;
-    vista: string | undefined; filo: string | undefined; paese: string | undefined; onscegli: (k: string) => void;
-  } = $props();
+  let { g, catena, zona, params, onscegli }: { g: Geopoliticai; catena: Catena | undefined; zona: string; params: Params; onscegli: (k: string) => void } = $props();
 
   const fili = $derived(filiDi(catena));
-  const filo = $derived(filoDi(vistaMappa(paramVista, paramSiti), paramFilo, catena));
+  const filo = $derived(filoDi(vistaMappa(params.vista, params.siti), params.filo, catena));
   // nel filo ogni fermata ha la sua tappa, anche quella di un anello senza dati
   const ok = $derived(filo ? ANELLI.map((a) => a.key) : attivi(g, catena));
-  const anello = $derived(anelloDi(param, ok));
+  const anello = $derived(anelloDi(params.anello, ok));
   const idx = $derived(ANELLI.findIndex((a) => a.key === anello));
   const attivo = (k: AnelloKey) => ok.includes(k);
   const vai = (k: AnelloKey) => imposta('anello', k);
@@ -37,7 +34,7 @@
   }
 
   const materiali = $derived(materialiDi(catena));
-  const materiale = $derived(materialeDi(paramMateriale, catena));
+  const materiale = $derived(materialeDi(params.materiale, catena));
   const v = $derived(vista(g, catena, anello, materiale));
   const ev = $derived(paesiZona(g, zona));
   const scelte = $derived(zonaDi(g));
@@ -58,7 +55,7 @@
     tappa?.iso === iso ? `color-mix(in srgb, var(--k-${tappa.anello}) 45%, var(--card))`
     : tappe.some((t) => t.iso === iso) ? 'color-mix(in srgb, var(--fg) 16%, var(--card))' : 'var(--line)';
   const linee = $derived(filo ? archi(filo, idx) : []);
-  const dati = $derived(filo ? datiFilo(g, catena, anello, paramMateriale) : null);
+  const dati = $derived(filo ? datiFilo(g, catena, anello, params.materiale) : null);
 
   const [vx, vy, vw, vh] = VIEWBOX.split(' ').map(Number);
   /** La posizione di un punto della mappa, in percentuale del riquadro che la contiene. */
@@ -95,7 +92,7 @@
   const nelRiquadro = (x: number, y: number) => x >= EUROPA.x && x <= EUROPA.x + EUROPA.w && y >= EUROPA.y && y <= EUROPA.y + EUROPA.h;
 
   // i Siti valgono solo nei data center: con un altro anello ?siti=1 si ignora
-  const conSiti = $derived(!filo && anello === 'datacenter' && paramSiti === '1' && !!g.data_center);
+  const conSiti = $derived(!filo && anello === 'datacenter' && params.siti === '1' && !!g.data_center);
   const punti = $derived(conSiti ? puntiSiti(g.data_center!) : []);
   const puntiEuropa = $derived(punti.filter((q) => nelRiquadro(q.x, q.y)));
   const tappeEuropa = $derived(tappe.filter((t) => nelRiquadro(t.x, t.y)));
@@ -129,7 +126,7 @@
   }
   // il link apre il suo fumetto; se è già aperto, perché il link l'ha appena scritto tocca(), niente
   $effect(() => {
-    const p = PAESI.find((x) => x.id === paramPaese);
+    const p = PAESI.find((x) => x.id === params.paese);
     if (p) untrack(() => { if (aperto?.iso !== p.id) apriPaese(p); });
   });
   function apriDalMenu(e: SubmitEvent) {
@@ -138,13 +135,13 @@
     if (p) tocca(p);
   }
   function toccaSito(q: PuntoSito, da: Element) {
-    if (paramPaese) imposta('paese', null); // il link diceva un Paese
+    if (params.paese) imposta('paese', null); // il link diceva un Paese
     return apri({ titolo: q.sito.nome, sito: q.sito }, q.x, nelRiquadro(q.x, q.y), da);
   }
   function chiudi() {
     const da = aperto?.da as HTMLElement | SVGElement | undefined;
     aperto = null;
-    if (paramPaese) imposta('paese', null);
+    if (params.paese) imposta('paese', null);
     da?.focus({ preventScroll: true });
   }
 

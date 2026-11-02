@@ -244,7 +244,7 @@
           {#each PAESI.filter((p) => ev.has(p.id)) as p (p.id)}<path d={p.d} class="bordo" />{/each}
           {#if ita}<path d={ita.d} class="italia" />{/if}
           {#each punti as q (q.sito.nome)}{@render cerchio(q, !nelRiquadro(q.x, q.y))}{/each}
-          {#if sotto}<rect class="zona" x={EUROPA.x} y={EUROPA.y} width={EUROPA.w} height={EUROPA.h} rx="4" aria-hidden="true" />{/if}
+          {#if sotto}<rect class="riquadro" x={EUROPA.x} y={EUROPA.y} width={EUROPA.w} height={EUROPA.h} rx="4" aria-hidden="true" />{/if}
           {#if filo}{@render filoSvg(tappeMondo, kMondo)}{/if}
         </svg>
         {#each etichette as e (e.iso)}
@@ -449,7 +449,7 @@
   .europa .arco.on { stroke-width: 1.5; }
   .richiamo { stroke: var(--c); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
   .vero { fill: var(--c); stroke: var(--card); stroke-width: 1px; vector-effect: non-scaling-stroke; pointer-events: none; }
-  .zona { fill: none; stroke: var(--fg-2); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .riquadro { fill: none; stroke: var(--fg-2); stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
   .tappa { cursor: pointer; }
   .tappa circle { fill: var(--c); stroke: #fff; stroke-width: 1.2; }
   .tappa.on circle { stroke: var(--fg); stroke-width: 1.8; }

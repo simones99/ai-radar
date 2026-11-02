@@ -912,15 +912,16 @@ test('Stato delle fonti, tabella impilata: ogni valore resta sotto il nome della
     return r.getBoundingClientRect().top - td.getBoundingClientRect().top;
   });
   expect(dalNome).toBeLessThan(24);
-  const righe = await adzuna.getByRole('cell', { name: /ADZUNA_APP_KEY/ }).evaluate((td) => {
-    const parola = 'ADZUNA_APP_ID/ADZUNA_APP_KEY';
-    const t = [...td.childNodes].find((n): n is Text => n instanceof Text && n.data.includes(parola))!;
-    const r = document.createRange();
-    r.setStart(t, t.data.indexOf(parola));
-    r.setEnd(t, t.data.indexOf(parola) + parola.length);
-    return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+  // la parola si cerca come con Ctrl+F: compare anche nell'elenco delle fonti da controllare, e sta su una riga dappertutto
+  const righe = await page.evaluate(() => {
+    const trovate: number[] = [];
+    getSelection()?.removeAllRanges();
+    while ((window as Window & { find?: (s: string) => boolean }).find?.('ADZUNA_APP_ID/ADZUNA_APP_KEY')) {
+      trovate.push(new Set([...getSelection()!.getRangeAt(0).getClientRects()].map((x) => Math.round(x.top))).size);
+    }
+    return trovate;
   });
-  expect(righe).toBe(1);
+  expect(new Set(righe)).toEqual(new Set([1]));
 });
 
 test('360px: all’apertura il titolo della card è nella finestra, sotto le pillole', async ({ page }) => {

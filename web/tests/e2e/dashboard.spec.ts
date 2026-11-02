@@ -1083,6 +1083,16 @@ for (const width of [768, 1280, 1920]) {
   });
 }
 
+test.describe('sul telefono, senza un mouse', () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } });
+  test('Movimenti: le istruzioni dicono di toccare, non di passare sopra', async ({ page }) => {
+    await page.goto('/#competenze');
+    const movimenti = page.getByRole('region', { name: 'Radar delle competenze' });
+    await expect(movimenti.getByText('Tocca una riga per aprirla.')).toBeVisible();
+    await expect(movimenti.getByText(/^Passa sopra una riga/)).toBeHidden();
+  });
+});
+
 test('il salto al contenuto: in home porta al titolo, e il Tab dopo alla prima porta', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Vai al contenuto' }).focus();

@@ -224,9 +224,9 @@ Prototipo di riferimento: https://claude.ai/artifact/3D8t5JPfwAS71YXdLk9ERF
 
 ### Tastiera e lettori di schermo
 
-- Link "Vai ai temi" in cima.
+- Link "Vai al contenuto" in cima: porta al titolo della card aperta o a quello della pagina, senza chiudere la card.
 - Ordine di Tab: testata, card, crediti.
-- All'apertura il focus va al titolo della card (`tabindex="-1"`); alla chiusura torna alla card di partenza.
+- All'apertura il focus va al titolo della card (`tabindex="-1"`), in Norme alla scadenza su cui si arriva; alla chiusura torna alla card di partenza.
 - Ogni grafico ha "Vedi i dati": una tabella con gli stessi numeri.
 - Anello di focus blu da 2px sempre visibile.
 

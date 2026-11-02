@@ -69,9 +69,9 @@ Ogni porta contiene:
 
 La porta è un unico elemento cliccabile (`<a>` con l'hash della card), con il focus visibile come le card.
 
-Il link "Vai ai temi" in cima resta e porta alla sezione "Su cosa formarti".
+Il link "Vai al contenuto" in cima porta al titolo della pagina; il Tab dopo è la prima porta.
 
-Una card aperta si apre, come oggi, a tutta larghezza al posto della griglia. Le pillole delle altre card stanno in due gruppi: "Su cosa formarti" con le sue card, poi "L'AI in Italia" con le sue. La card aperta non compare tra le pillole.
+Una card aperta si apre, come oggi, a tutta larghezza al posto della griglia. Le pillole delle altre card stanno in due gruppi, uno per testa: prima la testa della card aperta, poi l'altra. La card aperta non compare tra le pillole.
 
 ## 5. Le regole delle porte
 
@@ -95,7 +95,7 @@ Una notizia per testa: la porta dice la notizia e nessuna regola esclude quello 
 
 Dalla regola 2 alla 4 una competenza con meno di 3 annunci ogni 10mila, la soglia del radar, non fa notizia: un cambio di quadrante di una competenza che quasi nessuno chiede non aiuta a scegliere su cosa formarsi. La regola 1 resta per tutte, perché un'uscita da "Impara ora" è una notizia anche quando gli annunci sono scesi. *(Aggiunto il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
 
-1. Una o più competenze entrano o escono da "Impara ora" (`radarChanges`). Titolo: "**MCP** entra tra le competenze da imparare ora"; con più nomi "**MCP** e **RAG** entrano…"; se ci sono anche uscite: "…; **LLMOps** esce". Target: Competenze, elemento = la prima competenza che entra (o esce, se nessuna entra); con entrate e uscite insieme, Competenze senza elemento: tutti i nomi stanno sul radar, la pagina di una competenza ne mostrerebbe metà. Chi era già stato in "Impara ora" "torna" invece di entrare, e se il margine dello slancio di tutti quelli che entrano comprende lo zero il titolo aggiunge "di misura": le regole non cambiano, cambiano le parole. *(Cambiato il 2026-11-02 dopo la terza critica, scelta dell'utente.)*
+1. Una o più competenze entrano o escono da "Impara ora" (`radarChanges`). Titolo: "**MCP** entra tra le competenze da imparare ora"; con più nomi "**MCP** e **RAG** entrano…"; se ci sono anche uscite: "…; **LLMOps** esce". Target: Competenze, elemento = la prima competenza che entra (o esce, se nessuna entra); con entrate e uscite insieme, Competenze senza elemento: tutti i nomi stanno sul radar, la pagina di una competenza ne mostrerebbe metà. Chi era già stato in "Impara ora" "torna" invece di entrare, e se il margine dello slancio di tutti quelli che entrano comprende lo zero il titolo aggiunge "di misura": le regole non cambiano, cambiano le parole. *(Cambiato il 2026-11-02 dopo la terza critica, scelta dell'utente.)* Chi entra sotto soglia in Italia (`domanda_it` sotto 3) lo dice una riga sotto la notizia («MCP: in Italia 2,6 annunci, sotto soglia»), e il sottotitolo di Competenze lo ripete.
 2. Altri cambi di quadrante. Titolo: "**MCP** e **Multimodali** passano a Da provare" se il quadrante d'arrivo è lo stesso; altrimenti "**MCP** passa a Da provare" per la competenza con lo spostamento più grande. Target: quella competenza.
 3. Lo spostamento più grande, se è di almeno `MOVE_MIN` (10 punti) su slancio o domanda. Sullo slancio, un valore di un mese fa dentro il margine di oggi non è una notizia: il principio di prudenza vale anche qui. *(Aggiunto il 2026-11-02 dopo la seconda critica.)* Titolo in unità vere, come in Radar 2.0 (7.4): "Slancio di **DB vettoriali** da +12% a −20%" oppure "Domanda di **MCP** da 2,1 a 3,4 annunci ogni 10mila". Target: quella competenza. *(Allineato al codice il 2026-11-02 dopo la terza code review.)*
 4. La competenza con più slancio, se cresce più dell'AI. Titolo: "**Agenti AI** crescono più di tutte: +52% sull'AI in 6 mesi". Target: quella competenza.

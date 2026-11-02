@@ -44,7 +44,7 @@
         </li>
       {/each}
     </ul>
-    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese; sotto, il valore di allora. Passa sopra una riga per trovarla nel grafico; aprila con un clic.</p>
+    <p class="cite">Valori di oggi: slancio in 6 mesi, annunci ogni 10mila. Freccia e blu: cosa è salito nell’ultimo mese; sotto, il valore di allora. <span class="mouse">Passa sopra una riga per trovarla nel grafico; aprila con un clic.</span><span class="tocco">Tocca una riga per aprirla.</span></p>
   </div>
 {/if}
 
@@ -74,4 +74,7 @@
   .era { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--fg-3); padding-right: 1em; } /* sotto la cifra, allineato alla cifra e non alla freccia */
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: var(--misura); }
+  /* sul telefono non c'è un mouse da passare sopra */
+  .tocco { display: none; }
+  @media (hover: none) { .mouse { display: none; } .tocco { display: inline; } }
 </style>

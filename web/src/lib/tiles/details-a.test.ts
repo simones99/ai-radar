@@ -149,6 +149,12 @@ describe('Competenze: il ruolo', () => {
 
 describe('Business', () => {
   const tile = mk('business', 'Business', headBusiness, BusinessDetail);
+  it('il sondaggio McKinsey dice di chi è il numero, di che anno, e che non è la misura di Eurostat', () => {
+    show(BusinessDetail, tile);
+    const blocco = screen.getByRole('region', { name: 'Chi risponde al sondaggio McKinsey dice di usarla, 2025' });
+    expect(blocco).toHaveTextContent("Non è la stessa misura dell'adozione Eurostat.");
+    expect(within(blocco).getByRole('img', { name: /sondaggio McKinsey/ })).toBeInTheDocument();
+  });
   it('grafici con fonte cliccabile e serie mancanti dichiarate', () => {
     show(BusinessDetail, tile);
     expect(screen.getByRole('img', { name: 'Investimenti privati per area' })).toBeInTheDocument();
@@ -246,7 +252,7 @@ describe('Business', () => {
       show(BusinessDetail, tile);
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("16% delle imprese italiane usa l'AI");
       expect(screen.getByText("Nel 2025, imprese con almeno 10 addetti. UE: 20%. Nel 2024 in Italia l'8%.")).toBeInTheDocument();
-      for (const name of ["Imprese che usano l'AI, per area", "Imprese europee che usano l'AI, 2025", 'Investimenti privati per area', 'Ricavi di TSMC'])
+      for (const name of ['Chi risponde al sondaggio McKinsey dice di usarla, 2025', "Imprese europee che usano l'AI, 2025", 'Investimenti privati per area', 'Ricavi di TSMC'])
         expect(screen.getByRole('heading', { name })).toBeInTheDocument();
     });
 

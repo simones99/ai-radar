@@ -27,7 +27,9 @@
     return Object.entries(TIPI).filter(([e]) => m.has(e)).map(([e, k]) => ({ k, v: m.get(e)?.now.v ?? 0 })).sort((a, b) => a.v - b.v);
   });
   const AREE: Record<string, string> = { 'All geographies': 'Mondo', 'Asia-Pacific': 'Asia-Pacifico', 'Developing markets': 'Paesi emergenti', Europe: 'Europa', 'Greater China': 'Cina', 'North America': 'Nord America' };
-  const imprese = $derived([...owidLatestByEntity(o, 'imprese_ai')].map(([e, x]) => ({ k: AREE[e] ?? e, now: x.now.v, was: x.was?.v ?? null, hot: e === 'Europe' })).sort((a, b) => b.now - a.now));
+  // un sondaggio, non la misura di Eurostat: nessuna area in evidenza, e il titolo dice di chi è il numero
+  const imprese = $derived([...owidLatestByEntity(o, 'imprese_ai')].map(([e, x]) => ({ k: AREE[e] ?? e, now: x.now.v, was: x.was?.v ?? null, t: x.now.t })).sort((a, b) => b.now - a.now));
+  const impreseAnno = $derived(imprese.map((r) => r.t).sort().at(-1));
   const eu = $derived(data.eurostat);
   const euYear = $derived((eu && ultimoAnno(Object.values(eu.serie))) ?? '');
   const euRows = $derived(eu ? Object.entries(eu.serie)
@@ -96,10 +98,10 @@
     {/if}
     {@render bloccoItUe(inSettore("A cosa serve l'AI"), es?.anno, settore ? "In % delle imprese del settore che usano l'AI." : "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}
     {@render bloccoItUe(inSettore('Le barriere di chi non la usa'), es?.anno, settore ? "In % delle imprese del settore che hanno considerato l'AI senza usarla." : "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
-    <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
+    <Block title="Chi risponde al sondaggio McKinsey dice di usarla{impreseAnno ? `, ${impreseAnno}` : ''}" note="Aziende intervistate che usano l'AI in almeno una funzione. Non è la stessa misura dell'adozione Eurostat. Punto pieno: ultimo anno; vuoto: anno prima."
       missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
       table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
-      <DotPlot label="Imprese che usano l'AI, per area" data={imprese} sopra />
+      <DotPlot label="Aziende che dicono di usare l'AI nel sondaggio McKinsey, per area" data={imprese} sopra />
     </Block>
     <Block title="Imprese europee che usano l'AI, {euYear}" note="Imprese con almeno 10 addetti che usano almeno una tecnologia AI. Punto vuoto: anno prima."
       missing={euRows.length ? null : MISSING} cite={eu ? [{ t: 'Fonte: ' }, { t: 'Eurostat, isoc_eb_ai', href: eu.url }, { t: '.' }] : null}

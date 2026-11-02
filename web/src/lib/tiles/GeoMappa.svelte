@@ -11,7 +11,7 @@
   import { FONT, hits, measureText, type Box } from '../charts/labels';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
-    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
+    ANELLI, anelloDi, archi, attivi, CENTRO, CITE_FILO, citeFumetto, citeSiti, datiFilo, didascaliaSiti, dominio, EUROPA as EUR, filiDi, filoDi, fumetto, materialeDi, materialiDi, NOMI,
     nomeFilo, nomeSito, PAESI, paesiZona, proietta, puntiSiti, schedaSito, separa, tinta, VIEWBOX, vista, vistaMappa, zonaDi, type AnelloKey, type Paese, type PuntoSito,
   } from '../geo/mappa';
   import { imposta } from '../router';
@@ -145,6 +145,7 @@
   }
 
   const cifre = $derived(v.tabellone(zona));
+  const citeVista = $derived(filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite);
 </script>
 
 {#snippet paese(p: Paese)}
@@ -184,7 +185,7 @@
 {/snippet}
 
 <Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note={filo ? 'Sei anelli, dalla miniera al modello: il filo mostra da quali Paesi passa un modello.' : 'Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese.'}
-  table={filo ? dati?.tabella ?? null : v.tabella} cite={filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite}>
+  table={filo ? dati?.tabella ?? null : v.tabella} cite={aperto?.iso ? citeFumetto(g, catena, citeVista) : citeVista}>
   <div class="anello scala" style:--c="var(--k-{anello})">
     {#if fili.length}
       <div class="viste">

@@ -91,16 +91,24 @@ export function vista(g: Geopoliticai, c: Catena | undefined, k: AnelloKey, mate
 /** Un anello nel fumetto del Paese: il valore di ogni materiale, o il valore unico, ognuno con la sua data. */
 export interface AnelloFumetto { key: AnelloKey; nome: string; voci: { materiale?: string; testo: string; data?: string }[] }
 
+/** Le viste di un anello: una per materiale nelle materie prime, una sola negli altri. */
+const visteAnello = (g: Geopoliticai, c: Catena | undefined, k: AnelloKey): { materiale?: string; v: Vista }[] =>
+  k === 'materie' ? materialiDi(c).map((m) => ({ materiale: m.nome, v: vista(g, c, k, m.key) })) : [{ v: vista(g, c, k) }];
+
 /** Il fumetto di un Paese: i sei anelli, con la frase onesta dove il Paese non ha niente e «dati in arrivo» dove l'anello non c'è. */
 export function fumetto(g: Geopoliticai, c: Catena | undefined, iso: string): AnelloFumetto[] {
   const ok = attivi(g, c);
-  const voce = (v: Vista, materiale?: string) => ({ materiale, testo: v.testo(iso), data: v.data });
   return ANELLI.map(({ key, nome }) => ({
     key, nome,
-    voci: !ok.includes(key) ? [{ testo: 'dati in arrivo' }]
-      : key === 'materie' ? materialiDi(c).map((m) => voce(vista(g, c, key, m.key), m.nome))
-      : [voce(vista(g, c, key))],
+    voci: ok.includes(key) ? visteAnello(g, c, key).map(({ materiale, v }) => ({ materiale, testo: v.testo(iso), data: v.data })) : [{ testo: 'dati in arrivo' }],
   }));
+}
+
+/** Sotto la mappa, con il fumetto di un Paese aperto: dopo le fonti di `gia`, quelle degli altri anelli che il fumetto mostra.
+ *  Tra queste c'è ETO, che chiede la dicitura con il divieto di uso commerciale (ADR 0001). */
+export function citeFumetto(g: Geopoliticai, c: Catena | undefined, gia: Cite): Cite {
+  const altre = attivi(g, c).flatMap((k) => visteAnello(g, c, k).map((x) => x.v.cite)).filter((cite) => !gia.some((p) => p.t === cite[0].t));
+  return [...gia, ...altre.flatMap((cite) => [{ t: ' ' }, ...cite.filter((p) => !CONFINI_CITE.includes(p))])];
 }
 
 /** I Paesi della mappa di una zona: «Altri» è tutto quello che non sta nelle altre aree. */

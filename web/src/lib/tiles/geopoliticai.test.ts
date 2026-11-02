@@ -761,6 +761,22 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
     expect(await aree(() => fireEvent.click(mappa().getByRole('button', { name: 'Apri' })))).toEqual(['francia']);
   });
 
+  it('il fumetto dice tutti gli anelli, e con lui sotto la mappa ci sono tutte le fonti: anche ETO, con il divieto di uso commerciale', async () => {
+    quote(data, { anello: 'modelli' });
+    const fonte = () => mappa().getByText(/^Modelli: /);
+    expect(fonte()).not.toHaveTextContent('uso commerciale');
+    await fireEvent.click(mondo().getByTestId('paese-CHN'));
+    expect(fonte()).toHaveTextContent('Macchinari: ETO, Advanced Semiconductor Supply Chain Dataset (CC BY-NC 4.0, uso commerciale non consentito), dati del 2025');
+    expect(fonte().textContent?.match(/Confini: /g)).toHaveLength(1);
+    await fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' }));
+    expect(fonte()).not.toHaveTextContent('uso commerciale');
+  });
+
+  it('anche il fumetto aperto dal link ?paese= porta le sue fonti', () => {
+    quote(data, { anello: 'modelli', paese: 'ITA' });
+    expect(mappa().getByText(/^Modelli: /)).toHaveTextContent('CC BY-NC 4.0, uso commerciale non consentito');
+  });
+
   it('il pulsante Chiudi chiude il fumetto', async () => {
     quote();
     await fireEvent.click(mondo().getByTestId('paese-USA'));

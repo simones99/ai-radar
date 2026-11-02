@@ -31,7 +31,7 @@ test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText("Su cosa formarti e cosa succede all'AI in Italia");
   await expect(page.getByRole('link', { name: /Agenti AI crescono più di tutte/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /A ottobre esce State of AI Report/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Nessuno dei 35 modelli di grande scala/ })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Su cosa formarti' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: "L'AI in Italia" })).toBeVisible();
   await expect(page.locator('button.face')).toHaveCount(9);

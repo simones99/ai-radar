@@ -282,6 +282,8 @@ const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: 
 const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
 
+const MIN_ANNUNCI = 3; // ogni 10mila, la soglia del radar: sotto, un cambio non è una notizia per chi deve scegliere su cosa formarsi
+
 // Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
 function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM } | null {
   // 1. entrate e uscite da Impara ora
@@ -296,8 +298,10 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
     return { title, competenza: inn[0] ?? out[0] };
   }
 
+  const cercate = sure.filter((r) => r.domanda >= MIN_ANNUNCI);
+
   // 2. altri cambi di quadrante
-  const changed = sure.filter((r) => r.changed).sort((a, b) => b.move - a.move);
+  const changed = cercate.filter((r) => r.changed).sort((a, b) => b.move - a.move);
   if (changed.length) {
     const dest = changed[0].quadrante;
     const who = changed.every((r) => r.quadrante === dest) ? changed : [changed[0]];
@@ -305,7 +309,7 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
   }
 
   // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse)
-  const big = sure.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
+  const big = cercate.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
   if (big) {
     const onSlancio = Math.abs(big.dS) >= Math.abs(big.dD);
     const title: TitleParts = onSlancio
@@ -315,7 +319,7 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
   }
 
   // 4. la competenza con più slancio, se cresce più dell'AI
-  const top = sure.slice().sort((a, b) => b.slancio - a.slancio)[0];
+  const top = cercate.slice().sort((a, b) => b.slancio - a.slancio)[0];
   if (top && top.slancio > 0) return { title: [{ t: top.breve, em: true }, { t: ` ${verbo([top], 'cresce', 'crescono')} più di tutte: ${signedPct(top.slancio)} sull'AI in 6 mesi` }], competenza: top };
   return null;
 }
@@ -408,18 +412,7 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
     };
   }
 
-  // 3. un rapporto previsto entro 30 giorni (le date dei rapporti sono mesi stimati)
-  const r = nextReport(d.rapporti, today);
-  if (r && r.ym <= ym(new Date(today.getTime() + SOON * 864e5))) {
-    const mese = monthName(r.ym);
-    return {
-      title: [{ t: `${mese.startsWith('a') ? 'Ad' : 'A'} ${mese} esce ` }, { t: r.report.nome, em: true }],
-      meta: 'Data stimata, dai rapporti degli anni scorsi',
-      target: { tema: 'rapporti', elemento: slug(r.report.nome) },
-    };
-  }
-
-  // 4. GeopoliticAI: quanti modelli di grande scala dell'anno in corso sono europei, o dell'ultimo anno chiuso se nell'anno in corso
+  // 3. GeopoliticAI: quanti modelli di grande scala dell'anno in corso sono europei, o dell'ultimo anno chiuso se nell'anno in corso
   // non ce n'è ancora nessuno. La card GeopoliticAI dice la capacità e il distacco dagli USA: la porta dice un'altra cosa
   const geo = d.geopoliticai;
   const q = geo && [geo.anno_corrente, geo.anno_corrente - 1].map((y) => ({ y, ...quota(geo, 'ue', y) })).find((x) => x.tot > 0);
@@ -435,13 +428,24 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
     };
   }
 
-  // 5. riserva: la scadenza dopo quella della card, anche lontana
+  // 4. riserva: la scadenza dopo quella della card, anche lontana
   const dopo = scad.find((s) => ahead(s.data) > 0);
   if (dopo) return scadenza(dopo);
 
-  // 6. ultima riserva, quando resta solo la scadenza della card: il titolo del dettaglio Norme
+  // 5. ultima riserva, quando resta solo la scadenza della card: il titolo del dettaglio Norme
   if (nellaCard) {
     return { title: giorniAllaScadenza(ahead(nellaCard.data)), meta: `AI Act · ${nellaCard.titolo}`, target: { tema: 'norme', elemento: nellaCard.data } };
+  }
+
+  // 6. un rapporto previsto entro 30 giorni: la data è un mese stimato, viene dopo tutto quello che è un fatto
+  const r = nextReport(d.rapporti, today);
+  if (r && r.ym <= ym(new Date(today.getTime() + SOON * 864e5))) {
+    const mese = monthName(r.ym);
+    return {
+      title: [{ t: `${mese.startsWith('a') ? 'Ad' : 'A'} ${mese} esce ` }, { t: r.report.nome, em: true }],
+      meta: 'Data stimata, dai rapporti degli anni scorsi',
+      target: { tema: 'rapporti', elemento: slug(r.report.nome) },
+    };
   }
   return NO_DATA;
 }

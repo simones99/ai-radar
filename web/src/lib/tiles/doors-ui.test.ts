@@ -12,8 +12,8 @@ describe('Doors', () => {
     const perTe = screen.getByRole('link', { name: /Per te.*Su cosa formarti.*Agenti AI crescono più di tutte/ });
     expect(perTe).toHaveAttribute('href', '#competenze/agenti');
     expect(perTe.querySelector('em')).toHaveTextContent('Agenti AI');
-    const italia = screen.getByRole('link', { name: /Per la tua organizzazione.*L'AI in Italia.*A ottobre esce State of AI Report/ });
-    expect(italia).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+    const italia = screen.getByRole('link', { name: /Per la tua organizzazione.*L'AI in Italia.*Nessuno dei 35 modelli di grande scala/ });
+    expect(italia).toHaveAttribute('href', '#geopoliticai?area=ue');
     expect(screen.getByText('Radar delle competenze · dati al 15 ott 2026')).toBeInTheDocument();
   });
   it('senza dati: porte non cliccabili che lo dicono', () => {
@@ -64,20 +64,20 @@ describe('Doors', () => {
     });
     it('scelto o tolto un settore con le porte a vista, la porta si aggiorna', async () => {
       render(Doors, { data: recenti, today });
-      expect(italia()).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+      expect(italia()).toHaveAttribute('href', '#geopoliticai?area=ue');
       settore.scegli('ict');
       await tick();
       expect(italia()).toHaveAccessibleName(/^Per la tua organizzazione · Informazione e comunicazione /);
       settore.scegli(null);
       await tick();
-      expect(italia()).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+      expect(italia()).toHaveAttribute('href', '#geopoliticai?area=ue');
     });
     it('senza storage del browser: la porta di oggi', () => {
       settore.scegli('manifattura');
       vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('SecurityError'); });
       try {
         render(Doors, { data: recenti, today });
-        expect(italia()).toHaveAttribute('href', '#rapporti/state-of-ai-report');
+        expect(italia()).toHaveAttribute('href', '#geopoliticai?area=ue');
       } finally {
         vi.restoreAllMocks();
       }

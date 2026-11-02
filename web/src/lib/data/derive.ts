@@ -74,7 +74,7 @@ export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarR
   };
 }
 
-/** Crescita annua del calcolo dei modelli di frontiera: regressione su log10(FLOP). */
+/** Crescita annua del calcolo dei modelli tra i più grandi del loro momento («Frontier model» per Epoch): regressione su log10(FLOP). */
 export function computeGrowth(punti: EpochPoint[], since = 2018): { fattore: number; n: number } | null {
   const pts = punti.filter((p) => p.f && p.c && p.c > 0 && p.d >= `${since}-01-01`).map((p) => [tNum(p.d), Math.log10(p.c as number)]);
   if (pts.length < 5) return null;

@@ -43,14 +43,14 @@ const verboEntra = (rows: RadarRowM[]): string =>
 // ---------------------------------------------------------------- modelli
 export function faceModelli(d: Dataset, _today?: Date): Face | null {
   const g = d.epoch ? computeGrowth(d.epoch.punti) : null;
-  return g && { fig: `×${nf(g.fattore, 1)}`, unit: "all'anno", sent: 'Quanto cresce il calcolo per addestrare i modelli di frontiera, dal 2018.' };
+  return g && { fig: `×${nf(g.fattore, 1)}`, unit: "all'anno", sent: 'Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.' };
 }
 export function headModelli(d: Dataset, _today?: Date): Head {
   const g = d.epoch ? computeGrowth(d.epoch.punti) : null;
   if (!g) return { title: plain('Modelli e ricerca'), deck: null };
   return {
-    title: [{ t: 'Il calcolo dei modelli di frontiera cresce di ' }, { t: `${nf(g.fattore, 1)} volte`, em: true }, { t: " all'anno" }],
-    deck: `Stima su ${g.n} modelli di frontiera dal 2018, dai dati di Epoch AI.`,
+    title: [{ t: 'Il calcolo dei modelli più grandi cresce di ' }, { t: `${nf(g.fattore, 1)} volte`, em: true }, { t: " all'anno" }],
+    deck: `Stima su ${g.n} modelli, i più grandi del loro momento, dal 2018, dai dati di Epoch AI.`,
   };
 }
 

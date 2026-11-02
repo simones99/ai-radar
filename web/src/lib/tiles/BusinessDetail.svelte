@@ -95,7 +95,7 @@
       </Block>
     {/if}
     {@render bloccoItUe(inSettore("A cosa serve l'AI"), es?.anno, settore ? "In % delle imprese del settore che usano l'AI." : "Tutti i settori rilevati, in % delle imprese che usano l'AI.", scopi, 'Scopo')}
-    {@render bloccoItUe(inSettore('Cosa frena chi non la usa'), es?.anno, settore ? "In % delle imprese del settore che hanno considerato l'AI senza usarla." : "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
+    {@render bloccoItUe(inSettore('Le barriere di chi non la usa'), es?.anno, settore ? "In % delle imprese del settore che hanno considerato l'AI senza usarla." : "Tutti i settori rilevati, in % delle imprese che hanno considerato l'AI senza usarla.", barriere, 'Barriera')}
     <Block title="Imprese che usano l'AI, per area" note="Aziende intervistate che usano l'AI in almeno una funzione. Punto pieno: ultimo anno; vuoto: anno prima."
       missing={imprese.length ? null : MISSING} cite={owidCite(s('imprese_ai'))}
       table={{ ...dotsTable(imprese, ['Area', 'Ultimo anno', 'Anno prima']), format: exact }}>
@@ -110,10 +110,10 @@
 
   <div class="sezione" role="group" aria-labelledby="bz-investimenti">
     <h3 class="group" id="bz-investimenti">Investimenti</h3>
-    <Block span={8} title="Investimenti privati per regione" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
+    <Block span={8} title="Investimenti privati per area" note="{ND} Esclude le aziende quotate e la spesa interna delle grandi tecnologiche."
       missing={inv.length ? null : MISSING} cite={owidCite(s('investimenti_privati'))}
       table={{ ...seriesTable(inv, 'Anno'), format: exact }}>
-      <LineChart label="Investimenti privati per regione" series={inv} yFormat={short} />
+      <LineChart label="Investimenti privati per area" series={inv} yFormat={short} />
     </Block>
     <Block span={4} title="Di cui AI generativa" note="{ND} Mondo." missing={gen.length ? null : MISSING}
       cite={owidCite(s('investimenti_generativa'))} table={{ cols: ['Anno', 'Dollari'], rows: gen.map((g) => [g.k, g.v]), format: exact }}>

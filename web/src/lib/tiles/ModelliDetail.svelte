@@ -38,9 +38,9 @@
 </script>
 
 <Detail {tile} {head} {onclose}>
-  <Block span={8} title="Calcolo di addestramento dei modelli notevoli" note="FLOP usati per addestrare ogni modello, scala logaritmica. In blu i modelli di frontiera."
+  <Block span={8} title="Calcolo di addestramento dei modelli notevoli" note="FLOP usati per addestrare ogni modello, scala logaritmica. In blu i più grandi del loro momento."
     missing={compute.length ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'} cite={epCite}
-    table={{ cols: ['Modello di frontiera', 'Data', 'FLOP'], rows: (ep?.punti ?? []).filter((p) => p.f && p.c).sort((a, b) => b.d.localeCompare(a.d)).slice(0, 20).map((p) => [p.m, day(p.d), (p.c as number).toExponential(1)]) }}>
+    table={{ cols: ['Tra i più grandi del loro momento', 'Data', 'FLOP'], rows: (ep?.punti ?? []).filter((p) => p.f && p.c).sort((a, b) => b.d.localeCompare(a.d)).slice(0, 20).map((p) => [p.m, day(p.d), (p.c as number).toExponential(1)]) }}>
     <Scatter label="Calcolo di addestramento dei modelli notevoli" pts={compute} yLog xTitle="anno di pubblicazione" yTitle="FLOP" yFormat={pow10} xFormat={(v) => String(Math.round(v))} />
   </Block>
   <Block span={4} title="Capacità dei modelli nel tempo"

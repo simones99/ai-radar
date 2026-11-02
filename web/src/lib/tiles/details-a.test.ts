@@ -151,8 +151,8 @@ describe('Business', () => {
   const tile = mk('business', 'Business', headBusiness, BusinessDetail);
   it('grafici con fonte cliccabile e serie mancanti dichiarate', () => {
     show(BusinessDetail, tile);
-    expect(screen.getByRole('img', { name: 'Investimenti privati per regione' })).toBeInTheDocument();
-    const inv = screen.getByRole('img', { name: 'Investimenti privati per regione' }).closest('section')!;
+    expect(screen.getByRole('img', { name: 'Investimenti privati per area' })).toBeInTheDocument();
+    const inv = screen.getByRole('img', { name: 'Investimenti privati per area' }).closest('section')!;
     expect(within(inv).getByRole('link', { name: 'Our World in Data' })).toHaveAttribute('href', 'https://ourworldindata.org/grapher/private-investment-in-artificial-intelligence');
     expect(within(inv).getByRole('link', { name: 'CC BY-ND 4.0' })).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nd/4.0/');
     // CC BY-ND: valori come pubblicati, in dollari e senza arrotondamenti
@@ -160,7 +160,7 @@ describe('Business', () => {
     const gen = screen.getByRole('img', { name: 'Investimenti in AI generativa' }).closest('section')!;
     expect(within(gen).getByText('143.800.000.000')).toBeInTheDocument();
     expect(within(screen.getByRole('img', { name: 'Investimenti in AI generativa' })).getByText('144 B')).toBeInTheDocument();
-    expect(within(screen.getByRole('img', { name: 'Investimenti privati per regione' })).getByText(/^Europa/)).toHaveClass('hot');
+    expect(within(screen.getByRole('img', { name: 'Investimenti privati per area' })).getByText(/^Europa/)).toHaveClass('hot');
     expect(screen.getAllByText('Dati non disponibili in questo aggiornamento.').length).toBeGreaterThan(0);
     expect(within(screen.getByRole('img', { name: "Imprese europee che usano l'AI" })).getByText('Italia')).toHaveClass('hot');
   });
@@ -174,7 +174,7 @@ describe('Business', () => {
       for (const [title, img] of [
         ['Adozione per settore, 2025', "Adozione per settore, Italia e UE"],
         ["A cosa serve l'AI, 2025", "A cosa serve l'AI, Italia e UE"],
-        ['Cosa frena chi non la usa, 2025', 'Cosa frena chi non la usa, Italia e UE'],
+        ['Le barriere di chi non la usa, 2025', 'Le barriere di chi non la usa, Italia e UE'],
       ]) {
         const b = blk(title);
         expect(within(b).getByRole('img', { name: img })).toBeInTheDocument();
@@ -183,13 +183,13 @@ describe('Business', () => {
         expect(b).toHaveTextContent('Punto pieno: Italia; vuoto: UE.');
       }
       expect(blk("A cosa serve l'AI, 2025")).toHaveTextContent("% delle imprese che usano l'AI");
-      expect(blk('Cosa frena chi non la usa, 2025')).toHaveTextContent("% delle imprese che hanno considerato l'AI senza usarla");
+      expect(blk('Le barriere di chi non la usa, 2025')).toHaveTextContent("% delle imprese che hanno considerato l'AI senza usarla");
       // ordinati per valore italiano; le tabelle danno Italia e UE
       expect(righe('Adozione per settore, 2025')).toEqual([
         ['Informazione e comunicazione', '51,3', '62,5'], ['Manifattura', '14,7', '17,3'], ['Immobiliare', '14,0', '24,8'],
       ]);
       expect(righe("A cosa serve l'AI, 2025")[0]).toEqual(['Marketing e vendite', '33,1', '34,7']);
-      expect(righe('Cosa frena chi non la usa, 2025')).toHaveLength(8);
+      expect(righe('Le barriere di chi non la usa, 2025')).toHaveLength(8);
       expect(screen.queryByText(/Dato italiano non affidabile/)).toBeNull();
     });
 
@@ -246,7 +246,7 @@ describe('Business', () => {
       show(BusinessDetail, tile);
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent("16% delle imprese italiane usa l'AI");
       expect(screen.getByText("Nel 2025, imprese con almeno 10 addetti. UE: 20%. Nel 2024 in Italia l'8%.")).toBeInTheDocument();
-      for (const name of ["Imprese che usano l'AI, per area", "Imprese europee che usano l'AI, 2025", 'Investimenti privati per regione', 'Ricavi di TSMC'])
+      for (const name of ["Imprese che usano l'AI, per area", "Imprese europee che usano l'AI, 2025", 'Investimenti privati per area', 'Ricavi di TSMC'])
         expect(screen.getByRole('heading', { name })).toBeInTheDocument();
     });
 
@@ -288,12 +288,12 @@ describe('Business: il settore', () => {
     expect(within(confronto).getByText('Immobiliare')).not.toHaveClass('hot');
     expect(blk('Adozione per settore, 2025')).toHaveTextContent('In evidenza: Manifattura.');
     const titoli = within(screen.getByRole('group', { name: 'Adozione' })).getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
-    expect(titoli.slice(0, 5)).toEqual(['Adozione', 'Adozione per settore, 2025', 'Adozione in Manifattura, 2021-2025', "A cosa serve l'AI in Manifattura, 2025", 'Cosa frena chi non la usa in Manifattura, 2025']);
+    expect(titoli.slice(0, 5)).toEqual(['Adozione', 'Adozione per settore, 2025', 'Adozione in Manifattura, 2021-2025', "A cosa serve l'AI in Manifattura, 2025", 'Le barriere di chi non la usa in Manifattura, 2025']);
     expect(within(blk('Adozione in Manifattura, 2021-2025')).getByRole('img', { name: 'Adozione in Manifattura, Italia e UE' })).toBeInTheDocument();
     expect(blk('Adozione in Manifattura, 2021-2025')).toHaveTextContent('Dati 2021-2025.');
     expect(righe('Adozione in Manifattura, 2021-2025')).toEqual([['2021', '6,6', '6,9'], ['2023', '4,9', '6,8'], ['2024', '8,0', '10,6'], ['2025', '14,7', '17,3']]);
     expect(righe("A cosa serve l'AI in Manifattura, 2025")[0]).toEqual(['Marketing e vendite', '28,7', '30,4']);
-    expect(righe('Cosa frena chi non la usa in Manifattura, 2025')[0]).toEqual(['Mancano le competenze', '62,5', '71,1']);
+    expect(righe('Le barriere di chi non la usa in Manifattura, 2025')[0]).toEqual(['Mancano le competenze', '62,5', '71,1']);
   });
 
   it("l'andamento non disegna il 2022, né come punto né come tratto", () => {

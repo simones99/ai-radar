@@ -12,7 +12,7 @@ const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
 
 describe('numeri chiave delle card', () => {
   it('modelli: crescita del calcolo', () => {
-    expect(faceModelli(d, today)).toEqual({ fig: '×4,8', unit: "all'anno", sent: 'Quanto cresce il calcolo per addestrare i modelli di frontiera, dal 2018.' });
+    expect(faceModelli(d, today)).toEqual({ fig: '×4,8', unit: "all'anno", sent: 'Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.' });
     expect(faceModelli({}, today)).toBeNull();
   });
   it('open source: tipo più frequente, senza contare "altro"', () => {

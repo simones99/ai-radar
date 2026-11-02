@@ -873,7 +873,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
-const SETTORI = ['Adozione per settore, Italia e UE', "A cosa serve l'AI, Italia e UE", 'Cosa frena chi non la usa, Italia e UE'];
+const SETTORI = ['Adozione per settore, Italia e UE', "A cosa serve l'AI, Italia e UE", 'Le barriere di chi non la usa, Italia e UE'];
 
 test('Business in tema scuro: i grafici dei settori senza violazioni gravi', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });

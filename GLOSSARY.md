@@ -68,6 +68,10 @@ _Avoid_: anno corrente, ultimo anno
 Un modello AI addestrato con almeno 1e23 FLOP di calcolo di addestramento. Sono i modelli su cui si contano le aree.
 _Avoid_: modello grande, modello di frontiera, modello notevole
 
+**Modello tra i più grandi**:
+Un modello che Epoch segna come «Frontier model»: quando è uscito era tra i più grandi per calcolo di addestramento. Dipende dal momento in cui è uscito, mentre il modello di grande scala ha una soglia fissa, e i due insiemi non coincidono.
+_Avoid_: modello di frontiera
+
 **Capacità**:
 Quanto un modello è bravo nei compiti verificabili, misurata dall'Epoch Capabilities Index. Ha senso solo nel confronto tra modelli, non come valore assoluto. Dice quanto valgono i risultati di un'area.
 _Avoid_: competenza, intelligenza, potenza (per un modello)

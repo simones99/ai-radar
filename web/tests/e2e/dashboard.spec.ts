@@ -291,6 +291,22 @@ test('area a 320px: il menu sta accanto o sotto il titolo, niente scorrimento or
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+for (const width of [320, 390, 480]) {
+  test(`card GeopoliticAI a ${width}px: i nomi delle aree stanno interi nella card`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 780 });
+    await page.goto('/');
+    const card = page.getByRole('button', { name: /GeopoliticAI/ });
+    await expect(card).toBeVisible();
+    const fuori = (await card.boundingBox())!;
+    for (const nome of ['USA', 'Cina', 'UE']) {
+      const box = (await card.getByText(nome, { exact: true }).boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(fuori.x);
+      expect(box.x + box.width).toBeLessThanOrEqual(fuori.x + fuori.width);
+    }
+    expect(await noHorizontalScroll(page)).toBe(true);
+  });
+}
+
 test('Modelli e ricerca: il rimando apre GeopoliticAI, Indietro torna a Modelli e poi alla home', async ({ page }) => {
   await page.goto('/');
   await page.locator('#tile-modelli .face').click();

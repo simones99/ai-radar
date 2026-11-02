@@ -71,7 +71,7 @@
 </span>
 
 <style>
-  .radar { display: block; width: 100%; height: 100%; }
+  .radar { display: block; width: 100%; height: 100%; } @media (max-width: 560px) { .radar { height: auto; aspect-ratio: 4 / 3; } }
   svg { display: block; }
   .q { fill: color-mix(in srgb, var(--fg) 4%, var(--card)); }
   .q.hot { fill: color-mix(in srgb, var(--accent) 14%, var(--card)); }

@@ -98,7 +98,7 @@
   @media (max-width: 560px) {
     .face { grid-template-columns: 88px minmax(0, 1fr); align-items: center; padding: var(--s1); border-radius: var(--r-md); }
     .face.spicco { grid-template-columns: minmax(0, 1fr); align-items: stretch; padding: var(--s1) var(--s1) var(--s2); }
-    .spicco .viz { min-height: 0; aspect-ratio: 4 / 3; }
+    .spicco .viz { min-height: 0; } /* l'altezza la decide la figura */
     .spicco .f-body { padding-inline: var(--s1); gap: 4px; }
     .spicco .fig { font-size: 36px; line-height: 40px; }
     .ph { aspect-ratio: 1; border-radius: var(--r-sm); }

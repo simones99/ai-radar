@@ -19,16 +19,24 @@ const tile = (over: Partial<TileDef> = {}): TileDef => ({
 const blocks = createRawSnippet(() => ({ render: () => '<p>blocchi</p>' }));
 
 describe('TileFace', () => {
-  it('numero, unità, frase e data di aggiornamento', async () => {
+  it('numero, unità e frase; la data solo se è diversa da quella di tutte, in testa alla pagina', async () => {
     const onopen = vi.fn();
     render(TileFace, { tile: tile(), data: FIXTURE as Dataset, today, expanded: false, onopen });
     const b = screen.getByRole('button', { name: /Business/ });
     expect(b).toHaveAttribute('aria-expanded', 'false');
     expect(b).toHaveAttribute('aria-controls', 'detail-business');
     expect(b).toHaveTextContent('290mld $');
-    expect(b).toHaveTextContent('agg. 15 ott 2026');
+    expect(b).not.toHaveTextContent('agg.');
+    expect(b).toHaveAccessibleDescription('Investimenti privati.');
     await fireEvent.click(b);
     expect(onopen).toHaveBeenCalledOnce();
+  });
+  it('una fonte aggiornata in un altro giorno dice la sua data', () => {
+    const f = FIXTURE as Dataset;
+    render(TileFace, { tile: tile(), data: { ...f, status: { ...f.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, today, expanded: false, onopen: () => {} });
+    const b = screen.getByRole('button', { name: /Business/ });
+    expect(b).toHaveTextContent('agg. 15 ott 2026');
+    expect(b).toHaveAccessibleDescription('Investimenti privati. agg. 15 ott 2026');
   });
   it('fonte assente: spiega il motivo', () => {
     render(TileFace, { tile: tile({ source: 'adzuna', face: () => null }), data: FIXTURE as Dataset, today, expanded: false, onopen: () => {} });

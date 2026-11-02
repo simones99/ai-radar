@@ -18,7 +18,9 @@
   // per un lettore di schermo la card è il suo nome e la sua cifra; la frase e la data arrivano come descrizione, non come un nome lungo tutta la card
   const nomeCard = $derived(face ? `${tile.label}: ${face.fig}${face.unit ? ` ${face.unit}` : ''}` : tile.label);
   const stale = $derived(st.state === 'vecchio' && !!st.fallito && !!st.aggiornato);
-  const conData = $derived(st.state === 'assente' || !!st.aggiornato);
+  // la data dell'aggiornamento di tutte sta in testa alla pagina: una card dice la sua solo se è diversa
+  const dataDiversa = $derived(!!st.aggiornato && (!data.status?.aggiornato || day(st.aggiornato) !== day(data.status.aggiornato)));
+  const conData = $derived(st.state === 'assente' || dataDiversa);
   const descritta = $derived([`${tile.id}-frase`, conData && `${tile.id}-data`, stale && `${tile.id}-stale`].filter(Boolean).join(' '));
 </script>
 
@@ -35,9 +37,11 @@
   <span class="f-body">
     <span class="f-lab">
       <span>{tile.label}</span>
-      <span class="small" id="{tile.id}-data">
-        {#if st.state === 'assente'}non disponibile{:else if st.aggiornato}agg. {day(st.aggiornato)}{/if}
-      </span>
+      {#if conData}
+        <span class="small" id="{tile.id}-data">
+          {#if st.state === 'assente'}non disponibile{:else if st.aggiornato}agg. {day(st.aggiornato)}{/if}
+        </span>
+      {/if}
     </span>
     {#if face}
       {#if conCifra}<span class="fig">{face.fig}{#if face.unit}<span class="u">{face.unit}</span>{/if}</span>{/if}

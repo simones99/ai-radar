@@ -40,7 +40,7 @@ test('home: due porte, due sezioni, 9 temi', async ({ page }) => {
 test('home: il contenuto sta nel main, e una card si chiama con la sua cifra, con la frase come descrizione', async ({ page }) => {
   await page.goto('/');
   const card = page.getByRole('main').getByRole('button', { name: 'GeopoliticAI: 18,8 punti sotto gli USA', exact: true });
-  await expect(card).toHaveAccessibleDescription(/^Capacità del miglior modello europeo.*agg\. /);
+  await expect(card).toHaveAccessibleDescription(/^Capacità del miglior modello europeo/);
 });
 
 test('1920px: note, metodo e crediti restano nella misura di una riga di testo, circa 75 caratteri', async ({ page }) => {

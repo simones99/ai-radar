@@ -81,7 +81,7 @@
     .face.compact:hover { background: var(--card); transform: none; }
     .face.compact:hover .ph img { transform: none; }
   }
-  /* la card di spicco: la figura al posto della foto; l'unica voce grande della testa è la porta */
+  /* la card di spicco: la figura al posto della foto. La notizia della testa la dice la porta; la cifra di GeopoliticAI resta grande come nelle altre card, perché parla d'altro */
   .viz { display: block; aspect-ratio: 4 / 3; border-radius: var(--r-md); overflow: hidden; background: var(--card); min-height: 0; }
   .spicco { grid-template-rows: minmax(0, 1fr) auto; }
   .spicco .viz { aspect-ratio: auto; min-height: 240px; }

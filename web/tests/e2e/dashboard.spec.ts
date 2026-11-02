@@ -52,11 +52,11 @@ test('1920px: note, metodo e crediti restano nella misura di una riga di testo, 
   }
 });
 
-test('la settimana in testa è quella dei dati, non dell’orologio di chi legge, con l’articolo eliso', async ({ page }) => {
+test('la settimana in testa è quella dei dati, non dell’orologio di chi legge: dal suo lunedì, con l’articolo eliso', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-05T10:00:00'));
-  await page.route('**/data/status.json', (route) => route.fulfill({ json: { ...(FIXTURE.status as object), aggiornato: '2026-10-08T08:00:00+00:00' } }));
+  await page.route('**/data/status.json', (route) => route.fulfill({ json: { ...(FIXTURE.status as object), aggiornato: '2026-06-10T08:00:00+00:00' } })); // un mercoledì
   await page.goto('/');
-  await expect(page.getByText('Settimana dell’8 ott 2026')).toBeVisible();
+  await expect(page.getByText('Settimana dell’8 giu 2026')).toBeVisible();
 });
 
 test('senza lo stato delle fonti la riga della settimana non c’è', async ({ page }) => {

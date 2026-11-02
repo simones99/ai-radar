@@ -34,6 +34,12 @@ export const monthYear = (ymStr: string): string => `${monthName(ymStr)} ${ymStr
 const pad = (n: number) => String(n).padStart(2, '0');
 export const isoDay = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 export const ym = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+/** Il lunedì della settimana di una data. */
+export function lunediDi(iso: string): string {
+  const d = parseDay(iso);
+  d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+  return isoDay(d);
+}
 
 export function daysTo(iso: string, today: Date): number {
   return Math.round((parseDay(iso).getTime() - parseDay(isoDay(today)).getTime()) / 864e5);

@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { capitalize, day, dayWith, daysTo, exact, isoDay, short, lowerFirst, monthName, monthYear, nf, signedPts, ym } from './format';
+import { capitalize, day, dayWith, daysTo, exact, isoDay, short, lowerFirst, monthName, monthYear, nf, signedPts, ym, lunediDi } from './format';
+
+describe('lunediDi', () => {
+  it('il lunedì della settimana: lo stesso giorno, un martedì, una domenica, oltre il mese', () => {
+    expect(lunediDi('2026-10-26')).toBe('2026-10-26');
+    expect(lunediDi('2026-10-27T15:42:09+00:00')).toBe('2026-10-26');
+    expect(lunediDi('2026-11-01')).toBe('2026-10-26');
+    expect(lunediDi('2026-11-03')).toBe('2026-11-02');
+  });
+});
 
 describe('formati italiani', () => {
   it('numeri con separatori italiani', () => {

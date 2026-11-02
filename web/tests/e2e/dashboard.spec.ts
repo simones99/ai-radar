@@ -291,6 +291,27 @@ test('area a 320px: il menu sta accanto o sotto il titolo, niente scorrimento or
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+for (const width of [320, 1280]) {
+  test(`GeopoliticAI a ${width}px: il distacco è nello schermo del titolo, sopra la mappa`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/#geopoliticai');
+    const titolo = (await page.getByRole('heading', { level: 2, name: /Chi costruisce i modelli/ }).boundingBox())!;
+    const cifra = (await page.getByText('18,8', { exact: true }).boundingBox())!;
+    expect(cifra.y).toBeGreaterThan(titolo.y);
+    expect(cifra.y - titolo.y).toBeLessThan(900);
+    const mappa = (await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).boundingBox())!;
+    expect(cifra.y).toBeLessThan(mappa.y);
+    expect(await noHorizontalScroll(page)).toBe(true);
+  });
+}
+
+test('GeopoliticAI: dal distacco alla scheda dell’UE, anche con un’altra area scelta', async ({ page }) => {
+  await page.goto('/#geopoliticai?area=cina');
+  await expect(scheda(page, 'Cina')).toBeVisible();
+  await page.getByRole('button', { name: "Vai alla scheda dell'UE" }).click();
+  await expect(scheda(page, 'UE')).toBeFocused();
+});
+
 for (const width of [320, 390, 480]) {
   test(`card GeopoliticAI a ${width}px: i nomi delle aree stanno interi nella card`, async ({ page }) => {
     await page.setViewportSize({ width, height: 780 });

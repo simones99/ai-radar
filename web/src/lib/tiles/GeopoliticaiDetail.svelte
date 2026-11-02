@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import Block from '../charts/Block.svelte';
-  import { AREE, paesiUe } from '../data/geopoliticai';
+  import { AREE, annoFaccia, paesiUe, valore } from '../data/geopoliticai';
   import { area as areaRicordata } from '../scelta.svelte';
-  import { scheda } from '../text/geopoliticai';
+  import { annoTesto, eci, faccia, scheda } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
   import GeoChiAddestra from './GeoChiAddestra.svelte';
   import GeoMappa from './GeoMappa.svelte';
@@ -20,6 +20,10 @@
   const paesi = $derived(g ? paesiUe(g) : []);
   const scegli = (k: string) => areaRicordata.scegli(k === 'ue' ? null : k); // l'UE è la scelta di partenza
   const s = $derived(g && g.zone[zona] ? scheda(g, zona) : null);
+  // la risposta al titolo, sempre sull'UE come la card in home, anche con un'altra area scelta
+  const distacco = $derived(g ? faccia(g) : null);
+  const annoDistacco = $derived(g ? annoFaccia(g) : 0);
+  const treAree = $derived(g ? (['usa', 'cina', 'ue'] as const).flatMap((k) => valore(g, k, 'eci', annoDistacco) ?? []) : []);
   /** Dalla matrice: sceglie l'area, porta la scheda in vista e le dà il focus. */
   async function apriScheda(k: string) {
     scegli(k);
@@ -38,7 +42,21 @@
 </script>
 
 <Detail {tile} {head} {onclose}>
-  <!-- prima la mappa della catena, la vista che risponde al titolo; poi la scheda dell'area scelta, la matrice e chi addestra -->
+  <!-- prima la risposta al titolo, il distacco dell'UE; poi la mappa della catena, la scheda dell'area scelta, la matrice e chi addestra -->
+  {#if g && distacco}
+    <div class="distacco">
+      <p class="cifra"><strong>{distacco.fig}</strong> {distacco.unit}</p>
+      <dl>
+        {#each treAree as v (v.zona)}
+          <div class:ue={v.zona === 'ue'}><dt>{g.zone[v.zona].nome}</dt><dd>{eci(v.v)}</dd></div>
+        {/each}
+      </dl>
+      <p class="come">
+        Capacità del miglior modello di ogni area nel {annoTesto(g, annoDistacco)}, in punti dell'<a href="https://epoch.ai/eci" target="_blank" rel="noopener">Epoch Capabilities Index</a>.
+        <button type="button" class="vai" onclick={() => apriScheda('ue')}>Vai alla scheda dell'UE</button>
+      </p>
+    </div>
+  {/if}
   {#if g}
     <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
       vista={params.vista} filo={params.filo} onscegli={scegli} />
@@ -97,6 +115,15 @@
 </Detail>
 
 <style>
+  /* sulla carta, come il titolo: la riga del giornale tra il titolo e la mappa */
+  .distacco { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--s2) var(--s5); padding-bottom: var(--s3); border-bottom: 1px solid var(--line-2); }
+  .cifra { font-size: 22px; line-height: 28px; color: var(--fg-2); }
+  .cifra strong { font-weight: 600; font-size: clamp(44px, 6vw, 64px); line-height: 1.05; letter-spacing: -.015em; font-variant-numeric: tabular-nums; color: var(--fg); }
+  .distacco dl { display: flex; gap: var(--s4); margin: 0; }
+  .distacco dt { font-size: 14px; line-height: 20px; color: var(--fg-2); }
+  .distacco dd { margin: 0; font-weight: 600; font-size: 24px; line-height: 28px; font-variant-numeric: tabular-nums; }
+  .distacco .ue dd { color: var(--accent); }
+  .come { flex: 1 1 100%; font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .area { display: inline-flex; align-items: center; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
   /* il menu è sulla carta: prende il fondo della pagina, come le pillole della mappa */
   .area select { background-color: var(--bg); }

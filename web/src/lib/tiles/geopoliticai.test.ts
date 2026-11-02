@@ -55,6 +55,33 @@ describe('GeopoliticAI: card in home', () => {
   });
 });
 
+describe('GeopoliticAI: il distacco sotto il titolo', () => {
+  it('dice la cifra della card e le tre aree, con la fonte', () => {
+    show();
+    expect(screen.getByText('18,8')).toBeInTheDocument();
+    expect(screen.getByText('punti sotto gli USA', { exact: false })).toBeInTheDocument();
+    for (const [nome, valore] of [['USA', '168,8'], ['Cina', '157,9'], ['UE', '150,0']]) {
+      const termine = screen.getAllByRole('term').find((t) => t.textContent === nome)!;
+      expect(screen.getAllByRole('definition').some((v) => v.textContent === valore && v.parentElement === termine.parentElement)).toBe(true);
+    }
+    expect(screen.getByText(/nel 2026, anno in corso, in punti/)).toBeInTheDocument();
+  });
+  it("resta sull'UE anche con un'altra area scelta", () => {
+    area('cina');
+    expect(screen.getByText('18,8')).toBeInTheDocument();
+  });
+  it("senza un valore UE nell'anno in corso passa all'ultimo anno chiuso, come la card", () => {
+    show(ueSenzaAnnoInCorso());
+    expect(screen.getByText('22,3')).toBeInTheDocument();
+    expect(screen.getByText(/nel 2025, in punti/)).toBeInTheDocument();
+  });
+  it('senza un valore UE non c’è', () => {
+    const senzaEci: Dataset = { ...data, geopoliticai: { ...geo, zone: { ...geo.zone, ue: { ...geo.zone.ue, eci: {} } } } };
+    show(senzaEci);
+    expect(screen.queryByRole('button', { name: "Vai alla scheda dell'UE" })).not.toBeInTheDocument();
+  });
+});
+
 describe('GeopoliticAI: la scheda dell’UE', () => {
   it('prima la capacità, poi il calcolo, con la distanza dal primo dello stesso anno', () => {
     show();

@@ -4,7 +4,7 @@ import {
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, Quadrant, Ruolo } from '../data/types';
-import { CHI_ADDESTRA, faccia } from './geopoliticai';
+import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
@@ -399,11 +399,10 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
   const geo = d.geopoliticai;
   const q = geo && [geo.anno_corrente, geo.anno_corrente - 1].map((y) => ({ y, ...quota(geo, 'ue', y) })).find((x) => x.tot > 0);
   if (geo && q) {
-    const pct = (100 * q.n) / q.tot;
     const finora = q.y === geo.anno_corrente ? ', finora' : '';
     return {
       title: q.n
-        ? [{ t: `${q.n} dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} ${q.n === 1 ? 'è europeo' : 'sono europei'} (${nf(pct, pct < 1 ? 1 : 0)}%)${finora}` }]
+        ? [{ t: `${q.n} dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} ${q.n === 1 ? 'è europeo' : 'sono europei'} (${percento(q.n, q.tot)})${finora}` }]
         : [{ t: `Nessuno dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} è europeo${finora}` }],
       meta: `Epoch AI · dati scaricati ${dayWith('il', geo.scaricato)}`,
       target: { tema: 'geopoliticai', elemento: CHI_ADDESTRA, params: { area: 'ue' } },

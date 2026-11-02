@@ -252,7 +252,7 @@ export function faceGeopoliticai(d: Dataset, _today?: Date): Face | null {
 export function headGeopoliticai(d: Dataset, _today?: Date): Head {
   if (!d.geopoliticai) return { title: plain('GeopoliticAI'), deck: null };
   return {
-    title: [{ t: 'Chi costruisce i modelli più potenti, ' }, { t: "e dov'è l'Europa", em: true }],
+    title: [{ t: 'Chi costruisce i modelli più capaci, ' }, { t: "e dov'è l'Europa", em: true }],
     deck: "Calcolo di addestramento e capacità dei modelli AI per area, dal 2020. Un modello conta per il Paese della prima organizzazione che l'ha sviluppato.",
   };
 }

@@ -49,7 +49,7 @@ describe('GeopoliticAI: card in home', () => {
   });
   it("la testa del dettaglio dice dov'è l'Europa", () => {
     const h = headGeopoliticai(data, today);
-    expect(text(h.title)).toBe("Chi costruisce i modelli più potenti, e dov'è l'Europa");
+    expect(text(h.title)).toBe("Chi costruisce i modelli più capaci, e dov'è l'Europa");
     expect(h.title.find((p) => p.em)?.t).toBe("e dov'è l'Europa");
     expect(h.deck).toContain('prima organizzazione');
   });

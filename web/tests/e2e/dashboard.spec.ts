@@ -66,6 +66,21 @@ test('senza lo stato delle fonti la riga della settimana non c’è', async ({ p
   await expect(page.getByText(/^Settimana /)).toHaveCount(0);
 });
 
+test('un file di dati bloccato: l’avviso e lo stato delle fonti lo dicono, e Riprova lo richiede', async ({ page }) => {
+  let bloccato = true;
+  await page.route('**/data/radar.json', (route) => (bloccato ? route.fulfill({ status: 500, body: '' }) : route.fulfill({ json: FIXTURE.radar })));
+  await page.goto('/');
+  await expect(page.getByRole('alert')).toContainText('Una parte dei dati non è arrivata');
+  const stato = page.getByRole('region', { name: 'Stato delle fonti' });
+  await expect(stato).toContainText('Radar (calcolo)');
+  await expect(stato).not.toContainText('sono aggiornate');
+  expect(await noHorizontalScroll(page)).toBe(true);
+  bloccato = false;
+  await page.getByRole('alert').getByRole('button', { name: 'Riprova' }).click();
+  await expect(page.getByRole('link', { name: /MCP entra/ })).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
 test('mappa a 1280px: il fumetto si legge tutto e non copre il tabellone', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/#geopoliticai?vista=quote');

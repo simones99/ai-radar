@@ -47,6 +47,8 @@ a { color: inherit; text-underline-offset: 3px; }
 /* le superfici del browser nei colori del sito: selezione, barre di scorrimento, caselle */
 ::selection { background: color-mix(in srgb, var(--accent) 24%, var(--card)); color: var(--fg); }
 html { scrollbar-color: var(--line-2) transparent; accent-color: var(--fg); }
+/* il comando di quando i dati non arrivano */
+.riprova { border: 0; border-radius: 999px; background: var(--fg); color: var(--card); padding: var(--s1) var(--s3); min-height: 40px; cursor: pointer; }
 /* «Vedi i dati», «Vedi le fonti»: il segno disegnato al posto del triangolo del browser, giù da chiuso e su da aperto */
 summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; min-height: 40px; width: fit-content; font-size: 14px; color: var(--fg-2); }
 summary::-webkit-details-marker { display: none; }

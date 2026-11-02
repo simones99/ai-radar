@@ -162,7 +162,7 @@ describe('porta Per te', () => {
     expect(p.target).toEqual({ tema: 'competenze', elemento: null });
   });
   it('senza radar: porta vuota e non cliccabile', () => {
-    expect(doorPerTe({}, today)).toEqual({ title: [], meta: 'Dati non ancora disponibili', target: null });
+    expect(doorPerTe({}, today)).toEqual({ title: [], meta: 'Dati non disponibili', target: null });
   });
 });
 
@@ -343,6 +343,6 @@ describe('porta L’AI in Italia', () => {
     });
   });
   it('senza dati: porta vuota e non cliccabile', () => {
-    expect(doorItalia({}, today)).toEqual({ title: [], meta: 'Dati non ancora disponibili', target: null });
+    expect(doorItalia({}, today)).toEqual({ title: [], meta: 'Dati non disponibili', target: null });
   });
 });

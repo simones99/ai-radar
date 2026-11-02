@@ -19,7 +19,7 @@ describe('Doors', () => {
   it('senza dati: porte non cliccabili che lo dicono', () => {
     render(Doors, { data: {}, today });
     expect(screen.queryAllByRole('link')).toHaveLength(0);
-    expect(screen.getAllByText('Dati non ancora disponibili')).toHaveLength(2);
+    expect(screen.getAllByText('Dati non disponibili')).toHaveLength(2);
     expect(screen.getByText('Su cosa formarti')).toBeInTheDocument();
   });
 

@@ -52,7 +52,7 @@
     <SkillView row={skill} {quadranti} storico={data.radar?.storico ?? []} />
   {:else if !rows.length}
     <Block span={12} title="Radar delle competenze"
-      missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar si calcola dopo il primo aggiornamento di arXiv, GitHub e Adzuna.'} />
+      missing={old ? 'Il radar si aggiorna al prossimo giro della pipeline.' : 'Il radar non è disponibile in questo momento.'} />
   {:else}
     {#if ruoli.length}
       <div class="chips" role="group" aria-label="Il tuo ruolo">

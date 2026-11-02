@@ -1,14 +1,16 @@
 <script lang="ts">
   import DataTable from '../charts/DataTable.svelte';
+  import type { FileKey } from '../data/load';
   import type { Status } from '../data/types';
   import { day } from '../text/format';
 
-  let { status }: { status: Status | undefined } = $props();
+  // mancanti: i file di dati che questa pagina non ha ricevuto. Lo stato delle fonti dice com'è andato l'aggiornamento, non se i dati sono arrivati qui
+  let { status, mancanti = [], onriprova }: { status: Status | undefined; mancanti?: FileKey[]; onriprova?: () => void } = $props();
 
   const NOMI: Record<string, string> = {
     epoch: 'Epoch AI', geopoliticai: 'Epoch (GeopoliticAI)', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
     adzuna: 'Adzuna', eurostat: 'Eurostat', eurostat_settori: 'Eurostat (settori)', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)', catena: "Catena dell'AI (dati curati)",
-    feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)',
+    feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)', news: 'Notizie', status: 'Stato delle fonti',
   };
   const STATI: Record<string, string> = { ok: 'aggiornata', errore: 'errore', 'non configurata': 'non configurata' };
   const fonti = $derived(Object.entries(status?.fonti ?? {}).map(([k, s]) => ({
@@ -22,9 +24,15 @@
 
 <section class="status" id="stato" aria-labelledby="stato-h">
   <h2 id="stato-h">Stato delle fonti</h2>
+  {#if mancanti.length && onriprova}
+    <div class="mancanti">
+      <p class="small">Questa pagina non ha ricevuto i dati di: <b>{mancanti.map((k) => NOMI[k] ?? k).join(', ')}</b>.</p>
+      <button type="button" class="riprova" onclick={onriprova}>Riprova</button>
+    </div>
+  {/if}
   {#if rows.length}
     <p class="muted small">
-      {#if problemi.length}{problemi.length} {problemi.length === 1 ? 'fonte' : 'fonti'} su {rows.length} da controllare.{:else}Tutte le {rows.length} fonti sono aggiornate.{/if}
+      {#if problemi.length}{problemi.length} {problemi.length === 1 ? 'fonte' : 'fonti'} su {rows.length} da controllare.{:else if mancanti.length}L'ultimo aggiornamento delle {rows.length} fonti non ha dato errori.{:else}Tutte le {rows.length} fonti sono aggiornate.{/if}
       Ultimo aggiornamento: {status ? day(status.aggiornato) : '—'}. Una fonte in errore mostra l'ultimo dato valido.
     </p>
     {#if problemi.length}
@@ -34,7 +42,7 @@
     {/if}
     <details><summary>Vedi le {rows.length} fonti</summary><DataTable cols={['Fonte', 'Stato', 'Ultimo successo', 'Note']} {rows} /></details>
   {:else}
-    <p class="muted small">Nessun aggiornamento registrato ancora.</p>
+    <p class="muted small">{mancanti.includes('status') ? 'Lo stato delle fonti non è arrivato.' : 'Nessun aggiornamento registrato ancora.'}</p>
   {/if}
 </section>
 
@@ -43,6 +51,9 @@
   details { min-width: 0; } /* la tabella scorre dentro, non allarga la pagina */
   h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
   .status > p { max-width: var(--misura); }
+  .mancanti { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); }
+  .mancanti p { flex: 1 1 16em; max-width: var(--misura); }
+  .mancanti b { font-weight: 600; }
   .problemi { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s1); font-size: 14px; line-height: 20px; max-width: var(--misura); }
   .problemi b { font-weight: 600; }
   .nota { display: block; font-size: 12px; line-height: 16px; color: var(--fg-2); overflow-wrap: anywhere; }

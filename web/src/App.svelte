@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { FILES, loadAll } from './lib/data/load';
+  import { FILES, loadAll, type FileKey } from './lib/data/load';
   import type { Dataset } from './lib/data/types';
   import { PHOTOS } from './lib/photos';
   import { dayWith } from './lib/text/format';
@@ -12,11 +12,13 @@
   const today = new Date();
   let phase = $state<'loading' | 'ready' | 'error'>('loading');
   let data = $state<Dataset>({});
+  let mancanti = $state<FileKey[]>([]);
 
   async function load() {
     phase = 'loading';
     const r = await loadAll();
     data = r.data;
+    mancanti = r.failed;
     phase = r.failed.length === FILES.length ? 'error' : 'ready';
   }
   onMount(load);
@@ -39,9 +41,15 @@
   {#if phase === 'error'}
     <section class="alert" role="alert">
       <p>Non riesco a caricare i dati.</p>
-      <button type="button" onclick={load}>Riprova</button>
+      <button type="button" class="riprova" onclick={load}>Riprova</button>
     </section>
   {:else}
+    {#if phase === 'ready' && mancanti.length}
+      <section class="alert" role="alert">
+        <p>Una parte dei dati non è arrivata: alcune card restano vuote. <a href="#stato">Quali</a></p>
+        <button type="button" class="riprova" onclick={load}>Riprova</button>
+      </section>
+    {/if}
     <div class="intro">
       <section class="hero">
         <!-- la settimana dei dati, non quella dell'orologio di chi legge -->
@@ -74,7 +82,8 @@
         <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
       </p>
     </section>
-    <SourcesStatus status={data.status} />
+    <!-- senza nessun file l'avviso e il suo Riprova stanno già in testa: qui basta dire che lo stato non è arrivato -->
+    <SourcesStatus status={data.status} {mancanti} onriprova={phase === 'ready' ? load : undefined} />
   </footer>
 </div>
 
@@ -108,7 +117,6 @@
   /* nella colonna stretta accanto alle card */
   @media (min-width: 1200px) { h1 { font-size: 28px; } }
   .alert { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: var(--s3); }
-  .alert button { border: 0; border-radius: 999px; background: var(--fg); color: var(--card); padding: var(--s1) var(--s3); min-height: 40px; cursor: pointer; }
   /* il colophon: crediti e stato delle fonti affiancati da 960px */
   .colophon { --fondo: var(--bg); display: grid; gap: var(--s5); border-top: 1px solid var(--line-2); padding-top: var(--s3); }
   @media (min-width: 960px) { .colophon { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s6); } }

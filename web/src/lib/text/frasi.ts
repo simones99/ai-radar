@@ -273,7 +273,7 @@ export interface Door {
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
   scelta?: string; // nome del ruolo o del settore ricordato, per l'etichetta (Per te · Prodotto)
 }
-const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: null };
+const NO_DATA: Door = { title: [], meta: 'Dati non disponibili', target: null };
 
 /** "A", "A e B", "A, B e C", con i nomi in evidenza. */
 const names = (rows: RadarRowM[]): TitleParts =>

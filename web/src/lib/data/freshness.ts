@@ -15,7 +15,7 @@ const MOTIVI: Record<string, string> = {
 export function tileState(source: string, status: Status | undefined, hasData: boolean): TileState {
   const st = status?.fonti?.[source];
   if (!hasData) {
-    return { state: 'assente', aggiornato: null, fallito: st?.ultimo_tentativo ?? null, motivo: MOTIVI[source] ?? 'Dati non ancora disponibili.' };
+    return { state: 'assente', aggiornato: null, fallito: st?.ultimo_tentativo ?? null, motivo: MOTIVI[source] ?? 'Dati non disponibili.' };
   }
   if (st?.stato === 'errore') {
     return { state: 'vecchio', aggiornato: st.ultimo_successo ?? null, fallito: st.ultimo_tentativo ?? null, motivo: null };

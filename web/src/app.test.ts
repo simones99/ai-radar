@@ -28,6 +28,44 @@ describe('App', () => {
     expect(within(crediti).getByRole('link', { name: 'Licenze del software' })).toHaveAttribute('href', 'THIRD_PARTY_LICENSES.txt');
   });
 
+  describe('un file di dati non arriva', () => {
+    const conRisposte = (senza: string[]) => vi.fn(async (url: string) => {
+      const k = url.split('/').pop()!.replace('.json', '');
+      const body = senza.includes(k) ? undefined : (FIXTURE as Record<string, unknown>)[k];
+      return { ok: body !== undefined, json: async () => body } as Response;
+    });
+    const stato = () => within(document.getElementById('stato')!);
+    it('con tutti i file: nessun avviso e nessun Riprova', async () => {
+      vi.stubGlobal('fetch', conRisposte([]));
+      render(App);
+      await screen.findByRole('heading', { level: 1 });
+      await screen.findByRole('link', { name: /MCP entra/ });
+      expect(screen.queryByRole('alert')).toBeNull();
+      expect(screen.queryByRole('button', { name: 'Riprova' })).toBeNull();
+    });
+    it('il radar: lo dicono l’avviso e lo stato delle fonti, che non parla di tutte aggiornate; Riprova lo richiede e l’avviso sparisce', async () => {
+      const f = conRisposte(['radar']);
+      vi.stubGlobal('fetch', f);
+      render(App);
+      expect(await screen.findByRole('alert')).toHaveTextContent('Una parte dei dati non è arrivata');
+      expect(stato().getByText(/non ha ricevuto i dati di/)).toHaveTextContent('Questa pagina non ha ricevuto i dati di: Radar (calcolo).');
+      expect(document.getElementById('stato')).not.toHaveTextContent('sono aggiornate');
+      expect(screen.getAllByText('Dati non disponibili').length).toBeGreaterThan(0);
+      f.mockImplementation(conRisposte([]));
+      await fireEvent.click(stato().getByRole('button', { name: 'Riprova' }));
+      expect(await screen.findByRole('link', { name: /MCP entra/ })).toBeInTheDocument();
+      expect(screen.queryByRole('alert')).toBeNull();
+      expect(document.getElementById('stato')).toHaveTextContent('da controllare');
+    });
+    it('lo stato delle fonti: non dice che non c’è stato nessun aggiornamento', async () => {
+      vi.stubGlobal('fetch', conRisposte(['status']));
+      render(App);
+      await screen.findByRole('alert');
+      expect(stato().getByText('Lo stato delle fonti non è arrivato.')).toBeInTheDocument();
+      expect(document.getElementById('stato')).not.toHaveTextContent('Nessun aggiornamento registrato');
+    });
+  });
+
   it('nessun dato raggiungibile: avviso e Riprova', async () => {
     const fetchFn = vi.fn(async () => { throw new TypeError('offline'); });
     vi.stubGlobal('fetch', fetchFn);

@@ -31,8 +31,9 @@
   const xLabel = (v: number) => (v === 0 ? '0' : signedPct(v));
   const yLabel = (v: number) => nf(v, v < 1 ? 1 : 0);
   const MEZZA_FUGA = 2; // px, tra i quadranti: ci passa la linea della soglia
+  const centro = $derived({ x: x(0.5), y: y(0.5) });
   // i quattro quadranti a tono, staccati dalla fuga
-  const riquadri = $derived(riquadriDelRadar({ x0: x(-0.04), y0: y(1.04), x1: x(1.04), y1: y(-0.04) }, x(0.5), y(0.5), MEZZA_FUGA));
+  const riquadri = $derived(riquadriDelRadar({ x0: x(-0.04), y0: y(1.04), x1: x(1.04), y1: y(-0.04) }, centro, MEZZA_FUGA));
   // i nomi dei quadranti, fuori agli angoli
   const angoli = $derived([
     { id: 'consolida' as Quadrant, x: m.l, y: m.t - 8, a: 'start' },
@@ -108,7 +109,7 @@
     const it = { id: r.id, x: x(r.x), y: y(r.y), w: measureText(r.breve, `600 13px ${FONT}`), h: LH };
     const taken = [...layout.map((l) => l.box), ...soglie.map((l) => l.box), ...segni];
     const b = placeLabels([it], perNomi, taken, 10).get(r.id) as Box;
-    return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: inImparaOra(b, x(0.5), y(0.5)), px: it.x, py: it.y, l: leader(it, b) };
+    return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: inImparaOra(b, centro), px: it.x, py: it.y, l: leader(it, b) };
   });
   const dim = (id: string) => highlight != null && highlight !== id;
   const altro = (id: string) => highlight == null && delRuolo != null && !delRuolo.includes(id); // durante l'anteprima conta solo quella
@@ -183,7 +184,7 @@
         {#if l}<line class="leader" class:dim={dim(it.id)} class:altro={altro(it.id)} x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
       {/each}
       {#each layout as it (it.id)}
-        {@const tono = inImparaOra(it.box, x(0.5), y(0.5)) ? 'halo-hot' : 'halo-q'}
+        {@const tono = inImparaOra(it.box, centro) ? 'halo-hot' : 'halo-q'}
         <text class:dim={dim(it.id)} class:altro={altro(it.id)} x={it.box.x0} y={it.box.y0 + LH - 4}>
           {#each it.lines as t, i (i)}
             <tspan x={it.box.x0} dy={i ? LH : 0} class="halo {tono} {i === 0 ? (it.hot ? 'lb-hot' : 't12') : 'note'}">{t}</tspan>

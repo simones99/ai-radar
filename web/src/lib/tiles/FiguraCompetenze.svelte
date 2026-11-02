@@ -20,7 +20,8 @@
   const B = P + 18; // la fascia dei nomi, in alto e in basso: i punti non ci arrivano
   const x = $derived(scaleLinear([-0.04, 1.04], [0, w]));
   const y = $derived(scaleLinear([-0.04, 1.04], [h - B, B]));
-  const nomi = $derived(riquadriDelRadar({ x0: 0, y0: 0, x1: w, y1: h }, x(0.5), y(0.5), G / 2).map((q) => {
+  const centro = $derived({ x: x(0.5), y: y(0.5) });
+  const nomi = $derived(riquadriDelRadar({ x0: 0, y0: 0, x1: w, y1: h }, centro, G / 2).map((q) => {
     const hot = q.id === 'impara-ora';
     const tw = measureText(quadranti[q.id], `${hot ? 700 : 600} 13px ${FONT}`);
     const tx = q.sinistra ? q.x0 + P : q.x1 - P;
@@ -67,7 +68,7 @@
       {#if l}<line class="leader" x1={it.x} y1={it.y} x2={l.x2} y2={l.y2} />{/if}
     {/each}
     {#each etichette as it (it.id)}
-      <text class="lbl halo" class:blu={inImparaOra(it.box, x(0.5), y(0.5))} x={it.box.x0} y={it.box.y0 + LH - 4}>{it.r.breve}</text>
+      <text class="lbl halo" class:blu={inImparaOra(it.box, centro)} x={it.box.x0} y={it.box.y0 + LH - 4}>{it.r.breve}</text>
     {/each}
   </svg>
 </span>

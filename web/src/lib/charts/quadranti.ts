@@ -4,11 +4,14 @@ import type { Box } from './labels';
 /** Un quadrante del radar disegnato: il suo riquadro e da che lato sta. */
 export interface Riquadro extends Box { id: Quadrant; sinistra: boolean; alto: boolean }
 
-/** I quattro quadranti del radar dentro `fuori`, divisi nel punto (`cx`, `cy`) da una fuga larga 2·`mezzaFuga`:
+/** Il punto in cui le due soglie del radar si incrociano, in pixel. */
+export interface Centro { x: number; y: number }
+
+/** I quattro quadranti del radar dentro `fuori`, divisi nel `centro` da una fuga larga 2·`mezzaFuga`:
  *  in alto da consolidare e impara ora, in basso tieni d'occhio e da provare. */
-export function riquadriDelRadar(fuori: Box, cx: number, cy: number, mezzaFuga: number): Riquadro[] {
-  const sx = { x0: fuori.x0, x1: cx - mezzaFuga }, dx = { x0: cx + mezzaFuga, x1: fuori.x1 };
-  const su = { y0: fuori.y0, y1: cy - mezzaFuga }, giu = { y0: cy + mezzaFuga, y1: fuori.y1 };
+export function riquadriDelRadar(fuori: Box, centro: Centro, mezzaFuga: number): Riquadro[] {
+  const sx = { x0: fuori.x0, x1: centro.x - mezzaFuga }, dx = { x0: centro.x + mezzaFuga, x1: fuori.x1 };
+  const su = { y0: fuori.y0, y1: centro.y - mezzaFuga }, giu = { y0: centro.y + mezzaFuga, y1: fuori.y1 };
   return [
     { id: 'consolida', ...sx, ...su, sinistra: true, alto: true },
     { id: 'impara-ora', ...dx, ...su, sinistra: false, alto: true },
@@ -17,5 +20,5 @@ export function riquadriDelRadar(fuori: Box, cx: number, cy: number, mezzaFuga: 
   ];
 }
 
-/** Il centro della box sta in alto a destra di (`cx`, `cy`), nel quadrante «impara ora»: lì l'alone di un'etichetta ne prende il colore. */
-export const inImparaOra = (b: Box, cx: number, cy: number) => (b.x0 + b.x1) / 2 > cx && (b.y0 + b.y1) / 2 < cy;
+/** Il centro della box sta in alto a destra del `centro`, nel quadrante «impara ora»: lì l'alone di un'etichetta ne prende il colore. */
+export const inImparaOra = (b: Box, centro: Centro) => (b.x0 + b.x1) / 2 > centro.x && (b.y0 + b.y1) / 2 < centro.y;

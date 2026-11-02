@@ -233,7 +233,8 @@
     .has-open { grid-template-columns: 300px minmax(0, 1fr); gap: var(--s4); align-items: start; }
     /* l'elenco resta a vista mentre si scorre il dettaglio */
     .has-open .groups { display: grid; gap: var(--s3); position: sticky; top: var(--s3); max-height: calc(100vh - var(--s6)); overflow-y: auto; padding: 4px; margin: -4px; }
-    .has-open .tiles { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+    /* le nove righe e le due teste stanno in 800px di altezza, senza scorrere */
+    .has-open .tiles { grid-template-columns: minmax(0, 1fr); gap: 4px; }
     .has-open .tile.largo { grid-column: auto; }
     .has-open .g-h { font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-2); padding-inline: var(--s1); }
   }

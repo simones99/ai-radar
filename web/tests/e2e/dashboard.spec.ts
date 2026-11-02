@@ -216,6 +216,13 @@ test('una voce grande per testa: la card Competenze ha figura e frase, Geopoliti
   expect(await corpo(/^GeopoliticAI/)).toBe(await corpo(/^Modelli e ricerca/));
 });
 
+test('elenco accanto a una card aperta: a 800px di altezza ci stanno tutte le card, senza scorrere', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/#business');
+  await expect(page.locator('#tile-rapporti .face')).toBeVisible();
+  expect(await page.locator('.has-open .groups').evaluate((el) => el.scrollHeight <= el.clientHeight)).toBe(true);
+});
+
 test('elenco accanto a una card aperta: Competenze dice la sua cifra', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/#business');

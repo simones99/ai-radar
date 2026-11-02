@@ -73,9 +73,10 @@
     .face:hover { box-shadow: var(--shadow-up); transform: translateY(-2px); }
     .face:hover .ph img { transform: scale(1.03); }
   }
-  .face.compact { grid-template-columns: 56px minmax(0, 1fr); align-items: center; gap: 12px; padding: var(--s1); border-radius: var(--r-md); background: transparent; box-shadow: none; }
+  .face.compact { grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 12px; padding: var(--s1); border-radius: var(--r-md); background: transparent; box-shadow: none; }
   .compact .ph { aspect-ratio: 1; border-radius: var(--r-sm); }
   .compact .f-body { padding-inline: 0; gap: 0; }
+  .compact .f-lab { line-height: 20px; }
   .compact .f-lab .small, .compact .sent { display: none; }
   .compact .fig { font-size: 22px; line-height: 28px; }
   .compact .u { font-size: 13px; }

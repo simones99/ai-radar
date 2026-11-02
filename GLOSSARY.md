@@ -76,6 +76,10 @@ _Avoid_: competenza, intelligenza, potenza (per un modello)
 Un modello che, quando è uscito, aveva la capacità più alta mai misurata, cioè un ECI più alto di tutti i modelli usciti prima. Fra due modelli usciti lo stesso giorno conta solo il più alto, e chi pareggia il record non lo batte.
 _Avoid_: modello di frontiera, modello migliore
 
+**Distacco**:
+Quanti punti di capacità separano l'UE dalla prima area, confrontando il miglior modello di ciascuna nello stesso anno. Quando la prima area è l'UE non c'è distacco.
+_Avoid_: divario, gap, ritardo
+
 **Barriera**:
 Un motivo per cui un'impresa che ha considerato l'AI non la usa, per esempio i costi o la mancanza di competenze.
 _Avoid_: ostacolo, freno

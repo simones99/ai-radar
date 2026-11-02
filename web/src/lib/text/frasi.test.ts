@@ -66,7 +66,7 @@ describe('numeri chiave delle card', () => {
     const h = headCompetenze(senza('mcp'), today);
     expect(text(h.title)).toBe('RAG esce da Impara ora');
     expect(h.title[0]).toEqual({ t: 'RAG', em: true });
-    expect(h.deck).not.toContain('esce');
+    expect(h.deck).not.toContain('RAG'); // lo dice già il titolo
     expect(text(headCompetenze(senza('mcp', 'rag'), today).title)).toBe('Nessun cambio tra le competenze da imparare ora');
   });
   it('competenze: una sola da imparare ora, verbo al singolare', () => {

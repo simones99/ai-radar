@@ -924,6 +924,17 @@ test('Stato delle fonti, tabella impilata: ogni valore resta sotto il nome della
   expect(new Set(righe)).toEqual(new Set([1]));
 });
 
+for (const width of [320, 360]) {
+  test(`${width}px: le pillole dicono il nome della loro testa, e la pagina non scorre di lato`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 640 });
+    await page.goto('/#rapporti');
+    const pillole = page.getByRole('navigation', { name: 'Altri temi' });
+    await expect(pillole.getByText('Su cosa formarti')).toBeInViewport();
+    await expect(pillole.getByRole('group', { name: "L'AI in Italia" }).getByText("L'AI in Italia")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+}
+
 test('360px: all’apertura il titolo della card è nella finestra, sotto le pillole', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 780 });
   await page.goto('/');

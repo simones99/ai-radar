@@ -41,7 +41,6 @@
     .pills { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: var(--s1); margin-inline: calc(-1 * var(--s2)); padding-inline: var(--s2); }
     .scroll, .group { flex-wrap: nowrap; }
     .group, .pill { flex: none; } /* scorrono di lato: non si stringono */
-    .glab { display: none; } /* sul telefono il posto è delle pillole; il nome della testa resta nel gruppo, per chi usa un lettore di schermo */
     .scroll { overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent); padding-right: var(--s4); }
   }
 </style>

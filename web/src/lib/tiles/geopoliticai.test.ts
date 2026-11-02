@@ -768,6 +768,14 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
     return visti;
   }
 
+  it('«Vedi l’Italia» apre il suo fumetto senza passare dal menu, e il Filo resta la vista', async () => {
+    show(data);
+    const vedi = () => fireEvent.click(mappa().getByRole('button', { name: "Vedi l'Italia" }));
+    expect(await paesi(vedi)).toEqual(['ITA']);
+    expect(mappa().getByRole('dialog', { name: 'Italia' })).toBeInTheDocument();
+    expect(mappa().getByRole('group', { name: 'Esempio' })).toBeInTheDocument();
+  });
+
   it('il Paese aperto sta nel link, dalla mappa e dal menu; chiudendo il fumetto il link torna senza', async () => {
     quote();
     expect(await paesi(() => fireEvent.click(mondo().getByTestId('paese-USA')))).toEqual(['USA']);

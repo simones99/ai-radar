@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { separa } from './mappa';
+import { NOMI, PAESI, separa } from './mappa';
+
+describe('i nomi del menu dei Paesi', () => {
+  it('in italiano e con la maiuscola, anche per i territori', () => {
+    expect([NOMI.JEY, NOMI.KAS, NOMI.IOA]).toEqual(['Jersey', 'Ghiacciaio del Siachen', "Territori australiani dell'oceano Indiano"]);
+    // eSwatini è il nome ufficiale, con la minuscola
+    expect(PAESI.filter((p) => p.id !== 'SWZ' && p.nome[0] !== p.nome[0].toUpperCase()).map((p) => p.nome)).toEqual([]);
+  });
+});
 
 describe('separa: i segni della mappa non si coprono', () => {
   const dist = (a: { px: number; py: number }, b: { px: number; py: number }) => Math.hypot(a.px - b.px, a.py - b.py);

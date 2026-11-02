@@ -31,7 +31,10 @@ UNISCI = {"HKG": "CHN", "MAC": "CHN"}
 FUORI = {"ATA", "ATF"}  # l'Antartide e le Terre australi francesi stanno sotto il taglio
 CRIMEA = (34.10, 44.95)  # Sinferopoli: il poligono russo che la contiene passa all'Ucraina
 # i nomi come li usa il resto del sito, dove quello di Natural Earth è diverso
-NOMI = {"USA": "USA", "CZE": "Cechia"}
+NOMI = {
+    "USA": "USA", "CZE": "Cechia", "JEY": "Jersey", "KAS": "Ghiacciaio del Siachen",
+    "IOA": "Territori australiani dell'oceano Indiano",
+}
 
 
 def proj(lon: float, lat: float) -> tuple[float, float]:

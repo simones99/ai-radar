@@ -197,7 +197,8 @@
           <button type="button" aria-pressed={filo ? 'false' : 'true'} onclick={() => imposta('vista', 'quote')}>Quote <span class="lungo">per Paese</span></button>
         </div>
         {#if filo}
-          <div class="scelte" role="group" aria-label="Esempio">
+          <div class="scelte esempi" role="group" aria-label="Esempio">
+            <span class="eti" aria-hidden="true">Esempio:</span>
             {#each fili as f (f.key)}<button type="button" aria-pressed={f.key === filo.key ? 'true' : 'false'} aria-label={f.nome} onclick={() => imposta('filo', f.key)}>{f.corto}</button>{/each}
           </div>
         {/if}
@@ -308,6 +309,7 @@
         </select>
       </label>
       <button type="submit" disabled={!paeseScelto}>Apri</button>
+      {#if ita}<button type="button" onclick={() => tocca(ita)}>Vedi l'Italia</button>{/if}
     </form>
 
     {#if filo}
@@ -437,12 +439,18 @@
     li:first-child.on .lab { left: 0; } li:last-child.on .lab { right: 0; }
   }
 
-  .viste { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+  .viste { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); }
   .viste .scelte button[aria-pressed='true'] { background: var(--fg); border-color: var(--fg); color: var(--card); }
+  /* la vista cambia la mappa, l'esempio sceglie un filo dentro la vista: due scelte diverse, e non due pillole nere affiancate */
+  .esempi { align-items: center; }
+  .eti { font-size: 14px; line-height: 20px; color: var(--fg-2); white-space: nowrap; }
+  .viste .esempi button[aria-pressed='true'] { background: var(--card); border-color: var(--fg); color: var(--fg); box-shadow: inset 0 0 0 1px var(--fg); }
   /* sul telefono la vista e l'esempio stanno su una riga ciascuno: «Filo» e «Quote» bastano, il resto del nome resta per chi usa un lettore di schermo */
   @media (max-width: 560px) {
     .viste .scelte { flex-wrap: nowrap; }
     .viste .scelte button { padding-inline: var(--s1); }
+    .viste .esempi { flex-wrap: wrap; }
+    .viste .esempi .eti { flex-basis: 100%; }
   }
   /* l'arco che arriva alla fermata scelta si disegna; con «riduci movimento» no (app.css) */
   .arco { fill: none; stroke: var(--c); stroke-width: 1.2; stroke-linecap: round; opacity: .6; pointer-events: none; }

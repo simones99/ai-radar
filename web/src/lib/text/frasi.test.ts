@@ -42,7 +42,7 @@ describe('numeri chiave delle card', () => {
     const pl: Dataset = { radar: { ...d.radar!, competenze: comp } };
     const h = headCompetenze(pl, today);
     expect(text(h.title)).toBe('Multimodali entrano tra le competenze da imparare ora');
-    expect(h.deck).toBe("DB vettoriali escono da Impara ora. Multimodali: in Italia 2,6 annunci, sotto soglia. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
+    expect(h.deck).toBe("DB vettoriali escono da Impara ora. Multimodali: in Italia 2,6 annunci ogni 10mila, sotto soglia. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
   });
   it('competenze: chi torna in Impara ora con un margine che comprende lo zero: il titolo dice «tornano», il sottotitolo dice il margine', () => {
     const pt = (pubblicato: 'impara-ora' | 'consolida') => ({ slancio: 0, domanda: 1, calcolato: pubblicato, pubblicato, incerto: false });
@@ -50,7 +50,7 @@ describe('numeri chiave delle card', () => {
     const storico = (['impara-ora', 'consolida', 'consolida', 'impara-ora'] as const).map((q, i) => ({ mese: `2026-0${i + 6}`, competenze: { mcp: pt(q) } }));
     const h = headCompetenze({ radar: { ...d.radar!, competenze: comp, storico } }, today);
     expect(text(h.title)).toBe('Multimodali tornano tra le competenze da imparare ora');
-    expect(h.deck).toMatch(/^RAG esce da Impara ora\. Il margine di Multimodali, da −9% a \+32%, include lo zero: potrebbero non crescere più dell'AI\. Multimodali: in Italia 2,6 annunci, sotto soglia\. Oggi /);
+    expect(h.deck).toMatch(/^RAG esce da Impara ora\. Il margine di Multimodali, da −9% a \+32%, include lo zero: potrebbero non crescere più dell'AI\. Multimodali: in Italia 2,6 annunci ogni 10mila, sotto soglia\. Oggi /);
     const q = d.radar!.quadranti;
     expect(cambio(radarRows({ ...d.radar!, competenze: comp, storico }).find((r) => r.id === 'mcp')!, q)).toBe('tornano in Impara ora');
   });
@@ -80,11 +80,11 @@ describe('numeri chiave delle card', () => {
     expect(text(headCompetenze(senza('mcp', 'rag'), today).title)).toBe('Nessun cambio tra le competenze da imparare ora');
   });
   it('competenze: chi entra sotto soglia in Italia lo dice anche il sottotitolo, come la porta', () => {
-    expect(headCompetenze(d, today).deck).toContain('MCP: in Italia 2,6 annunci, sotto soglia. ');
+    expect(headCompetenze(d, today).deck).toContain('MCP: in Italia 2,6 annunci ogni 10mila, sotto soglia. ');
   });
   it('competenze: una sola da imparare ora, verbo al singolare', () => {
     const one: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.filter((r) => r.id !== 'agenti') } };
-    expect(headCompetenze(one, today).deck).toBe("RAG esce da Impara ora. MCP: in Italia 2,6 annunci, sotto soglia. Oggi 1 competenza su 4 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
+    expect(headCompetenze(one, today).deck).toBe("RAG esce da Impara ora. MCP: in Italia 2,6 annunci ogni 10mila, sotto soglia. Oggi 1 competenza su 4 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
     expect(faceCompetenze(one, today)?.sent).toBe("1 competenza su 4 da imparare ora: cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
   });
   it('competenze: chi resta in Impara ora ma per il calcolo è altrove non «cresce più dell’AI»', () => {
@@ -161,7 +161,7 @@ describe('titoli', () => {
     const h = headCompetenze(d, today);
     expect(text(h.title)).toBe('MCP entra tra le competenze da imparare ora');
     expect(h.title[0]).toEqual({ t: 'MCP', em: true });
-    expect(h.deck).toBe("RAG esce da Impara ora. MCP: in Italia 2,6 annunci, sotto soglia. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
+    expect(h.deck).toBe("RAG esce da Impara ora. MCP: in Italia 2,6 annunci ogni 10mila, sotto soglia. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
   });
   it('business e norme', () => {
     const hb = headBusiness(d, today);

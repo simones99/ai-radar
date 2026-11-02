@@ -11,12 +11,13 @@
     feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)',
   };
   const STATI: Record<string, string> = { ok: 'aggiornata', errore: 'errore', 'non configurata': 'non configurata' };
-  const fonti = $derived(Object.entries(status?.fonti ?? {}));
-  const rows = $derived(fonti.map(([k, s]) => [
-    NOMI[k] ?? k, STATI[s.stato] ?? s.stato, s.ultimo_successo ? day(s.ultimo_successo) : '—', s.messaggio ?? '', // anche una fonte aggiornata può avere un avviso
-  ]));
+  const fonti = $derived(Object.entries(status?.fonti ?? {}).map(([k, s]) => ({
+    nome: NOMI[k] ?? k, stato: STATI[s.stato] ?? s.stato, ultimo: s.ultimo_successo ? day(s.ultimo_successo) : null, nota: s.messaggio ?? '',
+    problema: s.stato !== 'ok' || !!s.messaggio, // anche una fonte aggiornata può avere un avviso
+  })));
+  const rows = $derived(fonti.map((f) => [f.nome, f.stato, f.ultimo ?? '—', f.nota]));
   // con tutto in ordine basta una riga; le fonti in errore o con un avviso si leggono subito, la tabella intera resta chiusa
-  const problemi = $derived(rows.filter((_, i) => fonti[i][1].stato !== 'ok' || fonti[i][1].messaggio));
+  const problemi = $derived(fonti.filter((f) => f.problema));
 </script>
 
 <section class="status" id="stato" aria-labelledby="stato-h">
@@ -28,7 +29,7 @@
     </p>
     {#if problemi.length}
       <ul class="problemi">
-        {#each problemi as [nome, stato, ultimo, nota] (nome)}<li><b>{nome}</b>: {stato}{#if ultimo !== '—'}, ultimo successo {ultimo}{/if}.{#if nota}<span class="nota">{nota}</span>{/if}</li>{/each}
+        {#each problemi as { nome, stato, ultimo, nota } (nome)}<li><b>{nome}</b>: {stato}{#if ultimo}, ultimo successo {ultimo}{/if}.{#if nota}<span class="nota">{nota}</span>{/if}</li>{/each}
       </ul>
     {/if}
     <details><summary>Vedi le {rows.length} fonti</summary><DataTable cols={['Fonte', 'Stato', 'Ultimo successo', 'Note']} {rows} /></details>

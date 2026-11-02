@@ -82,7 +82,6 @@
   @media (max-width: 560px) {
     .tog { display: grid; grid-template-columns: 1fr 1fr; justify-self: stretch; }
     .tog button { padding-inline: var(--s1); }
-    .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   }
   table { border-collapse: separate; border-spacing: 3px; width: 100%; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
   thead th { font-weight: 500; color: var(--fg-3); font-size: 12px; line-height: 16px; text-align: left; padding: var(--s1); white-space: nowrap; }

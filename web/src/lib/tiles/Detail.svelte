@@ -90,7 +90,6 @@
   /* sotto i 1200px chiude la × accanto alle pillole: una sola chiusura per volta */
   @media (max-width: 1199px) { .close { display: none; } }
   @media (hover: hover) { .copy:hover { color: var(--fg); } .close:hover { background: var(--line-2); } }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   /* dodici colonne a ogni larghezza: i blocchi tengono le loro misure (4, 6, 8, 12) e le coppie restano affiancate */
   .blocks { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s2); }
 </style>

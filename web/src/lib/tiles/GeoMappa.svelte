@@ -439,7 +439,6 @@
   @media (max-width: 560px) {
     .viste .scelte { flex-wrap: nowrap; }
     .viste .scelte button { padding-inline: var(--s1); }
-    .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   }
   /* l'arco che arriva alla fermata scelta si disegna; con «riduci movimento» no (app.css) */
   .arco { fill: none; stroke: var(--c); stroke-width: 1.2; stroke-linecap: round; opacity: .6; pointer-events: none; }

@@ -70,7 +70,6 @@
   .ar { display: inline-block; width: 1em; text-align: right; }
   .up { color: var(--accent); font-weight: 600; }
   .down { color: var(--fg-2); }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .flat { color: var(--fg-3); }
   .era { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--fg-3); padding-right: 1em; } /* sotto la cifra, allineato alla cifra e non alla freccia */
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }

@@ -59,6 +59,9 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .muted { color: var(--fg-2); }
 .skip { position: absolute; left: var(--s2); top: -64px; background: var(--card); padding: var(--s1) var(--s2); border-radius: var(--r-sm); box-shadow: var(--shadow); z-index: 10; }
 .skip:focus { top: var(--s2); }
+/* il testo solo per chi usa un lettore di schermo; .lungo lo è solo sul telefono, dove una scelta sta in una parola */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 560px) { .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 
 /* i menu a tendina, una pillola come le scelte: il segno di apertura disegnato con due sfumature nel colore del testo, in tutti e due i temi.
    16px perché il telefono non ingrandisca la pagina al tocco */

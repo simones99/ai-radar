@@ -949,7 +949,9 @@ describe('GeopoliticAI: il Filo della catena', () => {
     expect(premuto(viste())).toEqual(['Filo della catena']);
     expect(premuto(esempi())).toEqual(['Europeo']);
     expect(esempi().getAllByRole('button').map((b) => b.textContent)).toEqual(['Americano', 'Europeo', 'Cinese']); // corti a vista
-    expect(esempi().getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['Un modello americano', 'Un modello europeo', 'Un modello cinese']);
+    for (const [nome, corto] of [['Un modello americano', 'Americano'], ['Un modello europeo', 'Europeo'], ['Un modello cinese', 'Cinese']]) {
+      expect(esempi().getByRole('button', { name: nome })).toHaveTextContent(corto);
+    }
     cleanup();
     show(data, { vista: 'filo', filo: 'cina' });
     expect(premuto(esempi())).toEqual(['Cinese']);

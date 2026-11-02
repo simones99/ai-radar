@@ -962,7 +962,7 @@ describe('GeopoliticAI: il Filo della catena', () => {
     expect(mappa().queryByRole('button', { name: 'Siti' })).toBeNull();
     expect(mappa().queryByRole('button', { name: /^Colossus 2:/ })).toBeNull();
     expect(mappa().getByRole('option', { name: 'Svezia: 5. EcoDataCenter 2' })).toBeInTheDocument();
-    expect(mappa().getByRole('option', { name: 'Italia: nessuna tappa del filo' })).toBeInTheDocument();
+    expect(mappa().getByRole('option', { name: 'Italia' })).toBeInTheDocument();
   });
 
   it('nel filo «Vedi i dati» ha le quote della fermata scelta, e la fonte viene dopo chi ha scelto l’esempio, con i confini una volta sola', () => {

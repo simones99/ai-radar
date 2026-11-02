@@ -2,6 +2,8 @@
   import { onMount, tick } from 'svelte';
   import Block from '../charts/Block.svelte';
   import { AREE, annoFaccia, paesiUe, valore } from '../data/geopoliticai';
+  import { paesiZona } from '../geo/mappa';
+  import { imposta } from '../router';
   import { area as areaRicordata } from '../scelta.svelte';
   import { annoTesto, CHI_ADDESTRA, eci, faccia, scheda } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
@@ -39,8 +41,12 @@
   }
   // la porta della testa arriva sul blocco della sua notizia, non sul titolo della card
   $effect(() => { if (elemento === CHI_ADDESTRA) vaiAlBlocco('geo-chi-addestra'); });
-  /** Alla sezione della mappa quando c'è, altrimenti in fondo al dettaglio. */
-  function versoLaMappa() {
+  /** Dalla scheda di chi è a zero: le quote per Paese, con il fumetto del suo Paese se è uno solo. Alla sezione della mappa quando c'è, altrimenti in fondo al dettaglio. */
+  async function versoLaMappa() {
+    const paesi = g ? [...paesiZona(g, zona)] : [];
+    imposta('vista', 'quote');
+    if (paesi.length === 1) imposta('paese', paesi[0]);
+    await tick();
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const mappa = document.getElementById('geo-mappa');
     (mappa ?? document.getElementById('detail-geopoliticai'))?.scrollIntoView?.({ block: mappa ? 'start' : 'end', behavior: reduce ? 'auto' : 'smooth' });
@@ -65,7 +71,7 @@
   {/if}
   {#if g}
     <GeoMappa {g} catena={data.catena} {zona} anello={params.anello} materiale={params.materiale} siti={params.siti}
-      vista={params.vista} filo={params.filo} onscegli={scegli} />
+      vista={params.vista} filo={params.filo} paese={params.paese} onscegli={scegli} />
   {/if}
   <Block span={12} id="geo-scheda" title={s?.titolo ?? 'UE'} missing={s ? null : 'Dati di Epoch AI non disponibili in questo aggiornamento.'}>
     {#snippet azione()}

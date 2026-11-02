@@ -398,6 +398,27 @@ for (const width of [320, 390, 480]) {
   });
 }
 
+test('GeopoliticAI: «Dove sta l’Italia» apre le quote con il suo fumetto, il link lo dice, e chiudendolo il link torna senza', async ({ page }) => {
+  await page.goto('/#geopoliticai?area=italia');
+  await page.getByRole('button', { name: "Dove sta l'Italia nella catena dell'AI →" }).click();
+  const fumetto = page.getByRole('dialog', { name: 'Italia' });
+  await expect(fumetto).toBeFocused();
+  await expect(page).toHaveURL(/vista=quote/);
+  await expect(page).toHaveURL(/paese=ITA/);
+  await page.reload();
+  await expect(fumetto).toBeVisible();
+  await fumetto.getByRole('button', { name: 'Chiudi' }).click();
+  await expect(fumetto).toHaveCount(0);
+  await expect(page).not.toHaveURL(/paese=/);
+  await expect(page).toHaveURL(/vista=quote/);
+});
+
+test('GeopoliticAI: un ?paese= sconosciuto si ignora', async ({ page }) => {
+  await page.goto('/#geopoliticai?vista=quote&paese=XXX');
+  await expect(page.getByRole('region', { name: "Chi controlla la catena dell'AI" })).toBeVisible();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+});
+
 test('Modelli e ricerca: il rimando apre GeopoliticAI, Indietro torna a Modelli e poi alla home', async ({ page }) => {
   await page.goto('/');
   await page.locator('#tile-modelli .face').click();

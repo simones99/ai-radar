@@ -3,9 +3,10 @@
   // ingrandita, il tabellone e la tabella. Ci sono le materie prime (USGS e studio UE), i tre anelli dei chip (ETO), i data center e i modelli (Epoch).
   // Un tocco su un Paese apre il suo fumetto con tutti gli anelli, e se il Paese è una scelta di ?area= sceglie anche l'area.
   // Nei data center, con ?siti=1, un cerchio per ogni sito noto a Epoch, con il suo fumetto.
+  // Con ?paese=ITA il fumetto di quel Paese è già aperto.
   // Si apre sul Filo della catena: un esempio scelto da noi (?filo=, quello europeo se manca), con gli archi tra le sei tappe e il loro elenco;
   // nel filo resta la tabella delle quote della fermata scelta. Con ?vista=quote, la mappa delle quote per Paese con le sue note.
-  import { tick } from 'svelte';
+  import { tick, untrack } from 'svelte';
   import Block from '../charts/Block.svelte';
   import type { Catena, Geopoliticai, GeoSito } from '../data/types';
   import {
@@ -15,9 +16,9 @@
   import { imposta } from '../router';
   import { NOTA_FILO, NOTA_GPU } from '../text/geopoliticai';
 
-  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, vista: paramVista, filo: paramFilo, onscegli }: {
+  let { g, catena, zona, anello: param, materiale: paramMateriale, siti: paramSiti, vista: paramVista, filo: paramFilo, paese: paramPaese, onscegli }: {
     g: Geopoliticai; catena: Catena | undefined; zona: string; anello: string | undefined; materiale: string | undefined; siti: string | undefined;
-    vista: string | undefined; filo: string | undefined; onscegli: (k: string) => void;
+    vista: string | undefined; filo: string | undefined; paese: string | undefined; onscegli: (k: string) => void;
   } = $props();
 
   const fili = $derived(filiDi(catena));
@@ -106,10 +107,16 @@
   let menuPaese = $state<HTMLSelectElement>();
   let paeseScelto = $state('');
   const paesiMenu = [...PAESI].filter((p) => NOMI[p.id]).sort((a, b) => NOMI[a.id].localeCompare(NOMI[b.id], 'it'));
+  const apriPaese = (p: Paese) => apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), menuPaese);
   function tocca(p: Paese) {
     if (scelte[p.id]) onscegli(scelte[p.id]);
-    return apri({ titolo: NOMI[p.id] ?? p.id, iso: p.id }, p.c[0], EUROPEI.has(p.id), menuPaese);
+    if (paramPaese) imposta('paese', null); // il link diceva un altro fumetto
+    return apriPaese(p);
   }
+  $effect(() => {
+    const p = PAESI.find((x) => x.id === paramPaese);
+    if (p) untrack(() => apriPaese(p));
+  });
   function apriDalMenu(e: SubmitEvent) {
     e.preventDefault();
     const p = PAESI.find((x) => x.id === paeseScelto);
@@ -119,6 +126,7 @@
   function chiudi() {
     const da = aperto?.da as HTMLElement | SVGElement | undefined;
     aperto = null;
+    if (paramPaese) imposta('paese', null);
     da?.focus({ preventScroll: true });
   }
 

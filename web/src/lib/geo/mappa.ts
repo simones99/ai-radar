@@ -275,10 +275,11 @@ export function separa<T extends { x: number; y: number }>(punti: T[], d: number
   return p;
 }
 
-/** Il nome di un Paese nella vista del filo: le sue tappe, o nessuna. */
+/** Il nome di un Paese nella vista del filo, con le sue tappe se ne ha. */
 export function nomeFilo(f: CatenaFilo, iso: string): string {
   const qui = f.tappe.flatMap((t, i) => (t.iso === iso ? [`${i + 1}. ${t.luogo}`] : []));
-  return `${NOMI[iso] ?? iso}: ${qui.length ? qui.join('; ') : 'nessuna tappa del filo'}`;
+  const nome = NOMI[iso] ?? iso;
+  return qui.length ? `${nome}: ${qui.join('; ')}` : nome;
 }
 
 /** Il dominio della fonte di una tappa, per il testo del link: «Fonte: epoch.ai». */

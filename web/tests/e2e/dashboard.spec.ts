@@ -66,16 +66,25 @@ test('senza lo stato delle fonti la riga della settimana non c’è', async ({ p
   await expect(page.getByText(/^Settimana /)).toHaveCount(0);
 });
 
-test('mappa a 1280px: il fumetto sta sulla mappa e non copre il tabellone', async ({ page }) => {
+test('mappa a 1280px: il fumetto si legge tutto e non copre il tabellone', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/#geopoliticai?vista=quote');
   await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('combobox', { name: 'Un Paese' }).selectOption('CHN');
   await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('button', { name: 'Apri' }).click();
   await expect(page.getByRole('dialog', { name: 'Cina' })).toBeVisible();
   await scrollSettled(page);
-  const fumetto = (await page.getByRole('dialog', { name: 'Cina' }).boundingBox())!;
+  const dialogo = page.getByRole('dialog', { name: 'Cina' });
+  const fumetto = (await dialogo.boundingBox())!;
+  expect(await dialogo.evaluate((el) => el.scrollHeight <= el.clientHeight)).toBe(true);
+  const menu = (await page.getByRole('combobox', { name: 'Un Paese' }).boundingBox())!;
+  expect(fumetto.y + fumetto.height).toBeLessThanOrEqual(menu.y);
+  await expect(page.getByRole('combobox', { name: 'Un Paese' })).toHaveValue('CHN');
+  // la posizione del riquadro dell'Europa non dipende dall'altezza del fumetto
+  const riquadro = (await page.getByRole('group', { name: 'Europa, ingrandita' }).boundingBox())!;
   const mondo = (await page.getByRole('group', { name: /^Mappa del mondo/ }).boundingBox())!;
-  expect(fumetto.y + fumetto.height).toBeLessThanOrEqual(mondo.y + mondo.height);
+  expect(riquadro.y + riquadro.height).toBeLessThanOrEqual(mondo.y + mondo.height);
+  await dialogo.getByRole('button', { name: 'Chiudi' }).click();
+  await expect(page.getByRole('combobox', { name: 'Un Paese' })).toHaveValue('');
 });
 
 test('porta Per te: chi entra e chi esce insieme: apre il radar, dove si vedono tutti e due', async ({ page }) => {

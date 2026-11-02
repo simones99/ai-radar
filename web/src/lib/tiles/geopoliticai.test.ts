@@ -783,20 +783,40 @@ describe('GeopoliticAI: il fumetto del Paese', () => {
     const sito = mondo().getAllByRole('button', { name: /H100 equivalenti|in costruzione/ })[0];
     expect(await paesi(() => fireEvent.click(sito))).toEqual([null]);
   });
-  it('il fumetto dice tutti gli anelli, e con lui sotto la mappa ci sono tutte le fonti: anche ETO, con il divieto di uso commerciale', async () => {
+  it('il fumetto dice tutti gli anelli: sotto la mappa a vista la fonte della vista e la dicitura di ETO, una volta sola, e le altre fonti in un elemento chiuso', async () => {
     quote(data, { anello: 'modelli' });
     const fonte = () => mappa().getByText(/^Modelli: /);
+    const altre = () => mappa().queryByText('Vedi le altre fonti')?.closest('details');
     expect(fonte()).not.toHaveTextContent('uso commerciale');
+    expect(altre()).toBeFalsy();
     await fireEvent.click(mondo().getByTestId('paese-CHN'));
-    expect(fonte()).toHaveTextContent('Macchinari: ETO, Advanced Semiconductor Supply Chain Dataset (CC BY-NC 4.0, uso commerciale non consentito), dati del 2025');
+    expect(fonte()).toHaveTextContent('Progettazione dei chip, Fabbricazione dei chip, Macchinari: ETO, Advanced Semiconductor Supply Chain Dataset (CC BY-NC 4.0, uso commerciale non consentito), quote rielaborate da AI Radar.');
+    expect(fonte().textContent?.match(/ETO, /g)).toHaveLength(1);
     expect(fonte().textContent?.match(/Confini: /g)).toHaveLength(1);
+    expect(fonte()).not.toHaveTextContent('Data center: ');
+    expect(altre()).not.toHaveAttribute('open');
+    expect(altre()).toHaveTextContent('Data center: ');
+    expect(altre()).not.toHaveTextContent('ETO');
     await fireEvent.click(mappa().getByRole('button', { name: 'Chiudi' }));
     expect(fonte()).not.toHaveTextContent('uso commerciale');
+    expect(altre()).toBeFalsy();
+  });
+  it('sull’anello di un chip la dicitura di ETO è già quella della vista; gli altri anelli di ETO stanno nell’elemento chiuso', async () => {
+    quote(data, { anello: 'macchinari' });
+    await fireEvent.click(mondo().getByTestId('paese-CHN'));
+    expect(mappa().getByText(/^Macchinari: /)).toHaveTextContent('uso commerciale non consentito');
+    expect(mappa().getByText('Vedi le altre fonti').closest('details')).toHaveTextContent('Fabbricazione dei chip: ETO');
   });
 
   it('anche il fumetto aperto dal link ?paese= porta le sue fonti', () => {
     quote(data, { anello: 'modelli', paese: 'ITA' });
     expect(mappa().getByText(/^Modelli: /)).toHaveTextContent('CC BY-NC 4.0, uso commerciale non consentito');
+  });
+
+  it('il menu dice il Paese del link, e con «Apri» acceso', () => {
+    quote(data, { anello: 'modelli', paese: 'ITA' });
+    expect(mappa().getByRole('combobox', { name: 'Un Paese' })).toHaveValue('ITA');
+    expect(mappa().getByRole('button', { name: 'Apri' })).toBeEnabled();
   });
 
   it('il pulsante Chiudi chiude il fumetto', async () => {

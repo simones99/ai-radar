@@ -104,11 +104,23 @@ export function fumetto(g: Geopoliticai, c: Catena | undefined, iso: string): An
   }));
 }
 
-/** Sotto la mappa, con il fumetto di un Paese aperto: dopo le fonti di `gia`, quelle degli altri anelli che il fumetto mostra.
- *  Tra queste c'è ETO, che chiede la dicitura con il divieto di uso commerciale (ADR 0001). */
-export function citeFumetto(g: Geopoliticai, c: Catena | undefined, gia: Cite): Cite {
-  const altre = attivi(g, c).flatMap((k) => visteAnello(g, c, k).map((x) => x.v.cite)).filter((cite) => !gia.some((p) => p.t === cite[0].t));
-  return [...gia, ...altre.flatMap((cite) => [{ t: ' ' }, ...cite.filter((p) => !CONFINI_CITE.includes(p))])];
+const unaDopoLaltra = (fonti: Cite[]): Cite => fonti.flatMap((cite, i) => [...(i ? [{ t: ' ' }] : []), ...cite]);
+
+/** Sotto la mappa, con il fumetto di un Paese aperto: le fonti di `gia` e la dicitura di ETO con il divieto di uso commerciale, una volta sola per tutti i suoi anelli,
+ *  che resta a vista (ADR 0001). Le fonti degli altri anelli che il fumetto mostra sono `altre`, da tenere chiuse. */
+export function citeFumetto(g: Geopoliticai, c: Catena | undefined, gia: Cite): { cite: Cite; altre: Cite } {
+  const altre = attivi(g, c).flatMap((k) => visteAnello(g, c, k).map((x) => x.v.cite)).filter((cite) => !gia.some((p) => p.t === cite[0].t)).map((cite) => cite.filter((p) => !CONFINI_CITE.includes(p)));
+  const nc = (cite: Cite) => cite.some((p) => /BY-NC/.test(p.t));
+  if (nc(gia)) return { cite: gia, altre: unaDopoLaltra(altre) };
+  const chip = attivi(g, c).filter((k): k is Chip => (CHIP as readonly string[]).includes(k)).filter((k) => /BY-NC/.test(c?.anelli[k]?.licenza ?? ''));
+  const a = c?.anelli[chip[0]];
+  if (!a) return { cite: gia, altre: unaDopoLaltra(altre) };
+  // i suoi anelli possono avere date diverse: ognuna è accanto al suo valore, nel fumetto
+  const nomi = chip.map((k) => ANELLI.find((x) => x.key === k)!.nome).join(', ');
+  return {
+    cite: [...gia, { t: ` ${nomi}: ${a.fonte}, ` }, { t: a.titolo, href: a.url }, { t: ' (' }, { t: a.licenza, href: a.url_licenza }, { t: ', uso commerciale non consentito), quote rielaborate da AI Radar.' }],
+    altre: unaDopoLaltra(altre.filter((cite) => !nc(cite))),
+  };
 }
 
 /** I Paesi della mappa di una zona: «Altri» è tutto quello che non sta nelle altre aree. */

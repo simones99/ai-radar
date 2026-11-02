@@ -124,9 +124,10 @@
     imposta('paese', p.id);
     return apriPaese(p);
   }
-  // il link apre il suo fumetto; se è già aperto, perché il link l'ha appena scritto tocca(), niente
+  // il link apre il suo fumetto; se è già aperto, perché il link l'ha appena scritto tocca(), niente. Il menu dice il Paese del link
   $effect(() => {
     const p = PAESI.find((x) => x.id === params.paese);
+    paeseScelto = p && NOMI[p.id] ? p.id : '';
     if (p) untrack(() => { if (aperto?.iso !== p.id) apriPaese(p); });
   });
   function apriDalMenu(e: SubmitEvent) {
@@ -147,6 +148,7 @@
 
   const cifre = $derived(v.tabellone(zona));
   const citeVista = $derived(filo ? dati?.cite ?? CITE_FILO : conSiti ? [...v.cite, ...citeSiti(g.data_center!)] : v.cite);
+  const fontiPaese = $derived(aperto?.iso ? citeFumetto(g, catena, citeVista) : null);
 </script>
 
 {#snippet paese(p: Paese)}
@@ -186,7 +188,7 @@
 {/snippet}
 
 <Block span={12} id="geo-mappa" title="Chi controlla la catena dell'AI" note={filo ? 'Sei anelli, dalla miniera al modello: il filo mostra da quali Paesi passa un modello.' : 'Sei anelli, dalla miniera al modello: la mappa mostra quanto ne ha ogni Paese.'}
-  table={filo ? dati?.tabella ?? null : v.tabella} cite={aperto?.iso ? citeFumetto(g, catena, citeVista) : citeVista}>
+  table={filo ? dati?.tabella ?? null : v.tabella} cite={fontiPaese?.cite ?? citeVista} altreFonti={fontiPaese?.altre}>
   <div class="anello scala" style:--c="var(--k-{anello})">
     {#if fili.length}
       <div class="viste">
@@ -230,6 +232,7 @@
       <span>{tappa ? `${tappa.luogo}, ${NOMI[tappa.iso] ?? tappa.iso}` : v.misura}</span>
     </div>
 
+    <div class="palco">
     <div class="cornice">
       <div class="mondo" bind:clientWidth={larghezza}>
         <svg viewBox={VIEWBOX} role="group" aria-label="Mappa del mondo: {filo ? `Filo della catena, ${filo.nome.toLowerCase()}` : v.misura.split(' · ')[0]}">
@@ -265,6 +268,7 @@
         <span class="in-t" aria-hidden="true">Europa, ingrandita</span>
         <span class="et it" style:left={etItalia.left} style:top={etItalia.top} aria-hidden="true">Italia</span>
       </div>
+    </div>
       {#if aperto}
         <!-- sotto i 600 px non galleggia: è un pannello sotto le mappe -->
         <div class="fumetto {aperto.lato}" role="dialog" aria-labelledby="geo-fumetto-t" tabindex="-1" bind:this={pannello}
@@ -364,7 +368,10 @@
   .scelte button[aria-pressed='true'] { background: var(--c); border-color: var(--c); color: #fff; }
   .titolo span { font-size: 13px; line-height: 20px; color: var(--fg-3); }
 
-  .cornice { position: relative; }
+  /* la mappa e il fumetto stanno nella stessa cella: un fumetto più alto della mappa la allunga, e sposta giù quello che viene dopo invece di coprirlo o di tagliarsi */
+  .palco { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .palco > * { grid-area: 1 / 1; min-width: 0; }
+  .cornice { position: relative; align-self: start; }
   .mondo { position: relative; }
   svg { display: block; width: 100%; height: auto; }
   .mondo > svg { background: color-mix(in srgb, var(--bg) 70%, #9fc3d9); border-radius: var(--r-md); }
@@ -386,11 +393,10 @@
   .in-t { position: absolute; left: 0; top: 0; padding: 2px 6px; border-bottom-right-radius: var(--r-sm); background: color-mix(in srgb, var(--card) 88%, transparent);
     font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; }
   .et.it { font-size: 11px; font-weight: 700; color: var(--accent); padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--card) 85%, transparent); text-shadow: none; }
-  /* resta sulla mappa e scorre dentro di sé: non copre il tabellone sotto */
-  .fumetto { position: absolute; top: 8px; z-index: 2; width: min(340px, 44%); max-height: calc(100% - 16px); overflow-y: auto; overscroll-behavior: contain; display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
+  .fumetto { position: relative; z-index: 2; align-self: start; margin-block: 8px; width: min(340px, 44%); display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
     background: var(--card); border: 1px solid var(--line-2); box-shadow: 0 6px 20px rgb(0 0 0 / .18); }
-  .fumetto.destra { right: 8px; }
-  .fumetto.sinistra { left: 8px; }
+  .fumetto.destra { justify-self: end; margin-right: 8px; }
+  .fumetto.sinistra { justify-self: start; margin-left: 8px; }
   .fumetto .testa { display: flex; align-items: center; justify-content: space-between; gap: var(--s1); }
   .fumetto h5 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 700; }
   .chiudi { min-width: 44px; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
@@ -419,7 +425,8 @@
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */
     .europa { position: relative; left: auto !important; top: auto !important; width: auto !important; margin-top: var(--s1); }
     .in-t { font-size: 12px; }
-    .fumetto.destra, .fumetto.sinistra { position: relative; inset: auto; width: auto; max-height: none; overflow-y: visible; margin-top: var(--s1); box-shadow: none; }
+    .palco { display: block; }
+    .fumetto.destra, .fumetto.sinistra { width: auto; justify-self: stretch; margin: var(--s1) 0 0; box-shadow: none; }
   }
   @media (max-width: 560px) {
     .linea { padding-bottom: 20px; }

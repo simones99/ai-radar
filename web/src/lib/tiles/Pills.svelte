@@ -5,12 +5,14 @@
   import { TESTE } from './registry';
   import type { TileDef } from './types';
 
-  let { tiles, onpick, onclose }: { tiles: TileDef[]; onpick: (id: TileId) => void; onclose: () => void } = $props();
+  let { tiles, testa, onpick, onclose }: { tiles: TileDef[]; testa: TileDef['testa']; onpick: (id: TileId) => void; onclose: () => void } = $props();
+  // prima la testa della card aperta: sul telefono si vede solo l'inizio della striscia, e deve dire dove si è
+  const teste = $derived([...TESTE].sort((a, b) => Number(b.id === testa) - Number(a.id === testa)));
 </script>
 
-<nav class="pills" aria-label="Altri temi">
+<nav class="pills" aria-label="Altre card">
   <div class="scroll">
-    {#each TESTE as g (g.id)}
+    {#each teste as g (g.id)}
       {@const mine = tiles.filter((t) => t.testa === g.id)}
       {#if mine.length}
         <div class="group" role="group" aria-label={g.label}>

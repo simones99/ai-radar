@@ -12,9 +12,12 @@
   const head = $derived(tile.head(data, today));
   const items = $derived((data.ai_act?.scadenze ?? []).map((s) => ({ date: s.data, title: s.titolo, text: s.descrizione, href: s.fonte })));
   const policy = $derived((data.news?.notizie ?? []).filter((n) => n.tema === 'politica').slice(0, 8));
-  // la linea parte dalle scadenze passate: si arriva su quella del link, o sulla prossima, che è il titolo. Dopo lo scorrimento di Detail, che si monta prima
+  // la linea parte dalle scadenze passate: si arriva su quella del link, o sulla prossima, che è il titolo. Dopo lo scorrimento di Detail, che si monta prima.
+  // Anche il focus: dal titolo, ormai sopra la finestra, il primo Tab riporterebbe su
   onMount(() => {
-    const voce = document.querySelector('#detail-norme .tl .hl') ?? document.querySelector('#detail-norme .tl .next');
+    const voce = document.querySelector<HTMLElement>('#detail-norme .tl .hl') ?? document.querySelector<HTMLElement>('#detail-norme .tl .next');
+    voce?.setAttribute('tabindex', '-1');
+    voce?.focus({ preventScroll: true });
     voce?.scrollIntoView?.({ block: 'center', behavior: scorrimento() });
   });
 </script>

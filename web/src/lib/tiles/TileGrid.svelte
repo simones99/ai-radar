@@ -1,7 +1,7 @@
 <script lang="ts">
   import { flushSync, onDestroy, tick } from 'svelte';
   import type { Dataset } from '../data/types';
-  import { riduciMovimento } from '../movimento';
+  import { riduciMovimento, scorrimento } from '../movimento';
   import { APRI, IMPOSTA, parseHash, toHash, type Params, type TileId } from '../router';
   import Pills from './Pills.svelte';
   import { TESTE, TILES } from './registry';
@@ -145,7 +145,9 @@
     params = !h ? {} : current === null ? h.params : params;
     canonical(h && { ...h, params });
     if (!h && location.hash) {
-      show(null); // ancora interna (#stato, #crediti, #temi): chiude la card e lascia la pagina dove va il link
+      // ancora interna (#stato, #crediti, #temi): chiude la card. Il browser è già andato all'ancora, ma con la card ancora aperta: si torna a cercarla a pagina cambiata
+      const ancora = location.hash.slice(1);
+      show(null).then(tick).then(() => document.getElementById(ancora)?.scrollIntoView?.({ block: 'start', behavior: scorrimento() }));
       return;
     }
     const again = h != null && current === h.tema && currentEl !== h.elemento; // stessa card, altro elemento: scheda ricreata
@@ -189,7 +191,7 @@
 <!-- Card aperta: sotto 1200px pillole e dettaglio al posto delle card; da 1200px le card restano in elenco accanto al dettaglio. -->
 <div class="board" class:has-open={open !== undefined}>
   {#if open}
-    <Pills tiles={TILES.filter((t) => t.id !== openId)} onpick={(id) => openTile(id)} onclose={closeTile} />
+    <Pills tiles={TILES.filter((t) => t.id !== openId)} testa={open.testa} onpick={(id) => openTile(id)} onclose={closeTile} />
   {/if}
 
   <div class="groups" id="temi">

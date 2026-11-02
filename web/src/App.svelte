@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { FILES, loadAll, type FileKey } from './lib/data/load';
   import type { Dataset } from './lib/data/types';
+  import { scorrimento } from './lib/movimento';
   import { PHOTOS } from './lib/photos';
   import { dayWith, lunediDi } from './lib/text/format';
   import Doors from './lib/tiles/Doors.svelte';
@@ -23,6 +24,14 @@
   }
   onMount(load);
 
+  // al titolo della card aperta o in testa alla pagina, senza toccare il link: un'ancora chiuderebbe la card
+  function salta(e: MouseEvent) {
+    e.preventDefault();
+    const t = document.querySelector<HTMLElement>('section.detail h2') ?? document.getElementById('contenuto');
+    t?.focus({ preventScroll: true });
+    t?.scrollIntoView?.({ block: 'start', behavior: scorrimento() });
+  }
+
   const FONTI = [
     ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['arXiv', 'https://arxiv.org'],
     ['GitHub', 'https://github.com'], ['Hugging Face', 'https://huggingface.co'], ['The Adzuna API', 'https://www.adzuna.co.uk'],
@@ -30,7 +39,7 @@
   ];
 </script>
 
-<a class="skip" href="#temi">Vai ai temi</a>
+<a class="skip" href="#contenuto" onclick={salta}>Vai al contenuto</a>
 <div class="wrap">
   <header class="bar">
     <span class="logo"><i aria-hidden="true"></i>AI Radar</span>
@@ -39,7 +48,7 @@
 
   <main>
   {#if phase === 'error'}
-    <section class="alert" role="alert">
+    <section class="alert" role="alert" id="contenuto" tabindex="-1">
       <p>Non riesco a caricare i dati.</p>
       <button type="button" class="riprova" onclick={load}>Riprova</button>
     </section>
@@ -54,7 +63,7 @@
       <section class="hero">
         <!-- la settimana dei dati, non quella dell'orologio di chi legge: dal suo lunedì, anche quando il giro è partito un altro giorno -->
         {#if data.status?.aggiornato}<p class="small muted">Settimana {dayWith('del', lunediDi(data.status.aggiornato))}</p>{/if}
-        <h1>Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
+        <h1 id="contenuto" tabindex="-1">Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
       </section>
       {#if phase === 'ready'}<Doors {data} {today} />{/if}
     </div>

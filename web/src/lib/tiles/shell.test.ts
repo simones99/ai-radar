@@ -117,9 +117,9 @@ describe('Detail', () => {
 });
 
 describe('Pills', () => {
-  it('sceglie un altro tema o chiude', async () => {
+  it('sceglie un’altra card o chiude', async () => {
     const onpick = vi.fn(), onclose = vi.fn();
-    render(Pills, { tiles: [tile(), tile({ id: 'norme', label: 'Norme' })], onpick, onclose });
+    render(Pills, { tiles: [tile(), tile({ id: 'norme', label: 'Norme' })], testa: 'per-te', onpick, onclose });
     await fireEvent.click(screen.getByRole('button', { name: 'Norme' }));
     expect(onpick).toHaveBeenCalledWith('norme');
     await fireEvent.click(screen.getByRole('button', { name: 'Chiudi' }));

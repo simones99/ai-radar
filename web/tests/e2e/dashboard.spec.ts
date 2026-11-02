@@ -94,7 +94,12 @@ for (const [w, h] of [[1280, 800], [320, 640]]) {
     await page.setViewportSize({ width: w, height: h });
     await page.goto('/');
     await page.locator('#tile-norme .face').click();
-    await expect(page.locator('#h-norme')).toBeFocused();
+    await expect(page.locator('#detail-norme .tl li.next')).toBeFocused();
+    await scrollSettled(page);
+    await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
+    // da tastiera si prosegue da lì: il primo Tab non riporta in cima alla pagina
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#detail-norme .tl li.next a')).toBeFocused();
     await scrollSettled(page);
     await expect(page.locator('#detail-norme .tl li.next')).toBeInViewport();
   });
@@ -361,7 +366,7 @@ test('indietro chiude; dopo un cambio di card un solo indietro torna alla home',
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await page.locator('#tile-business .face').click();
-  await page.getByRole('navigation', { name: 'Altri temi' }).getByRole('button', { name: 'Norme' }).click();
+  await page.getByRole('navigation', { name: 'Altre card' }).getByRole('button', { name: 'Norme' }).click();
   await expect(page).toHaveURL(/#norme$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
@@ -1061,6 +1066,52 @@ test('ancora interna con una card aperta: la pagina va all’ancora, non alle ca
   await expect(page.locator('#stato')).toBeInViewport();
 });
 
+for (const width of [768, 1280, 1920]) {
+  test(`${width}px, un file bloccato e una card aperta dal link: «Quali» porta allo stato delle fonti`, async ({ page }) => {
+    await page.route('**/data/radar.json', (route) => route.fulfill({ status: 500, body: '' }));
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/#competenze');
+    await scrollSettled(page);
+    await page.getByRole('alert').getByRole('link', { name: 'Quali' }).click();
+    await expect(page.locator('section.detail')).toHaveCount(0);
+    await scrollSettled(page);
+    await expect(page.getByRole('region', { name: 'Stato delle fonti' })).toBeInViewport();
+  });
+}
+
+test('il salto al contenuto: in home porta al titolo, e il Tab dopo alla prima porta', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Vai al contenuto' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: /^Per te/ })).toBeFocused();
+});
+
+for (const width of [390, 1280]) {
+  test(`${width}px, il salto al contenuto con una card aperta: porta al suo titolo, e la card resta aperta`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/#business');
+    await scrollSettled(page);
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.getByRole('link', { name: 'Vai al contenuto' }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('#h-business')).toBeFocused();
+    await scrollSettled(page);
+    await expect(page.locator('#h-business')).toBeInViewport();
+    await expect(page).toHaveURL(/#business$/);
+  });
+}
+
+test('tutti i dati bloccati: il salto al contenuto ha ancora dove andare', async ({ page }) => {
+  await page.route('**/data/*.json', (route) => route.fulfill({ status: 500, body: '' }));
+  await page.goto('/');
+  await expect(page.getByRole('alert')).toContainText('Non riesco a caricare i dati.');
+  await page.getByRole('link', { name: 'Vai al contenuto' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('alert')).toBeFocused();
+});
+
 test('Stato delle fonti, tabella impilata: ogni valore resta sotto il nome della sua colonna, e una nota lunga non spezza le parole', async ({ page }) => {
   await page.goto('/');
   const stato = page.getByRole('region', { name: 'Stato delle fonti' });
@@ -1089,9 +1140,10 @@ for (const width of [320, 360]) {
   test(`${width}px: le pillole dicono il nome della loro testa, e la pagina non scorre di lato`, async ({ page }) => {
     await page.setViewportSize({ width, height: 640 });
     await page.goto('/#rapporti');
-    const pillole = page.getByRole('navigation', { name: 'Altri temi' });
-    await expect(pillole.getByText('Su cosa formarti')).toBeInViewport();
-    await expect(pillole.getByRole('group', { name: "L'AI in Italia" }).getByText("L'AI in Italia")).toBeVisible();
+    const pillole = page.getByRole('navigation', { name: 'Altre card' });
+    // parte dalla testa della card aperta: si legge dove si è
+    await expect(pillole.getByRole('group', { name: "L'AI in Italia" }).getByText("L'AI in Italia")).toBeInViewport();
+    await expect(pillole.getByRole('group', { name: 'Su cosa formarti' }).getByText('Su cosa formarti')).toBeAttached();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
@@ -1104,7 +1156,7 @@ test('360px: all’apertura il titolo della card è nella finestra, sotto le pil
   await scrollSettled(page);
   await expect(page.locator('#h-rapporti')).toBeInViewport();
   await expect.poll(async () => {
-    const pills = await page.locator('nav[aria-label="Altri temi"]').boundingBox();
+    const pills = await page.locator('nav[aria-label="Altre card"]').boundingBox();
     const det = await page.locator('#detail-rapporti').boundingBox();
     return pills && det ? det.y >= pills.y + pills.height : false;
   }).toBe(true);
@@ -1141,7 +1193,7 @@ test('1440px: card aperta con le altre in elenco accanto, senza intro né pillol
   await expect(page.locator('#detail-business')).toBeVisible();
   await expect(page.getByRole('link', { name: /Per te/ })).toBeHidden(); // né le porte
   await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toBeAttached(); // la h1 resta per i lettori di schermo
-  await expect(page.locator('nav[aria-label="Altri temi"]')).toBeHidden();
+  await expect(page.locator('nav[aria-label="Altre card"]')).toBeHidden();
   await expect(page.locator('button.face:visible')).toHaveCount(9);
   await expect(page.locator('#tile-business .face')).toHaveAttribute('aria-expanded', 'true');
   const elenco = await box(page, '#temi');

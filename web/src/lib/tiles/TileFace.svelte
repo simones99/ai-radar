@@ -58,10 +58,11 @@
   .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
   .ph-empty { display: grid; place-items: center; padding: var(--s2); font-size: 12px; line-height: 16px; color: var(--fg-2); text-align: center; }
   .f-body { display: grid; gap: var(--s1); padding-inline: var(--s2); }
-  .f-lab { display: flex; justify-content: space-between; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
-  .f-lab .small { color: var(--fg-3); }
-  .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-  .u { display: inline-block; white-space: nowrap; font-size: 20px; letter-spacing: -.01em; margin-left: 4px; color: var(--fg-2); font-weight: 500; }
+  .f-lab { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .f-lab .small { color: var(--fg-3); white-space: nowrap; } /* se non ci sta, la data va intera sotto il nome */
+  /* lo stacco è solo tra cifra e unità sulla stessa riga: un'unità che va a capo non rientra */
+  .fig { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 4px; font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .u { white-space: nowrap; font-size: 20px; letter-spacing: -.01em; color: var(--fg-2); font-weight: 500; }
   .sent { font-size: 14px; line-height: 24px; color: var(--fg-2); }
   .stale { font-size: 12px; line-height: 16px; color: var(--fg-3); }
   @media (hover: hover) {

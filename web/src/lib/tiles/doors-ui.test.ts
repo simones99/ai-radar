@@ -10,7 +10,7 @@ describe('Doors', () => {
   it('due porte come link alla card della notizia', () => {
     render(Doors, { data: FIXTURE as Dataset, today });
     const perTe = screen.getByRole('link', { name: /Per te.*Su cosa formarti.*MCP entra tra le competenze da imparare ora/ });
-    expect(perTe).toHaveAttribute('href', '#competenze/mcp');
+    expect(perTe).toHaveAttribute('href', '#competenze');
     expect(perTe.querySelector('em')).toHaveTextContent('MCP');
     const italia = screen.getByRole('link', { name: /Per la tua organizzazione.*L'AI in Italia.*16% delle imprese italiane usa l'AI/ });
     expect(italia).toHaveAttribute('href', '#business');
@@ -36,7 +36,7 @@ describe('Doors', () => {
       vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('SecurityError'); });
       try {
         render(Doors, { data: FIXTURE as Dataset, today });
-        expect(screen.getByRole('link', { name: /^Per te Su cosa formarti MCP entra/ })).toHaveAttribute('href', '#competenze/mcp');
+        expect(screen.getByRole('link', { name: /^Per te Su cosa formarti MCP entra/ })).toHaveAttribute('href', '#competenze');
       } finally {
         vi.restoreAllMocks();
       }
@@ -48,7 +48,7 @@ describe('Doors', () => {
       expect(screen.getByRole('link', { name: /Per te · Prodotto/ })).toHaveAttribute('href', '#competenze/rag?ruolo=prodotto');
       ruolo.scegli(null);
       await tick();
-      expect(screen.getByRole('link', { name: /^Per te Su cosa formarti MCP entra/ })).toHaveAttribute('href', '#competenze/mcp');
+      expect(screen.getByRole('link', { name: /^Per te Su cosa formarti MCP entra/ })).toHaveAttribute('href', '#competenze');
     });
   });
   describe('con un settore ricordato', () => {

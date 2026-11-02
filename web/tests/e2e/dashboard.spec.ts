@@ -78,7 +78,24 @@ test('mappa a 1280px: il fumetto sta sulla mappa e non copre il tabellone', asyn
   expect(fumetto.y + fumetto.height).toBeLessThanOrEqual(mondo.y + mondo.height);
 });
 
-test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {
+test('porta Per te: chi entra e chi esce insieme: apre il radar, dove si vedono tutti e due', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: /MCP entra tra le competenze.*RAG esce/ }).click();
+  await expect(page).toHaveURL(/#competenze$/);
+  await expect(page.locator('#h-competenze')).toHaveText('MCP entra tra le competenze da imparare ora');
+  await expect(page.getByText(/^RAG esce da Impara ora\./)).toBeVisible();
+  const radar = page.getByRole('group', { name: /Radar delle competenze/ });
+  await expect(radar.getByRole('link', { name: /^Model Context Protocol \(MCP\): Impara ora/ })).toBeAttached();
+  await expect(radar.getByRole('link', { name: /^RAG e ricerca semantica: Da consolidare/ })).toBeAttached();
+});
+
+// nella fixture MCP entra e RAG esce: qui RAG era già fuori, e la notizia è di una competenza sola
+const soloMcpEntra = (page: Page) => page.route('**/data/radar.json', (route) => route.fulfill({
+  json: { ...FIXTURE.radar!, competenze: FIXTURE.radar!.competenze.map((c) => (c.id === 'rag' ? { ...c, quadrante_prec: 'consolida' } : c)) },
+}));
+
+test('porta Per te: solo chi entra: apre Competenze sulla competenza della notizia', async ({ page }) => {
+  await soloMcpEntra(page);
   await page.goto('/');
   await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
@@ -141,7 +158,7 @@ test('porta: Esc chiude come per le card, avanti la riapre, indietro la richiude
   await expect(page).toHaveURL(/\/$/);
   await page.goForward();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page).toHaveURL(/#competenze$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -154,7 +171,7 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
   await expect(page.locator('#detail-business')).toBeVisible();
   await page.getByRole('link', { name: /MCP entra tra le competenze/ }).click();
   await expect(page.locator('#detail-competenze')).toBeVisible();
-  await expect(page).toHaveURL(/#competenze\/mcp$/);
+  await expect(page).toHaveURL(/#competenze$/);
   await page.goBack();
   await expect(page.locator('section.detail')).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -162,6 +179,7 @@ test('porta con una card aperta: come una pillola, un solo indietro torna alla h
 
 test('porta verso la card già aperta: riapre la competenza e porta il focus al titolo', async ({ page }) => {
   await page.setViewportSize({ width: 1100, height: 800 }); // da 1200px, con una card aperta, le porte non ci sono
+  await soloMcpEntra(page);
   await page.goto('/');
   const porta = page.getByRole('link', { name: /MCP entra tra le competenze/ });
   await porta.click();

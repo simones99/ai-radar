@@ -14,12 +14,17 @@ const radar = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({
 });
 
 describe('porta Per te', () => {
-  it('1. chi entra e chi esce è la notizia della testa, e il link apre chi entra', () => {
+  it('1. chi entra e chi esce è la notizia della testa, e il link apre il radar, dove si vedono tutti e due', () => {
     const p = doorPerTe(d, today);
     expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(p.title[0]).toEqual({ t: 'MCP', em: true });
     expect(p.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
-    expect(p.target).toEqual({ tema: 'competenze', elemento: 'mcp' });
+    expect(p.target).toEqual({ tema: 'competenze', elemento: null });
+  });
+  it('1. solo entrate: il link apre chi entra', () => {
+    const p = doorPerTe(radar([{ quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.3, domanda_prec: 0.7, quadrante_prec: 'consolida' }]), today);
+    expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
+    expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
   it('1. solo uscite', () => {
     const p = doorPerTe(radar([{ quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' }]), today);
@@ -177,7 +182,7 @@ describe('porta Per te con un ruolo', () => {
     for (const r of [null, 'boh']) {
       const p = doorPerTe(d, today, r);
       expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
-      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: 'mcp' });
+      expect(p.target).toStrictEqual({ tema: 'competenze', elemento: null });
       expect(p).not.toHaveProperty('ruolo');
     }
   });

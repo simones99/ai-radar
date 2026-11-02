@@ -13,7 +13,7 @@ describe('App', () => {
       return { ok: body !== undefined, json: async () => body } as Response;
     }));
     render(App);
-    expect(await screen.findByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toHaveAttribute('href', '#competenze/mcp');
+    expect(await screen.findByRole('link', { name: /MCP entra tra le competenze da imparare ora/ })).toHaveAttribute('href', '#competenze');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent("Su cosa formarti e cosa succede all'AI in Italia");
     expect(document.querySelectorAll('button.face')).toHaveLength(9);
     expect(screen.getByRole('heading', { name: 'Stato delle fonti' })).toBeInTheDocument();

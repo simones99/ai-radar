@@ -271,8 +271,8 @@ const NO_DATA: Door = { title: [], meta: 'Dati non ancora disponibili', target: 
 const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
 
-// Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta.
-function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM } | null {
+// Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta (null: alla pagina di tutte).
+function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM | null } | null {
   // 1. entrate e uscite da Impara ora
   const { inn, out } = radarChanges(sure);
   if (inn.length || out.length) {
@@ -282,7 +282,8 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
       if (inn.length) title.push({ t: '; ' });
       title.push(...names(out), { t: ` ${verbo(out, 'esce', 'escono')}${inn.length ? '' : ' da Impara ora'}` });
     }
-    return { title, competenza: inn[0] ?? out[0] };
+    // chi entra e chi esce insieme stanno solo sul radar: la pagina di una competenza mostrerebbe metà della notizia
+    return { title, competenza: inn.length && out.length ? null : inn[0] ?? out[0] };
   }
 
   const cercate = sure.filter((r) => r.domanda >= MIN_ANNUNCI);

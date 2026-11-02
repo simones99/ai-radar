@@ -1,7 +1,7 @@
 <script lang="ts">
   // La figura della card GeopoliticAI in home: la mappa delle tre aree della frase (USA, Cina, UE) colorate per la capacità
   // del loro miglior modello nell'anno della card, come l'anello dei modelli nel dettaglio. Decorativa: i numeri sono nel testo della card.
-  import { annoFaccia, valore } from '../data/geopoliticai';
+  import { annoFaccia, areeFaccia } from '../data/geopoliticai';
   import type { Dataset } from '../data/types';
   import { CENTRO, PAESI, proietta, tinta } from '../geo/mappa';
   import { eci } from '../text/geopoliticai';
@@ -14,14 +14,7 @@
   const larga = proietta(146, 42)[0] - sinistra, alta = proietta(0, 4)[1] - cima;
   // dove mettere l'etichetta di ogni area: l'UE sulla Germania, come il dato unico dell'Europa nella mappa del dettaglio
   const DOVE: Record<string, [string, number, number]> = { usa: ['USA', 0, 0], cina: ['CHN', 0, 0], ue: ['DEU', 6, -16] };
-  const aree = $derived.by(() => {
-    if (!g) return [];
-    const y = annoFaccia(g);
-    return (['usa', 'cina', 'ue'] as const).flatMap((k) => {
-      const v = valore(g, k, 'eci', y);
-      return v ? [{ k, v: v.v, nome: g.zone[k].nome, paesi: new Set(g.zone[k].paesi_mappa) }] : [];
-    });
-  });
+  const aree = $derived(g ? areeFaccia(g, annoFaccia(g)).map(({ zona: k, v }) => ({ k, v, nome: g.zone[k].nome, paesi: new Set(g.zone[k].paesi_mappa) })) : []);
   const lo = $derived(Math.min(...aree.map((a) => a.v)) - 10);
   const hi = $derived(Math.max(...aree.map((a) => a.v)));
   const primo = $derived(aree.find((a) => a.v === hi)?.k);

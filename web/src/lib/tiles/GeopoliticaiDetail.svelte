@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import Block from '../charts/Block.svelte';
-  import { AREE, annoFaccia, paesiUe, valore } from '../data/geopoliticai';
+  import { AREE, annoFaccia, areeFaccia, paesiUe } from '../data/geopoliticai';
   import { paesiZona } from '../geo/mappa';
   import { imposta } from '../router';
   import { area as areaRicordata } from '../scelta.svelte';
@@ -25,7 +25,7 @@
   // la risposta al titolo, sempre sull'UE come la card in home, anche con un'altra area scelta
   const distacco = $derived(g ? faccia(g) : null);
   const annoDistacco = $derived(g ? annoFaccia(g) : 0);
-  const treAree = $derived(g ? (['usa', 'cina', 'ue'] as const).flatMap((k) => valore(g, k, 'eci', annoDistacco) ?? []) : []);
+  const treAree = $derived(g ? areeFaccia(g, annoDistacco) : []);
   /** Porta un blocco in vista e gli dà il focus. */
   async function vaiAlBlocco(id: string) {
     await tick();

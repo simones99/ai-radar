@@ -36,6 +36,10 @@ export function quota(g: Geopoliticai, area: string, anno: number): { n: number;
 export const annoFaccia = (g: Geopoliticai): number =>
   valore(g, 'ue', 'eci', g.anno_corrente) ? g.anno_corrente : g.anno_corrente - 1;
 
+/** Le tre aree che la card di GeopoliticAI mette a confronto, con il loro valore nell'anno: USA, Cina e UE. */
+export const areeFaccia = (g: Geopoliticai, anno: number): Valore[] =>
+  (['usa', 'cina', 'ue'] as const).flatMap((k) => valore(g, k, 'eci', anno) ?? []);
+
 /** I Paesi UE del file, nell'ordine del file, con l'Italia sempre in fondo. */
 export const paesiUe = (g: Geopoliticai): string[] =>
   Object.keys(g.zone).filter((k) => g.zone[k].tipo === 'paese-ue').sort((a, b) => Number(a === 'italia') - Number(b === 'italia'));

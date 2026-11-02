@@ -1,4 +1,4 @@
-import { annoFaccia, AREE, classifica, quota, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
+import { annoFaccia, AREE, areeFaccia, classifica, quota, ultimo, valore, type Misura, type Valore } from '../data/geopoliticai';
 import type { Geopoliticai, GeoZona } from '../data/types';
 import { capitalize, dayWith, nf } from './format';
 import type { Face } from './frasi';
@@ -280,7 +280,7 @@ export function faccia(g: Geopoliticai): Face | null {
   const y = annoFaccia(g);
   const ue = valore(g, 'ue', 'eci', y);
   if (!ue) return null;
-  const altri = (['usa', 'cina'] as const).flatMap((k) => valore(g, k, 'eci', y) ?? []);
+  const altri = areeFaccia(g, y).filter((v) => v.zona !== 'ue');
   const confronto = altri.map((v, i) => {
     const z = g.zone[v.zona];
     if (i > 0) return `${z.con_articolo} a ${eci(v.v)}`;

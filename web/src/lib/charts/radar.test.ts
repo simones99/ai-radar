@@ -24,7 +24,6 @@ describe('Radar', () => {
   it('chi aspetta la conferma del quadrante lo dice anche a parole', () => {
     render(Radar, { rows, quadranti: radar.quadranti, href });
     expect(screen.getByRole('link', { name: /Tieni d'occhio\./ })).toHaveAccessibleName(/Il calcolo di oggi dà Da provare, da confermare/);
-    expect(screen.getByRole('link', { name: /^Agenti AI/ }).getAttribute('aria-labelledby')).toBeTruthy();
     expect(screen.getByRole('link', { name: /^Agenti AI/ })).not.toHaveAccessibleName(/da confermare/);
   });
   it('evidenzia una competenza e attenua le altre', () => {

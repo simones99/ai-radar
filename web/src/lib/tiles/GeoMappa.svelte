@@ -417,7 +417,7 @@
   .paese select { flex: 1 1 0; width: 0; min-width: 0; background-color: var(--bg); }
   .paese button { min-height: 44px; padding: 0 var(--s2); border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg); cursor: pointer; font-size: 14px; color: var(--fg-2); }
   .paese button:disabled { cursor: default; opacity: .6; }
-  .didascalia { margin: 0; font-size: 13px; line-height: 20px; color: var(--fg-2); }
+  .didascalia { margin: 0; font-size: 13px; line-height: 20px; color: var(--fg-2); max-width: var(--misura); }
   @media (max-width: 599px) {
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */
     .europa { position: relative; left: auto !important; top: auto !important; width: auto !important; margin-top: var(--s1); }

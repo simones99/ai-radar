@@ -53,7 +53,7 @@ Criteri di successo:
 Dall'alto in basso:
 
 1. Barra con logo e link a "Foto e fonti" e "Stato delle fonti", come oggi.
-2. Data: "Settimana del 16 ott 2026".
+2. Data: "Settimana del 16 ott 2026": la data di `status.aggiornato`, non quella dell'orologio di chi legge; senza `status.json` la riga non c'è. *(Cambiato il 2026-11-02 dopo la critica prima del rilascio, scelta dell'utente.)*
 3. `h1` con la riga che spiega il sito: "Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì." In stile testo grande, non titolo enorme: le porte sono il titolo visivo.
 4. Le due porte affiancate, stessa larghezza e stessa altezza. Sotto 720 px vanno una sotto l'altra, prima "Per te".
 5. Sezione "Su cosa formarti", titolo `h2`, 4 card in questo ordine: Competenze, Modelli e ricerca, Open source, Notizie.

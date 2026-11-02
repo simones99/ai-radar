@@ -74,5 +74,5 @@
   .flat { color: var(--fg-3); }
   .era { display: block; font-size: 12px; line-height: 16px; font-weight: 400; color: var(--fg-3); padding-right: 1em; } /* sotto la cifra, allineato alla cifra e non alla freccia */
   .chip { grid-column: 1 / -1; font-size: 12px; line-height: 16px; color: var(--fg-2); }
-  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); }
+  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: var(--misura); }
 </style>

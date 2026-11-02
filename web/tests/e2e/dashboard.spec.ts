@@ -52,10 +52,28 @@ test('1920px: note, metodo e crediti restano nella misura di una riga di testo, 
   }
 });
 
-test('la settimana dell’8: articolo eliso nella data in testa', async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-10-08T10:00:00'));
+test('la settimana in testa è quella dei dati, non dell’orologio di chi legge, con l’articolo eliso', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-05T10:00:00'));
+  await page.route('**/data/status.json', (route) => route.fulfill({ json: { ...(FIXTURE.status as object), aggiornato: '2026-10-08T08:00:00+00:00' } }));
   await page.goto('/');
   await expect(page.getByText('Settimana dell’8 ott 2026')).toBeVisible();
+});
+
+test('senza lo stato delle fonti la riga della settimana non c’è', async ({ page }) => {
+  await page.route('**/data/status.json', (route) => route.fulfill({ status: 404, body: '' }));
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.getByText(/^Settimana /)).toHaveCount(0);
+});
+
+test('mappa a 1280px: il fumetto sta sulla mappa e non copre il tabellone', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/#geopoliticai?vista=quote');
+  await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('combobox', { name: 'Un Paese' }).selectOption('CHN');
+  await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('button', { name: 'Apri' }).click();
+  const fumetto = (await page.getByRole('dialog', { name: 'Cina' }).boundingBox())!;
+  const mondo = (await page.getByRole('group', { name: /^Mappa del mondo/ }).boundingBox())!;
+  expect(fumetto.y + fumetto.height).toBeLessThanOrEqual(mondo.y + mondo.height);
 });
 
 test('porta Per te: apre Competenze sulla competenza della notizia', async ({ page }) => {

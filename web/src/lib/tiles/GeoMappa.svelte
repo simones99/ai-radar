@@ -362,7 +362,8 @@
   .in-t { position: absolute; left: 0; top: 0; padding: 2px 6px; border-bottom-right-radius: var(--r-sm); background: color-mix(in srgb, var(--card) 88%, transparent);
     font-size: 11px; line-height: 14px; font-weight: 600; color: var(--fg-2); pointer-events: none; }
   .et.it { font-size: 11px; font-weight: 700; color: var(--accent); padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--card) 85%, transparent); text-shadow: none; }
-  .fumetto { position: absolute; top: 8px; z-index: 2; width: min(340px, 44%); display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
+  /* resta sulla mappa e scorre dentro di sé: non copre il tabellone sotto */
+  .fumetto { position: absolute; top: 8px; z-index: 2; width: min(340px, 44%); max-height: calc(100% - 16px); overflow-y: auto; overscroll-behavior: contain; display: grid; gap: var(--s1); padding: 12px; border-radius: var(--r-md);
     background: var(--card); border: 1px solid var(--line-2); box-shadow: 0 6px 20px rgb(0 0 0 / .18); }
   .fumetto.destra { right: 8px; }
   .fumetto.sinistra { left: 8px; }
@@ -394,7 +395,7 @@
     /* sotto la mappa del mondo, a tutta larghezza: la posizione nell'oceano non vale più */
     .europa { position: relative; left: auto !important; top: auto !important; width: auto !important; margin-top: var(--s1); }
     .in-t { font-size: 12px; }
-    .fumetto.destra, .fumetto.sinistra { position: relative; inset: auto; width: auto; margin-top: var(--s1); box-shadow: none; }
+    .fumetto.destra, .fumetto.sinistra { position: relative; inset: auto; width: auto; max-height: none; overflow-y: visible; margin-top: var(--s1); box-shadow: none; }
   }
   @media (max-width: 560px) {
     .linea { padding-bottom: 20px; }
@@ -428,7 +429,7 @@
   .tappa text { font-size: 9px; font-weight: 800; fill: #fff; pointer-events: none; }
   .tappa:focus-visible { outline: none; }
   .tappa:focus-visible circle { stroke: var(--accent); stroke-width: 2.4; }
-  .esempio { margin: 0; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); }
+  .esempio { margin: 0; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); max-width: var(--misura); }
   .tappe { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
   /* il colore della tappa sta nel suo tondo numerato */
   .tappe li { display: grid; gap: 2px; padding: 6px 8px; border-radius: var(--r-sm); }
@@ -436,7 +437,7 @@
   .tappe button { display: flex; align-items: center; gap: 10px; min-height: 44px; width: 100%; padding: 0; border: 0; background: none; text-align: left;
     font: inherit; font-size: 15px; line-height: 20px; color: var(--fg); cursor: pointer; }
   .tn { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #fff; font-weight: 700; font-size: 13px; }
-  .tappe p { margin: 0 0 0 38px; font-size: 13px; line-height: 20px; color: var(--fg-2); overflow-wrap: anywhere; }
+  .tappe p { margin: 0 0 0 38px; font-size: 13px; line-height: 20px; color: var(--fg-2); overflow-wrap: anywhere; max-width: var(--misura); }
   .tappe a { color: inherit; }
 
   .tabellone { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--s1); margin: 0; }

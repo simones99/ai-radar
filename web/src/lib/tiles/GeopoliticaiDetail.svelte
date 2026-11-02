@@ -123,7 +123,7 @@
   .distacco dt { font-size: 14px; line-height: 20px; color: var(--fg-2); }
   .distacco dd { margin: 0; font-weight: 600; font-size: 24px; line-height: 28px; font-variant-numeric: tabular-nums; }
   .distacco .ue dd { color: var(--accent); }
-  .come { flex: 1 1 100%; font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .come { flex: 1 1 100%; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .area { display: inline-flex; align-items: center; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
   /* il menu è sulla carta: prende il fondo della pagina, come le pillole della mappa */
   .area select { background-color: var(--bg); }

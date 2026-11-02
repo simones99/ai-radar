@@ -60,7 +60,7 @@
   .next .when { color: var(--accent); }
   .what { padding-block: var(--s2); display: grid; gap: 4px; }
   .what a, .what b { font-weight: 600; }
-  .what span { color: var(--fg-2); font-size: 14px; }
+  .what span { color: var(--fg-2); font-size: 14px; max-width: var(--misura); }
   .future:not(.next) .what a, .future:not(.next) .what b { font-weight: 500; color: var(--fg-2); }
   .hl { background: var(--accent-soft); border-radius: var(--r-sm); }
   .today .when, .today .what { color: var(--fg-3); font-weight: 400; font-size: 12px; }

@@ -109,9 +109,9 @@
 <style>
   .back, .warn { grid-column: 1 / -1; }
   .back a { font-weight: 500; }
-  .warn { margin: 0; padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 24px; }
+  .warn { margin: 0; padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 24px; max-width: var(--misura); }
   .fig { margin: 0; font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-  .sub { margin: 0; font-size: 14px; line-height: 24px; color: var(--fg-2); }
+  .sub { margin: 0; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .path { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s1); }
   .path li { display: grid; gap: 2px; padding: var(--s1) var(--s2); border-radius: var(--r-md); background: var(--bg); font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .path b { font-weight: 600; color: var(--fg); }

@@ -3,7 +3,7 @@
   import { FILES, loadAll } from './lib/data/load';
   import type { Dataset } from './lib/data/types';
   import { PHOTOS } from './lib/photos';
-  import { dayWith, isoDay } from './lib/text/format';
+  import { dayWith } from './lib/text/format';
   import Doors from './lib/tiles/Doors.svelte';
   import SourcesStatus from './lib/tiles/SourcesStatus.svelte';
   import { TILES } from './lib/tiles/registry';
@@ -44,7 +44,8 @@
   {:else}
     <div class="intro">
       <section class="hero">
-        <p class="small muted">Settimana {dayWith('del', isoDay(today))}</p>
+        <!-- la settimana dei dati, non quella dell'orologio di chi legge -->
+        {#if data.status?.aggiornato}<p class="small muted">Settimana {dayWith('del', data.status.aggiornato)}</p>{/if}
         <h1>Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
       </section>
       {#if phase === 'ready'}<Doors {data} {today} />{/if}

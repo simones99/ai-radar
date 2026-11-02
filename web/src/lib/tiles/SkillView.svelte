@@ -37,6 +37,8 @@
   }));
   /** Le cifre di un grafico hanno tutte gli stessi decimali, tacche ed etichetta: uno se il valore più alto sta sotto 10, nessuno se no. */
   const yf = (s: Series[]) => { const d = Math.max(0, ...s.flatMap((x) => x.pts.map((p) => p.y))) < 10 ? 1 : 0; return (v: number) => nf(v, d); };
+  // sotto 10 il decimale conta: un'Italia a 2,6 non si arrotonda a 3, proprio il valore della soglia
+  const annunciF = (s: Series[]) => { const d = Math.min(...s.flatMap((x) => x.pts.map((p) => p.y))) < 10 ? 1 : 0; return (v: number) => nf(v, d); };
   const monthAt = (mens: { mese: string }[]) => (i: number) => (mens[i] ? monthShort(mens[i].mese) : '');
   const dayAt = (i: number) => (ril[i] ? day(ril[i].data).replace(/ \d{4}$/, '') : '');
 </script>
@@ -73,7 +75,7 @@
 <Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila, media dei Paesi e Italia." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
   missing={ril.length < 2 ? 'Serve un mese di rilevazioni.' : null}
   table={{ cols: ['Rilevazione', 'Media', 'Italia'], rows: ril.map((r) => [r.data, r.media, r.it ?? '—']) }}>
-  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={yf(annunci)} xFormat={dayAt} />
+  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
 </Block>
 
 <Block span={12} title="Il percorso sul radar" note="Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo."

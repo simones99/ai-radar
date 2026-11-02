@@ -23,13 +23,13 @@ describe('Competenze', () => {
     show(CompetenzeDetail, tile);
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('MCP entra tra le competenze da imparare ora');
     expect(screen.getByRole('group', { name: /Radar delle competenze/ })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Movimenti del mese' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Movimenti di settembre' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Le competenze una per una' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Come si calcola' })).toBeInTheDocument();
   });
   it('radar e movimenti con fonti cliccabili, Adzuna compresa', () => {
     show(CompetenzeDetail, tile);
-    for (const name of ['Radar delle competenze', 'Movimenti del mese']) {
+    for (const name of ['Radar delle competenze', 'Movimenti di settembre']) {
       const blk = screen.getByRole('heading', { name }).closest('section')!;
       expect(within(blk).getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com');
       expect(within(blk).getByRole('link', { name: 'arXiv' })).toHaveAttribute('href', 'https://arxiv.org');
@@ -39,7 +39,7 @@ describe('Competenze', () => {
   it('passando il mouse su una riga del pannello, nel radar le altre si attenuano', async () => {
     const { container } = show(CompetenzeDetail, tile);
     expect(container.querySelectorAll('g.pt.dim')).toHaveLength(0);
-    const link = within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getByRole('link', { name: /^MCP slancio/ });
+    const link = within(screen.getByRole('heading', { name: 'Movimenti di settembre' }).closest('section')!).getByRole('link', { name: /^MCP slancio/ });
     const ev = new Event('pointerenter');
     Object.defineProperty(ev, 'pointerType', { value: 'mouse' });
     await fireEvent(link, ev);
@@ -96,8 +96,8 @@ describe('Competenze: il ruolo', () => {
     expect(within(tab).queryByRole('columnheader', { name: 'Per il tuo ruolo' })).toBeNull();
   });
 
-  it('Movimenti del mese: prima le competenze del ruolo, poi le altre attenuate, ognuna nell’ordine di «Tutti»', () => {
-    const movimenti = () => within(screen.getByRole('heading', { name: 'Movimenti del mese' }).closest('section')!).getAllByRole('link').filter((a) => a.matches('a.row'));
+  it('Movimenti: prima le competenze del ruolo, poi le altre attenuate, ognuna nell’ordine di «Tutti»', () => {
+    const movimenti = () => within(screen.getByRole('heading', { name: 'Movimenti di settembre' }).closest('section')!).getAllByRole('link').filter((a) => a.matches('a.row'));
     const nomi = (as: HTMLElement[]) => as.map((a) => a.getAttribute('title'));
     const { unmount } = show(CompetenzeDetail, tile);
     const tutti = nomi(movimenti());

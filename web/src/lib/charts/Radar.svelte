@@ -96,8 +96,8 @@
       const wd = Math.max(...lines.map((t, i) => measureText(t, i === 0 && hot ? `600 13px ${FONT}` : `400 12px ${FONT}`)));
       return { id: r.id, x: x(r.x), y: y(r.y), w: wd, h: lines.length * LH, lines, r, hot };
     });
-    // Sul telefono un'etichetta senza posto libero, se non è di Impara ora, non si disegna: resta il suggerimento sul punto.
-    const skip = (id: string) => narrow && rows.find((r) => r.id === id)?.quadrante !== 'impara-ora';
+    // Sul telefono un'etichetta senza posto libero, se non è di Impara ora e non ha appena cambiato quadrante (la notizia della porta), non si disegna: resta il suggerimento sul punto.
+    const skip = (id: string) => { const r = rows.find((q) => q.id === id); return narrow && r?.quadrante !== 'impara-ora' && !r?.changed; };
     const boxes = placeLabels(items, perNomi, obstacles, 10, skip);
     return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });

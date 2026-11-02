@@ -19,6 +19,7 @@
   {#if d.title.length}
     <span class="news">{#each d.title as p, i (i)}{#if p.em}<em>{p.t}</em>{:else}{p.t}{/if}{/each}</span>
   {/if}
+  {#if d.nota}<span class="nota">{d.nota}</span>{/if}
   <span class="meta">{d.meta}</span>
 {/snippet}
 
@@ -44,5 +45,6 @@
   .news { font-weight: 500; font-size: clamp(24px, 2.8vw, 32px); line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; overflow-wrap: anywhere; }
   .news em { font-style: normal; color: var(--accent); font-weight: 700; }
   @media (min-width: 1200px) { .news { font-size: 26px; } }
+  .nota { font-size: 14px; line-height: 20px; color: var(--fg-2); }
   .meta { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 </style>

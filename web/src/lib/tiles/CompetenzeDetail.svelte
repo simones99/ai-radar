@@ -8,7 +8,7 @@
   import type { Quadrant } from '../data/types';
   import { apri, toHash } from '../router';
   import { ruolo as ruoloRicordato } from '../scelta.svelte';
-  import { per10k, signedPct } from '../text/format';
+  import { monthName, per10k, signedPct } from '../text/format';
   import { headSkill } from '../text/frasi';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
@@ -29,6 +29,7 @@
   const delRuolo = $derived(ruolo ? all.filter((c) => c.ruoli?.includes(ruolo.id)).map((c) => c.id) : null);
   const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
   const elenco = $derived(delRuolo ? [...all.filter((c) => !altro(c.id)), ...all.filter((c) => altro(c.id))] : all); // prima il ruolo, l'ordine resta
+  const meseMovimenti = $derived(data.radar?.storico?.at(-1)?.mese); // i movimenti vanno di mese in mese: non è per forza il mese di chi legge
   let hovered = $state<string | null>(null); // anteprima al passaggio del mouse sui movimenti
   const arxivDown = $derived(data.status?.fonti?.arxiv?.stato === 'errore' ? 'In questo giro arXiv non ha risposto: lo slancio viene dagli altri segnali. ' : '');
   const sources: Cite = [
@@ -73,7 +74,7 @@
           <p class="legenda">Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo.</p>
         </div>
         <div class="mov">
-          <h4>Movimenti del mese</h4>
+          <h4>Movimenti {meseMovimenti ? `di ${monthName(meseMovimenti)}` : 'del mese'}</h4>
           <MovesPanel {rows} {quadranti} {delRuolo} bind:hovered />
         </div>
       </div></div>

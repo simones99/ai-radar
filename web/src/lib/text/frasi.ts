@@ -191,6 +191,9 @@ const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((
   const [da, a] = r.slancio_margine as [number, number];
   return `Il margine di ${r.breve}, da ${signedPct(da)} a ${signedPct(a)}, include lo zero: ${verbo([r], 'potrebbe', 'potrebbero')} non crescere più dell'AI. `;
 }).join('');
+/** La soglia guarda la media dei Paesi: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
+const sottoSogliaInItalia = (inn: RadarRowM[]): string =>
+  inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci, sotto soglia`).join('; ');
 export function headCompetenze(d: Dataset, _today?: Date): Head {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };
@@ -201,9 +204,10 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
+  const italia = sottoSogliaInItalia(inn);
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verboEntra(inn)} tra le competenze da imparare ora` }],
-    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + tail,
+    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + (italia && `${italia}. `) + tail,
   };
 }
 
@@ -275,6 +279,7 @@ export function headGeopoliticai(d: Dataset, _today?: Date): Head {
 export interface Door {
   title: TitleParts; // vuoto se non ci sono dati
   meta: string; // fonte e data del dato
+  nota?: string; // riga piccola sotto la notizia: chi entra in Impara ora ma in Italia sta sotto soglia
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
   scelta?: string; // nome del ruolo o del settore ricordato, per l'etichetta (Per te · Prodotto)
 }
@@ -285,7 +290,7 @@ const names = (rows: RadarRowM[]): TitleParts =>
   rows.flatMap((r, i) => [...(i === 0 ? [] : [{ t: i === rows.length - 1 ? ' e ' : ', ' }]), { t: r.breve, em: true }]);
 
 // Regole 1-4 della porta Per te: la prima che scatta su queste competenze, con la competenza a cui porta (null: alla pagina di tutte).
-function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM | null } | null {
+function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): { title: TitleParts; competenza: RadarRowM | null; nota?: string } | null {
   // 1. entrate e uscite da Impara ora
   const { inn, out } = radarChanges(sure);
   if (inn.length || out.length) {
@@ -297,7 +302,8 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
       title.push(...names(out), { t: ` ${verbo(out, 'esce', 'escono')}${inn.length ? '' : ' da Impara ora'}` });
     }
     // chi entra e chi esce insieme stanno solo sul radar: la pagina di una competenza mostrerebbe metà della notizia
-    return { title, competenza: inn.length && out.length ? null : inn[0] ?? out[0] };
+    const nota = sottoSogliaInItalia(inn);
+    return { title, competenza: inn.length && out.length ? null : inn[0] ?? out[0], ...(nota && { nota }) };
   }
 
   const cercate = sure.filter((r) => r.domanda >= MIN_ANNUNCI);
@@ -340,7 +346,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...(ruolo && { params: { ruolo: ruolo.id } }) });
 
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
-  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo };
+  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo, ...(notizia.nota && { nota: notizia.nota }) };
 
   // 5. riserva, quando nessuna regola scatta. Senza ruolo quante competenze sono da imparare ora lo dice già la card:
   // la porta dice la competenza con più annunci, se non è incerta

@@ -11,6 +11,12 @@ const by = (id: string) => rows.find((r) => r.id === id)!;
 const figs = (c: HTMLElement) => [...c.querySelectorAll('.fig')].map((e) => e.textContent);
 
 describe('SkillView', () => {
+  it('annunci: con la media sopra 10, l’Italia sotto la soglia tiene il decimale', () => {
+    const row = by('mcp');
+    const rilevazioni = [{ data: '2026-09-14', media: 12, it: 2.4 }, { data: '2026-10-12', media: 12.4, it: 2.6 }];
+    render(SkillView, { row: { ...row, segnali: { ...row.segnali, lavoro: { ...row.segnali!.lavoro!, rilevazioni } } }, quadranti: radar.quadranti, storico: radar.storico });
+    expect(screen.getByRole('img', { name: 'Annunci su MCP ogni 10mila' })).toHaveTextContent('2,6');
+  });
   it('un margine che comprende lo zero lo dice accanto al numero', () => {
     render(SkillView, { row: { ...by('mcp'), slancio_margine: [-0.09, 0.32] }, quadranti: radar.quadranti, storico: radar.storico });
     expect(screen.getByText(/margine: da −9% a \+32%, include lo zero$/)).toBeInTheDocument();

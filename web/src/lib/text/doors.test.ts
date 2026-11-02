@@ -4,6 +4,7 @@ import { FIXTURE, FIXTURE_TODAY as today, fromNorm } from '../test/fixtures';
 import { doorItalia, doorPerTe, faceGeopoliticai } from './frasi';
 
 const d = FIXTURE as Dataset;
+const conMcp = (domanda_it: number | undefined): Dataset => ({ ...d, radar: { ...d.radar!, competenze: d.radar!.competenze.map((r) => (r.id === 'mcp' ? { ...r, domanda_it } : r)) } });
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
 // Le righe si scrivono pensando alla posizione sul grafico (0–1): fromNorm la porta in valori veri.
 const radar = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({
@@ -163,6 +164,16 @@ describe('porta Per te', () => {
   });
   it('senza radar: porta vuota e non cliccabile', () => {
     expect(doorPerTe({}, today)).toEqual({ title: [], meta: 'Dati non disponibili', target: null });
+  });
+});
+
+describe('porta Per te e l’Italia', () => {
+  it('chi entra in Impara ora sotto soglia in Italia: lo dice una riga sotto la notizia', () => {
+    expect(doorPerTe(conMcp(2.602), today).nota).toBe('MCP: in Italia 2,6 annunci, sotto soglia');
+  });
+  it('alla soglia, o senza il dato italiano, nessuna riga', () => {
+    expect(doorPerTe(conMcp(3), today)).not.toHaveProperty('nota');
+    expect(doorPerTe(conMcp(undefined), today)).not.toHaveProperty('nota');
   });
 });
 

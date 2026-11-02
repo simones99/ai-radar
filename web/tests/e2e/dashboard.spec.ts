@@ -116,6 +116,36 @@ test('Norme da una porta: si apre sulla scadenza del link', async ({ page }) => 
   await expect(page.locator('#detail-norme .tl li[aria-current="true"]')).toBeInViewport();
 });
 
+test('radar a 320px, con le posizioni di un radar vero: chi ha cambiato quadrante ha il suo nome, anche fuori da Impara ora', async ({ page }) => {
+  // id, nome, slancio e il suo valore di un mese fa, annunci e il loro valore di un mese fa, quadrante, calcolato, di un mese fa, incerto
+  const righe = [
+    ["agenti", "Agenti AI", 0.4257, 0.4658, 30.787, null, "impara-ora", "impara-ora", "impara-ora", false],
+    ["coding-agenti", "Agenti di coding", 0.8743, 1.6903, 1.913, null, "prova", "prova", "prova", false],
+    ["mcp", "MCP", 0.3022, 0.1221, 4.678, null, "impara-ora", "impara-ora", "impara-ora", false],
+    ["rag", "RAG", -0.3412, 0.1491, 9.545, null, "impara-ora", "consolida", "impara-ora", true],
+    ["valutazione", "Eval", 0.5339, 1.253, 1.269, null, "prova", "prova", "prova", false],
+    ["post-training", "Fine-tuning", 0.1356, 0.0801, 0.323, null, "prova", "prova", "osserva", false],
+    ["context-engineering", "Context engineering", -0.265, -0.0519, 14.342, null, "consolida", "consolida", "impara-ora", false],
+    ["sicurezza", "Sicurezza AI", 0.0346, 0.1244, 0.467, null, "prova", "prova", "prova", false],
+    ["governance", "Governance", -0.2422, -0.1061, 3.211, null, "consolida", "consolida", "impara-ora", true],
+    ["dati-per-ai", "Data engineering", 0.0958, -0.047, 3.268, null, "consolida", "impara-ora", "consolida", false],
+    ["text-to-sql", "AI per BI", 1.1455, 1.1254, 0.127, null, "prova", "prova", "prova", true],
+    ["vector-db", "DB vettoriali", -0.4834, -0.2222, 5.337, null, "consolida", "consolida", "consolida", true],
+    ["multimodale", "Multimodali", 0.0946, 0.0255, 8.866, null, "impara-ora", "impara-ora", "consolida", false],
+    ["llmops", "LLMOps", 0.2381, 0.5952, 17.719, null, "impara-ora", "impara-ora", "impara-ora", true],
+    ["modelli-locali", "Modelli locali", 0.184, 0.2605, 0.179, null, "prova", "prova", "prova", false],
+    ["robotica", "Robotica", 1.1953, 0.55, 0.232, null, "prova", "prova", "prova", true]
+  ] as const;
+  const base = FIXTURE.radar!.competenze[0];
+  const competenze = righe.map(([id, breve, slancio, slancio_prec, domanda, domanda_prec, quadrante, quadrante_calcolato, quadrante_prec, incerto]) =>
+    ({ ...base, id, nome: breve, breve, slancio, slancio_prec, domanda, domanda_prec, quadrante, quadrante_calcolato, quadrante_prec, incerto }));
+  await page.route('**/data/radar.json', (route) => route.fulfill({ json: { ...FIXTURE.radar, competenze } }));
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/#competenze');
+  const radar = page.getByRole('group', { name: /^Radar delle competenze/ });
+  for (const nome of ["Fine-tuning", "Context engineering", "Governance", "Multimodali"]) await expect(radar.getByText(nome, { exact: true })).toBeVisible();
+});
+
 test('sul telefono la foto viene dopo il primo blocco; da 720px sta accanto al titolo', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/#modelli');

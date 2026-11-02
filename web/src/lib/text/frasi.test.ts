@@ -79,7 +79,7 @@ describe('numeri chiave delle card', () => {
   it('pagina di una competenza: nome nel titolo, quadrante e movimento nel sottotitolo', () => {
     const rows = radarRows(d.radar!);
     const by = (id: string) => rows.find((r) => r.id === id)!;
-    expect(headSkill(by('mcp'), d.radar!.quadranti)).toEqual({ title: [{ t: 'Model Context Protocol (MCP)' }], deck: 'Impara ora. Lo standard per collegare strumenti.' });
+    expect(headSkill(by('mcp'), d.radar!.quadranti)).toEqual({ title: [{ t: 'Model Context Protocol (MCP)' }], deck: 'Impara ora, un mese fa Da consolidare. Lo standard per collegare strumenti.' });
     expect(headSkill(by('vector-db'), d.radar!.quadranti).deck).toBe("Tieni d'occhio, in movimento verso Da provare. Indici.");
   });
   it('pagina di una competenza: sotto la descrizione, per quali ruoli conta, nell’ordine dei ruoli', () => {

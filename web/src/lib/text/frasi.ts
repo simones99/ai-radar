@@ -4,7 +4,7 @@ import {
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, Quadrant, Ruolo } from '../data/types';
-import { faccia } from './geopoliticai';
+import { CHI_ADDESTRA, faccia } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, per10k, short, signedPct, ym } from './format';
 
@@ -199,11 +199,12 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   };
 }
 
-/** Titolo della pagina di una competenza: il nome; sotto, quadrante, eventuale movimento e descrizione. */
+/** Titolo della pagina di una competenza: il nome; sotto, quadrante, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
 export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = []): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
+  const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
   const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
-  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
+  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${prima}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }
 
 // ---------------------------------------------------------------- notizie
@@ -296,11 +297,13 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
     return { title: [...names(who), { t: ` ${verbo(who, 'passa', 'passano')} a ${quadranti[dest]}` }], competenza: who[0] };
   }
 
-  // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse)
-  const big = cercate.filter((r) => r.hasPrev && r.move >= MOVE_MIN).sort((a, b) => b.move - a.move)[0];
+  // 3. lo spostamento più grande, se almeno MOVE_MIN (un decimo dell'asse). Sullo slancio, il valore di un mese fa
+  // dentro il margine di oggi non è una notizia: i due numeri non si distinguono
+  const suSlancio = (r: RadarRowM) => Math.abs(r.dS) >= Math.abs(r.dD);
+  const dentroMargine = ({ sp, slancio_margine: m }: RadarRowM) => sp != null && !!m && sp >= m[0] && sp <= m[1];
+  const big = cercate.filter((r) => r.hasPrev && r.move >= MOVE_MIN && !(suSlancio(r) && dentroMargine(r))).sort((a, b) => b.move - a.move)[0];
   if (big) {
-    const onSlancio = Math.abs(big.dS) >= Math.abs(big.dD);
-    const title: TitleParts = onSlancio
+    const title: TitleParts = suSlancio(big)
       ? [{ t: 'Slancio di ' }, { t: big.breve, em: true }, { t: ` da ${signedPct(big.sp as number)} a ${signedPct(big.slancio)}` }]
       : [{ t: 'Domanda di ' }, { t: big.breve, em: true }, { t: ` da ${per10k(big.dp as number)} a ${per10k(big.domanda)} annunci ogni 10mila` }];
     return { title, competenza: big };
@@ -405,7 +408,7 @@ export function doorItalia(d: Dataset, today: Date, settoreId: string | null = n
         ? [{ t: `${q.n} dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} ${q.n === 1 ? 'è europeo' : 'sono europei'} (${nf(pct, pct < 1 ? 1 : 0)}%)${finora}` }]
         : [{ t: `Nessuno dei ${q.tot}`, em: true }, { t: ` modelli di grande scala del ${q.y} è europeo${finora}` }],
       meta: `Epoch AI · dati scaricati ${dayWith('il', geo.scaricato)}`,
-      target: { tema: 'geopoliticai', elemento: null, params: { area: 'ue' } },
+      target: { tema: 'geopoliticai', elemento: CHI_ADDESTRA, params: { area: 'ue' } },
     };
   }
 

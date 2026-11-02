@@ -48,11 +48,11 @@
 
 <Block span={4} title="Domanda" cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
   <p class="fig">{per10k(row.domanda)}</p>
-  <p class="sub">annunci ogni 10mila, media dei Paesi{row.domanda_it != null ? ` · Italia: ${per10k(row.domanda_it)}` : ''}</p>
+  <p class="sub">annunci ogni 10mila, media dei Paesi{row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : ''}{row.domanda_it != null ? ` · Italia: ${per10k(row.domanda_it)}` : ''}</p>
 </Block>
 <Block span={4} title="Slancio">
   <p class="fig">{signedPct(row.slancio)}</p>
-  <p class="sub">in 6 mesi, rispetto all’AI{margin ? ` · margine: da ${signedPct(margin[0])} a ${signedPct(margin[1])}` : ''}</p>
+  <p class="sub">in 6 mesi, rispetto all’AI{row.sp != null ? ` · era ${signedPct(row.sp)} un mese fa` : ''}{margin ? ` · margine: da ${signedPct(margin[0])} a ${signedPct(margin[1])}` : ''}</p>
 </Block>
 <Block span={4} title="Affidabilità">
   <p class="fig">{row.incerto ? 'incerta' : 'solida'}</p>

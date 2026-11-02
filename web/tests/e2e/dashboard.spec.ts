@@ -84,6 +84,7 @@ test('porta Per te: apre Competenze sulla competenza della notizia', async ({ pa
   await expect(page.locator('#detail-competenze')).toBeVisible();
   await expect(page).toHaveURL(/#competenze\/mcp$/);
   await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page.getByText(/^Impara ora, un mese fa Da consolidare\./)).toBeVisible();
 });
 
 test('porta L’AI in Italia: il dato italiano apre Business', async ({ page }) => {
@@ -106,7 +107,13 @@ test('porta L’AI in Italia: senza un dato italiano dice la quota dell’UE e a
   await page.goto('/');
   await page.getByRole('link', { name: /Per la tua organizzazione/ }).getByText('Nessuno dei 35').click();
   await expect(page.locator('#detail-geopoliticai')).toBeVisible();
-  await expect(page).toHaveURL(/#geopoliticai\?area=ue$/);
+  await expect(page).toHaveURL(/#geopoliticai\/chi-addestra\?area=ue$/);
+  // si arriva sul blocco della notizia, e il numero della porta è lì
+  const blocco = page.getByRole('region', { name: 'Chi addestra i modelli di grande scala' });
+  await expect(blocco).toBeFocused();
+  await scrollSettled(page);
+  await expect(blocco).toBeInViewport();
+  await expect(blocco).toContainText('nessuno dei 35');
 });
 
 test('una voce grande per testa: la card Competenze ha figura e frase, GeopoliticAI tiene la cifra alla misura delle altre', async ({ page }) => {

@@ -386,7 +386,7 @@ describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
 
   it('una barra per anno con la quota delle cinque aree e il totale, l’area scelta in evidenza', () => {
     show();
-    expect(blocco().getByText('Quota dei modelli di grande scala usciti ogni anno, per area. È un conteggio: non dice quanto sono potenti.')).toBeInTheDocument();
+    expect(blocco().getByText(/^Di grande scala: almeno 10²³ operazioni di calcolo.*è un conteggio, non dice quanto sono potenti\.$/)).toBeInTheDocument();
     const barre = blocco().getAllByRole('img');
     expect(barre.map((b) => b.getAttribute('aria-label')?.slice(0, 4))).toEqual(['2023', '2024', '2025', '2026']);
     const barra2025 = blocco().getByRole('img', { name: '2025: USA 66, Cina 84, UE 5, Regno Unito 0, Altri 10. Totale 165.' });
@@ -402,25 +402,25 @@ describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
     expect(inEvidenza()).toEqual(['Cina']);
   });
 
-  it('la frase sull’area scelta, sempre per l’ultimo anno chiuso', () => {
+  it('la frase sull’area scelta: l’anno in corso, se ha modelli, e l’ultimo anno chiuso', () => {
     show();
-    expect(blocco().getByText("Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).")).toBeInTheDocument();
+    expect(blocco().getByText("Nel 2026, finora, nessuno dei 35 modelli di grande scala è dell'UE. Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).")).toBeInTheDocument();
     cleanup();
     area('usa');
-    expect(blocco().getByText('Nel 2025, 66 dei 165 modelli di grande scala sono degli USA (40%).')).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025, 66 dei 165 modelli di grande scala sono degli USA \(40%\)\.$/)).toBeInTheDocument();
   });
 
   it('per un Paese UE usa il suo nome; con un modello solo al singolare, sotto l’1% con un decimale', () => {
     area('francia');
-    expect(blocco().getByText('Nel 2025, 3 dei 165 modelli di grande scala sono della Francia (2%).')).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025, 3 dei 165 modelli di grande scala sono della Francia \(2%\)\.$/)).toBeInTheDocument();
     cleanup();
     area('germania');
-    expect(blocco().getByText('Nel 2025, 1 dei 165 modelli di grande scala è della Germania (0,6%).')).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025, 1 dei 165 modelli di grande scala è della Germania \(0,6%\)\.$/)).toBeInTheDocument();
   });
 
   it('a zero lo dice a parole', () => {
     area('italia');
-    expect(blocco().getByText("Nel 2025 nessuno dei 165 modelli di grande scala è dell'Italia.")).toBeInTheDocument();
+    expect(blocco().getByText(/Nel 2025 nessuno dei 165 modelli di grande scala è dell'Italia\.$/)).toBeInTheDocument();
   });
 });
 

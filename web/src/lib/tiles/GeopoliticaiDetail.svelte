@@ -3,14 +3,14 @@
   import Block from '../charts/Block.svelte';
   import { AREE, annoFaccia, paesiUe, valore } from '../data/geopoliticai';
   import { area as areaRicordata } from '../scelta.svelte';
-  import { annoTesto, eci, faccia, scheda } from '../text/geopoliticai';
+  import { annoTesto, CHI_ADDESTRA, eci, faccia, scheda } from '../text/geopoliticai';
   import Detail from './Detail.svelte';
   import GeoChiAddestra from './GeoChiAddestra.svelte';
   import GeoMappa from './GeoMappa.svelte';
   import GeoMatrice from './GeoMatrice.svelte';
   import type { DetailProps } from './types';
 
-  let { data, today, tile, params, onclose }: DetailProps = $props();
+  let { data, today, tile, elemento, params, onclose }: DetailProps = $props();
 
   const head = $derived(tile.head(data, today));
   const g = $derived(data.geopoliticai);
@@ -24,15 +24,21 @@
   const distacco = $derived(g ? faccia(g) : null);
   const annoDistacco = $derived(g ? annoFaccia(g) : 0);
   const treAree = $derived(g ? (['usa', 'cina', 'ue'] as const).flatMap((k) => valore(g, k, 'eci', annoDistacco) ?? []) : []);
-  /** Dalla matrice: sceglie l'area, porta la scheda in vista e le dà il focus. */
-  async function apriScheda(k: string) {
-    scegli(k);
+  /** Porta un blocco in vista e gli dà il focus. */
+  async function vaiAlBlocco(id: string) {
     await tick();
-    const el = document.getElementById('geo-scheda');
+    const el = document.getElementById(id);
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     el?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
     el?.focus({ preventScroll: true });
   }
+  /** Dalla matrice: sceglie l'area e porta alla scheda. */
+  function apriScheda(k: string) {
+    scegli(k);
+    vaiAlBlocco('geo-scheda');
+  }
+  // la porta della testa arriva sul blocco della sua notizia, non sul titolo della card
+  $effect(() => { if (elemento === CHI_ADDESTRA) vaiAlBlocco('geo-chi-addestra'); });
   /** Alla sezione della mappa quando c'è, altrimenti in fondo al dettaglio. */
   function versoLaMappa() {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;

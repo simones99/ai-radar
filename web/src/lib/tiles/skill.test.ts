@@ -16,6 +16,7 @@ describe('SkillView', () => {
     expect(figs(container)).toEqual(['3,4', '+15%', 'solida']);
     expect(screen.getByText(/Italia: 2,6/)).toBeInTheDocument();
     expect(screen.getByText(/margine: da \+5% a \+27%/)).toBeInTheDocument();
+    expect(screen.getByText(/era [+−]\d+% un mese fa/)).toBeInTheDocument();
     expect(screen.getByText('pesa di più: repository su GitHub')).toBeInTheDocument();
     for (const name of ['Paper su MCP ogni 1.000 paper AI', 'Repository su MCP ogni 1.000 repository AI', 'Annunci su MCP ogni 10mila']) {
       expect(screen.getByRole('img', { name })).toBeInTheDocument();

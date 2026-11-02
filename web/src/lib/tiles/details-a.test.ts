@@ -54,7 +54,7 @@ describe('Competenze', () => {
   it('link diretto a una competenza: la sua pagina al posto del radar', () => {
     show(CompetenzeDetail, tile, 'mcp');
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Model Context Protocol (MCP)');
-    expect(screen.getByText('Impara ora. Lo standard per collegare strumenti.')).toBeInTheDocument();
+    expect(screen.getByText('Impara ora, un mese fa Da consolidare. Lo standard per collegare strumenti.')).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: /Radar delle competenze/ })).toBeNull();
   });
   it('radar.json della pipeline vecchia: avviso', () => {

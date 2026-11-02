@@ -64,6 +64,17 @@ describe('porta Per te', () => {
     expect(p.title[1]).toEqual({ t: 'C0', em: true });
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
+  it('3. sullo slancio, un valore di un mese fa dentro il margine di oggi non è una notizia', () => {
+    const giu = { quadrante: 'osserva', slancio: 0.0, domanda: 0.6, slancio_prec: 0.33, domanda_prec: 0.6, quadrante_prec: 'osserva' } as const;
+    const p = doorPerTe(radar([giu]), today);
+    expect(text(p.title)).toBe('Slancio di C0 da −21% a −50%');
+    const conMargine = (m: [number, number]): Dataset => {
+      const r = radar([giu]);
+      return { radar: { ...r.radar!, competenze: [{ ...r.radar!.competenze[0], slancio_margine: m }] } };
+    };
+    expect(text(doorPerTe(conMargine([-0.6, -0.1]), today).title)).toMatch(/ha più annunci di tutte/);
+    expect(text(doorPerTe(conMargine([-0.6, -0.4]), today).title)).toBe('Slancio di C0 da −21% a −50%');
+  });
   it('3. spostamento sulla domanda', () => {
     const p = doorPerTe(radar([{ quadrante: 'impara-ora', slancio: 0.6, domanda: 0.9, slancio_prec: 0.6, domanda_prec: 0.6, quadrante_prec: 'impara-ora' }]), today);
     expect(text(p.title)).toBe('Domanda di C0 da 5,9 a 46 annunci ogni 10mila');
@@ -266,7 +277,7 @@ describe('porta L’AI in Italia', () => {
       expect(text(p.title)).toBe('Nessuno dei 35 modelli di grande scala del 2026 è europeo, finora');
       expect(p.title[0]).toEqual({ t: 'Nessuno dei 35', em: true });
       expect(p.meta).toBe('Epoch AI · dati scaricati il 15 ott 2026');
-      expect(p.target).toEqual({ tema: 'geopoliticai', elemento: null, params: { area: 'ue' } });
+      expect(p.target).toEqual({ tema: 'geopoliticai', elemento: 'chi-addestra', params: { area: 'ue' } });
     });
     it('nell’anno in corso, uno o più', () => {
       expect(text(doorItalia(conUe(2), today).title)).toBe('2 dei 37 modelli di grande scala del 2026 sono europei (5%), finora');

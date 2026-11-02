@@ -245,14 +245,21 @@ export function notaMatrice(g: Geopoliticai, misura: Misura): string {
   return `${cosa} ${copertura}${senza}`;
 }
 
-/** «Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).»: sempre per l'ultimo anno chiuso, il totale è delle cinque aree. */
+/** L'elemento del link che apre GeopoliticAI sul blocco «Chi addestra i modelli di grande scala». */
+export const CHI_ADDESTRA = 'chi-addestra';
+
+/** «Nel 2025, 5 dei 165 modelli di grande scala sono dell'UE (3%).»: l'ultimo anno chiuso, preceduto dall'anno in corso se ha già dei modelli; il totale è delle cinque aree. */
 export function fraseChiAddestra(g: Geopoliticai, k: string): string {
-  const y = g.anno_corrente - 1;
-  const { n: mio, tot } = quota(g, k, y);
   const dove = di(g.zone[k].con_articolo);
-  if (!mio) return `Nel ${y} nessuno dei ${tot} modelli di grande scala è ${dove}.`;
-  const pct = (100 * mio) / tot;
-  return `Nel ${y}, ${mio} dei ${tot} modelli di grande scala ${mio === 1 ? 'è' : 'sono'} ${dove} (${nf(pct, pct < 1 ? 1 : 0)}%).`;
+  const frase = (y: number, finora: boolean): string => {
+    const { n: mio, tot } = quota(g, k, y);
+    const quando = finora ? `Nel ${y}, finora,` : `Nel ${y}${mio ? ',' : ''}`;
+    if (!mio) return `${quando} nessuno dei ${tot} modelli di grande scala è ${dove}.`;
+    const pct = (100 * mio) / tot;
+    return `${quando} ${mio} dei ${tot} modelli di grande scala ${mio === 1 ? 'è' : 'sono'} ${dove} (${nf(pct, pct < 1 ? 1 : 0)}%).`;
+  };
+  const chiuso = frase(g.anno_corrente - 1, false);
+  return quota(g, k, g.anno_corrente).tot ? `${frase(g.anno_corrente, true)} ${chiuso}` : chiuso;
 }
 
 /** Fonte sotto la card (ticket 06, Q15). */

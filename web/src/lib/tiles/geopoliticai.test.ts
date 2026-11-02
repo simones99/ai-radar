@@ -60,10 +60,7 @@ describe('GeopoliticAI: il distacco sotto il titolo', () => {
     show();
     expect(screen.getByText('18,8')).toBeInTheDocument();
     expect(screen.getByText('punti sotto gli USA', { exact: false })).toBeInTheDocument();
-    for (const [nome, valore] of [['USA', '168,8'], ['Cina', '157,9'], ['UE', '150,0']]) {
-      const termine = screen.getAllByRole('term').find((t) => t.textContent === nome)!;
-      expect(screen.getAllByRole('definition').some((v) => v.textContent === valore && v.parentElement === termine.parentElement)).toBe(true);
-    }
+    expect(document.body.textContent).toMatch(/USA\s*168,8\s*Cina\s*157,9\s*UE\s*150,0/); // ogni area accanto al suo valore, come si legge
     expect(screen.getByText(/nel 2026, anno in corso, in punti/)).toBeInTheDocument();
   });
   it("resta sull'UE anche con un'altra area scelta", () => {

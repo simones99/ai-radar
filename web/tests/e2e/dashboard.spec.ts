@@ -71,6 +71,8 @@ test('mappa a 1280px: il fumetto sta sulla mappa e non copre il tabellone', asyn
   await page.goto('/#geopoliticai?vista=quote');
   await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('combobox', { name: 'Un Paese' }).selectOption('CHN');
   await page.getByRole('region', { name: "Chi controlla la catena dell'AI" }).getByRole('button', { name: 'Apri' }).click();
+  await expect(page.getByRole('dialog', { name: 'Cina' })).toBeVisible();
+  await scrollSettled(page);
   const fumetto = (await page.getByRole('dialog', { name: 'Cina' }).boundingBox())!;
   const mondo = (await page.getByRole('group', { name: /^Mappa del mondo/ }).boundingBox())!;
   expect(fumetto.y + fumetto.height).toBeLessThanOrEqual(mondo.y + mondo.height);
@@ -328,6 +330,8 @@ for (const width of [320, 1280]) {
   test(`GeopoliticAI a ${width}px: il distacco è nello schermo del titolo, sopra la mappa`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/#geopoliticai');
+    await expect(page.getByRole('heading', { level: 2, name: /Chi costruisce i modelli/ })).toBeVisible();
+    await scrollSettled(page);
     const titolo = (await page.getByRole('heading', { level: 2, name: /Chi costruisce i modelli/ }).boundingBox())!;
     const cifra = (await page.getByText('18,8', { exact: true }).boundingBox())!;
     expect(cifra.y).toBeGreaterThan(titolo.y);

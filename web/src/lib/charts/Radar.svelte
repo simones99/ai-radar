@@ -74,6 +74,7 @@
     ].filter((p) => p != null);
   });
   const LH = 16;
+  const perNomi = $derived<Box>({ x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }); // dove possono stare i nomi
   const layout = $derived.by(() => {
     const obstacles: Box[] = angoli.map((q) => {
       const tw = measureText(quadranti[q.id], `500 12px ${FONT}`);
@@ -96,7 +97,7 @@
     });
     // Sul telefono un'etichetta senza posto libero, se non è di Impara ora, non si disegna: resta il suggerimento sul punto.
     const skip = (id: string) => narrow && rows.find((r) => r.id === id)?.quadrante !== 'impara-ora';
-    const boxes = placeLabels(items, { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, obstacles, 10, skip);
+    const boxes = placeLabels(items, perNomi, obstacles, 10, skip);
     return items.filter((it) => boxes.has(it.id)).map((it) => ({ ...it, box: boxes.get(it.id) as Box }));
   });
   // Da tastiera: se il punto col focus non ha l'etichetta (sul telefono), il nome compare accanto finché resta lì.
@@ -106,7 +107,7 @@
     if (!r) return null;
     const it = { id: r.id, x: x(r.x), y: y(r.y), w: measureText(r.breve, `600 13px ${FONT}`), h: LH };
     const taken = [...layout.map((l) => l.box), ...soglie.map((l) => l.box), ...segni];
-    const b = placeLabels([it], { x0: m.l + 2, y0: m.t + 2, x1: w - m.r - 2, y1: H - m.b - 2 }, taken, 10).get(r.id) as Box;
+    const b = placeLabels([it], perNomi, taken, 10).get(r.id) as Box;
     return { t: r.breve, x: b.x0, y: b.y0 + LH - 4, hot: inImparaOra(b, x(0.5), y(0.5)), px: it.x, py: it.y, l: leader(it, b) };
   });
   const dim = (id: string) => highlight != null && highlight !== id;

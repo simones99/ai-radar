@@ -72,8 +72,8 @@
   h2 em { font-style: normal; color: var(--accent); }
   /* il taglio da titolo di Bricolage è già stretto: la spaziatura resta appena negativa */
   .spicco h2 { font-size: clamp(36px, 5.2vw, 72px); line-height: 1.04; letter-spacing: -.012em; max-width: 17ch; }
-  .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: 62ch; }
-  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 56ch; }
+  .deck { color: var(--fg-2); font-size: 18px; line-height: 28px; max-width: var(--misura); }
+  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   figure { display: grid; gap: var(--s1); }
   .ph { display: block; aspect-ratio: 2 / 1; border-radius: var(--r-md); overflow: hidden; background: var(--line) center / cover no-repeat; } /* sotto la foto, finché arriva, la sua anteprima */
   @media (min-width: 720px) { .ph { aspect-ratio: 4 / 3; } }

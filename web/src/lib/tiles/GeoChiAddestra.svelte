@@ -57,5 +57,5 @@
   .sw, .seg { background: color-mix(in oklab, var(--a) 70%, var(--card)); }
   .sw.hot, .seg.hot { background: var(--a); }
   .tot { color: var(--fg-2); text-align: right; }
-  .frase { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }
+  .frase { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
 </style>

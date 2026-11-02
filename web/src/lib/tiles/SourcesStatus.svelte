@@ -41,8 +41,8 @@
   .status { display: grid; gap: var(--s2); align-content: start; min-width: 0; }
   details { min-width: 0; } /* la tabella scorre dentro, non allarga la pagina */
   h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
-  .status > p { max-width: 72ch; }
-  .problemi { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s1); font-size: 14px; line-height: 20px; max-width: 72ch; }
+  .status > p { max-width: var(--misura); }
+  .problemi { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s1); font-size: 14px; line-height: 20px; max-width: var(--misura); }
   .problemi b { font-weight: 600; }
   .nota { display: block; font-size: 12px; line-height: 16px; color: var(--fg-2); overflow-wrap: anywhere; }
 </style>

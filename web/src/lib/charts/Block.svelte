@@ -55,7 +55,7 @@
   @media (max-width: 560px) { .blk { padding: var(--s2); } }
   .testa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s1) var(--s2); }
   h3 { font-weight: 600; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
-  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
-  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: 72ch; }
+  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
+  .cite { font-size: 12px; line-height: 16px; color: var(--fg-3); max-width: var(--misura); }
   .cite a { color: inherit; }
 </style>

@@ -450,5 +450,5 @@
   .vuoto { font-size: 15px; line-height: 22px; font-style: italic; color: var(--fg-2); }
   /* l'Italia ha accanto al nome il tratteggio del suo contorno sulla mappa */
   .cifra.it dt::before { content: ''; display: inline-block; width: 16px; margin-right: 6px; vertical-align: middle; border-top: 2px dashed var(--accent); }
-  .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; max-width: 72ch; }
+  .note { font-size: 13px; line-height: 20px; color: var(--fg-2); padding-left: 1.2em; margin: 0; max-width: var(--misura); }
 </style>

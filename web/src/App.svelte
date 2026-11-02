@@ -113,7 +113,7 @@
   @media (min-width: 960px) { .colophon { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s6); } }
   .credits { display: grid; gap: var(--s3); align-content: start; }
   .credits h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
-  .credits > p { max-width: 72ch; }
+  .credits > p { max-width: var(--misura); }
   /* in colonne di giornale: ogni credito segue il precedente, senza i vuoti di una griglia allineata al più lungo della riga */
   .credits ul { list-style: none; margin: 0; padding: 0; columns: 220px; column-gap: var(--s3); font-size: 12px; line-height: 16px; color: var(--fg-2); }
   .credits li { break-inside: avoid; margin-bottom: var(--s1); }

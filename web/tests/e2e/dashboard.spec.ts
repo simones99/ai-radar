@@ -43,6 +43,15 @@ test('home: il contenuto sta nel main, e una card si chiama con la sua cifra, co
   await expect(card).toHaveAccessibleDescription(/^Capacità del miglior modello europeo.*agg\. /);
 });
 
+test('1920px: note, metodo e crediti restano nella misura di una riga di testo, circa 75 caratteri', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.goto('/#competenze');
+  for (const testo of [/^Le linee sono soglie fisse/, /^Quadranti a soglie fisse/, /Le notizie mostrano solo titolo/]) {
+    const em = await page.getByText(testo).evaluate((el) => el.getBoundingClientRect().width / parseFloat(getComputedStyle(el).fontSize));
+    expect(em).toBeLessThanOrEqual(34.01);
+  }
+});
+
 test('la settimana dell’8: articolo eliso nella data in testa', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-10-08T10:00:00'));
   await page.goto('/');

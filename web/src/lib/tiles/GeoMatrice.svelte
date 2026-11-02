@@ -98,6 +98,6 @@
   tr.sel .v:not(.na) { outline: 2px solid var(--fg); }
   /* un dato che manca si dice in corsivo, come nel tabellone della mappa; la cella ha la forma delle altre */
   td.zero { padding: var(--s1) 12px; border-radius: 6px; font-size: 14px; line-height: 20px; font-style: italic; color: var(--fg-2); background: var(--bg); }
-  .nota-matrice { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .nota-matrice { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .na { color: var(--fg-3); font-size: 12px; }
 </style>

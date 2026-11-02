@@ -16,6 +16,8 @@
   --font: "Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --r-sm: 8px; --r-md: 16px; --r-lg: 24px;
   --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px; --s5: 40px; --s6: 48px; --s8: 64px; --s12: 96px;
+  /* la riga di testo, circa 75 caratteri. In em e non in ch: in Bricolage lo 0 è largo .65em, un carattere medio .455em, e 72ch sarebbero 103 caratteri */
+  --misura: 34em;
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
 @media (prefers-color-scheme: dark) {

@@ -127,13 +127,13 @@
   .area { display: inline-flex; align-items: center; gap: var(--s1); font-size: 14px; line-height: 24px; color: var(--fg-2); }
   /* il menu è sulla carta: prende il fondo della pagina, come le pillole della mappa */
   .area select { background-color: var(--bg); }
-  .frase { font-size: 18px; line-height: 28px; max-width: 60ch; }
+  .frase { font-size: 18px; line-height: 28px; max-width: var(--misura); }
   .due { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s3); }
   h4 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--fg-2); }
   h4 span { display: block; font-weight: 400; color: var(--fg-3); }
   .fig { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
   .sotto { font-size: 14px; line-height: 20px; color: var(--fg-2); }
   .vai { background: none; border: 0; padding: 0; font: inherit; font-size: 14px; line-height: 24px; color: var(--fg); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-  .riga { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 70ch; }
+  .riga { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   @media (max-width: 560px) { .fig { font-size: 28px; line-height: 32px; } }
 </style>

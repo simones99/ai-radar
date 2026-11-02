@@ -50,7 +50,7 @@
 
 <style>
   .panel { display: grid; gap: var(--s2); align-content: start; }
-  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .note { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .sum { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s1); }
   .sum div { background: var(--bg); border-radius: var(--r-md); padding: var(--s2); display: grid; gap: 4px; }
   .sum b { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }

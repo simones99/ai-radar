@@ -149,7 +149,7 @@
   /* con un numero dispari di blocchi da metà riga l'ultimo, da solo, prende tutta la riga (Adozione con «Tutti») */
   .sezione > :global(section.blk.w6:last-of-type:nth-of-type(odd)) { grid-column: 1 / -1; }
   .group { grid-column: 1 / -1; font-weight: 600; font-size: 14px; line-height: 24px; color: var(--fg-2); padding-top: var(--s2); }
-  .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .group-note { grid-column: 1 / -1; font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
   .scelta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s1) var(--s2); font-size: 14px; line-height: 24px; color: var(--fg-2); }
-  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: 72ch; }
+  .nota { font-size: 14px; line-height: 24px; color: var(--fg-2); max-width: var(--misura); }
 </style>

@@ -112,7 +112,7 @@
   @container (min-width: 960px) { .radar-mov { grid-template-columns: minmax(0, 1fr) 320px; } .mov { max-width: none; border-left: 1px solid var(--line); padding-left: var(--s3); } }
   .chips button { background: var(--card); border: 0; border-radius: 999px; padding: var(--s1) 12px; min-height: 40px; font-size: 14px; line-height: 24px; cursor: pointer; color: var(--fg-2); }
   .chips button[aria-pressed='true'] { background: var(--fg); color: var(--card); }
-  .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: 80ch; }
+  .method { margin: 0; padding-left: var(--s3); display: grid; gap: var(--s1); color: var(--fg-2); font-size: 14px; line-height: 24px; max-width: var(--misura); }
   table { border-collapse: collapse; width: 100%; font-size: 14px; line-height: 24px; font-variant-numeric: tabular-nums; }
   th, td { text-align: left; padding: var(--s1); border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
   thead th { font-size: 12px; line-height: 16px; color: var(--fg-3); font-weight: 500; }

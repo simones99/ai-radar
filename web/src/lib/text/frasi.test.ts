@@ -44,6 +44,16 @@ describe('numeri chiave delle card', () => {
     expect(text(h.title)).toBe('Multimodali entrano tra le competenze da imparare ora');
     expect(h.deck).toBe("DB vettoriali escono da Impara ora. Oggi 2 competenze su 5 crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
   });
+  it('competenze: chi torna in Impara ora con un margine che comprende lo zero: il titolo dice «tornano», il sottotitolo dice il margine', () => {
+    const pt = (pubblicato: 'impara-ora' | 'consolida') => ({ slancio: 0, domanda: 1, calcolato: pubblicato, pubblicato, incerto: false });
+    const comp = d.radar!.competenze.map((r) => (r.id === 'mcp' ? { ...r, breve: 'Multimodali', plurale: true, slancio_margine: [-0.09, 0.32] as [number, number] } : r));
+    const storico = (['impara-ora', 'consolida', 'consolida', 'impara-ora'] as const).map((q, i) => ({ mese: `2026-0${i + 6}`, competenze: { mcp: pt(q) } }));
+    const h = headCompetenze({ radar: { ...d.radar!, competenze: comp, storico } }, today);
+    expect(text(h.title)).toBe('Multimodali tornano tra le competenze da imparare ora');
+    expect(h.deck).toMatch(/^RAG esce da Impara ora\. Il margine di Multimodali, da −9% a \+32%, include lo zero: potrebbero non crescere più dell'AI\. Oggi /);
+    const q = d.radar!.quadranti;
+    expect(cambio(radarRows({ ...d.radar!, competenze: comp, storico }).find((r) => r.id === 'mcp')!, q)).toBe('tornano in Impara ora');
+  });
   it('competenze: etichetta del cambio sul radar, al plurale con i nomi plurali', () => {
     const q = d.radar!.quadranti;
     const rows = radarRows(d.radar!);

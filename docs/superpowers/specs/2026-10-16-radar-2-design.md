@@ -197,7 +197,7 @@ Dentro la card Competenze aperta, al posto del radar, dall'alto in basso:
 4. Tre numeri:
    - **Domanda**: "3,4 annunci ogni 10mila", sotto "Italia: 2,6";
    - **Slancio**: "+25% in 6 mesi", sotto "margine: da +10% a +42%";
-   - **Affidabilità**: "solida" o "incerta", sotto il segnale che pesa di più ("pesa di più: GitHub").
+   - **Incertezza del dato**: "normale" o "alta", sotto il segnale che pesa di più ("pesa di più: GitHub"). Dice solo se il margine è largo, come il punto vuoto sul radar. *(Prima "Affidabilità: solida o incerta", cambiato il 2026-11-02 dopo la terza critica: "solida" accanto a un margine che comprende lo zero si smentiva.)*
 5. **Andamento**, tre piccoli grafici a linea affiancati (uno sotto l'altro sotto 720 px):
    - paper che ne parlano ogni 1.000 paper AI, 13 mesi;
    - nuovi repository ogni 1.000 repository AI, 13 mesi;

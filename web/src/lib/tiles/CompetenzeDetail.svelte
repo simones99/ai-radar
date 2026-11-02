@@ -42,7 +42,7 @@
     'Domanda: annunci attivi che citano la competenza ogni 10.000 annunci del Paese, media tra i Paesi.',
     'Quadranti a soglie fisse. Slancio sopra 0 (cresce più dell’AI) e almeno 3 annunci ogni 10mila: Impara ora. Solo lo slancio: Da provare. Solo la domanda: Da consolidare. Nessuna delle due: Tieni d’occhio.',
     'Prudenza: il quadrante cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo. Nel frattempo la competenza è «in movimento verso» il quadrante nuovo.',
-    'Dato incerto (punto vuoto): il margine all’80% dello slancio è largo, l’estremo alto supera di oltre il 55% quello basso. Succede con pochi paper o repository, o con andamenti irregolari.',
+    'Dato incerto (punto vuoto): il margine all’80% dello slancio è largo, l’estremo alto supera di oltre il 55% quello basso. Succede con pochi paper o repository, o con andamenti irregolari. Un margine che comprende lo zero non basta a rendere incerto il dato, ma dice che la competenza potrebbe non crescere più dell’AI.',
     'Le parole cercate per ogni competenza sono in config/skills.yaml. Negli annunci si cerca per tutte una frase esatta in inglese, così le competenze sono confrontabili.',
   ];
 </script>

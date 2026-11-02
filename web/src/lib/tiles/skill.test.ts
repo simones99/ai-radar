@@ -11,11 +11,16 @@ const by = (id: string) => rows.find((r) => r.id === id)!;
 const figs = (c: HTMLElement) => [...c.querySelectorAll('.fig')].map((e) => e.textContent);
 
 describe('SkillView', () => {
+  it('un margine che comprende lo zero lo dice accanto al numero', () => {
+    render(SkillView, { row: { ...by('mcp'), slancio_margine: [-0.09, 0.32] }, quadranti: radar.quadranti, storico: radar.storico });
+    expect(screen.getByText(/margine: da −9% a \+32%, include lo zero$/)).toBeInTheDocument();
+  });
   it('tre numeri, tre andamenti, percorso e risorse', () => {
     const { container } = render(SkillView, { row: by('mcp'), quadranti: radar.quadranti, storico: radar.storico });
-    expect(figs(container)).toEqual(['3,4', '+15%', 'solida']);
+    expect(figs(container)).toEqual(['3,4', '+15%', 'normale']);
     expect(screen.getByText(/Italia: 2,6/)).toBeInTheDocument();
-    expect(screen.getByText(/margine: da \+5% a \+27%/)).toBeInTheDocument();
+    expect(screen.getByText(/margine: da \+5% a \+27%$/)).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Incertezza del dato' })).toBeInTheDocument();
     expect(screen.getByText(/era [+−]\d+% un mese fa/)).toBeInTheDocument();
     expect(screen.getByText('pesa di più: repository su GitHub')).toBeInTheDocument();
     for (const name of ['Paper su MCP ogni 1.000 paper AI', 'Repository su MCP ogni 1.000 repository AI', 'Annunci su MCP ogni 10mila']) {
@@ -35,7 +40,7 @@ describe('SkillView', () => {
   it('competenza incerta, senza risorse, con una sola rilevazione e senza storico', () => {
     const { container } = render(SkillView, { row: by('robotica'), quadranti: radar.quadranti, storico: [] });
     expect(screen.getByRole('note')).toHaveTextContent('Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.');
-    expect(figs(container)[2]).toBe('incerta');
+    expect(figs(container)[2]).toBe('alta');
     expect(screen.getByText('Nessuna risorsa disponibile.')).toBeInTheDocument();
     expect(screen.getByText('Nessun repository nuovo con questo topic negli ultimi 90 giorni.')).toBeInTheDocument();
     expect(screen.getByText('Serve un mese di rilevazioni.')).toBeInTheDocument();

@@ -2,7 +2,7 @@
   import Block from '../charts/Block.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import type { Cite, Series } from '../charts/types';
-  import type { RadarRowM } from '../data/derive';
+  import { margineSuZero, type RadarRowM } from '../data/derive';
   import type { Quadrant, Radar } from '../data/types';
   import { day, dayWith, monthShort, nf, per10k, signedPct } from '../text/format';
 
@@ -52,10 +52,11 @@
 </Block>
 <Block span={4} title="Slancio">
   <p class="fig">{signedPct(row.slancio)}</p>
-  <p class="sub">in 6 mesi, rispetto all’AI{row.sp != null ? ` · era ${signedPct(row.sp)} un mese fa` : ''}{margin ? ` · margine: da ${signedPct(margin[0])} a ${signedPct(margin[1])}` : ''}</p>
+  <p class="sub">in 6 mesi, rispetto all’AI{row.sp != null ? ` · era ${signedPct(row.sp)} un mese fa` : ''}{margin ? ` · margine: da ${signedPct(margin[0])} a ${signedPct(margin[1])}${margineSuZero(row) ? ', include lo zero' : ''}` : ''}</p>
 </Block>
-<Block span={4} title="Affidabilità">
-  <p class="fig">{row.incerto ? 'incerta' : 'solida'}</p>
+<!-- dice solo se il margine è largo, come il punto vuoto sul radar: non dà un giudizio sulla competenza -->
+<Block span={4} title="Incertezza del dato">
+  <p class="fig">{row.incerto ? 'alta' : 'normale'}</p>
   <p class="sub">{heavy ? `pesa di più: ${FONTE[heavy]}` : ''}</p>
 </Block>
 

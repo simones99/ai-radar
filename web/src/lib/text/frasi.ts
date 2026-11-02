@@ -1,5 +1,5 @@
 import {
-  MOVE_MIN, computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
+  MOVE_MIN, computeGrowth, margineSuZero, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type RadarRowM,
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
@@ -36,6 +36,9 @@ const plain = (t: string): TitleParts => [{ t }];
 /** Verbo accordato ai nomi brevi: plurale con più competenze o con un nome plurale («Multimodali entrano»). */
 const verbo = (rows: { plurale?: boolean }[], sing: string, plur: string): string =>
   rows.length > 1 || rows[0]?.plurale ? plur : sing;
+/** Chi entra in Impara ora, o ci torna se c'era già stato. */
+const verboEntra = (rows: RadarRowM[]): string =>
+  rows.every((r) => r.rientra) ? verbo(rows, 'torna', 'tornano') : verbo(rows, 'entra', 'entrano');
 
 // ---------------------------------------------------------------- modelli
 export function faceModelli(d: Dataset, _today?: Date): Face | null {
@@ -180,9 +183,14 @@ export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
-  r.quadrante === 'impara-ora' ? `${verbo([r], 'entra', 'entrano')} in Impara ora`
+  r.quadrante === 'impara-ora' ? `${verboEntra([r])} in Impara ora`
     : r.qp === 'impara-ora' ? `${verbo([r], 'esce', 'escono')} da Impara ora`
       : `${verbo([r], 'passa', 'passano')} a ${quadranti[r.quadrante]}`;
+/** Chi entra con un margine che comprende lo zero: la frase lo dice, il quadrante resta quello del calcolo. */
+const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((r) => {
+  const [da, a] = r.slancio_margine as [number, number];
+  return `Il margine di ${r.breve}, da ${signedPct(da)} a ${signedPct(a)}, include lo zero: ${verbo([r], 'potrebbe', 'potrebbero')} non crescere più dell'AI. `;
+}).join('');
 export function headCompetenze(d: Dataset, _today?: Date): Head {
   const rows = d.radar ? radarRows(d.radar) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };
@@ -194,8 +202,8 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
   return {
-    title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` }],
-    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + tail,
+    title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verboEntra(inn)} tra le competenze da imparare ora` }],
+    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + tail,
   };
 }
 
@@ -277,7 +285,8 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
   const { inn, out } = radarChanges(sure);
   if (inn.length || out.length) {
     const title: TitleParts = [];
-    if (inn.length) title.push(...names(inn), { t: ` ${verbo(inn, 'entra', 'entrano')} tra le competenze da imparare ora` });
+    // «di misura» se il margine di tutti comprende lo zero: la pagina dice perché
+    if (inn.length) title.push(...names(inn), { t: ` ${verboEntra(inn)} tra le competenze da imparare ora${inn.every(margineSuZero) ? ', di misura' : ''}` });
     if (out.length) {
       if (inn.length) title.push({ t: '; ' });
       title.push(...names(out), { t: ` ${verbo(out, 'esce', 'escono')}${inn.length ? '' : ' da Impara ora'}` });

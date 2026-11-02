@@ -26,6 +26,25 @@ describe('porta Per te', () => {
     expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
     expect(p.target).toEqual({ tema: 'competenze', elemento: 'c0' });
   });
+  describe('1. chi era già stato in Impara ora ci torna, e un margine che comprende lo zero si dice', () => {
+    const entra = { quadrante: 'impara-ora', slancio: 0.7, domanda: 0.7, slancio_prec: 0.3, domanda_prec: 0.7, quadrante_prec: 'consolida' } as const;
+    const con = (riga: Partial<Radar['competenze'][number]>, q: ('impara-ora' | 'consolida')[]): Dataset => {
+      const r = radar([{ ...entra, ...riga }]);
+      const pt = (pubblicato: 'impara-ora' | 'consolida') => ({ slancio: 0, domanda: 1, calcolato: pubblicato, pubblicato, incerto: false });
+      return { radar: { ...r.radar!, storico: q.map((x, i) => ({ mese: `2026-0${i + 1}`, competenze: { c0: pt(x) } })) } };
+    };
+    it('rientro: «torna», con il plurale dei nomi plurali', () => {
+      expect(text(doorPerTe(con({}, ['impara-ora', 'consolida', 'impara-ora']), today).title)).toBe('C0 torna tra le competenze da imparare ora');
+      expect(text(doorPerTe(con({ breve: 'Multimodali', plurale: true }, ['impara-ora', 'consolida', 'impara-ora']), today).title)).toBe('Multimodali tornano tra le competenze da imparare ora');
+    });
+    it('prima volta: «entra», anche con lo storico; il mese di oggi non conta come una volta precedente', () => {
+      expect(text(doorPerTe(con({}, ['consolida', 'consolida', 'impara-ora']), today).title)).toBe('C0 entra tra le competenze da imparare ora');
+    });
+    it('margine che comprende lo zero: «di misura»; uno tutto sopra lo zero, no', () => {
+      expect(text(doorPerTe(con({ slancio_margine: [-0.09, 0.32] }, []), today).title)).toBe('C0 entra tra le competenze da imparare ora, di misura');
+      expect(text(doorPerTe(con({ slancio_margine: [0.05, 0.32] }, []), today).title)).toBe('C0 entra tra le competenze da imparare ora');
+    });
+  });
   it('1. solo uscite', () => {
     const p = doorPerTe(radar([{ quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' }]), today);
     expect(text(p.title)).toBe('C0 esce da Impara ora');

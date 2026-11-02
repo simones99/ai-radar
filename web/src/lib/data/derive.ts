@@ -34,7 +34,12 @@ export interface RadarRowM extends RadarRow {
   dC: number;
   changed: boolean;
   hasPrev: boolean;
+  /** Entra in Impara ora e c'era già stata: lo dice lo storico, prima di questo mese. */
+  rientra: boolean;
 }
+
+/** Il margine dello slancio comprende lo zero: la competenza potrebbe non crescere più dell'AI. */
+export const margineSuZero = ({ slancio_margine: m }: RadarRow): boolean => !!m && m[0] < 0 && m[1] > 0;
 
 export function radarRows(r: Radar): RadarRowM[] {
   if (r.versione !== 2) return []; // radar.json della pipeline vecchia: ranghi, non unità vere
@@ -51,11 +56,13 @@ export function radarRows(r: Radar): RadarRowM[] {
       const dS = px != null ? x - px : 0;
       const dD = hasPrev && dp != null ? y - ny(dp) : 0;
       const calc = c.quadrante_calcolato ?? null;
+      const changed = hasPrev && qp != null && qp !== c.quadrante;
       return {
         ...c, breve: c.breve || c.nome, slancio: s, domanda: d, quadrante: c.quadrante as Quadrant,
         incerto: !!c.incerto, moving: calc && calc !== c.quadrante ? calc : null,
         x, y, px, py, sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
-        changed: hasPrev && qp != null && qp !== c.quadrante, hasPrev,
+        changed, hasPrev,
+        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => p.competenze[c.id]?.pubblicato === 'impara-ora'),
       };
     });
 }

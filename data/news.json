@@ -55,6 +55,27 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "SpaceXSI apparently cuts Grok Bot quotas weeks after Musk called it his fastest-growing product",
+   "link": "https://the-decoder.com/spacexsi-apparently-cuts-grok-bot-quotas-weeks-after-musk-called-it-his-fastest-growing-product/",
+   "data": "2026-11-02",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic grows revenue twelvefold but posts $23 billion loss",
+   "link": "https://the-decoder.com/anthropic-grows-revenue-twelvefold-but-posts-23-billion-loss/",
+   "data": "2026-11-02",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "One brutal Minecraft night scared 50 AI agents into inventing chicken handoff protocols, a Fertilizer Officer, and fishing shifts",
+   "link": "https://the-decoder.com/one-brutal-minecraft-night-scared-50-ai-agents-into-inventing-chicken-handoff-protocols-a-fertilizer-officer-and-fishing-shifts/",
+   "data": "2026-11-02",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Saudi Aramco takes 49 percent stake in AI firm Humain with $2.6 billion deal",
    "link": "https://the-decoder.com/saudi-aramco-takes-49-percent-stake-in-ai-firm-humain-with-2-6-billion-deal/",
    "data": "2026-11-02",
@@ -73,6 +94,34 @@
    "link": "https://simonwillison.net/2026/Nov/2/census-bureau-super-intelligence/",
    "data": "2026-11-02",
    "fonte": "Simon Willison",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Introducing the Grid Protectors Program",
+   "link": "https://openai.com/index/grid-protectors-program",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "LifeVal",
+   "link": "https://openai.com/index/lifeval",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Import AI 479: Spacewar; low-latency tasks versus LLMs; Genie 4",
+   "link": "https://jack-clark.net/2026/11/02/import-ai-479-spacewar-low-latency-tasks-versus-llms-genie-4/",
+   "data": "2026-11-02",
+   "fonte": "Import AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "The latest AI news we announced in October 2026",
+   "link": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/",
+   "data": "2026-11-02",
+   "fonte": "Google AI",
    "tema": "prodotti"
   },
   {
@@ -107,27 +156,6 @@
    "titolo": "Google wants video AI to understand what people need as they work",
    "link": "https://the-decoder.com/google-wants-video-ai-to-understand-what-people-need-as-they-workgoogle-researchers-are-teaching-a-video-assistant-when-to-offer-help/",
    "data": "2026-11-01",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI's upcoming chat-and-work merger in ChatGPT signals the end of all-you-can-prompt pricing",
-   "link": "https://the-decoder.com/openais-upcoming-chat-and-work-merger-in-chatgpt-signals-the-end-of-all-you-can-prompt-pricing/",
-   "data": "2026-11-01",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Anthropic's watermark rollout leaves a loophole on two older Claude models",
-   "link": "https://the-decoder.com/anthropics-watermark-rollout-leaves-a-loophole-on-two-older-claude-models/",
-   "data": "2026-10-31",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI plans to train models on Daybreak Blue cybersecurity session data that was previously off-limits",
-   "link": "https://the-decoder.com/openai-plans-to-train-models-on-daybreak-blue-cybersecurity-session-data-that-was-previously-off-limits/",
-   "data": "2026-10-31",
    "fonte": "The Decoder",
    "tema": "prodotti"
   },
@@ -326,20 +354,6 @@
    "data": "2026-10-28",
    "fonte": "Google DeepMind",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "Retell uses OpenAI models to help power 100M monthly calls",
-   "link": "https://openai.com/index/retell-ai",
-   "data": "2026-10-27",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI expands partnership with Oracle to bring its apps to ChatGPT",
-   "link": "https://openai.com/index/oracle-apps-in-chatgpt",
-   "data": "2026-10-27",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
   },
   {
    "titolo": "How Anthropic ships Claude with Claude: Separating the Brain from the Hands",
@@ -711,13 +725,6 @@
    "data": "2026-09-21",
    "fonte": "Import AI",
    "tema": "ricerca"
-  },
-  {
-   "titolo": "New experts join Google’s AI & Economy team",
-   "link": "https://blog.google/innovation-and-ai/technology/ai/expanding-ai-economy-research-bench/",
-   "data": "2026-09-18",
-   "fonte": "Google AI",
-   "tema": "prodotti"
   }
  ]
 }

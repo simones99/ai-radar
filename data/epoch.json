@@ -3835,6 +3835,15 @@
    "open": true
   },
   {
+   "m": "Mistral Large 4",
+   "o": "Mistral AI",
+   "d": "2026-10-06",
+   "c": 1.24e+25,
+   "f": false,
+   "a": "UE",
+   "open": true
+  },
+  {
    "m": "MAI-Base-2",
    "o": "Microsoft",
    "d": "2026-10-15",
@@ -4108,7 +4117,7 @@
   {
    "anno": 2026,
    "area": "UE",
-   "n": 0
+   "n": 1
   },
   {
    "anno": 2026,
@@ -4174,8 +4183,8 @@
   },
   {
    "anno": 2026,
-   "aperti": 29,
-   "totale": 94
+   "aperti": 30,
+   "totale": 95
   }
  ],
  "recenti": [
@@ -4213,6 +4222,13 @@
    "d": "2026-10-12",
    "a": "USA",
    "accesso": "API access"
+  },
+  {
+   "m": "Mistral Large 4",
+   "o": "Mistral AI",
+   "d": "2026-10-06",
+   "a": "UE",
+   "accesso": "Open weights (restricted use)"
   },
   {
    "m": "Gemini 4 Argon",
@@ -4255,18 +4271,11 @@
    "d": "2026-09-22",
    "a": "USA",
    "accesso": "API access"
-  },
-  {
-   "m": "Claude Opus 5.5",
-   "o": "Anthropic",
-   "d": "2026-09-22",
-   "a": "USA",
-   "accesso": "API access"
   }
  ],
  "anno_in_corso": 2026,
  "fonte": "Epoch AI, Data on AI Models (CC BY 4.0)",
  "url": "https://epoch.ai/data/ai-models",
  "file": "https://epoch.ai/data/notable_ai_models.csv",
- "modelli": 1091
+ "modelli": 1092
 }

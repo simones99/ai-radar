@@ -1,9 +1,14 @@
 {
- "aggiornato": "2026-10-27",
+ "aggiornato": "2026-11-02",
  "siti": {
   "Colossus 2": {
    "lat": 34.98929,
    "lon": -90.03857,
+   "posizione": "epoch"
+  },
+  "OpenAI Stargate Abilene": {
+   "lat": 32.50131,
+   "lon": -99.78561,
    "posizione": "epoch"
   },
   "Anthropic-Amazon New Carlisle": {
@@ -31,11 +36,6 @@
    "lon": -82.74276,
    "posizione": "epoch"
   },
-  "OpenAI Stargate Abilene": {
-   "lat": 32.50131,
-   "lon": -99.78561,
-   "posizione": "epoch"
-  },
   "DayOne Kempas": {
    "lat": 1.55943,
    "lon": 103.71987,
@@ -54,6 +54,11 @@
   "Google New Albany": {
    "lat": 40.05677,
    "lon": -82.76774,
+   "posizione": "epoch"
+  },
+  "Anthropic Lake Mariner": {
+   "lat": 43.35643,
+   "lon": -78.60204,
    "posizione": "epoch"
   },
   "Google Mesa": {
@@ -186,6 +191,11 @@
    "lon": -93.78939,
    "posizione": "epoch"
   },
+  "YTL Johor": {
+   "lat": 1.61828,
+   "lon": 103.51922,
+   "posizione": "epoch"
+  },
   "Meta Eagle Mountain": {
    "lat": 40.26529,
    "lon": -112.01925,
@@ -246,6 +256,11 @@
    "lon": -86.36847,
    "posizione": "epoch"
   },
+  "Huawei Wuhu": {
+   "lat": 31.29177,
+   "lon": 118.29981,
+   "posizione": "epoch"
+  },
   "CoreWeave Ellendale ND": {
    "lat": 46.0153,
    "lon": -98.57252,
@@ -286,11 +301,6 @@
    "lon": -81.8428,
    "posizione": "epoch"
   },
-  "Huawei Wuhu": {
-   "lat": 31.29177,
-   "lon": 118.29981,
-   "posizione": "epoch"
-  },
   "Core42 Lake Mariner": {
    "lat": 43.35493,
    "lon": -78.60604,
@@ -306,11 +316,6 @@
    "lon": -77.53963,
    "posizione": "epoch"
   },
-  "Anthropic Lake Mariner": {
-   "lat": 43.35643,
-   "lon": -78.60204,
-   "posizione": "epoch"
-  },
   "Microsoft-Nebius New Jersey": {
    "lat": 39.42675,
    "lon": -75.01675,
@@ -324,6 +329,11 @@
   "Nebius Mantsala": {
    "lat": 60.62935,
    "lon": 25.26047,
+   "posizione": "epoch"
+  },
+  "Envision Galaxy Ulanqab": {
+   "lat": 40.94681,
+   "lon": 113.24977,
    "posizione": "epoch"
   },
   "Southgate Melbourne": {
@@ -396,11 +406,6 @@
    "lon": 15.41698,
    "posizione": "epoch"
   },
-  "Envision Galaxy Ulanqab": {
-   "lat": 40.94681,
-   "lon": 113.24977,
-   "posizione": "epoch"
-  },
   "Goodnight": {
    "lat": 35.01971,
    "lon": -101.30863,
@@ -467,7 +472,7 @@
    "posizione": "epoch"
   },
   "QTS Cedar Rapids": {
-   "lat": 41.90968,
+   "lat": 41.90953,
    "lon": -91.74293,
    "posizione": "epoch"
   },

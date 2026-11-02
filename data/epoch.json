@@ -3565,6 +3565,15 @@
    "open": true
   },
   {
+   "m": "Qwen3-VL-235B-A22B",
+   "o": "Alibaba",
+   "d": "2025-09-23",
+   "c": 5.038044e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
    "m": "GLM-4.6",
    "o": "Z.ai (Zhipu AI),Tsinghua University",
    "d": "2025-09-30",
@@ -3824,6 +3833,15 @@
    "f": false,
    "a": "Cina",
    "open": true
+  },
+  {
+   "m": "MAI-Base-2",
+   "o": "Microsoft",
+   "d": "2026-10-15",
+   "c": 2.4e+25,
+   "f": false,
+   "a": "USA",
+   "open": false
   }
  ],
  "per_anno": [
@@ -4030,7 +4048,7 @@
   {
    "anno": 2024,
    "area": "USA",
-   "n": 57
+   "n": 58
   },
   {
    "anno": 2024,
@@ -4055,12 +4073,12 @@
   {
    "anno": 2025,
    "area": "USA",
-   "n": 64
+   "n": 65
   },
   {
    "anno": 2025,
    "area": "Cina",
-   "n": 35
+   "n": 36
   },
   {
    "anno": 2025,
@@ -4080,12 +4098,12 @@
   {
    "anno": 2026,
    "area": "USA",
-   "n": 53
+   "n": 57
   },
   {
    "anno": 2026,
    "area": "Cina",
-   "n": 30
+   "n": 31
   },
   {
    "anno": 2026,
@@ -4147,20 +4165,41 @@
   {
    "anno": 2024,
    "aperti": 39,
-   "totale": 98
+   "totale": 99
   },
   {
    "anno": 2025,
-   "aperti": 45,
-   "totale": 107
+   "aperti": 46,
+   "totale": 109
   },
   {
    "anno": 2026,
    "aperti": 29,
-   "totale": 89
+   "totale": 94
   }
  ],
  "recenti": [
+  {
+   "m": "Gemini 4 Carbon",
+   "o": "Google DeepMind",
+   "d": "2026-10-28",
+   "a": "USA",
+   "accesso": "Unreleased"
+  },
+  {
+   "m": "MAI-Base-2",
+   "o": "Microsoft",
+   "d": "2026-10-15",
+   "a": "USA",
+   "accesso": "Unreleased"
+  },
+  {
+   "m": "Grok Voice 3.0",
+   "o": "xAI",
+   "d": "2026-10-14",
+   "a": "USA",
+   "accesso": "API access"
+  },
   {
    "m": "Muse Wonder Full",
    "o": "Meta AI",
@@ -4223,32 +4262,11 @@
    "d": "2026-09-22",
    "a": "USA",
    "accesso": "API access"
-  },
-  {
-   "m": "Grok 4.7",
-   "o": "xAI",
-   "d": "2026-09-21",
-   "a": "USA",
-   "accesso": "API access"
-  },
-  {
-   "m": "Step 5 Preview",
-   "o": "StepFun",
-   "d": "2026-09-18",
-   "a": "Cina",
-   "accesso": "API access"
-  },
-  {
-   "m": "DeepSeek V4.1 Flash",
-   "o": "DeepSeek",
-   "d": "2026-09-09",
-   "a": "Cina",
-   "accesso": "Open weights (unrestricted)"
   }
  ],
  "anno_in_corso": 2026,
  "fonte": "Epoch AI, Data on AI Models (CC BY 4.0)",
  "url": "https://epoch.ai/data/ai-models",
  "file": "https://epoch.ai/data/notable_ai_models.csv",
- "modelli": 1083
+ "modelli": 1091
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  // «Chi addestra i modelli di grande scala»: per ogni anno una barra al 100% con la quota per area. È un conteggio, non una misura di potenza.
+  // «Chi addestra i modelli di grande scala»: per ogni anno una barra al 100% con la quota per area. È un conteggio, non una misura di capacità.
   import Block from '../charts/Block.svelte';
   import { AREE } from '../data/geopoliticai';
   import type { Geopoliticai } from '../data/types';
@@ -20,7 +20,7 @@
   const nome = (k: string) => g.zone[k].nome;
 </script>
 
-<Block span={12} id="geo-chi-addestra" title="Chi addestra i modelli di grande scala" note="Di grande scala: almeno 10²³ operazioni di calcolo (FLOP) per addestrarlo, e il miglior modello per capacità può restare sotto. Qui la quota dei modelli usciti ogni anno, per area: è un conteggio, non dice quanto sono potenti."
+<Block span={12} id="geo-chi-addestra" title="Chi addestra i modelli di grande scala" note="Di grande scala: almeno 10²³ operazioni di calcolo (FLOP) per addestrarlo, e il miglior modello per capacità può restare sotto. Qui la quota dei modelli usciti ogni anno, per area: è un conteggio, non dice quanto valgono."
   table={{ cols: ['Anno', ...AREE.map(nome), 'Totale'], rows: anni.map((a) => [String(a.y), ...a.per.map((p) => p.n), a.tot]) }}>
   <ul class="legenda">
     {#each AREE as k (k)}<li aria-current={k === scelta ? 'true' : undefined}><span class="sw" class:hot={k === scelta} style:--a="var(--a-{k})"></span>{nome(k)}</li>{/each}

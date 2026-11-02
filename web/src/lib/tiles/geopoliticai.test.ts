@@ -383,7 +383,7 @@ describe('GeopoliticAI: chi addestra i modelli di grande scala', () => {
 
   it('una barra per anno con la quota delle cinque aree e il totale, l’area scelta in evidenza', () => {
     show();
-    expect(blocco().getByText(/^Di grande scala: almeno 10²³ operazioni di calcolo.*è un conteggio, non dice quanto sono potenti\.$/)).toBeInTheDocument();
+    expect(blocco().getByText(/^Di grande scala: almeno 10²³ operazioni di calcolo.*è un conteggio, non dice quanto valgono\.$/)).toBeInTheDocument();
     const barre = blocco().getAllByRole('img');
     expect(barre.map((b) => b.getAttribute('aria-label')?.slice(0, 4))).toEqual(['2023', '2024', '2025', '2026']);
     const barra2025 = blocco().getByRole('img', { name: '2025: USA 66, Cina 84, UE 5, Regno Unito 0, Altri 10. Totale 165.' });

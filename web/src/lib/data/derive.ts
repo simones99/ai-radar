@@ -13,7 +13,13 @@ export const nx = (s: number): number =>
 /** Posizione 0–1 sull'asse della domanda: scala logaritmica. */
 export const ny = (d: number): number => unit(lin(Math.log(d), [Math.log(DOMANDA_DOM[0]), Math.log(DOMANDA_DOM[1])]));
 
-export interface RadarRowM extends RadarRow {
+/** Una competenza letta su un mercato. */
+export interface CompetenzaNelMercato extends RadarRow {
+  /** Quanti annunci ci sono dietro la domanda: lo dice solo il mercato Italia. */
+  annunci: number | null;
+}
+
+export interface RadarRowM extends CompetenzaNelMercato {
   breve: string;
   slancio: number;
   domanda: number;
@@ -41,9 +47,32 @@ export interface RadarRowM extends RadarRow {
 /** Il margine dello slancio comprende lo zero: la competenza potrebbe non crescere più dell'AI. */
 export const margineSuZero = ({ slancio_margine: m }: RadarRow): boolean => !!m && m[0] < 0 && m[1] > 0;
 
-export function radarRows(r: Radar): RadarRowM[] {
+/** I mercati che si possono scegliere: «Tutti i Paesi» non è una scelta. */
+export const MERCATI_DA_SCEGLIERE = ['italia'] as const;
+/** I Paesi di cui il radar legge la domanda. */
+export type Mercato = 'tutti' | (typeof MERCATI_DA_SCEGLIERE)[number];
+/** Il mercato con questo valore del link o del ricordo; uno sconosciuto si ignora, come senza scelta. */
+export const mercatoScelto = (v: string | null | undefined): Mercato => MERCATI_DA_SCEGLIERE.find((m) => m === v) ?? 'tutti';
+
+/** Il quadrante pubblicato di un punto dello storico, letto sul mercato. */
+export const pubblicatoDi = (punto: NonNullable<Radar['storico']>[number]['competenze'][string] | undefined, mercato: Mercato): Quadrant | null | undefined =>
+  mercato === 'italia' ? punto?.pubblicato_it : punto?.pubblicato;
+
+/** La competenza letta sull'Italia: gli stessi campi con i valori italiani. Lo slancio è unico. */
+const sullItalia = (c: RadarRow): CompetenzaNelMercato => ({
+  ...c,
+  domanda: c.domanda_it ?? null, annunci: c.annunci_it ?? null, quadrante: c.quadrante_it ?? null, quadrante_calcolato: c.quadrante_calcolato_it ?? null,
+  domanda_prec: c.domanda_prec_it ?? null, quadrante_prec: c.quadrante_prec_it ?? null,
+});
+
+/** Tutte le competenze lette sul mercato, anche quelle senza il dato per stare sul radar. */
+export function competenzeDi(r: Radar, mercato: Mercato = 'tutti'): CompetenzaNelMercato[] {
   if (r.versione !== 2) return []; // radar.json della pipeline vecchia: ranghi, non unità vere
-  return r.competenze
+  return r.competenze.map((c) => (mercato === 'italia' ? sullItalia(c) : { ...c, annunci: null }));
+}
+
+export function radarRows(r: Radar, mercato: Mercato = 'tutti'): RadarRowM[] {
+  return competenzeDi(r, mercato)
     .filter((c) => c.slancio != null && c.domanda != null && c.quadrante != null)
     .map((c) => {
       const s = c.slancio as number, d = c.domanda as number;
@@ -62,9 +91,28 @@ export function radarRows(r: Radar): RadarRowM[] {
         incerto: !!c.incerto, moving: calc && calc !== c.quadrante ? calc : null,
         x, y, px, py, sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
         changed, hasPrev,
-        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => p.competenze[c.id]?.pubblicato === 'impara-ora'),
+        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => pubblicatoDi(p.competenze[c.id], mercato) === 'impara-ora'),
       };
     });
+}
+
+/** Il radar c'è: almeno una competenza sta sul radar con tutti i Paesi. Se il mercato scelto non ne ha nessuna, il radar c'è e l'Italia no. */
+export const radarDisponibile = (r: Radar | undefined): r is Radar => !!r && radarRows(r).length > 0;
+
+/** La riga della pagina di una competenza, letta sul mercato. */
+export interface RigaPagina extends RadarRowM {
+  /** Il Paese a metà classifica, qualunque sia il mercato. */
+  domandaTutti: number | null;
+  /** Il mercato non ha il dato: la riga è quella di tutti i Paesi, e la pagina lo dice al posto del numero. */
+  senzaDato: boolean;
+}
+
+/** Null se la competenza non ha una pagina: non sta sul radar nemmeno con tutti i Paesi. */
+export function rigaPagina(r: Radar, id: string, mercato: Mercato = 'tutti'): RigaPagina | null {
+  const tutti = radarRows(r).find((x) => x.id === id);
+  const nelMercato = radarRows(r, mercato).find((x) => x.id === id);
+  const riga = nelMercato ?? tutti;
+  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato } : null;
 }
 
 export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {

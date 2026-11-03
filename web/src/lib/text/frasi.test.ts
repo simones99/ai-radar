@@ -5,7 +5,7 @@ import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
   cambio, headBusiness, headCompetenze, headNotizie, headNorme, headPersone, headSkill, tipoLabel,
 } from './frasi';
-import { radarRows } from '../data/derive';
+import { radarRows, rigaPagina } from '../data/derive';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -36,6 +36,39 @@ describe('numeri chiave delle card', () => {
   });
   it('competenze: la card dice quante sono, chi entra lo dice la porta', () => {
     expect(faceCompetenze(d, today)).toEqual({ fig: '2', unit: 'su 5', sent: "2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila." });
+  });
+  describe('competenze: la card con il mercato', () => {
+    const conQuadranti = (it: Record<string, 'impara-ora' | 'osserva'>, tutti?: 'osserva'): Dataset => ({
+      radar: { ...d.radar!, competenze: d.radar!.competenze.map((c) => ({ ...c, quadrante_it: it[c.id] ?? 'osserva', quadrante_calcolato_it: it[c.id] ?? 'osserva', quadrante_prec_it: null, ...(tutti && { quadrante: tutti, quadrante_calcolato: tutti, quadrante_prec: null }) })) },
+    });
+    it('con «Italia» dice i numeri italiani e la scelta', () => {
+      expect(faceCompetenze(d, today, 'italia')).toEqual({ fig: '1', unit: 'su 5', scelta: 'Italia', sent: "1 competenza su 5 da imparare ora: cresce più dell'AI e ha almeno 3 annunci ogni 10mila." });
+    });
+    it('senza mercato o con «Tutti i Paesi»: nessuna scelta da dire', () => {
+      expect(faceCompetenze(d, today, 'tutti')).toEqual(faceCompetenze(d, today));
+      expect(faceCompetenze(d, today, 'tutti')).not.toHaveProperty('scelta');
+    });
+    it('chi in Italia sta per uscire lo dice la frase', () => {
+      const r = conQuadranti({ agenti: 'impara-ora' });
+      const inBilico: Dataset = { radar: { ...r.radar!, competenze: r.radar!.competenze.map((c) => (c.id === 'agenti' ? { ...c, quadrante_calcolato_it: 'prova' } : c)) } };
+      expect(faceCompetenze(inBilico, today, 'italia')?.sent).toBe('1 competenza su 5 da imparare ora; Agenti AI hanno meno di 3 annunci ogni 10mila e possono uscirne.');
+    });
+    it('nessuna in Impara ora: lo dice, sia in Italia sia su tutti i Paesi', () => {
+      const sent = "Nessuna competenza su 5 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.";
+      expect(faceCompetenze(conQuadranti({}), today, 'italia')).toEqual({ fig: '0', unit: 'su 5', scelta: 'Italia', sent });
+      expect(faceCompetenze(conQuadranti({}, 'osserva'), today)).toEqual({ fig: '0', unit: 'su 5', sent });
+    });
+    it('nessun dato italiano: la frase lo dice e non mostra uno zero', () => {
+      const senzaItalia: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.map((c) => ({ ...c, domanda_it: null, quadrante_it: null, quadrante_calcolato_it: null })) } };
+      expect(faceCompetenze(senzaItalia, today, 'italia')).toEqual({ fig: '—', unit: '', scelta: 'Italia', sent: 'Per l’Italia il dato non è disponibile in questo momento.' });
+    });
+    it('senza radar, o con il radar della pipeline vecchia, resta il messaggio della fonte', () => {
+      expect(faceCompetenze({}, today, 'italia')).toBeNull();
+      expect(faceCompetenze({ radar: { ...d.radar!, versione: undefined } }, today, 'italia')).toBeNull();
+    });
+    it('il sottotitolo della card regge con nessuna in Impara ora', () => {
+      expect(headCompetenze(conQuadranti({}), today, { mercato: 'italia' }).deck).toBe("Oggi nessuna competenza su 5 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
+    });
   });
   it('competenze: nomi plurali, verbo al plurale anche da soli', () => {
     const comp = d.radar!.competenze.map((r) => (r.id === 'mcp' ? { ...r, breve: 'Multimodali', plurale: true } : r.id === 'rag' ? { ...r, breve: 'DB vettoriali', plurale: true } : r));
@@ -98,14 +131,12 @@ describe('numeri chiave delle card', () => {
     expect(faceCompetenze(senzaCambi, today)?.sent).toBe('2 competenze su 5 da imparare ora; LLMOps sta perdendo slancio (−34%) e può uscirne.');
   });
   it('pagina di una competenza: nome nel titolo, quadrante e movimento nel sottotitolo', () => {
-    const rows = radarRows(d.radar!);
-    const by = (id: string) => rows.find((r) => r.id === id)!;
+    const by = (id: string) => rigaPagina(d.radar!, id)!;
     expect(headSkill(by('mcp'), d.radar!.quadranti)).toEqual({ title: [{ t: 'Model Context Protocol (MCP)' }], deck: 'Impara ora, un mese fa Da consolidare. Lo standard per collegare strumenti.' });
     expect(headSkill(by('vector-db'), d.radar!.quadranti).deck).toBe("Tieni d'occhio, in movimento verso Da provare. Indici.");
   });
   it('pagina di una competenza: sotto la descrizione, per quali ruoli conta, nell’ordine dei ruoli', () => {
-    const rows = radarRows(d.radar!);
-    const by = (id: string) => rows.find((r) => r.id === id)!;
+    const by = (id: string) => rigaPagina(d.radar!, id)!;
     expect(headSkill(by('rag'), d.radar!.quadranti, d.radar!.ruoli).nota).toBe('Conta per: Sviluppo software, Prodotto, Dati e analisi');
     expect(headSkill(by('robotica'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // non conta per nessun ruolo
     expect(headSkill(by('agenti'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // radar senza il campo ruoli

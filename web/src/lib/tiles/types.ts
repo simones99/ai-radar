@@ -13,7 +13,8 @@ export interface TileDef {
   eager: boolean;
   testa: Testa;
   face: (d: Dataset, today: Date) => Face | null;
-  head: (d: Dataset, today: Date) => Head;
+  /** Il titolo del dettaglio: i parametri del link servono a chi ha una scelta che lo cambia. */
+  head: (d: Dataset, today: Date, params?: Params) => Head;
   Detail: Component<DetailProps>;
   /** La figura disegnata con i dati che fa di questa una card di spicco (vedi diSpicco). Solo span e svg: sta dentro il pulsante della card. */
   Figura?: Component<{ data: Dataset }>;

@@ -1,5 +1,6 @@
-// Una scelta che sta nel link (?ruolo=, ?settore=, ?area=) ed è ricordata nel browser con la chiave ai-radar:<parametro>.
+// Una scelta che sta nel link (?ruolo=, ?mercato=, ?settore=, ?area=) ed è ricordata nel browser con la chiave ai-radar:<parametro>.
 // Senza storage (bloccato, finestra privata) la pagina funziona: la scelta va nel link ma non resta.
+import { mercatoScelto, type Mercato } from './data/derive';
 import { imposta } from './router';
 
 let versione = $state(0); // cresce a ogni scelta: chi legge un ricordo in un $derived si aggiorna
@@ -53,6 +54,10 @@ export function sceltaRicordata(parametro: string): SceltaRicordata {
 
 /** Il ruolo (card Competenze, testa Per te). */
 export const ruolo = sceltaRicordata('ruolo');
+/** Il mercato (card Competenze): «Tutti i Paesi» non è una scelta. */
+export const mercato = sceltaRicordata('mercato');
+/** Il mercato ricordato, per chi lo legge fuori dalla card: un valore che non c'è più vale «Tutti i Paesi». */
+export const mercatoRicordato = (): Mercato => mercatoScelto(mercato.ricordato());
 /** Il settore (card Business, testa Per la tua organizzazione). */
 export const settore = sceltaRicordata('settore');
 /** L'area o il Paese UE (card GeopoliticAI). */

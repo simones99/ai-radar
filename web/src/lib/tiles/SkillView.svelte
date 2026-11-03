@@ -2,15 +2,25 @@
   import Block from '../charts/Block.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import type { Cite, Series } from '../charts/types';
-  import { margineSuZero, type RadarRowM } from '../data/derive';
+  import { margineSuZero, pubblicatoDi, type Mercato, type RigaPagina } from '../data/derive';
   import type { Quadrant, Radar } from '../data/types';
-  import { day, dayWith, monthShort, nf, per10k, signedPct } from '../text/format';
+  import { day, dayWith, monthShort, nf, per10k, quantiAnnunci, signedPct } from '../text/format';
+  import { ITALIA_SENZA_DATO } from '../text/frasi';
 
-  let { row, quadranti, storico = [] }: {
-    row: RadarRowM;
+  let { row, quadranti, mercato = 'tutti', storico = [], indietro = '#competenze' }: {
+    row: RigaPagina;
     quadranti: Record<Quadrant, string>;
+    mercato?: Mercato;
     storico?: NonNullable<Radar['storico']>;
+    /** Il link alla card Competenze, con le scelte fatte. */
+    indietro?: string;
   } = $props();
+
+  const italia = $derived(mercato === 'italia');
+  const eraDomanda = $derived(row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : '');
+  const sottoDomanda = $derived(italia
+    ? `ogni 10mila in Italia${row.annunci != null ? `, ${quantiAnnunci(row.annunci)}` : ''}${eraDomanda}${row.domandaTutti != null ? ` · Paese a metà classifica: ${per10k(row.domandaTutti)}` : ''}`
+    : `annunci ogni 10mila, il Paese a metà classifica${eraDomanda}${row.domanda_it != null ? ` · Italia: ${per10k(row.domanda_it)}` : ''}`);
 
   const FONTE: Record<string, string> = { arxiv: 'paper su arXiv', github: 'repository su GitHub', lavoro: 'annunci di lavoro' };
   const cite = (t: string, href: string): Cite => [{ t: 'Fonte: ' }, { t, href }, { t: '.' }];
@@ -27,12 +37,14 @@
   const ril = $derived(seg.lavoro?.rilevazioni ?? []);
   const paper = $derived<Series[]>([{ name: row.breve, hot: true, pts: paperM.flatMap((m, i) => (m.totale ? [{ x: i, y: (1000 * m.n) / m.totale }] : [])) }]);
   const repo = $derived<Series[]>([{ name: row.breve, hot: true, pts: repoM.flatMap((m, i) => (m.base ? [{ x: i, y: (1000 * m.n) / m.base }] : [])) }]);
+  const conItalia = $derived(ril.some((r) => r.it != null));
+  const evidenzaItalia = $derived(italia && conItalia); // l'evidenza va sul mercato scelto, se ha una linea
   const annunci = $derived<Series[]>([
-    { name: 'Media', hot: true, pts: ril.map((r, i) => ({ x: i, y: r.media })) },
-    ...(ril.some((r) => r.it != null) ? [{ name: 'Italia', pts: ril.flatMap((r, i) => (r.it == null ? [] : [{ x: i, y: r.it }])) }] : []),
+    { name: 'Paese a metà classifica', hot: !evidenzaItalia, pts: ril.map((r, i) => ({ x: i, y: r.mediana })) },
+    ...(conItalia ? [{ name: 'Italia', hot: evidenzaItalia, pts: ril.flatMap((r, i) => (r.it == null ? [] : [{ x: i, y: r.it }])) }] : []),
   ]);
   const percorso = $derived(storico.flatMap((p) => {
-    const q = p.competenze[row.id]?.pubblicato;
+    const q = pubblicatoDi(p.competenze[row.id], mercato);
     return q ? [{ mese: p.mese, q }] : [];
   }));
   /** Le cifre di un grafico hanno tutte gli stessi decimali, tacche ed etichetta: uno se il valore più alto sta sotto 10, nessuno se no. */
@@ -43,14 +55,14 @@
   const dayAt = (i: number) => (ril[i] ? day(ril[i].data).replace(/ \d{4}$/, '') : '');
 </script>
 
-<nav class="back" aria-label="Competenze"><a href="#competenze">← Tutte le competenze</a></nav>
+<nav class="back" aria-label="Competenze"><a href={indietro}>← Tutte le competenze</a></nav>
 {#if row.incerto}
   <p class="warn" role="note">Dato incerto: {row.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.</p>
 {/if}
 
-<Block span={4} title="Domanda" cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
+<Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
   <p class="fig">{per10k(row.domanda)}</p>
-  <p class="sub">annunci ogni 10mila, media dei Paesi{row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : ''}{row.domanda_it != null ? ` · Italia: ${per10k(row.domanda_it)}` : ''}</p>
+  <p class="sub">{sottoDomanda}</p>
 </Block>
 <Block span={4} title="Slancio">
   <p class="fig">{signedPct(row.slancio)}</p>
@@ -72,14 +84,14 @@
   table={{ cols: ['Mese', 'Repository', 'Repository AI'], rows: repoM.map((m) => [m.mese, m.n, m.base]) }}>
   <LineChart series={repo} label="Repository su {row.breve} ogni 1.000 repository AI" height={200} yFormat={yf(repo)} xFormat={monthAt(repoM)} />
 </Block>
-<Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila, media dei Paesi e Italia." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
+<Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila a ogni rilevazione: il Paese a metà classifica e l’Italia. Il numero in evidenza in Domanda è la mediana delle ultime 4 rilevazioni." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
   missing={ril.length < 2 ? 'Serve un mese di rilevazioni.' : null}
-  table={{ cols: ['Rilevazione', 'Media', 'Italia'], rows: ril.map((r) => [r.data, r.media, r.it ?? '—']) }}>
-  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
+  table={{ cols: ['Rilevazione', 'Paese a metà classifica', 'Italia'], rows: ril.map((r) => [r.data, r.mediana, r.it ?? '—']) }}>
+  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila{evidenzaItalia ? ', in evidenza l’Italia' : ''}" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
 </Block>
 
 <Block span={12} title="Il percorso sul radar" note="Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo."
-  missing={percorso.length ? null : 'Lo storico arriva con i prossimi aggiornamenti.'}>
+  missing={percorso.length ? null : italia && storico.length ? `${ITALIA_SENZA_DATO}.` : 'Lo storico arriva con i prossimi aggiornamenti.'}>
   <ol class="path" role="list" aria-label="Il percorso sul radar">
     {#each percorso as p (p.mese)}<li class:hot={p.q === 'impara-ora'}><span>{monthShort(p.mese)} {p.mese.slice(0, 4)}</span><b>{quadranti[p.q]}</b></li>{/each}
   </ol>
@@ -106,7 +118,7 @@
 </Block>
 
 <Block span={12} title="Fonti e metodo">
-  <p class="sub">Fonti: <a href="https://arxiv.org" target="_blank" rel="noopener">arXiv</a>, <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.adzuna.co.uk" target="_blank" rel="noopener">The Adzuna API</a>. Come si calcolano slancio, domanda e incertezza: <a href="#competenze">vedi il metodo</a>.</p>
+  <p class="sub">Fonti: <a href="https://arxiv.org" target="_blank" rel="noopener">arXiv</a>, <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.adzuna.co.uk" target="_blank" rel="noopener">The Adzuna API</a>. Come si calcolano slancio, domanda e incertezza: <a href={indietro}>vedi il metodo</a>.</p>
 </Block>
 
 <style>

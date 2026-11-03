@@ -22,6 +22,16 @@
   // a destra c'è posto per l'etichetta finale più lunga, fino a metà della larghezza
   const r = $derived(Math.min(w * 0.5, Math.max(56, ...series.filter((s) => s.pts.length).map((s) => measureText(endLabel(s), `600 12px ${FONT}`))) + 16));
   const m = $derived({ l: 40, r, t: 16, b: 32 });
+  /** L'etichetta finale, che va a capo se non sta nel margine (10 px sono lo scarto dal punto). */
+  const righe = (testo: string): string[] => {
+    const out: string[] = [];
+    for (const parola of testo.split(' ')) {
+      const con = out.length ? `${out[out.length - 1]} ${parola}` : parola;
+      if (out.length && measureText(con, `600 12px ${FONT}`) <= r - 10) out[out.length - 1] = con;
+      else out.push(parola);
+    }
+    return out;
+  };
   const all = $derived(series.flatMap((s) => s.pts));
   const x = $derived(scaleLinear(extent(all, (p) => p.x) as [number, number], [m.l, w - m.r]));
   const y = $derived(scaleLinear([0, max(all, (p) => p.y) ?? 1], [height - m.b, m.t]).nice(4)); // lo stesso numero delle tacche: la linea più alta della griglia sta sopra il valore più alto
@@ -48,9 +58,9 @@
   const ends = $derived.by(() => {
     const e = series.filter((s) => s.pts.length).map((s) => {
       const lp = s.pts[s.pts.length - 1];
-      return { s, lp, ty: y(lp.y) };
+      return { s, lp, ty: y(lp.y), righe: righe(endLabel(s)) };
     }).sort((a, b) => a.ty - b.ty);
-    for (let i = 1; i < e.length; i++) e[i].ty = Math.max(e[i].ty, e[i - 1].ty + 16);
+    for (let i = 1; i < e.length; i++) e[i].ty = Math.max(e[i].ty, e[i - 1].ty + 16 * e[i - 1].righe.length);
     return e;
   });
 </script>
@@ -72,7 +82,7 @@
       {/if}
     {/each}
     {#each ends as e (e.s.name)}
-      <text class={e.s.hot ? 't12b hot' : 't12'} x={w - m.r + 10} y={e.ty + 4}>{endLabel(e.s)}</text>
+      <text class={e.s.hot ? 't12b hot' : 't12'} x={w - m.r + 10} y={e.ty + 4}>{e.righe[0]}{#each e.righe.slice(1) as riga, i (i)}{' '}<tspan x={w - m.r + 10} dy="16">{riga}</tspan>{/each}</text>
     {/each}
   </svg>
 </div>

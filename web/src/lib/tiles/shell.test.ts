@@ -31,6 +31,11 @@ describe('TileFace', () => {
     await fireEvent.click(b);
     expect(onopen).toHaveBeenCalledOnce();
   });
+  it('una scelta nella faccia della card: il nome visibile e quello accessibile la dicono', () => {
+    render(TileFace, { tile: tile({ face: () => ({ fig: '1', unit: 'su 5', sent: 'Una sola.', scelta: 'Italia' }) }), data: FIXTURE as Dataset, today, expanded: false, onopen: () => {} });
+    const b = screen.getByRole('button', { name: 'Business · Italia: 1 su 5' });
+    expect(b).toHaveTextContent('Business · Italia');
+  });
   it('una fonte aggiornata in un altro giorno dice la sua data', () => {
     const f = FIXTURE as Dataset;
     render(TileFace, { tile: tile(), data: { ...f, status: { ...f.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, today, expanded: false, onopen: () => {} });

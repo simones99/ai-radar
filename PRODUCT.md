@@ -28,7 +28,7 @@ Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, 
 ## Operating Context
 
 - Una visita tipica parte dalla home: due porte, *Per te* e *Per la tua organizzazione*, ognuna con una notizia; sotto, 9 card divise per testa (4 e 5). Una card si apre a tutta larghezza; da 1200 px le altre restano in un elenco a sinistra.
-- Ogni scelta (card, ruolo, settore, area, anello) sta nel link con `#card?nome=valore`, così un link si condivide e vince sul ricordo della visita precedente.
+- Ogni scelta (card, ruolo, mercato, settore, area, anello) sta nel link con `#card?nome=valore`, così un link si condivide e vince sul ricordo della visita precedente.
 - I dati arrivano da GitHub Actions ogni lunedì; GitHub Pages pubblica il sito statico. Una fonte che non risponde lascia l'ultimo dato valido e lo segnala nella sezione *Stato delle fonti*.
 
 ## Capabilities and Constraints

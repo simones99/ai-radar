@@ -236,8 +236,8 @@ describe('porta Per te con il mercato', () => {
     radar: { ...radar(rows.map((r) => ({ ...quiete, domanda_it: 5, quadrante_it: 'osserva', quadrante_calcolato_it: 'osserva', ...r }))).radar!, ruoli: RUOLI },
   });
 
-  describe('senza scelta o con un valore sconosciuto: come con «Tutti i Paesi», e la nota sull’Italia resta', () => {
-    for (const m of [undefined, null, 'tutti', 'francia']) {
+  describe('senza scelta: come con «Tutti i Paesi», e la nota sull’Italia resta', () => {
+    for (const m of [undefined, 'tutti'] as const) {
       it(String(m), () => {
         const p = doorPerTe(conMcp(2.602), today, null, m);
         expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');

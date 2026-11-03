@@ -1,6 +1,6 @@
 import {
-  MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, mercatoScelto, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
-  type Mercato, type RadarRowM,
+  MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, mercatoScelto, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarDisponibile, radarRows, settoreScelto, ultimoAnno,
+  type Mercato, type RadarRowM, type RigaPagina,
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/types';
@@ -178,13 +178,13 @@ function inBilico(rows: RadarRowM[]): string {
 export function faceCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tutti'): Face | null {
   const rows = d.radar ? radarRows(d.radar, mercato) : [];
   const conScelta = mercato === 'italia' ? { scelta: 'Italia' } : {};
-  if (!rows.length) return conScelta.scelta && d.radar && radarRows(d.radar).length ? { fig: '—', unit: '', sent: `${ITALIA_SENZA_DATO}.`, ...conScelta } : null;
+  if (!rows.length) return radarDisponibile(d.radar) ? { fig: '—', unit: '', sent: `${ITALIA_SENZA_DATO}.`, ...conScelta } : null;
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
-  const fig = { fig: String(n), unit: `su ${rows.length}`, ...conScelta };
-  if (!n) return { ...fig, sent: `Nessuna competenza su ${rows.length} ${perche(n)}.` };
+  const cifra = { fig: String(n), unit: `su ${rows.length}`, ...conScelta };
+  if (!n) return { ...cifra, sent: `Nessuna competenza su ${rows.length} ${perche(n)}.` };
   const quante = `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length} da imparare ora`;
   const bilico = inBilico(rows);
-  return { ...fig, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche(n)}.` };
+  return { ...cifra, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche(n)}.` };
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
@@ -199,7 +199,8 @@ const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((
 /** La soglia guarda il Paese a metà classifica: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
 const sottoSogliaInItalia = (inn: RadarRowM[]): string =>
   inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci ogni 10mila, sotto soglia`).join('; ');
-export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tutti'): Head {
+export function headCompetenze(d: Dataset, _today?: Date, params: Params = {}): Head {
+  const mercato = mercatoScelto(params.mercato);
   const rows = d.radar ? radarRows(d.radar, mercato) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };
   const { inn, out } = radarChanges(rows);
@@ -209,15 +210,15 @@ export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tu
   const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
-  const italia = mercato === 'italia' ? '' : sottoSogliaInItalia(inn); // il mercato Italia ha già i suoi quadranti
+  const sottoSoglia = mercato === 'italia' ? '' : sottoSogliaInItalia(inn); // il mercato Italia ha già i suoi quadranti
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verboEntra(inn)} tra le competenze da imparare ora` }],
-    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + (italia && `${italia}. `) + tail,
+    deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + (sottoSoglia && `${sottoSoglia}. `) + tail,
   };
 }
 
 /** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
-export function headSkill(r: RadarRowM & { senzaDato?: boolean }, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
+export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
   const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
   const dove = mercato === 'italia' ? 'In Italia: ' : ''; // nella pagina non ci sono i bottoni: lo dice la frase
@@ -350,13 +351,12 @@ function quanteDaImparare(n: number, tot: number, ruolo: string | null): string 
 
 /**
  * Con un ruolo ricordato le regole si provano prima sulle sue competenze, poi su tutte (spec Ruoli, sezione 6).
- * Con il mercato ricordato leggono le righe di quel mercato; un valore sconosciuto: come «Tutti i Paesi».
+ * Con il mercato ricordato leggono le righe di quel mercato.
  */
-export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = null, mercatoId: string | null = null): Door {
-  const mercato = mercatoScelto(mercatoId);
+export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = null, mercato: Mercato = 'tutti'): Door {
+  if (!radarDisponibile(d.radar)) return NO_DATA;
   const italia = mercato === 'italia';
-  const rows = d.radar ? radarRows(d.radar, mercato) : [];
-  if (!d.radar || !(rows.length || radarRows(d.radar).length)) return NO_DATA;
+  const rows = radarRows(d.radar, mercato);
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
   // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const sure = rows.filter((r) => !r.incerto);

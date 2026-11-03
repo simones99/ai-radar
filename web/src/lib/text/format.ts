@@ -59,7 +59,7 @@ export const signedPct = (v: number): string => `${signedPts(v)}%`;
 export const per10k = (v: number): string => nf(v, v < 10 ? 1 : 0);
 /** Quanti annunci: «39 annunci», «1 annuncio». */
 export const quantiAnnunci = (annunci: number): string => `${nf(annunci)} ${annunci === 1 ? 'annuncio' : 'annunci'}`;
-/** La domanda con gli annunci che ci sono dietro: «2,8 ogni 10mila, 39 annunci». */
-export const conAnnunci = (domanda: number, annunci: number): string => `${per10k(domanda)} ogni 10mila, ${quantiAnnunci(annunci)}`;
+/** La domanda con gli annunci che ci sono dietro, se si conoscono: «2,8 ogni 10mila, 39 annunci». */
+export const conAnnunci = (domanda: number, annunci: number | null): string => `${per10k(domanda)} ogni 10mila${annunci != null ? `, ${quantiAnnunci(annunci)}` : ''}`;
 /** Mese breve da "2026-09": «set». */
 export const monthShort = (ymStr: string): string => monthName(ymStr).slice(0, 3);

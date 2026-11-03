@@ -4,12 +4,12 @@
   import type { Cite } from '../charts/types';
   import MovesPanel from '../charts/MovesPanel.svelte';
   import Radar from '../charts/Radar.svelte';
-  import { competenzeDi, MERCATI_DA_SCEGLIERE, mercatoScelto, radarRows, rigaPagina, type CompetenzaNelMercato } from '../data/derive';
+  import { competenzeDi, MERCATI_DA_SCEGLIERE, mercatoScelto, radarDisponibile, radarRows, rigaPagina, type CompetenzaNelMercato } from '../data/derive';
   import type { Quadrant } from '../data/types';
   import { apri, toHash } from '../router';
-  import { mercato as mercatoRicordato, ruolo as ruoloRicordato } from '../scelta.svelte';
+  import { mercato as sceltaMercato, ruolo as sceltaRuolo } from '../scelta.svelte';
   import { conAnnunci, monthName, per10k, signedPct } from '../text/format';
-  import { headCompetenze, headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
+  import { headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
   import type { DetailProps } from './types';
@@ -19,20 +19,20 @@
   const mercato = $derived(mercatoScelto(params.mercato));
   const italia = $derived(mercato === 'italia');
   const rows = $derived(data.radar ? radarRows(data.radar, mercato) : []);
-  const radarVuoto = $derived(!data.radar || !radarRows(data.radar).length); // con tutti i Paesi: senza il dato italiano la scelta resta, per tornare indietro
+  const radarVuoto = $derived(!radarDisponibile(data.radar)); // con tutti i Paesi: senza il dato italiano la scelta resta, per tornare indietro
   const quadranti = $derived(data.radar?.quadranti ?? ({ 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" } as Record<Quadrant, string>));
   const ruoli = $derived(data.radar?.ruoli ?? []);
   const ruolo = $derived(ruoli.find((r) => r.id === params.ruolo) ?? null); // un ruolo sconosciuto nel link si ignora
   onMount(() => {
-    ruoloRicordato.allinea(params.ruolo, ruoli.map((r) => r.id));
-    mercatoRicordato.allinea(params.mercato, MERCATI_DA_SCEGLIERE);
+    sceltaRuolo.allinea(params.ruolo, ruoli.map((r) => r.id));
+    sceltaMercato.allinea(params.mercato, MERCATI_DA_SCEGLIERE);
   });
   const skill = $derived(data.radar && elemento ? rigaPagina(data.radar, elemento, mercato) : null);
-  const head = $derived(skill ? headSkill(skill, quadranti, ruoli, mercato) : headCompetenze(data, today, mercato));
+  const head = $derived(skill ? headSkill(skill, quadranti, ruoli, mercato) : tile.head(data, today, params));
   const old = $derived(!!data.radar && data.radar.versione !== 2);
   const all = $derived(data.radar ? competenzeDi(data.radar, mercato) : []);
   const colAnnunci = $derived(italia ? 'Annunci in Italia' : 'Annunci ogni 10mila');
-  const annunciDi = (c: CompetenzaNelMercato, domanda: number) => (c.annunci != null ? conAnnunci(domanda, c.annunci) : per10k(domanda));
+  const annunciDi = (c: CompetenzaNelMercato, domanda: number) => (italia ? conAnnunci(domanda, c.annunci) : per10k(domanda));
   const placed = $derived(new Set(rows.map((r) => r.id)));
   const delRuolo = $derived(ruolo ? all.filter((c) => c.ruoli?.includes(ruolo.id)).map((c) => c.id) : null);
   const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
@@ -67,13 +67,13 @@
     <div class="scelte">
       {#if ruoli.length}
         <div class="chips" role="group" aria-label="Il tuo ruolo">
-          <button type="button" aria-pressed={ruolo === null} onclick={() => ruoloRicordato.scegli(null)}>Tutti</button>
-          {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => ruoloRicordato.scegli(r.id)}>{r.nome}</button>{/each}
+          <button type="button" aria-pressed={ruolo === null} onclick={() => sceltaRuolo.scegli(null)}>Tutti</button>
+          {#each ruoli as r (r.id)}<button type="button" aria-pressed={ruolo?.id === r.id} onclick={() => sceltaRuolo.scegli(r.id)}>{r.nome}</button>{/each}
         </div>
       {/if}
       <div class="chips" role="group" aria-label="Mercato">
-        <button type="button" aria-pressed={mercato === 'tutti'} onclick={() => mercatoRicordato.scegli(null)}>Tutti i Paesi</button>
-        <button type="button" aria-pressed={mercato === 'italia'} onclick={() => mercatoRicordato.scegli('italia')}>Italia</button>
+        <button type="button" aria-pressed={mercato === 'tutti'} onclick={() => sceltaMercato.scegli(null)}>Tutti i Paesi</button>
+        <button type="button" aria-pressed={mercato === 'italia'} onclick={() => sceltaMercato.scegli('italia')}>Italia</button>
       </div>
     </div>
     {#if rows.length}
@@ -86,7 +86,7 @@
         <!-- il radar a tutta larghezza, con la legenda sotto: prima la figura. Accanto, quando c'è posto, i movimenti che ci si leggono: le stesse fonti -->
         <div class="rm"><div class="radar-mov">
           <div class="col">
-            <Radar {rows} {quadranti} highlight={hovered} {delRuolo} label={italia ? 'Radar delle competenze in Italia con il movimento dall’ultimo mese' : undefined} href={(id) => toHash('competenze', id, params)} onpick={(id) => apri('competenze', id)} />
+            <Radar {rows} {quadranti} {mercato} highlight={hovered} {delRuolo} label={italia ? 'Radar delle competenze in Italia con il movimento dall’ultimo mese' : undefined} href={(id) => toHash('competenze', id, params)} onpick={(id) => apri('competenze', id)} />
             {#if italia}<p class="legenda">La crescita è mondiale, la domanda è italiana.</p>{/if}
             <p class="legenda">Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo.</p>
             <p class="legenda">Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.</p>

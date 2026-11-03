@@ -2,7 +2,7 @@
   import Block from '../charts/Block.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import type { Cite, Series } from '../charts/types';
-  import { margineSuZero, type Mercato, type RigaPagina } from '../data/derive';
+  import { margineSuZero, pubblicatoDi, type Mercato, type RigaPagina } from '../data/derive';
   import type { Quadrant, Radar } from '../data/types';
   import { day, dayWith, monthShort, nf, per10k, quantiAnnunci, signedPct } from '../text/format';
   import { ITALIA_SENZA_DATO } from '../text/frasi';
@@ -42,8 +42,7 @@
     ...(ril.some((r) => r.it != null) ? [{ name: 'Italia', pts: ril.flatMap((r, i) => (r.it == null ? [] : [{ x: i, y: r.it }])) }] : []),
   ]);
   const percorso = $derived(storico.flatMap((p) => {
-    const punto = p.competenze[row.id];
-    const q = italia ? punto?.pubblicato_it : punto?.pubblicato;
+    const q = pubblicatoDi(p.competenze[row.id], mercato);
     return q ? [{ mese: p.mese, q }] : [];
   }));
   /** Le cifre di un grafico hanno tutte gli stessi decimali, tacche ed etichetta: uno se il valore più alto sta sotto 10, nessuno se no. */

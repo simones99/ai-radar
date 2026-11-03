@@ -47,12 +47,16 @@ export interface RadarRowM extends CompetenzaNelMercato {
 /** Il margine dello slancio comprende lo zero: la competenza potrebbe non crescere più dell'AI. */
 export const margineSuZero = ({ slancio_margine: m }: RadarRow): boolean => !!m && m[0] < 0 && m[1] > 0;
 
-/** I Paesi di cui il radar legge la domanda. */
-export type Mercato = 'tutti' | 'italia';
 /** I mercati che si possono scegliere: «Tutti i Paesi» non è una scelta. */
-export const MERCATI_DA_SCEGLIERE: readonly string[] = ['italia'];
+export const MERCATI_DA_SCEGLIERE = ['italia'] as const;
+/** I Paesi di cui il radar legge la domanda. */
+export type Mercato = 'tutti' | (typeof MERCATI_DA_SCEGLIERE)[number];
 /** Il mercato con questo valore del link o del ricordo; uno sconosciuto si ignora, come senza scelta. */
-export const mercatoScelto = (v: string | null | undefined): Mercato => (v === 'italia' ? 'italia' : 'tutti');
+export const mercatoScelto = (v: string | null | undefined): Mercato => MERCATI_DA_SCEGLIERE.find((m) => m === v) ?? 'tutti';
+
+/** Il quadrante pubblicato di un punto dello storico, letto sul mercato. */
+export const pubblicatoDi = (punto: NonNullable<Radar['storico']>[number]['competenze'][string] | undefined, mercato: Mercato): Quadrant | null | undefined =>
+  mercato === 'italia' ? punto?.pubblicato_it : punto?.pubblicato;
 
 /** La competenza letta sull'Italia: gli stessi campi con i valori italiani. Lo slancio è unico. */
 const sullItalia = (c: RadarRow): CompetenzaNelMercato => ({
@@ -68,7 +72,6 @@ export function competenzeDi(r: Radar, mercato: Mercato = 'tutti'): CompetenzaNe
 }
 
 export function radarRows(r: Radar, mercato: Mercato = 'tutti'): RadarRowM[] {
-  const italia = mercato === 'italia';
   return competenzeDi(r, mercato)
     .filter((c) => c.slancio != null && c.domanda != null && c.quadrante != null)
     .map((c) => {
@@ -88,13 +91,13 @@ export function radarRows(r: Radar, mercato: Mercato = 'tutti'): RadarRowM[] {
         incerto: !!c.incerto, moving: calc && calc !== c.quadrante ? calc : null,
         x, y, px, py, sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
         changed, hasPrev,
-        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => {
-          const punto = p.competenze[c.id];
-          return (italia ? punto?.pubblicato_it : punto?.pubblicato) === 'impara-ora';
-        }),
+        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => pubblicatoDi(p.competenze[c.id], mercato) === 'impara-ora'),
       };
     });
 }
+
+/** Il radar c'è: almeno una competenza sta sul radar con tutti i Paesi. Se il mercato scelto non ne ha nessuna, il radar c'è e l'Italia no. */
+export const radarDisponibile = (r: Radar | undefined): r is Radar => !!r && radarRows(r).length > 0;
 
 /** La riga della pagina di una competenza, letta sul mercato. */
 export interface RigaPagina extends RadarRowM {

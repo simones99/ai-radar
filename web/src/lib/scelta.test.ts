@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { IMPOSTA } from './router';
-import { sceltaRicordata } from './scelta.svelte';
+import { mercatoRicordato, sceltaRicordata } from './scelta.svelte';
 
 beforeEach(() => localStorage.clear());
 
@@ -16,6 +16,14 @@ describe('sceltaRicordata', () => {
     expect(ruolo.ricordato()).toBeNull();
     expect(settore.ricordato()).toBe('ict');
     expect(localStorage.getItem('ai-radar:settore')).toBe('ict');
+  });
+
+  it('il mercato ricordato: un valore che non c’è più vale «Tutti i Paesi», come nessun ricordo', () => {
+    expect(mercatoRicordato()).toBe('tutti');
+    localStorage.setItem('ai-radar:mercato', 'italia');
+    expect(mercatoRicordato()).toBe('italia');
+    localStorage.setItem('ai-radar:mercato', 'francia');
+    expect(mercatoRicordato()).toBe('tutti');
   });
 
   describe('all’apertura della card, tra link e ricordo', () => {

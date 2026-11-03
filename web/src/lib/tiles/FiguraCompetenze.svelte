@@ -2,15 +2,15 @@
   // La figura della card Competenze in home: il radar ridotto ai suoi quattro quadranti, con i punti di tutte le competenze, lette sul mercato ricordato,
   // e i nomi di quelle da imparare ora; chi è appena entrato porta la scia da dove era un mese fa; punto vuoto: dato incerto, contorno tratteggiato: il calcolo dà già un altro quadrante, come nel radar. Decorativa: la notizia è nel testo della card.
   import { scaleLinear } from 'd3-scale';
-  import { mercatoScelto, radarRows, type RadarRowM } from '../data/derive';
+  import { radarRows, type RadarRowM } from '../data/derive';
   import type { Dataset, Quadrant } from '../data/types';
   import { FONT, leader, measureText, placeLabels, type Box } from '../charts/labels';
   import { inImparaOra, riquadriDelRadar } from '../charts/quadranti';
-  import { mercato } from '../scelta.svelte';
+  import { mercatoRicordato } from '../scelta.svelte';
 
   let { data }: { data: Dataset } = $props();
 
-  const rows = $derived(data.radar ? radarRows(data.radar, mercatoScelto(mercato.ricordato())) : []);
+  const rows = $derived(data.radar ? radarRows(data.radar, mercatoRicordato()) : []);
   const quadranti = $derived(data.radar?.quadranti ?? ({ 'impara-ora': 'Impara ora', prova: 'Da provare', consolida: 'Da consolidare', osserva: "Tieni d'occhio" } as Record<Quadrant, string>));
   let cw = $state(0);
   let ch = $state(0);

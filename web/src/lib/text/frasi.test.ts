@@ -5,7 +5,7 @@ import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
   cambio, headBusiness, headCompetenze, headNotizie, headNorme, headPersone, headSkill, tipoLabel,
 } from './frasi';
-import { radarRows } from '../data/derive';
+import { radarRows, rigaPagina } from '../data/derive';
 
 const d = FIXTURE as Dataset;
 const text = (parts: { t: string }[]) => parts.map((p) => p.t).join('');
@@ -67,7 +67,7 @@ describe('numeri chiave delle card', () => {
       expect(faceCompetenze({ radar: { ...d.radar!, versione: undefined } }, today, 'italia')).toBeNull();
     });
     it('il sottotitolo della card regge con nessuna in Impara ora', () => {
-      expect(headCompetenze(conQuadranti({}), today, 'italia').deck).toBe("Oggi nessuna competenza su 5 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
+      expect(headCompetenze(conQuadranti({}), today, { mercato: 'italia' }).deck).toBe("Oggi nessuna competenza su 5 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.");
     });
   });
   it('competenze: nomi plurali, verbo al plurale anche da soli', () => {
@@ -131,14 +131,12 @@ describe('numeri chiave delle card', () => {
     expect(faceCompetenze(senzaCambi, today)?.sent).toBe('2 competenze su 5 da imparare ora; LLMOps sta perdendo slancio (−34%) e può uscirne.');
   });
   it('pagina di una competenza: nome nel titolo, quadrante e movimento nel sottotitolo', () => {
-    const rows = radarRows(d.radar!);
-    const by = (id: string) => rows.find((r) => r.id === id)!;
+    const by = (id: string) => rigaPagina(d.radar!, id)!;
     expect(headSkill(by('mcp'), d.radar!.quadranti)).toEqual({ title: [{ t: 'Model Context Protocol (MCP)' }], deck: 'Impara ora, un mese fa Da consolidare. Lo standard per collegare strumenti.' });
     expect(headSkill(by('vector-db'), d.radar!.quadranti).deck).toBe("Tieni d'occhio, in movimento verso Da provare. Indici.");
   });
   it('pagina di una competenza: sotto la descrizione, per quali ruoli conta, nell’ordine dei ruoli', () => {
-    const rows = radarRows(d.radar!);
-    const by = (id: string) => rows.find((r) => r.id === id)!;
+    const by = (id: string) => rigaPagina(d.radar!, id)!;
     expect(headSkill(by('rag'), d.radar!.quadranti, d.radar!.ruoli).nota).toBe('Conta per: Sviluppo software, Prodotto, Dati e analisi');
     expect(headSkill(by('robotica'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // non conta per nessun ruolo
     expect(headSkill(by('agenti'), d.radar!.quadranti, d.radar!.ruoli)).not.toHaveProperty('nota'); // radar senza il campo ruoli

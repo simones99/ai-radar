@@ -80,7 +80,7 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 
 ## Edizioni, feed e correzioni
 
-Un'**edizione** riassume una settimana: le due porte, le frasi delle card cambiate dalla settimana prima, fino a 3 notizie per tema e le fonti che non hanno risposto. Ogni riga ha fonte, licenza e link alla card. Il testo resta com'è anche quando i dati del sito cambiano: nel file sono salvate le frasi già composte, non i dati da cui derivano.
+Un'**edizione** riassume una settimana: le due porte, le frasi delle card cambiate dalla settimana prima, fino a 3 notizie per tema e le fonti senza dati aggiornati a quel giro. Ogni riga ha fonte, licenza e link alla card. Il testo resta com'è anche quando i dati del sito cambiano: nel file sono salvate le frasi già composte, non i dati da cui derivano.
 
 | Indirizzo | Cosa c'è |
 | --- | --- |

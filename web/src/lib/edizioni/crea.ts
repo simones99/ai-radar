@@ -6,7 +6,7 @@ import {
   doorItalia, doorPerTe, faceBusiness, faceCompetenze, faceGeopoliticai, faceModelli, faceNorme, faceNotizie, faceOpen, facePersone, faceRapporti,
   type Door, type Face,
 } from '../text/frasi';
-import { fontiDi, fontiMute } from './fonti';
+import { fontiDi, fontiNonAggiornate } from './fonti';
 import { notizieDi } from './notizie';
 import { VERSIONE, type CardFissa, type Edizione, type PortaFissa } from './tipi';
 
@@ -80,7 +80,7 @@ export function creaEdizione(d: Dataset, precedente: Edizione | null): Edizione 
     ],
     card: CARD.map((c) => frase(c, d, oggi, precedente)),
     notizie: notizieDi(d),
-    fonti_mute: fontiMute(d),
+    fonti_non_aggiornate: fontiNonAggiornate(d),
     correzioni: [],
   };
 }

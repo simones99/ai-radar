@@ -106,12 +106,12 @@ ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono s
 </section>`;
 }
 
-function fontiMute(e: Edizione): string {
-  if (!e.fonti_mute.length) return '<p class="ed-nota">Tutte le fonti hanno risposto a questo giro.</p>';
-  const righe = e.fonti_mute.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
+/** Una fonte in errore e una non configurata non hanno fatto la stessa cosa, ma a tutte e due mancano i dati di questo giro. */
+function fontiNonAggiornate(e: Edizione): string {
+  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">Tutte le fonti hanno dati aggiornati a questo giro.</p>';
+  const righe = e.fonti_non_aggiornate.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
   return `<section>
-<h2>Fonti che non hanno risposto</h2>
-<p class="ed-nota">Questa settimana i loro dati sono rimasti indietro.</p>
+<h2>Senza dati aggiornati a questo giro</h2>
 <ul class="ed-voci">
 ${righe}
 </ul>
@@ -192,7 +192,7 @@ ${e.porte.map((p) => porta(p, radice)).join('\n')}
 </div>
 ${frasi(e, radice)}
 ${notizie(e, radice)}
-${fontiMute(e)}`;
+${fontiNonAggiornate(e)}`;
 }
 
 const descrizioneEdizione = (e: Edizione): string => e.porte.filter((p) => p.titolo.length).map((p) => `${testoPorta(p)}.`).join(' ');

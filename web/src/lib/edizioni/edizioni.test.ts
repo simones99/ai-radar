@@ -250,15 +250,15 @@ describe('fonte e licenza su ogni riga', () => {
   });
 });
 
-describe('le fonti che non hanno risposto al giro', () => {
+describe('le fonti senza dati aggiornati a questo giro', () => {
   it('sono quelle in errore o non configurate, con il nome che hanno in pagina e l’ultimo successo; un avviso su una fonte aggiornata non conta', () => {
-    expect(crea().fonti_mute).toEqual([
+    expect(crea().fonti_non_aggiornate).toEqual([
       { id: 'arxiv', nome: 'arXiv', ultimo_successo: '2026-10-08T08:00:00+00:00' },
       { id: 'adzuna', nome: 'Adzuna', ultimo_successo: null },
     ]);
   });
-  it('quando rispondono tutte l’elenco è vuoto', () => {
-    expect(crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: { epoch: d.status!.fonti.epoch } } }).fonti_mute).toEqual([]);
+  it('quando sono tutte aggiornate l’elenco è vuoto', () => {
+    expect(crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: { epoch: d.status!.fonti.epoch } } }).fonti_non_aggiornate).toEqual([]);
   });
   it('un’edizione nuova nasce senza correzioni', () => {
     expect(crea().correzioni).toEqual([]);
@@ -537,14 +537,16 @@ describe('la pagina di un’edizione', () => {
     expect(() => file({ ...crea(), versione: 99 })).toThrow(/2026-10-12.*versione 99/);
   });
 
-  it('dice quali fonti non hanno risposto, e l’ultimo dato che hanno dato', () => {
-    const s = sezione(pagina(crea()), 'Fonti che non hanno risposto')!;
+  it('dice quali fonti non hanno dati aggiornati, in errore o non configurate, con una frase vera per tutte e due, e l’ultimo dato che hanno dato', () => {
+    const s = sezione(pagina(crea()), 'Senza dati aggiornati a questo giro')!;
     expect(s.textContent).toContain('arXiv');
     expect(s.textContent).toContain('8 ott 2026');
     expect(s.textContent).toContain('Adzuna');
+    expect(pagina(crea()).body.textContent).not.toMatch(/hanno risposto/);
     const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
-    expect(pagina(tutte).body.textContent).toContain('Tutte le fonti hanno risposto');
-    expect(sezione(pagina(tutte), 'Fonti che non hanno risposto')).toBeUndefined();
+    expect(pagina(tutte).body.textContent).toContain('Tutte le fonti hanno dati aggiornati a questo giro.');
+    expect(pagina(tutte).body.textContent).not.toMatch(/hanno risposto/);
+    expect(sezione(pagina(tutte), 'Senza dati aggiornati a questo giro')).toBeUndefined();
   });
 
   it('è la stessa con la stessa edizione: niente dipende dal momento della build', () => {

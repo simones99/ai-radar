@@ -6,7 +6,7 @@ export interface Destinazione { tema: string; elemento: string | null; params?: 
 
 /** Da dove viene una riga: il nome, l'indirizzo se c'è e la licenza con cui si riusa. */
 export interface Fonte { nome: string; url: string | null; licenza: string }
-export interface FonteMuta { id: string; nome: string; ultimo_successo: string | null }
+export interface FonteNonAggiornata { id: string; nome: string; ultimo_successo: string | null }
 
 export interface VoceFissa { titolo: string; link: string; data: string; fonte: string }
 export interface NotizieFisse {
@@ -58,8 +58,8 @@ export interface Edizione {
   porte: PortaFissa[];
   card: CardFissa[];
   notizie: NotizieFisse;
-  /** Le fonti che non hanno risposto al giro. */
-  fonti_mute: FonteMuta[];
+  /** Le fonti senza dati aggiornati a questo giro: in errore o non configurate. */
+  fonti_non_aggiornate: FonteNonAggiornata[];
   /** Si aggiungono a mano, con un commit: è l'unico modo in cui un'edizione cambia. */
   correzioni: Correzione[];
 }

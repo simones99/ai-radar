@@ -4,7 +4,7 @@ import { nextDeadline, nextReport } from '../data/derive';
 import type { Dataset } from '../data/types';
 import { NOMI_FONTI } from '../text/fonti';
 import { CHI_ADDESTRA } from '../text/geopoliticai';
-import type { Destinazione, Fonte, FonteMuta } from './tipi';
+import type { Destinazione, Fonte, FonteNonAggiornata } from './tipi';
 
 // Chi non pubblica con una licenza aperta si riusa alle sue condizioni: lo diciamo così, senza attribuirgli una licenza che non ha.
 const ARXIV: Fonte = { nome: 'arXiv', url: 'https://arxiv.org', licenza: 'metadati CC0' };
@@ -42,6 +42,6 @@ const TABELLA: Record<string, (d: Dataset, oggi: Date, elemento: string | null) 
 export const fontiDi = (d: Dataset, oggi: Date, dest: Destinazione | null): Fonte[] =>
   dest ? (TABELLA[dest.tema]?.(d, oggi, dest.elemento) ?? []) : [];
 
-/** Le fonti rimaste indietro a questo giro. Un avviso su una fonte aggiornata non conta: la fonte ha risposto. */
-export const fontiMute = (d: Dataset): FonteMuta[] =>
+/** Le fonti senza dati aggiornati a questo giro, in errore o non configurate. Un avviso su una fonte aggiornata non conta: i suoi dati ci sono. */
+export const fontiNonAggiornate = (d: Dataset): FonteNonAggiornata[] =>
   Object.entries(d.status?.fonti ?? {}).filter(([, s]) => s.stato !== 'ok').map(([id, s]) => ({ id, nome: NOMI_FONTI[id] ?? id, ultimo_successo: s.ultimo_successo ?? null }));

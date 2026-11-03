@@ -1,5 +1,5 @@
 // Il feed visto da chi lo legge: l'XML che esce dal modulo Edizioni, letto con un parser.
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
 import { creaEdizione, fileDelSito, type Edizione } from '.';
@@ -103,5 +103,54 @@ describe('una voce del feed', () => {
     const doc = testoIntero();
     expect(doc.querySelector('h1')).toBeNull();
     expect(doc.body.textContent).toMatch(/Questa edizione resta com'è, con i dati raccolti il 15 ott 2026/);
+  });
+
+  describe('il guid', () => {
+    const guid = (testo: string) => leggi(testo).querySelector('item > guid')!;
+
+    it('non è un permalink e ha il formato ai-radar:edizione:AAAA-MM-GG', () => {
+      const g = guid(xml(prima));
+      expect(g.getAttribute('isPermaLink')).toBe('false');
+      expect(g.textContent).toBe('ai-radar:edizione:2026-10-12');
+    });
+
+    it('resta uguale con un altro indirizzo base, mentre il link lo segue', () => {
+      const altrove = fileDelSito([prima], opzioni('https://altrove.example/radar/'))['feed.xml'];
+      expect(guid(altrove).textContent).toBe(guid(xml(prima)).textContent);
+      expect(figlio(leggi(altrove).querySelector('item')!, 'link')?.textContent).toBe('https://altrove.example/radar/edizioni/2026-10-12/');
+    });
+  });
+
+  describe('una correzione', () => {
+    const corretta: Edizione = { ...prima, correzioni: [{ data: '2026-10-20', testo: 'Il dato di Eurostat era quello del 2024.' }] };
+
+    it('si legge dentro la voce, in testa', () => {
+      const doc = testoIntero(corretta);
+      const riga = [...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Corretta'))!;
+      expect(riga.textContent).toBe('Corretta il 20 ott 2026: Il dato di Eurostat era quello del 2024.');
+      expect(riga.compareDocumentPosition(doc.querySelector('article')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('non cambia guid, link, titolo né data della voce: per il lettore è la stessa voce', () => {
+      for (const nome of ['guid', 'link', 'title', 'pubDate']) expect(figlio(voce(corretta), nome)?.textContent).toBe(figlio(voce(), nome)?.textContent);
+    });
+
+    it('senza correzioni la voce non ne parla', () => {
+      expect(testoIntero().body.textContent).not.toContain('Corretta');
+    });
+  });
+});
+
+describe('due build con le stesse edizioni', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('danno lo stesso feed, qualunque sia il momento della build e l’ordine in cui arrivano i file', () => {
+    const adesso = xml(prima, seconda);
+    vi.useFakeTimers({ now: new Date('2031-03-03T10:00:00') });
+    expect(xml(seconda, prima)).toBe(adesso);
+  });
+
+  it('una data di raccolta non valida ferma il sito con un messaggio chiaro: il feed non pubblica una data rotta', () => {
+    expect(() => xml({ ...prima, raccolti: 'ieri' })).toThrow(/2026-10-12.*raccolt.*ieri/i);
   });
 });

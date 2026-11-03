@@ -117,6 +117,7 @@ ${righe}
 
 function controlla(e: Edizione): void {
   if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
+  if (Number.isNaN(Date.parse(e.raccolti))) throw new Error(`Edizione ${e.settimana}: la data di raccolta non è valida, «${e.raccolti}».`);
   for (const c of e.correzioni) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(c.data)) throw new Error(`Edizione ${e.settimana}: una correzione ha una data non valida, «${c.data}»: serve AAAA-MM-GG.`);
   }
@@ -219,6 +220,7 @@ function voceDelFeed(e: Edizione, indirizzoBase: string): string {
   return `<item>
 <title>${esc(titoloPagina(e))}</title>
 <link>${esc(`${indirizzoBase}edizioni/${e.settimana}/`)}</link>
+<guid isPermaLink="false">ai-radar:edizione:${esc(e.settimana)}</guid>
 <pubDate>${new Date(e.raccolti).toUTCString()}</pubDate>
 <description>${esc(descrizioneEdizione(e))}</description>
 <content:encoded>${esc(corpoEdizione(e, indirizzoBase))}</content:encoded>

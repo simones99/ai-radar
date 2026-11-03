@@ -23,7 +23,8 @@ sono le correzioni a un'edizione già uscita.
 | `risorse.json` | Stato settimanale dei link «Per iniziare» delle competenze | Controllo della pipeline |
 | `radar.json` | Radar delle competenze (versione 2: unità vere, soglie fisse, incertezza), calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
-| `edizioni/AAAA-MM-GG.json` | Un'edizione: i testi già composti di una settimana, con il suo lunedì come nome. L'app non la carica: la build ne fa una pagina. Una correzione si fa a mano nel file, aggiungendo a `correzioni` la data e il testo | `npm run edizione`, nel workflow |
+| `edizioni/AAAA-MM-GG.json` | Un'edizione: i testi già composti di una settimana, con il suo lunedì come nome. L'app non la carica: la build ne fa una pagina. Una correzione si fa a mano nel file, aggiungendo a `correzioni` la data e il testo, e poi rifacendo l'immagine | `npm run edizione`, nel workflow |
+| `edizioni/AAAA-MM-GG.png` | L'immagine dell'anteprima di quell'edizione, 1200×630: la build la copia soltanto. Dopo una correzione si rifà con `npm run edizione -- --immagine AAAA-MM-GG`, in `web/` | `npm run edizione`, nel workflow |
 
 I file con storico (arXiv, GitHub, Hugging Face, Adzuna) si
 arricchiscono a ogni raccolta: per questo sono salvati nel repository.

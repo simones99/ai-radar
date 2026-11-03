@@ -36,6 +36,11 @@ jobs:
       - name: Test della pipeline
         run: python -m pytest -q
 
+      # i test del comando dell'edizione ne generano l'immagine
+      - name: Installa Chromium
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
       - name: Test dell'app
         working-directory: web
         run: |

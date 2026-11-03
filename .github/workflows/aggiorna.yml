@@ -71,6 +71,11 @@ jobs:
       - name: Test della pipeline
         run: python -m pytest -q
 
+      # serve ai test del comando dell'edizione, alla creazione della sua immagine e agli end-to-end
+      - name: Installa Chromium
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
       - name: Test dell'app
         working-directory: web
         run: |
@@ -105,9 +110,9 @@ jobs:
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi
 
-      # Il file dell'edizione nasce qui, senza commit: diventa definitivo solo dopo gli end-to-end. Evento e casella li valuta il comando,
-      # che su un push o con il file già presente non fa nulla. Se fallisce, dati e sito proseguono e il job in fondo manda il giro in rosso;
-      # si rimedia con la casella del giro manuale
+      # Il file dell'edizione e la sua immagine nascono qui, senza commit: diventano definitivi solo dopo gli end-to-end. Evento e casella li valuta
+      # il comando, che su un push o con il file già presente non fa nulla. Se fallisce, anche solo per l'immagine, non scrive niente: dati e sito
+      # proseguono e il job in fondo manda il giro in rosso; si rimedia con la casella del giro manuale
       - name: Crea l'edizione
         id: edizione
         continue-on-error: true
@@ -122,11 +127,10 @@ jobs:
 
       - name: Test end-to-end
         working-directory: web
-        run: |
-          npx playwright install --with-deps chromium
-          npm run e2e
+        run: npm run e2e
 
       # dopo gli end-to-end: se falliscono il job si ferma qui, l'edizione non si salva e il sito non esce.
+      # File fisso e immagine stanno nella stessa cartella, ed entrano nello stesso commit.
       # L'autore del commit l'ha già impostato il passo che salva i dati, e senza quel passo (un push) non c'è niente da salvare
       - name: Salva l'edizione nel repository
         if: steps.edizione.outcome == 'success'

@@ -125,8 +125,13 @@ function controlla(e: Edizione): void {
 
 const ICONA = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23121211' stroke-width='4'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%230068d6'/%3E%3C/svg%3E";
 
+/** Il nome dell'immagine di un'edizione nel sito, nella cartella della sua pagina. */
+export const IMMAGINE = 'anteprima.png';
+/** L'immagine fissa della home, con il testo alternativo che ha in index.html: l'archivio non ne ha una propria. */
+const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
+
 /** Lo scheletro comune delle pagine. radice: la radice del sito vista dalla pagina; percorso: la pagina vista dalla radice. */
-function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string }, opzioni: OpzioniSito): string {
+function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniSito): string {
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -135,6 +140,15 @@ function pagina(o: { titolo: string; descrizione: string; percorso: string; radi
 <title>${esc(o.titolo)}</title>
 <meta name="description" content="${esc(o.descrizione)}" />
 <link rel="canonical" href="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
+<meta property="og:title" content="${esc(o.titolo)}" />
+<meta property="og:description" content="${esc(o.descrizione)}" />
+<meta property="og:url" content="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
+<meta property="og:image" content="${esc(`${opzioni.indirizzoBase}${o.immagine.percorso}`)}" />
+<meta property="og:image:alt" content="${esc(o.immagine.alt)}" />
+<meta property="og:type" content="${o.tipo}" />
+<meta property="og:locale" content="it_IT" />
+<meta property="og:site_name" content="AI Radar" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${opzioni.indirizzoBase}feed.xml`)}" />
 <link rel="icon" href="${esc(ICONA)}" />
 <link rel="stylesheet" href="${esc(`${o.radice}${opzioni.foglio}`)}" />
@@ -187,6 +201,11 @@ function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
     nav: `<a href="../">Edizioni</a><a href="${radice}">Dati di oggi</a>`,
     corpo: corpoEdizione(e, radice, `<p class="ed-fonte">Edizione</p>
 <h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`),
+    tipo: 'article',
+    immagine: {
+      percorso: `edizioni/${e.settimana}/${IMMAGINE}`,
+      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${p.titolo.length ? testoPorta(p) : p.meta}.`).join(' ')}`,
+    },
   }, opzioni);
 }
 
@@ -204,6 +223,8 @@ ${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length 
     percorso: 'edizioni/',
     radice: '../',
     nav: '<a href="../">Dati di oggi</a>',
+    tipo: 'website',
+    immagine: IMMAGINE_HOME,
     corpo: `<div class="ed-testa">
 <h1>Edizioni</h1>
 <p class="ed-nota">Il riassunto di ogni settimana. Esce il lunedì e dopo non cambia, salvo correzioni dichiarate.</p>

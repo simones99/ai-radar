@@ -89,7 +89,7 @@
             <Radar {rows} {quadranti} {mercato} highlight={hovered} {delRuolo} label={italia ? 'Radar delle competenze in Italia con il movimento dall’ultimo mese' : undefined} href={(id) => toHash('competenze', id, params)} onpick={(id) => apri('competenze', id)} />
             {#if italia}<p class="legenda">La crescita è mondiale, la domanda è italiana.</p>{/if}
             <p class="legenda">Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo.</p>
-            <p class="legenda">Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.</p>
+            <p class="legenda">Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni{italia ? '' : ', nel Paese a metà classifica'}.</p>
           </div>
           <div class="mov">
             <h4>Movimenti {meseMovimenti ? `di ${monthName(meseMovimenti)}` : 'del mese'}</h4>

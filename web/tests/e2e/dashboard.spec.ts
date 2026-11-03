@@ -595,7 +595,7 @@ test('pagina di una competenza a 320px: niente scorrimento orizzontale, e le eti
     await page.goto(`/${hash}`);
     await page.reload();
     const annunci = page.getByRole('region', { name: 'Annunci' });
-    const etichetta = annunci.getByRole('img', { name: 'Annunci su MCP ogni 10mila' }).getByText('Paese a metà classifica');
+    const etichetta = annunci.getByRole('img', { name: /^Annunci su MCP ogni 10mila/ }).getByText('Paese a metà classifica');
     await expect(etichetta).toBeVisible();
     expect(await noHorizontalScroll(page), hash).toBe(true);
     const scheda = (await annunci.boundingBox())!;
@@ -603,6 +603,27 @@ test('pagina di una competenza a 320px: niente scorrimento orizzontale, e le eti
     expect(testo.x + testo.width, hash).toBeLessThanOrEqual(scheda.x + scheda.width);
   }
 });
+
+for (const { nome, hash, evidenza, altra } of [
+  { nome: 'Tutti i Paesi', hash: '#competenze/mcp', evidenza: 'Paese a metà classifica', altra: /^Italia/ },
+  { nome: 'Italia', hash: '#competenze/mcp?mercato=italia', evidenza: /^Italia/, altra: 'Paese a metà classifica' },
+]) {
+  test(`grafico Annunci con «${nome}»: il colore in evidenza va sul mercato scelto`, async ({ page }) => {
+    await page.goto(`/${hash}`);
+    const grafico = page.getByRole('region', { name: 'Annunci' }).getByRole('img', { name: /^Annunci su MCP ogni 10mila/ });
+    const colore = (testo: string | RegExp) => grafico.getByText(testo).evaluate((el) => getComputedStyle(el).fill);
+    const blu = await page.evaluate(() => {
+      const prova = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      prova.style.fill = 'var(--accent)';
+      document.body.append(prova);
+      const fill = getComputedStyle(prova).fill;
+      prova.remove();
+      return fill;
+    });
+    expect(await colore(evidenza)).toBe(blu);
+    expect(await colore(altra)).not.toBe(blu);
+  });
+}
 
 for (const colorScheme of ['light', 'dark'] as const) {
   test(`accessibilità nella pagina di una competenza con «Italia», tema ${colorScheme}: nessuna violazione grave`, async ({ page }) => {

@@ -277,6 +277,11 @@ describe('Competenze: il mercato', () => {
       show(CompetenzeDetail, tile, null, { mercato: 'italia' });
       expect(screen.getByText('La crescita è mondiale, la domanda è italiana.')).toBeInTheDocument();
     });
+    it('con «Italia» la riga sul metodo non parla del Paese a metà classifica', () => {
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      expect(screen.getByText('Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni.')).toBeInTheDocument();
+      expect(screen.queryByText(/^Da novembre 2026.*Paese a metà classifica/)).toBeNull();
+    });
     it('un solo annuncio si dice al singolare', () => {
       apri(conItalia((id) => (id === 'mcp' ? { annunci_it: 1 } : {})));
       expect(riga('Le competenze una per una', 'Model Context Protocol (MCP)')[3]).toBe('2,6 ogni 10mila, 1 annuncio');

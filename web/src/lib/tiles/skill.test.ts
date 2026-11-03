@@ -98,7 +98,7 @@ describe('La pagina di una competenza segue il mercato', () => {
     it(`il grafico Annunci chiama le serie «Paese a metà classifica» e «Italia» e mostra le stesse rilevazioni ${params === italia ? 'con «Italia»' : 'con «Tutti i Paesi»'}`, () => {
       pagina('mcp', params);
       const annunci = screen.getByRole('region', { name: 'Annunci' });
-      const grafico = within(annunci).getByRole('img', { name: 'Annunci su MCP ogni 10mila' });
+      const grafico = within(annunci).getByRole('img', { name: params === italia ? 'Annunci su MCP ogni 10mila, in evidenza l’Italia' : 'Annunci su MCP ogni 10mila' });
       expect(grafico).toHaveTextContent('Paese a metà classifica 3,4');
       expect(grafico).toHaveTextContent('Italia 2,6');
       const tabella = within(annunci).getByRole('table');
@@ -107,6 +107,11 @@ describe('La pagina di una competenza segue il mercato', () => {
       expect(annunci).toHaveTextContent('Il numero in evidenza in Domanda è la mediana delle ultime 4 rilevazioni.');
     });
   }
+  it('con «Italia» ma senza rilevazioni italiane il grafico Annunci non dice un’evidenza che non c’è', () => {
+    const senzaItalia = conCompetenza('mcp', { segnali: { lavoro: { rilevazioni: [{ data: '2026-09-14', mediana: 3.1, it: null }, { data: '2026-10-12', mediana: 3.4, it: null }] } } });
+    pagina('mcp', italia, senzaItalia);
+    expect(within(screen.getByRole('region', { name: 'Annunci' })).getByRole('img', { name: 'Annunci su MCP ogni 10mila' })).not.toHaveTextContent('Italia');
+  });
   it('il percorso sul radar e il titolo usano i quadranti del mercato scelto', () => {
     const { unmount } = pagina('mcp');
     const percorso = () => within(screen.getByRole('list', { name: 'Il percorso sul radar' })).getAllByRole('listitem').map((li) => li.textContent);

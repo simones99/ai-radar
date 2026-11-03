@@ -37,9 +37,11 @@
   const ril = $derived(seg.lavoro?.rilevazioni ?? []);
   const paper = $derived<Series[]>([{ name: row.breve, hot: true, pts: paperM.flatMap((m, i) => (m.totale ? [{ x: i, y: (1000 * m.n) / m.totale }] : [])) }]);
   const repo = $derived<Series[]>([{ name: row.breve, hot: true, pts: repoM.flatMap((m, i) => (m.base ? [{ x: i, y: (1000 * m.n) / m.base }] : [])) }]);
+  const conItalia = $derived(ril.some((r) => r.it != null));
+  const evidenzaItalia = $derived(italia && conItalia); // l'evidenza va sul mercato scelto, se ha una linea
   const annunci = $derived<Series[]>([
-    { name: 'Paese a metà classifica', hot: true, pts: ril.map((r, i) => ({ x: i, y: r.mediana })) },
-    ...(ril.some((r) => r.it != null) ? [{ name: 'Italia', pts: ril.flatMap((r, i) => (r.it == null ? [] : [{ x: i, y: r.it }])) }] : []),
+    { name: 'Paese a metà classifica', hot: !evidenzaItalia, pts: ril.map((r, i) => ({ x: i, y: r.mediana })) },
+    ...(conItalia ? [{ name: 'Italia', hot: evidenzaItalia, pts: ril.flatMap((r, i) => (r.it == null ? [] : [{ x: i, y: r.it }])) }] : []),
   ]);
   const percorso = $derived(storico.flatMap((p) => {
     const q = pubblicatoDi(p.competenze[row.id], mercato);
@@ -85,7 +87,7 @@
 <Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila a ogni rilevazione: il Paese a metà classifica e l’Italia. Il numero in evidenza in Domanda è la mediana delle ultime 4 rilevazioni." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
   missing={ril.length < 2 ? 'Serve un mese di rilevazioni.' : null}
   table={{ cols: ['Rilevazione', 'Paese a metà classifica', 'Italia'], rows: ril.map((r) => [r.data, r.mediana, r.it ?? '—']) }}>
-  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
+  <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila{evidenzaItalia ? ', in evidenza l’Italia' : ''}" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
 </Block>
 
 <Block span={12} title="Il percorso sul radar" note="Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo."

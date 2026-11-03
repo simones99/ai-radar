@@ -92,6 +92,52 @@ describe('il comando che fissa l’edizione', { timeout: 60_000 }, () => {
     });
   });
 
+  describe('dopo una correzione, un comando rigenera l’immagine', () => {
+    const ALTRA = '2026-10-05';
+    const rigenera = (settimana: string, ambiente: Record<string, string> = {}) =>
+      spawnSync(process.execPath, ['scripts/edizione.mjs', '--immagine', settimana], { env: { ...process.env, AI_RADAR_DATA_DIR: dati, ...ambiente }, encoding: 'utf-8' });
+    const correggi = () => {
+      const e = leggi();
+      writeFileSync(fissa(), JSON.stringify({ ...e, porte: [{ ...e.porte[0], titolo: [{ t: 'Una porta corretta a mano' }] }, e.porte[1]], correzioni: [{ data: '2026-10-14', testo: 'La porta era sbagliata.' }] }));
+    };
+
+    beforeEach(() => {
+      lancia('schedule');
+      writeFileSync(join(edizioni(), `${ALTRA}.json`), JSON.stringify({ ...leggi(), settimana: ALTRA }));
+      writeFileSync(join(edizioni(), `${ALTRA}.png`), 'l’immagine dell’altra edizione');
+    });
+
+    it('mostra il testo corretto e non tocca né il file fisso né le altre edizioni', () => {
+      const vecchia = readFileSync(immagine());
+      correggi();
+      const fissi = readFileSync(fissa(), 'utf-8');
+      const altra = readFileSync(join(edizioni(), `${ALTRA}.json`), 'utf-8');
+      const giro = rigenera(SETTIMANA);
+      expect(giro.stderr).toBe('');
+      expect(giro.status).toBe(0);
+      expect(readFileSync(immagine()).equals(vecchia)).toBe(false);
+      expect(misurePng(immagine())).toEqual([1200, 630]);
+      expect(readFileSync(fissa(), 'utf-8')).toBe(fissi);
+      expect(readFileSync(join(edizioni(), `${ALTRA}.json`), 'utf-8')).toBe(altra);
+      expect(readFileSync(join(edizioni(), `${ALTRA}.png`), 'utf-8')).toBe('l’immagine dell’altra edizione');
+      expect(readdirSync(edizioni()).sort()).toEqual([`${ALTRA}.json`, `${ALTRA}.png`, `${SETTIMANA}.json`, `${SETTIMANA}.png`]);
+    });
+
+    it('un’edizione che non esiste è un errore, e non crea niente', () => {
+      const giro = rigenera('2026-09-07');
+      expect(giro.status).toBe(1);
+      expect(giro.stderr).toMatch(/2026-09-07/);
+      expect(existsSync(join(edizioni(), '2026-09-07.png'))).toBe(false);
+    });
+
+    it('se l’immagine nuova non si può fare, resta quella di prima', () => {
+      const vecchia = readFileSync(immagine());
+      correggi();
+      expect(rigenera(SETTIMANA, { PLAYWRIGHT_BROWSERS_PATH: join(dati, 'nessun-browser') }).status).toBe(1);
+      expect(readFileSync(immagine()).equals(vecchia)).toBe(true);
+    });
+  });
+
   it('se il file fisso non si può scrivere non resta l’immagine da sola', () => {
     mkdirSync(join(edizioni(), `${SETTIMANA}.json.tmp`), { recursive: true }); // al suo posto c'è una cartella: la scrittura fallisce
     expect(lancia('schedule').status).toBe(1);

@@ -54,6 +54,14 @@ export function scriviSito({ dati, uscita, indirizzoBase, htmlHome }: { dati: st
   }
 }
 
+/** Rifà l'immagine di un'edizione già uscita, dopo una correzione: non tocca il file fisso né le altre edizioni. */
+export async function rifaiImmagine({ settimana, dati, fotografa }: { settimana: string; dati: string; fotografa: Giro['fotografa'] }): Promise<string> {
+  const fissa = join(dati, 'edizioni', `${settimana}.json`);
+  if (!existsSync(fissa)) throw new Error(`Immagine non rifatta: non c'è un'edizione del ${settimana}.`);
+  scrivi(fileImmagine(dati, settimana), await fotografa(JSON.parse(readFileSync(fissa, 'utf-8')) as Edizione));
+  return `Immagine dell'edizione del ${settimana} rifatta.`;
+}
+
 export interface Giro {
   evento: string;
   casella: boolean;

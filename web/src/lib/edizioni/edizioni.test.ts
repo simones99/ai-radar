@@ -376,7 +376,7 @@ describe('la pagina di un’edizione', () => {
       expect(titoli(doc)).not.toContain('Cambiato dalla settimana scorsa');
       const righe = sezione(doc, 'La situazione')!.textContent;
       for (const c of crea().card.filter((x) => x.id !== 'notizie')) expect(righe).toContain(c.frase);
-      expect(sezione(doc, 'Notizie')!.textContent).toContain('2 notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.');
+      expect(sezione(doc, 'Notizie')!.textContent).toContain('2 Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.');
     });
     it('non dice «Nessun cambio» accanto alle porte', () => {
       expect(pagina(crea()).body.textContent).not.toContain('Nessun cambio qui');
@@ -453,7 +453,15 @@ describe('la pagina di un’edizione', () => {
     it('una settimana senza notizie lo dice, senza temi', () => {
       const s = sezione(pagina(crea({ ...d, news: { ...d.news!, notizie: [] } })), 'Notizie')!;
       expect(s.textContent).toContain('Nessuna notizia nei 7 giorni fino al 15 ott 2026.');
+      expect(s.textContent).not.toContain('0 Nessuna');
       expect(s.querySelector('h3')).toBeNull();
+    });
+    it('il conteggio è la frase salvata nel file fisso: una correzione a quella frase si vede', () => {
+      const e = crea();
+      const corretta = { ...e, card: e.card.map((c) => (c.id === 'notizie' ? { ...c, cifra: '3', frase: 'Notizie corrette a mano, da 3 fonti.' } : c)) };
+      const t = sezione(pagina(corretta), 'Notizie')!.textContent;
+      expect(t).toContain('3 Notizie corrette a mano, da 3 fonti.');
+      expect(t).not.toContain('nei 7 giorni');
     });
     it('senza il file delle notizie dice «Dati non disponibili»', () => {
       expect(sezione(pagina(crea({ ...d, news: undefined })), 'Notizie')!.textContent).toContain('Dati non disponibili');

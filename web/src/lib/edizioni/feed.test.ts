@@ -92,6 +92,12 @@ describe('una voce del feed', () => {
     expect([...doc.querySelectorAll('a')].find((a) => a.textContent === 'The Adzuna API')?.getAttribute('href')).toMatch(/^https:/);
   });
 
+  it('il conteggio delle notizie è la frase salvata nel file fisso: una correzione a quella frase si vede anche qui', () => {
+    expect(testoIntero().body.textContent).toContain('2 Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.');
+    const corretta = { ...prima, card: prima.card.map((c) => (c.id === 'notizie' ? { ...c, cifra: '3', frase: 'Notizie corrette a mano, da 3 fonti.' } : c)) };
+    expect(testoIntero(corretta).body.textContent).toContain('3 Notizie corrette a mano, da 3 fonti.');
+  });
+
   it('i link alle card sono assoluti e seguono l’indirizzo base: nel lettore non c’è una pagina da cui partire', () => {
     const doc = testoIntero();
     expect([...doc.querySelectorAll('a')].find((a) => a.textContent === 'Norme')?.getAttribute('href')).toBe(`${BASE}#norme`);

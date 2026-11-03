@@ -90,17 +90,17 @@ ${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDat
 
 function notizie(e: Edizione, radice: string): string {
   const n = e.notizie;
-  const frase = e.card.find((c) => c.id === 'notizie')?.frase;
-  const conteggio = !frase ? 'Dati non disponibili.'
-    : !n.numero ? frase
-    : `${n.numero} ${n.numero === 1 ? 'notizia' : 'notizie'} ${n.periodo}, da ${n.fonti} ${n.fonti === 1 ? 'fonte' : 'fonti'}.`;
+  const card = e.card.find((c) => c.id === 'notizie');
+  // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
+  const cifra = card?.cifra && card.cifra !== '0' ? `<strong class="ed-cifra">${esc(card.cifra)}</strong> ` : '';
+  const conteggio = card?.frase ? `${cifra}${esc(card.frase)}` : 'Dati non disponibili.';
   const temi = n.temi.map((t) => `<h3>${esc(t.nome)}</h3>
 <ul class="ed-voci">
 ${t.voci.map((v) => `<li>${linkEsterno(v.link, v.titolo)} <span class="ed-fonte">${esc(v.fonte)} · ${esc(day(v.data))}</span></li>`).join('\n')}
 </ul>`).join('\n');
   return `<section>
 <h2>Notizie</h2>
-<p>${esc(conteggio)}</p>
+<p>${conteggio}</p>
 ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono solo titolo, data e link all'articolo originale, nella sua lingua.</p>\n${temi}` : ''}
 <p><a href="${esc(`${radice}${toHash('notizie')}`)}">Le altre notizie, nella card Notizie</a></p>
 </section>`;

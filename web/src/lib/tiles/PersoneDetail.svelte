@@ -35,9 +35,16 @@
   const giovani = $derived(dots('uso_genai_giovani_ue'));
   const dev = $derived(owidPoints(o, 'sviluppatori_ai', 'World').map((p) => ({ k: p.t, v: p.v })));
   const annunci = $derived(lines('annunci_ai', ['United States', 'Italy', 'Germany', 'France', 'Spain', 'United Kingdom']));
-  const jobs = $derived(data.radar
-    ? radarRows(data.radar).sort((a, b) => a.domanda - b.domanda).slice(-10).map((r) => ({ k: r.breve, v: r.domanda }))
-    : []);
+  const competenze = $derived(data.radar ? radarRows(data.radar) : []);
+  // Le 10 più cercate in Italia, dalla prima. Questa card guarda l'Italia: il mercato scelto in Competenze qui non conta.
+  const jobs = $derived(competenze
+    .flatMap((r) => (r.domanda_it == null ? [] : [{ k: r.breve, v: r.domanda_it, annunci: r.annunci_it ?? '—', metaClassifica: r.domanda }]))
+    .sort((a, b) => b.v - a.v)
+    .slice(0, 10));
+  // Senza la chiave non c'è un annuncio in nessun Paese; senza l'Italia gli altri Paesi ci sono.
+  const jobsMissing = $derived(jobs.length ? null
+    : competenze.length ? 'Mancano i dati italiani: le rilevazioni recenti di Adzuna non comprendono l’Italia.'
+    : 'Serve la chiave gratuita di Adzuna (ADZUNA_APP_ID e ADZUNA_APP_KEY nei secret del repository).');
 </script>
 
 <Detail {tile} {head} {onclose}>
@@ -57,9 +64,10 @@
   <Block title="Annunci di lavoro che chiedono l'AI" note="Quota degli annunci online che chiedono competenze AI, %. Valori esatti nella tabella." missing={annunci.length ? null : MISSING} cite={owidCite(s('annunci_ai'))} table={{ ...seriesTable(annunci, 'Anno'), format: exact }}>
     <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={pctF} xFormat={quando} />
   </Block>
-  <Block title="Competenze più chieste negli annunci" note="Annunci che citano la competenza ogni 10.000, nel Paese a metà classifica."
-    missing={jobs.length ? null : 'Serve la chiave gratuita di Adzuna (ADZUNA_APP_ID e ADZUNA_APP_KEY nei secret del repository).'}
-    cite={[{ t: 'Fonte: ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }, { t: '.' }]} table={barsTable(jobs, ['Competenza', 'Ogni 10.000 annunci'])}>
-    <Bars label="Competenze più chieste negli annunci" data={jobs} format={(v) => nf(v, 1)} />
+  <Block title="Competenze più chieste negli annunci" note="Annunci in Italia che citano la competenza ogni 10mila, mediana delle ultime 4 rilevazioni."
+    missing={jobsMissing}
+    cite={[{ t: 'Fonte: ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }, { t: '.' }]}
+    table={{ cols: ['Competenza', 'Italia', 'Annunci in Italia', 'Paese a metà classifica'], rows: jobs.map((j) => [j.k, j.v, j.annunci, j.metaClassifica]) }}>
+    <Bars label="Competenze più chieste negli annunci" data={[...jobs].reverse()} format={(v) => nf(v, 1)} />
   </Block>
 </Detail>

@@ -4,6 +4,23 @@ export const VERSIONE = 1;
 
 export interface Destinazione { tema: string; elemento: string | null; params?: Record<string, string> }
 
+/** Da dove viene una riga: il nome, l'indirizzo se c'è e la licenza con cui si riusa. */
+export interface Fonte { nome: string; url: string | null; licenza: string }
+export interface FonteMuta { id: string; nome: string; ultimo_successo: string | null }
+
+export interface VoceFissa { titolo: string; link: string; data: string; fonte: string }
+export interface NotizieFisse {
+  /** Le notizie della settimana, non solo quelle scelte. */
+  numero: number;
+  periodo: string;
+  /** Le fonti distinte tra le notizie della settimana. */
+  fonti: number;
+  regola: string;
+  temi: { tema: string; nome: string; voci: VoceFissa[] }[];
+}
+
+export interface Correzione { data: string; testo: string }
+
 export interface PortaFissa {
   id: 'per-te' | 'italia';
   nome: string;
@@ -12,6 +29,7 @@ export interface PortaFissa {
   nota?: string;
   meta: string;
   destinazione: Destinazione | null;
+  fonti: Fonte[];
   /** Diversa dall'edizione precedente. Nella prima edizione è sempre vera: non c'è confronto, e si mostra tutto. */
   cambiata: boolean;
 }
@@ -24,6 +42,7 @@ export interface CardFissa {
   unita: string | null;
   frase: string | null;
   destinazione: Destinazione;
+  fonti: Fonte[];
   /** Come per le porte. Notizie è sempre falsa: il suo conteggio apre la sezione delle notizie. */
   cambiata: boolean;
 }
@@ -38,4 +57,9 @@ export interface Edizione {
   precedente: string | null;
   porte: PortaFissa[];
   card: CardFissa[];
+  notizie: NotizieFisse;
+  /** Le fonti che non hanno risposto al giro. */
+  fonti_mute: FonteMuta[];
+  /** Si aggiungono a mano, con un commit: è l'unico modo in cui un'edizione cambia. */
+  correzioni: Correzione[];
 }

@@ -6,6 +6,8 @@ import {
   doorItalia, doorPerTe, faceBusiness, faceCompetenze, faceGeopoliticai, faceModelli, faceNorme, faceNotizie, faceOpen, facePersone, faceRapporti,
   type Door, type Face,
 } from '../text/frasi';
+import { fontiDi, fontiMute } from './fonti';
+import { notizieDi } from './notizie';
 import { VERSIONE, type CardFissa, type Edizione, type PortaFissa } from './tipi';
 
 // La vista di partenza: nessun ruolo, «Tutti i Paesi», nessun settore. Non passa da tiles/registry, che legge le scelte ricordate.
@@ -31,13 +33,15 @@ const stessaPorta = (a: PortaFissa, b: PortaFissa): boolean =>
 const stessaCard = (a: CardFissa, b: CardFissa): boolean =>
   a.frase === b.frase && (a.id === 'norme' || (a.cifra === b.cifra && a.unita === b.unita));
 
-function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, precedente: Edizione | null): PortaFissa {
+function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, d: Dataset, oggi: Date, precedente: Edizione | null): PortaFissa {
+  const destinazione = p.target && { tema: p.target.tema, elemento: p.target.elemento, ...(p.target.params && { params: p.target.params }) };
   const fissa: PortaFissa = {
     id, nome, etichetta,
     titolo: p.title,
     ...(p.nota && { nota: p.nota }),
     meta: p.meta,
-    destinazione: p.target && { tema: p.target.tema, elemento: p.target.elemento, ...(p.target.params && { params: p.target.params }) },
+    destinazione,
+    fonti: fontiDi(d, oggi, destinazione),
     cambiata: true,
   };
   const prima = precedente?.porte.find((x) => x.id === id);
@@ -46,7 +50,8 @@ function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, p
 
 function frase(c: (typeof CARD)[number], d: Dataset, oggi: Date, precedente: Edizione | null): CardFissa {
   const f = c.face(d, oggi);
-  const fissa: CardFissa = { id: c.id, nome: c.nome, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione: { tema: c.id, elemento: null }, cambiata: true };
+  const destinazione = { tema: c.id, elemento: null };
+  const fissa: CardFissa = { id: c.id, nome: c.nome, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione), cambiata: true };
   // la frase di Notizie contiene la data e cambierebbe sempre: il suo conteggio apre la sezione delle notizie
   if (c.id === 'notizie') return { ...fissa, cambiata: false };
   const prima = precedente?.card.find((x) => x.id === c.id);
@@ -70,9 +75,12 @@ export function creaEdizione(d: Dataset, precedente: Edizione | null): Edizione 
     raccolti,
     precedente: precedente?.settimana ?? null,
     porte: [
-      porta('per-te', 'Per te', 'Su cosa formarti', perTe, precedente),
-      porta('italia', 'Per la tua organizzazione', "L'AI in Italia", italia, precedente),
+      porta('per-te', 'Per te', 'Su cosa formarti', perTe, d, oggi, precedente),
+      porta('italia', 'Per la tua organizzazione', "L'AI in Italia", italia, d, oggi, precedente),
     ],
     card: CARD.map((c) => frase(c, d, oggi, precedente)),
+    notizie: notizieDi(d),
+    fonti_mute: fontiMute(d),
+    correzioni: [],
   };
 }

@@ -140,8 +140,8 @@ test('una riga porta alla sua card, e la testata torna alla home', async ({ page
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Su cosa formarti');
 });
 
-for (const [nome, indirizzo] of [['un’edizione', PRIMA], ['l’archivio', ARCHIVIO]] as const) {
-  test(`il feed si trova partendo da ${nome}: il link «Segui con RSS» si vede anche a 320 px e apre /feed.xml, senza JavaScript`, async ({ browser, request }) => {
+for (const [nome, indirizzo] of [['da un’edizione', PRIMA], ['dall’archivio', ARCHIVIO]] as const) {
+  test(`il feed si trova partendo ${nome}: il link «Segui con RSS» si vede anche a 320 px e apre /feed.xml, senza JavaScript`, async ({ browser, request }) => {
     const contesto = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 320, height: 640 } });
     const page = await contesto.newPage();
     await serviEdizioni(page, request);

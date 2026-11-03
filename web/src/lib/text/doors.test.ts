@@ -228,8 +228,139 @@ describe('porta Per te con un ruolo', () => {
   });
 });
 
+describe('porta Per te con il mercato', () => {
+  const RUOLI = [{ id: 'prodotto', nome: 'Prodotto' }, { id: 'dati', nome: 'Dati e analisi' }];
+  // Su tutti i Paesi queste competenze non fanno notizia e hanno pochi annunci: chi dice altro legge i campi italiani
+  const quiete = { quadrante: 'osserva', quadrante_calcolato: 'osserva', slancio: 0.5, domanda: 0.1 } as const;
+  const inItalia = (rows: Partial<Radar['competenze'][number]>[]): Dataset => ({
+    radar: { ...radar(rows.map((r) => ({ ...quiete, domanda_it: 5, quadrante_it: 'osserva', quadrante_calcolato_it: 'osserva', ...r }))).radar!, ruoli: RUOLI },
+  });
+
+  describe('senza scelta o con un valore sconosciuto: come con «Tutti i Paesi», e la nota sull’Italia resta', () => {
+    for (const m of [undefined, null, 'tutti', 'francia']) {
+      it(String(m), () => {
+        const p = doorPerTe(conMcp(2.602), today, null, m);
+        expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
+        expect(p.nota).toBe('MCP: in Italia 2,6 annunci ogni 10mila, sotto soglia');
+        expect(p).not.toHaveProperty('scelta');
+        expect(p.target).toStrictEqual({ tema: 'competenze', elemento: null });
+      });
+    }
+  });
+
+  describe('con «Italia» tutte le regole leggono le righe italiane', () => {
+    it('1. chi esce in Italia', () => {
+      const p = doorPerTe(d, today, null, 'italia');
+      expect(text(p.title)).toBe('RAG esce da Impara ora');
+      expect(p.target).toEqual({ tema: 'competenze', elemento: 'rag', params: { mercato: 'italia' } });
+    });
+    it('1. chi entra in Italia, e la nota sparisce anche sotto soglia: la vista Italia ha già i suoi quadranti', () => {
+      const entra = inItalia([{ quadrante_it: 'impara-ora', domanda_it: 2.6, slancio_prec: 0.3, quadrante_prec_it: 'consolida' }]);
+      const p = doorPerTe(entra, today, null, 'italia');
+      expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
+      expect(p).not.toHaveProperty('nota');
+    });
+    it('2. un altro cambio di quadrante', () => {
+      const p = doorPerTe(inItalia([{ quadrante_it: 'prova', slancio_prec: 0.3, quadrante_prec_it: 'osserva' }]), today, null, 'italia');
+      expect(text(p.title)).toBe('C0 passa a Da provare');
+    });
+    it('2. un cambio sotto i 3 annunci italiani non fa notizia', () => {
+      const p = doorPerTe(inItalia([{ quadrante_it: 'prova', domanda_it: 2.9, slancio: 0.7, slancio_prec: 0.3, quadrante_prec_it: 'osserva' }]), today, null, 'italia');
+      expect(text(p.title)).toBe('C0 ha più annunci di tutte: 2,9 ogni 10mila');
+    });
+    it('3. lo spostamento più grande, sulla domanda italiana', () => {
+      const p = doorPerTe(inItalia([{ domanda_it: 46, slancio_prec: 0.5, domanda_prec_it: 5.9, quadrante_prec_it: 'osserva' }]), today, null, 'italia');
+      expect(text(p.title)).toBe('Domanda di C0 da 5,9 a 46 annunci ogni 10mila');
+    });
+    it('4. la competenza con più slancio, tra quelle cercate in Italia', () => {
+      const p = doorPerTe(inItalia([{ slancio: 0.9, domanda: 0.9, domanda_it: 1 }, { slancio: 0.7 }]), today, null, 'italia');
+      expect(text(p.title)).toMatch(/^C1 cresce più di tutte: /);
+    });
+    it('5. riserva: la competenza con più annunci in Italia', () => {
+      const p = doorPerTe(inItalia([{ domanda: 0.9, domanda_it: 1 }, { domanda_it: 46 }]), today, null, 'italia');
+      expect(text(p.title)).toBe('C1 ha più annunci di tutte: 46 ogni 10mila');
+    });
+    it('5. riserva: quante da imparare ora in Italia, se la più cercata è incerta', () => {
+      const p = doorPerTe(inItalia([{ incerto: true, domanda_it: 46 }, { quadrante_it: 'impara-ora' }, {}]), today, null, 'italia');
+      expect(text(p.title)).toBe('1 competenza su 3 da imparare ora');
+    });
+    it('una competenza senza dato italiano non fa notizia e non si conta', () => {
+      const p = doorPerTe(inItalia([{ incerto: true, domanda_it: 46 }, { quadrante_it: 'impara-ora' }, { domanda_it: null, quadrante_it: null, quadrante_calcolato_it: null }]), today, null, 'italia');
+      expect(text(p.title)).toBe('1 competenza su 2 da imparare ora');
+    });
+  });
+
+  describe('etichetta e link dicono la scelta', () => {
+    it('Per te · Italia', () => {
+      const p = doorPerTe(d, today, null, 'italia');
+      expect(p.scelta).toBe('Italia');
+      expect(p.target?.params).toEqual({ mercato: 'italia' });
+    });
+    it('Per te · Prodotto · Italia: il link porta tutti e due, e le regole leggono le competenze del ruolo in Italia', () => {
+      const r = inItalia([
+        { quadrante_it: 'prova', slancio_prec: 0.3, quadrante_prec_it: 'osserva', ruoli: ['dati'] },
+        { quadrante_it: 'consolida', slancio_prec: 0.3, quadrante_prec_it: 'osserva', ruoli: ['prodotto'] },
+      ]);
+      const p = doorPerTe(r, today, 'prodotto', 'italia');
+      expect(text(p.title)).toBe('C1 passa a Da consolidare');
+      expect(p.scelta).toBe('Prodotto · Italia');
+      expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1', params: { mercato: 'italia', ruolo: 'prodotto' } });
+    });
+    it('un ruolo sconosciuto: solo l’Italia', () => {
+      const p = doorPerTe(d, today, 'boh', 'italia');
+      expect(p.scelta).toBe('Italia');
+      expect(p.target?.params).toEqual({ mercato: 'italia' });
+    });
+  });
+
+  describe('con una sola competenza in Impara ora e con nessuna: mai una frase sbagliata o vuota', () => {
+    // la più cercata è incerta: si arriva al conteggio della riserva
+    const conteggio = (rows: Partial<Radar['competenze'][number]>[]) => inItalia([{ incerto: true, domanda_it: 46, ruoli: [] }, ...rows]);
+    const f = { quadrante_it: 'osserva' } as const, h = { quadrante_it: 'impara-ora' } as const;
+    it('senza ruolo', () => {
+      expect(text(doorPerTe(conteggio([h, f]), today, null, 'italia').title)).toBe('1 competenza su 3 da imparare ora');
+      expect(text(doorPerTe(conteggio([f, f]), today, null, 'italia').title)).toBe('Nessuna competenza su 3 da imparare ora');
+    });
+    it('nessuna, anche su tutti i Paesi', () => {
+      const p = doorPerTe(radar([{ quadrante: 'osserva', incerto: true, slancio: 0.2, domanda: 0.9 }, { quadrante: 'osserva', slancio: 0.2, domanda: 0.2 }]), today);
+      expect(text(p.title)).toBe('Nessuna competenza su 2 da imparare ora');
+      expect(p.title[0]).toEqual({ t: 'Nessuna competenza su 2', em: true });
+    });
+    it('con un ruolo', () => {
+      const delRuolo = (q: typeof f | typeof h) => ({ ...q, ruoli: ['prodotto'] });
+      const porta = (...rows: Partial<Radar['competenze'][number]>[]) => text(doorPerTe(inItalia(rows), today, 'prodotto', 'italia').title);
+      expect(porta(delRuolo(h), delRuolo(f))).toBe('1 delle 2 competenze di Prodotto da imparare ora');
+      expect(porta(delRuolo(f), delRuolo(f))).toBe('Nessuna delle 2 competenze di Prodotto da imparare ora');
+      expect(porta(delRuolo(h))).toBe("L'unica competenza di Prodotto da imparare ora");
+      expect(porta(delRuolo(f))).toBe('Nessuna competenza di Prodotto da imparare ora');
+    });
+    it('il ruolo non ha nessuna competenza con il dato italiano', () => {
+      const senza = { domanda_it: null, quadrante_it: null, quadrante_calcolato_it: null, ruoli: ['prodotto'] };
+      const p = doorPerTe(inItalia([senza, { ruoli: ['dati'] }]), today, 'prodotto', 'italia');
+      expect(text(p.title)).toBe('Nessuna competenza di Prodotto da imparare ora');
+      expect(p.scelta).toBe('Prodotto · Italia');
+    });
+  });
+
+  describe('senza dati', () => {
+    const senzaItalia: Dataset = { radar: { ...d.radar!, competenze: d.radar!.competenze.map((c) => ({ ...c, domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null })) } };
+    it('nessun dato italiano: lo dice, con la scelta, e il link apre la card dove si può cambiare', () => {
+      const p = doorPerTe(senzaItalia, today, null, 'italia');
+      expect(text(p.title)).toBe('Per l’Italia il dato non è disponibile in questo momento');
+      expect(p.scelta).toBe('Italia');
+      expect(p.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
+      expect(p.target).toEqual({ tema: 'competenze', elemento: null, params: { mercato: 'italia' } });
+    });
+    it('senza radar, o con il radar della pipeline vecchia: porta vuota e non cliccabile anche con «Italia»', () => {
+      const vuota = { title: [], meta: 'Dati non disponibili', target: null };
+      expect(doorPerTe({}, today, null, 'italia')).toEqual(vuota);
+      expect(doorPerTe({ radar: { ...d.radar!, versione: undefined } }, today, null, 'italia')).toEqual(vuota);
+    });
+  });
+});
+
 describe('porta L’AI in Italia', () => {
-  const at = (iso: string) => new Date(`${iso}T10:00:00`);
+  const at =(iso: string) => new Date(`${iso}T10:00:00`);
   const conScadenza = (data: string, titolo = 'Codici di buone pratiche'): Dataset =>
     ({ ...d, ai_act: { scadenze: [...d.ai_act!.scadenze, { ...d.ai_act!.scadenze[1], data, titolo }] } });
   it('1. scadenza entro 30 giorni, prima del dato italiano, con Oggi e Domani', () => {

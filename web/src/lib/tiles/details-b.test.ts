@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/svelte';
 import type { Component } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
-import type { Dataset } from '../data/types';
+import type { Dataset, RadarRow } from '../data/types';
 import type { TileId } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import { paese } from '../text/paesi';
@@ -87,7 +87,7 @@ describe('Persone', () => {
 
 describe('Persone: competenze più chieste negli annunci', () => {
   const persone = mk('persone', 'Persone e lavoro', headPersone, PersoneDetail);
-  const conCompetenze = (righe: { domanda: number | null; domanda_it: number | null; annunci_it: number | null }[]): Dataset => ({
+  const conCompetenze = (righe: Partial<RadarRow>[]): Dataset => ({
     ...data,
     radar: { ...data.radar!, competenze: righe.map((r, i) => ({ ...data.radar!.competenze[0], id: `c${i}`, nome: `Competenza ${i}`, breve: `Competenza ${i}`, ...r })) },
   });
@@ -104,7 +104,7 @@ describe('Persone: competenze più chieste negli annunci', () => {
   it('la tabella ha le 10 competenze con più annunci in Italia, dalla prima, con Italia, annunci e Paese a metà classifica', () => {
     const blk = apri(conCompetenze(DODICI));
     expect(within(blk).getAllByRole('columnheader', { hidden: true }).map((c) => c.textContent))
-      .toEqual(['Competenza', 'Italia', 'Annunci in Italia', 'Paese a metà classifica']);
+      .toEqual(['Competenza', 'Italia, ogni 10mila', 'Annunci in Italia', 'Paese a metà classifica, ogni 10mila']);
     expect(righe(blk)).toEqual([
       ['Competenza 0', '24', '300', '1'], ['Competenza 1', '22', '275', '2'], ['Competenza 2', '20', '250', '3'],
       ['Competenza 3', '18', '225', '4'], ['Competenza 4', '16', '200', '5'], ['Competenza 5', '14', '175', '6'],
@@ -161,6 +161,28 @@ describe('Persone: competenze più chieste negli annunci', () => {
     expect(blk).toHaveTextContent('Serve la chiave gratuita di Adzuna');
     expect(blk).not.toHaveTextContent(/Mancano i dati italiani/);
     expect(within(blk).queryByRole('img')).not.toBeInTheDocument();
+  });
+  it('una competenza con il dato italiano e senza quadrante resta in classifica', () => {
+    const blk = apri(conCompetenze([
+      { domanda: 2, domanda_it: 5, annunci_it: 60 },
+      { domanda: 7, domanda_it: 9, annunci_it: 110, slancio: null, quadrante: null, quadrante_it: null },
+      { domanda: null, domanda_it: 8, annunci_it: 100, quadrante: null, quadrante_it: null },
+    ]));
+    expect(righe(blk)).toEqual([['Competenza 1', '9', '110', '7'], ['Competenza 2', '8', '100', '—'], ['Competenza 0', '5', '60', '2']]);
+  });
+  describe('senza il radar la causa non è la chiave di Adzuna: dice che i dati mancano, come gli altri blocchi', () => {
+    for (const [caso, d] of [
+      ['senza radar.json', { ...data, radar: undefined }],
+      ['con il radar vuoto', { ...data, radar: { ...data.radar!, competenze: [] } }],
+      ['con il radar della pipeline vecchia', { ...data, radar: { ...data.radar!, versione: undefined } }],
+    ] as [string, Dataset][]) {
+      it(caso, () => {
+        const blk = apri(d);
+        expect(blk).toHaveTextContent('Dati non disponibili in questo aggiornamento.');
+        expect(blk).not.toHaveTextContent(/Serve la chiave/);
+        expect(blk).not.toHaveTextContent(/Mancano i dati italiani/);
+      });
+    }
   });
 });
 

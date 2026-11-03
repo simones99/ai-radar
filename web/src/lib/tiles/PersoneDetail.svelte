@@ -3,7 +3,7 @@
   import Block from '../charts/Block.svelte';
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
-  import { owidLatestByEntity, owidPoints, radarRows, tNum } from '../data/derive';
+  import { competenzeDi, owidLatestByEntity, owidPoints, tNum } from '../data/derive';
   import { exact, monthShort, nf } from '../text/format';
   import { paese } from '../text/paesi';
   import { barsTable, dotsTable, fmtYm, owidCite, seriesTable, MISSING } from './cite';
@@ -35,15 +35,16 @@
   const giovani = $derived(dots('uso_genai_giovani_ue'));
   const dev = $derived(owidPoints(o, 'sviluppatori_ai', 'World').map((p) => ({ k: p.t, v: p.v })));
   const annunci = $derived(lines('annunci_ai', ['United States', 'Italy', 'Germany', 'France', 'Spain', 'United Kingdom']));
-  const competenze = $derived(data.radar ? radarRows(data.radar) : []);
-  // Le 10 più cercate in Italia, dalla prima. Questa card guarda l'Italia: il mercato scelto in Competenze qui non conta.
+  const competenze = $derived(data.radar ? competenzeDi(data.radar) : []);
+  // Le 10 più cercate in Italia, dalla prima, anche se non hanno un posto sul radar. Questa card guarda l'Italia: il mercato scelto in Competenze qui non conta.
   const jobs = $derived(competenze
-    .flatMap((r) => (r.domanda_it == null ? [] : [{ k: r.breve, v: r.domanda_it, annunci: r.annunci_it ?? '—', metaClassifica: r.domanda }]))
+    .flatMap((c) => (c.domanda_it == null ? [] : [{ k: c.breve || c.nome, v: c.domanda_it, annunci: c.annunci_it ?? '—', metaClassifica: c.domanda ?? '—' }]))
     .sort((a, b) => b.v - a.v)
     .slice(0, 10));
-  // Senza la chiave non c'è un annuncio in nessun Paese; senza l'Italia gli altri Paesi ci sono.
+  // Senza il radar la causa non si conosce; senza la chiave non c'è un annuncio in nessun Paese; senza l'Italia gli altri Paesi ci sono.
   const jobsMissing = $derived(jobs.length ? null
-    : competenze.length ? 'Mancano i dati italiani: le rilevazioni recenti di Adzuna non comprendono l’Italia.'
+    : !competenze.length ? MISSING
+    : competenze.some((c) => c.domanda != null) ? 'Mancano i dati italiani: le rilevazioni recenti di Adzuna non comprendono l’Italia.'
     : 'Serve la chiave gratuita di Adzuna (ADZUNA_APP_ID e ADZUNA_APP_KEY nei secret del repository).');
 </script>
 
@@ -67,7 +68,7 @@
   <Block title="Competenze più chieste negli annunci" note="Annunci in Italia che citano la competenza ogni 10mila, mediana delle ultime 4 rilevazioni."
     missing={jobsMissing}
     cite={[{ t: 'Fonte: ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }, { t: '.' }]}
-    table={{ cols: ['Competenza', 'Italia', 'Annunci in Italia', 'Paese a metà classifica'], rows: jobs.map((j) => [j.k, j.v, j.annunci, j.metaClassifica]) }}>
+    table={{ cols: ['Competenza', 'Italia, ogni 10mila', 'Annunci in Italia', 'Paese a metà classifica, ogni 10mila'], rows: jobs.map((j) => [j.k, j.v, j.annunci, j.metaClassifica]) }}>
     <Bars label="Competenze più chieste negli annunci" data={[...jobs].reverse()} format={(v) => nf(v, 1)} />
   </Block>
 </Detail>

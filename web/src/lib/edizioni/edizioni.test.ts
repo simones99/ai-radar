@@ -4,7 +4,7 @@ import type { Dataset } from '../data/types';
 import { parseHash } from '../router';
 import { FIXTURE } from '../test/fixtures';
 import { TESTE, TILES } from '../tiles/registry';
-import { creaEdizione, deveCreare, fileDelSito, type Destinazione, type Edizione } from '.';
+import { creaEdizione, deveCreare, filePubblici, type Destinazione, type Edizione } from '.';
 
 const d = FIXTURE as Dataset;
 const crea = (dati: Dataset = d, precedente: Edizione | null = null) => creaEdizione(dati, precedente) as Edizione;
@@ -30,16 +30,16 @@ describe('creare un’edizione', () => {
     expect(testo(perTe.titolo)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(perTe.titolo[0]).toEqual({ t: 'MCP', em: true });
     expect(perTe.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
-    expect(perTe.destinazione).toEqual({ tema: 'competenze', elemento: null });
+    expect(perTe.destinazione).toEqual({ card: 'competenze', elemento: null });
     expect(italia.nome).toBe('Per la tua organizzazione');
     expect(testo(italia.titolo)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
-    expect(italia.destinazione).toEqual({ tema: 'business', elemento: null });
+    expect(italia.destinazione).toEqual({ card: 'business', elemento: null });
   });
 
   it('contiene tutte le nove frasi di card, ciascuna con cifra, unità, frase e destinazione', () => {
     const e = crea();
     expect(e.card.map((c) => c.id)).toEqual(['competenze', 'modelli', 'open', 'notizie', 'business', 'geopoliticai', 'persone', 'norme', 'rapporti']);
-    expect(card(e, 'business')).toMatchObject({ nome: 'Business', cifra: '16', unita: '%', frase: "Imprese italiane che usano l'AI nel 2025. UE: 20%.", destinazione: { tema: 'business', elemento: null } });
+    expect(card(e, 'business')).toMatchObject({ nome: 'Business', cifra: '16', unita: '%', frase: "Imprese italiane che usano l'AI nel 2025. UE: 20%.", destinazione: { card: 'business', elemento: null } });
     // la data delle frasi è quella dei dati: dal 15 ottobre al 2 dicembre 2026
     expect(card(e, 'norme')).toMatchObject({ cifra: '48', unita: 'giorni' });
   });
@@ -142,9 +142,9 @@ describe('le notizie scelte', () => {
   const conNotizie = (notizie: ReturnType<typeof voce>[]): Dataset => ({ ...d, news: { ...d.news!, notizie } });
   const titoli = (e: Edizione, tema: string) => e.notizie.temi.find((t) => t.tema === tema)?.voci.map((v) => v.titolo);
 
-  it('si parte dalla finestra di 7 giorni fino all’ultimo aggiornamento: numero, periodo e numero di fonti', () => {
+  it('si parte dalla finestra di 7 giorni fino all’ultimo aggiornamento: totale, periodo e fonti distinte', () => {
     const { notizie } = crea();
-    expect(notizie.numero).toBe(2); // la terza del FIXTURE è del 20 settembre
+    expect(notizie.totale).toBe(2); // la terza del FIXTURE è del 20 settembre
     expect(notizie.periodo).toBe('nei 7 giorni fino al 15 ott 2026');
     expect(notizie.fonti).toBe(2);
     expect(notizie.temi.flatMap((t) => t.voci.map((v) => v.titolo))).not.toContain('Una notizia vecchia');
@@ -156,7 +156,7 @@ describe('le notizie scelte', () => {
       voce('a', '2026-10-10', 'F1', 'ricerca'), voce('b', '2026-10-13', 'F2', 'ricerca'), voce('c', '2026-10-11', 'F3', 'ricerca'), voce('d', '2026-10-14', 'F4', 'ricerca'),
     ]));
     expect(titoli(e, 'ricerca')).toEqual(['d', 'b', 'c']);
-    expect(e.notizie.numero).toBe(4); // il conteggio resta quello di tutte le notizie della settimana
+    expect(e.notizie.totale).toBe(4); // il conteggio resta quello di tutte le notizie della settimana
   });
 
   it('senza ripetere una fonte nello stesso tema, e la stessa fonte può tornare in un altro tema', () => {
@@ -186,7 +186,7 @@ describe('le notizie scelte', () => {
 
   it('senza il file delle notizie la sezione resta vuota', () => {
     const { notizie } = crea({ ...d, news: undefined });
-    expect(notizie).toMatchObject({ numero: 0, fonti: 0, temi: [] });
+    expect(notizie).toMatchObject({ totale: 0, fonti: 0, temi: [] });
   });
 });
 
@@ -269,7 +269,7 @@ describe('le fonti senza dati aggiornati a questo giro', () => {
 describe('la pagina di un’edizione', () => {
   const BASE = 'https://altro-utente.github.io/altro-radar/';
   const FOGLIO = 'assets/index-abc123.css';
-  const file = (...ed: Edizione[]) => fileDelSito(ed, { indirizzoBase: BASE, foglio: FOGLIO });
+  const file = (...ed: Edizione[]) => filePubblici(ed, { indirizzoBase: BASE, foglio: FOGLIO });
   const html = (e: Edizione) => file(e)[`edizioni/${e.settimana}/index.html`];
   const pagina = (e: Edizione) => new DOMParser().parseFromString(html(e), 'text/html');
   const titoli = (doc: Document) => [...doc.querySelectorAll('h2')].map((h) => h.textContent);
@@ -370,10 +370,10 @@ describe('la pagina di un’edizione', () => {
     const base = crea();
     const conDest = (destinazione: Destinazione) => ({ ...base, porte: [{ ...base.porte[0], destinazione }, base.porte[1]] });
     const href = (e: Edizione) => pagina(e).querySelector('article a')?.getAttribute('href') as string;
-    expect(href(conDest({ tema: 'norme', elemento: '2026-12-02' }))).toBe('../../#norme/2026-12-02');
-    expect(href(conDest({ tema: 'business', elemento: null, params: { settore: 'ict', altro: 'a b' } }))).toBe('../../#business?settore=ict&altro=a%20b');
+    expect(href(conDest({ card: 'norme', elemento: '2026-12-02' }))).toBe('../../#norme/2026-12-02');
+    expect(href(conDest({ card: 'business', elemento: null, params: { settore: 'ict', altro: 'a b' } }))).toBe('../../#business?settore=ict&altro=a%20b');
     // «politica» è il vecchio id di Norme: il link salvato resta valido perché il router lo riconosce
-    const vecchio = href(conDest({ tema: 'politica', elemento: null }));
+    const vecchio = href(conDest({ card: 'politica', elemento: null }));
     expect(vecchio).toBe('../../#politica');
     expect(parseHash(vecchio.slice('../../'.length))?.tema).toBe('norme');
   });
@@ -563,10 +563,10 @@ describe('l’archivio', () => {
   const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc123.css' };
   const prima = creaEdizione(d, null) as Edizione;
   const seconda = creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima) as Edizione;
-  const archivio = (...ed: Edizione[]) => new DOMParser().parseFromString(fileDelSito(ed, opzioni)['edizioni/index.html'], 'text/html');
+  const archivio = (...ed: Edizione[]) => new DOMParser().parseFromString(filePubblici(ed, opzioni)['edizioni/index.html'], 'text/html');
 
   it('senza edizioni non esistono né pagine né archivio', () => {
-    expect(fileDelSito([], opzioni)).toEqual({});
+    expect(filePubblici([], opzioni)).toEqual({});
   });
 
   it('elenca tutte le edizioni, dalla più recente, qualunque sia l’ordine in cui arrivano, ciascuna con il suo link', () => {
@@ -628,12 +628,12 @@ describe('l’indice per la home', () => {
   const seconda = crea({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima);
 
   it('dice qual è l’ultima edizione, qualunque sia l’ordine in cui arrivano', () => {
-    expect(JSON.parse(fileDelSito([prima, seconda], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
-    expect(JSON.parse(fileDelSito([seconda, prima], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
+    expect(JSON.parse(filePubblici([prima, seconda], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
+    expect(JSON.parse(filePubblici([seconda, prima], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
   });
 
   it('senza edizioni non esiste', () => {
-    expect(fileDelSito([], opzioni)).not.toHaveProperty(['data/edizioni.json']);
+    expect(filePubblici([], opzioni)).not.toHaveProperty(['data/edizioni.json']);
   });
 });
 

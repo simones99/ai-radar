@@ -2,7 +2,7 @@
 // derivano: le regole delle frasi possono cambiare senza alterare il passato. Un cambio di forma alza VERSIONE.
 export const VERSIONE = 1;
 
-export interface Destinazione { tema: string; elemento: string | null; params?: Record<string, string> }
+export interface Destinazione { card: string; elemento: string | null; params?: Record<string, string> }
 
 /** Da dove viene una riga: il nome, l'indirizzo se c'è e la licenza con cui si riusa. */
 export interface Fonte { nome: string; url: string | null; licenza: string }
@@ -11,7 +11,7 @@ export interface FonteNonAggiornata { id: string; nome: string; ultimo_successo:
 export interface VoceFissa { titolo: string; link: string; data: string; fonte: string }
 export interface NotizieFisse {
   /** Le notizie della settimana, non solo quelle scelte. */
-  numero: number;
+  totale: number;
   periodo: string;
   /** Le fonti distinte tra le notizie della settimana. */
   fonti: number;

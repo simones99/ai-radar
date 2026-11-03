@@ -24,7 +24,7 @@ const CARD: { id: TileId; nome: string; face: (d: Dataset, oggi: Date) => Face |
 ];
 
 const testo = (p: PortaFissa): string => p.titolo.map((x) => x.t).join('');
-const suScadenza = (p: PortaFissa): boolean => p.destinazione?.tema === 'norme';
+const suScadenza = (p: PortaFissa): boolean => p.destinazione?.card === 'norme';
 /** Il conto alla rovescia non è una notizia: una porta con una scadenza si confronta sulla scadenza a cui porta, le altre sul titolo. */
 const stessaPorta = (a: PortaFissa, b: PortaFissa): boolean =>
   suScadenza(a) && suScadenza(b) ? a.destinazione?.elemento === b.destinazione?.elemento : testo(a) === testo(b);
@@ -34,7 +34,7 @@ const stessaCard = (a: CardFissa, b: CardFissa): boolean =>
   a.frase === b.frase && (a.id === 'norme' || (a.cifra === b.cifra && a.unita === b.unita));
 
 function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, d: Dataset, oggi: Date, precedente: Edizione | null): PortaFissa {
-  const destinazione = p.target && { tema: p.target.tema, elemento: p.target.elemento, ...(p.target.params && { params: p.target.params }) };
+  const destinazione = p.target && { card: p.target.tema, elemento: p.target.elemento, ...(p.target.params && { params: p.target.params }) };
   const fissa: PortaFissa = {
     id, nome, etichetta,
     titolo: p.title,
@@ -50,7 +50,7 @@ function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, d
 
 function frase(c: (typeof CARD)[number], d: Dataset, oggi: Date, precedente: Edizione | null): CardFissa {
   const f = c.face(d, oggi);
-  const destinazione = { tema: c.id, elemento: null };
+  const destinazione = { card: c.id, elemento: null };
   const fissa: CardFissa = { id: c.id, nome: c.nome, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione), cambiata: true };
   // la frase di Notizie contiene la data e cambierebbe sempre: il suo conteggio apre la sezione delle notizie
   if (c.id === 'notizie') return { ...fissa, cambiata: false };

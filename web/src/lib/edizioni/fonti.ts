@@ -41,7 +41,7 @@ const TABELLA: Record<TileId, (d: Dataset, oggi: Date, elemento: string | null) 
 
 /** Le fonti di una card; una porta eredita quelle della card a cui porta, per la sua scadenza se ne ha una. */
 export const fontiDi = (d: Dataset, oggi: Date, dest: Destinazione | null): Fonte[] =>
-  dest ? (TABELLA[dest.tema as TileId]?.(d, oggi, dest.elemento) ?? []) : [];
+  dest ? (TABELLA[dest.card as TileId]?.(d, oggi, dest.elemento) ?? []) : [];
 
 /** Le fonti senza dati aggiornati a questo giro, in errore o non configurate. Un avviso su una fonte aggiornata non conta: i suoi dati ci sono. */
 export const fontiNonAggiornate = (d: Dataset): FonteNonAggiornata[] =>

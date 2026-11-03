@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => ({
         const home = bundle['index.html'];
         if (!dir || home?.type !== 'asset') return;
         const { module } = await runnerImport<typeof import('./src/lib/edizioni/cartella.ts')>(fileURLToPath(new URL('./src/lib/edizioni/cartella.ts', import.meta.url)));
-        module.scriviSito({
+        module.scriviFilePubblici({
           dati: process.env.AI_RADAR_DATA_DIR ?? fileURLToPath(new URL('../data', import.meta.url)),
           uscita: dir,
           indirizzoBase: indirizzoBase(process.env.AI_RADAR_BASE_URL),

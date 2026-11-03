@@ -28,7 +28,7 @@ export function notizieDi(d: Dataset): NotizieFisse {
   // «altro» resta in fondo, dopo anche i temi che la tabella non conosce
   const ordine = [...Object.keys(TEMI_NOTIZIE).filter((t) => t !== 'altro'), ...ignoti, 'altro'];
   return {
-    numero: voci.length,
+    totale: voci.length,
     periodo,
     fonti: new Set(voci.map((v) => v.fonte)).size,
     regola: REGOLA,

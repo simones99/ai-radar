@@ -1,11 +1,11 @@
-// I file del sito che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
+// I file pubblici che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
 import { INDICE_EDIZIONI } from '../data/load';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
 import { VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
 
-export interface OpzioniSito {
+export interface OpzioniFilePubblici {
   /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
   indirizzoBase: string;
   /** Il foglio di stile della home, relativo alla radice del sito: il suo nome cambia a ogni build. */
@@ -40,7 +40,7 @@ const linkEsterno = (url: string | null, testo: string): string => {
 };
 
 /** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
-const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.tema as TileId, d.elemento, d.params)}`);
+const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.card as TileId, d.elemento, d.params)}`);
 const testoPorta = (p: PortaFissa): string => p.titolo.map((x) => x.t).join('');
 const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
 
@@ -137,7 +137,7 @@ const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar 
 const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
 
 /** Lo scheletro comune delle pagine. radice: la radice del sito vista dalla pagina; percorso: la pagina vista dalla radice. */
-function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniSito): string {
+function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniFilePubblici): string {
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -197,7 +197,7 @@ ${fontiNonAggiornate(e)}`;
 
 const descrizioneEdizione = (e: Edizione): string => e.porte.filter((p) => p.titolo.length).map((p) => `${testoPorta(p)}.`).join(' ');
 
-function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
+function paginaEdizione(e: Edizione, opzioni: OpzioniFilePubblici): string {
   const radice = '../../';
   return pagina({
     titolo: titoloPagina(e),
@@ -218,7 +218,7 @@ function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
 const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
 const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.';
 
-function archivio(edizioni: Edizione[], opzioni: OpzioniSito): string {
+function archivio(edizioni: Edizione[], opzioni: OpzioniFilePubblici): string {
   const voci = edizioni.map((e) => `<li>
 <h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
 ${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length ? testoPorta(p) : p.meta)}</p>`).join('\n')}
@@ -258,7 +258,7 @@ function voceDelFeed(e: Edizione, indirizzoBase: string): string {
 // I caratteri che XML 1.0 non ammette nemmeno come entità: uno solo, in un titolo esterno, renderebbe illeggibile tutto il feed.
 const FUORI_DA_XML = /[^\t\n\r -퟿-�\u{10000}-\u{10FFFF}]/gu;
 
-function feed(recenti: Edizione[], { indirizzoBase }: OpzioniSito): string {
+function feed(recenti: Edizione[], { indirizzoBase }: OpzioniFilePubblici): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 <channel>
@@ -277,7 +277,7 @@ ${recenti.slice(0, VOCI_DEL_FEED).map((e) => voceDelFeed(e, indirizzoBase)).join
  * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
  * Un file nuovo del sito è una voce in più in questa mappa: chi costruisce il sito li scrive tutti allo stesso modo.
  */
-export function fileDelSito(edizioni: Edizione[], opzioni: OpzioniSito): Record<string, string> {
+export function filePubblici(edizioni: Edizione[], opzioni: OpzioniFilePubblici): Record<string, string> {
   edizioni.forEach(controlla);
   if (!edizioni.length) return {};
   const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));

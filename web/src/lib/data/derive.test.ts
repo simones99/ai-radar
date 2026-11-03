@@ -3,7 +3,7 @@ import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidLatestByEntity, owidPoints, owidPrev,
   radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, andamentoItUe, barriereItUe, scopiItUe, ultimoAnno,
 } from './derive';
-import type { EpochPoint, EurostatSettori, News, Owid, Radar } from './types';
+import type { EpochPoint, EurostatSettori, News, Owid, Quadrant, Radar } from './types';
 import { FIXTURE, fromNorm } from '../test/fixtures';
 
 const today = new Date(2026, 9, 15, 10);
@@ -47,6 +47,79 @@ describe('radarRows', () => {
   });
   it('scarta le competenze senza posizione', () => {
     expect(radarRows(radar([{ slancio: null }, {}]))).toHaveLength(1);
+  });
+});
+
+describe('radarRows con il mercato', () => {
+  // La competenza sta in due punti diversi: in alto tra tutti i Paesi, sotto soglia in Italia.
+  const dueViste: Partial<Radar['competenze'][number]> = {
+    slancio: 0.75, domanda: 0.9, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
+    slancio_prec: 0.5, domanda_prec: 0.9, quadrante_prec: 'impara-ora',
+    domanda_it: 2.8, annunci_it: 39, quadrante_it: 'prova', quadrante_calcolato_it: 'impara-ora',
+    domanda_prec_it: 0.9, quadrante_prec_it: 'osserva',
+  };
+
+  it('senza scelta legge tutti i Paesi', () => {
+    const r = radar([dueViste]);
+    expect(radarRows(r)).toEqual(radarRows(r, 'tutti'));
+    expect(radarRows(r)[0]).toMatchObject({ quadrante: 'impara-ora', moving: null, qp: 'impara-ora', changed: false, dD: 0 });
+    expect(radarRows(r)[0].domanda).toBeCloseTo(45.6, 1);
+  });
+  it("con l'Italia valori, quadranti e movimenti sono italiani", () => {
+    const [r] = radarRows(radar([dueViste]), 'italia');
+    expect(r).toMatchObject({ domanda: 2.8, annunci_it: 39, quadrante: 'prova', moving: 'impara-ora', dp: 0.9, qp: 'osserva', changed: true });
+    expect(r.y).toBeCloseTo(0.49, 2);
+    expect(r.py).toBeCloseTo(0.323, 2);
+    expect(r.dD).toBeCloseTo(0.167, 2);
+    // Lo slancio è unico: l'asse orizzontale non cambia.
+    expect(r.x).toBeCloseTo(0.75);
+    expect(r.px).toBeCloseTo(0.5);
+    expect(r.slancio).toBeCloseTo(0.414, 3);
+    expect(r.dS).toBeCloseTo(0.25);
+  });
+  it('i movimenti della vista seguono i quadranti italiani', () => {
+    const rows = radarRows(radar([
+      { ...dueViste, quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' },
+      { ...dueViste, quadrante_it: 'prova', quadrante_prec_it: 'impara-ora' },
+      { ...dueViste, quadrante_it: 'osserva', quadrante_prec_it: 'osserva' },
+    ]), 'italia');
+    expect(radarChanges(rows).inn.map((r) => r.id)).toEqual(['c0']);
+    expect(radarChanges(rows).out.map((r) => r.id)).toEqual(['c1']);
+  });
+  it("«rientra» guarda lo storico della vista", () => {
+    const punto = (pubblicato: Quadrant, pubblicato_it: Quadrant) => ({ slancio: 0.1, domanda: 5, calcolato: pubblicato, pubblicato, incerto: false, domanda_it: 2, calcolato_it: pubblicato_it, pubblicato_it });
+    const r: Radar = {
+      ...radar([{ ...dueViste, quadrante_prec: 'prova', quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' }]),
+      storico: [
+        { mese: '2026-07', competenze: { c0: punto('impara-ora', 'prova') } },
+        { mese: '2026-08', competenze: { c0: punto('prova', 'prova') } },
+        { mese: '2026-09', competenze: { c0: punto('impara-ora', 'impara-ora') } },
+      ],
+    };
+    expect(radarRows(r)[0]).toMatchObject({ changed: true, rientra: true });
+    expect(radarRows(r, 'italia')[0]).toMatchObject({ changed: true, rientra: false });
+    const inItalia: Radar = { ...r, storico: r.storico!.map((p, i) => (i ? p : { ...p, competenze: { c0: punto('prova', 'impara-ora') } })) };
+    expect(radarRows(inItalia)[0].rientra).toBe(false);
+    expect(radarRows(inItalia, 'italia')[0].rientra).toBe(true);
+  });
+  it('lascia fuori chi non ha il dato italiano, solo in quella vista', () => {
+    const r = radar([dueViste, { ...dueViste, domanda_it: null, annunci_it: null, quadrante_it: null }, { slancio: 0.6, domanda: 0.6 }]);
+    expect(radarRows(r, 'italia').map((x) => x.id)).toEqual(['c0']);
+    expect(radarRows(r).map((x) => x.id)).toEqual(['c0', 'c1', 'c2']);
+  });
+  it('senza domanda italiana di un mese fa: movimento solo sullo slancio', () => {
+    const [r] = radarRows(radar([{ ...dueViste, domanda_prec_it: null }]), 'italia');
+    expect(r).toMatchObject({ dp: null, dD: 0 });
+    expect(r.py).toBeCloseTo(r.y);
+  });
+  it('un valore 0 sta in fondo all\'asse ed è un dato, non un dato mancante', () => {
+    const [r] = radarRows(radar([{ ...dueViste, domanda_it: 0, annunci_it: 0, domanda_prec_it: 0 }]), 'italia');
+    expect(r).toMatchObject({ domanda: 0, annunci_it: 0, y: 0, py: 0, dp: 0, dD: 0 });
+    const [sceso] = radarRows(radar([{ ...dueViste, domanda_it: 0, annunci_it: 0 }]), 'italia');
+    expect(sceso.y).toBe(0);
+    expect(sceso.dD).toBeCloseTo(-0.323, 2);
+    expect(sceso.move).toBeCloseTo(0.323, 2);
+    expect(sceso.dC).toBeCloseTo(-0.036, 2);
   });
 });
 

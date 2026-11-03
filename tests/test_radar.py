@@ -310,7 +310,8 @@ def test_run_writes_version_2(tmp_path, monkeypatch):
     st = out["storico"]
     assert [p["mese"] for p in st] == MONTHS[5:]  # un punto per ogni mese con 6 mesi di serie
     assert st[-1]["competenze"]["a"] == {"slancio": r["slancio"], "domanda": 3.5, "calcolato": "impara-ora",
-                                         "pubblicato": "impara-ora", "incerto": False}
+                                         "pubblicato": "impara-ora", "incerto": False,
+                                         "domanda_it": 5.0, "calcolato_it": "impara-ora", "pubblicato_it": "impara-ora"}
 
 
 def test_adding_a_skill_does_not_change_the_others(tmp_path, monkeypatch):
@@ -408,6 +409,118 @@ def test_surveys_say_the_median_country_and_italy_of_that_date_only(tmp_path, mo
         {"data": WEEKS[1], "mediana": 5.5, "it": 2.0},
         {"data": WEEKS[2], "mediana": 9.0, "it": 3.0},
     ]
+
+
+@pytest.mark.parametrize("counts,expected", [
+    ([37, 41, 52, 17], 39),         # l'esempio di MCP nella spec
+    ([500, 37, 41, 52, 17], 39),    # 4 rilevazioni su 5: quella da 500 è fuori
+    ([10, 21, 30], 21),             # meno di 4: quelle che ci sono
+    ([10, 21, 30, 41], 26),         # a metà tra 21 e 30 è 25,5
+    ([4, 5, 6, 4], 5),              # 4,5: la metà va in su anche sotto un numero pari
+    ([43, 42, 43, 38], 43),         # 42,5
+    ([0], 0),                       # nessun annuncio è un dato, non un dato mancante
+])
+def test_italian_job_ads_are_the_median_of_the_counts_of_the_same_surveys(tmp_path, monkeypatch, counts, expected):
+    r = demand_row(tmp_path, monkeypatch, [snap(w, "it", n) for w, n in zip(WEEKS, counts)])
+    assert r["annunci_it"] == expected
+
+
+def test_italian_job_ads_skip_surveys_with_another_query(tmp_path, monkeypatch):
+    snaps = [snap(WEEKS[0], "it", 900, q="vecchia"), snap(WEEKS[1], "it", 900, q="vecchia"), snap(WEEKS[2], "it", 10), snap(WEEKS[3], "it", 30)]
+    assert demand_row(tmp_path, monkeypatch, snaps)["annunci_it"] == 20
+
+
+def test_italian_job_ads_do_not_depend_on_the_total(tmp_path, monkeypatch):
+    """Il conteggio è la mediana dei conteggi, non il valore ogni 10mila riportato sul totale."""
+    snaps = [snap(w, "it", n, totale=t) for w, n, t in zip(WEEKS, [37, 41, 52, 17], [130000, 140000, 150000, 135000])]
+    assert demand_row(tmp_path, monkeypatch, snaps)["annunci_it"] == 39
+
+
+def italy_goes_up(from_week: str, it_prima: int = 10, it_dopo: int = 50) -> list[dict]:
+    """Italia da 1 a 5 ogni 10mila dalla settimana data; gli USA sempre a 20: «Tutti i Paesi» non si muove."""
+    return [snap(w, "it", it_dopo if w >= from_week else it_prima) for w in WEEKS] + [snap(w, "us", 200) for w in WEEKS]
+
+
+def rising_radar(tmp_path, monkeypatch, snaps: list[dict]) -> dict:
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, {"snapshots": snaps})
+    return run_radar([{"id": "a", "nome": "A"}])
+
+
+def test_one_month_above_the_threshold_does_not_change_the_italian_quadrant(tmp_path, monkeypatch):
+    # Il limite di un mese fa è il 14/9: fino a lì l'Italia è a 1, nelle ultime 4 rilevazioni è a 5.
+    r = rising_radar(tmp_path, monkeypatch, italy_goes_up("2026-09-21"))["competenze"][0]
+    assert (r["domanda_it"], r["domanda_prec_it"]) == (5.0, 1.0)
+    assert r["quadrante_calcolato_it"] == "impara-ora"
+    assert r["quadrante_it"] == "prova"
+    assert r["quadrante_prec_it"] == "prova"
+    assert (r["quadrante"], r["quadrante_calcolato"]) == ("impara-ora", "impara-ora")
+
+
+def test_two_months_above_the_threshold_change_the_italian_quadrant(tmp_path, monkeypatch):
+    r = rising_radar(tmp_path, monkeypatch, italy_goes_up("2026-08-24"))["competenze"][0]
+    assert (r["domanda_it"], r["domanda_prec_it"]) == (5.0, 5.0)
+    assert (r["quadrante_it"], r["quadrante_calcolato_it"]) == ("impara-ora", "impara-ora")
+    assert r["quadrante_prec_it"] == "prova"
+
+
+def test_history_has_the_italian_view_month_by_month(tmp_path, monkeypatch):
+    st = rising_radar(tmp_path, monkeypatch, italy_goes_up("2026-08-24"))["storico"]
+    # Limiti: 12/10 e 14/9 con l'Italia a 5, 17/8 con l'Italia a 1, 20/7 senza rilevazioni.
+    assert [{k: p["competenze"]["a"][k] for k in ("domanda_it", "calcolato_it", "pubblicato_it")} for p in st[-4:]] == [
+        {"domanda_it": None, "calcolato_it": "prova", "pubblicato_it": "prova"},
+        {"domanda_it": 1.0, "calcolato_it": "prova", "pubblicato_it": "prova"},
+        {"domanda_it": 5.0, "calcolato_it": "impara-ora", "pubblicato_it": "prova"},
+        {"domanda_it": 5.0, "calcolato_it": "impara-ora", "pubblicato_it": "impara-ora"},
+    ]
+
+
+def test_a_missing_italian_month_uses_the_next_italian_demand_not_the_other_view(tmp_path, monkeypatch):
+    """Gli USA ci sono da agosto, l'Italia solo dalle ultime settimane: il buco si riempie con l'Italia."""
+    snaps = [snap(w, "us", 200) for w in WEEKS] + [snap(w, "it", 10) for w in WEEKS[-4:]]
+    st = rising_radar(tmp_path, monkeypatch, snaps)["storico"]
+    prima = st[-2]["competenze"]["a"]
+    assert (prima["domanda"], prima["domanda_it"]) == (20.0, None)
+    assert (prima["calcolato"], prima["calcolato_it"]) == ("impara-ora", "prova")
+    assert (prima["pubblicato"], prima["pubblicato_it"]) == ("impara-ora", "prova")
+
+
+@pytest.mark.parametrize("n,g,expected", [
+    (30, 1.05, "impara-ora"),  # 3,0 è già sopra soglia, anche in Italia
+    (29, 1.05, "prova"),
+    (30, 0.9, "consolida"),    # chi non cresce più dell'AI, non cresce in nessuna vista
+    (29, 0.9, "osserva"),
+])
+def test_threshold_and_momentum_are_the_same_in_both_views(tmp_path, monkeypatch, n, g, expected):
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, g)}, {"a": grow(2000, g)}, {"snapshots": [snap(WEEKS[0], "it", n)]})
+    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    assert r["quadrante_calcolato_it"] == r["quadrante_calcolato"] == expected  # un solo Paese: le due viste coincidono
+
+
+ITALIAN_FIELDS = ("domanda_it", "annunci_it", "quadrante_it", "quadrante_calcolato_it", "domanda_prec_it", "quadrante_prec_it")
+
+
+@pytest.mark.parametrize("italia", [
+    [],                                                                                       # mai rilevata
+    [{"data": WEEKS[-1], "paese": "it", "totale": 100000, "competenze": {}, "query": {}}],    # senza questa competenza
+    [{**snap(WEEKS[-1], "it", 50), "totale": 0}],                                             # senza il totale
+])
+def test_without_italian_data_the_italian_fields_are_null_and_the_radar_goes_on(tmp_path, monkeypatch, italia):
+    out = rising_radar(tmp_path, monkeypatch, [snap(w, "us", 200) for w in WEEKS] + italia)
+    r = out["competenze"][0]
+    assert {k: r[k] for k in ITALIAN_FIELDS} == dict.fromkeys(ITALIAN_FIELDS)
+    assert r["quadrante"] == "impara-ora"  # la vista di tutti i Paesi resta
+    for p in out["storico"]:
+        assert {k: p["competenze"]["a"][k] for k in ("domanda_it", "calcolato_it", "pubblicato_it")} == dict.fromkeys(("domanda_it", "calcolato_it", "pubblicato_it"))
+
+
+def test_italy_out_of_the_window_has_no_italian_view_today(tmp_path, monkeypatch):
+    r = rising_radar(tmp_path, monkeypatch, [snap(w, "us", 200) for w in WEEKS] + [snap("2025-10-10", "it", 50)])["competenze"][0]
+    assert {k: r[k] for k in ITALIAN_FIELDS} == dict.fromkeys(ITALIAN_FIELDS)
+
+
+def test_no_job_ad_in_italy_is_zero_and_has_a_quadrant(tmp_path, monkeypatch):
+    r = rising_radar(tmp_path, monkeypatch, [snap(w, "it", 0) for w in WEEKS] + [snap(w, "us", 200) for w in WEEKS])["competenze"][0]
+    assert (r["domanda_it"], r["annunci_it"], r["quadrante_it"]) == (0.0, 0, "prova")
 
 
 def test_incomplete_arxiv_is_ignored(tmp_path, monkeypatch):

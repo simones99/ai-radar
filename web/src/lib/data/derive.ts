@@ -41,9 +41,21 @@ export interface RadarRowM extends RadarRow {
 /** Il margine dello slancio comprende lo zero: la competenza potrebbe non crescere più dell'AI. */
 export const margineSuZero = ({ slancio_margine: m }: RadarRow): boolean => !!m && m[0] < 0 && m[1] > 0;
 
-export function radarRows(r: Radar): RadarRowM[] {
+/** I Paesi di cui il radar legge la domanda. */
+export type Mercato = 'tutti' | 'italia';
+
+/** La competenza letta sull'Italia: gli stessi campi con i valori italiani. Lo slancio è unico. */
+const sullItalia = (c: RadarRow): RadarRow => ({
+  ...c,
+  domanda: c.domanda_it ?? null, quadrante: c.quadrante_it ?? null, quadrante_calcolato: c.quadrante_calcolato_it ?? null,
+  domanda_prec: c.domanda_prec_it ?? null, quadrante_prec: c.quadrante_prec_it ?? null,
+});
+
+export function radarRows(r: Radar, mercato: Mercato = 'tutti'): RadarRowM[] {
   if (r.versione !== 2) return []; // radar.json della pipeline vecchia: ranghi, non unità vere
+  const italia = mercato === 'italia';
   return r.competenze
+    .map((c) => (italia ? sullItalia(c) : c))
     .filter((c) => c.slancio != null && c.domanda != null && c.quadrante != null)
     .map((c) => {
       const s = c.slancio as number, d = c.domanda as number;
@@ -62,7 +74,10 @@ export function radarRows(r: Radar): RadarRowM[] {
         incerto: !!c.incerto, moving: calc && calc !== c.quadrante ? calc : null,
         x, y, px, py, sp, dp, qp, dS, dD, move: Math.max(Math.abs(dS), Math.abs(dD)), dC: (dS + dD) / 2,
         changed, hasPrev,
-        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => p.competenze[c.id]?.pubblicato === 'impara-ora'),
+        rientra: changed && c.quadrante === 'impara-ora' && (r.storico ?? []).slice(0, -1).some((p) => {
+          const punto = p.competenze[c.id];
+          return (italia ? punto?.pubblicato_it : punto?.pubblicato) === 'impara-ora';
+        }),
       };
     });
 }

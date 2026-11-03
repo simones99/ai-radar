@@ -28,15 +28,22 @@ export interface RadarRow {
   slancio_margine?: [number, number] | null;
   /** Annunci ogni 10mila nel Paese a metà classifica; ogni Paese vale la mediana delle sue ultime 4 rilevazioni. */
   domanda: number | null;
+  /** Annunci ogni 10mila in Italia. I campi che finiscono in `_it` sono la vista Italia: `null` dove manca il dato italiano. */
   domanda_it?: number | null;
+  /** Numero di annunci in Italia: mediana dei conteggi delle stesse rilevazioni, arrotondata. */
+  annunci_it?: number | null;
   /** Quadrante pubblicato: cambia dopo due mesi di fila nel quadrante nuovo. */
   quadrante: Quadrant | null;
   quadrante_calcolato?: Quadrant | null;
+  quadrante_it?: Quadrant | null;
+  quadrante_calcolato_it?: Quadrant | null;
   incerto?: boolean;
   incerto_perche?: string | null;
   slancio_prec?: number | null;
   domanda_prec?: number | null;
   quadrante_prec?: Quadrant | null;
+  domanda_prec_it?: number | null;
+  quadrante_prec_it?: Quadrant | null;
   segnali?: {
     arxiv?: (Segnale & { mensile: { mese: string; n: number; totale: number }[] }) | null;
     github?: (Segnale & { mensile: { mese: string; n: number; base: number }[] }) | null;
@@ -54,7 +61,7 @@ export interface Radar {
   quadranti: Record<Quadrant, string>;
   ruoli?: Ruolo[];
   competenze: RadarRow[];
-  storico?: { mese: string; competenze: Record<string, { slancio: number | null; domanda: number | null; calcolato: Quadrant | null; pubblicato: Quadrant | null; incerto: boolean }> }[];
+  storico?: { mese: string; competenze: Record<string, { slancio: number | null; domanda: number | null; calcolato: Quadrant | null; pubblicato: Quadrant | null; incerto: boolean; domanda_it?: number | null; calcolato_it?: Quadrant | null; pubblicato_it?: Quadrant | null }> }[];
 }
 
 export interface OwidPoint { entita: string; t: string; v: number }

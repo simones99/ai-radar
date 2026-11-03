@@ -12,8 +12,8 @@ const lavoro = (rilevazioni: { data: string; mediana: number; it: number | null 
   const last = rilevazioni[rilevazioni.length - 1];
   return { variazione: null, margine: null, peso: 0, data: last.data, ogni_10mila: { it: last.it ?? 0, us: last.mediana }, rilevazioni };
 };
-const pt = (slancio: number, domanda: number, pub: Quadrant, incerto = false, calcolato: Quadrant = pub) =>
-  ({ slancio, domanda, calcolato, pubblicato: pub, incerto });
+const pt = (slancio: number, domanda: number, pub: Quadrant, [domanda_it, pubblicato_it, calcolato_it = pubblicato_it]: [number, Quadrant, Quadrant?], incerto = false, calcolato: Quadrant = pub) =>
+  ({ slancio, domanda, calcolato, pubblicato: pub, incerto, domanda_it, calcolato_it, pubblicato_it });
 
 /** Valori veri da posizioni 0–1 sul grafico (l'inverso di nx e ny), per scrivere i test pensando alla posizione. */
 export function fromNorm<T extends { slancio?: number | null; domanda?: number | null; slancio_prec?: number | null; domanda_prec?: number | null }>(r: T): T {
@@ -39,15 +39,15 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
     ruoli: [{ id: 'sviluppo', nome: 'Sviluppo software' }, { id: 'prodotto', nome: 'Prodotto' }, { id: 'dati', nome: 'Dati e analisi' }, { id: 'compliance', nome: 'Legale e compliance' }],
     competenze: [
       { id: 'agenti', nome: 'Agenti AI', breve: 'Agenti AI', plurale: true, descrizione: 'Sistemi che pianificano.',
-        slancio: 0.52, slancio_margine: [0.45, 0.6], domanda: 26.4, domanda_it: 37.1, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
-        incerto: false, incerto_perche: null, slancio_prec: 0.38, domanda_prec: 26.4, quadrante_prec: 'impara-ora',
+        slancio: 0.52, slancio_margine: [0.45, 0.6], domanda: 26.4, domanda_it: 37.1, annunci_it: 460, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora', quadrante_it: 'impara-ora', quadrante_calcolato_it: 'impara-ora',
+        incerto: false, incerto_perche: null, slancio_prec: 0.38, domanda_prec: 26.4, quadrante_prec: 'impara-ora', domanda_prec_it: 36, quadrante_prec_it: 'impara-ora',
         segnali: { arxiv: { variazione: 0.3, margine: [0.2, 0.4], peso: 0.5, mensile: paper(1200, 1.07) }, github: { variazione: 0.8, margine: [0.6, 1], peso: 0.5, mensile: repo(650, 1.3) },
           lavoro: lavoro([{ data: '2026-10-12', mediana:26.4, it: 37.1 }]) },
         per_iniziare: [{ titolo: 'Corso gratuito di Hugging Face sugli agenti', url: 'https://huggingface.co/learn/agents-course/en/unit0/introduction', tipo: 'corso', lingua: 'en' }],
         in_crescita: [] },
       { id: 'mcp', nome: 'Model Context Protocol (MCP)', breve: 'MCP', descrizione: 'Lo standard per collegare strumenti.', ruoli: ['sviluppo'],
-        slancio: 0.15, slancio_margine: [0.05, 0.27], domanda: 3.4, domanda_it: 2.6, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
-        incerto: false, incerto_perche: null, slancio_prec: -0.27, domanda_prec: 3.4, quadrante_prec: 'consolida',
+        slancio: 0.15, slancio_margine: [0.05, 0.27], domanda: 3.4, domanda_it: 2.6, annunci_it: 32, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora', quadrante_it: 'prova', quadrante_calcolato_it: 'prova',
+        incerto: false, incerto_perche: null, slancio_prec: -0.27, domanda_prec: 3.4, quadrante_prec: 'consolida', domanda_prec_it: 2.4, quadrante_prec_it: 'osserva',
         segnali: { arxiv: { variazione: -0.04, margine: [-0.3, 0.3], peso: 0.33, mensile: paper(20, 1.07) }, github: { variazione: 0.4, margine: [0.2, 0.6], peso: 0.67, mensile: repo(900, 1.25) },
           lavoro: lavoro([{ data: '2026-09-14', mediana:3.1, it: 2.4 }, { data: '2026-10-12', mediana:3.4, it: 2.6 }]) },
         per_iniziare: [
@@ -56,28 +56,28 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
         ],
         in_crescita: [{ nome: 'acme/mcp-kit', url: 'https://github.com/acme/mcp-kit', descrizione: 'Kit per server MCP.', stelle: 1200, creato: '2026-08-02' }] },
       { id: 'rag', nome: 'RAG e ricerca semantica', breve: 'RAG', descrizione: 'Recupero di informazioni.', ruoli: ['dati', 'sviluppo', 'prodotto'],
-        slancio: -0.27, slancio_margine: [-0.35, -0.18], domanda: 8, domanda_it: 6.1, quadrante: 'consolida', quadrante_calcolato: 'consolida',
-        incerto: false, incerto_perche: null, slancio_prec: 0.04, domanda_prec: 8, quadrante_prec: 'impara-ora',
+        slancio: -0.27, slancio_margine: [-0.35, -0.18], domanda: 8, domanda_it: 6.1, annunci_it: 76, quadrante: 'consolida', quadrante_calcolato: 'consolida', quadrante_it: 'consolida', quadrante_calcolato_it: 'consolida',
+        incerto: false, incerto_perche: null, slancio_prec: 0.04, domanda_prec: 8, quadrante_prec: 'impara-ora', domanda_prec_it: 6.1, quadrante_prec_it: 'impara-ora',
         segnali: { arxiv: { variazione: -0.39, margine: [-0.5, -0.25], peso: 0.33, mensile: paper(300, 0.97) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(1400, 1.1) },
           lavoro: lavoro([{ data: '2026-10-12', mediana:8, it: 6.1 }]) },
         per_iniziare: [], in_crescita: [] },
       { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.', ruoli: [],
-        slancio: 0.82, slancio_margine: [0.3, 1.6], domanda: 0.17, domanda_it: 0.28, quadrante: 'prova', quadrante_calcolato: 'prova',
-        incerto: true, incerto_perche: 'pochi paper (45 al mese)', slancio_prec: 0.27, domanda_prec: 0.17, quadrante_prec: 'prova',
+        slancio: 0.82, slancio_margine: [0.3, 1.6], domanda: 0.17, domanda_it: 0.28, annunci_it: 3, quadrante: 'prova', quadrante_calcolato: 'prova', quadrante_it: 'prova', quadrante_calcolato_it: 'prova',
+        incerto: true, incerto_perche: 'pochi paper (45 al mese)', slancio_prec: 0.27, domanda_prec: 0.17, quadrante_prec: 'prova', domanda_prec_it: 0.28, quadrante_prec_it: 'prova',
         segnali: { arxiv: { variazione: 0.9, margine: [0.2, 2], peso: 0.55, mensile: paper(30, 1.05) }, github: { variazione: 1.1, margine: [0.4, 2.2], peso: 0.45, mensile: repo(20, 1.3) },
           lavoro: lavoro([{ data: '2026-10-12', mediana:0.17, it: 0.28 }]) },
         per_iniziare: [], in_crescita: [] },
       { id: 'vector-db', nome: 'Database vettoriali', breve: 'DB vettoriali', plurale: true, descrizione: 'Indici.', ruoli: ['sviluppo', 'dati'],
-        slancio: 0.05, slancio_margine: [-0.05, 0.16], domanda: 0.9, domanda_it: 0.4, quadrante: 'osserva', quadrante_calcolato: 'prova',
-        incerto: false, incerto_perche: null, slancio_prec: 0, domanda_prec: 0.9, quadrante_prec: 'osserva',
+        slancio: 0.05, slancio_margine: [-0.05, 0.16], domanda: 0.9, domanda_it: 0.4, annunci_it: 5, quadrante: 'osserva', quadrante_calcolato: 'prova', quadrante_it: 'osserva', quadrante_calcolato_it: 'prova',
+        incerto: false, incerto_perche: null, slancio_prec: 0, domanda_prec: 0.9, quadrante_prec: 'osserva', domanda_prec_it: 0.4, quadrante_prec_it: 'osserva',
         segnali: { arxiv: { variazione: -0.1, margine: [-0.3, 0.1], peso: 0.33, mensile: paper(15, 1) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(180, 1.08) },
           lavoro: lavoro([{ data: '2026-10-12', mediana:0.9, it: 0.4 }]) },
         per_iniziare: [], in_crescita: [] },
     ],
     storico: [
-      { mese: '2026-07', competenze: { agenti: pt(0.4, 26, 'impara-ora'), mcp: pt(-0.3, 3.1, 'consolida'), rag: pt(0.05, 8, 'impara-ora'), robotica: pt(0.3, 0.2, 'prova', true), 'vector-db': pt(-0.1, 0.9, 'osserva') } },
-      { mese: '2026-08', competenze: { agenti: pt(0.38, 26.4, 'impara-ora'), mcp: pt(-0.27, 3.4, 'consolida'), rag: pt(0.04, 8, 'impara-ora'), robotica: pt(0.27, 0.17, 'prova', true), 'vector-db': pt(0, 0.9, 'osserva') } },
-      { mese: '2026-09', competenze: { agenti: pt(0.52, 26.4, 'impara-ora'), mcp: pt(0.15, 3.4, 'impara-ora'), rag: pt(-0.27, 8, 'consolida'), robotica: pt(0.82, 0.17, 'prova', true), 'vector-db': pt(0.05, 0.9, 'osserva', false, 'prova') } },
+      { mese: '2026-07', competenze: { agenti: pt(0.4, 26, 'impara-ora', [36, 'impara-ora']), mcp: pt(-0.3, 3.1, 'consolida', [2.4, 'osserva']), rag: pt(0.05, 8, 'impara-ora', [6.1, 'impara-ora']), robotica: pt(0.3, 0.2, 'prova', [0.28, 'prova'], true), 'vector-db': pt(-0.1, 0.9, 'osserva', [0.4, 'osserva']) } },
+      { mese: '2026-08', competenze: { agenti: pt(0.38, 26.4, 'impara-ora', [36, 'impara-ora']), mcp: pt(-0.27, 3.4, 'consolida', [2.4, 'osserva']), rag: pt(0.04, 8, 'impara-ora', [6.1, 'impara-ora']), robotica: pt(0.27, 0.17, 'prova', [0.28, 'prova'], true), 'vector-db': pt(0, 0.9, 'osserva', [0.4, 'osserva']) } },
+      { mese: '2026-09', competenze: { agenti: pt(0.52, 26.4, 'impara-ora', [37.1, 'impara-ora']), mcp: pt(0.15, 3.4, 'impara-ora', [2.6, 'prova']), rag: pt(-0.27, 8, 'consolida', [6.1, 'consolida']), robotica: pt(0.82, 0.17, 'prova', [0.28, 'prova'], true), 'vector-db': pt(0.05, 0.9, 'osserva', [0.4, 'osserva', 'prova'], false, 'prova') } },
     ],
   },
   owid: {

@@ -24,8 +24,10 @@ const ARCHIVIO = '/edizioni/';
 async function serviEdizioni(page: Page, request: APIRequestContext) {
   const home = await (await request.get('/')).text();
   const file = fileDelSito([conCorrezione, seconda], { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
-  for (const [percorso, html] of Object.entries(file)) {
-    await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType: 'text/html; charset=utf-8', body: html }));
+  for (const [percorso, body] of Object.entries(file)) {
+    // il feed con il tipo con cui lo serve GitHub Pages
+    const contentType = percorso.endsWith('.xml') ? 'application/xml' : 'text/html; charset=utf-8';
+    await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType, body }));
   }
 }
 
@@ -146,6 +148,22 @@ test('una riga porta alla sua card, e la testata torna alla home', async ({ page
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Su cosa formarti');
 });
 
+for (const [nome, indirizzo] of [['da un’edizione', PRIMA], ['dall’archivio', ARCHIVIO]] as const) {
+  test(`il feed si trova partendo ${nome}: il link «Segui con RSS» si vede anche a 320 px e apre /feed.xml, senza JavaScript`, async ({ browser, request }) => {
+    const contesto = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 320, height: 640 } });
+    const page = await contesto.newPage();
+    await serviEdizioni(page, request);
+    await page.goto(indirizzo);
+    await expect(page.locator('head link[rel="alternate"][type="application/rss+xml"]')).toHaveAttribute('href', 'https://esempio.org/ai-radar/feed.xml');
+    const link = page.getByRole('link', { name: 'Segui con RSS' });
+    await expect(link).toBeInViewport();
+    const [risposta] = await Promise.all([page.waitForResponse('**/feed.xml'), link.click()]);
+    expect(new URL(risposta.url()).pathname).toBe('/feed.xml');
+    expect(await risposta.text()).toContain('ai-radar:edizione:2026-10-12');
+    await contesto.close();
+  });
+}
+
 test('nel sito costruito ci sono solo le edizioni salvate nei dati: nessuna edizione di prova', () => {
   const cartella = (relativa: string) => fileURLToPath(new URL(relativa, import.meta.url));
   const salvate = process.env.AI_RADAR_DATA_DIR ? `${process.env.AI_RADAR_DATA_DIR}/edizioni` : cartella('../../../data/edizioni');
@@ -154,5 +172,6 @@ test('nel sito costruito ci sono solo le edizioni salvate nei dati: nessuna ediz
   const pagine = existsSync(uscita) ? readdirSync(uscita).filter((n) => n !== 'index.html') : [];
   expect(pagine.sort()).toEqual(nomi.sort());
   expect(existsSync(`${uscita}/index.html`)).toBe(nomi.length > 0);
+  expect(existsSync(cartella('../../../_site/feed.xml'))).toBe(nomi.length > 0);
   expect(nomi).not.toContain('2026-10-12'); // la settimana del FIXTURE: la prima edizione vera esce dopo il rilascio
 });

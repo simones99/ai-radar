@@ -227,6 +227,9 @@ function voceDelFeed(e: Edizione, indirizzoBase: string): string {
 </item>`;
 }
 
+// I caratteri che XML 1.0 non ammette nemmeno come entità: uno solo, in un titolo esterno, renderebbe illeggibile tutto il feed.
+const FUORI_DA_XML = /[^\t\n\r -퟿-�\u{10000}-\u{10FFFF}]/gu;
+
 function feed(recenti: Edizione[], { indirizzoBase }: OpzioniSito): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
@@ -239,7 +242,7 @@ function feed(recenti: Edizione[], { indirizzoBase }: OpzioniSito): string {
 ${recenti.slice(0, VOCI_DEL_FEED).map((e) => voceDelFeed(e, indirizzoBase)).join('\n')}
 </channel>
 </rss>
-`;
+`.replace(FUORI_DA_XML, '');
 }
 
 /**

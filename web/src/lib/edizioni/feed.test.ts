@@ -141,6 +141,52 @@ describe('una voce del feed', () => {
   });
 });
 
+describe('neutralizzare i testi esterni nel feed', () => {
+  const conVoce = (titolo: string, link = 'https://esempio.org/?a=1&b=2', fonte = 'F<1>'): Edizione => ({
+    ...prima,
+    notizie: { ...prima.notizie, temi: [{ tema: 'ricerca', nome: 'Ricerca', voci: [{ titolo, link, data: '2026-10-14', fonte }] }] },
+  });
+  const testoIntero = (e: Edizione) => new DOMParser().parseFromString(voci(e)[0].getElementsByTagNameNS('http://purl.org/rss/1.0/modules/content/', 'encoded')[0].textContent ?? '', 'text/html');
+  const voceDelTema = (e: Edizione) => [...testoIntero(e).querySelectorAll('h3')].find((h) => h.textContent === 'Ricerca')!.nextElementSibling!.querySelector('li')!;
+
+  it('< e & in un titolo non rompono l’XML e restano testo nell’HTML della voce', () => {
+    const li = voceDelTema(conVoce('<img src=x onerror=alert(1)> A & B'));
+    expect(li.querySelector('img')).toBeNull();
+    expect(li.querySelector('a')?.textContent).toBe('<img src=x onerror=alert(1)> A & B');
+    expect(li.querySelector('a')?.getAttribute('href')).toBe('https://esempio.org/?a=1&b=2');
+    expect(li.textContent).toContain('F<1>');
+  });
+
+  it('un titolo che prova a chiudere un blocco XML resta testo', () => {
+    expect(voceDelTema(conVoce(']]></content:encoded><item>x</item>')).textContent).toContain(']]></content:encoded><item>x</item>');
+    expect(voci(conVoce(']]></content:encoded><item>x</item>'))).toHaveLength(1);
+  });
+
+  it('un carattere che XML non ammette non rompe il feed: sparisce, e il resto del titolo resta', () => {
+    expect(voceDelTema(conVoce('Un\u000b titolo\u0000 con￾ scarti \ud83d')).querySelector('a')?.textContent).toBe('Un titolo con scarti ');
+  });
+
+  it('le emoji e gli accenti nei titoli restano', () => {
+    expect(voceDelTema(conVoce('È già qui 🤖')).querySelector('a')?.textContent).toBe('È già qui 🤖');
+  });
+
+  it('una porta con < e & non rompe né il titolo né la descrizione della voce', () => {
+    const e = { ...prima, porte: [{ ...prima.porte[0], titolo: [{ t: 'A < B & C' }] }, prima.porte[1]] };
+    expect(figlio(voci(e)[0], 'description')?.textContent).toContain('A < B & C.');
+  });
+
+  it.each(['javascript:alert(1)', 'data:text/html,x', 'ftp://esempio.org/x', '/relativo', ''])('il link «%s» non diventa un link: la voce resta, come testo', (link) => {
+    const li = voceDelTema(conVoce('Un titolo', link));
+    expect(li.textContent).toContain('Un titolo');
+    expect(li.querySelector('a')).toBeNull();
+  });
+
+  it('anche l’indirizzo di una fonte passa dallo stesso controllo', () => {
+    const f = { ...prima, card: prima.card.map((c) => ({ ...c, fonti: [{ nome: 'Fonte', url: 'javascript:alert(1)', licenza: 'CC0' }] })) };
+    expect(xml(f)).not.toContain('javascript:');
+  });
+});
+
 describe('due build con le stesse edizioni', () => {
   afterEach(() => vi.useRealTimers());
 

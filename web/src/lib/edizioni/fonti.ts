@@ -1,7 +1,7 @@
 // La tabella unica delle fonti: per ogni card, chi ha dato i numeri e con quale licenza, letti dai dati quando ci sono.
 // Le frasi delle card non portano fonti e la meta di una porta è una riga di testo: per ricontrollare una riga dell'edizione serve questa.
 import { nextDeadline, nextReport } from '../data/derive';
-import type { Dataset, SourceStatus } from '../data/types';
+import type { Dataset } from '../data/types';
 import { NOMI_FONTI } from '../text/fonti';
 import type { Destinazione, Fonte, FonteMuta } from './tipi';
 
@@ -36,7 +36,6 @@ const TABELLA: Record<string, (d: Dataset, oggi: Date, elemento: string | null) 
 export const fontiDi = (d: Dataset, oggi: Date, dest: Destinazione | null): Fonte[] =>
   dest ? (TABELLA[dest.tema]?.(d, oggi, dest.elemento) ?? []) : [];
 
-const NON_HA_RISPOSTO = (s: SourceStatus) => s.stato !== 'ok';
 /** Le fonti rimaste indietro a questo giro. Un avviso su una fonte aggiornata non conta: la fonte ha risposto. */
 export const fontiMute = (d: Dataset): FonteMuta[] =>
-  Object.entries(d.status?.fonti ?? {}).filter(([, s]) => NON_HA_RISPOSTO(s)).map(([id, s]) => ({ id, nome: NOMI_FONTI[id] ?? id, ultimo_successo: s.ultimo_successo ?? null }));
+  Object.entries(d.status?.fonti ?? {}).filter(([, s]) => s.stato !== 'ok').map(([id, s]) => ({ id, nome: NOMI_FONTI[id] ?? id, ultimo_successo: s.ultimo_successo ?? null }));

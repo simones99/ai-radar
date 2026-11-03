@@ -55,6 +55,76 @@
  "giorni": 45,
  "notizie": [
   {
+   "titolo": "Anthropic's Message Threads cut time to first token by 35 percent for long conversations",
+   "link": "https://the-decoder.com/anthropics-message-threads-cut-time-to-first-token-by-35-percent-for-long-conversations/",
+   "data": "2026-11-03",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Nvidia pushes cloud customers to cut back on China business",
+   "link": "https://the-decoder.com/nvidia-pushes-cloud-customers-to-cut-back-on-china-business/",
+   "data": "2026-11-03",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Huawei tells customers to find their own AI chip memory, effectively outsourcing procurement to the black market",
+   "link": "https://the-decoder.com/huawei-tells-customers-to-find-their-own-ai-chip-memory-effectively-outsourcing-procurement-to-the-black-market/",
+   "data": "2026-11-03",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Bug hunters can now earn up to $172,000 from OpenAI as company ramps up security",
+   "link": "https://the-decoder.com/bug-hunters-can-now-earn-up-to-172000-from-openai-as-company-ramps-up-security/",
+   "data": "2026-11-03",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic cracks down on game cloning in Claude Code after wave of AI-built knockoffs",
+   "link": "https://the-decoder.com/anthropic-cracks-down-on-game-cloning-in-claude-code-after-wave-of-ai-built-knockoffs/",
+   "data": "2026-11-03",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Heimstaden is changing residential real estate management with AI",
+   "link": "https://openai.com/index/heimstaden",
+   "data": "2026-11-03",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] LLMs can read & write neural network weights: \"Weight Space Programming\" cuts Autoresearch out of the RSI loop",
+   "link": "https://latent.space/p/ainews-llms-can-read-write-neural-network-weights-weight-space-programming-cuts-autoresearch-out-of/",
+   "data": "2026-11-03",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Transformers Model Integration Contracts",
+   "link": "https://huggingface.co/blog/transformers-mic",
+   "data": "2026-11-03",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Goldman Sachs pulls AI coding tools from traders and bankers",
+   "link": "https://the-decoder.com/goldman-sachs-pulls-ai-coding-tools-from-traders-and-bankers/",
+   "data": "2026-11-02",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "AI elites might hoard intelligence like mercantilists hoarded gold",
+   "link": "https://the-decoder.com/ai-elites-might-hoard-intelligence-like-mercantilists-hoarded-gold/",
+   "data": "2026-11-02",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "SpaceXSI apparently cuts Grok Bot quotas weeks after Musk called it his fastest-growing product",
    "link": "https://the-decoder.com/spacexsi-apparently-cuts-grok-bot-quotas-weeks-after-musk-called-it-his-fastest-growing-product/",
    "data": "2026-11-02",
@@ -76,20 +146,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Saudi Aramco takes 49 percent stake in AI firm Humain with $2.6 billion deal",
-   "link": "https://the-decoder.com/saudi-aramco-takes-49-percent-stake-in-ai-firm-humain-with-2-6-billion-deal/",
-   "data": "2026-11-02",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI prepares lobbying blitz for a post-midterm Washington",
-   "link": "https://the-decoder.com/openai-prepares-lobbying-blitz-for-a-post-midterm-washington/",
-   "data": "2026-11-02",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "The U.S. Census Bureau and “Super Intelligence”",
    "link": "https://simonwillison.net/2026/Nov/2/census-bureau-super-intelligence/",
    "data": "2026-11-02",
@@ -97,8 +153,29 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "Scaling Git at OpenAI",
+   "link": "https://openai.com/index/scaling-git-at-openai",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
    "titolo": "Introducing the Grid Protectors Program",
    "link": "https://openai.com/index/grid-protectors-program",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Rewarding defenders with bigger bug bounties",
+   "link": "https://openai.com/index/rewarding-defenders-with-bigger-bug-bounties",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Preparing our next security sprint to harden OpenAI",
+   "link": "https://openai.com/index/preparing-our-next-security-sprint-to-harden-openai",
    "data": "2026-11-02",
    "fonte": "OpenAI",
    "tema": "prodotti"
@@ -118,6 +195,27 @@
    "tema": "prodotti"
   },
   {
+   "titolo": "OpenAI appoints Dan Driscoll as Senior Counselor for National Security Modernization",
+   "link": "https://openai.com/index/dan-driscoll-joins-openai",
+   "data": "2026-11-02",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Building AI for Lawyers - Jacob Lauritzen, CTO of Legora",
+   "link": "https://latent.space/p/building-ai-for-lawyers-jacob-lauritzen-cto-of-legora/",
+   "data": "2026-11-02",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Building Legal Agents When You Can't See the Data - Jacob Lauritzen, CTO of Legora",
+   "link": "https://latent.space/p/building_legal_agents_when_you_can_t_see_the_data_-_jacob_lauritzen_cto_of_legora/",
+   "data": "2026-11-02",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
    "titolo": "Import AI 479: Spacewar; low-latency tasks versus LLMs; Genie 4",
    "link": "https://jack-clark.net/2026/11/02/import-ai-479-spacewar-low-latency-tasks-versus-llms-genie-4/",
    "data": "2026-11-02",
@@ -129,41 +227,6 @@
    "link": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/",
    "data": "2026-11-02",
    "fonte": "Google AI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Adobe is testing how well AI agents can use editing tools like a Photoshop professional would",
-   "link": "https://the-decoder.com/adobe-is-testing-how-well-ai-agents-can-use-editing-tools-like-a-photoshop-professional-would/",
-   "data": "2026-11-01",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Empathetic prompts can turn AI chatbots into seemingly traumatized conversational partners",
-   "link": "https://the-decoder.com/empathetic-prompts-can-turn-ai-chatbots-into-seemingly-traumatized-conversational-partners/",
-   "data": "2026-11-01",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Chinese AI models are politically complex, not just government mouthpieces, study finds",
-   "link": "https://the-decoder.com/chinese-ai-models-are-politically-complex-not-just-government-mouthpieces-study-finds/",
-   "data": "2026-11-01",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI is steering ChatGPT users toward more paid usage",
-   "link": "https://the-decoder.com/openai-is-steering-chatgpt-users-toward-more-paid-usage/",
-   "data": "2026-11-01",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Google wants video AI to understand what people need as they work",
-   "link": "https://the-decoder.com/google-wants-video-ai-to-understand-what-people-need-as-they-workgoogle-researchers-are-teaching-a-video-assistant-when-to-offer-help/",
-   "data": "2026-11-01",
-   "fonte": "The Decoder",
    "tema": "prodotti"
   },
   {
@@ -237,27 +300,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "How we detect frontier model misalignment",
-   "link": "https://openai.com/index/how-we-detect-frontier-model-misalignment",
-   "data": "2026-10-29",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "How Ropes & Gray is developing AI for transactional diligence",
-   "link": "https://openai.com/index/ropes-gray-ai-diligence",
-   "data": "2026-10-29",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Credit Saison achieves 954% ROI in a ChatGPT Enterprise pilot",
-   "link": "https://openai.com/index/credit-saison",
-   "data": "2026-10-29",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "Can Frontier Models See Past a Decoy? Elorian Tests Visual Reasoning",
    "link": "https://latent.space/p/elorian/",
    "data": "2026-10-29",
@@ -321,20 +363,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "OpenAI and ServiceNow expand partnership across enterprise workflows",
-   "link": "https://openai.com/index/openai-servicenow-partnership-expansion",
-   "data": "2026-10-28",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "The future of the firm",
-   "link": "https://openai.com/index/the-future-of-the-firm",
-   "data": "2026-10-28",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
    "titolo": "Why Agents Love Supabase",
    "link": "https://latent.space/p/supabase/",
    "data": "2026-10-28",
@@ -365,20 +393,6 @@
   {
    "titolo": "How Anthropic ships the #1 LLM in the World safely: Separating the Brain from the Hands",
    "link": "https://latent.space/p/how_anthropic_ships_the_1_llm_in_the_world_safely_separating_the_brain_from_the_hands/",
-   "data": "2026-10-27",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "Coding From the Himalayas With an Offline AI Agent",
-   "link": "https://latent.space/p/offline-coding/",
-   "data": "2026-10-27",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "[AINews] Anthropic files for $2T IPO in 2 weeks: 1400% growth rate, 48% of revenue through cloud partners, 85% margin, $1B op profit in Q2, $134B cash in bank and $10B lifetime burn",
-   "link": "https://latent.space/p/ainews-anthropic-s1/",
    "data": "2026-10-27",
    "fonte": "Latent Space",
    "tema": "business"
@@ -426,13 +440,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "[AINews] Kimi 3.1 Pro 104BA-2.8T: Fable-5.1-Class Open Weights narrows Closed-AI lead to 1 month... and Pro Highspeed API with 2-3× speed",
-   "link": "https://latent.space/p/ainews-kimi-31/",
-   "data": "2026-10-24",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
    "titolo": "Does Your Model Run on AWS Trainium? Look It Up",
    "link": "https://huggingface.co/blog/torch-neuronx-model-support",
    "data": "2026-10-23",
@@ -463,13 +470,6 @@
   {
    "titolo": "How Specializing the Vocabulary of SLMs Can Cut Inference Cost by 77% in Real Applications",
    "link": "https://huggingface.co/blog/Dharma-AI/vocabx-vocabulary-specialization",
-   "data": "2026-10-21",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Profiling TorchNeuron (Part 1): System-level profiling on AWS Trainium.",
-   "link": "https://huggingface.co/blog/amazon/profiling-torchneuron-part-1",
    "data": "2026-10-21",
    "fonte": "Hugging Face",
    "tema": "ricerca"

@@ -187,6 +187,28 @@ describe('neutralizzare i testi esterni nel feed', () => {
   });
 });
 
+describe('trovare il feed dalle pagine', () => {
+  const pagina = (percorso: string) => new DOMParser().parseFromString(fileDelSito([prima, seconda], opzioni())[percorso], 'text/html');
+
+  it.each([
+    ['edizioni/2026-10-12/index.html', '../../feed.xml'],
+    ['edizioni/index.html', '../feed.xml'],
+  ])('%s ha il link rel="alternate" assoluto, per i lettori, e il link visibile «Segui con RSS»', (percorso, relativo) => {
+    const doc = pagina(percorso);
+    const alternate = doc.querySelector('head link[rel="alternate"]');
+    expect(alternate?.getAttribute('type')).toBe('application/rss+xml');
+    expect(alternate?.getAttribute('href')).toBe(`${BASE}feed.xml`);
+    expect(alternate?.getAttribute('title')).toBe('AI Radar, le edizioni');
+    const visibili = [...doc.querySelectorAll('a')].filter((a) => a.textContent === 'Segui con RSS');
+    expect(visibili).toHaveLength(1);
+    expect(visibili[0].getAttribute('href')).toBe(relativo);
+  });
+
+  it('il testo intero della voce non invita a seguire un feed che il lettore sta già seguendo', () => {
+    expect(xml(prima)).not.toContain('Segui con RSS');
+  });
+});
+
 describe('due build con le stesse edizioni', () => {
   afterEach(() => vi.useRealTimers());
 

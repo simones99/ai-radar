@@ -135,6 +135,7 @@ function pagina(o: { titolo: string; descrizione: string; percorso: string; radi
 <title>${esc(o.titolo)}</title>
 <meta name="description" content="${esc(o.descrizione)}" />
 <link rel="canonical" href="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
+<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${opzioni.indirizzoBase}feed.xml`)}" />
 <link rel="icon" href="${esc(ICONA)}" />
 <link rel="stylesheet" href="${esc(`${o.radice}${opzioni.foglio}`)}" />
 </head>
@@ -143,7 +144,7 @@ function pagina(o: { titolo: string; descrizione: string; percorso: string; radi
 <div class="edizione">
 <header class="testata">
 <a class="logo" href="${o.radice}"><i aria-hidden="true"></i>AI Radar</a>
-<nav aria-label="Pagina">${o.nav}</nav>
+<nav aria-label="Pagina">${o.nav}<a href="${o.radice}feed.xml">Segui con RSS</a></nav>
 </header>
 <main id="contenuto" tabindex="-1">
 ${o.corpo}

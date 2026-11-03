@@ -1,6 +1,6 @@
 import {
   MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
-  type RadarRowM,
+  type Mercato, type RadarRowM,
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/types';
@@ -194,8 +194,8 @@ const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((
 /** La soglia guarda il Paese a metà classifica: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
 const sottoSogliaInItalia = (inn: RadarRowM[]): string =>
   inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci ogni 10mila, sotto soglia`).join('; ');
-export function headCompetenze(d: Dataset, _today?: Date): Head {
-  const rows = d.radar ? radarRows(d.radar) : [];
+export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tutti'): Head {
+  const rows = d.radar ? radarRows(d.radar, mercato) : [];
   if (!rows.length) return { title: plain('Competenze'), deck: null };
   const { inn, out } = radarChanges(rows);
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
@@ -204,7 +204,7 @@ export function headCompetenze(d: Dataset, _today?: Date): Head {
   const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
-  const italia = sottoSogliaInItalia(inn);
+  const italia = mercato === 'italia' ? '' : sottoSogliaInItalia(inn); // la vista Italia ha già i suoi quadranti
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verboEntra(inn)} tra le competenze da imparare ora` }],
     deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + (italia && `${italia}. `) + tail,

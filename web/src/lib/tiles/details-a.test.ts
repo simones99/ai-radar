@@ -156,6 +156,139 @@ describe('Competenze: il ruolo', () => {
   });
 });
 
+describe('Competenze: il mercato', () => {
+  const tile = mk('competenze', 'Competenze', headCompetenze, CompetenzeDetail);
+  const mercati = () => screen.getByRole('group', { name: 'Mercato' });
+  const premuto = () => within(mercati()).getAllByRole('button').filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent);
+  let link: Array<[string, string | null]>; // i parametri che la card chiede di cambiare nel link
+  const ascolta = (e: Event) => {
+    const { chiave, valore } = (e as CustomEvent).detail;
+    if (chiave === 'mercato') link.push([chiave, valore]);
+  };
+  beforeEach(() => {
+    localStorage.clear();
+    link = [];
+    document.addEventListener(IMPOSTA, ascolta);
+    return () => document.removeEventListener(IMPOSTA, ascolta);
+  });
+
+  it('due voci sopra il radar: senza scelta è premuta «Tutti i Paesi»', () => {
+    show(CompetenzeDetail, tile);
+    expect(within(mercati()).getAllByRole('button').map((b) => b.textContent)).toEqual(['Tutti i Paesi', 'Italia']);
+    expect(premuto()).toEqual(['Tutti i Paesi']);
+  });
+  it('il link sceglie l’Italia e diventa il ricordo; un valore sconosciuto si ignora', () => {
+    localStorage.setItem('ai-radar:mercato', 'boh');
+    show(CompetenzeDetail, tile, null, { mercato: 'francia' });
+    expect(premuto()).toEqual(['Tutti i Paesi']);
+    expect(link).toEqual([['mercato', null]]);
+    document.body.innerHTML = '';
+    show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+    expect(premuto()).toEqual(['Italia']);
+    expect(localStorage.getItem('ai-radar:mercato')).toBe('italia');
+  });
+  it('senza scelta nel link vale il ricordo, che entra nel link', () => {
+    localStorage.setItem('ai-radar:mercato', 'italia');
+    show(CompetenzeDetail, tile);
+    expect(link).toEqual([['mercato', 'italia']]);
+  });
+  it('«Italia» va nel link e nel ricordo; «Tutti i Paesi» toglie l’uno e l’altro', async () => {
+    show(CompetenzeDetail, tile);
+    await fireEvent.click(within(mercati()).getByRole('button', { name: 'Italia' }));
+    expect(link).toEqual([['mercato', 'italia']]);
+    expect(localStorage.getItem('ai-radar:mercato')).toBe('italia');
+    await fireEvent.click(within(mercati()).getByRole('button', { name: 'Tutti i Paesi' }));
+    expect(link).toEqual([['mercato', 'italia'], ['mercato', null]]);
+    expect(localStorage.getItem('ai-radar:mercato')).toBeNull();
+  });
+  it('mercato e ruolo stanno insieme nello stesso link', () => {
+    show(CompetenzeDetail, tile, null, { mercato: 'italia', ruolo: 'dati' });
+    expect(premuto()).toEqual(['Italia']);
+    expect(within(screen.getByRole('group', { name: 'Il tuo ruolo' })).getByRole('button', { name: 'Dati e analisi' })).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('ai-radar:mercato')).toBe('italia');
+    expect(localStorage.getItem('ai-radar:ruolo')).toBe('dati');
+  });
+
+  describe('la vista Italia', () => {
+    const blocco = (name: string) => screen.getByRole('heading', { name }).closest('section')!;
+    const radar = () => screen.getByRole('group', { name: /^Radar delle competenze/ });
+    const riga = (titolo: string, nome: string) => {
+      const tab = within(blocco(titolo)).getByRole('table');
+      const celle = [...within(tab).getByRole('rowheader', { name: nome }).closest('tr')!.querySelectorAll('td')].map((td) => td.textContent);
+      return celle;
+    };
+    const conItalia = (cambia: (id: string) => object) =>
+      ({ ...data, radar: { ...data.radar!, competenze: data.radar!.competenze.map((c) => ({ ...c, ...cambia(c.id) })) } }) as Dataset;
+    const senzaItalia = { domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null, domanda_prec_it: null, quadrante_prec_it: null };
+    const apri = (d: Dataset) => render(CompetenzeDetail, { data: d, today, tile, elemento: null, params: { mercato: 'italia' }, onclose: () => {} });
+
+    it('il titolo e la frase in testa parlano dei quadranti italiani', () => {
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('RAG esce da Impara ora');
+      expect(screen.getByText("Oggi 1 competenza su 5 cresce più dell'AI e ha almeno 3 annunci ogni 10mila.", { exact: false })).toBeInTheDocument();
+    });
+    it('la nota «sotto soglia» sull’Italia non c’è: i quadranti sono già italiani', () => {
+      apri(conItalia((id) => (id === 'mcp' ? { quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' } : {})));
+      expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('MCP entra tra le competenze da imparare ora');
+      expect(screen.queryByText(/sotto soglia/)).toBeNull();
+    });
+    it('il fumetto di un punto dice quadrante italiano, numero e annunci; lo slancio è lo stesso', () => {
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      expect(within(radar()).getByRole('link', { name: /^Model Context Protocol/ })).toHaveAccessibleName(
+        "Model Context Protocol (MCP): Da provare (era Tieni d'occhio). Slancio +15% in 6 mesi, 2,6 ogni 10mila, 32 annunci. Un mese fa: slancio −27%, 2,4 ogni 10mila.");
+    });
+    it('l’asse della domanda è lo stesso delle due viste', () => {
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      for (const t of ['0,1', '3', '90', '−50%', '+100%']) expect(within(radar()).getByText(t)).toBeInTheDocument();
+      expect(within(radar()).getByText('Annunci ogni 10mila →')).toBeInTheDocument();
+    });
+    it('Movimenti: valori e cambi di quadrante italiani', () => {
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      const mov = within(blocco('Movimenti di settembre')).getByRole('link', { name: /^MCP slancio/ });
+      expect(mov).toHaveTextContent('2,6');
+      expect(mov).toHaveTextContent("Tieni d'occhio → Da provare");
+    });
+    it('le due tabelle dicono numero e annunci; lo slancio non cambia', () => {
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      expect(riga('Radar delle competenze', 'Model Context Protocol (MCP)').slice(0, 3)).toEqual(['Da provare', '+15%', '2,6 ogni 10mila, 32 annunci']);
+      expect(riga('Le competenze una per una', 'Model Context Protocol (MCP)').slice(1)).toEqual(['Da provare', '+15%', '2,6 ogni 10mila, 32 annunci']);
+      expect(within(blocco('Le competenze una per una')).getByRole('columnheader', { name: 'Annunci in Italia' })).toBeInTheDocument();
+    });
+    it('sotto il radar la riga che spiega la vista; con «Tutti i Paesi» non c’è', () => {
+      const { unmount } = show(CompetenzeDetail, tile);
+      expect(screen.queryByText('La crescita è mondiale, la domanda è italiana.')).toBeNull();
+      expect(riga('Radar delle competenze', 'Model Context Protocol (MCP)').slice(0, 3)).toEqual(['Impara ora', '+15%', '3,4']);
+      unmount();
+      show(CompetenzeDetail, tile, null, { mercato: 'italia' });
+      expect(screen.getByText('La crescita è mondiale, la domanda è italiana.')).toBeInTheDocument();
+    });
+    it('un solo annuncio si dice al singolare', () => {
+      apri(conItalia((id) => (id === 'mcp' ? { annunci_it: 1 } : {})));
+      expect(riga('Le competenze una per una', 'Model Context Protocol (MCP)')[3]).toBe('2,6 ogni 10mila, 1 annuncio');
+    });
+    it('un valore 0 sta in fondo al radar, senza errori', () => {
+      apri(conItalia((id) => (id === 'mcp' ? { domanda_it: 0, annunci_it: 0 } : {})));
+      expect(within(radar()).getByRole('link', { name: /^Model Context Protocol/ })).toHaveAccessibleName(/0,0 ogni 10mila, 0 annunci/);
+    });
+    it('una competenza senza dato italiano resta fuori dal radar e in tabella dice «dato non disponibile»', () => {
+      apri(conItalia((id) => (id === 'mcp' ? senzaItalia : {})));
+      expect(within(radar()).queryByRole('link', { name: /^Model Context Protocol/ })).toBeNull();
+      expect(within(radar()).getAllByRole('link')).toHaveLength(4);
+      const celle = riga('Le competenze una per una', 'Model Context Protocol (MCP)');
+      expect(celle[1]).toBe('dato non disponibile');
+      expect(celle.slice(2)).toEqual(['+15%', '—']);
+    });
+    it('senza nessun dato italiano la vista lo dice con una frase, senza zeri, e si può tornare a tutti i Paesi', () => {
+      apri(conItalia(() => senzaItalia));
+      expect(within(blocco('Radar delle competenze')).getByText('Per l’Italia il dato non è disponibile in questo momento.')).toBeInTheDocument();
+      expect(screen.queryByRole('group', { name: /^Radar delle competenze/ })).toBeNull();
+      expect(riga('Le competenze una per una', 'Agenti AI')[1]).toBe('dato non disponibile');
+      expect(screen.queryByText('0,0', { exact: false })).toBeNull();
+      expect(within(mercati()).getByRole('button', { name: 'Tutti i Paesi' })).toBeEnabled();
+    });
+  });
+});
+
 describe('Business', () => {
   const tile = mk('business', 'Business', headBusiness, BusinessDetail);
   it('il sondaggio McKinsey dice di chi è il numero, di che anno, e che non è la misura di Eurostat', () => {

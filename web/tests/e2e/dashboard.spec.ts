@@ -468,6 +468,89 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+const mercati = (page: Page) => page.getByRole('group', { name: 'Mercato' });
+const mercatoPremuto = (page: Page) => mercati(page).locator('button[aria-pressed="true"]');
+const rigaItalia = 'La crescita è mondiale, la domanda è italiana.';
+
+test('mercato: il link apre la vista Italia, il ricaricamento la tiene, «Tutti i Paesi» toglie la scelta dal link e dal ricordo', async ({ page }) => {
+  await page.goto('/#competenze?mercato=italia');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(page.locator('#h-competenze')).toHaveText('RAG esce da Impara ora');
+  await expect(page.getByText(rigaItalia)).toBeVisible();
+  await expect(page.getByRole('link', { name: /^Model Context Protocol \(MCP\): Da provare.*2,6 ogni 10mila, 32 annunci/ })).toBeAttached();
+  await page.reload();
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await page.goto('about:blank');
+  await page.goto('/#competenze'); // senza mercato nel link: vale il ricordo, che entra nel link
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(page).toHaveURL(/#competenze\?mercato=italia$/);
+  await mercati(page).getByRole('button', { name: 'Tutti i Paesi' }).click();
+  await expect(page).toHaveURL(/#competenze$/);
+  await expect(page.getByText(rigaItalia)).toHaveCount(0);
+  await expect(page.locator('#h-competenze')).toHaveText('MCP entra tra le competenze da imparare ora');
+  await page.goto('about:blank');
+  await page.goto('/#competenze');
+  await expect(mercatoPremuto(page)).toHaveText('Tutti i Paesi');
+  await expect(page).toHaveURL(/#competenze$/);
+});
+
+test('mercato: un valore sconosciuto nel link si ignora e vale il ricordo', async ({ page }) => {
+  await page.goto('/#competenze?mercato=francia');
+  await expect(mercatoPremuto(page)).toHaveText('Tutti i Paesi');
+  await expect(page).toHaveURL(/#competenze$/);
+  await mercati(page).getByRole('button', { name: 'Italia' }).click();
+  await expect(page).toHaveURL(/#competenze\?mercato=italia$/);
+  await page.goto('about:blank');
+  await page.goto('/#competenze?mercato=francia');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(page).toHaveURL(/#competenze\?mercato=italia$/);
+});
+
+test('mercato e ruolo stanno nello stesso link, e tutti e due entrano dal ricordo', async ({ page }) => {
+  await page.goto('/#competenze?mercato=italia&ruolo=dati');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(premuto(page)).toHaveText('Dati e analisi');
+  await page.goto('about:blank');
+  await page.goto('/#competenze');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(premuto(page)).toHaveText('Dati e analisi');
+  await expect(page).toHaveURL(/#competenze\?(?=.*mercato=italia)(?=.*ruolo=dati)/);
+});
+
+test('mercato da tastiera: Tab tra i pulsanti, Invio sceglie, Spazio torna a tutti i Paesi', async ({ page }) => {
+  await page.goto('/#competenze');
+  await mercati(page).getByRole('button', { name: 'Tutti i Paesi' }).focus();
+  await page.keyboard.press('Tab');
+  await expect(mercati(page).getByRole('button', { name: 'Italia' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(page).toHaveURL(/#competenze\?mercato=italia$/);
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Space');
+  await expect(mercatoPremuto(page)).toHaveText('Tutti i Paesi');
+  await expect(page).toHaveURL(/#competenze$/);
+});
+
+test('vista Italia a 320px: niente scorrimento orizzontale, e i pulsanti restano interi', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.goto('/#competenze?mercato=italia');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(page.getByText(rigaItalia)).toBeVisible();
+  await expect(page.getByRole('group', { name: /^Radar delle competenze in Italia/ })).toBeVisible();
+  expect(await noHorizontalScroll(page)).toBe(true);
+  const scelte = await mercati(page).boundingBox();
+  expect(scelte!.x + scelte!.width).toBeLessThanOrEqual(320);
+});
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`accessibilità nella vista Italia, tema ${colorScheme}: nessuna violazione grave`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.goto('/#competenze?mercato=italia');
+    await expect(page.getByText(rigaItalia)).toBeVisible();
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+}
+
 const menuArea = (page: Page) => page.getByRole('combobox', { name: 'Area' });
 // la scheda dell'area è la regione che porta il nome dell'area: il suo titolo
 const scheda = (page: Page, area: string) => page.getByRole('region', { name: area, exact: true });

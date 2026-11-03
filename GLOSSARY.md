@@ -20,6 +20,10 @@ _Avoid_: skill, tema
 L'area di lavoro di chi legge la testa *Per te*: Sviluppo software (ML incluso), Prodotto, Dati e analisi, Legale e compliance. Indica quali competenze riguardano quel lettore, senza cambiare le misure del radar; senza un ruolo scelto si vedono tutte.
 _Avoid_: profilo, persona, mestiere, sviluppatore, PM, analista, legale (come nomi dei ruoli)
 
+**Mercato**:
+I Paesi di cui il radar legge la domanda, tutti o l'Italia. Cambia la domanda e i quadranti, non lo slancio, che è unico.
+_Avoid_: Paese, zona, geografia (come nomi della scelta)
+
 **Settore**:
 L'attività economica di un'organizzazione, come la classifica Eurostat (per esempio manifattura, commercio, ICT). Finanza, pubblica amministrazione, sanità, istruzione e agricoltura non sono settori rilevati.
 _Avoid_: industria, comparto, ambito

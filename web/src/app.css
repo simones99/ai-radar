@@ -65,6 +65,47 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 560px) { .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 
+/* La testata, della home e delle pagine delle edizioni. Dove non stanno in una riga i link vanno sotto il nome, ognuno intero */
+.testata { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s2); }
+.logo { white-space: nowrap; display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; text-decoration: none; }
+.logo i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--fg); position: relative; }
+.logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
+.testata nav { display: flex; gap: var(--s3); font-size: 14px; }
+.testata nav a { white-space: nowrap; text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
+@media (hover: hover) { .testata nav a:hover { color: var(--fg); } }
+
+/* Le pagine delle edizioni, HTML statico su questo stesso foglio: una colonna di testo, non una griglia di card. Il tema scuro arriva dai token */
+.edizione { max-width: calc(var(--misura) + 2 * var(--s2)); margin-inline: auto; padding: var(--s3) var(--s2) var(--s12); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
+.edizione main { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s6); }
+.edizione main:focus { outline: none; }
+.edizione section { display: grid; gap: var(--s2); }
+.edizione p, .edizione li { overflow-wrap: anywhere; }
+.edizione h1 { font-weight: 600; font-size: clamp(28px, 6vw, 36px); line-height: 1.15; letter-spacing: -.01em; }
+.edizione h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
+.edizione h3 { font-weight: 600; font-size: 16px; line-height: 24px; }
+.edizione footer { border-top: 1px solid var(--line-2); padding-top: var(--s3); }
+.ed-testa { display: grid; gap: var(--s1); }
+.ed-nota { font-size: 14px; line-height: 20px; color: var(--fg-2); }
+.ed-fonte { font-size: 12px; line-height: 16px; color: var(--fg-3); }
+.ed-corretta { margin-top: var(--s1); padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 20px; }
+.ed-corretta strong { font-weight: 600; }
+/* le due porte, alla pari: una sopra l'altra, con lo stesso peso */
+.ed-porte { display: grid; gap: var(--s2); }
+.ed-porta { display: grid; gap: var(--s1); padding: var(--s3); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); }
+.edizione .ed-porta h2 { font-size: 14px; line-height: 20px; }
+.ed-porta h2 span { font-weight: 400; color: var(--fg-2); white-space: nowrap; }
+.ed-notizia { font-weight: 500; font-size: clamp(24px, 5vw, 28px); line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; }
+.ed-notizia a { text-decoration-color: var(--line-2); text-decoration-thickness: 1px; }
+@media (hover: hover) { .ed-notizia a:hover { text-decoration-color: currentColor; } }
+.ed-notizia em { font-style: normal; color: var(--accent); font-weight: 700; }
+.ed-ripetuta { font-size: 14px; line-height: 20px; font-weight: 500; }
+/* le righe: frasi, voci e archivio */
+.ed-righe, .ed-voci, .ed-archivio { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+.ed-righe li, .ed-archivio li { display: grid; gap: var(--s1); padding-top: var(--s2); border-top: 1px solid var(--line-2); }
+.ed-voci .ed-fonte { display: block; }
+.ed-cifra { color: var(--accent); font-weight: 700; }
+.ed-archivio p strong { font-weight: 600; }
+
 /* i menu a tendina, una pillola come le scelte: il segno di apertura disegnato con due sfumature nel colore del testo, in tutti e due i temi.
    16px perché il telefono non ingrandisca la pagina al tocco */
 select { appearance: none; max-width: 100%; font: inherit; font-size: 16px; font-weight: 500; color: var(--fg); background-color: var(--card); border: 1px solid var(--line-2); border-radius: 999px;

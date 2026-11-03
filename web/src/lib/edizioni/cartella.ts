@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { FILES } from '../data/load';
 import type { Dataset } from '../data/types';
 import { lunediDi } from '../text/format';
-import { creaEdizione, deveCreare } from '.';
+import { creaEdizione, deveCreare, fileDelSito, foglioDellaHome } from '.';
 import type { Edizione } from './tipi';
 
 /** Tutte le edizioni salvate; se la cartella non c'è ancora, nessuna. Il nome del file è l'indirizzo della pagina: deve essere la sua settimana. */
@@ -33,6 +33,15 @@ function scrivi(file: string, contenuto: string): void {
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(`${file}.tmp`, contenuto);
   renameSync(`${file}.tmp`, file);
+}
+
+/** Scrive nella cartella di uscita tutti i file che nascono dalle edizioni. Un file nuovo del sito basta aggiungerlo a fileDelSito. */
+export function scriviSito({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
+  const file = fileDelSito(leggiEdizioni(dati), { indirizzoBase, foglio: foglioDellaHome(htmlHome) });
+  for (const [percorso, contenuto] of Object.entries(file)) {
+    mkdirSync(dirname(join(uscita, percorso)), { recursive: true });
+    writeFileSync(join(uscita, percorso), contenuto);
+  }
 }
 
 export interface Giro { evento: string; casella: boolean; dati: string }

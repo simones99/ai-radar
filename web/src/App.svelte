@@ -41,7 +41,7 @@
 
 <a class="skip" href="#contenuto" onclick={salta}>Vai al contenuto</a>
 <div class="wrap">
-  <header class="bar">
+  <header class="testata">
     <span class="logo"><i aria-hidden="true"></i>AI Radar</span>
     <nav aria-label="Pagina"><a href="#crediti">Foto e fonti</a><a href="#stato">Stato delle fonti</a></nav>
   </header>
@@ -97,14 +97,6 @@
 </div>
 
 <style>
-  /* dove non stanno in una riga i link vanno sotto il nome, ognuno intero */
-  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s2); }
-  .logo { white-space: nowrap; display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
-  .logo i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--fg); position: relative; }
-  .logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
-  nav { display: flex; gap: var(--s3); font-size: 14px; }
-  nav a { white-space: nowrap; text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
-  @media (hover: hover) { nav a:hover { color: var(--fg); } }
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
   /* main non fa una scatola sua: i suoi figli stanno nella griglia di .wrap, come la testata e il colophon */

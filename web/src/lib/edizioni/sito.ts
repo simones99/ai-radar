@@ -11,6 +11,14 @@ export interface OpzioniSito {
   foglio: string;
 }
 
+/** Il foglio di stile che la build ha dato alla home, relativo alla radice del sito. */
+export function foglioDellaHome(html: string): string {
+  const link = html.match(/<link\b[^>]*\brel="stylesheet"[^>]*>/)?.[0];
+  const href = link?.match(/\bhref="(?:\.\/)?([^"]+)"/)?.[1];
+  if (!href) throw new Error('La home non ha un foglio di stile: le pagine delle edizioni non saprebbero quale usare.');
+  return href;
+}
+
 // I titoli delle notizie arrivano da fonti esterne, e un'edizione corretta a mano può contenere di tutto: niente entra nella pagina senza passare da qui.
 const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
 

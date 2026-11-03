@@ -71,11 +71,7 @@ jobs:
       - name: Test della pipeline
         run: python -m pytest -q
 
-      # serve ai test del comando dell'edizione, alla creazione della sua immagine e agli end-to-end
-      - name: Installa Chromium
-        working-directory: web
-        run: npx playwright install --with-deps chromium
-
+      # senza browser: Chromium arriva dopo la raccolta, e questi test non lo richiedono
       - name: Test dell'app
         working-directory: web
         run: |
@@ -93,22 +89,13 @@ jobs:
 
       - name: Salva i dati nel repository
         if: github.event_name != 'push'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
-          if git diff --cached --quiet; then
-            echo "Nessun dato nuovo da salvare."
-          else
-            git commit -m "Dati aggiornati $(date -u +%F)"
-            # un push arrivato mentre il giro girava: i dati vanno sopra. Il rebase passa se il push non tocca i file
-            # scritti dal giro, e data/ la scrivono solo i giri programmati e manuali di questo workflow, uno alla volta:
-            # mai quelli del push. L'unica eccezione sono le correzioni a mano, su edizioni già uscite, che il giro non
-            # riscrive mai. Se il push tocca i percorsi in `on.push`, ha già messo in coda il suo giro, che pubblicherà
-            # anche lui, con i dati appena salvati
-            git pull --rebase origin "$GITHUB_REF_NAME"
-            git push origin "HEAD:$GITHUB_REF_NAME"
-          fi
+        run: python scripts/salva_nel_repo.py data "Dati aggiornati $(date -u +%F)"
+
+      # dopo i dati salvati: come per gli end-to-end, un download fallito non ferma la raccolta del lunedì e lascia i dati nel repository.
+      # Serve all'immagine dell'edizione, ai test con il browser e agli end-to-end
+      - name: Installa Chromium
+        working-directory: web
+        run: npx playwright install --with-deps chromium
 
       # Il file dell'edizione e la sua immagine nascono qui, senza commit: diventano definitivi solo dopo gli end-to-end. Evento e casella li valuta
       # il comando, che su un push o con il file già presente non fa nulla. Se fallisce, anche solo per l'immagine, non scrive niente: dati e sito
@@ -127,23 +114,22 @@ jobs:
 
       - name: Test end-to-end
         working-directory: web
-        run: npm run e2e
+        run: |
+          npm run test:browser
+          npm run e2e
 
       # dopo gli end-to-end: se falliscono il job si ferma qui, l'edizione non si salva e il sito non esce.
-      # File fisso e immagine stanno nella stessa cartella, ed entrano nello stesso commit.
-      # L'autore del commit l'ha già impostato il passo che salva i dati, e senza quel passo (un push) non c'è niente da salvare
+      # File fisso e immagine stanno nella stessa cartella, ed entrano nello stesso commit. La settimana la dice il comando,
+      # solo quando l'edizione è nata in questo giro: su un push, o con il file già presente, questo passo non parte
       - name: Salva l'edizione nel repository
-        if: steps.edizione.outcome == 'success'
+        if: steps.edizione.outputs.settimana != ''
+        env:
+          SETTIMANA: ${{ steps.edizione.outputs.settimana }}
         run: |
-          if [ -d data/edizioni ]; then git add data/edizioni; fi
-          if git diff --cached --quiet; then
-            echo "Nessuna edizione nuova da salvare."
-          else
-            git commit -m "Edizione del $(date -u +%F)"
-            # come per i dati: un push arrivato nel frattempo resta sotto
-            git pull --rebase origin "$GITHUB_REF_NAME"
-            git push origin "HEAD:$GITHUB_REF_NAME"
-          fi
+          python scripts/salva_nel_repo.py data/edizioni "Edizione del $SETTIMANA" || {
+            echo "::error::L'edizione del $SETTIMANA non è stata salvata e il sito non esce: i dati del giro invece sì. Per rifarla, avvia il giro a mano con la casella accesa."
+            exit 1
+          }
 
       - uses: actions/upload-pages-artifact@v5
         with:
@@ -159,13 +145,21 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v5
 
-  # L'errore nella sola creazione dell'edizione non ferma dati e sito, ma deve arrivare la mail di GitHub
+  # L'errore nella sola creazione dell'edizione non ferma dati e sito, ma deve arrivare la mail di GitHub.
+  # Aspetta la pubblicazione per dire com'è andata davvero: gli end-to-end o il caricamento possono aver fermato il sito lo stesso
   edizione-non-creata:
-    needs: aggiorna
+    needs: [aggiorna, pubblica]
     if: ${{ !cancelled() && needs.aggiorna.outputs.edizione == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - name: Manda il giro in rosso
+        env:
+          SITO: ${{ needs.pubblica.result }}
         run: |
-          echo "::error::L'edizione di questa settimana non è stata creata. Dati e sito sono andati avanti: per recuperarla, avvia il giro a mano con la casella accesa."
+          if [ "$SITO" = "success" ]; then
+            esito="Dati e sito sono andati avanti"
+          else
+            esito="Il sito non è uscito, e il motivo è negli altri job"
+          fi
+          echo "::error::L'edizione di questa settimana non è stata creata. $esito. Per recuperarla, avvia il giro a mano con la casella accesa."
           exit 1

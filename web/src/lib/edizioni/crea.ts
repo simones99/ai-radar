@@ -6,9 +6,9 @@ import {
   doorItalia, doorPerTe, faceBusiness, faceCompetenze, faceGeopoliticai, faceModelli, faceNorme, faceNotizie, faceOpen, facePersone, faceRapporti,
   type Door, type Face,
 } from '../text/frasi';
-import { fontiDi, fontiMute } from './fonti';
+import { fontiDi, fontiNonAggiornate } from './fonti';
 import { notizieDi } from './notizie';
-import { VERSIONE, type CardFissa, type Edizione, type PortaFissa } from './tipi';
+import { eCardNotizie, testoPorta, VERSIONE, type CardFissa, type Edizione, type PortaFissa } from './tipi';
 
 // La vista di partenza: nessun ruolo, «Tutti i Paesi», nessun settore. Non passa da tiles/registry, che legge le scelte ricordate.
 const CARD: { id: TileId; nome: string; face: (d: Dataset, oggi: Date) => Face | null }[] = [
@@ -23,39 +23,38 @@ const CARD: { id: TileId; nome: string; face: (d: Dataset, oggi: Date) => Face |
   { id: 'rapporti', nome: 'Rapporti', face: faceRapporti },
 ];
 
-const testo = (p: PortaFissa): string => p.titolo.map((x) => x.t).join('');
-const suScadenza = (p: PortaFissa): boolean => p.destinazione?.tema === 'norme';
+type SenzaConfronto<T> = Omit<T, 'cambiata'>;
+
+const suScadenza = (p: SenzaConfronto<PortaFissa>): boolean => p.destinazione?.card === 'norme';
 /** Il conto alla rovescia non è una notizia: una porta con una scadenza si confronta sulla scadenza a cui porta, le altre sul titolo. */
-const stessaPorta = (a: PortaFissa, b: PortaFissa): boolean =>
-  suScadenza(a) && suScadenza(b) ? a.destinazione?.elemento === b.destinazione?.elemento : testo(a) === testo(b);
+const stessaPorta = (a: SenzaConfronto<PortaFissa>, b: SenzaConfronto<PortaFissa>): boolean =>
+  suScadenza(a) && suScadenza(b) ? a.destinazione?.elemento === b.destinazione?.elemento : testoPorta(a) === testoPorta(b);
 
 /** Norme confronta solo la frase, perché la cifra è il conto alla rovescia. */
-const stessaCard = (a: CardFissa, b: CardFissa): boolean =>
+const stessaCard = (a: SenzaConfronto<CardFissa>, b: SenzaConfronto<CardFissa>): boolean =>
   a.frase === b.frase && (a.id === 'norme' || (a.cifra === b.cifra && a.unita === b.unita));
 
+/** Senza una riga precedente con cui confrontarsi conta come cambiata: nella prima edizione si mostra tutto. */
+const cambiata = <T>(ora: T, prima: T | undefined, stessa: (a: T, b: T) => boolean): boolean => !prima || !stessa(ora, prima);
+
 function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, d: Dataset, oggi: Date, precedente: Edizione | null): PortaFissa {
-  const destinazione = p.target && { tema: p.target.tema, elemento: p.target.elemento, ...(p.target.params && { params: p.target.params }) };
-  const fissa: PortaFissa = {
+  const destinazione = p.target && { card: p.target.tema, elemento: p.target.elemento, ...(p.target.params && { params: p.target.params }) };
+  const fissa: SenzaConfronto<PortaFissa> = {
     id, nome, etichetta,
     titolo: p.title,
     ...(p.nota && { nota: p.nota }),
     meta: p.meta,
     destinazione,
     fonti: fontiDi(d, oggi, destinazione),
-    cambiata: true,
   };
-  const prima = precedente?.porte.find((x) => x.id === id);
-  return { ...fissa, cambiata: !prima || !stessaPorta(fissa, prima) };
+  return { ...fissa, cambiata: cambiata(fissa, precedente?.porte.find((x) => x.id === id), stessaPorta) };
 }
 
 function frase(c: (typeof CARD)[number], d: Dataset, oggi: Date, precedente: Edizione | null): CardFissa {
   const f = c.face(d, oggi);
-  const destinazione = { tema: c.id, elemento: null };
-  const fissa: CardFissa = { id: c.id, nome: c.nome, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione), cambiata: true };
-  // la frase di Notizie contiene la data e cambierebbe sempre: il suo conteggio apre la sezione delle notizie
-  if (c.id === 'notizie') return { ...fissa, cambiata: false };
-  const prima = precedente?.card.find((x) => x.id === c.id);
-  return { ...fissa, cambiata: !prima || !stessaCard(fissa, prima) };
+  const destinazione = { card: c.id, elemento: null };
+  const fissa: SenzaConfronto<CardFissa> = { id: c.id, nome: c.nome, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione) };
+  return { ...fissa, cambiata: !eCardNotizie(c) && cambiata(fissa, precedente?.card.find((x) => x.id === c.id), stessaCard) };
 }
 
 /**
@@ -80,7 +79,7 @@ export function creaEdizione(d: Dataset, precedente: Edizione | null): Edizione 
     ],
     card: CARD.map((c) => frase(c, d, oggi, precedente)),
     notizie: notizieDi(d),
-    fonti_mute: fontiMute(d),
+    fonti_non_aggiornate: fontiNonAggiornate(d),
     correzioni: [],
   };
 }

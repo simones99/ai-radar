@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
-import { scriviSito } from './cartella';
+import { scriviFilePubblici } from './cartella';
 import { creaEdizione, type Edizione } from '.';
 
 const ALTRO_INDIRIZZO = 'https://altro-utente.github.io/altro-radar/';
@@ -76,8 +76,16 @@ describe('il sito costruito', () => {
     const dati = join(cartella, 'senza-immagine');
     mkdirSync(join(dati, 'edizioni'), { recursive: true });
     writeFileSync(join(dati, 'edizioni', '2026-10-12.json'), JSON.stringify(creaEdizione(FIXTURE as Dataset, null)));
-    const scrivi = () => scriviSito({ dati, uscita: join(dati, 'uscita'), indirizzoBase: ALTRO_INDIRIZZO, htmlHome: '<link rel="stylesheet" href="./assets/a.css">' });
+    const scrivi = () => scriviFilePubblici({ dati, uscita: join(dati, 'uscita'), indirizzoBase: ALTRO_INDIRIZZO, htmlHome: '<link rel="stylesheet" href="./assets/a.css">' });
     expect(scrivi).toThrow(/2026-10-12.*senza la sua immagine.*--immagine 2026-10-12/);
+  });
+
+  it('home, archivio e pagine hanno la stessa icona, e nella home non resta un segnaposto', () => {
+    const icona = (doc: Document) => doc.querySelector('link[rel="icon"]')?.getAttribute('href');
+    const home = new DOMParser().parseFromString(readFileSync(join(conEdizioni(), 'index.html'), 'utf-8'), 'text/html');
+    expect(icona(home)).toMatch(/^data:image\/svg\+xml,/);
+    expect(icona(pagina('edizioni', 'index.html'))).toBe(icona(home));
+    expect(icona(pagina('edizioni', '2026-10-12', 'index.html'))).toBe(icona(home));
   });
 
   it('il foglio di stile delle pagine è quello della home, e contiene i token', () => {

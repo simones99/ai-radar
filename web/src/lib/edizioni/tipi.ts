@@ -2,16 +2,16 @@
 // derivano: le regole delle frasi possono cambiare senza alterare il passato. Un cambio di forma alza VERSIONE.
 export const VERSIONE = 1;
 
-export interface Destinazione { tema: string; elemento: string | null; params?: Record<string, string> }
+export interface Destinazione { card: string; elemento: string | null; params?: Record<string, string> }
 
 /** Da dove viene una riga: il nome, l'indirizzo se c'è e la licenza con cui si riusa. */
 export interface Fonte { nome: string; url: string | null; licenza: string }
-export interface FonteMuta { id: string; nome: string; ultimo_successo: string | null }
+export interface FonteNonAggiornata { id: string; nome: string; ultimo_successo: string | null }
 
 export interface VoceFissa { titolo: string; link: string; data: string; fonte: string }
 export interface NotizieFisse {
   /** Le notizie della settimana, non solo quelle scelte. */
-  numero: number;
+  totale: number;
   periodo: string;
   /** Le fonti distinte tra le notizie della settimana. */
   fonti: number;
@@ -47,6 +47,12 @@ export interface CardFissa {
   cambiata: boolean;
 }
 
+/** Una porta senza dati ha il titolo vuoto. */
+export const portaConDati = (p: Pick<PortaFissa, 'titolo'>): boolean => p.titolo.length > 0;
+export const testoPorta = (p: Pick<PortaFissa, 'titolo'>): string => p.titolo.map((x) => x.t).join('');
+/** La card Notizie non è una riga come le altre: la sua frase contiene la data e cambierebbe sempre, e il suo conteggio apre la sezione delle notizie. */
+export const eCardNotizie = (c: Pick<CardFissa, 'id'>): boolean => c.id === 'notizie';
+
 export interface Edizione {
   versione: number;
   /** Il lunedì della settimana, AAAA-MM-GG: è anche la chiave del file e dell'indirizzo. */
@@ -58,8 +64,8 @@ export interface Edizione {
   porte: PortaFissa[];
   card: CardFissa[];
   notizie: NotizieFisse;
-  /** Le fonti che non hanno risposto al giro. */
-  fonti_mute: FonteMuta[];
+  /** Le fonti senza dati aggiornati a questo giro: in errore o non configurate. */
+  fonti_non_aggiornate: FonteNonAggiornata[];
   /** Si aggiungono a mano, con un commit: è l'unico modo in cui un'edizione cambia. */
   correzioni: Correzione[];
 }

@@ -1,7 +1,7 @@
 // L'immagine dell'anteprima di un'edizione, fotografata con Playwright. La carica solo il comando: la build la copia soltanto, e non arriva mai fin qui.
 import { chromium, type Page } from '@playwright/test';
 import { dayWith } from '../text/format';
-import type { Edizione } from './tipi';
+import { portaConDati, type Edizione } from './tipi';
 
 const MODELLO = new URL('../../../scripts/immagine-edizione.html', import.meta.url).href;
 // il corpo delle due porte, in pixel: il più grande a cui entrano tutte e due. A 30 si legge ancora nei 400 px di un elenco di post
@@ -11,13 +11,14 @@ const PIU_PICCOLO = 30;
 /**
  * Riempie il modello con l'edizione e sceglie il corpo delle due porte, lo stesso per entrambe. I testi entrano come testo, mai come HTML.
  * Se non entrano, o manca il font del sito, è un errore: meglio nessuna edizione che un'immagine tagliata.
+ * L'interfaccia è fotografa: questa è esportata solo per le prove che un PNG non permette, dichiarate in tests/e2e/immagine.spec.ts.
  */
 export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
   await page.setViewportSize({ width: 1200, height: 630 });
   await page.goto(MODELLO);
   const contenuto = {
     data: `Settimana ${dayWith('del', e.settimana)}`,
-    porte: e.porte.map((p) => ({ nome: p.nome, parti: p.titolo.length ? p.titolo : [{ t: p.meta }] })),
+    porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }] })),
     da: PIU_GRANDE,
     a: PIU_PICCOLO,
   };

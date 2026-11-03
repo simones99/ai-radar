@@ -4,7 +4,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
-import { creaEdizione, fileDelSito, foglioDellaHome, type Edizione } from '../../src/lib/edizioni';
+import { creaEdizione, filePubblici, foglioDellaHome, type Edizione } from '../../src/lib/edizioni';
 import type { Dataset } from '../../src/lib/data/types';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
@@ -23,7 +23,7 @@ const ARCHIVIO = '/edizioni/';
 
 async function serviEdizioni(page: Page, request: APIRequestContext) {
   const home = await (await request.get('/')).text();
-  const file = fileDelSito([conCorrezione, seconda], { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici([conCorrezione, seconda], { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
   for (const [percorso, body] of Object.entries(file)) {
     // il feed con il tipo con cui lo serve GitHub Pages
     const contentType = percorso.endsWith('.xml') ? 'application/xml' : 'text/html; charset=utf-8';
@@ -65,6 +65,18 @@ for (const [nome, indirizzo] of [['la prima edizione', PRIMA], ['un’edizione c
       await page.setViewportSize({ width: 320, height: 640 });
       await page.goto(indirizzo);
       expect(await senzaScorrimento(page)).toBe(true);
+    });
+
+    test('con «riduci movimento» niente si anima, nemmeno passando su un link', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(indirizzo);
+      await page.getByRole('main').getByRole('link').first().hover();
+      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      // anche ciò che partirebbe dopo: nessun elemento ha una transizione o un'animazione
+      expect(await page.evaluate(() => [...document.querySelectorAll('*')].filter((el) => {
+        const stile = getComputedStyle(el);
+        return stile.animationName !== 'none' || stile.transitionDuration.split(', ').some((durata) => durata !== '0s');
+      }).length)).toBe(0);
     });
 
     test('usa il font e la testata del sito', async ({ page }) => {

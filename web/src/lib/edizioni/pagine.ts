@@ -1,17 +1,15 @@
-// I file del sito che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
+// Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa.
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
-import { INDICE_EDIZIONI } from '../data/load';
+import { ICONA } from '../icona';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
-import { VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
+import { eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
 
-export interface OpzioniSito {
+export interface OpzioniPagine {
   /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
   indirizzoBase: string;
   /** Il foglio di stile della home, relativo alla radice del sito: il suo nome cambia a ogni build. */
   foglio: string;
-  /** L'HTML della home uscito dalla build: con almeno un'edizione la mappa ne restituisce una copia con il link al feed. */
-  home?: string;
 }
 
 /** Il foglio di stile che la build ha dato alla home, relativo alla radice del sito. */
@@ -23,7 +21,7 @@ export function foglioDellaHome(html: string): string {
 }
 
 // I titoli delle notizie arrivano da fonti esterne, e un'edizione corretta a mano può contenere di tutto: niente entra nella pagina senza passare da qui.
-const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
+export const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
 
 /** L'indirizzo se è http o https, altrimenti null: il resto non diventa un link. */
 function linkSicuro(url: string | null): string | null {
@@ -40,9 +38,8 @@ const linkEsterno = (url: string | null, testo: string): string => {
 };
 
 /** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
-const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.tema as TileId, d.elemento, d.params)}`);
-const testoPorta = (p: PortaFissa): string => p.titolo.map((x) => x.t).join('');
-const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
+const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.card as TileId, d.elemento, d.params)}`);
+export const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
 
 function rigaFonti(fonti: Fonte[]): string {
   if (!fonti.length) return '';
@@ -52,12 +49,11 @@ function rigaFonti(fonti: Fonte[]): string {
 
 function porta(p: PortaFissa, radice: string): string {
   const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
-  const notizia = p.titolo.length && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
-  const conDati = p.titolo.length > 0;
+  const notizia = portaConDati(p) && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
   return `<article class="ed-porta">
 <h2>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
 ${notizia}
-${conDati && !p.cambiata ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
+${portaConDati(p) && !p.cambiata ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
 ${p.nota ? `<p class="ed-nota">${esc(p.nota)}</p>` : ''}
 <p class="ed-fonte">${esc(p.meta)}</p>
 ${rigaFonti(p.fonti)}
@@ -74,7 +70,7 @@ ${rigaFonti(c.fonti)}
 }
 
 function frasi(e: Edizione, radice: string): string {
-  const card = e.card.filter((c) => c.id !== 'notizie'); // il conteggio delle notizie apre la loro sezione
+  const card = e.card.filter((c) => !eCardNotizie(c));
   const conDati = card.filter((c) => c.frase != null);
   const righe = conDati.filter((c) => c.cambiata);
   const invariate = conDati.filter((c) => !c.cambiata);
@@ -90,43 +86,33 @@ ${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDat
 
 function notizie(e: Edizione, radice: string): string {
   const n = e.notizie;
-  const frase = e.card.find((c) => c.id === 'notizie')?.frase;
-  const conteggio = !frase ? 'Dati non disponibili.'
-    : !n.numero ? frase
-    : `${n.numero} ${n.numero === 1 ? 'notizia' : 'notizie'} ${n.periodo}, da ${n.fonti} ${n.fonti === 1 ? 'fonte' : 'fonti'}.`;
+  const card = e.card.find(eCardNotizie);
+  // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
+  const cifra = card?.cifra && card.cifra !== '0' ? `<strong class="ed-cifra">${esc(card.cifra)}</strong> ` : '';
+  const conteggio = card?.frase ? `${cifra}${esc(card.frase)}` : 'Dati non disponibili.';
   const temi = n.temi.map((t) => `<h3>${esc(t.nome)}</h3>
 <ul class="ed-voci">
 ${t.voci.map((v) => `<li>${linkEsterno(v.link, v.titolo)} <span class="ed-fonte">${esc(v.fonte)} · ${esc(day(v.data))}</span></li>`).join('\n')}
 </ul>`).join('\n');
   return `<section>
 <h2>Notizie</h2>
-<p>${esc(conteggio)}</p>
+<p>${conteggio}</p>
 ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono solo titolo, data e link all'articolo originale, nella sua lingua.</p>\n${temi}` : ''}
 <p><a href="${esc(`${radice}${toHash('notizie')}`)}">Le altre notizie, nella card Notizie</a></p>
 </section>`;
 }
 
-function fontiMute(e: Edizione): string {
-  if (!e.fonti_mute.length) return '<p class="ed-nota">Tutte le fonti hanno risposto a questo giro.</p>';
-  const righe = e.fonti_mute.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
+/** Una fonte in errore e una non configurata non hanno fatto la stessa cosa, ma a tutte e due mancano i dati di questo giro. */
+function fontiNonAggiornate(e: Edizione): string {
+  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">Tutte le fonti hanno dati aggiornati a questo giro.</p>';
+  const righe = e.fonti_non_aggiornate.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
   return `<section>
-<h2>Fonti che non hanno risposto</h2>
-<p class="ed-nota">Questa settimana i loro dati sono rimasti indietro.</p>
+<h2>Senza dati aggiornati a questo giro</h2>
 <ul class="ed-voci">
 ${righe}
 </ul>
 </section>`;
 }
-
-function controlla(e: Edizione): void {
-  if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
-  if (Number.isNaN(Date.parse(e.raccolti))) throw new Error(`Edizione ${e.settimana}: la data di raccolta non è valida, «${e.raccolti}».`);
-  for (const c of e.correzioni) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(c.data)) throw new Error(`Edizione ${e.settimana}: una correzione ha una data non valida, «${c.data}»: serve AAAA-MM-GG.`);
-  }
-}
-
-const ICONA = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23121211' stroke-width='4'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%230068d6'/%3E%3C/svg%3E";
 
 /** Il nome dell'immagine di un'edizione nel sito, nella cartella della sua pagina. */
 export const IMMAGINE = 'anteprima.png';
@@ -134,10 +120,10 @@ export const IMMAGINE = 'anteprima.png';
 const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
 
 /** Il link con cui un lettore di feed trova il feed partendo da una pagina. */
-const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
+export const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
 
 /** Lo scheletro comune delle pagine. radice: la radice del sito vista dalla pagina; percorso: la pagina vista dalla radice. */
-function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniSito): string {
+function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniPagine): string {
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -180,7 +166,7 @@ ${o.corpo}
  * Il testo di un'edizione, lo stesso nella pagina e nella voce del feed.
  * radice: la radice del sito vista dai link; intestazione: il titolo, che nella voce mostra già il lettore di feed.
  */
-function corpoEdizione(e: Edizione, radice: string, intestazione = ''): string {
+export function corpoEdizione(e: Edizione, radice: string, intestazione = ''): string {
   const correzioni = e.correzioni.map((c) => `<p class="ed-corretta"><strong>Corretta ${esc(dayWith('il', c.data))}:</strong> ${esc(c.testo)}</p>`).join('\n');
   return `<div class="ed-testa">
 ${intestazione}
@@ -192,12 +178,12 @@ ${e.porte.map((p) => porta(p, radice)).join('\n')}
 </div>
 ${frasi(e, radice)}
 ${notizie(e, radice)}
-${fontiMute(e)}`;
+${fontiNonAggiornate(e)}`;
 }
 
-const descrizioneEdizione = (e: Edizione): string => e.porte.filter((p) => p.titolo.length).map((p) => `${testoPorta(p)}.`).join(' ');
+export const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${testoPorta(p)}.`).join(' ');
 
-function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
+export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine): string {
   const radice = '../../';
   return pagina({
     titolo: titoloPagina(e),
@@ -210,18 +196,18 @@ function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
     tipo: 'article',
     immagine: {
       percorso: `edizioni/${e.settimana}/${IMMAGINE}`,
-      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${p.titolo.length ? testoPorta(p) : p.meta}.`).join(' ')}`,
+      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${portaConDati(p) ? testoPorta(p) : p.meta}.`).join(' ')}`,
     },
   }, opzioni);
 }
 
-const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
-const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.';
+export const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
+export const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.';
 
-function archivio(edizioni: Edizione[], opzioni: OpzioniSito): string {
+export function archivio(edizioni: Edizione[], opzioni: OpzioniPagine): string {
   const voci = edizioni.map((e) => `<li>
 <h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
-${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length ? testoPorta(p) : p.meta)}</p>`).join('\n')}
+${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(portaConDati(p) ? testoPorta(p) : p.meta)}</p>`).join('\n')}
 </li>`).join('\n');
   return pagina({
     titolo: TITOLO_ARCHIVIO,
@@ -239,54 +225,4 @@ ${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length 
 ${voci}
 </ul>`,
   }, opzioni);
-}
-
-const VOCI_DEL_FEED = 26; // chi si iscrive non scarica anni di storico: quello sta nell'archivio
-
-/** Il testo intero sta in content:encoded, dove lo cercano i lettori di feed; description resta il riassunto con le due porte. */
-function voceDelFeed(e: Edizione, indirizzoBase: string): string {
-  return `<item>
-<title>${esc(titoloPagina(e))}</title>
-<link>${esc(`${indirizzoBase}edizioni/${e.settimana}/`)}</link>
-<guid isPermaLink="false">ai-radar:edizione:${esc(e.settimana)}</guid>
-<pubDate>${new Date(e.raccolti).toUTCString()}</pubDate>
-<description>${esc(descrizioneEdizione(e))}</description>
-<content:encoded>${esc(corpoEdizione(e, indirizzoBase))}</content:encoded>
-</item>`;
-}
-
-// I caratteri che XML 1.0 non ammette nemmeno come entità: uno solo, in un titolo esterno, renderebbe illeggibile tutto il feed.
-const FUORI_DA_XML = /[^\t\n\r -퟿-�\u{10000}-\u{10FFFF}]/gu;
-
-function feed(recenti: Edizione[], { indirizzoBase }: OpzioniSito): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-<channel>
-<title>${esc(TITOLO_ARCHIVIO)}</title>
-<link>${esc(`${indirizzoBase}edizioni/`)}</link>
-<description>${esc(DESCRIZIONE_ARCHIVIO)}</description>
-<language>it</language>
-<atom:link href="${esc(`${indirizzoBase}feed.xml`)}" rel="self" type="application/rss+xml" />
-${recenti.slice(0, VOCI_DEL_FEED).map((e) => voceDelFeed(e, indirizzoBase)).join('\n')}
-</channel>
-</rss>
-`.replace(FUORI_DA_XML, '');
-}
-
-/**
- * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
- * Un file nuovo del sito è una voce in più in questa mappa: chi costruisce il sito li scrive tutti allo stesso modo.
- */
-export function fileDelSito(edizioni: Edizione[], opzioni: OpzioniSito): Record<string, string> {
-  edizioni.forEach(controlla);
-  if (!edizioni.length) return {};
-  const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));
-  return {
-    'edizioni/index.html': archivio(recenti, opzioni),
-    ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
-    'feed.xml': feed(recenti, opzioni),
-    [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
-    // nell'HTML e non dall'app: un lettore di feed non esegue JavaScript. Senza edizioni la home resta quella uscita dalla build
-    ...(opzioni.home ? { 'index.html': opzioni.home.replace('</head>', () => `  ${linkAlFeed(opzioni.indirizzoBase)}\n  </head>`) } : {}),
-  };
 }

@@ -3,6 +3,7 @@
 import { nextDeadline, nextReport } from '../data/derive';
 import type { Dataset } from '../data/types';
 import { NOMI_FONTI } from '../text/fonti';
+import { CHI_ADDESTRA } from '../text/geopoliticai';
 import type { Destinazione, Fonte, FonteMuta } from './tipi';
 
 // Chi non pubblica con una licenza aperta si riusa alle sue condizioni: lo diciamo così, senza attribuirgli una licenza che non ha.
@@ -17,7 +18,12 @@ const TABELLA: Record<string, (d: Dataset, oggi: Date, elemento: string | null) 
   open: (d) => [{ nome: 'Hugging Face', url: d.huggingface?.url ?? 'https://huggingface.co', licenza: "termini d'uso di Hugging Face" }],
   notizie: () => [{ nome: 'I feed delle fonti di ogni notizia', url: null, licenza: SOLO_LINK }],
   business: (d) => [{ nome: 'Eurostat', url: d.eurostat?.url ?? 'https://ec.europa.eu/eurostat', licenza: 'CC BY 4.0' }],
-  geopoliticai: (d) => [{ nome: `${d.geopoliticai?.fonte ?? 'Epoch AI'}, Epoch Capabilities Index`, url: d.geopoliticai?.url_eci ?? 'https://epoch.ai/eci', licenza: d.geopoliticai?.licenza ?? 'CC BY 4.0' }],
+  geopoliticai: (d, _oggi, elemento) => {
+    const g = d.geopoliticai;
+    // la porta su chi addestra i modelli di grande scala conta i modelli; la card riporta la capacità
+    const [dato, url] = elemento === CHI_ADDESTRA ? ['Data on AI models', g?.url_modelli ?? 'https://epoch.ai/data/ai-models'] : ['Epoch Capabilities Index', g?.url_eci ?? 'https://epoch.ai/eci'];
+    return [{ nome: `${g?.fonte ?? 'Epoch AI'}, ${dato}`, url, licenza: g?.licenza ?? 'CC BY 4.0' }];
+  },
   persone: (d) => {
     const s = d.owid?.serie?.uso_genai;
     return [{ nome: s?.citazione?.trim() || 'Our World in Data', url: s?.url ?? 'https://ourworldindata.org', licenza: s?.licenza ?? 'indicata dalla fonte' }];

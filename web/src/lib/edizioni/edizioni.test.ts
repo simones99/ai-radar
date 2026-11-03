@@ -230,6 +230,14 @@ describe('fonte e licenza su ogni riga', () => {
     expect(g.licenza).toBe(d.geopoliticai!.licenza);
   });
 
+  it('una riga di GeopoliticAI mostra le fonti del dato che riporta: la card la capacità, la porta i modelli di grande scala', () => {
+    const g = d.geopoliticai!;
+    expect(fonti(crea(), 'geopoliticai')).toEqual([{ nome: 'Epoch AI, Epoch Capabilities Index', url: g.url_eci, licenza: g.licenza }]);
+    const porta = crea({ status: d.status, geopoliticai: g }).porte[1];
+    expect(testo(porta.titolo)).toMatch(/modelli di grande scala/);
+    expect(porta.fonti).toEqual([{ nome: 'Epoch AI, Data on AI models', url: g.url_modelli, licenza: g.licenza }]);
+  });
+
   it('la fonte di Norme è quella della scadenza mostrata, e quella di Rapporti è il rapporto mostrato', () => {
     expect(fonti(crea(), 'norme')[0].url).toBe('https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai');
     expect(fonti(crea(), 'rapporti')[0]).toMatchObject({ nome: 'State of AI Report, Air Street Capital', url: 'https://www.stateof.ai' });

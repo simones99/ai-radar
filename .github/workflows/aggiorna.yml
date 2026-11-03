@@ -43,6 +43,10 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
+      # l'indirizzo pubblico del sito, per tutti i passi del job: la build che verrà pubblicata è quella rilanciata dagli end-to-end
+      - name: Ricava l'indirizzo base dal nome del repository
+        run: echo "AI_RADAR_BASE_URL=https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_ENV"
+
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"

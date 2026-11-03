@@ -12,6 +12,10 @@ _Avoid_: sezione, ingresso
 La card che apre una testa, una per testa (Competenze e GeopoliticAI): in home prende tutta la riga, con una figura disegnata dai dati al posto della foto e senza un titolo che faccia concorrenza alla porta, e il suo dettaglio si apre sul titolo grande, senza foto.
 _Avoid_: copertina, card in evidenza
 
+**Edizione**:
+Il riassunto fisso di una settimana, con le due porte, le frasi cambiate e le notizie. Esce il lunedì, ha un suo link e dopo non cambia, salvo correzioni dichiarate.
+_Avoid_: numero, newsletter, digest, bollettino
+
 **Competenza**:
 Una delle capacità sull'AI che il radar segue, misurata su ricerca, open source e lavoro.
 _Avoid_: skill, tema

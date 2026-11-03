@@ -40,7 +40,7 @@
     'Slancio: quanto è cambiata negli ultimi 6 mesi interi la quota della competenza sul totale dell’AI. Si stima con una retta sui dati di ogni mese, non confrontando solo due periodi.',
     'Paper: quota dei paper AI su arXiv che la citano nell’abstract. Repository: quota dei nuovi repository GitHub con il suo topic sui nuovi repository AI (topic llm, ai, artificial-intelligence, generative-ai). Annunci: quota degli annunci che la citano, quando ci sono almeno 8 settimane di rilevazioni con la stessa ricerca.',
     'I segnali si combinano pesando di più quelli più precisi; nessuno pesa più di due terzi.',
-    'Domanda: annunci attivi che citano la competenza ogni 10.000 annunci del Paese, media tra i Paesi.',
+    'Domanda: annunci attivi che citano la competenza ogni 10.000 annunci del Paese. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la stessa ricerca, così una settimana strana non sposta il numero. Il Paese a metà classifica è la mediana tra gli 8 Paesi: con un numero pari di Paesi, il valore a metà tra i due centrali. Il metodo è cambiato a novembre 2026: prima contava solo l’ultima rilevazione, e un solo Paese poteva spostare il valore.',
     'Quadranti a soglie fisse. Slancio sopra 0 (cresce più dell’AI) e almeno 3 annunci ogni 10mila: Impara ora. Solo lo slancio: Da provare. Solo la domanda: Da consolidare. Nessuna delle due: Tieni d’occhio.',
     'Prudenza: il quadrante cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo. Nel frattempo la competenza è «in movimento verso» il quadrante nuovo.',
     'Dato incerto (punto vuoto): il margine all’80% dello slancio è largo, l’estremo alto supera di oltre il 55% quello basso. Succede con pochi paper o repository, o con andamenti irregolari. Un margine che comprende lo zero non basta a rendere incerto il dato, ma dice che la competenza potrebbe non crescere più dell’AI.',
@@ -72,6 +72,7 @@
         <div class="col">
           <Radar {rows} {quadranti} highlight={hovered} {delRuolo} href={(id) => toHash('competenze', id)} onpick={(id) => apri('competenze', id)} />
           <p class="legenda">Le linee sono soglie fisse: cresce più dell’AI, almeno 3 annunci ogni 10mila. Il colore è il quadrante confermato, la posizione il calcolo di oggi: dopo due mesi di fila il quadrante cambia, e il contorno tratteggiato segna chi aspetta. Scia: da dove era un mese fa. Punto vuoto: dato incerto. Tocca un punto per aprirlo.</p>
+          <p class="legenda">Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.</p>
         </div>
         <div class="mov">
           <h4>Movimenti {meseMovimenti ? `di ${monthName(meseMovimenti)}` : 'del mese'}</h4>

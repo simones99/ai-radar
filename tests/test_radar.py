@@ -260,6 +260,11 @@ def run_radar(skills: list[dict]) -> dict:
     return json.loads((common.data_dir() / "radar.json").read_text(encoding="utf-8"))
 
 
+def demand_row(tmp_path, monkeypatch, snaps: list[dict]) -> dict:
+    write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, {"snapshots": snaps})
+    return run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+
+
 @pytest.mark.parametrize("s,d,q", [(0.01, 3.0, "impara-ora"), (0.0, 3.0, "consolida"), (0.01, 2.99, "prova"),
                                    (-0.2, 1.0, "osserva"), (None, 5.0, None), (0.3, None, None)])
 def test_quadrant_fixed_thresholds(s, d, q):
@@ -290,14 +295,14 @@ def test_run_writes_version_2(tmp_path, monkeypatch):
     assert r["slancio"] == pytest.approx(1.05 ** 6 - 1, abs=0.02)
     lo, hi = r["slancio_margine"]
     assert lo < r["slancio"] < hi
-    assert r["domanda"] == pytest.approx(3.5)  # media tra 5 (it) e 2 (us) ogni 10mila
+    assert r["domanda"] == pytest.approx(3.5)  # a metà tra 5 (it) e 2 (us) ogni 10mila
     assert r["domanda_it"] == pytest.approx(5.0)
     assert r["quadrante"] == r["quadrante_calcolato"] == "impara-ora"
     assert (r["incerto"], r["incerto_perche"]) == (False, None)
     seg = r["segnali"]
     assert seg["arxiv"]["peso"] + seg["github"]["peso"] == pytest.approx(1)
     assert seg["lavoro"]["variazione"] is None  # una sola rilevazione: niente tendenza del lavoro
-    assert seg["lavoro"]["rilevazioni"] == [{"data": "2026-10-12", "media": 3.5, "it": 5.0}]
+    assert seg["lavoro"]["rilevazioni"] == [{"data": "2026-10-12", "mediana": 3.5, "it": 5.0}]
     assert len(seg["github"]["mensile"]) == 12 and seg["github"]["mensile"][0]["base"] == 20000
     assert r["per_iniziare"] == [{"lingua": "en", "titolo": "Doc", "url": "https://doc.example", "tipo": "documentazione"}]
     assert r["in_crescita"][0]["nome"] == "o/r"
@@ -335,6 +340,74 @@ def test_job_trend_needs_eight_weeks_with_the_same_query():
     sig = radar.jobs_signal({"snapshots": changed}, "a")
     assert sig["tendenza"] is None  # con la ricerca nuova ci sono solo 3 settimane
     assert [x["data"] for x in sig["rilevazioni"]] == weeks[-4:]
+
+
+WEEKS = ["2026-08-03", "2026-08-10", "2026-08-17", "2026-08-24", "2026-08-31", "2026-09-07",
+         "2026-09-14", "2026-09-21", "2026-09-28", "2026-10-05", "2026-10-12"]
+
+
+def three_countries() -> list[dict]:
+    """Italia in salita, USA in discesa, Germania con la ricerca cambiata dopo 7 settimane."""
+    return ([snap(w, "it", 50 + 5 * i) for i, w in enumerate(WEEKS)]
+            + [snap(w, "us", 200 - 4 * i) for i, w in enumerate(WEEKS)]
+            + [snap(w, "de", 80, q="vecchia" if i < 7 else "x") for i, w in enumerate(WEEKS)])
+
+
+def test_the_median_does_not_touch_momentum_or_the_query_filter(tmp_path, monkeypatch):
+    """I valori vengono dal codice di prima della mediana: il cambio di metodo riguarda solo la domanda."""
+    r = demand_row(tmp_path, monkeypatch, three_countries())
+    assert r["slancio"] == 0.3356 and r["slancio_margine"] == [0.2952, 0.3772] and r["incerto"] is False
+    lavoro = r["segnali"]["lavoro"]
+    assert (lavoro["variazione"], lavoro["margine"], lavoro["peso"]) == (0.2154, [-0.0069, 0.4875], 0.033)
+    assert [x["data"] for x in lavoro["rilevazioni"]] == WEEKS
+
+
+@pytest.mark.parametrize("counts,expected", [
+    ([900, 10, 60, 30, 20], 2.5),  # 4 rilevazioni su 5: quella da 900 è fuori; 1, 6, 3, 2 ogni 10mila
+    ([10, 20, 40], 2.0),           # meno di 4: quelle che ci sono
+    ([20, 40], 3.0),
+    ([40], 4.0),
+])
+def test_demand_of_a_country_is_the_median_of_its_last_four_surveys(tmp_path, monkeypatch, counts, expected):
+    r = demand_row(tmp_path, monkeypatch, [snap(w, "it", n) for w, n in zip(WEEKS, counts)])
+    assert r["domanda_it"] == pytest.approx(expected)
+    assert r["segnali"]["lavoro"]["ogni_10mila"] == {"it": pytest.approx(expected)}
+
+
+def test_demand_only_uses_surveys_with_the_same_query(tmp_path, monkeypatch):
+    snaps = [snap(WEEKS[0], "it", 900, q="vecchia"), snap(WEEKS[1], "it", 900, q="vecchia"), snap(WEEKS[2], "it", 10), snap(WEEKS[3], "it", 30)]
+    assert demand_row(tmp_path, monkeypatch, snaps)["domanda_it"] == pytest.approx(2.0)
+
+
+def test_demand_is_the_country_halfway_down_the_ranking(tmp_path, monkeypatch):
+    r = demand_row(tmp_path, monkeypatch, three_countries())
+    # it 8,5 9 9,5 10 -> 9,25; us 17,2 16,8 16,4 16 -> 16,6; de 8 (la ricerca vecchia non conta)
+    assert r["segnali"]["lavoro"]["ogni_10mila"] == {"de": 8.0, "it": 9.25, "us": 16.6}
+    assert r["domanda"] == pytest.approx(9.25)
+    assert r["domanda_it"] == pytest.approx(9.25)
+
+
+def test_with_an_even_number_of_countries_demand_is_between_the_two_central_ones(tmp_path, monkeypatch):
+    snaps = [snap(WEEKS[0], c, n) for c, n in (("it", 10), ("us", 30), ("de", 50), ("fr", 90))]
+    assert demand_row(tmp_path, monkeypatch, snaps)["domanda"] == pytest.approx(4.0)  # 1, 3, 5, 9 ogni 10mila
+
+
+def test_one_outlier_country_does_not_move_demand(tmp_path, monkeypatch):
+    def domanda(spagna: int) -> float:
+        snaps = [snap(WEEKS[0], c, n) for c, n in (("it", 10), ("us", 30), ("es", spagna))]
+        return demand_row(tmp_path, monkeypatch, snaps)["domanda"]
+
+    assert domanda(50) == pytest.approx(3.0)
+    assert domanda(50000) == pytest.approx(3.0)
+
+
+def test_surveys_say_the_median_country_and_italy_of_that_date_only(tmp_path, monkeypatch):
+    snaps = [snap(w, "it", 10 * (i + 1)) for i, w in enumerate(WEEKS[:3])] + [snap(w, "us", 90) for w in WEEKS[:3]] + [snap(WEEKS[2], "de", 200)]
+    assert demand_row(tmp_path, monkeypatch, snaps)["segnali"]["lavoro"]["rilevazioni"] == [
+        {"data": WEEKS[0], "mediana": 5.0, "it": 1.0},
+        {"data": WEEKS[1], "mediana": 5.5, "it": 2.0},
+        {"data": WEEKS[2], "mediana": 9.0, "it": 3.0},
+    ]
 
 
 def test_incomplete_arxiv_is_ignored(tmp_path, monkeypatch):
@@ -447,6 +520,6 @@ def test_weekly_jobs_give_previous_demand_and_history(tmp_path, monkeypatch):
     write_inputs(tmp_path, monkeypatch, {"a": grow(500, 1.05)}, {"a": grow(2000, 1.05)}, jobs)
     out = run_radar([{"id": "a", "nome": "A"}])
     r = out["competenze"][0]
-    assert r["domanda_prec"] == pytest.approx(5.9)  # ultima rilevazione 5/10, limite 7/9: 59 annunci su 100mila
+    assert r["domanda_prec"] == pytest.approx(5.75)  # ultima rilevazione 5/10, limite 7/9: mediana di 56, 57, 58, 59 annunci su 100mila
     assert out["storico"][-1]["competenze"]["a"]["domanda"] is not None
     assert out["storico"][-2]["competenze"]["a"]["domanda"] is not None

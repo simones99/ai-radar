@@ -26,7 +26,7 @@ export interface RadarRow {
   /** Variazione in 6 mesi della quota sul totale dell'AI: 0,25 = +25%. */
   slancio: number | null;
   slancio_margine?: [number, number] | null;
-  /** Annunci ogni 10mila, media dei Paesi. */
+  /** Annunci ogni 10mila nel Paese a metà classifica; ogni Paese vale la mediana delle sue ultime 4 rilevazioni. */
   domanda: number | null;
   domanda_it?: number | null;
   /** Quadrante pubblicato: cambia dopo due mesi di fila nel quadrante nuovo. */
@@ -40,7 +40,7 @@ export interface RadarRow {
   segnali?: {
     arxiv?: (Segnale & { mensile: { mese: string; n: number; totale: number }[] }) | null;
     github?: (Segnale & { mensile: { mese: string; n: number; base: number }[] }) | null;
-    lavoro?: (Segnale & { rilevazioni: { data: string; media: number; it: number | null }[]; ogni_10mila: Record<string, number>; data: string }) | null;
+    lavoro?: (Segnale & { rilevazioni: { data: string; mediana: number; it: number | null }[]; ogni_10mila: Record<string, number>; data: string }) | null;
   };
   per_iniziare?: Risorsa[];
   in_crescita?: RepoNuovo[];

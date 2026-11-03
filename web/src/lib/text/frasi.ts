@@ -191,7 +191,7 @@ const alLimite = (rows: RadarRowM[]): string => rows.filter(margineSuZero).map((
   const [da, a] = r.slancio_margine as [number, number];
   return `Il margine di ${r.breve}, da ${signedPct(da)} a ${signedPct(a)}, include lo zero: ${verbo([r], 'potrebbe', 'potrebbero')} non crescere più dell'AI. `;
 }).join('');
-/** La soglia guarda la media dei Paesi: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
+/** La soglia guarda il Paese a metà classifica: chi lavora in Italia deve sapere se da noi chi entra in Impara ora non ci arriva. Lo dicono la porta e il suo arrivo. */
 const sottoSogliaInItalia = (inn: RadarRowM[]): string =>
   inn.filter((r) => r.domanda_it != null && r.domanda_it < MIN_ANNUNCI).map((r) => `${r.breve}: in Italia ${per10k(r.domanda_it as number)} annunci ogni 10mila, sotto soglia`).join('; ');
 export function headCompetenze(d: Dataset, _today?: Date): Head {

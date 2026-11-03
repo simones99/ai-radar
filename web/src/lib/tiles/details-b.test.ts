@@ -79,6 +79,12 @@ describe('Persone', () => {
     expect(screen.getByRole('img', { name: 'Competenze più chieste negli annunci' })).toBeInTheDocument();
     expect(screen.queryByText(/Serve la chiave gratuita di Adzuna/)).toBeNull();
   });
+  it('le competenze più chieste dicono il Paese a metà classifica', () => {
+    show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
+    const blk = screen.getByRole('region', { name: 'Competenze più chieste negli annunci' });
+    expect(blk).toHaveTextContent('Annunci che citano la competenza ogni 10.000, nel Paese a metà classifica.');
+    expect(blk).not.toHaveTextContent(/media (dei|tra i) Paesi/);
+  });
   it('gli annunci sono in CC BY-ND: il grafico arrotonda e la nota rimanda alla tabella, con i valori come pubblicati', () => {
     show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
     expect(screen.getByRole('region', { name: "Annunci di lavoro che chiedono l'AI" })).toHaveTextContent('Valori esatti nella tabella.');

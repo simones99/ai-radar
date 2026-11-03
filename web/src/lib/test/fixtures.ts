@@ -8,9 +8,9 @@ const ok = { stato: 'ok' as const, ultimo_successo: '2026-10-15T08:00:00+00:00' 
 const MESI = ['2025-09', '2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09'];
 const paper = (n0: number, g: number) => MESI.map((mese, i) => ({ mese, n: Math.round(n0 * g ** i), totale: 12000 }));
 const repo = (n0: number, g: number) => MESI.map((mese, i) => ({ mese, n: Math.round(n0 * g ** i), base: Math.round(6000 * 1.15 ** i) }));
-const lavoro = (rilevazioni: { data: string; media: number; it: number | null }[]) => {
+const lavoro = (rilevazioni: { data: string; mediana: number; it: number | null }[]) => {
   const last = rilevazioni[rilevazioni.length - 1];
-  return { variazione: null, margine: null, peso: 0, data: last.data, ogni_10mila: { it: last.it ?? 0, us: last.media }, rilevazioni };
+  return { variazione: null, margine: null, peso: 0, data: last.data, ogni_10mila: { it: last.it ?? 0, us: last.mediana }, rilevazioni };
 };
 const pt = (slancio: number, domanda: number, pub: Quadrant, incerto = false, calcolato: Quadrant = pub) =>
   ({ slancio, domanda, calcolato, pubblicato: pub, incerto });
@@ -42,14 +42,14 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
         slancio: 0.52, slancio_margine: [0.45, 0.6], domanda: 26.4, domanda_it: 37.1, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
         incerto: false, incerto_perche: null, slancio_prec: 0.38, domanda_prec: 26.4, quadrante_prec: 'impara-ora',
         segnali: { arxiv: { variazione: 0.3, margine: [0.2, 0.4], peso: 0.5, mensile: paper(1200, 1.07) }, github: { variazione: 0.8, margine: [0.6, 1], peso: 0.5, mensile: repo(650, 1.3) },
-          lavoro: lavoro([{ data: '2026-10-12', media: 26.4, it: 37.1 }]) },
+          lavoro: lavoro([{ data: '2026-10-12', mediana:26.4, it: 37.1 }]) },
         per_iniziare: [{ titolo: 'Corso gratuito di Hugging Face sugli agenti', url: 'https://huggingface.co/learn/agents-course/en/unit0/introduction', tipo: 'corso', lingua: 'en' }],
         in_crescita: [] },
       { id: 'mcp', nome: 'Model Context Protocol (MCP)', breve: 'MCP', descrizione: 'Lo standard per collegare strumenti.', ruoli: ['sviluppo'],
         slancio: 0.15, slancio_margine: [0.05, 0.27], domanda: 3.4, domanda_it: 2.6, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
         incerto: false, incerto_perche: null, slancio_prec: -0.27, domanda_prec: 3.4, quadrante_prec: 'consolida',
         segnali: { arxiv: { variazione: -0.04, margine: [-0.3, 0.3], peso: 0.33, mensile: paper(20, 1.07) }, github: { variazione: 0.4, margine: [0.2, 0.6], peso: 0.67, mensile: repo(900, 1.25) },
-          lavoro: lavoro([{ data: '2026-09-14', media: 3.1, it: 2.4 }, { data: '2026-10-12', media: 3.4, it: 2.6 }]) },
+          lavoro: lavoro([{ data: '2026-09-14', mediana:3.1, it: 2.4 }, { data: '2026-10-12', mediana:3.4, it: 2.6 }]) },
         per_iniziare: [
           { titolo: 'Documentazione ufficiale di MCP: introduzione', url: 'https://modelcontextprotocol.io/docs/getting-started/intro', tipo: 'documentazione', lingua: 'en' },
           { titolo: 'Corso in italiano di prova', url: 'https://example.org/corso-mcp', tipo: 'corso', lingua: 'it' },
@@ -59,19 +59,19 @@ export const FIXTURE: Dataset & Record<string, unknown> = {
         slancio: -0.27, slancio_margine: [-0.35, -0.18], domanda: 8, domanda_it: 6.1, quadrante: 'consolida', quadrante_calcolato: 'consolida',
         incerto: false, incerto_perche: null, slancio_prec: 0.04, domanda_prec: 8, quadrante_prec: 'impara-ora',
         segnali: { arxiv: { variazione: -0.39, margine: [-0.5, -0.25], peso: 0.33, mensile: paper(300, 0.97) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(1400, 1.1) },
-          lavoro: lavoro([{ data: '2026-10-12', media: 8, it: 6.1 }]) },
+          lavoro: lavoro([{ data: '2026-10-12', mediana:8, it: 6.1 }]) },
         per_iniziare: [], in_crescita: [] },
       { id: 'robotica', nome: 'AI fisica e robotica', breve: 'Robotica', descrizione: 'Robot.', ruoli: [],
         slancio: 0.82, slancio_margine: [0.3, 1.6], domanda: 0.17, domanda_it: 0.28, quadrante: 'prova', quadrante_calcolato: 'prova',
         incerto: true, incerto_perche: 'pochi paper (45 al mese)', slancio_prec: 0.27, domanda_prec: 0.17, quadrante_prec: 'prova',
         segnali: { arxiv: { variazione: 0.9, margine: [0.2, 2], peso: 0.55, mensile: paper(30, 1.05) }, github: { variazione: 1.1, margine: [0.4, 2.2], peso: 0.45, mensile: repo(20, 1.3) },
-          lavoro: lavoro([{ data: '2026-10-12', media: 0.17, it: 0.28 }]) },
+          lavoro: lavoro([{ data: '2026-10-12', mediana:0.17, it: 0.28 }]) },
         per_iniziare: [], in_crescita: [] },
       { id: 'vector-db', nome: 'Database vettoriali', breve: 'DB vettoriali', plurale: true, descrizione: 'Indici.', ruoli: ['sviluppo', 'dati'],
         slancio: 0.05, slancio_margine: [-0.05, 0.16], domanda: 0.9, domanda_it: 0.4, quadrante: 'osserva', quadrante_calcolato: 'prova',
         incerto: false, incerto_perche: null, slancio_prec: 0, domanda_prec: 0.9, quadrante_prec: 'osserva',
         segnali: { arxiv: { variazione: -0.1, margine: [-0.3, 0.1], peso: 0.33, mensile: paper(15, 1) }, github: { variazione: 0.1, margine: [0, 0.2], peso: 0.67, mensile: repo(180, 1.08) },
-          lavoro: lavoro([{ data: '2026-10-12', media: 0.9, it: 0.4 }]) },
+          lavoro: lavoro([{ data: '2026-10-12', mediana:0.9, it: 0.4 }]) },
         per_iniziare: [], in_crescita: [] },
     ],
     storico: [

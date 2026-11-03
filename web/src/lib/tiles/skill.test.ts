@@ -11,11 +11,19 @@ const by = (id: string) => rows.find((r) => r.id === id)!;
 const figs = (c: HTMLElement) => [...c.querySelectorAll('.fig')].map((e) => e.textContent);
 
 describe('SkillView', () => {
-  it('annunci: con la media sopra 10, l’Italia sotto la soglia tiene il decimale', () => {
+  it('annunci: con il Paese a metà classifica sopra 10, l’Italia sotto la soglia tiene il decimale', () => {
     const row = by('mcp');
-    const rilevazioni = [{ data: '2026-09-14', media: 12, it: 2.4 }, { data: '2026-10-12', media: 12.4, it: 2.6 }];
+    const rilevazioni = [{ data: '2026-09-14', mediana: 12, it: 2.4 }, { data: '2026-10-12', mediana: 12.4, it: 2.6 }];
     render(SkillView, { row: { ...row, segnali: { ...row.segnali, lavoro: { ...row.segnali!.lavoro!, rilevazioni } } }, quadranti: radar.quadranti, storico: radar.storico });
     expect(screen.getByRole('img', { name: 'Annunci su MCP ogni 10mila' })).toHaveTextContent('2,6');
+  });
+  it('domanda e annunci parlano del Paese a metà classifica, non più di una media', () => {
+    const { container } = render(SkillView, { row: by('mcp'), quadranti: radar.quadranti, storico: radar.storico });
+    expect(screen.getByRole('region', { name: 'Domanda' })).toHaveTextContent('annunci ogni 10mila, il Paese a metà classifica');
+    const annunci = screen.getByRole('region', { name: 'Annunci' });
+    expect(annunci).toHaveTextContent('il Paese a metà classifica e l’Italia');
+    expect(screen.getByRole('img', { name: 'Annunci su MCP ogni 10mila' })).toHaveTextContent('Metà classifica 3,4');
+    expect(container).not.toHaveTextContent(/\bmedia\b/i);
   });
   it('un margine che comprende lo zero lo dice accanto al numero', () => {
     render(SkillView, { row: { ...by('mcp'), slancio_margine: [-0.09, 0.32] }, quadranti: radar.quadranti, storico: radar.storico });

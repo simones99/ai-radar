@@ -28,7 +28,7 @@
   const paper = $derived<Series[]>([{ name: row.breve, hot: true, pts: paperM.flatMap((m, i) => (m.totale ? [{ x: i, y: (1000 * m.n) / m.totale }] : [])) }]);
   const repo = $derived<Series[]>([{ name: row.breve, hot: true, pts: repoM.flatMap((m, i) => (m.base ? [{ x: i, y: (1000 * m.n) / m.base }] : [])) }]);
   const annunci = $derived<Series[]>([
-    { name: 'Media', hot: true, pts: ril.map((r, i) => ({ x: i, y: r.media })) },
+    { name: 'Metà classifica', hot: true, pts: ril.map((r, i) => ({ x: i, y: r.mediana })) },
     ...(ril.some((r) => r.it != null) ? [{ name: 'Italia', pts: ril.flatMap((r, i) => (r.it == null ? [] : [{ x: i, y: r.it }])) }] : []),
   ]);
   const percorso = $derived(storico.flatMap((p) => {
@@ -50,7 +50,7 @@
 
 <Block span={4} title="Domanda" cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
   <p class="fig">{per10k(row.domanda)}</p>
-  <p class="sub">annunci ogni 10mila, media dei Paesi{row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : ''}{row.domanda_it != null ? ` · Italia: ${per10k(row.domanda_it)}` : ''}</p>
+  <p class="sub">annunci ogni 10mila, il Paese a metà classifica{row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : ''}{row.domanda_it != null ? ` · Italia: ${per10k(row.domanda_it)}` : ''}</p>
 </Block>
 <Block span={4} title="Slancio">
   <p class="fig">{signedPct(row.slancio)}</p>
@@ -72,9 +72,9 @@
   table={{ cols: ['Mese', 'Repository', 'Repository AI'], rows: repoM.map((m) => [m.mese, m.n, m.base]) }}>
   <LineChart series={repo} label="Repository su {row.breve} ogni 1.000 repository AI" height={200} yFormat={yf(repo)} xFormat={monthAt(repoM)} />
 </Block>
-<Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila, media dei Paesi e Italia." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
+<Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila a ogni rilevazione: il Paese a metà classifica e l’Italia." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
   missing={ril.length < 2 ? 'Serve un mese di rilevazioni.' : null}
-  table={{ cols: ['Rilevazione', 'Media', 'Italia'], rows: ril.map((r) => [r.data, r.media, r.it ?? '—']) }}>
+  table={{ cols: ['Rilevazione', 'Paese a metà classifica', 'Italia'], rows: ril.map((r) => [r.data, r.mediana, r.it ?? '—']) }}>
   <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
 </Block>
 

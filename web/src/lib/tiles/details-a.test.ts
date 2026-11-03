@@ -27,6 +27,15 @@ describe('Competenze', () => {
     expect(screen.getByRole('heading', { name: 'Le competenze una per una' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Come si calcola' })).toBeInTheDocument();
   });
+  it('il cambio di metodo della domanda è scritto sotto il radar e nel metodo', () => {
+    show(CompetenzeDetail, tile);
+    expect(screen.getByText('Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.')).toBeInTheDocument();
+    const metodo = screen.getByRole('region', { name: 'Come si calcola' });
+    expect(metodo).toHaveTextContent('mediana delle sue ultime 4 rilevazioni con la stessa ricerca');
+    expect(metodo).toHaveTextContent('Il Paese a metà classifica è la mediana tra gli 8 Paesi');
+    expect(metodo).toHaveTextContent('Il metodo è cambiato a novembre 2026');
+    expect(metodo).not.toHaveTextContent(/media (dei|tra i) Paesi/);
+  });
   it('radar e movimenti con fonti cliccabili, Adzuna compresa', () => {
     show(CompetenzeDetail, tile);
     for (const name of ['Radar delle competenze', 'Movimenti di settembre']) {

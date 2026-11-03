@@ -7,7 +7,8 @@ dell'AI, stimata come tendenza (pipeline/tendenza.py) e combinando i segnali:
     la somma dei topic github_base_topics di sources.yaml);
   * lavoro: annunci che la citano / annunci del Paese, se ci sono almeno 8 settimane di
     rilevazioni fatte con la stessa ricerca.
-Domanda: annunci ogni 10mila, media tra i Paesi della rilevazione più recente.
+Domanda: annunci ogni 10mila. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la
+stessa ricerca; il valore del radar è la mediana tra i Paesi, il Paese a metà classifica.
 
 Quadranti a soglie fisse: slancio > 0 (cresce più dell'AI), domanda >= 3 annunci ogni 10mila.
 Il quadrante pubblicato cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo.
@@ -24,6 +25,7 @@ nessun numero; un ruolo sconosciuto o con meno di MIN_PER_RUOLO competenze ferma
 from __future__ import annotations
 
 from datetime import date
+from statistics import median
 
 from .common import read_json, write_json
 from .tendenza import combine, margine, rapporto, trend, variazione
@@ -37,6 +39,7 @@ SOGLIA_DOMANDA = 3.0    # annunci ogni 10mila, circa 1 su 3.300
 # LLMOps 1,63, Governance 1,63, DB vettoriali 1,60; solide MCP 1,46, multimodali 1,46, RAG 1,20, agenti 1,10.
 RAPPORTO_MAX = 1.55
 MIN_GIORNI_LAVORO = 56  # 8 settimane di rilevazioni con la stessa ricerca
+RILEVAZIONI_DOMANDA = 4 # la domanda di un Paese guarda le ultime 4: una settimana strana non la sposta
 GIORNI_MESE = 30.44
 POCHI = 100             # sotto questa media al mese il motivo dell'incertezza dice «pochi»
 MAX_STORICO = 24
@@ -117,22 +120,24 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
     """
     snaps = jobs.get("snapshots", [])
     latest = _latest_by_country(snaps)
-    if latest:  # un Paese tolto dalla configurazione non resta nella media per sempre
+    if latest:  # un Paese tolto dalla configurazione non resta nella domanda per sempre
         recente = max(x["data"] for x in latest.values())
         latest = {c: x for c, x in latest.items() if _days(x["data"], recente) <= FINESTRA * GIORNI_MESE}
     q = lambda x: x.get("query", {}).get(sid)  # noqa: E731
-    shares = {c: 10000 * x["competenze"][sid] / x["totale"] for c, x in latest.items()
-              if x.get("competenze", {}).get(sid) is not None and x.get("totale")}
-    if not shares:
+    per_10mila = lambda x: 10000 * x["competenze"][sid] / x["totale"]  # noqa: E731
+    paesi = [c for c, x in latest.items() if x.get("competenze", {}).get(sid) is not None and x.get("totale")]
+    if not paesi:
         return None
-    newest = max(latest[c]["data"] for c in shares)
-    same = [x for x in snaps if x["paese"] in shares and q(x) == q(latest[x["paese"]])
+    newest = max(latest[c]["data"] for c in paesi)
+    same = [x for x in snaps if x["paese"] in paesi and q(x) == q(latest[x["paese"]])
             and x.get("totale") and x.get("competenze", {}).get(sid) is not None
             and _days(x["data"], newest) <= FINESTRA * GIORNI_MESE]
 
     trends = []
-    for c in shares:
+    valori: dict[str, float] = {}
+    for c in paesi:
         own = sorted((x for x in same if x["paese"] == c), key=lambda x: x["data"])
+        valori[c] = median(per_10mila(x) for x in own[-RILEVAZIONI_DOMANDA:])
         if len(own) < 2 or _days(own[0]["data"], own[-1]["data"]) < MIN_GIORNI_LAVORO:
             continue
         t = trend([_days(own[0]["data"], x["data"]) / GIORNI_MESE for x in own],
@@ -143,14 +148,14 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
 
     by_day: dict[str, dict[str, float]] = {}
     for x in same:
-        by_day.setdefault(x["data"], {})[x["paese"]] = 10000 * x["competenze"][sid] / x["totale"]
+        by_day.setdefault(x["data"], {})[x["paese"]] = per_10mila(x)
     return {
         "tendenza": comb[0] if comb else None,
-        "media": round(sum(shares.values()) / len(shares), 3),
-        "it": round(shares["it"], 3) if "it" in shares else None,
-        "ogni_10mila": {c: round(v, 2) for c, v in sorted(shares.items())},
+        "mediana": round(median(valori.values()), 3),
+        "it": round(valori["it"], 3) if "it" in valori else None,
+        "ogni_10mila": {c: round(v, 2) for c, v in sorted(valori.items())},
         "data": newest,
-        "rilevazioni": [{"data": d, "media": round(sum(v.values()) / len(v), 3), "it": round(v["it"], 3) if "it" in v else None}
+        "rilevazioni": [{"data": d, "mediana": round(median(v.values()), 3), "it": round(v["it"], 3) if "it" in v else None}
                         for d, v in sorted(by_day.items())],
     }
 
@@ -211,7 +216,7 @@ def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
     return {
         "slancio": slancio,
         "slancio_margine": lo_hi,
-        "domanda": lav["media"] if lav else None,
+        "domanda": lav["mediana"] if lav else None,
         "domanda_it": lav["it"] if lav else None,
         "incerto": incerto,
         "incerto_perche": perche,

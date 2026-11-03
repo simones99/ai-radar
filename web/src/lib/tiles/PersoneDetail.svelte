@@ -57,7 +57,7 @@
   <Block title="Annunci di lavoro che chiedono l'AI" note="Quota degli annunci online che chiedono competenze AI, %. Valori esatti nella tabella." missing={annunci.length ? null : MISSING} cite={owidCite(s('annunci_ai'))} table={{ ...seriesTable(annunci, 'Anno'), format: exact }}>
     <LineChart label="Quota di annunci di lavoro sull'AI" series={annunci} yFormat={pctF} xFormat={quando} />
   </Block>
-  <Block title="Competenze più chieste negli annunci" note="Annunci che citano la competenza ogni 10.000, media tra i Paesi."
+  <Block title="Competenze più chieste negli annunci" note="Annunci che citano la competenza ogni 10.000, nel Paese a metà classifica."
     missing={jobs.length ? null : 'Serve la chiave gratuita di Adzuna (ADZUNA_APP_ID e ADZUNA_APP_KEY nei secret del repository).'}
     cite={[{ t: 'Fonte: ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }, { t: '.' }]} table={barsTable(jobs, ['Competenza', 'Ogni 10.000 annunci'])}>
     <Bars label="Competenze più chieste negli annunci" data={jobs} format={(v) => nf(v, 1)} />

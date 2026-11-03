@@ -24,4 +24,4 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
 
 I file con storico (arXiv, GitHub, Hugging Face, Adzuna) si
-arricchiscono a ogni giro: per questo sono salvati nel repository.
+arricchiscono a ogni raccolta: per questo sono salvati nel repository.

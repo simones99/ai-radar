@@ -29,6 +29,8 @@ permissions:
 concurrency:
   group: aggiornamento
   cancel-in-progress: false
+  # senza, un giro in attesa viene cancellato dal successivo: un push potrebbe far perdere la raccolta del lunedì
+  queue: max
 
 jobs:
   aggiorna:

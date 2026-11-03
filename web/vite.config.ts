@@ -38,7 +38,11 @@ export default defineConfig(({ mode }) => ({
   build: { outDir: '../_site', emptyOutDir: true },
   test: {
     environment: 'jsdom',
-    include: ['src/**/*.test.ts'],
     setupFiles: ['src/test-setup.ts'],
+    // chi lancia Chromium sta a parte: `npm test` passa senza, e nel workflow gira prima della raccolta dei dati. `npm run test:browser` gira con gli end-to-end
+    projects: [
+      { extends: true, test: { name: 'app', include: ['src/**/*.test.ts'], exclude: ['src/**/*.browser.test.ts'] } },
+      { extends: true, test: { name: 'browser', include: ['src/**/*.browser.test.ts'] } },
+    ],
   },
 }));

@@ -130,10 +130,12 @@ python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\
 pip install -r requirements.txt
 python -m pytest -q                                     # test della pipeline, senza rete
 python -m pipeline.run --months 7                       # dati veri, storico corto
-cd web && npm ci && npm test                            # test dell'app
+cd web && npm ci && npm test                            # test dell'app, senza browser
 cd .. && python scripts/build_site.py                   # copia i dati e costruisce _site/
 cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
+
+Con Chromium (`npx playwright install chromium`) ci sono anche `npm run test:browser`, i test del comando che fa l'immagine di un'edizione, e `npm run e2e`.
 
 Per lavorare sull'app con il ricaricamento automatico: `mkdir -p web/public/data && cp data/*.json web/public/data/` e poi `cd web && npm run dev`.
 

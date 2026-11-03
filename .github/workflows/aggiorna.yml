@@ -71,11 +71,7 @@ jobs:
       - name: Test della pipeline
         run: python -m pytest -q
 
-      # serve ai test del comando dell'edizione, alla creazione della sua immagine e agli end-to-end
-      - name: Installa Chromium
-        working-directory: web
-        run: npx playwright install --with-deps chromium
-
+      # senza browser: Chromium arriva dopo la raccolta, e questi test non lo richiedono
       - name: Test dell'app
         working-directory: web
         run: |
@@ -110,6 +106,12 @@ jobs:
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi
 
+      # dopo i dati salvati: come per gli end-to-end, un download fallito non ferma la raccolta del lunedì e lascia i dati nel repository.
+      # Serve all'immagine dell'edizione, ai test con il browser e agli end-to-end
+      - name: Installa Chromium
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
       # Il file dell'edizione e la sua immagine nascono qui, senza commit: diventano definitivi solo dopo gli end-to-end. Evento e casella li valuta
       # il comando, che su un push o con il file già presente non fa nulla. Se fallisce, anche solo per l'immagine, non scrive niente: dati e sito
       # proseguono e il job in fondo manda il giro in rosso; si rimedia con la casella del giro manuale
@@ -127,7 +129,9 @@ jobs:
 
       - name: Test end-to-end
         working-directory: web
-        run: npm run e2e
+        run: |
+          npm run test:browser
+          npm run e2e
 
       # dopo gli end-to-end: se falliscono il job si ferma qui, l'edizione non si salva e il sito non esce.
       # File fisso e immagine stanno nella stessa cartella, ed entrano nello stesso commit.

@@ -58,3 +58,50 @@ describe('il canale del feed', () => {
     expect(Object.keys(fileDelSito(tante, opzioni())).filter((p) => /^edizioni\/\d/.test(p))).toHaveLength(30);
   });
 });
+
+describe('una voce del feed', () => {
+  const voce = (e: Edizione = prima) => voci(e)[0];
+  /** Il testo intero della voce, come lo apre un lettore di feed. */
+  const testoIntero = (e: Edizione = prima) => {
+    const html = voce(e).getElementsByTagNameNS('http://purl.org/rss/1.0/modules/content/', 'encoded')[0].textContent ?? '';
+    return new DOMParser().parseFromString(html, 'text/html');
+  };
+
+  it('ha il titolo con la data, il link all’edizione e pubDate dal momento della raccolta', () => {
+    const v = voce();
+    expect(figlio(v, 'title')?.textContent).toBe('AI Radar, settimana del 12 ott 2026');
+    expect(figlio(v, 'link')?.textContent).toBe(`${BASE}edizioni/2026-10-12/`);
+    expect(figlio(v, 'pubDate')?.textContent).toBe('Thu, 15 Oct 2026 08:00:00 GMT');
+  });
+
+  it('la descrizione contiene le due porte, Per te per prima', () => {
+    expect(figlio(voce(), 'description')?.textContent).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+  });
+
+  it('ha il testo intero in HTML: porte, frasi, notizie, fonti e link', () => {
+    const doc = testoIntero();
+    const t = doc.body.textContent;
+    expect(t).toContain('MCP entra tra le competenze da imparare ora; RAG esce');
+    expect(t).toContain("16% delle imprese italiane usa l'AI (UE: 20%)");
+    expect(t).toContain("Imprese italiane che usano l'AI nel 2025. UE: 20%.");
+    expect(t).toContain("The Adzuna API (termini d'uso di Adzuna)");
+    expect(t).toContain('non sono una classifica');
+    const notizia = [...doc.querySelectorAll('a')].find((a) => a.textContent === "Google says self-improving AI isn't anywhere close")!;
+    expect(notizia.getAttribute('href')).toBe('https://the-decoder.com/a');
+    expect(notizia.closest('li')?.textContent).toContain('The Decoder');
+    expect([...doc.querySelectorAll('a')].find((a) => a.textContent === 'The Adzuna API')?.getAttribute('href')).toMatch(/^https:/);
+  });
+
+  it('i link alle card sono assoluti e seguono l’indirizzo base: nel lettore non c’è una pagina da cui partire', () => {
+    const doc = testoIntero();
+    expect([...doc.querySelectorAll('a')].find((a) => a.textContent === 'Norme')?.getAttribute('href')).toBe(`${BASE}#norme`);
+    expect([...doc.querySelectorAll('a')].find((a) => a.textContent === 'Le altre notizie, nella card Notizie')?.getAttribute('href')).toBe(`${BASE}#notizie`);
+    for (const a of doc.querySelectorAll('a')) expect(a.getAttribute('href')).toMatch(/^https?:\/\//);
+  });
+
+  it('non ripete il titolo, che il lettore mostra già, e non parla di una pagina', () => {
+    const doc = testoIntero();
+    expect(doc.querySelector('h1')).toBeNull();
+    expect(doc.body.textContent).toMatch(/Questa edizione resta com'è, con i dati raccolti il 15 ott 2026/);
+  });
+});

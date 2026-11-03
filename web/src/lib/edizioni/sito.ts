@@ -154,13 +154,15 @@ ${o.corpo}
 `;
 }
 
-function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
-  const radice = '../../';
+/**
+ * Il testo di un'edizione, lo stesso nella pagina e nella voce del feed.
+ * radice: la radice del sito vista dai link; intestazione: il titolo, che nella voce mostra già il lettore di feed.
+ */
+function corpoEdizione(e: Edizione, radice: string, intestazione = ''): string {
   const correzioni = e.correzioni.map((c) => `<p class="ed-corretta"><strong>Corretta ${esc(dayWith('il', c.data))}:</strong> ${esc(c.testo)}</p>`).join('\n');
-  const corpo = `<div class="ed-testa">
-<p class="ed-fonte">Edizione</p>
-<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>
-<p class="ed-nota">Questa pagina resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Le card del sito mostrano i dati di oggi, quindi possono dire altro.</p>
+  return `<div class="ed-testa">
+${intestazione}
+<p class="ed-nota">Questa edizione resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Le card del sito mostrano i dati di oggi, quindi possono dire altro.</p>
 ${correzioni}
 </div>
 <div class="ed-porte">
@@ -169,13 +171,20 @@ ${e.porte.map((p) => porta(p, radice)).join('\n')}
 ${frasi(e, radice)}
 ${notizie(e, radice)}
 ${fontiMute(e)}`;
+}
+
+const descrizioneEdizione = (e: Edizione): string => e.porte.filter((p) => p.titolo.length).map((p) => `${testoPorta(p)}.`).join(' ');
+
+function paginaEdizione(e: Edizione, opzioni: OpzioniSito): string {
+  const radice = '../../';
   return pagina({
     titolo: titoloPagina(e),
-    descrizione: e.porte.filter((p) => p.titolo.length).map((p) => `${testoPorta(p)}.`).join(' '),
+    descrizione: descrizioneEdizione(e),
     percorso: `edizioni/${e.settimana}/`,
     radice,
     nav: `<a href="../">Edizioni</a><a href="${radice}">Dati di oggi</a>`,
-    corpo,
+    corpo: corpoEdizione(e, radice, `<p class="ed-fonte">Edizione</p>
+<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`),
   }, opzioni);
 }
 
@@ -205,22 +214,27 @@ ${voci}
 
 const VOCI_DEL_FEED = 26; // chi si iscrive non scarica anni di storico: quello sta nell'archivio
 
-function voceDelFeed(e: Edizione): string {
+/** Il testo intero sta in content:encoded, dove lo cercano i lettori di feed; description resta il riassunto con le due porte. */
+function voceDelFeed(e: Edizione, indirizzoBase: string): string {
   return `<item>
 <title>${esc(titoloPagina(e))}</title>
+<link>${esc(`${indirizzoBase}edizioni/${e.settimana}/`)}</link>
+<pubDate>${new Date(e.raccolti).toUTCString()}</pubDate>
+<description>${esc(descrizioneEdizione(e))}</description>
+<content:encoded>${esc(corpoEdizione(e, indirizzoBase))}</content:encoded>
 </item>`;
 }
 
 function feed(recenti: Edizione[], { indirizzoBase }: OpzioniSito): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
 <channel>
 <title>${esc(TITOLO_ARCHIVIO)}</title>
 <link>${esc(`${indirizzoBase}edizioni/`)}</link>
 <description>${esc(DESCRIZIONE_ARCHIVIO)}</description>
 <language>it</language>
 <atom:link href="${esc(`${indirizzoBase}feed.xml`)}" rel="self" type="application/rss+xml" />
-${recenti.slice(0, VOCI_DEL_FEED).map(voceDelFeed).join('\n')}
+${recenti.slice(0, VOCI_DEL_FEED).map((e) => voceDelFeed(e, indirizzoBase)).join('\n')}
 </channel>
 </rss>
 `;

@@ -279,6 +279,18 @@ describe('porta Per te con il mercato', () => {
     it('5. riserva: la competenza con più annunci in Italia', () => {
       const p = doorPerTe(inItalia([{ domanda: 0.9, domanda_it: 1 }, { domanda_it: 46 }]), today, null, 'italia');
       expect(text(p.title)).toBe('C1 ha più annunci di tutte: 46 ogni 10mila');
+      expect(p.scelta).toBe('Italia'); // l'etichetta dice la scelta che il link porta
+      expect(p.target).toEqual({ tema: 'competenze', elemento: 'c1', params: { mercato: 'italia' } });
+    });
+    it('5. riserva: con tutti i valori a 0 non è una notizia, si contano le competenze da imparare ora', () => {
+      const p = doorPerTe(inItalia([{ domanda_it: 0 }, { domanda_it: 0 }]), today, null, 'italia');
+      expect(text(p.title)).toBe('Nessuna competenza su 2 da imparare ora');
+      expect(p.scelta).toBe('Italia');
+      expect(p.target).toEqual({ tema: 'competenze', elemento: null, params: { mercato: 'italia' } });
+    });
+    it('5. riserva: un valore che si legge «0,0» vale come zero', () => {
+      const p = doorPerTe(inItalia([{ domanda_it: 0.04 }, { domanda_it: 0.01 }]), today, null, 'italia');
+      expect(text(p.title)).toBe('Nessuna competenza su 2 da imparare ora');
     });
     it('5. riserva: quante da imparare ora in Italia, se la più cercata è incerta', () => {
       const p = doorPerTe(inItalia([{ incerto: true, domanda_it: 46 }, { quadrante_it: 'impara-ora' }, {}]), today, null, 'italia');

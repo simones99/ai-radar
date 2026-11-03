@@ -372,11 +372,11 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conScelta, ...(nota && { nota }) };
 
   // 5. riserva, quando nessuna regola scatta. Senza ruolo quante competenze sono da imparare ora lo dice già la card:
-  // la porta dice la competenza con più annunci, se non è incerta
+  // la porta dice la competenza con più annunci, se non è incerta e se si legge più di «0,0»
   const piuCercata = rows.slice().sort((a, b) => b.domanda - a.domanda)[0];
-  if (!ruolo && !piuCercata.incerto) {
+  if (!ruolo && !piuCercata.incerto && per10k(piuCercata.domanda) !== per10k(0)) {
     const title: TitleParts = [{ t: piuCercata.breve, em: true }, { t: ` ${verbo([piuCercata], 'ha', 'hanno')} più annunci di tutte: ${per10k(piuCercata.domanda)} ogni 10mila` }];
-    return { title, meta, target: to(piuCercata) };
+    return { title, meta, target: to(piuCercata), ...conScelta };
   }
   // altrimenti, quante competenze da imparare ora: con un ruolo, quante delle sue
   const base = ruolo ? rows.filter((r) => r.ruoli?.includes(ruolo.id)) : rows;

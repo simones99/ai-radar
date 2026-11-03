@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "17 5 * * 1"   # ogni lunedì alle 05:17 UTC (07:17 in Italia d'estate)
   workflow_dispatch:         # pulsante "Run workflow" nella scheda Actions
+    inputs:
+      crea_edizione:
+        description: "Crea l'edizione di questa settimana (ha effetto solo quando le edizioni esistono)"
+        type: boolean
+        default: false
   # un push prova il codice e pubblica il sito con i dati già salvati: i dati li raccolgono solo i due eventi qui sopra.
   # Dopo una modifica a pipeline/ o config/, quindi, per vederne l'effetto sui dati serve un avvio manuale
   push:

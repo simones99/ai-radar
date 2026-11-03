@@ -64,6 +64,17 @@ describe('il sito costruito', () => {
   it('la home e i dati caricati dall’app non cambiano: nessun JSON di edizione tra i file serviti', () => {
     expect(readFileSync(join(conEdizioni(), 'index.html'), 'utf-8')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
     expect(existsSync(join(conEdizioni(), 'data', 'edizioni'))).toBe(false);
-    expect(readdirSync(conEdizioni()).sort()).toEqual([...readdirSync(senzaEdizioni()), 'edizioni'].sort());
+    expect(readdirSync(conEdizioni()).sort()).toEqual([...readdirSync(senzaEdizioni()), 'edizioni', 'feed.xml'].sort());
+  });
+
+  it('il feed sta nella radice del sito con le voci delle edizioni salvate, e i suoi indirizzi seguono l’indirizzo base', () => {
+    const feed = new DOMParser().parseFromString(readFileSync(join(conEdizioni(), 'feed.xml'), 'utf-8'), 'application/xml');
+    expect(feed.querySelector('parsererror')).toBeNull();
+    expect(feed.querySelectorAll('item')).toHaveLength(2);
+    expect(feed.getElementsByTagNameNS('http://www.w3.org/2005/Atom', 'link')[0].getAttribute('href')).toBe(`${ALTRO_INDIRIZZO}feed.xml`);
+  });
+
+  it('senza edizioni il feed non esiste', () => {
+    expect(existsSync(join(senzaEdizioni(), 'feed.xml'))).toBe(false);
   });
 });

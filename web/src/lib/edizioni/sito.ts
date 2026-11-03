@@ -179,14 +179,17 @@ ${fontiMute(e)}`;
   }, opzioni);
 }
 
+const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
+const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.';
+
 function archivio(edizioni: Edizione[], opzioni: OpzioniSito): string {
   const voci = edizioni.map((e) => `<li>
 <h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
 ${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length ? testoPorta(p) : p.meta)}</p>`).join('\n')}
 </li>`).join('\n');
   return pagina({
-    titolo: 'AI Radar, le edizioni',
-    descrizione: 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.',
+    titolo: TITOLO_ARCHIVIO,
+    descrizione: DESCRIZIONE_ARCHIVIO,
     percorso: 'edizioni/',
     radice: '../',
     nav: '<a href="../">Dati di oggi</a>',
@@ -200,6 +203,29 @@ ${voci}
   }, opzioni);
 }
 
+const VOCI_DEL_FEED = 26; // chi si iscrive non scarica anni di storico: quello sta nell'archivio
+
+function voceDelFeed(e: Edizione): string {
+  return `<item>
+<title>${esc(titoloPagina(e))}</title>
+</item>`;
+}
+
+function feed(recenti: Edizione[], { indirizzoBase }: OpzioniSito): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>${esc(TITOLO_ARCHIVIO)}</title>
+<link>${esc(`${indirizzoBase}edizioni/`)}</link>
+<description>${esc(DESCRIZIONE_ARCHIVIO)}</description>
+<language>it</language>
+<atom:link href="${esc(`${indirizzoBase}feed.xml`)}" rel="self" type="application/rss+xml" />
+${recenti.slice(0, VOCI_DEL_FEED).map(voceDelFeed).join('\n')}
+</channel>
+</rss>
+`;
+}
+
 /**
  * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
  * Un file nuovo del sito è una voce in più in questa mappa: chi costruisce il sito li scrive tutti allo stesso modo.
@@ -211,5 +237,6 @@ export function fileDelSito(edizioni: Edizione[], opzioni: OpzioniSito): Record<
   return {
     'edizioni/index.html': archivio(recenti, opzioni),
     ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
+    'feed.xml': feed(recenti, opzioni),
   };
 }

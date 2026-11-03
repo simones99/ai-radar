@@ -24,6 +24,10 @@ _Avoid_: profilo, persona, mestiere, sviluppatore, PM, analista, legale (come no
 I Paesi di cui il radar legge la domanda, tutti o l'Italia. Cambia la domanda e i quadranti, non lo slancio, che è unico.
 _Avoid_: Paese, zona, geografia (come nomi della scelta)
 
+**Paese a metà classifica**:
+Il valore di domanda che sta a metà tra gli 8 Paesi seguiti: la mediana dei loro valori e, con un numero pari di Paesi, il valore a metà tra i due centrali. È la domanda del mercato «Tutti i Paesi». Non è un Paese preciso: da una competenza all'altra può essere un Paese diverso, o nessuno.
+_Avoid_: media dei Paesi, Paese mediano, Paese medio
+
 **Settore**:
 L'attività economica di un'organizzazione, come la classifica Eurostat (per esempio manifattura, commercio, ICT). Finanza, pubblica amministrazione, sanità, istruzione e agricoltura non sono settori rilevati.
 _Avoid_: industria, comparto, ambito

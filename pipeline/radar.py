@@ -9,7 +9,7 @@ dell'AI, stimata come tendenza (pipeline/tendenza.py) e combinando i segnali:
     rilevazioni fatte con la stessa ricerca.
 Domanda: annunci ogni 10mila. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la
 stessa ricerca; il valore del radar è la mediana tra i Paesi, il Paese a metà classifica.
-La lettura italiana usa il valore dell'Italia, con il numero di annunci delle stesse rilevazioni;
+Il mercato Italia usa il valore dell'Italia, con il numero di annunci delle stesse rilevazioni;
 dove manca il dato italiano i suoi campi sono null.
 
 Quadranti a soglie fisse: slancio > 0 (cresce più dell'AI), domanda >= 3 annunci ogni 10mila.
@@ -56,8 +56,8 @@ QUADRANTS = {
     "osserva": "Tieni d'occhio",
 }
 ETICHETTE = {"arxiv": "paper", "github": "repository nuovi", "lavoro": "annunci"}
-# Le due viste: tutti i Paesi e Italia. Stessi slancio, soglie e conferma di due mesi; cambia la domanda.
-VISTE = (("domanda", "calcolato", "pubblicato"), ("domanda_it", "calcolato_it", "pubblicato_it"))
+# I due mercati: tutti i Paesi e Italia. Stessi slancio, soglie e conferma di due mesi; cambia la domanda.
+MERCATI = (("domanda", "calcolato", "pubblicato"), ("domanda_it", "calcolato_it", "pubblicato_it"))
 
 
 def quadrant(slancio: float | None, domanda: float | None) -> str | None:
@@ -258,9 +258,9 @@ def _months_before(arx: dict, gh: dict, jobs: dict, k: int, ultimo: str) -> tupl
 
 
 def _publish(points: list[tuple[str, dict]], ids: list[str]) -> None:
-    """Quadrante calcolato e pubblicato di ogni punto in ogni vista, dal più vecchio al più recente."""
+    """Quadrante calcolato e pubblicato di ogni punto in ogni mercato, dal più vecchio al più recente."""
     for sid in ids:
-        for domanda, calcolato, pubblicato in VISTE:
+        for domanda, calcolato, pubblicato in MERCATI:
             later = None
             for _, rows in reversed(points):  # domanda mancante: quella del primo punto successivo che ce l'ha
                 r = rows[sid]
@@ -355,7 +355,7 @@ def run(skills: list[dict], today: date, ruoli: list[dict] | None = None) -> dic
         "quadranti": QUADRANTS,
         "ruoli": ruoli,
         "competenze": out_rows,
-        "storico": [{"mese": m, "competenze": {sid: {k: r[k] for k in ("slancio", "incerto", *chain.from_iterable(VISTE))}
+        "storico": [{"mese": m, "competenze": {sid: {k: r[k] for k in ("slancio", "incerto", *chain.from_iterable(MERCATI))}
                                                 for sid, r in rows.items()}} for m, rows in points],
     })
     return {"competenze": len(out_rows), "posizionate": sum(1 for r in out_rows if r["quadrante"]),

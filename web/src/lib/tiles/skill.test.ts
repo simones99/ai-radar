@@ -107,7 +107,7 @@ describe('La pagina di una competenza segue il mercato', () => {
       expect(annunci).toHaveTextContent('Il numero in evidenza in Domanda è la mediana delle ultime 4 rilevazioni.');
     });
   }
-  it('il percorso sul radar e il titolo usano i quadranti della vista scelta', () => {
+  it('il percorso sul radar e il titolo usano i quadranti del mercato scelto', () => {
     const { unmount } = pagina('mcp');
     const percorso = () => within(screen.getByRole('list', { name: 'Il percorso sul radar' })).getAllByRole('listitem').map((li) => li.textContent);
     expect(percorso()).toEqual(['lug 2026Da consolidare', 'ago 2026Da consolidare', 'set 2026Impara ora']);

@@ -487,13 +487,13 @@ def test_a_missing_italian_month_uses_the_next_italian_demand_not_the_other_view
 @pytest.mark.parametrize("n,g,expected", [
     (30, 1.05, "impara-ora"),  # 3,0 è già sopra soglia, anche in Italia
     (29, 1.05, "prova"),
-    (30, 0.9, "consolida"),    # chi non cresce più dell'AI, non cresce in nessuna vista
+    (30, 0.9, "consolida"),    # chi non cresce più dell'AI, non cresce in nessun mercato
     (29, 0.9, "osserva"),
 ])
 def test_threshold_and_momentum_are_the_same_in_both_views(tmp_path, monkeypatch, n, g, expected):
     write_inputs(tmp_path, monkeypatch, {"a": grow(500, g)}, {"a": grow(2000, g)}, {"snapshots": [snap(WEEKS[0], "it", n)]})
     r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
-    assert r["quadrante_calcolato_it"] == r["quadrante_calcolato"] == expected  # un solo Paese: le due viste coincidono
+    assert r["quadrante_calcolato_it"] == r["quadrante_calcolato"] == expected  # un solo Paese: i due mercati coincidono
 
 
 ITALIAN_FIELDS = ("domanda_it", "annunci_it", "quadrante_it", "quadrante_calcolato_it", "domanda_prec_it", "quadrante_prec_it")
@@ -508,7 +508,7 @@ def test_without_italian_data_the_italian_fields_are_null_and_the_radar_goes_on(
     out = rising_radar(tmp_path, monkeypatch, [snap(w, "us", 200) for w in WEEKS] + italia)
     r = out["competenze"][0]
     assert {k: r[k] for k in ITALIAN_FIELDS} == dict.fromkeys(ITALIAN_FIELDS)
-    assert r["quadrante"] == "impara-ora"  # la vista di tutti i Paesi resta
+    assert r["quadrante"] == "impara-ora"  # il mercato di tutti i Paesi resta
     for p in out["storico"]:
         assert {k: p["competenze"]["a"][k] for k in ("domanda_it", "calcolato_it", "pubblicato_it")} == dict.fromkeys(("domanda_it", "calcolato_it", "pubblicato_it"))
 

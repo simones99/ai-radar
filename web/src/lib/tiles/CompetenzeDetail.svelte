@@ -4,7 +4,7 @@
   import type { Cite } from '../charts/types';
   import MovesPanel from '../charts/MovesPanel.svelte';
   import Radar from '../charts/Radar.svelte';
-  import { competenzeDi, MERCATI_DA_SCEGLIERE, mercatoScelto, radarRows, rigaPagina, type CompetenzaVista } from '../data/derive';
+  import { competenzeDi, MERCATI_DA_SCEGLIERE, mercatoScelto, radarRows, rigaPagina, type CompetenzaNelMercato } from '../data/derive';
   import type { Quadrant } from '../data/types';
   import { apri, toHash } from '../router';
   import { mercato as mercatoRicordato, ruolo as ruoloRicordato } from '../scelta.svelte';
@@ -32,7 +32,7 @@
   const old = $derived(!!data.radar && data.radar.versione !== 2);
   const all = $derived(data.radar ? competenzeDi(data.radar, mercato) : []);
   const colAnnunci = $derived(italia ? 'Annunci in Italia' : 'Annunci ogni 10mila');
-  const annunciDi = (c: CompetenzaVista, domanda: number) => (c.annunci != null ? conAnnunci(domanda, c.annunci) : per10k(domanda));
+  const annunciDi = (c: CompetenzaNelMercato, domanda: number) => (c.annunci != null ? conAnnunci(domanda, c.annunci) : per10k(domanda));
   const placed = $derived(new Set(rows.map((r) => r.id)));
   const delRuolo = $derived(ruolo ? all.filter((c) => c.ruoli?.includes(ruolo.id)).map((c) => c.id) : null);
   const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
@@ -51,6 +51,7 @@
     'Domanda: annunci attivi che citano la competenza ogni 10.000 annunci del Paese. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la stessa ricerca, così una settimana strana non sposta il numero. Il Paese a metà classifica è la mediana tra gli 8 Paesi: con un numero pari di Paesi, il valore a metà tra i due centrali. Il metodo è cambiato a novembre 2026: prima contava solo l’ultima rilevazione, e un solo Paese poteva spostare il valore.',
     'Quadranti a soglie fisse. Slancio sopra 0 (cresce più dell’AI) e almeno 3 annunci ogni 10mila: Impara ora. Solo lo slancio: Da provare. Solo la domanda: Da consolidare. Nessuna delle due: Tieni d’occhio.',
     'Prudenza: il quadrante cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo. Nel frattempo la competenza è «in movimento verso» il quadrante nuovo.',
+    'Con «Italia» la domanda è quella italiana, la mediana delle ultime 4 rilevazioni in Italia, e accanto si legge il numero di annunci che ci sta dietro. Lo slancio è unico: la crescita si misura nel mondo e non cambia. La soglia è la stessa, 3 annunci ogni 10mila. I quadranti sono propri, con la stessa conferma di due mesi di fila.',
     'Dato incerto (punto vuoto): il margine all’80% dello slancio è largo, l’estremo alto supera di oltre il 55% quello basso. Succede con pochi paper o repository, o con andamenti irregolari. Un margine che comprende lo zero non basta a rendere incerto il dato, ma dice che la competenza potrebbe non crescere più dell’AI.',
     'Le parole cercate per ogni competenza sono in config/skills.yaml. Negli annunci si cerca per tutte una frase esatta in inglese, così le competenze sono confrontabili.',
   ];

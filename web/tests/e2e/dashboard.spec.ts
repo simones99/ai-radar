@@ -472,7 +472,7 @@ const mercati = (page: Page) => page.getByRole('group', { name: 'Mercato' });
 const mercatoPremuto = (page: Page) => mercati(page).getByRole('button', { pressed: true });
 const rigaItalia = 'La crescita è mondiale, la domanda è italiana.';
 
-test('mercato: il link apre la vista Italia, il ricaricamento la tiene, «Tutti i Paesi» toglie la scelta dal link e dal ricordo', async ({ page }) => {
+test('mercato: il link apre l’Italia, il ricaricamento la tiene, «Tutti i Paesi» toglie la scelta dal link e dal ricordo', async ({ page }) => {
   await page.goto('/#competenze?mercato=italia');
   await expect(mercatoPremuto(page)).toHaveText('Italia');
   await expect(page.getByRole('heading', { level: 2, name: 'RAG esce da Impara ora' })).toBeVisible();
@@ -531,7 +531,7 @@ test('mercato da tastiera: Tab tra i pulsanti, Invio sceglie, Spazio torna a tut
   await expect(page).toHaveURL(/#competenze$/);
 });
 
-test('vista Italia a 320px: niente scorrimento orizzontale, e i pulsanti restano interi', async ({ page }) => {
+test('mercato Italia a 320px: niente scorrimento orizzontale, e i pulsanti restano interi', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 780 });
   await page.goto('/#competenze?mercato=italia');
   await expect(mercatoPremuto(page)).toHaveText('Italia');
@@ -543,7 +543,7 @@ test('vista Italia a 320px: niente scorrimento orizzontale, e i pulsanti restano
 });
 
 for (const colorScheme of ['light', 'dark'] as const) {
-  test(`accessibilità nella vista Italia, tema ${colorScheme}: nessuna violazione grave`, async ({ page }) => {
+  test(`accessibilità con il mercato Italia, tema ${colorScheme}: nessuna violazione grave`, async ({ page }) => {
     await page.emulateMedia({ colorScheme });
     await page.goto('/#competenze?mercato=italia');
     await expect(page.getByText(rigaItalia)).toBeVisible();
@@ -554,7 +554,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
 const bloccoDomanda = (page: Page) => page.getByRole('region', { name: 'Domanda' });
 const paginaItalia = '2,6 ogni 10mila in Italia, 32 annunci · era 2,4 un mese fa · Paese a metà classifica: 3,4';
 
-test('pagina di una competenza: il link apre la vista Italia, senza bottoni, con i quadranti italiani', async ({ page }) => {
+test('pagina di una competenza: il link apre l’Italia, senza bottoni, con i quadranti italiani', async ({ page }) => {
   await page.goto('/#competenze/mcp?mercato=italia');
   await expect(page.getByRole('heading', { level: 2, name: 'Model Context Protocol (MCP)' })).toBeVisible();
   await expect(bloccoDomanda(page)).toContainText(paginaItalia);

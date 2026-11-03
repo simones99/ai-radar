@@ -28,7 +28,7 @@ export interface RadarRow {
   slancio_margine?: [number, number] | null;
   /** Annunci ogni 10mila nel Paese a metà classifica; ogni Paese vale la mediana delle sue ultime 4 rilevazioni. */
   domanda: number | null;
-  /** Annunci ogni 10mila in Italia. I campi che finiscono in `_it` sono la vista Italia: `null` dove manca il dato italiano. */
+  /** Annunci ogni 10mila in Italia. I campi che finiscono in `_it` sono il mercato Italia: `null` dove manca il dato italiano. */
   domanda_it?: number | null;
   /** Numero di annunci in Italia: mediana dei conteggi delle stesse rilevazioni, arrotondata. */
   annunci_it?: number | null;

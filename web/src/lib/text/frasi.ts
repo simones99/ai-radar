@@ -209,7 +209,7 @@ export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tu
   const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
-  const italia = mercato === 'italia' ? '' : sottoSogliaInItalia(inn); // la vista Italia ha già i suoi quadranti
+  const italia = mercato === 'italia' ? '' : sottoSogliaInItalia(inn); // il mercato Italia ha già i suoi quadranti
   return {
     title: [{ t: joinE(inn.map((r) => r.breve)), em: true }, { t: ` ${verboEntra(inn)} tra le competenze da imparare ora` }],
     deck: (out.length ? `${joinE(out.map((r) => r.breve))} ${verbo(out, 'esce', 'escono')} da Impara ora. ` : '') + alLimite(inn) + (italia && `${italia}. `) + tail,
@@ -368,7 +368,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   if (!rows.length) return { title: plain(ITALIA_SENZA_DATO), meta, target: to(null), ...conScelta }; // il radar c'è, l'Italia no
 
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
-  const nota = italia ? '' : notizia?.nota; // la vista Italia ha già i suoi quadranti
+  const nota = italia ? '' : notizia?.nota; // il mercato Italia ha già i suoi quadranti
   if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conScelta, ...(nota && { nota }) };
 
   // 5. riserva, quando nessuna regola scatta. Senza ruolo quante competenze sono da imparare ora lo dice già la card:

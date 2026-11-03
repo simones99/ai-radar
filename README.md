@@ -61,6 +61,8 @@ I quadranti hanno **soglie fisse**: slancio sopra 0 (cresce più dell'AI nel suo
 
 Il radar è **prudente**: il quadrante cambia solo se il calcolo di due mesi di fila dà il quadrante nuovo; nel frattempo la competenza è "in movimento verso" il quadrante nuovo. Una competenza è **incerta** (punto vuoto) quando il margine d'errore dello slancio è largo, di solito per pochi paper o repository: resta sul radar ma non finisce nella porta *Per te* della home.
 
+Il radar si può leggere **sull'Italia**: nella card Competenze si sceglie il mercato, «Tutti i Paesi» o «Italia», e la scelta sta nel link (`#competenze?mercato=italia`). Con «Italia» la domanda è quella italiana, la mediana delle ultime 4 rilevazioni in Italia, e accanto si legge il numero di annunci che ci sta dietro. Lo slancio è unico: la crescita si misura nel mondo e non cambia. La soglia è la stessa, 3 annunci ogni 10mila. I quadranti sono propri, con la stessa conferma di due mesi di fila. Dove manca il dato italiano la pagina lo dice e non mostra uno zero.
+
 Ogni competenza ha una sua pagina (`#competenze/mcp`) con l'andamento dei tre segnali, il percorso sul radar, le risorse per iniziare scelte a mano e i repository nuovi più stellati.
 
 Limiti da tenere a mente:

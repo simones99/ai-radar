@@ -254,7 +254,7 @@ describe('porta Per te con il mercato', () => {
       expect(text(p.title)).toBe('RAG esce da Impara ora');
       expect(p.target).toEqual({ tema: 'competenze', elemento: 'rag', params: { mercato: 'italia' } });
     });
-    it('1. chi entra in Italia, e la nota sparisce anche sotto soglia: la vista Italia ha già i suoi quadranti', () => {
+    it('1. chi entra in Italia, e la nota sparisce anche sotto soglia: il mercato Italia ha già i suoi quadranti', () => {
       const entra = inItalia([{ quadrante_it: 'impara-ora', domanda_it: 2.6, slancio_prec: 0.3, quadrante_prec_it: 'consolida' }]);
       const p = doorPerTe(entra, today, null, 'italia');
       expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');

@@ -27,6 +27,15 @@ describe('Competenze', () => {
     expect(screen.getByRole('heading', { name: 'Le competenze una per una' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Come si calcola' })).toBeInTheDocument();
   });
+  it('il metodo dice come si legge il radar sull’Italia', () => {
+    show(CompetenzeDetail, tile);
+    const metodo = screen.getByRole('region', { name: 'Come si calcola' });
+    expect(metodo).toHaveTextContent('Con «Italia» la domanda è quella italiana');
+    expect(metodo).toHaveTextContent('il numero di annunci');
+    expect(metodo).toHaveTextContent('Lo slancio è unico');
+    expect(metodo).toHaveTextContent('La soglia è la stessa');
+    expect(metodo).toHaveTextContent('I quadranti sono propri, con la stessa conferma di due mesi di fila');
+  });
   it('il cambio di metodo della domanda è scritto sotto il radar e nel metodo', () => {
     show(CompetenzeDetail, tile);
     expect(screen.getByText('Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.')).toBeInTheDocument();
@@ -209,7 +218,7 @@ describe('Competenze: il mercato', () => {
     expect(localStorage.getItem('ai-radar:ruolo')).toBe('dati');
   });
 
-  describe('la vista Italia', () => {
+  describe('con il mercato Italia', () => {
     const blocco = (name: string) => screen.getByRole('region', { name });
     const radar = () => screen.getByRole('group', { name: /^Radar delle competenze/ });
     const riga = (titolo: string, nome: string) => {
@@ -237,7 +246,7 @@ describe('Competenze: il mercato', () => {
       expect(within(radar()).getByRole('link', { name: /^Model Context Protocol/ })).toHaveAccessibleName(
         "Model Context Protocol (MCP): Da provare (era Tieni d'occhio). Slancio +15% in 6 mesi, 2,6 ogni 10mila, 32 annunci. Un mese fa: slancio −27%, 2,4 ogni 10mila.");
     });
-    it('l’asse della domanda è lo stesso delle due viste', () => {
+    it('l’asse della domanda è lo stesso nei due mercati', () => {
       show(CompetenzeDetail, tile, null, { mercato: 'italia' });
       for (const t of ['0,1', '3', '90', '−50%', '+100%']) expect(within(radar()).getByText(t)).toBeInTheDocument();
       expect(within(radar()).getByText('Annunci ogni 10mila →')).toBeInTheDocument();
@@ -260,7 +269,7 @@ describe('Competenze: il mercato', () => {
       expect(riga('Le competenze una per una', 'Model Context Protocol (MCP)').slice(1)).toEqual(['Da provare', '+15%', '2,6 ogni 10mila, 32 annunci']);
       expect(within(blocco('Le competenze una per una')).getByRole('columnheader', { name: 'Annunci in Italia' })).toBeInTheDocument();
     });
-    it('sotto il radar la riga che spiega la vista; con «Tutti i Paesi» non c’è', () => {
+    it('sotto il radar la riga che spiega il mercato; con «Tutti i Paesi» non c’è', () => {
       const { unmount } = show(CompetenzeDetail, tile);
       expect(screen.queryByText('La crescita è mondiale, la domanda è italiana.')).toBeNull();
       expect(riga('Radar delle competenze', 'Model Context Protocol (MCP)').slice(0, 3)).toEqual(['Impara ora', '+15%', '3,4']);
@@ -284,7 +293,7 @@ describe('Competenze: il mercato', () => {
       expect(celle[1]).toBe('dato non disponibile');
       expect(celle.slice(2)).toEqual(['+15%', '—']);
     });
-    it('senza nessun dato italiano la vista lo dice con una frase, senza zeri, e si può tornare a tutti i Paesi', () => {
+    it('senza nessun dato italiano la card lo dice con una frase, senza zeri, e si può tornare a tutti i Paesi', () => {
       apri(conItalia(() => senzaItalia));
       expect(within(blocco('Radar delle competenze')).getByText('Per l’Italia il dato non è disponibile in questo momento.')).toBeInTheDocument();
       expect(screen.queryByRole('group', { name: /^Radar delle competenze/ })).toBeNull();

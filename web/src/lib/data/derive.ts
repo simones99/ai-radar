@@ -13,13 +13,13 @@ export const nx = (s: number): number =>
 /** Posizione 0–1 sull'asse della domanda: scala logaritmica. */
 export const ny = (d: number): number => unit(lin(Math.log(d), [Math.log(DOMANDA_DOM[0]), Math.log(DOMANDA_DOM[1])]));
 
-/** Una competenza nella vista di un mercato. */
-export interface CompetenzaVista extends RadarRow {
-  /** Quanti annunci ci sono dietro la domanda: lo dice solo la vista Italia. */
+/** Una competenza letta su un mercato. */
+export interface CompetenzaNelMercato extends RadarRow {
+  /** Quanti annunci ci sono dietro la domanda: lo dice solo il mercato Italia. */
   annunci: number | null;
 }
 
-export interface RadarRowM extends CompetenzaVista {
+export interface RadarRowM extends CompetenzaNelMercato {
   breve: string;
   slancio: number;
   domanda: number;
@@ -55,14 +55,14 @@ export const MERCATI_DA_SCEGLIERE: readonly string[] = ['italia'];
 export const mercatoScelto = (v: string | null | undefined): Mercato => (v === 'italia' ? 'italia' : 'tutti');
 
 /** La competenza letta sull'Italia: gli stessi campi con i valori italiani. Lo slancio è unico. */
-const sullItalia = (c: RadarRow): CompetenzaVista => ({
+const sullItalia = (c: RadarRow): CompetenzaNelMercato => ({
   ...c,
   domanda: c.domanda_it ?? null, annunci: c.annunci_it ?? null, quadrante: c.quadrante_it ?? null, quadrante_calcolato: c.quadrante_calcolato_it ?? null,
   domanda_prec: c.domanda_prec_it ?? null, quadrante_prec: c.quadrante_prec_it ?? null,
 });
 
 /** Tutte le competenze lette sul mercato, anche quelle senza il dato per stare sul radar. */
-export function competenzeDi(r: Radar, mercato: Mercato = 'tutti'): CompetenzaVista[] {
+export function competenzeDi(r: Radar, mercato: Mercato = 'tutti'): CompetenzaNelMercato[] {
   if (r.versione !== 2) return []; // radar.json della pipeline vecchia: ranghi, non unità vere
   return r.competenze.map((c) => (mercato === 'italia' ? sullItalia(c) : { ...c, annunci: null }));
 }
@@ -107,9 +107,9 @@ export interface RigaPagina extends RadarRowM {
 /** Null se la competenza non ha una pagina: non sta sul radar nemmeno con tutti i Paesi. */
 export function rigaPagina(r: Radar, id: string, mercato: Mercato = 'tutti'): RigaPagina | null {
   const tutti = radarRows(r).find((x) => x.id === id);
-  const vista = radarRows(r, mercato).find((x) => x.id === id);
-  const riga = vista ?? tutti;
-  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !vista } : null;
+  const nelMercato = radarRows(r, mercato).find((x) => x.id === id);
+  const riga = nelMercato ?? tutti;
+  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato } : null;
 }
 
 export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {

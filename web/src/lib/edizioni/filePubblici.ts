@@ -1,120 +1,13 @@
 // I file pubblici che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
-// Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
 import { INDICE_EDIZIONI } from '../data/load';
-import { toHash, type TileId } from '../router';
-import { day, dayWith, isDay } from '../text/format';
-import { ICONA } from '../icona';
-import { eCardNotizie, portaConDati, testoPorta, VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
+import { isDay } from '../text/format';
+import { feed } from './feed';
+import { archivio, linkAlFeed, paginaEdizione, type OpzioniPagine } from './pagine';
+import { VERSIONE, type Edizione } from './tipi';
 
-export interface OpzioniFilePubblici {
-  /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
-  indirizzoBase: string;
-  /** Il foglio di stile della home, relativo alla radice del sito: il suo nome cambia a ogni build. */
-  foglio: string;
+export interface OpzioniFilePubblici extends OpzioniPagine {
   /** L'HTML della home uscito dalla build: con almeno un'edizione la mappa ne restituisce una copia con il link al feed. */
   home?: string;
-}
-
-/** Il foglio di stile che la build ha dato alla home, relativo alla radice del sito. */
-export function foglioDellaHome(html: string): string {
-  const link = html.match(/<link\b[^>]*\brel="stylesheet"[^>]*>/)?.[0];
-  const href = link?.match(/\bhref="(?:\.\/)?([^"]+)"/)?.[1];
-  if (!href) throw new Error('La home non ha un foglio di stile: le pagine delle edizioni non saprebbero quale usare.');
-  return href;
-}
-
-// I titoli delle notizie arrivano da fonti esterne, e un'edizione corretta a mano può contenere di tutto: niente entra nella pagina senza passare da qui.
-const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
-
-/** L'indirizzo se è http o https, altrimenti null: il resto non diventa un link. */
-function linkSicuro(url: string | null): string | null {
-  if (!url) return null;
-  try {
-    return ['http:', 'https:'].includes(new URL(url).protocol) ? url.trim() : null;
-  } catch {
-    return null;
-  }
-}
-const linkEsterno = (url: string | null, testo: string): string => {
-  const sicuro = linkSicuro(url);
-  return sicuro ? `<a href="${esc(sicuro)}" target="_blank" rel="noopener">${esc(testo)}</a>` : esc(testo);
-};
-
-/** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
-const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.card as TileId, d.elemento, d.params)}`);
-const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
-
-function rigaFonti(fonti: Fonte[]): string {
-  if (!fonti.length) return '';
-  const elenco = fonti.map((f) => `${linkEsterno(f.url, f.nome)} (${esc(f.licenza)})`).join(', ');
-  return `<p class="ed-fonte">${fonti.length === 1 ? 'Fonte' : 'Fonti'}: ${elenco}.</p>`;
-}
-
-function porta(p: PortaFissa, radice: string): string {
-  const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
-  const notizia = portaConDati(p) && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
-  return `<article class="ed-porta">
-<h2>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
-${notizia}
-${portaConDati(p) && !p.cambiata ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
-${p.nota ? `<p class="ed-nota">${esc(p.nota)}</p>` : ''}
-<p class="ed-fonte">${esc(p.meta)}</p>
-${rigaFonti(p.fonti)}
-</article>`;
-}
-
-function rigaCard(c: CardFissa, radice: string): string {
-  const unita = c.unita ? `${c.unita === '%' ? '' : ' '}${esc(c.unita)}` : '';
-  return `<li>
-<h3><a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a></h3>
-<p><strong class="ed-cifra">${esc(c.cifra ?? '')}${unita}</strong> ${esc(c.frase ?? '')}</p>
-${rigaFonti(c.fonti)}
-</li>`;
-}
-
-function frasi(e: Edizione, radice: string): string {
-  const card = e.card.filter((c) => !eCardNotizie(c));
-  const conDati = card.filter((c) => c.frase != null);
-  const righe = conDati.filter((c) => c.cambiata);
-  const invariate = conDati.filter((c) => !c.cambiata);
-  const senzaDati = card.filter((c) => c.frase == null);
-  const elenco = (xs: CardFissa[]) => xs.map((c) => `<a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a>`).join(', ');
-  return `<section>
-<h2>${e.precedente ? 'Cambiato dalla settimana scorsa' : 'La situazione'}</h2>
-${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : '<p>Nessuna frase è cambiata dalla settimana scorsa.</p>'}
-${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
-${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}
-</section>`;
-}
-
-function notizie(e: Edizione, radice: string): string {
-  const n = e.notizie;
-  const card = e.card.find(eCardNotizie);
-  // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
-  const cifra = card?.cifra && card.cifra !== '0' ? `<strong class="ed-cifra">${esc(card.cifra)}</strong> ` : '';
-  const conteggio = card?.frase ? `${cifra}${esc(card.frase)}` : 'Dati non disponibili.';
-  const temi = n.temi.map((t) => `<h3>${esc(t.nome)}</h3>
-<ul class="ed-voci">
-${t.voci.map((v) => `<li>${linkEsterno(v.link, v.titolo)} <span class="ed-fonte">${esc(v.fonte)} · ${esc(day(v.data))}</span></li>`).join('\n')}
-</ul>`).join('\n');
-  return `<section>
-<h2>Notizie</h2>
-<p>${conteggio}</p>
-${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono solo titolo, data e link all'articolo originale, nella sua lingua.</p>\n${temi}` : ''}
-<p><a href="${esc(`${radice}${toHash('notizie')}`)}">Le altre notizie, nella card Notizie</a></p>
-</section>`;
-}
-
-/** Una fonte in errore e una non configurata non hanno fatto la stessa cosa, ma a tutte e due mancano i dati di questo giro. */
-function fontiNonAggiornate(e: Edizione): string {
-  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">Tutte le fonti hanno dati aggiornati a questo giro.</p>';
-  const righe = e.fonti_non_aggiornate.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
-  return `<section>
-<h2>Senza dati aggiornati a questo giro</h2>
-<ul class="ed-voci">
-${righe}
-</ul>
-</section>`;
 }
 
 function controlla(e: Edizione): void {
@@ -123,151 +16,6 @@ function controlla(e: Edizione): void {
   for (const c of e.correzioni) {
     if (!isDay(c.data)) throw new Error(`Edizione ${e.settimana}: una correzione ha una data non valida, «${c.data}»: serve AAAA-MM-GG.`);
   }
-}
-
-/** Il nome dell'immagine di un'edizione nel sito, nella cartella della sua pagina. */
-export const IMMAGINE = 'anteprima.png';
-/** L'immagine fissa della home, con il testo alternativo che ha in index.html: l'archivio non ne ha una propria. */
-const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
-
-/** Il link con cui un lettore di feed trova il feed partendo da una pagina. */
-const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
-
-/** Lo scheletro comune delle pagine. radice: la radice del sito vista dalla pagina; percorso: la pagina vista dalla radice. */
-function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniFilePubblici): string {
-  return `<!doctype html>
-<html lang="it">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>${esc(o.titolo)}</title>
-<meta name="description" content="${esc(o.descrizione)}" />
-<link rel="canonical" href="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
-<meta property="og:title" content="${esc(o.titolo)}" />
-<meta property="og:description" content="${esc(o.descrizione)}" />
-<meta property="og:url" content="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
-<meta property="og:image" content="${esc(`${opzioni.indirizzoBase}${o.immagine.percorso}`)}" />
-<meta property="og:image:alt" content="${esc(o.immagine.alt)}" />
-<meta property="og:type" content="${o.tipo}" />
-<meta property="og:locale" content="it_IT" />
-<meta property="og:site_name" content="AI Radar" />
-<meta name="twitter:card" content="summary_large_image" />
-${linkAlFeed(opzioni.indirizzoBase)}
-<link rel="icon" href="${esc(ICONA)}" />
-<link rel="stylesheet" href="${esc(`${o.radice}${opzioni.foglio}`)}" />
-</head>
-<body>
-<a class="skip" href="#contenuto">Vai al contenuto</a>
-<div class="edizione">
-<header class="testata">
-<a class="logo" href="${o.radice}"><i aria-hidden="true"></i>AI Radar</a>
-<nav aria-label="Pagina">${o.nav}<a href="${o.radice}feed.xml">Segui con RSS</a></nav>
-</header>
-<main id="contenuto" tabindex="-1">
-${o.corpo}
-</main>
-<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p></footer>
-</div>
-</body>
-</html>
-`;
-}
-
-/**
- * Il testo di un'edizione, lo stesso nella pagina e nella voce del feed.
- * radice: la radice del sito vista dai link; intestazione: il titolo, che nella voce mostra già il lettore di feed.
- */
-function corpoEdizione(e: Edizione, radice: string, intestazione = ''): string {
-  const correzioni = e.correzioni.map((c) => `<p class="ed-corretta"><strong>Corretta ${esc(dayWith('il', c.data))}:</strong> ${esc(c.testo)}</p>`).join('\n');
-  return `<div class="ed-testa">
-${intestazione}
-<p class="ed-nota">Questa edizione resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Le card del sito mostrano i dati di oggi, quindi possono dire altro.</p>
-${correzioni}
-</div>
-<div class="ed-porte">
-${e.porte.map((p) => porta(p, radice)).join('\n')}
-</div>
-${frasi(e, radice)}
-${notizie(e, radice)}
-${fontiNonAggiornate(e)}`;
-}
-
-const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${testoPorta(p)}.`).join(' ');
-
-function paginaEdizione(e: Edizione, opzioni: OpzioniFilePubblici): string {
-  const radice = '../../';
-  return pagina({
-    titolo: titoloPagina(e),
-    descrizione: descrizioneEdizione(e),
-    percorso: `edizioni/${e.settimana}/`,
-    radice,
-    nav: `<a href="../">Edizioni</a><a href="${radice}">Dati di oggi</a>`,
-    corpo: corpoEdizione(e, radice, `<p class="ed-fonte">Edizione</p>
-<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`),
-    tipo: 'article',
-    immagine: {
-      percorso: `edizioni/${e.settimana}/${IMMAGINE}`,
-      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${portaConDati(p) ? testoPorta(p) : p.meta}.`).join(' ')}`,
-    },
-  }, opzioni);
-}
-
-const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
-const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.';
-
-function archivio(edizioni: Edizione[], opzioni: OpzioniFilePubblici): string {
-  const voci = edizioni.map((e) => `<li>
-<h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
-${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(portaConDati(p) ? testoPorta(p) : p.meta)}</p>`).join('\n')}
-</li>`).join('\n');
-  return pagina({
-    titolo: TITOLO_ARCHIVIO,
-    descrizione: DESCRIZIONE_ARCHIVIO,
-    percorso: 'edizioni/',
-    radice: '../',
-    nav: '<a href="../">Dati di oggi</a>',
-    tipo: 'website',
-    immagine: IMMAGINE_HOME,
-    corpo: `<div class="ed-testa">
-<h1>Edizioni</h1>
-<p class="ed-nota">Il riassunto di ogni settimana. Esce il lunedì e dopo non cambia, salvo correzioni dichiarate.</p>
-</div>
-<ul class="ed-archivio">
-${voci}
-</ul>`,
-  }, opzioni);
-}
-
-const VOCI_DEL_FEED = 26; // chi si iscrive non scarica anni di storico: quello sta nell'archivio
-
-/** Il testo intero sta in content:encoded, dove lo cercano i lettori di feed; description resta il riassunto con le due porte. */
-function voceDelFeed(e: Edizione, indirizzoBase: string): string {
-  return `<item>
-<title>${esc(titoloPagina(e))}</title>
-<link>${esc(`${indirizzoBase}edizioni/${e.settimana}/`)}</link>
-<guid isPermaLink="false">ai-radar:edizione:${esc(e.settimana)}</guid>
-<pubDate>${new Date(e.raccolti).toUTCString()}</pubDate>
-<description>${esc(descrizioneEdizione(e))}</description>
-<content:encoded>${esc(corpoEdizione(e, indirizzoBase))}</content:encoded>
-</item>`;
-}
-
-// I caratteri che XML 1.0 non ammette nemmeno come entità: uno solo, in un titolo esterno, renderebbe illeggibile tutto il feed.
-const FUORI_DA_XML = /[^\t\n\r -퟿-�\u{10000}-\u{10FFFF}]/gu;
-
-function feed(recenti: Edizione[], { indirizzoBase }: OpzioniFilePubblici): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-<channel>
-<title>${esc(TITOLO_ARCHIVIO)}</title>
-<link>${esc(`${indirizzoBase}edizioni/`)}</link>
-<description>${esc(DESCRIZIONE_ARCHIVIO)}</description>
-<language>it</language>
-<atom:link href="${esc(`${indirizzoBase}feed.xml`)}" rel="self" type="application/rss+xml" />
-${recenti.slice(0, VOCI_DEL_FEED).map((e) => voceDelFeed(e, indirizzoBase)).join('\n')}
-</channel>
-</rss>
-`.replace(FUORI_DA_XML, '');
 }
 
 /**
@@ -281,7 +29,7 @@ export function filePubblici(edizioni: Edizione[], opzioni: OpzioniFilePubblici)
   return {
     'edizioni/index.html': archivio(recenti, opzioni),
     ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
-    'feed.xml': feed(recenti, opzioni),
+    'feed.xml': feed(recenti, opzioni.indirizzoBase),
     [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
     // nell'HTML e non dall'app: un lettore di feed non esegue JavaScript. Senza edizioni la home resta quella uscita dalla build
     ...(opzioni.home ? { 'index.html': opzioni.home.replace('</head>', () => `  ${linkAlFeed(opzioni.indirizzoBase)}\n  </head>`) } : {}),

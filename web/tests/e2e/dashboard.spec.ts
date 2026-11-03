@@ -979,6 +979,42 @@ test('Business a 320px: i grafici dei settori senza scorrimento orizzontale', as
   expect(await noHorizontalScroll(page)).toBe(true);
 });
 
+const COMPETENZE_ITALIA = 'Competenze più chieste negli annunci';
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`Persone a 320px, tema ${colorScheme}: le competenze più chieste in Italia, con la tabella aperta, senza scorrimento né violazioni gravi`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.setViewportSize({ width: 320, height: 780 });
+    await page.goto('/#persone');
+    await page.reload();
+    const blocco = page.getByRole('region', { name: COMPETENZE_ITALIA });
+    await expect(blocco.getByRole('img', { name: COMPETENZE_ITALIA })).toBeVisible();
+    await blocco.getByText('Vedi i dati').click();
+    await expect(blocco.getByRole('columnheader', { name: 'Annunci in Italia' })).toBeAttached();
+    await expect(blocco.getByRole('row', { name: /Agenti AI/ })).toContainText('460');
+    expect(await noHorizontalScroll(page)).toBe(true);
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+}
+
+test('Persone: le competenze più chieste restano quelle italiane con qualsiasi mercato, nel link o ricordato', async ({ page }) => {
+  const righe = async () => {
+    await page.reload();
+    const blocco = page.getByRole('region', { name: COMPETENZE_ITALIA });
+    await blocco.getByText('Vedi i dati').click();
+    return blocco.getByRole('row').allTextContents();
+  };
+  await page.goto('/#persone');
+  const senzaScelta = await righe();
+  expect(senzaScelta[1]).toContain('Agenti AI');
+  expect(senzaScelta[1]).toContain('37,1');
+  await page.goto('/#persone?mercato=italia');
+  expect(await righe()).toEqual(senzaScelta);
+  await page.evaluate(() => localStorage.setItem('ai-radar:mercato', 'italia'));
+  await page.goto('/#persone');
+  expect(await righe()).toEqual(senzaScelta);
+});
+
 test('Business: si legge prima l’adozione, la risposta al titolo, poi gli investimenti', async ({ page }) => {
   await page.goto('/#business');
   const y = async (name: string) => (await page.getByRole('group', { name }).boundingBox())!.y;

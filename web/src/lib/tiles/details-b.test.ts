@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/svelte';
 import type { Component } from 'svelte';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import type { TileId } from '../router';
 import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
@@ -79,15 +79,88 @@ describe('Persone', () => {
     expect(screen.getByRole('img', { name: 'Competenze più chieste negli annunci' })).toBeInTheDocument();
     expect(screen.queryByText(/Serve la chiave gratuita di Adzuna/)).toBeNull();
   });
-  it('le competenze più chieste dicono il Paese a metà classifica', () => {
-    show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
-    const blk = screen.getByRole('region', { name: 'Competenze più chieste negli annunci' });
-    expect(blk).toHaveTextContent('Annunci che citano la competenza ogni 10.000, nel Paese a metà classifica.');
-    expect(blk).not.toHaveTextContent(/media (dei|tra i) Paesi/);
-  });
   it('gli annunci sono in CC BY-ND: il grafico arrotonda e la nota rimanda alla tabella, con i valori come pubblicati', () => {
     show(PersoneDetail, mk('persone', 'Persone e lavoro', headPersone, PersoneDetail));
     expect(screen.getByRole('region', { name: "Annunci di lavoro che chiedono l'AI" })).toHaveTextContent('Valori esatti nella tabella.');
+  });
+});
+
+describe('Persone: competenze più chieste negli annunci', () => {
+  const persone = mk('persone', 'Persone e lavoro', headPersone, PersoneDetail);
+  const conCompetenze = (righe: { domanda: number | null; domanda_it: number | null; annunci_it: number | null }[]): Dataset => ({
+    ...data,
+    radar: { ...data.radar!, competenze: righe.map((r, i) => ({ ...data.radar!.competenze[0], id: `c${i}`, nome: `Competenza ${i}`, breve: `Competenza ${i}`, ...r })) },
+  });
+  const apri = (d: Dataset, params: Record<string, string> = {}) => {
+    render(PersoneDetail, { data: d, today, tile: persone, elemento: null, params, onclose: () => {} });
+    return screen.getByRole('region', { name: 'Competenze più chieste negli annunci' });
+  };
+  const righe = (blk: HTMLElement) => within(blk).getAllByRole('row', { hidden: true }).slice(1)
+    .map((r) => [...r.children].map((c) => c.textContent));
+
+  // l'ordine italiano è l'opposto di quello del Paese a metà classifica: chi legge il secondo sbaglia classifica
+  const DODICI = Array.from({ length: 12 }, (_, i) => ({ domanda: 1 + i, domanda_it: 24 - 2 * i, annunci_it: 300 - 25 * i }));
+
+  it('la tabella ha le 10 competenze con più annunci in Italia, dalla prima, con Italia, annunci e Paese a metà classifica', () => {
+    const blk = apri(conCompetenze(DODICI));
+    expect(within(blk).getAllByRole('columnheader', { hidden: true }).map((c) => c.textContent))
+      .toEqual(['Competenza', 'Italia', 'Annunci in Italia', 'Paese a metà classifica']);
+    expect(righe(blk)).toEqual([
+      ['Competenza 0', '24', '300', '1'], ['Competenza 1', '22', '275', '2'], ['Competenza 2', '20', '250', '3'],
+      ['Competenza 3', '18', '225', '4'], ['Competenza 4', '16', '200', '5'], ['Competenza 5', '14', '175', '6'],
+      ['Competenza 6', '12', '150', '7'], ['Competenza 7', '10', '125', '8'], ['Competenza 8', '8', '100', '9'],
+      ['Competenza 9', '6', '75', '10'],
+    ]);
+  });
+  it('il grafico disegna i valori italiani, con in evidenza la competenza più cercata in Italia', () => {
+    const blk = apri(conCompetenze(DODICI));
+    const grafico = within(blk).getByRole('img', { name: 'Competenze più chieste negli annunci' });
+    expect(within(grafico).getByText('24,0')).toHaveClass('hot');
+    expect(within(grafico).getByText('Competenza 9')).toBeInTheDocument();
+    expect(within(grafico).queryByText('Competenza 10')).not.toBeInTheDocument(); // 11ª in Italia, 2ª per il Paese a metà classifica
+    expect(within(grafico).queryByText('1,0')).not.toBeInTheDocument(); // il valore della prima per il Paese a metà classifica
+  });
+  it('una competenza senza dato italiano resta fuori, una con zero annunci resta dentro', () => {
+    const blk = apri(conCompetenze([
+      { domanda: 9, domanda_it: null, annunci_it: null },
+      { domanda: 2, domanda_it: 0, annunci_it: 0 },
+      { domanda: 1, domanda_it: 5, annunci_it: 60 },
+    ]));
+    expect(righe(blk)).toEqual([['Competenza 2', '5', '60', '1'], ['Competenza 1', '0', '0', '2']]);
+  });
+  it('la nota dice che sono annunci in Italia ogni 10mila, mediana delle ultime 4 rilevazioni', () => {
+    const blk = apri(conCompetenze(DODICI));
+    expect(blk).toHaveTextContent('Annunci in Italia che citano la competenza ogni 10mila, mediana delle ultime 4 rilevazioni.');
+    expect(blk).not.toHaveTextContent(/media (dei|tra i) Paesi/);
+  });
+  describe('il mercato scelto altrove non cambia nulla', () => {
+    afterEach(() => localStorage.clear());
+    for (const [caso, params, ricordo] of [
+      ['nessuna scelta', {}, null],
+      ['Italia nel link', { mercato: 'italia' }, null],
+      ['Italia ricordata', {}, 'italia'],
+      ['Tutti i Paesi nel link, Italia ricordata', { mercato: 'tutti' }, 'italia'],
+    ] as const) {
+      it(caso, () => {
+        if (ricordo) localStorage.setItem('ai-radar:mercato', ricordo);
+        const blk = apri(conCompetenze(DODICI), params);
+        expect(righe(blk).slice(0, 2)).toEqual([['Competenza 0', '24', '300', '1'], ['Competenza 1', '22', '275', '2']]);
+        expect(within(within(blk).getByRole('img', { name: 'Competenze più chieste negli annunci' })).getByText('24,0')).toHaveClass('hot');
+      });
+    }
+  });
+  it('senza dati italiani lo dice, e non chiede la chiave di Adzuna', () => {
+    const blk = apri(conCompetenze([{ domanda: 9, domanda_it: null, annunci_it: null }, { domanda: 2, domanda_it: null, annunci_it: null }]));
+    expect(blk).toHaveTextContent('Mancano i dati italiani: le rilevazioni recenti di Adzuna non comprendono l’Italia.');
+    expect(blk).not.toHaveTextContent(/Serve la chiave/);
+    expect(within(blk).queryByRole('img')).not.toBeInTheDocument();
+    expect(within(blk).queryByText('Vedi i dati')).not.toBeInTheDocument();
+  });
+  it('senza annunci in nessun Paese chiede la chiave di Adzuna, e non parla dell’Italia', () => {
+    const blk = apri(conCompetenze([{ domanda: null, domanda_it: null, annunci_it: null }]));
+    expect(blk).toHaveTextContent('Serve la chiave gratuita di Adzuna');
+    expect(blk).not.toHaveTextContent(/Mancano i dati italiani/);
+    expect(within(blk).queryByRole('img')).not.toBeInTheDocument();
   });
 });
 

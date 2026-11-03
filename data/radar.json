@@ -41,10 +41,10 @@
     "sviluppo",
     "prodotto"
    ],
-   "slancio": 0.5122,
+   "slancio": 0.512,
    "slancio_margine": [
-    0.4395,
-    0.5885
+    0.4394,
+    0.5883
    ],
    "domanda": 28.558,
    "domanda_it": 38.404,
@@ -137,10 +137,10 @@
      ]
     },
     "github": {
-     "variazione": 1.3812,
+     "variazione": 1.3805,
      "margine": [
-      1.1443,
-      1.6443
+      1.1436,
+      1.6435
      ],
      "peso": 0.333,
      "mensile": [
@@ -201,13 +201,13 @@
       },
       {
        "mese": "2026-09",
-       "n": 18254,
-       "base": 31833
+       "n": 18255,
+       "base": 31836
       },
       {
        "mese": "2026-10",
-       "n": 23432,
-       "base": 33788
+       "n": 23430,
+       "base": 33794
       }
      ]
     },
@@ -275,21 +275,21 @@
      "nome": "deepseek-ai/deepseek-harness",
      "url": "https://github.com/deepseek-ai/deepseek-harness",
      "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-     "stelle": 270602,
+     "stelle": 270632,
      "creato": "2026-08-13"
     },
     {
      "nome": "Ebony-Vinyl/dsh-our-free-model",
      "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
      "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-     "stelle": 58496,
+     "stelle": 58526,
      "creato": "2026-09-24"
     },
     {
      "nome": "lexmount/moli",
      "url": "https://github.com/lexmount/moli",
      "descrizione": "Best headless browser for AI agents. Lite, Fast, High-Compatibility. Built in Rust",
-     "stelle": 22378,
+     "stelle": 22381,
      "creato": "2026-08-10"
     }
    ]
@@ -303,10 +303,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.9433,
+   "slancio": 0.9431,
    "slancio_margine": [
-    0.5991,
-    1.3616
+    0.5989,
+    1.3615
    ],
    "domanda": 1.862,
    "domanda_it": 0.336,
@@ -317,7 +317,7 @@
    "quadrante_calcolato_it": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.8804,
+   "slancio_prec": 0.8803,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "domanda_prec_it": null,
@@ -399,10 +399,10 @@
      ]
     },
     "github": {
-     "variazione": 0.9313,
+     "variazione": 0.9308,
      "margine": [
-      0.4158,
-      1.6344
+      0.4154,
+      1.634
      ],
      "peso": 0.394,
      "mensile": [
@@ -464,12 +464,12 @@
       {
        "mese": "2026-09",
        "n": 1201,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 1322,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -537,7 +537,7 @@
      "nome": "ccch1mneyyy/dsh-Go",
      "url": "https://github.com/ccch1mneyyy/dsh-Go",
      "descrizione": "dsh-go — DeepSeek Harness 装进口袋：手机本机运行，也能遥控你的电脑。",
-     "stelle": 6781,
+     "stelle": 6831,
      "creato": "2026-10-25"
     },
     {
@@ -551,7 +551,7 @@
      "nome": "microsoft/TokenEconomizer",
      "url": "https://github.com/microsoft/TokenEconomizer",
      "descrizione": "Experience-Driven Black-Box Cost Control for Coding Agents",
-     "stelle": 4604,
+     "stelle": 4608,
      "creato": "2026-10-13"
     }
    ]
@@ -565,7 +565,7 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.6706,
+   "slancio": 0.6707,
    "slancio_margine": [
     0.3697,
     1.0377
@@ -661,10 +661,10 @@
      ]
     },
     "github": {
-     "variazione": 1.7646,
+     "variazione": 1.7643,
      "margine": [
-      1.0932,
-      2.6512
+      1.0931,
+      2.6507
      ],
      "peso": 0.51,
      "mensile": [
@@ -725,13 +725,13 @@
       },
       {
        "mese": "2026-09",
-       "n": 14582,
-       "base": 31833
+       "n": 14583,
+       "base": 31836
       },
       {
        "mese": "2026-10",
-       "n": 21459,
-       "base": 33788
+       "n": 21461,
+       "base": 33794
       }
      ]
     },
@@ -799,21 +799,21 @@
      "nome": "tangency-labs/solidcraft",
      "url": "https://github.com/tangency-labs/solidcraft",
      "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-     "stelle": 13303,
+     "stelle": 13304,
      "creato": "2026-10-07"
     },
     {
      "nome": "CopilotKit/OpenBot",
      "url": "https://github.com/CopilotKit/OpenBot",
      "descrizione": "Open-source AI coworkers that each get a computer of their own: a browser, files and tools, with every action decided before it happens and recorded after. Bring any AG-UI agent.",
-     "stelle": 9976,
+     "stelle": 9977,
      "creato": "2026-08-17"
     },
     {
      "nome": "rehan-remade/universal-modder",
      "url": "https://github.com/rehan-remade/universal-modder",
      "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
-     "stelle": 9365,
+     "stelle": 9366,
      "creato": "2026-09-30"
     }
    ]
@@ -829,10 +829,10 @@
     "prodotto",
     "dati"
    ],
-   "slancio": -0.0113,
+   "slancio": -0.0114,
    "slancio_margine": [
-    -0.0769,
-    0.059
+    -0.077,
+    0.0588
    ],
    "domanda": 5.672,
    "domanda_it": 6.315,
@@ -843,7 +843,7 @@
    "quadrante_calcolato_it": "consolida",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": -0.0131,
+   "slancio_prec": -0.0132,
    "domanda_prec": null,
    "quadrante_prec": "impara-ora",
    "domanda_prec_it": null,
@@ -925,10 +925,10 @@
      ]
     },
     "github": {
-     "variazione": 0.198,
+     "variazione": 0.1977,
      "margine": [
-      0.1311,
-      0.2688
+      0.1309,
+      0.2685
      ],
      "peso": 0.667,
      "mensile": [
@@ -990,12 +990,12 @@
       {
        "mese": "2026-09",
        "n": 5893,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 6630,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -1100,10 +1100,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": 0.8345,
+   "slancio": 0.8339,
    "slancio_margine": [
-    0.5907,
-    1.1158
+    0.5901,
+    1.1151
    ],
    "domanda": 0.594,
    "domanda_it": 0.425,
@@ -1114,7 +1114,7 @@
    "quadrante_calcolato_it": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.5608,
+   "slancio_prec": 0.5606,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "domanda_prec_it": null,
@@ -1196,10 +1196,10 @@
      ]
     },
     "github": {
-     "variazione": 2.9894,
+     "variazione": 2.9884,
      "margine": [
-      2.3092,
-      3.8095
+      2.3082,
+      3.8085
      ],
      "peso": 0.582,
      "mensile": [
@@ -1261,12 +1261,12 @@
       {
        "mese": "2026-09",
        "n": 1569,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 2030,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -1347,7 +1347,7 @@
      "nome": "xinxuxin/keystone-bench",
      "url": "https://github.com/xinxuxin/keystone-bench",
      "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
-     "stelle": 1111,
+     "stelle": 1112,
      "creato": "2026-09-07"
     },
     {
@@ -1369,10 +1369,10 @@
     "sviluppo",
     "dati"
    ],
-   "slancio": 0.2425,
+   "slancio": 0.2423,
    "slancio_margine": [
-    0.1022,
-    0.4007
+    0.1021,
+    0.4005
    ],
    "domanda": 0.275,
    "domanda_it": 0.29,
@@ -1465,10 +1465,10 @@
      ]
     },
     "github": {
-     "variazione": 0.265,
+     "variazione": 0.2647,
      "margine": [
-      0.0815,
-      0.4796
+      0.0813,
+      0.4792
      ],
      "peso": 0.585,
      "mensile": [
@@ -1530,12 +1530,12 @@
       {
        "mese": "2026-09",
        "n": 400,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 474,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -1634,10 +1634,10 @@
     "dati",
     "compliance"
    ],
-   "slancio": -0.2683,
+   "slancio": -0.2684,
    "slancio_margine": [
-    -0.3456,
-    -0.1819
+    -0.3457,
+    -0.182
    ],
    "domanda": 13.806,
    "domanda_it": 10.378,
@@ -1730,10 +1730,10 @@
      ]
     },
     "github": {
-     "variazione": 0.0028,
+     "variazione": 0.0025,
      "margine": [
-      -0.0946,
-      0.1106
+      -0.0948,
+      0.1104
      ],
      "peso": 0.667,
      "mensile": [
@@ -1795,12 +1795,12 @@
       {
        "mese": "2026-09",
        "n": 2096,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 2355,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -1874,7 +1874,7 @@
      "nome": "google/elephant-goldfish-model",
      "url": "https://github.com/google/elephant-goldfish-model",
      "descrizione": "Open-source skills for designing and reviewing software with AI agents",
-     "stelle": 11018,
+     "stelle": 11033,
      "creato": "2026-09-13"
     },
     {
@@ -1903,10 +1903,10 @@
     "sviluppo",
     "compliance"
    ],
-   "slancio": 0.081,
+   "slancio": 0.0801,
    "slancio_margine": [
-    -0.0262,
-    0.2001
+    -0.0272,
+    0.1992
    ],
    "domanda": 0.247,
    "domanda_it": 1.451,
@@ -1917,7 +1917,7 @@
    "quadrante_calcolato_it": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.0375,
+   "slancio_prec": 0.0371,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "domanda_prec_it": null,
@@ -1929,7 +1929,7 @@
       -0.3329,
       -0.1137
      ],
-     "peso": 0.541,
+     "peso": 0.542,
      "mensile": [
       {
        "mese": "2025-10",
@@ -1999,12 +1999,12 @@
      ]
     },
     "github": {
-     "variazione": 0.6142,
+     "variazione": 0.6148,
      "margine": [
-      0.3836,
-      0.8833
+      0.3835,
+      0.8848
      ],
-     "peso": 0.459,
+     "peso": 0.458,
      "mensile": [
       {
        "mese": "2025-10",
@@ -2063,13 +2063,13 @@
       },
       {
        "mese": "2026-09",
-       "n": 909,
-       "base": 31833
+       "n": 910,
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 969,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -2137,7 +2137,7 @@
      "nome": "trhhubsd/ARTEX",
      "url": "https://github.com/trhhubsd/ARTEX",
      "descrizione": "ARTEX · AI autonomous penetration testing system (multi-agent LLM, Go + Next.js) · AI 自主渗透测试系统 · 百度 agent+ 攻防挑战赛冠军",
-     "stelle": 1305,
+     "stelle": 1307,
      "creato": "2026-10-08"
     },
     {
@@ -2166,10 +2166,10 @@
     "prodotto",
     "compliance"
    ],
-   "slancio": -0.2887,
+   "slancio": -0.2893,
    "slancio_margine": [
-    -0.4486,
-    -0.0825
+    -0.4491,
+    -0.0831
    ],
    "domanda": 2.171,
    "domanda_it": 0.653,
@@ -2180,7 +2180,7 @@
    "quadrante_calcolato_it": "osserva",
    "incerto": true,
    "incerto_perche": "pochi paper (30 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": -0.245,
+   "slancio_prec": -0.2451,
    "domanda_prec": null,
    "quadrante_prec": "osserva",
    "domanda_prec_it": null,
@@ -2262,10 +2262,10 @@
      ]
     },
     "github": {
-     "variazione": -0.2304,
+     "variazione": -0.2313,
      "margine": [
-      -0.4434,
-      0.0642
+      -0.4442,
+      0.0633
      ],
      "peso": 0.617,
      "mensile": [
@@ -2327,12 +2327,12 @@
       {
        "mese": "2026-09",
        "n": 808,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
-       "n": 707,
-       "base": 33788
+       "n": 706,
+       "base": 33794
       }
      ]
     },
@@ -2443,7 +2443,7 @@
    "quadrante_calcolato_it": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 0.0937,
+   "slancio_prec": 0.094,
    "domanda_prec": null,
    "quadrante_prec": "osserva",
    "domanda_prec_it": null,
@@ -2589,13 +2589,13 @@
       },
       {
        "mese": "2026-09",
-       "n": 2035,
-       "base": 31833
+       "n": 2036,
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 2298,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -2691,10 +2691,10 @@
    "ruoli": [
     "dati"
    ],
-   "slancio": 1.4285,
+   "slancio": 1.4281,
    "slancio_margine": [
-    0.8797,
-    2.1375
+    0.8794,
+    2.1369
    ],
    "domanda": 0.101,
    "domanda_it": 0.109,
@@ -2705,7 +2705,7 @@
    "quadrante_calcolato_it": "prova",
    "incerto": true,
    "incerto_perche": "pochi paper (27 al mese) e repository nuovi con andamento irregolare",
-   "slancio_prec": 1.1136,
+   "slancio_prec": 1.1134,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "domanda_prec_it": null,
@@ -2787,10 +2787,10 @@
      ]
     },
     "github": {
-     "variazione": 2.7291,
+     "variazione": 2.7282,
      "margine": [
-      1.8147,
-      3.9407
+      1.8142,
+      3.9391
      ],
      "peso": 0.667,
      "mensile": [
@@ -2852,12 +2852,12 @@
       {
        "mese": "2026-09",
        "n": 252,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 409,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -2963,7 +2963,7 @@
    "slancio": -0.5656,
    "slancio_margine": [
     -0.6621,
-    -0.4415
+    -0.4416
    ],
    "domanda": 2.1,
    "domanda_it": 3.084,
@@ -3058,8 +3058,8 @@
     "github": {
      "variazione": -0.5289,
      "margine": [
-      -0.6039,
-      -0.4396
+      -0.604,
+      -0.4397
      ],
      "peso": 0.667,
      "mensile": [
@@ -3121,12 +3121,12 @@
       {
        "mese": "2026-09",
        "n": 477,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 374,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -3229,10 +3229,10 @@
     "sviluppo",
     "prodotto"
    ],
-   "slancio": 0.1563,
+   "slancio": 0.1562,
    "slancio_margine": [
     -0.0271,
-    0.3743
+    0.3742
    ],
    "domanda": 7.109,
    "domanda_it": 2.597,
@@ -3325,10 +3325,10 @@
      ]
     },
     "github": {
-     "variazione": 1.011,
+     "variazione": 1.0106,
      "margine": [
-      0.3195,
-      2.065
+      0.3191,
+      2.0644
      ],
      "peso": 0.333,
      "mensile": [
@@ -3390,12 +3390,12 @@
       {
        "mese": "2026-09",
        "n": 418,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 529,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -3497,9 +3497,9 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": -0.1376,
+   "slancio": -0.1377,
    "slancio_margine": [
-    -0.2794,
+    -0.2795,
     0.032
    ],
    "domanda": 9.394,
@@ -3593,10 +3593,10 @@
      ]
     },
     "github": {
-     "variazione": -0.2047,
+     "variazione": -0.2049,
      "margine": [
-      -0.3715,
-      0.0064
+      -0.3717,
+      0.0062
      ],
      "peso": 0.582,
      "mensile": [
@@ -3658,12 +3658,12 @@
       {
        "mese": "2026-09",
        "n": 383,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 356,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -3751,7 +3751,7 @@
      "nome": "respanai/respan-gateway",
      "url": "https://github.com/respanai/respan-gateway",
      "descrizione": "Open-source LLM gateway in Rust. One endpoint for OpenAI, Anthropic, Gemini and every other vendor. Any SDK, any model, any tool.",
-     "stelle": 513,
+     "stelle": 514,
      "creato": "2026-09-25"
     }
    ]
@@ -3765,10 +3765,10 @@
    "ruoli": [
     "sviluppo"
    ],
-   "slancio": 0.433,
+   "slancio": 0.4329,
    "slancio_margine": [
-    0.3101,
-    0.5674
+    0.31,
+    0.5673
    ],
    "domanda": 0.117,
    "domanda_it": 0.186,
@@ -3861,10 +3861,10 @@
      ]
     },
     "github": {
-     "variazione": 1.6012,
+     "variazione": 1.6005,
      "margine": [
-      1.1508,
-      2.1459
+      1.1504,
+      2.145
      ],
      "peso": 0.333,
      "mensile": [
@@ -3926,12 +3926,12 @@
       {
        "mese": "2026-09",
        "n": 1354,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 1878,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -3999,14 +3999,14 @@
      "nome": "AienTech/dossier",
      "url": "https://github.com/AienTech/dossier",
      "descrizione": "A self-hosted job search app that writes tailored resumes and cover letters from your profile.",
-     "stelle": 4149,
+     "stelle": 4152,
      "creato": "2026-10-03"
     },
     {
      "nome": "syv-ai/HyperQwen",
      "url": "https://github.com/syv-ai/HyperQwen",
      "descrizione": "Serve large Qwen models fast on the GPUs you actually own. Qwen3.8-27B on a single 24 GB card with vLLM: 127 tok/s single-user (381 when the answer quotes the prompt), ~1,035 tok/s at 64 concurrent, …",
-     "stelle": 2495,
+     "stelle": 2496,
      "creato": "2026-08-15"
     },
     {
@@ -4025,10 +4025,10 @@
    "plurale": false,
    "descrizione": "Modelli che percepiscono e agiscono nel mondo fisico (VLA, world model).",
    "ruoli": [],
-   "slancio": 1.0235,
+   "slancio": 1.0234,
    "slancio_margine": [
-    0.6262,
-    1.5179
+    0.6261,
+    1.5177
    ],
    "domanda": 0.108,
    "domanda_it": 0.29,
@@ -4039,7 +4039,7 @@
    "quadrante_calcolato_it": "prova",
    "incerto": false,
    "incerto_perche": null,
-   "slancio_prec": 1.1973,
+   "slancio_prec": 1.1972,
    "domanda_prec": null,
    "quadrante_prec": "prova",
    "domanda_prec_it": null,
@@ -4121,10 +4121,10 @@
      ]
     },
     "github": {
-     "variazione": 1.7684,
+     "variazione": 1.7678,
      "margine": [
-      0.7857,
-      3.292
+      0.7854,
+      3.2908
      ],
      "peso": 0.333,
      "mensile": [
@@ -4186,12 +4186,12 @@
       {
        "mese": "2026-09",
        "n": 191,
-       "base": 31833
+       "base": 31836
       },
       {
        "mese": "2026-10",
        "n": 226,
-       "base": 33788
+       "base": 33794
       }
      ]
     },
@@ -5284,7 +5284,7 @@
      "pubblicato_it": "impara-ora"
     },
     "coding-agenti": {
-     "slancio": 0.8804,
+     "slancio": 0.8803,
      "incerto": false,
      "domanda": null,
      "calcolato": "prova",
@@ -5304,7 +5304,7 @@
      "pubblicato_it": "prova"
     },
     "rag": {
-     "slancio": -0.0131,
+     "slancio": -0.0132,
      "incerto": false,
      "domanda": null,
      "calcolato": "consolida",
@@ -5314,7 +5314,7 @@
      "pubblicato_it": "impara-ora"
     },
     "valutazione": {
-     "slancio": 0.5608,
+     "slancio": 0.5606,
      "incerto": false,
      "domanda": null,
      "calcolato": "prova",
@@ -5344,7 +5344,7 @@
      "pubblicato_it": "consolida"
     },
     "sicurezza": {
-     "slancio": 0.0375,
+     "slancio": 0.0371,
      "incerto": false,
      "domanda": null,
      "calcolato": "prova",
@@ -5354,7 +5354,7 @@
      "pubblicato_it": "prova"
     },
     "governance": {
-     "slancio": -0.245,
+     "slancio": -0.2451,
      "incerto": true,
      "domanda": null,
      "calcolato": "osserva",
@@ -5364,7 +5364,7 @@
      "pubblicato_it": "osserva"
     },
     "dati-per-ai": {
-     "slancio": 0.0937,
+     "slancio": 0.094,
      "incerto": false,
      "domanda": null,
      "calcolato": "prova",
@@ -5374,7 +5374,7 @@
      "pubblicato_it": "osserva"
     },
     "text-to-sql": {
-     "slancio": 1.1136,
+     "slancio": 1.1134,
      "incerto": true,
      "domanda": null,
      "calcolato": "prova",
@@ -5424,7 +5424,7 @@
      "pubblicato_it": "prova"
     },
     "robotica": {
-     "slancio": 1.1973,
+     "slancio": 1.1972,
      "incerto": true,
      "domanda": null,
      "calcolato": "prova",
@@ -5439,7 +5439,7 @@
    "mese": "2026-10",
    "competenze": {
     "agenti": {
-     "slancio": 0.5122,
+     "slancio": 0.512,
      "incerto": false,
      "domanda": 28.558,
      "calcolato": "impara-ora",
@@ -5449,7 +5449,7 @@
      "pubblicato_it": "impara-ora"
     },
     "coding-agenti": {
-     "slancio": 0.9433,
+     "slancio": 0.9431,
      "incerto": false,
      "domanda": 1.862,
      "calcolato": "prova",
@@ -5459,7 +5459,7 @@
      "pubblicato_it": "prova"
     },
     "mcp": {
-     "slancio": 0.6706,
+     "slancio": 0.6707,
      "incerto": false,
      "domanda": 2.553,
      "calcolato": "prova",
@@ -5469,7 +5469,7 @@
      "pubblicato_it": "prova"
     },
     "rag": {
-     "slancio": -0.0113,
+     "slancio": -0.0114,
      "incerto": false,
      "domanda": 5.672,
      "calcolato": "consolida",
@@ -5479,7 +5479,7 @@
      "pubblicato_it": "consolida"
     },
     "valutazione": {
-     "slancio": 0.8345,
+     "slancio": 0.8339,
      "incerto": false,
      "domanda": 0.594,
      "calcolato": "prova",
@@ -5489,7 +5489,7 @@
      "pubblicato_it": "prova"
     },
     "post-training": {
-     "slancio": 0.2425,
+     "slancio": 0.2423,
      "incerto": false,
      "domanda": 0.275,
      "calcolato": "prova",
@@ -5499,7 +5499,7 @@
      "pubblicato_it": "prova"
     },
     "context-engineering": {
-     "slancio": -0.2683,
+     "slancio": -0.2684,
      "incerto": false,
      "domanda": 13.806,
      "calcolato": "consolida",
@@ -5509,7 +5509,7 @@
      "pubblicato_it": "consolida"
     },
     "sicurezza": {
-     "slancio": 0.081,
+     "slancio": 0.0801,
      "incerto": false,
      "domanda": 0.247,
      "calcolato": "prova",
@@ -5519,7 +5519,7 @@
      "pubblicato_it": "prova"
     },
     "governance": {
-     "slancio": -0.2887,
+     "slancio": -0.2893,
      "incerto": true,
      "domanda": 2.171,
      "calcolato": "osserva",
@@ -5539,7 +5539,7 @@
      "pubblicato_it": "prova"
     },
     "text-to-sql": {
-     "slancio": 1.4285,
+     "slancio": 1.4281,
      "incerto": true,
      "domanda": 0.101,
      "calcolato": "prova",
@@ -5559,7 +5559,7 @@
      "pubblicato_it": "consolida"
     },
     "multimodale": {
-     "slancio": 0.1563,
+     "slancio": 0.1562,
      "incerto": false,
      "domanda": 7.109,
      "calcolato": "impara-ora",
@@ -5569,7 +5569,7 @@
      "pubblicato_it": "prova"
     },
     "llmops": {
-     "slancio": -0.1376,
+     "slancio": -0.1377,
      "incerto": false,
      "domanda": 9.394,
      "calcolato": "consolida",
@@ -5579,7 +5579,7 @@
      "pubblicato_it": "impara-ora"
     },
     "modelli-locali": {
-     "slancio": 0.433,
+     "slancio": 0.4329,
      "incerto": false,
      "domanda": 0.117,
      "calcolato": "prova",
@@ -5589,7 +5589,7 @@
      "pubblicato_it": "prova"
     },
     "robotica": {
-     "slancio": 1.0235,
+     "slancio": 1.0234,
      "incerto": false,
      "domanda": 0.108,
      "calcolato": "prova",

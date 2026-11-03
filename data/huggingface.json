@@ -8,9 +8,9 @@
    "url": "https://huggingface.co/LiquidAI/LFM3-1.7B",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 1325,
+   "like": 1335,
    "download": 47817,
-   "trending": 820,
+   "trending": 823,
    "creato": "2026-10-23"
   },
   {
@@ -18,9 +18,9 @@
    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 4793,
+   "like": 4795,
    "download": 187260,
-   "trending": 643,
+   "trending": 641,
    "creato": "2026-10-17"
   },
   {
@@ -40,7 +40,7 @@
    "libreria": "transformers",
    "like": 1523,
    "download": 6556,
-   "trending": 519,
+   "trending": 518,
    "creato": "2026-09-30"
   },
   {
@@ -48,9 +48,9 @@
    "url": "https://huggingface.co/speridlabs/idol",
    "tipo": "image-to-3d",
    "libreria": "idol",
-   "like": 467,
+   "like": 468,
    "download": 10742,
-   "trending": 445,
+   "trending": 446,
    "creato": "2026-10-28"
   },
   {
@@ -58,9 +58,9 @@
    "url": "https://huggingface.co/Lightricks/LTX-2.5",
    "tipo": "image-to-video",
    "libreria": "diffusion-single-file",
-   "like": 10423,
+   "like": 10425,
    "download": 2488128,
-   "trending": 381,
+   "trending": 380,
    "creato": "2026-07-23"
   },
   {
@@ -70,7 +70,7 @@
    "libreria": null,
    "like": 579,
    "download": 91123,
-   "trending": 373,
+   "trending": 371,
    "creato": "2026-10-25"
   },
   {
@@ -90,7 +90,7 @@
    "libreria": "transformers",
    "like": 577,
    "download": 189897,
-   "trending": 339,
+   "trending": 334,
    "creato": "2026-10-26"
   },
   {
@@ -98,9 +98,9 @@
    "url": "https://huggingface.co/LiquidAI/LFM3-Omni-2B",
    "tipo": "any-to-any",
    "libreria": "transformers",
-   "like": 325,
+   "like": 326,
    "download": 11662,
-   "trending": 294,
+   "trending": 295,
    "creato": "2026-10-21"
   },
   {
@@ -108,7 +108,7 @@
    "url": "https://huggingface.co/abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
    "tipo": "text-to-image",
    "libreria": "gguf",
-   "like": 5588,
+   "like": 5590,
    "download": 2508590,
    "trending": 292,
    "creato": "2026-09-20"
@@ -118,9 +118,9 @@
    "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
    "tipo": "image-text-to-text",
    "libreria": "transformers",
-   "like": 19046,
+   "like": 19047,
    "download": 8014877,
-   "trending": 286,
+   "trending": 287,
    "creato": "2026-08-05"
   },
   {
@@ -138,10 +138,20 @@
    "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
    "tipo": "image-to-image",
    "libreria": "diffusion-single-file",
-   "like": 2382,
+   "like": 2383,
    "download": 1032077,
    "trending": 277,
    "creato": "2026-10-14"
+  },
+  {
+   "id": "FusionCow/Sulphur-3",
+   "url": "https://huggingface.co/FusionCow/Sulphur-3",
+   "tipo": "altro",
+   "libreria": "minimax-h3",
+   "like": 309,
+   "download": 395,
+   "trending": 259,
+   "creato": "2026-10-31"
   },
   {
    "id": "Nanbeige/Nanbeige4.3-33B",
@@ -150,18 +160,8 @@
    "libreria": "transformers",
    "like": 1017,
    "download": 17839,
-   "trending": 259,
+   "trending": 256,
    "creato": "2026-10-24"
-  },
-  {
-   "id": "FusionCow/Sulphur-3",
-   "url": "https://huggingface.co/FusionCow/Sulphur-3",
-   "tipo": "altro",
-   "libreria": "minimax-h3",
-   "like": 308,
-   "download": 395,
-   "trending": 259,
-   "creato": "2026-10-31"
   },
   {
    "id": "Edge0/Audio8-TTS-Realistic-Air",
@@ -188,39 +188,39 @@
    "url": "https://huggingface.co/facebook/sam3",
    "tipo": "mask-generation",
    "libreria": "transformers",
-   "like": 5763,
+   "like": 5764,
    "download": 1891393,
-   "trending": 216,
+   "trending": 215,
    "creato": "2025-11-07"
-  },
-  {
-   "id": "LiquidAI/LFM3-VL-2B",
-   "url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
-   "tipo": "image-text-to-text",
-   "libreria": "transformers",
-   "like": 222,
-   "download": 11153,
-   "trending": 211,
-   "creato": "2026-10-19"
   },
   {
    "id": "AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF",
    "url": "https://huggingface.co/AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-GSQ-RCO-GGUF",
    "tipo": "text-generation",
    "libreria": "gguf",
-   "like": 237,
+   "like": 239,
    "download": 53913,
-   "trending": 211,
+   "trending": 213,
    "creato": "2026-10-28"
+  },
+  {
+   "id": "LiquidAI/LFM3-VL-2B",
+   "url": "https://huggingface.co/LiquidAI/LFM3-VL-2B",
+   "tipo": "image-text-to-text",
+   "libreria": "transformers",
+   "like": 223,
+   "download": 11153,
+   "trending": 212,
+   "creato": "2026-10-19"
   },
   {
    "id": "OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated",
    "url": "https://huggingface.co/OBLITERATUS/DeepSeek-V4.1-Flash-1017-obliterated",
    "tipo": "text-generation",
    "libreria": "transformers",
-   "like": 230,
+   "like": 231,
    "download": 1643,
-   "trending": 203,
+   "trending": 204,
    "creato": "2026-10-23"
   },
   {

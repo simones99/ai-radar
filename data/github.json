@@ -47,8 +47,8 @@
    "2026-06": 12365,
    "2026-07": 16272,
    "2026-08": 17973,
-   "2026-09": 18254,
-   "2026-10": 23432
+   "2026-09": 18255,
+   "2026-10": 23430
   },
   "coding-agenti": {
    "2025-10": 27,
@@ -77,8 +77,8 @@
    "2026-06": 9161,
    "2026-07": 11008,
    "2026-08": 11737,
-   "2026-09": 14582,
-   "2026-10": 21459
+   "2026-09": 14583,
+   "2026-10": 21461
   },
   "rag": {
    "2025-10": 954,
@@ -152,7 +152,7 @@
    "2026-06": 652,
    "2026-07": 773,
    "2026-08": 800,
-   "2026-09": 909,
+   "2026-09": 910,
    "2026-10": 969
   },
   "governance": {
@@ -168,7 +168,7 @@
    "2026-07": 784,
    "2026-08": 915,
    "2026-09": 808,
-   "2026-10": 707
+   "2026-10": 706
   },
   "dati-per-ai": {
    "2025-10": 364,
@@ -182,7 +182,7 @@
    "2026-06": 1668,
    "2026-07": 1937,
    "2026-08": 2064,
-   "2026-09": 2035,
+   "2026-09": 2036,
    "2026-10": 2298
   },
   "text-to-sql": {
@@ -295,8 +295,8 @@
    "2026-06": 16010,
    "2026-07": 17305,
    "2026-08": 15728,
-   "2026-09": 16307,
-   "2026-10": 20537
+   "2026-09": 16308,
+   "2026-10": 20539
   },
   "ai": {
    "2025-10": 3816,
@@ -310,8 +310,8 @@
    "2026-06": 13243,
    "2026-07": 13466,
    "2026-08": 11060,
-   "2026-09": 11703,
-   "2026-10": 9260
+   "2026-09": 11704,
+   "2026-10": 9263
   },
   "artificial-intelligence": {
    "2025-10": 615,
@@ -325,8 +325,8 @@
    "2026-06": 2246,
    "2026-07": 4497,
    "2026-08": 3140,
-   "2026-09": 2069,
-   "2026-10": 2049
+   "2026-09": 2070,
+   "2026-10": 2050
   },
   "generative-ai": {
    "2025-10": 442,
@@ -356,8 +356,8 @@
   "2026-06": 33107,
   "2026-07": 37241,
   "2026-08": 31895,
-  "2026-09": 31833,
-  "2026-10": 33788
+  "2026-09": 31836,
+  "2026-10": 33794
  },
  "in_crescita": {
   "agenti": [
@@ -365,21 +365,21 @@
     "nome": "deepseek-ai/deepseek-harness",
     "url": "https://github.com/deepseek-ai/deepseek-harness",
     "descrizione": "DeepSeek Harness: Everything is a Plugin.",
-    "stelle": 270602,
+    "stelle": 270632,
     "creato": "2026-08-13"
    },
    {
     "nome": "Ebony-Vinyl/dsh-our-free-model",
     "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
     "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-    "stelle": 58496,
+    "stelle": 58526,
     "creato": "2026-09-24"
    },
    {
     "nome": "lexmount/moli",
     "url": "https://github.com/lexmount/moli",
     "descrizione": "Best headless browser for AI agents. Lite, Fast, High-Compatibility. Built in Rust",
-    "stelle": 22378,
+    "stelle": 22381,
     "creato": "2026-08-10"
    }
   ],
@@ -388,7 +388,7 @@
     "nome": "ccch1mneyyy/dsh-Go",
     "url": "https://github.com/ccch1mneyyy/dsh-Go",
     "descrizione": "dsh-go — DeepSeek Harness 装进口袋：手机本机运行，也能遥控你的电脑。",
-    "stelle": 6781,
+    "stelle": 6831,
     "creato": "2026-10-25"
    },
    {
@@ -402,7 +402,7 @@
     "nome": "microsoft/TokenEconomizer",
     "url": "https://github.com/microsoft/TokenEconomizer",
     "descrizione": "Experience-Driven Black-Box Cost Control for Coding Agents",
-    "stelle": 4604,
+    "stelle": 4608,
     "creato": "2026-10-13"
    }
   ],
@@ -411,21 +411,21 @@
     "nome": "tangency-labs/solidcraft",
     "url": "https://github.com/tangency-labs/solidcraft",
     "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-    "stelle": 13303,
+    "stelle": 13304,
     "creato": "2026-10-07"
    },
    {
     "nome": "CopilotKit/OpenBot",
     "url": "https://github.com/CopilotKit/OpenBot",
     "descrizione": "Open-source AI coworkers that each get a computer of their own: a browser, files and tools, with every action decided before it happens and recorded after. Bring any AG-UI agent.",
-    "stelle": 9976,
+    "stelle": 9977,
     "creato": "2026-08-17"
    },
    {
     "nome": "rehan-remade/universal-modder",
     "url": "https://github.com/rehan-remade/universal-modder",
     "descrizione": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
-    "stelle": 9365,
+    "stelle": 9366,
     "creato": "2026-09-30"
    }
   ],
@@ -464,7 +464,7 @@
     "nome": "xinxuxin/keystone-bench",
     "url": "https://github.com/xinxuxin/keystone-bench",
     "descrizione": "A clinical decision-evidence benchmark: pull the one fact an answer rests on, and see whether the assistant's action moves with the evidence. Built on HealthBench.",
-    "stelle": 1111,
+    "stelle": 1112,
     "creato": "2026-09-07"
    },
    {
@@ -503,7 +503,7 @@
     "nome": "google/elephant-goldfish-model",
     "url": "https://github.com/google/elephant-goldfish-model",
     "descrizione": "Open-source skills for designing and reviewing software with AI agents",
-    "stelle": 11018,
+    "stelle": 11033,
     "creato": "2026-09-13"
    },
    {
@@ -526,7 +526,7 @@
     "nome": "trhhubsd/ARTEX",
     "url": "https://github.com/trhhubsd/ARTEX",
     "descrizione": "ARTEX · AI autonomous penetration testing system (multi-agent LLM, Go + Next.js) · AI 自主渗透测试系统 · 百度 agent+ 攻防挑战赛冠军",
-    "stelle": 1305,
+    "stelle": 1307,
     "creato": "2026-10-08"
    },
    {
@@ -678,7 +678,7 @@
     "nome": "respanai/respan-gateway",
     "url": "https://github.com/respanai/respan-gateway",
     "descrizione": "Open-source LLM gateway in Rust. One endpoint for OpenAI, Anthropic, Gemini and every other vendor. Any SDK, any model, any tool.",
-    "stelle": 513,
+    "stelle": 514,
     "creato": "2026-09-25"
    }
   ],
@@ -687,14 +687,14 @@
     "nome": "AienTech/dossier",
     "url": "https://github.com/AienTech/dossier",
     "descrizione": "A self-hosted job search app that writes tailored resumes and cover letters from your profile.",
-    "stelle": 4149,
+    "stelle": 4152,
     "creato": "2026-10-03"
    },
    {
     "nome": "syv-ai/HyperQwen",
     "url": "https://github.com/syv-ai/HyperQwen",
     "descrizione": "Serve large Qwen models fast on the GPUs you actually own. Qwen3.8-27B on a single 24 GB card with vLLM: 127 tok/s single-user (381 when the answer quotes the prompt), ~1,035 tok/s at 64 concurrent, …",
-    "stelle": 2495,
+    "stelle": 2496,
     "creato": "2026-08-15"
    },
    {
@@ -734,7 +734,7 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-11-03T13:02:27Z",
+   "ultimo_push": "2026-11-03T13:21:58Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -770,7 +770,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 168487
+     "stelle": 168488
     }
    ]
   },
@@ -778,7 +778,7 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-11-03T13:08:08Z",
+   "ultimo_push": "2026-11-03T13:18:05Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -814,7 +814,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 96213
+     "stelle": 96215
     }
    ]
   },
@@ -902,7 +902,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 44389
+     "stelle": 44390
     }
    ]
   },
@@ -990,7 +990,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 91767
+     "stelle": 91768
     }
    ]
   },
@@ -1034,7 +1034,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 30472
+     "stelle": 30473
     }
    ]
   },
@@ -1122,7 +1122,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 60449
+     "stelle": 60451
     }
    ]
   },
@@ -1174,7 +1174,7 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-11-03T12:08:41Z",
+   "ultimo_push": "2026-11-03T13:27:05Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1210,7 +1210,7 @@
     },
     {
      "data": "2026-11-03",
-     "stelle": 133253
+     "stelle": 133255
     }
    ]
   },
@@ -1218,7 +1218,7 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4.1, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-11-03T12:59:31Z",
+   "ultimo_push": "2026-11-03T13:24:51Z",
    "storico": [
     {
      "data": "2026-10-15",

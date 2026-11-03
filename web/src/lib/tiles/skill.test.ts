@@ -109,7 +109,7 @@ describe('La pagina di una competenza segue il mercato', () => {
   }
   it('il percorso sul radar e il titolo usano i quadranti della vista scelta', () => {
     const { unmount } = pagina('mcp');
-    const percorso = () => [...screen.getByRole('list', { name: 'Il percorso sul radar' }).querySelectorAll('li')].map((li) => li.textContent);
+    const percorso = () => within(screen.getByRole('list', { name: 'Il percorso sul radar' })).getAllByRole('listitem').map((li) => li.textContent);
     expect(percorso()).toEqual(['lug 2026Da consolidare', 'ago 2026Da consolidare', 'set 2026Impara ora']);
     expect(screen.getByText('Impara ora, un mese fa Da consolidare. Lo standard per collegare strumenti.')).toBeInTheDocument();
     unmount();
@@ -134,7 +134,7 @@ describe('La pagina di una competenza segue il mercato', () => {
       render(CompetenzeDetail, { data, today: FIXTURE_TODAY, tile, elemento: null, params: scelta, onclose: () => {} });
       const atteso = `#competenze/mcp${verso}`;
       expect(within(screen.getByRole('group', { name: /^Radar delle competenze/ })).getByRole('link', { name: /^Model Context Protocol/ })).toHaveAttribute('href', atteso);
-      expect(within(screen.getByRole('heading', { name: 'Movimenti di settembre' }).closest('section')!).getByRole('link', { name: /^MCP slancio/ })).toHaveAttribute('href', atteso);
+      expect(within(screen.getByRole('region', { name: 'Radar delle competenze' })).getByRole('link', { name: /^MCP slancio/ })).toHaveAttribute('href', atteso);
       expect(within(screen.getByRole('region', { name: 'Tabella delle competenze' })).getByRole('link', { name: 'Model Context Protocol (MCP)' })).toHaveAttribute('href', atteso);
     });
     it('senza scelta i link restano puliti', () => {

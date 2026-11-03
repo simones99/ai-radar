@@ -197,7 +197,7 @@ test('porta Per te: chi entra e chi esce insieme: apre il radar, dove si vedono 
   await page.goto('/');
   await page.getByRole('link', { name: /MCP entra tra le competenze.*RAG esce/ }).click();
   await expect(page).toHaveURL(/#competenze$/);
-  await expect(page.locator('#h-competenze')).toHaveText('MCP entra tra le competenze da imparare ora');
+  await expect(page.getByRole('heading', { level: 2, name: 'MCP entra tra le competenze da imparare ora' })).toBeVisible();
   await expect(page.getByText(/^RAG esce da Impara ora\./)).toBeVisible();
   const radar = page.getByRole('group', { name: /Radar delle competenze/ });
   await expect(radar.getByRole('link', { name: /^Model Context Protocol \(MCP\): Impara ora/ })).toBeAttached();
@@ -469,13 +469,13 @@ test('ruolo a 320px: la fila va a capo, niente scorrimento orizzontale', async (
 });
 
 const mercati = (page: Page) => page.getByRole('group', { name: 'Mercato' });
-const mercatoPremuto = (page: Page) => mercati(page).locator('button[aria-pressed="true"]');
+const mercatoPremuto = (page: Page) => mercati(page).getByRole('button', { pressed: true });
 const rigaItalia = 'La crescita è mondiale, la domanda è italiana.';
 
 test('mercato: il link apre la vista Italia, il ricaricamento la tiene, «Tutti i Paesi» toglie la scelta dal link e dal ricordo', async ({ page }) => {
   await page.goto('/#competenze?mercato=italia');
   await expect(mercatoPremuto(page)).toHaveText('Italia');
-  await expect(page.locator('#h-competenze')).toHaveText('RAG esce da Impara ora');
+  await expect(page.getByRole('heading', { level: 2, name: 'RAG esce da Impara ora' })).toBeVisible();
   await expect(page.getByText(rigaItalia)).toBeVisible();
   await expect(page.getByRole('link', { name: /^Model Context Protocol \(MCP\): Da provare.*2,6 ogni 10mila, 32 annunci/ })).toBeAttached();
   await page.reload();
@@ -487,7 +487,7 @@ test('mercato: il link apre la vista Italia, il ricaricamento la tiene, «Tutti 
   await mercati(page).getByRole('button', { name: 'Tutti i Paesi' }).click();
   await expect(page).toHaveURL(/#competenze$/);
   await expect(page.getByText(rigaItalia)).toHaveCount(0);
-  await expect(page.locator('#h-competenze')).toHaveText('MCP entra tra le competenze da imparare ora');
+  await expect(page.getByRole('heading', { level: 2, name: 'MCP entra tra le competenze da imparare ora' })).toBeVisible();
   await page.goto('about:blank');
   await page.goto('/#competenze');
   await expect(mercatoPremuto(page)).toHaveText('Tutti i Paesi');
@@ -556,7 +556,7 @@ const paginaItalia = '2,6 ogni 10mila in Italia, 32 annunci · era 2,4 un mese f
 
 test('pagina di una competenza: il link apre la vista Italia, senza bottoni, con i quadranti italiani', async ({ page }) => {
   await page.goto('/#competenze/mcp?mercato=italia');
-  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(page.getByRole('heading', { level: 2, name: 'Model Context Protocol (MCP)' })).toBeVisible();
   await expect(bloccoDomanda(page)).toContainText(paginaItalia);
   await expect(page.getByText("In Italia: Da provare, un mese fa Tieni d'occhio.")).toBeVisible();
   await expect(page.getByRole('list', { name: 'Il percorso sul radar' }).getByRole('listitem').last()).toHaveText('set 2026Da provare');
@@ -595,7 +595,7 @@ test('pagina di una competenza a 320px: niente scorrimento orizzontale, e le eti
     await page.goto(`/${hash}`);
     await page.reload();
     const annunci = page.getByRole('region', { name: 'Annunci' });
-    const etichetta = annunci.locator('text').filter({ hasText: 'Paese a metà classifica' });
+    const etichetta = annunci.getByRole('img', { name: 'Annunci su MCP ogni 10mila' }).getByText('Paese a metà classifica');
     await expect(etichetta).toBeVisible();
     expect(await noHorizontalScroll(page), hash).toBe(true);
     const scheda = (await annunci.boundingBox())!;
@@ -614,7 +614,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
 }
 
 // Con il FIXTURE: su tutti i Paesi 2 competenze in Impara ora, con i nomi Agenti AI e MCP nella figura; in Italia una sola, Agenti AI.
-const cardCompetenze = (page: Page) => page.locator('#tile-competenze').getByRole('button');
+const cardCompetenze = (page: Page) => page.getByRole('button', { name: /^Competenze/ });
 const homeItaliana = async (page: Page) => {
   const porta = page.getByRole('link', { name: /Per te · Italia/ });
   await expect(porta).toContainText('RAG esce da Impara ora');
@@ -636,7 +636,7 @@ test('home e mercato: scelta l’Italia nella card, porta e figura sono italiane
   await cardCompetenze(page).click();
   await mercati(page).getByRole('button', { name: 'Italia' }).click();
   await page.keyboard.press('Escape');
-  await expect(page.locator('section.detail')).toHaveCount(0);
+  await expect(mercati(page)).toHaveCount(0);
   await homeItaliana(page);
   await page.reload();
   await homeItaliana(page);

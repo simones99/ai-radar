@@ -96,7 +96,7 @@ describe('Persone: competenze più chieste negli annunci', () => {
     return screen.getByRole('region', { name: 'Competenze più chieste negli annunci' });
   };
   const righe = (blk: HTMLElement) => within(blk).getAllByRole('row', { hidden: true }).slice(1)
-    .map((r) => [...r.children].map((c) => c.textContent));
+    .map((r) => [within(r).getByRole('rowheader', { hidden: true }), ...within(r).getAllByRole('cell', { hidden: true })].map((c) => c.textContent));
 
   // l'ordine italiano è l'opposto di quello del Paese a metà classifica: chi legge il secondo sbaglia classifica
   const DODICI = Array.from({ length: 12 }, (_, i) => ({ domanda: 1 + i, domanda_it: 24 - 2 * i, annunci_it: 300 - 25 * i }));
@@ -112,10 +112,10 @@ describe('Persone: competenze più chieste negli annunci', () => {
       ['Competenza 9', '6', '75', '10'],
     ]);
   });
-  it('il grafico disegna i valori italiani, con in evidenza la competenza più cercata in Italia', () => {
+  it('il grafico disegna i valori italiani, dalla competenza più cercata in Italia', () => {
     const blk = apri(conCompetenze(DODICI));
     const grafico = within(blk).getByRole('img', { name: 'Competenze più chieste negli annunci' });
-    expect(within(grafico).getByText('24,0')).toHaveClass('hot');
+    expect(within(grafico).getByText('24,0')).toBeInTheDocument();
     expect(within(grafico).getByText('Competenza 9')).toBeInTheDocument();
     expect(within(grafico).queryByText('Competenza 10')).not.toBeInTheDocument(); // 11ª in Italia, 2ª per il Paese a metà classifica
     expect(within(grafico).queryByText('1,0')).not.toBeInTheDocument(); // il valore della prima per il Paese a metà classifica
@@ -145,7 +145,7 @@ describe('Persone: competenze più chieste negli annunci', () => {
         if (ricordo) localStorage.setItem('ai-radar:mercato', ricordo);
         const blk = apri(conCompetenze(DODICI), params);
         expect(righe(blk).slice(0, 2)).toEqual([['Competenza 0', '24', '300', '1'], ['Competenza 1', '22', '275', '2']]);
-        expect(within(within(blk).getByRole('img', { name: 'Competenze più chieste negli annunci' })).getByText('24,0')).toHaveClass('hot');
+        expect(within(within(blk).getByRole('img', { name: 'Competenze più chieste negli annunci' })).getByText('24,0')).toBeInTheDocument();
       });
     }
   });

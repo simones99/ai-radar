@@ -210,12 +210,12 @@ describe('Competenze: il mercato', () => {
   });
 
   describe('la vista Italia', () => {
-    const blocco = (name: string) => screen.getByRole('heading', { name }).closest('section')!;
+    const blocco = (name: string) => screen.getByRole('region', { name });
     const radar = () => screen.getByRole('group', { name: /^Radar delle competenze/ });
     const riga = (titolo: string, nome: string) => {
-      const tab = within(blocco(titolo)).getByRole('table');
-      const celle = [...within(tab).getByRole('rowheader', { name: nome }).closest('tr')!.querySelectorAll('td')].map((td) => td.textContent);
-      return celle;
+      const righe = within(within(blocco(titolo)).getByRole('table')).getAllByRole('row');
+      const scelta = righe.find((r) => within(r).queryByRole('rowheader', { name: nome }))!;
+      return within(scelta).getAllByRole('cell').map((td) => td.textContent);
     };
     const conItalia = (cambia: (id: string) => object) =>
       ({ ...data, radar: { ...data.radar!, competenze: data.radar!.competenze.map((c) => ({ ...c, ...cambia(c.id) })) } }) as Dataset;
@@ -242,9 +242,15 @@ describe('Competenze: il mercato', () => {
       for (const t of ['0,1', '3', '90', '−50%', '+100%']) expect(within(radar()).getByText(t)).toBeInTheDocument();
       expect(within(radar()).getByText('Annunci ogni 10mila →')).toBeInTheDocument();
     });
+    it('senza la domanda italiana di un mese fa il fumetto dice solo lo slancio, e la tabella un trattino', () => {
+      apri(conItalia((id) => (id === 'mcp' ? { domanda_prec_it: null } : {})));
+      expect(within(radar()).getByRole('link', { name: /^Model Context Protocol/ })).toHaveAccessibleName(/Un mese fa: slancio −27%\.$/);
+      expect(riga('Radar delle competenze', 'Model Context Protocol (MCP)')[3]).toBe('−27% · —');
+    });
     it('Movimenti: valori e cambi di quadrante italiani', () => {
       show(CompetenzeDetail, tile, null, { mercato: 'italia' });
-      const mov = within(blocco('Movimenti di settembre')).getByRole('link', { name: /^MCP slancio/ });
+      expect(screen.getByRole('heading', { name: 'Movimenti di settembre' })).toBeInTheDocument();
+      const mov = within(blocco('Radar delle competenze')).getByRole('link', { name: /^MCP slancio/ });
       expect(mov).toHaveTextContent('2,6');
       expect(mov).toHaveTextContent("Tieni d'occhio → Da provare");
     });

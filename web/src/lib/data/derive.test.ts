@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   computeGrowth, newsInLastDays, nextDeadline, nextReport, owidLatest, owidLatestByEntity, owidPoints, owidPrev,
-  radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, andamentoItUe, barriereItUe, scopiItUe, ultimoAnno,
+  radarChanges, radarRows, tNum, nx, ny, adozionePerSettore, andamentoItUe, barriereItUe, scopiItUe, ultimoAnno, type Mercato,
 } from './derive';
 import type { EpochPoint, EurostatSettori, News, Owid, Quadrant, Radar } from './types';
 import { FIXTURE, fromNorm } from '../test/fixtures';
+import { cambio } from '../text/frasi';
 
 const today = new Date(2026, 9, 15, 10);
 
@@ -51,75 +52,62 @@ describe('radarRows', () => {
 });
 
 describe('radarRows con il mercato', () => {
-  // La competenza sta in due punti diversi: in alto tra tutti i Paesi, sotto soglia in Italia.
-  const dueViste: Partial<Radar['competenze'][number]> = {
-    slancio: 0.75, domanda: 0.9, quadrante: 'impara-ora', quadrante_calcolato: 'impara-ora',
-    slancio_prec: 0.5, domanda_prec: 0.9, quadrante_prec: 'impara-ora',
-    domanda_it: 2.8, annunci_it: 39, quadrante_it: 'prova', quadrante_calcolato_it: 'impara-ora',
-    domanda_prec_it: 0.9, quadrante_prec_it: 'osserva',
-  };
+  // Nel FIXTURE MCP sta in due punti diversi: in Impara ora tra tutti i Paesi, in Da provare in Italia.
+  const fx = FIXTURE.radar as Radar;
+  const q = fx.quadranti;
+  const riga = (id: string, mercato?: Mercato, r: Radar = fx) => radarRows(r, mercato).find((x) => x.id === id)!;
+  const conMcp = (cambia: Partial<Radar['competenze'][number]>): Radar =>
+    ({ ...fx, competenze: fx.competenze.map((c) => (c.id === 'mcp' ? { ...c, ...cambia } : c)) });
+  const ids = (rows: { id: string }[]) => rows.map((r) => r.id);
 
   it('senza scelta legge tutti i Paesi', () => {
-    const r = radar([dueViste]);
-    expect(radarRows(r)).toEqual(radarRows(r, 'tutti'));
-    expect(radarRows(r)[0]).toMatchObject({ quadrante: 'impara-ora', moving: null, qp: 'impara-ora', changed: false, dD: 0 });
-    expect(radarRows(r)[0].domanda).toBeCloseTo(45.6, 1);
+    expect(radarRows(fx)).toEqual(radarRows(fx, 'tutti'));
+    expect(riga('mcp')).toMatchObject({ quadrante: 'impara-ora', domanda: 3.4, annunci: null });
   });
-  it("con l'Italia valori, quadranti e movimenti sono italiani", () => {
-    const [r] = radarRows(radar([dueViste]), 'italia');
-    expect(r).toMatchObject({ domanda: 2.8, annunci_it: 39, quadrante: 'prova', moving: 'impara-ora', dp: 0.9, qp: 'osserva', changed: true });
-    expect(r.y).toBeCloseTo(0.49, 2);
-    expect(r.py).toBeCloseTo(0.323, 2);
-    expect(r.dD).toBeCloseTo(0.167, 2);
-    // Lo slancio è unico: l'asse orizzontale non cambia.
-    expect(r.x).toBeCloseTo(0.75);
-    expect(r.px).toBeCloseTo(0.5);
-    expect(r.slancio).toBeCloseTo(0.414, 3);
-    expect(r.dS).toBeCloseTo(0.25);
+  it("con l'Italia numero, annunci e quadrante sono italiani", () => {
+    expect(riga('mcp', 'italia')).toMatchObject({ quadrante: 'prova', domanda: 2.6, annunci: 32 });
+    expect(riga('rag', 'italia')).toMatchObject({ quadrante: 'consolida', domanda: 6.1, annunci: 76 });
   });
-  it('i movimenti della vista seguono i quadranti italiani', () => {
-    const rows = radarRows(radar([
-      { ...dueViste, quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' },
-      { ...dueViste, quadrante_it: 'prova', quadrante_prec_it: 'impara-ora' },
-      { ...dueViste, quadrante_it: 'osserva', quadrante_prec_it: 'osserva' },
-    ]), 'italia');
-    expect(radarChanges(rows).inn.map((r) => r.id)).toEqual(['c0']);
-    expect(radarChanges(rows).out.map((r) => r.id)).toEqual(['c1']);
+  it('lo slancio è unico: il punto cambia altezza, non posizione sull’asse orizzontale', () => {
+    expect(riga('mcp', 'italia').slancio).toBe(riga('mcp').slancio);
+    expect(riga('mcp', 'italia').x).toBe(riga('mcp').x);
+    expect(riga('mcp', 'italia').y).toBeLessThan(riga('mcp').y);
   });
-  it("«rientra» guarda lo storico della vista", () => {
-    const punto = (pubblicato: Quadrant, pubblicato_it: Quadrant) => ({ slancio: 0.1, domanda: 5, calcolato: pubblicato, pubblicato, incerto: false, domanda_it: 2, calcolato_it: pubblicato_it, pubblicato_it });
-    const r: Radar = {
-      ...radar([{ ...dueViste, quadrante_prec: 'prova', quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' }]),
-      storico: [
-        { mese: '2026-07', competenze: { c0: punto('impara-ora', 'prova') } },
-        { mese: '2026-08', competenze: { c0: punto('prova', 'prova') } },
-        { mese: '2026-09', competenze: { c0: punto('impara-ora', 'impara-ora') } },
-      ],
-    };
-    expect(radarRows(r)[0]).toMatchObject({ changed: true, rientra: true });
-    expect(radarRows(r, 'italia')[0]).toMatchObject({ changed: true, rientra: false });
-    const inItalia: Radar = { ...r, storico: r.storico!.map((p, i) => (i ? p : { ...p, competenze: { c0: punto('prova', 'impara-ora') } })) };
-    expect(radarRows(inItalia)[0].rientra).toBe(false);
-    expect(radarRows(inItalia, 'italia')[0].rientra).toBe(true);
+  it('il quadrante verso cui si muove è quello del mercato', () => {
+    const r = conMcp({ quadrante_calcolato_it: 'impara-ora' });
+    expect(riga('mcp', 'italia', r).moving).toBe('impara-ora');
+    expect(riga('mcp', undefined, r).moving).toBeNull();
   });
-  it('lascia fuori chi non ha il dato italiano, solo in quella vista', () => {
-    const r = radar([dueViste, { ...dueViste, domanda_it: null, annunci_it: null, quadrante_it: null }, { slancio: 0.6, domanda: 0.6 }]);
-    expect(radarRows(r, 'italia').map((x) => x.id)).toEqual(['c0']);
-    expect(radarRows(r).map((x) => x.id)).toEqual(['c0', 'c1', 'c2']);
+  it('chi entra e chi esce da Impara ora segue i quadranti del mercato', () => {
+    expect(ids(radarChanges(radarRows(fx)).inn)).toEqual(['mcp']);
+    expect(ids(radarChanges(radarRows(fx)).out)).toEqual(['rag']);
+    expect(ids(radarChanges(radarRows(fx, 'italia')).inn)).toEqual([]);
+    expect(ids(radarChanges(radarRows(fx, 'italia')).out)).toEqual(['rag']);
+    expect(ids(radarChanges(radarRows(conMcp({ quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' }), 'italia')).inn)).toEqual(['mcp']);
   });
-  it('senza domanda italiana di un mese fa: movimento solo sullo slancio', () => {
-    const [r] = radarRows(radar([{ ...dueViste, domanda_prec_it: null }]), 'italia');
-    expect(r).toMatchObject({ dp: null, dD: 0 });
-    expect(r.py).toBeCloseTo(r.y);
+  it('l’etichetta del cambio dice il quadrante del mercato', () => {
+    expect(cambio(riga('mcp'), q)).toBe('entra in Impara ora');
+    expect(cambio(riga('mcp', 'italia'), q)).toBe('passa a Da provare');
   });
-  it('un valore 0 sta in fondo all\'asse ed è un dato, non un dato mancante', () => {
-    const [r] = radarRows(radar([{ ...dueViste, domanda_it: 0, annunci_it: 0, domanda_prec_it: 0 }]), 'italia');
-    expect(r).toMatchObject({ domanda: 0, annunci_it: 0, y: 0, py: 0, dp: 0, dD: 0 });
-    const [sceso] = radarRows(radar([{ ...dueViste, domanda_it: 0, annunci_it: 0 }]), 'italia');
-    expect(sceso.y).toBe(0);
-    expect(sceso.dD).toBeCloseTo(-0.323, 2);
-    expect(sceso.move).toBeCloseTo(0.323, 2);
-    expect(sceso.dC).toBeCloseTo(-0.036, 2);
+  it('chi «torna» in Impara ora lo dice lo storico del mercato', () => {
+    const conStorico = (mesi: [Quadrant, Quadrant][]): Radar => ({
+      ...conMcp({ quadrante_it: 'impara-ora', quadrante_prec_it: 'prova' }),
+      storico: mesi.map(([pubblicato, pubblicato_it], i) => ({ mese: `2026-0${i + 7}`, competenze: { mcp: { ...fx.storico![0].competenze.mcp, pubblicato, pubblicato_it } } })),
+    });
+    const tuttiIPaesi = conStorico([['impara-ora', 'prova'], ['consolida', 'prova'], ['impara-ora', 'impara-ora']]);
+    expect(cambio(riga('mcp', undefined, tuttiIPaesi), q)).toBe('torna in Impara ora');
+    expect(cambio(riga('mcp', 'italia', tuttiIPaesi), q)).toBe('entra in Impara ora');
+    const inItalia = conStorico([['consolida', 'impara-ora'], ['consolida', 'prova'], ['impara-ora', 'impara-ora']]);
+    expect(cambio(riga('mcp', undefined, inItalia), q)).toBe('entra in Impara ora');
+    expect(cambio(riga('mcp', 'italia', inItalia), q)).toBe('torna in Impara ora');
+  });
+  it('lascia fuori chi non ha il dato italiano, solo con l’Italia', () => {
+    const r = conMcp({ domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null, domanda_prec_it: null, quadrante_prec_it: null });
+    expect(ids(radarRows(r, 'italia'))).toEqual(['agenti', 'rag', 'robotica', 'vector-db']);
+    expect(ids(radarRows(r))).toEqual(['agenti', 'mcp', 'rag', 'robotica', 'vector-db']);
+  });
+  it('un valore 0 è un dato, non un dato mancante, e sta in fondo all’asse', () => {
+    expect(riga('mcp', 'italia', conMcp({ domanda_it: 0, annunci_it: 0 }))).toMatchObject({ domanda: 0, annunci: 0, y: 0 });
   });
 });
 

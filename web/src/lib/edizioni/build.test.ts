@@ -94,8 +94,18 @@ describe('il sito costruito', () => {
     expect(existsSync(join(senzaEdizioni(), 'edizioni'))).toBe(false);
   });
 
-  it('la home e i dati caricati dall’app non cambiano: nessun JSON di edizione tra i file serviti', () => {
-    expect(readFileSync(join(conEdizioni(), 'index.html'), 'utf-8')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
+  it('con le edizioni la home guadagna il link al feed per i lettori, leggibile senza JavaScript, e questa è la sua sola differenza', () => {
+    const con = readFileSync(join(conEdizioni(), 'index.html'), 'utf-8');
+    const link = new DOMParser().parseFromString(con, 'text/html').head.querySelector('link[rel="alternate"][type="application/rss+xml"]');
+    expect(link?.getAttribute('href')).toBe(`${ALTRO_INDIRIZZO}feed.xml`);
+    expect(con.replace(/\s*<link rel="alternate"[^>]*>/, '')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
+  });
+
+  it('senza edizioni la home non ha il link al feed', () => {
+    expect(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8')).not.toContain('rel="alternate"');
+  });
+
+  it('i dati caricati dall’app non cambiano: nessun JSON di edizione tra i file serviti', () => {
     expect(existsSync(join(conEdizioni(), 'data', 'edizioni'))).toBe(false);
     // data/ nasce con l'indice se la build non ha altri dati da copiare, come qui in una copia pulita del repo
     expect(new Set(readdirSync(conEdizioni()))).toEqual(new Set([...readdirSync(senzaEdizioni()), 'data', 'edizioni', 'feed.xml']));

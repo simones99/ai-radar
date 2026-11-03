@@ -1,5 +1,6 @@
 // I file del sito che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
+import { INDICE_EDIZIONI } from '../data/load';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
 import { VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
@@ -9,6 +10,8 @@ export interface OpzioniSito {
   indirizzoBase: string;
   /** Il foglio di stile della home, relativo alla radice del sito: il suo nome cambia a ogni build. */
   foglio: string;
+  /** L'HTML della home uscito dalla build: con almeno un'edizione la mappa ne restituisce una copia con il link al feed. */
+  home?: string;
 }
 
 /** Il foglio di stile che la build ha dato alla home, relativo alla radice del sito. */
@@ -130,6 +133,9 @@ export const IMMAGINE = 'anteprima.png';
 /** L'immagine fissa della home, con il testo alternativo che ha in index.html: l'archivio non ne ha una propria. */
 const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
 
+/** Il link con cui un lettore di feed trova il feed partendo da una pagina. */
+const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
+
 /** Lo scheletro comune delle pagine. radice: la radice del sito vista dalla pagina; percorso: la pagina vista dalla radice. */
 function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniSito): string {
   return `<!doctype html>
@@ -149,7 +155,7 @@ function pagina(o: { titolo: string; descrizione: string; percorso: string; radi
 <meta property="og:locale" content="it_IT" />
 <meta property="og:site_name" content="AI Radar" />
 <meta name="twitter:card" content="summary_large_image" />
-<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${opzioni.indirizzoBase}feed.xml`)}" />
+${linkAlFeed(opzioni.indirizzoBase)}
 <link rel="icon" href="${esc(ICONA)}" />
 <link rel="stylesheet" href="${esc(`${o.radice}${opzioni.foglio}`)}" />
 </head>
@@ -279,5 +285,8 @@ export function fileDelSito(edizioni: Edizione[], opzioni: OpzioniSito): Record<
     'edizioni/index.html': archivio(recenti, opzioni),
     ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
     'feed.xml': feed(recenti, opzioni),
+    [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
+    // nell'HTML e non dall'app: un lettore di feed non esegue JavaScript. Senza edizioni la home resta quella uscita dalla build
+    ...(opzioni.home ? { 'index.html': opzioni.home.replace('</head>', () => `  ${linkAlFeed(opzioni.indirizzoBase)}\n  </head>`) } : {}),
   };
 }

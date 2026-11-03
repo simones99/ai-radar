@@ -603,6 +603,21 @@ describe('l’archivio', () => {
   });
 });
 
+describe('l’indice per la home', () => {
+  const opzioni = { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: 'assets/index-abc123.css' };
+  const prima = crea();
+  const seconda = crea({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima);
+
+  it('dice qual è l’ultima edizione, qualunque sia l’ordine in cui arrivano', () => {
+    expect(JSON.parse(fileDelSito([prima, seconda], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
+    expect(JSON.parse(fileDelSito([seconda, prima], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
+  });
+
+  it('senza edizioni non esiste', () => {
+    expect(fileDelSito([], opzioni)).not.toHaveProperty(['data/edizioni.json']);
+  });
+});
+
 describe('decidere se un giro crea l’edizione', () => {
   it('il giro programmato sì, se il file non c’è', () => {
     expect(deveCreare({ evento: 'schedule', casella: false, esiste: false })).toBe(true);

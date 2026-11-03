@@ -66,6 +66,63 @@ describe('App', () => {
     });
   });
 
+  describe('l’indice delle edizioni', () => {
+    /** I dati del FIXTURE, aggiornati il 15 ottobre 2026, cioè nella settimana del 12; e la risposta da dare a chi chiede l'indice. */
+    const conIndice = (indice: () => Partial<Response>) => vi.fn(async (url: string) => {
+      const k = url.split('/').pop()!.replace('.json', '');
+      if (k === 'edizioni') return indice() as Response;
+      return { ok: true, json: async () => (FIXTURE as Record<string, unknown>)[k] } as Response;
+    });
+    const indice = (ultima: unknown) => () => ({ ok: true, json: async () => ({ ultima }) });
+    const caricata = async () => {
+      render(App);
+      await screen.findByRole('link', { name: /MCP entra/ });
+    };
+    const settimana = () => screen.queryByRole('link', { name: 'Settimana del 12 ott 2026' });
+
+    it('l’ultima edizione è di questa settimana: «Settimana del…» porta all’edizione', async () => {
+      vi.stubGlobal('fetch', conIndice(indice('2026-10-12')));
+      await caricata();
+      expect(await screen.findByRole('link', { name: 'Settimana del 12 ott 2026' })).toHaveAttribute('href', 'edizioni/2026-10-12/');
+    });
+
+    it('l’ultima edizione è di un’altra settimana: la riga resta testo semplice', async () => {
+      vi.stubGlobal('fetch', conIndice(indice('2026-10-05')));
+      await caricata();
+      expect(screen.getByText('Settimana del 12 ott 2026')).toBeInTheDocument();
+      await new Promise((r) => setTimeout(r));
+      expect(settimana()).toBeNull();
+    });
+
+    it('con un’edizione qualsiasi: «Edizioni» in testata porta all’archivio, e «Segui con RSS» in fondo al feed', async () => {
+      vi.stubGlobal('fetch', conIndice(indice('2026-10-05')));
+      await caricata();
+      expect(await within(screen.getByRole('banner')).findByRole('link', { name: 'Edizioni' })).toHaveAttribute('href', 'edizioni/');
+      expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Segui con RSS' })).toHaveAttribute('href', 'feed.xml');
+    });
+
+    const senzaIndice: [string, () => Partial<Response>][] = [
+      ['manca', () => ({ ok: false, json: async () => { throw new Error('non è JSON'); } })],
+      ['al suo posto arriva una pagina HTML', () => ({ ok: true, json: async () => { throw new SyntaxError('non è JSON'); } })],
+      ['non si raggiunge', () => { throw new TypeError('offline'); }],
+      ['è vuoto', () => ({ ok: true, json: async () => null })],
+      ['ha una data non valida', indice('../../altrove')],
+    ];
+    for (const [caso, risposta] of senzaIndice) {
+      it(`${caso}: nessun avviso e nessun link`, async () => {
+        vi.stubGlobal('fetch', conIndice(risposta));
+        await caricata();
+        await new Promise((r) => setTimeout(r));
+        expect(screen.getByText('Settimana del 12 ott 2026')).toBeInTheDocument();
+        expect(settimana()).toBeNull();
+        expect(screen.queryByRole('link', { name: 'Edizioni' })).toBeNull();
+        expect(screen.queryByRole('link', { name: 'Segui con RSS' })).toBeNull();
+        expect(screen.queryByRole('alert')).toBeNull();
+        expect(document.getElementById('stato')).not.toHaveTextContent('non ha ricevuto i dati');
+      });
+    }
+  });
+
   it('nessun dato raggiungibile: avviso e Riprova', async () => {
     const fetchFn = vi.fn(async () => { throw new TypeError('offline'); });
     vi.stubGlobal('fetch', fetchFn);

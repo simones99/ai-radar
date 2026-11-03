@@ -41,7 +41,7 @@ const fileImmagine = (dati: string, settimana: string): string => join(dati, 'ed
 /** Scrive nella cartella di uscita tutti i file che nascono dalle edizioni. Un file nuovo del sito basta aggiungerlo a fileDelSito. */
 export function scriviSito({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
   const edizioni = leggiEdizioni(dati);
-  const file = fileDelSito(edizioni, { indirizzoBase, foglio: foglioDellaHome(htmlHome) });
+  const file = fileDelSito(edizioni, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome });
   for (const [percorso, contenuto] of Object.entries(file)) {
     mkdirSync(dirname(join(uscita, percorso)), { recursive: true });
     writeFileSync(join(uscita, percorso), contenuto);

@@ -4,6 +4,13 @@ on:
   schedule:
     - cron: "17 5 * * 1"   # ogni lunedì alle 05:17 UTC (07:17 in Italia d'estate)
   workflow_dispatch:         # pulsante "Run workflow" nella scheda Actions
+    inputs:
+      crea_edizione:
+        description: "Crea l'edizione di questa settimana (ha effetto solo quando le edizioni esistono)"
+        type: boolean
+        default: false
+  # un push prova il codice e pubblica il sito con i dati già salvati: i dati li raccolgono solo i due eventi qui sopra.
+  # Dopo una modifica a pipeline/ o config/, quindi, per vederne l'effetto sui dati serve un avvio manuale
   push:
     branches: [main]
     paths:
@@ -60,6 +67,7 @@ jobs:
           npm test
 
       - name: Raccogli i dati
+        if: github.event_name != 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
@@ -68,6 +76,7 @@ jobs:
         run: python -m pipeline.run
 
       - name: Salva i dati nel repository
+        if: github.event_name != 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -77,8 +86,9 @@ jobs:
           else
             git commit -m "Dati aggiornati $(date -u +%F)"
             # un push arrivato mentre il giro girava: i dati vanno sopra. Il rebase passa se il push non tocca data/,
-            # e data/ la scrive solo questo workflow, un giro alla volta. Se tocca i percorsi in `on.push`, il push
-            # ha già messo in coda il suo giro, che pubblicherà anche lui
+            # e data/ la scrivono solo i giri programmati e manuali di questo workflow, uno alla volta: mai quelli
+            # del push. Se tocca i percorsi in `on.push`, il push ha già messo in coda il suo giro, che pubblicherà
+            # anche lui, con i dati appena salvati
             git pull --rebase origin "$GITHUB_REF_NAME"
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi

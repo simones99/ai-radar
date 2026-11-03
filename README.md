@@ -9,7 +9,7 @@ Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli o
 
 In home due porte, *Per te* e *Per la tua organizzazione*, danno la notizia della settimana di ciascuna testa e con un clic aprono la card da cui viene. Sotto ci sono le card, 4 per testa: Competenze, Modelli e ricerca, Open source, Notizie; Business, Persone e lavoro, Norme, Rapporti.
 
-Tutto gira gratis su GitHub: GitHub Actions raccoglie i dati ogni lunedì e GitHub Pages pubblica la pagina.
+Tutto gira gratis su GitHub: GitHub Actions raccoglie i dati ogni lunedì, o con un avvio manuale, e GitHub Pages pubblica la pagina.
 
 ```
 fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Svelte (D3) ──► GitHub Pages
@@ -32,7 +32,7 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Sv
    git push -u origin main
    ```
    In alternativa usa *Add file → Upload files* sul sito di GitHub, trascinando il contenuto della cartella; in quel caso controlla che la cartella `.github` sia stata caricata, perché alcuni sistemi nascondono le cartelle che iniziano con il punto.
-4. **Segui il primo aggiornamento.** Il caricamento avvia da solo *Aggiorna e pubblica*: lo trovi nella scheda *Actions*. Il primo giro dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Se hai saltato il passo 2, completalo e rilancia con *Actions → Aggiorna e pubblica → Run workflow*.
+4. **Avvia il primo giro a mano.** Il caricamento fa partire *Aggiorna e pubblica*, che però pubblica il sito con i dati già presenti nel repository e non ne raccoglie di nuovi. Per raccoglierli usa *Actions → Aggiorna e pubblica → Run workflow*, lasciando spenta la casella «Crea l'edizione di questa settimana»; se hai saltato il passo 2, completalo prima. Il primo giro di raccolta dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Da lì in poi i dati si raccolgono da soli ogni lunedì.
 5. La dashboard è su `https://<tuo-utente>.github.io/ai-radar/`.
 
 ## Chiavi facoltative
@@ -41,7 +41,7 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Sv
 | --- | --- | --- |
 | `ADZUNA_APP_ID` e `ADZUNA_APP_KEY` | Domanda di competenze nel lavoro, Europa e USA | Gratuite su [developer.adzuna.com](https://developer.adzuna.com) |
 
-**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (un giro qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Prima di renderla pubblica conviene chiedere conferma scritta ad Adzuna dal loro modulo di contatto. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
+**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (una raccolta qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Prima di renderla pubblica conviene chiedere conferma scritta ad Adzuna dal loro modulo di contatto. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
 
 `GITHUB_TOKEN` non va creato: GitHub lo fornisce in automatico al workflow.
 
@@ -55,7 +55,7 @@ Ogni competenza ha due coordinate in unità vere:
   - la quota di annunci di lavoro che la citano, quando ci sono almeno 8 settimane di rilevazioni con la stessa ricerca.
 
   I segnali più precisi pesano di più, nessuno più di due terzi.
-- **Domanda**: annunci di lavoro che la citano ogni 10.000 annunci attivi, nel **Paese a metà classifica**. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la stessa ricerca (con meno di 4, quelle che ci sono), così una settimana strana non sposta il numero. Il Paese a metà classifica è la mediana tra i Paesi: con un numero pari di Paesi, il valore a metà tra i due centrali. Il metodo è cambiato a novembre 2026: prima contava solo l'ultima rilevazione, e un solo Paese poteva spostare il valore. Lo storico si ricalcola a ogni giro, quindi il nuovo metodo vale anche per i mesi passati.
+- **Domanda**: annunci di lavoro che la citano ogni 10.000 annunci attivi, nel **Paese a metà classifica**. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la stessa ricerca (con meno di 4, quelle che ci sono), così una settimana strana non sposta il numero. Il Paese a metà classifica è la mediana tra i Paesi: con un numero pari di Paesi, il valore a metà tra i due centrali. Il metodo è cambiato a novembre 2026: prima contava solo l'ultima rilevazione, e un solo Paese poteva spostare il valore. Lo storico si ricalcola a ogni raccolta, quindi il nuovo metodo vale anche per i mesi passati.
 
 I quadranti hanno **soglie fisse**: slancio sopra 0 (cresce più dell'AI nel suo complesso) e almeno 3 annunci ogni 10mila. **Impara ora** (entrambe), **Da provare** (solo lo slancio), **Da consolidare** (solo la domanda), **Tieni d'occhio** (nessuna delle due). Aggiungere o togliere una competenza non sposta le altre.
 
@@ -75,13 +75,13 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 
 ## Personalizzare
 
-- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato. Ogni competenza ha anche 2-4 `risorse` «Per iniziare»: la pipeline controlla i link ogni settimana e nasconde quelli che danno errore per due settimane di fila.
+- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Alla raccolta successiva la pipeline ricalcola da sola lo storico di ciò che è cambiato. Ogni competenza ha anche 2-4 `risorse` «Per iniziare»: la pipeline controlla i link ogni settimana e nasconde quelli che danno errore per due settimane di fila.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
 - **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
 - **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).
 - **Settori della card Business**: in `config/sources.yaml`, blocco `eurostat_settori` (id, nome, codice NACE e la forma da usare nella frase della porta per ogni settore; i nomi italiani degli scopi e delle barriere accanto ai codici Eurostat). Se Eurostat cambia un codice, il passo si ferma e resta il file del giro prima.
 - **Scadenze dell'AI Act e rapporti**: `config/ai_act.yaml` e `config/rapporti.yaml`, da aggiornare a mano. Ogni voce ha un link alla fonte.
-- **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`.
+- **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`. I dati si raccolgono solo con quel giro o con un avvio manuale: un push pubblica il sito con i dati già salvati. Dopo una modifica a `pipeline/` o `config/`, quindi, per vederne subito l'effetto sui dati serve *Actions → Aggiorna e pubblica → Run workflow*; altrimenti arriva il lunedì dopo.
 
 ## Provarlo sul proprio computer
 

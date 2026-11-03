@@ -1,5 +1,5 @@
 // Il modulo Edizioni visto dal disco: legge e scrive data/edizioni/ per il comando e per la build. Solo Node, mai nel browser.
-import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { FILES } from '../data/load';
 import type { Dataset } from '../data/types';
@@ -29,7 +29,7 @@ function leggiDati(dati: string): Dataset {
 }
 
 /** Mai un file scritto a metà: un giro interrotto non lascia un'edizione che sembra buona. */
-function scrivi(file: string, contenuto: string): void {
+function scrivi(file: string, contenuto: string | Uint8Array): void {
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(`${file}.tmp`, contenuto);
   renameSync(`${file}.tmp`, file);
@@ -44,13 +44,19 @@ export function scriviSito({ dati, uscita, indirizzoBase, htmlHome }: { dati: st
   }
 }
 
-export interface Giro { evento: string; casella: boolean; dati: string }
+export interface Giro {
+  evento: string;
+  casella: boolean;
+  dati: string;
+  /** Il PNG di un'edizione. Lo passa il comando: questo modulo lo usa anche la build, che non deve richiedere Playwright. */
+  fotografa: (e: Edizione) => Promise<Uint8Array>;
+}
 
 /**
  * Il giro del comando: decide, crea e salva. Restituisce cosa è successo, da scrivere nel log.
- * Lancia un errore quando l'edizione doveva uscire e non può: per il workflow è una creazione fallita.
+ * Lancia un errore quando l'edizione doveva uscire e non può, anche per colpa dell'immagine: per il workflow è una creazione fallita.
  */
-export function fissaEdizione({ evento, casella, dati }: Giro): string {
+export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro): Promise<string> {
   const status = join(dati, 'status.json');
   const aggiornato: string | undefined = existsSync(status) ? JSON.parse(readFileSync(status, 'utf-8')).aggiornato : undefined;
   const settimana = aggiornato ? lunediDi(aggiornato) : null;
@@ -64,6 +70,16 @@ export function fissaEdizione({ evento, casella, dati }: Giro): string {
   const precedente = leggiEdizioni(dati).filter((e) => e.settimana < settimana).sort((a, b) => a.settimana.localeCompare(b.settimana)).at(-1) ?? null;
   const edizione = creaEdizione(leggiDati(dati), precedente);
   if (!edizione) throw new Error('Edizione non creata: tutte e due le porte sono senza dati.');
-  scrivi(fissa(settimana), `${JSON.stringify(edizione, null, 2)}\n`);
-  return `Edizione del ${settimana} creata.`;
+  // prima l'immagine, in memoria: se non si può fare, sul disco non è cambiato nulla e la settimana resta senza edizione.
+  // Il file fisso per ultimo: è lui a dire che l'edizione esiste
+  const png = await fotografa(edizione);
+  const immagine = join(dati, 'edizioni', `${settimana}.png`);
+  scrivi(immagine, png);
+  try {
+    scrivi(fissa(settimana), `${JSON.stringify(edizione, null, 2)}\n`);
+  } catch (e) {
+    rmSync(immagine, { force: true });
+    throw e;
+  }
+  return `Edizione del ${settimana} creata, con la sua immagine.`;
 }

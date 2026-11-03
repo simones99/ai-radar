@@ -1,11 +1,11 @@
-// L'immagine dell'anteprima di un'edizione, fotografata con Playwright. La usa solo il comando: la build la copia soltanto, e non arriva mai fin qui.
-import type { Page } from '@playwright/test';
+// L'immagine dell'anteprima di un'edizione, fotografata con Playwright. La carica solo il comando: la build la copia soltanto, e non arriva mai fin qui.
+import { chromium, type Page } from '@playwright/test';
 import { dayWith } from '../text/format';
 import type { Edizione } from './tipi';
 
 const MODELLO = new URL('../../../scripts/immagine-edizione.html', import.meta.url).href;
 // il corpo delle due porte, in pixel: il più grande a cui entrano tutte e due. A 30 si legge ancora nei 400 px di un elenco di post
-const PIU_GRANDE = 64;
+const PIU_GRANDE = 72;
 const PIU_PICCOLO = 30;
 
 /**
@@ -47,7 +47,6 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
 
 /** Il PNG dell'edizione, 1200×630, in memoria: finché non è pronto sul disco non si tocca nulla. */
 export async function fotografa(e: Edizione): Promise<Uint8Array> {
-  const { chromium } = await import('@playwright/test');
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({ colorScheme: 'light' });

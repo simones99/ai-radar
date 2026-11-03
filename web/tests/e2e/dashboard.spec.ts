@@ -551,6 +551,68 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
+const bloccoDomanda = (page: Page) => page.getByRole('region', { name: 'Domanda' });
+const paginaItalia = '2,6 ogni 10mila in Italia, 32 annunci · era 2,4 un mese fa · Paese a metà classifica: 3,4';
+
+test('pagina di una competenza: il link apre la vista Italia, senza bottoni, con i quadranti italiani', async ({ page }) => {
+  await page.goto('/#competenze/mcp?mercato=italia');
+  await expect(page.locator('#h-competenze')).toHaveText('Model Context Protocol (MCP)');
+  await expect(bloccoDomanda(page)).toContainText(paginaItalia);
+  await expect(page.getByText("In Italia: Da provare, un mese fa Tieni d'occhio.")).toBeVisible();
+  await expect(page.getByRole('list', { name: 'Il percorso sul radar' }).getByRole('listitem').last()).toHaveText('set 2026Da provare');
+  await expect(mercati(page)).toHaveCount(0);
+  await page.reload();
+  await expect(bloccoDomanda(page)).toContainText(paginaItalia);
+});
+
+test('pagina di una competenza: senza mercato nel link vale il ricordo, che entra nel link', async ({ page }) => {
+  await page.goto('/#competenze?mercato=italia');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await page.goto('about:blank');
+  await page.goto('/#competenze/mcp');
+  await expect(bloccoDomanda(page)).toContainText(paginaItalia);
+  await expect(page).toHaveURL(/#competenze\/mcp\?mercato=italia$/);
+});
+
+test('pagina di una competenza: «Tutte le competenze» e i punti del radar conservano mercato e ruolo', async ({ page }) => {
+  await page.goto('/#competenze?mercato=italia&ruolo=sviluppo');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  const punto = page.getByRole('group', { name: /^Radar delle competenze/ }).getByRole('link', { name: /^Model Context Protocol \(MCP\), del tuo ruolo: Da provare/ });
+  await expect(punto).toHaveAttribute('href', '#competenze/mcp?mercato=italia&ruolo=sviluppo');
+  await punto.focus();
+  await page.keyboard.press('Enter');
+  await expect(bloccoDomanda(page)).toContainText(paginaItalia);
+  await expect(page).toHaveURL(/#competenze\/mcp\?mercato=italia&ruolo=sviluppo$/);
+  await expect(page.getByRole('link', { name: '← Tutte le competenze' })).toHaveAttribute('href', '#competenze?mercato=italia&ruolo=sviluppo');
+  await page.getByRole('link', { name: '← Tutte le competenze' }).click();
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await expect(page).toHaveURL(/#competenze\?mercato=italia&ruolo=sviluppo$/);
+});
+
+test('pagina di una competenza a 320px: niente scorrimento orizzontale, e le etichette del grafico Annunci restano nella scheda', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  for (const hash of ['#competenze/mcp?mercato=italia', '#competenze/mcp']) {
+    await page.goto(`/${hash}`);
+    await page.reload();
+    const annunci = page.getByRole('region', { name: 'Annunci' });
+    const etichetta = annunci.locator('text').filter({ hasText: 'Paese a metà classifica' });
+    await expect(etichetta).toBeVisible();
+    expect(await noHorizontalScroll(page), hash).toBe(true);
+    const scheda = (await annunci.boundingBox())!;
+    const testo = (await etichetta.boundingBox())!;
+    expect(testo.x + testo.width, hash).toBeLessThanOrEqual(scheda.x + scheda.width);
+  }
+});
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`accessibilità nella pagina di una competenza con «Italia», tema ${colorScheme}: nessuna violazione grave`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme });
+    await page.goto('/#competenze/mcp?mercato=italia');
+    await expect(bloccoDomanda(page)).toContainText(paginaItalia);
+    expect(await seriousViolations(page)).toEqual([]);
+  });
+}
+
 const menuArea = (page: Page) => page.getByRole('combobox', { name: 'Area' });
 // la scheda dell'area è la regione che porta il nome dell'area: il suo titolo
 const scheda = (page: Page, area: string) => page.getByRole('region', { name: area, exact: true });

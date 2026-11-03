@@ -211,12 +211,17 @@ export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tu
   };
 }
 
-/** Titolo della pagina di una competenza: il nome; sotto, quadrante, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
-export function headSkill(r: RadarRowM, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = []): Head {
+/** Con «Italia», dove il dato manca: mai uno zero. */
+export const SENZA_ITALIA = 'Per l’Italia il dato non è disponibile in questo momento.';
+
+/** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
+export function headSkill(r: RadarRowM & { senzaDato?: boolean }, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
   const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
+  const dove = mercato === 'italia' ? 'In Italia: ' : ''; // nella pagina non ci sono i bottoni: lo dice la frase
+  const stato = r.senzaDato ? SENZA_ITALIA : `${dove}${quadranti[r.quadrante]}${prima}${moving}.`;
   const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
-  return { title: plain(r.nome), deck: `${quadranti[r.quadrante]}${prima}${moving}. ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
+  return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }
 
 // ---------------------------------------------------------------- notizie

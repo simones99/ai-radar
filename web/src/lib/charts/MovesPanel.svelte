@@ -1,14 +1,15 @@
 <script lang="ts">
   import type { RadarRowM } from '../data/derive';
   import type { Quadrant } from '../data/types';
-  import { toHash } from '../router';
+  import { toHash, type Params } from '../router';
   import { per10k, signedPct } from '../text/format';
 
-  let { rows, quadranti, hovered = $bindable(null), delRuolo = null }: {
+  let { rows, quadranti, hovered = $bindable(null), delRuolo = null, params = {} }: {
     rows: RadarRowM[];
     quadranti: Record<Quadrant, string>;
     hovered?: string | null; // anteprima nel grafico al passaggio del mouse
     delRuolo?: string[] | null; // competenze del ruolo scelto: in testa, prima del taglio a 8; le altre attenuate
+    params?: Params; // le scelte fatte: restano nei link alle competenze
   } = $props();
 
   const altro = (id: string) => delRuolo != null && !delRuolo.includes(id);
@@ -32,7 +33,7 @@
         {@const cs = cls(r.dS)}
         {@const cd = r.dp == null ? 'flat' : cls(r.dD)}
         <li class:altro={altro(r.id)}>
-          <a class="row" href={toHash('competenze', r.id)} title={r.nome}
+          <a class="row" href={toHash('competenze', r.id, params)} title={r.nome}
             onpointerenter={(e) => { if (e.pointerType === 'mouse') hovered = r.id; }}
             onpointerleave={(e) => { if (e.pointerType === 'mouse') hovered = null; }}>
             <span class="n">{r.breve}</span>

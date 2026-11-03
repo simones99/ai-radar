@@ -96,6 +96,22 @@ export function radarRows(r: Radar, mercato: Mercato = 'tutti'): RadarRowM[] {
     });
 }
 
+/** La riga della pagina di una competenza, letta sul mercato. */
+export interface RigaPagina extends RadarRowM {
+  /** Il Paese a metà classifica, qualunque sia il mercato. */
+  domandaTutti: number | null;
+  /** Il mercato non ha il dato: la riga è quella di tutti i Paesi, e la pagina lo dice al posto del numero. */
+  senzaDato: boolean;
+}
+
+/** Null se la competenza non ha una pagina: non sta sul radar nemmeno con tutti i Paesi. */
+export function rigaPagina(r: Radar, id: string, mercato: Mercato = 'tutti'): RigaPagina | null {
+  const tutti = radarRows(r).find((x) => x.id === id);
+  const vista = radarRows(r, mercato).find((x) => x.id === id);
+  const riga = vista ?? tutti;
+  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !vista } : null;
+}
+
 export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {
   return {
     inn: rows.filter((r) => r.changed && r.quadrante === 'impara-ora'),

@@ -57,8 +57,9 @@ export const lowerFirst = (s: string): string => (s ? s[0].toLowerCase() + s.sli
 export const signedPct = (v: number): string => `${signedPts(v)}%`;
 /** Annunci ogni 10mila: una cifra decimale sotto 10 («3,4»), interi da 10 in su («26»). */
 export const per10k = (v: number): string => nf(v, v < 10 ? 1 : 0);
+/** Quanti annunci: «39 annunci», «1 annuncio». */
+export const quantiAnnunci = (annunci: number): string => `${nf(annunci)} ${annunci === 1 ? 'annuncio' : 'annunci'}`;
 /** La domanda con gli annunci che ci sono dietro: «2,8 ogni 10mila, 39 annunci». */
-export const conAnnunci = (domanda: number, annunci: number): string =>
-  `${per10k(domanda)} ogni 10mila, ${nf(annunci)} ${annunci === 1 ? 'annuncio' : 'annunci'}`;
+export const conAnnunci = (domanda: number, annunci: number): string => `${per10k(domanda)} ogni 10mila, ${quantiAnnunci(annunci)}`;
 /** Mese breve da "2026-09": «set». */
 export const monthShort = (ymStr: string): string => monthName(ymStr).slice(0, 3);

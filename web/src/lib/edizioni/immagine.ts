@@ -11,6 +11,7 @@ const PIU_PICCOLO = 30;
 /**
  * Riempie il modello con l'edizione e sceglie il corpo delle due porte, lo stesso per entrambe. I testi entrano come testo, mai come HTML.
  * Se non entrano, o manca il font del sito, è un errore: meglio nessuna edizione che un'immagine tagliata.
+ * L'interfaccia è fotografa: questa è esportata solo per le prove che un PNG non permette, dichiarate in tests/e2e/immagine.spec.ts.
  */
 export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
   await page.setViewportSize({ width: 1200, height: 630 });

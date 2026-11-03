@@ -47,6 +47,29 @@ def test_i_controlli_sui_rami_non_scaricano_il_browser():
     assert "test:browser" not in comandi("controlli.yml", "controlli")
 
 
+def test_i_due_salvataggi_passano_dallo_stesso_comando():
+    assert "scripts/salva_nel_repo.py data " in passo("Salva i dati nel repository")["run"]
+    assert "scripts/salva_nel_repo.py data/edizioni " in passo("Salva l'edizione nel repository")["run"]
+
+
+def test_il_commit_dell_edizione_usa_la_sua_settimana_e_si_salva_solo_se_e_stata_creata():
+    salva = passo("Salva l'edizione nel repository")
+    assert salva["if"] == "steps.edizione.outputs.settimana != ''"
+    assert salva["env"]["SETTIMANA"] == "${{ steps.edizione.outputs.settimana }}"
+    assert '"Edizione del $SETTIMANA"' in salva["run"]
+    assert "date" not in salva["run"]
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_se_il_salvataggio_dell_edizione_fallisce_il_log_spiega_il_rimedio(tmp_path):
+    # in una cartella senza lo script: il comando fallisce davvero
+    giro = subprocess.run([SH, "-c", passo("Salva l'edizione nel repository")["run"]], cwd=tmp_path, env={**os.environ, "SETTIMANA": "2026-11-02"}, capture_output=True, text=True, encoding="utf-8")
+    assert giro.returncode == 1
+    assert "::error::" in giro.stdout
+    assert "2026-11-02" in giro.stdout
+    assert "casella" in giro.stdout
+
+
 def giro_finale(esito_del_sito: str) -> subprocess.CompletedProcess:
     """Il passo del job finale, con una shell come quella del runner e l'esito della pubblicazione che gli dà GitHub."""
     finale = job("aggiorna.yml", "edizione-non-creata")["steps"][0]

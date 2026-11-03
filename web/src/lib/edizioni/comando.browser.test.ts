@@ -14,7 +14,7 @@ function misurePng(file: string): [number, number] {
 }
 
 describe('il comando che fissa l’edizione e ne fa l’immagine', { timeout: 60_000 }, () => {
-  const { edizioni, fissa, immagine, scriviDati, comando, lancia, senzaBrowser, leggi } = comandoSuDatiDiProva();
+  const { dati, edizioni, fissa, immagine, scriviDati, comando, lancia, senzaBrowser, leggi } = comandoSuDatiDiProva();
 
   it('il giro programmato scrive il file della settimana, con i testi già composti, e accanto solo la sua immagine di 1200×630', () => {
     const giro = lancia('schedule');
@@ -24,6 +24,19 @@ describe('il comando che fissa l’edizione e ne fa l’immagine', { timeout: 60
     expect(leggi().card).toHaveLength(9);
     expect(readdirSync(edizioni())).toEqual([`${SETTIMANA}.json`, `${SETTIMANA}.png`]);
     expect(misurePng(immagine())).toEqual([1200, 630]);
+  });
+
+  it('dice al workflow la settimana dell’edizione creata, per il messaggio del commit', () => {
+    const uscita = join(dati(), 'github-output');
+    expect(lancia('schedule', '', { GITHUB_OUTPUT: uscita }).status).toBe(0);
+    expect(readFileSync(uscita, 'utf-8')).toBe(`settimana=${SETTIMANA}\n`);
+  });
+
+  it('un giro che trova l’edizione già creata non la ripropone al workflow', () => {
+    lancia('schedule');
+    const uscita = join(dati(), 'github-output');
+    expect(lancia('schedule', '', { GITHUB_OUTPUT: uscita }).status).toBe(0);
+    expect(existsSync(uscita)).toBe(false);
   });
 
   it('un secondo giro non sovrascrive, nemmeno con la casella, e non è un errore', () => {

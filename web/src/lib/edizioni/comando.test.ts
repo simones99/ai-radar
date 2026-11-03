@@ -16,11 +16,19 @@ describe('il comando che fissa l’edizione, senza browser', { timeout: 60_000 }
     expect(lancia('push', '', senzaBrowser()).status).toBe(0);
   });
 
-  it('senza il browser l’edizione non si crea: è un errore, e non resta nessun file a metà', () => {
-    const giro = lancia('schedule', '', senzaBrowser());
+  it('un giro che non crea non dice al workflow nessuna settimana', () => {
+    const uscita = join(dati(), 'github-output');
+    expect(lancia('push', '', { GITHUB_OUTPUT: uscita }).status).toBe(0);
+    expect(existsSync(uscita)).toBe(false);
+  });
+
+  it('senza il browser l’edizione non si crea: è un errore, non resta nessun file a metà e il workflow non ha niente da salvare', () => {
+    const uscita = join(dati(), 'github-output');
+    const giro = lancia('schedule', '', { ...senzaBrowser(), GITHUB_OUTPUT: uscita });
     expect(giro.status).toBe(1);
     expect(giro.stderr).not.toBe('');
     expect(existsSync(edizioni()) ? readdirSync(edizioni()) : []).toEqual([]);
+    expect(existsSync(uscita)).toBe(false);
   });
 
   it('un push non crea nemmeno senza lo stato delle fonti, e non è un errore', () => {

@@ -71,17 +71,17 @@ export interface Giro {
 }
 
 /**
- * Il giro del comando: decide, crea e salva. Restituisce cosa è successo, da scrivere nel log.
+ * Il giro del comando: decide, crea e salva. Restituisce cosa è successo, da scrivere nel log, e la settimana se l'edizione è nata in questo giro.
  * Lancia un errore quando l'edizione doveva uscire e non può, anche per colpa dell'immagine: per il workflow è una creazione fallita.
  */
-export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro): Promise<string> {
+export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro): Promise<{ messaggio: string; creata?: string }> {
   const status = join(dati, 'status.json');
   const aggiornato: string | undefined = existsSync(status) ? JSON.parse(readFileSync(status, 'utf-8')).aggiornato : undefined;
   const settimana = aggiornato ? lunediDi(aggiornato) : null;
   const fissa = (s: string) => join(dati, 'edizioni', `${s}.json`);
   const esiste = !!settimana && existsSync(fissa(settimana));
   if (!deveCreare({ evento, casella, esiste })) {
-    return esiste ? `Nessuna edizione nuova: quella del ${settimana} esiste già.` : `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.`;
+    return { messaggio: esiste ? `Nessuna edizione nuova: quella del ${settimana} esiste già.` : `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.` };
   }
   if (!settimana) throw new Error('Edizione non creata: i dati sono senza data, in status.json.');
   // l'edizione con cui confrontarsi: la più recente tra quelle uscite prima di questa settimana
@@ -99,5 +99,5 @@ export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro):
     rmSync(immagine, { force: true });
     throw e;
   }
-  return `Edizione del ${settimana} creata, con la sua immagine.`;
+  return { messaggio: `Edizione del ${settimana} creata, con la sua immagine.`, creata: settimana };
 }

@@ -9,7 +9,7 @@
   import { apri, toHash } from '../router';
   import { mercato as mercatoRicordato, ruolo as ruoloRicordato } from '../scelta.svelte';
   import { conAnnunci, monthName, per10k, signedPct } from '../text/format';
-  import { headCompetenze, headSkill, SENZA_ITALIA } from '../text/frasi';
+  import { headCompetenze, headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
   import type { DetailProps } from './types';
@@ -97,7 +97,7 @@
         </div></div>
       </Block>
     {:else}
-      <Block span={12} title="Radar delle competenze" missing={SENZA_ITALIA} />
+      <Block span={12} title="Radar delle competenze" missing="{ITALIA_SENZA_DATO}." />
     {/if}
     <Block span={12} title="Le competenze una per una">
       <!-- svelte-ignore a11y_no_noninteractive_tabindex: la tabella scorre in orizzontale e deve essere raggiungibile da tastiera -->

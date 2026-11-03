@@ -5,7 +5,7 @@
   import { margineSuZero, type Mercato, type RigaPagina } from '../data/derive';
   import type { Quadrant, Radar } from '../data/types';
   import { day, dayWith, monthShort, nf, per10k, quantiAnnunci, signedPct } from '../text/format';
-  import { SENZA_ITALIA } from '../text/frasi';
+  import { ITALIA_SENZA_DATO } from '../text/frasi';
 
   let { row, quadranti, mercato = 'tutti', storico = [], indietro = '#competenze' }: {
     row: RigaPagina;
@@ -59,7 +59,7 @@
   <p class="warn" role="note">Dato incerto: {row.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.</p>
 {/if}
 
-<Block span={4} title="Domanda" missing={row.senzaDato ? SENZA_ITALIA : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
+<Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
   <p class="fig">{per10k(row.domanda)}</p>
   <p class="sub">{sottoDomanda}</p>
 </Block>
@@ -90,7 +90,7 @@
 </Block>
 
 <Block span={12} title="Il percorso sul radar" note="Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo."
-  missing={percorso.length ? null : italia && storico.length ? SENZA_ITALIA : 'Lo storico arriva con i prossimi aggiornamenti.'}>
+  missing={percorso.length ? null : italia && storico.length ? `${ITALIA_SENZA_DATO}.` : 'Lo storico arriva con i prossimi aggiornamenti.'}>
   <ol class="path" role="list" aria-label="Il percorso sul radar">
     {#each percorso as p (p.mese)}<li class:hot={p.q === 'impara-ora'}><span>{monthShort(p.mese)} {p.mese.slice(0, 4)}</span><b>{quadranti[p.q]}</b></li>{/each}
   </ol>

@@ -613,6 +613,95 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
+// Con il FIXTURE: su tutti i Paesi 2 competenze in Impara ora, con i nomi Agenti AI e MCP nella figura; in Italia una sola, Agenti AI.
+const cardCompetenze = (page: Page) => page.locator('#tile-competenze').getByRole('button');
+const homeItaliana = async (page: Page) => {
+  const porta = page.getByRole('link', { name: /Per te · Italia/ });
+  await expect(porta).toContainText('RAG esce da Impara ora');
+  await expect(porta).not.toContainText('sotto soglia');
+  await expect(cardCompetenze(page)).toHaveAccessibleName('Competenze · Italia: 1 su 5');
+  await expect(cardCompetenze(page)).toHaveAccessibleDescription(/^1 competenza su 5 da imparare ora: cresce/);
+  await expect(cardCompetenze(page).getByText('Competenze · Italia')).toBeVisible();
+  await expect(cardCompetenze(page).getByText('Agenti AI')).toBeVisible();
+  await expect(cardCompetenze(page).getByText('MCP')).toHaveCount(0);
+};
+
+test('home e mercato: scelta l’Italia nella card, porta e figura sono italiane, anche dopo un ricaricamento; «Tutti i Paesi» le riporta indietro', async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 900 });
+  await page.goto('/');
+  await expect(page.getByRole('link', { name: /Per te/ }).first()).toContainText('MCP entra tra le competenze');
+  await expect(page.getByRole('link', { name: /Per te/ }).first()).toContainText('sotto soglia');
+  await expect(cardCompetenze(page)).toHaveAccessibleName('Competenze: 2 su 5');
+  await expect(cardCompetenze(page).getByText('MCP')).toBeVisible();
+  await cardCompetenze(page).click();
+  await mercati(page).getByRole('button', { name: 'Italia' }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('section.detail')).toHaveCount(0);
+  await homeItaliana(page);
+  await page.reload();
+  await homeItaliana(page);
+
+  await page.getByRole('link', { name: /Per te · Italia/ }).click();
+  await expect(page).toHaveURL(/#competenze\/rag\?mercato=italia$/);
+  await page.goto('/#competenze');
+  await mercati(page).getByRole('button', { name: 'Tutti i Paesi' }).click();
+  await page.keyboard.press('Escape');
+  await expect(cardCompetenze(page)).toHaveAccessibleName('Competenze: 2 su 5');
+  await expect(page.getByRole('link', { name: /Per te/ }).first()).toContainText('MCP entra tra le competenze');
+  await expect(cardCompetenze(page).getByText('MCP')).toBeVisible();
+});
+
+test('home e mercato: ruolo e Italia stanno insieme nell’etichetta e nel link della porta', async ({ page }) => {
+  await page.goto('/#competenze?mercato=italia&ruolo=prodotto');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await page.keyboard.press('Escape');
+  const porta = page.getByRole('link', { name: /Per te · Prodotto · Italia/ });
+  await expect(porta).toHaveAttribute('href', '#competenze/rag?mercato=italia&ruolo=prodotto');
+});
+
+test('home e mercato: un link con l’Italia aperto da solo basta perché la home la segua', async ({ page }) => {
+  await page.goto('/#competenze?mercato=italia');
+  await expect(mercatoPremuto(page)).toHaveText('Italia');
+  await page.keyboard.press('Escape');
+  await homeItaliana(page);
+});
+
+test('elenco accanto a una card aperta: la scelta del mercato si vede subito sulla card Competenze', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/#competenze');
+  await expect(cardCompetenze(page)).toHaveAccessibleName('Competenze: 2 su 5');
+  await mercati(page).getByRole('button', { name: 'Italia' }).click();
+  await expect(cardCompetenze(page)).toHaveAccessibleName('Competenze · Italia: 1 su 5');
+  await expect(cardCompetenze(page).getByText('Competenze · Italia')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await homeItaliana(page);
+});
+
+test('home e mercato con nessun dato italiano: porta e card lo dicono', async ({ page }) => {
+  const radar = { ...FIXTURE.radar!, competenze: FIXTURE.radar!.competenze.map((c) => ({ ...c, domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null })) };
+  await page.route('**/data/radar.json', (route) => route.fulfill({ json: radar }));
+  await page.addInitScript(() => localStorage.setItem('ai-radar:mercato', 'italia'));
+  await page.goto('/');
+  await expect(page.getByRole('link', { name: /Per te · Italia/ })).toContainText('Per l’Italia il dato non è disponibile');
+  await expect(cardCompetenze(page)).toHaveAccessibleDescription('Per l’Italia il dato non è disponibile in questo momento.');
+});
+
+test('home con l’Italia a 320px, nei due temi: niente scorrimento orizzontale, nessuna violazione grave', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.addInitScript(() => localStorage.setItem('ai-radar:mercato', 'italia'));
+  for (const colorScheme of ['light', 'dark'] as const) {
+    await page.emulateMedia({ colorScheme });
+    await page.goto('/');
+    await homeItaliana(page);
+    expect(await noHorizontalScroll(page)).toBe(true);
+    expect(await seriousViolations(page)).toEqual([]);
+  }
+  await page.addInitScript(() => localStorage.setItem('ai-radar:ruolo', 'compliance')); // l'etichetta più lunga
+  await page.goto('/');
+  await expect(page.getByRole('link', { name: /Per te · Legale e compliance · Italia/ })).toBeVisible();
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
 const menuArea = (page: Page) => page.getByRole('combobox', { name: 'Area' });
 // la scheda dell'area è la regione che porta il nome dell'area: il suo titolo
 const scheda = (page: Page, area: string) => page.getByRole('region', { name: area, exact: true });

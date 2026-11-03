@@ -1,5 +1,5 @@
 import {
-  MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
+  MOVE_MIN, computeGrowth, fineDelleNotizie, margineSuZero, mercatoScelto, newsInLastDays, nextDeadline, nextReport, owidLatest, owidPrev, radarChanges, radarRows, settoreScelto, ultimoAnno,
   type Mercato, type RadarRowM,
 } from '../data/derive';
 import { quota } from '../data/geopoliticai';
@@ -8,7 +8,7 @@ import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, parseDay, per10k, short, signedPct, ym } from './format';
 
-export interface Face { fig: string; unit: string; sent: string }
+export interface Face { fig: string; unit: string; sent: string; scelta?: string } // scelta: quella ricordata, accanto al nome della card (Competenze · Italia)
 export type TitleParts = { t: string; em?: boolean }[];
 export interface Head { title: TitleParts; deck: string | null; nota?: string } // nota: riga piccola sotto il sottotitolo
 
@@ -161,8 +161,10 @@ export function headNorme(d: Dataset, today: Date): Head {
 
 // ---------------------------------------------------------------- competenze
 const MIN_ANNUNCI = 3; // ogni 10mila, la soglia del radar: sotto, un cambio non è una notizia per chi deve scegliere su cosa formarsi
+/** Il radar c'è, ma nessuna competenza ha il dato italiano: lo dicono la card, la sua figura in home e la porta. */
+export const ITALIA_SENZA_DATO = 'Per l’Italia il dato non è disponibile in questo momento';
 /** Perché n competenze sono da imparare ora: la frase della card e del titolo. */
-const perche = (n: number) => `${n === 1 ? "cresce più dell'AI e ha" : "crescono più dell'AI e hanno"} almeno ${MIN_ANNUNCI} annunci ogni 10mila`;
+const perche = (n: number) => `${n <= 1 ? "cresce più dell'AI e ha" : "crescono più dell'AI e hanno"} almeno ${MIN_ANNUNCI} annunci ogni 10mila`;
 /** Chi è ancora in Impara ora ma per il calcolo del mese è già altrove: il quadrante cambia solo dopo due mesi, e la frase non può dire che cresce. */
 function inBilico(rows: RadarRowM[]): string {
   return rows.filter((r) => r.quadrante === 'impara-ora' && r.moving).map((r) => {
@@ -173,13 +175,16 @@ function inBilico(rows: RadarRowM[]): string {
   }).join('; ');
 }
 /** Chi entra e chi esce lo dice la porta Per te: la card dice quante sono, sotto il radar che le mostra. */
-export function faceCompetenze(d: Dataset, _today?: Date): Face | null {
-  const rows = d.radar ? radarRows(d.radar) : [];
-  if (!rows.length) return null;
+export function faceCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tutti'): Face | null {
+  const rows = d.radar ? radarRows(d.radar, mercato) : [];
+  const conScelta = mercato === 'italia' ? { scelta: 'Italia' } : {};
+  if (!rows.length) return conScelta.scelta && d.radar && radarRows(d.radar).length ? { fig: '—', unit: '', sent: `${ITALIA_SENZA_DATO}.`, ...conScelta } : null;
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
+  const fig = { fig: String(n), unit: `su ${rows.length}`, ...conScelta };
+  if (!n) return { ...fig, sent: `Nessuna competenza su ${rows.length} ${perche(n)}.` };
   const quante = `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${rows.length} da imparare ora`;
   const bilico = inBilico(rows);
-  return { fig: String(n), unit: `su ${rows.length}`, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche(n)}.` };
+  return { ...fig, sent: bilico ? `${quante}; ${bilico}.` : `${quante}: ${perche(n)}.` };
 }
 /** Etichetta del cambio di quadrante sul radar, sotto il nome breve. */
 export const cambio = (r: RadarRowM, quadranti: Record<Quadrant, string>): string =>
@@ -200,7 +205,7 @@ export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tu
   const { inn, out } = radarChanges(rows);
   const n = rows.filter((r) => r.quadrante === 'impara-ora').length;
   const bilico = inBilico(rows);
-  const quante = `Oggi ${n === 1 ? '1 competenza' : `${n} competenze`} su ${rows.length}`;
+  const quante = `Oggi ${n === 0 ? 'nessuna competenza' : n === 1 ? '1 competenza' : `${n} competenze`} su ${rows.length}`;
   const tail = bilico ? `${quante} ${n === 1 ? 'è' : 'sono'} in Impara ora; ${bilico}.` : `${quante} ${perche(n)}.`;
   if (!inn.length && !out.length) return { title: plain('Nessun cambio tra le competenze da imparare ora'), deck: tail };
   if (!inn.length) return { title: [{ t: joinE(out.map((r) => r.breve)), em: true }, { t: ` ${verbo(out, 'esce', 'escono')} da Impara ora` }], deck: tail };
@@ -211,15 +216,12 @@ export function headCompetenze(d: Dataset, _today?: Date, mercato: Mercato = 'tu
   };
 }
 
-/** Con «Italia», dove il dato manca: mai uno zero. */
-export const SENZA_ITALIA = 'Per l’Italia il dato non è disponibile in questo momento.';
-
 /** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
 export function headSkill(r: RadarRowM & { senzaDato?: boolean }, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
   const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
   const dove = mercato === 'italia' ? 'In Italia: ' : ''; // nella pagina non ci sono i bottoni: lo dice la frase
-  const stato = r.senzaDato ? SENZA_ITALIA : `${dove}${quadranti[r.quadrante]}${prima}${moving}.`;
+  const stato = r.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${dove}${quadranti[r.quadrante]}${prima}${moving}.`;
   const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
   return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }
@@ -286,7 +288,7 @@ export interface Door {
   meta: string; // fonte e data del dato
   nota?: string; // riga piccola sotto la notizia: chi entra in Impara ora ma in Italia sta sotto soglia
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
-  scelta?: string; // nome del ruolo o del settore ricordato, per l'etichetta (Per te · Prodotto)
+  scelta?: string; // ruolo, settore o mercato ricordati, per l'etichetta (Per te · Prodotto · Italia)
 }
 const NO_DATA: Door = { title: [], meta: 'Dati non disponibili', target: null };
 
@@ -339,19 +341,35 @@ function notiziaRadar(sure: RadarRowM[], quadranti: Record<Quadrant, string>): {
   return null;
 }
 
-/** Con un ruolo ricordato le regole si provano prima sulle sue competenze, poi su tutte (spec Ruoli, sezione 6). */
-export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = null): Door {
-  const rows = d.radar ? radarRows(d.radar) : [];
-  if (!d.radar || !rows.length) return NO_DATA;
+/** Quante competenze su tot sono da imparare ora: con un ruolo, quante delle sue. Il dato italiano può lasciare al ruolo una competenza sola, o nessuna. */
+function quanteDaImparare(n: number, tot: number, ruolo: string | null): string {
+  if (!ruolo) return n ? `${n} ${n === 1 ? 'competenza' : 'competenze'} su ${tot}` : `Nessuna competenza su ${tot}`;
+  if (tot > 1) return `${n || 'Nessuna'} delle ${tot} competenze di ${ruolo}`;
+  return `${n ? "L'unica" : 'Nessuna'} competenza di ${ruolo}`;
+}
+
+/**
+ * Con un ruolo ricordato le regole si provano prima sulle sue competenze, poi su tutte (spec Ruoli, sezione 6).
+ * Con il mercato ricordato leggono le righe di quel mercato; un valore sconosciuto: come «Tutti i Paesi».
+ */
+export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = null, mercatoId: string | null = null): Door {
+  const mercato = mercatoScelto(mercatoId);
+  const italia = mercato === 'italia';
+  const rows = d.radar ? radarRows(d.radar, mercato) : [];
+  if (!d.radar || !(rows.length || radarRows(d.radar).length)) return NO_DATA;
   const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
   // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const sure = rows.filter((r) => !r.incerto);
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza
-  const conRuolo = ruolo ? { scelta: ruolo.nome } : {};
-  const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...(ruolo && { params: { ruolo: ruolo.id } }) });
+  const scelta = [ruolo?.nome, italia && 'Italia'].filter(Boolean).join(' · ');
+  const conScelta = scelta ? { scelta } : {};
+  const conParams = ruolo || italia ? { params: { ...(italia && { mercato }), ...(ruolo && { ruolo: ruolo.id }) } } : {};
+  const to = (r: RadarRowM | null): Door['target'] => ({ tema: 'competenze', elemento: r?.id ?? null, ...conParams });
+  if (!rows.length) return { title: plain(ITALIA_SENZA_DATO), meta, target: to(null), ...conScelta }; // il radar c'è, l'Italia no
 
   const notizia = (ruolo && notiziaRadar(sure.filter((r) => r.ruoli?.includes(ruolo.id)), d.radar.quadranti)) || notiziaRadar(sure, d.radar.quadranti);
-  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conRuolo, ...(notizia.nota && { nota: notizia.nota }) };
+  const nota = italia ? '' : notizia?.nota; // la vista Italia ha già i suoi quadranti
+  if (notizia) return { title: notizia.title, meta, target: to(notizia.competenza), ...conScelta, ...(nota && { nota }) };
 
   // 5. riserva, quando nessuna regola scatta. Senza ruolo quante competenze sono da imparare ora lo dice già la card:
   // la porta dice la competenza con più annunci, se non è incerta
@@ -363,8 +381,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   // altrimenti, quante competenze da imparare ora: con un ruolo, quante delle sue
   const base = ruolo ? rows.filter((r) => r.ruoli?.includes(ruolo.id)) : rows;
   const daImparare = base.filter((r) => r.quadrante === 'impara-ora').length;
-  const quante = ruolo ? `${daImparare} delle ${base.length} competenze di ${ruolo.nome}` : `${daImparare} ${daImparare === 1 ? 'competenza' : 'competenze'} su ${rows.length}`;
-  return { title: [{ t: quante, em: true }, { t: ' da imparare ora' }], meta, target: to(null), ...conRuolo };
+  return { title: [{ t: quanteDaImparare(daImparare, base.length, ruolo?.nome ?? null), em: true }, { t: ' da imparare ora' }], meta, target: to(null), ...conScelta };
 }
 
 const SOON = 30; // giorni: scadenze vicine, rapporti in arrivo

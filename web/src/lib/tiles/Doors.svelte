@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { Dataset } from '../data/types';
   import { toHash } from '../router';
-  import { ruolo, settore } from '../scelta.svelte';
+  import { mercato, ruolo, settore } from '../scelta.svelte';
   import { doorItalia, doorPerTe, type Door } from '../text/frasi';
   import { TESTE } from './registry';
 
   let { data, today }: { data: Dataset; today: Date } = $props();
 
   const doors = $derived([
-    { g: TESTE[0], d: doorPerTe(data, today, ruolo.ricordato()) },
+    { g: TESTE[0], d: doorPerTe(data, today, ruolo.ricordato(), mercato.ricordato()) },
     { g: TESTE[1], d: doorItalia(data, today, settore.ricordato()) },
   ]);
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { FILES, loadAll, type FileKey } from './lib/data/load';
+  import { caricaUltimaEdizione, FILES, loadAll, type FileKey } from './lib/data/load';
   import type { Dataset } from './lib/data/types';
   import { scorrimento } from './lib/movimento';
   import { PHOTOS } from './lib/photos';
@@ -14,9 +14,12 @@
   let phase = $state<'loading' | 'ready' | 'error'>('loading');
   let data = $state<Dataset>({});
   let mancanti = $state<FileKey[]>([]);
+  let ultimaEdizione = $state<string | null>(null);
 
   async function load() {
     phase = 'loading';
+    // facoltativo: i dati non lo aspettano, e se non arriva la home resta senza link
+    caricaUltimaEdizione().then((u) => { ultimaEdizione = u; });
     const r = await loadAll();
     data = r.data;
     mancanti = r.failed;
@@ -62,7 +65,11 @@
     <div class="intro">
       <section class="hero">
         <!-- la settimana dei dati, non quella dell'orologio di chi legge: dal suo lunedì, anche quando il giro è partito un altro giorno -->
-        {#if data.status?.aggiornato}<p class="small muted">Settimana {dayWith('del', lunediDi(data.status.aggiornato))}</p>{/if}
+        {#if data.status?.aggiornato}
+          {@const settimana = lunediDi(data.status.aggiornato)}
+          <!-- porta all'edizione solo se è proprio di questa settimana: un'edizione vecchia direbbe un'altra cosa -->
+          <p class="small muted">{#if ultimaEdizione === settimana}<a class="settimana" href="edizioni/{settimana}/">Settimana {dayWith('del', settimana)}</a>{:else}Settimana {dayWith('del', settimana)}{/if}</p>
+        {/if}
         <h1 id="contenuto" tabindex="-1">Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
       </section>
       {#if phase === 'ready'}<Doors {data} {today} />{/if}
@@ -99,6 +106,8 @@
 <style>
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
+  /* un bersaglio di 24px per il dito, senza spostare la riga rispetto a quando è testo semplice */
+  .settimana { padding-block: 4px; }
   /* main non fa una scatola sua: i suoi figli stanno nella griglia di .wrap, come la testata e il colophon */
   main { display: contents; }
   /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto, e la h1 resta per i lettori di schermo */

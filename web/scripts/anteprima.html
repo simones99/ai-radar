@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- L'immagine dell'anteprima della home: il marchio della testata in grande, con i token e il font del sito. La fotografa anteprima.mjs. -->
+<html lang="it" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>Anteprima della home</title>
+    <link rel="stylesheet" href="../node_modules/@fontsource-variable/bricolage-grotesque/opsz.css" />
+    <link rel="stylesheet" href="../src/app.css" />
+    <style>
+      body { width: 1200px; height: 630px; padding: 72px 80px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+      .logo { display: flex; align-items: center; gap: 36px; font-weight: 700; font-size: 148px; line-height: 1; letter-spacing: -.02em; }
+      .logo i { flex: none; width: 112px; height: 112px; border-radius: 50%; border: 14px solid var(--fg); position: relative; }
+      .logo i::after { content: ''; position: absolute; inset: 21px; border-radius: 50%; background: var(--accent); }
+      p { font-size: 60px; line-height: 72px; font-weight: 500; letter-spacing: -.01em; }
+    </style>
+  </head>
+  <body>
+    <span class="logo"><i></i>AI Radar</span>
+    <!-- una riga per testa, alla pari -->
+    <p>Cosa succede nell’AI ogni settimana:<br />su cosa formarti<br />e come si muove l’AI in Italia.</p>
+  </body>
+</html>

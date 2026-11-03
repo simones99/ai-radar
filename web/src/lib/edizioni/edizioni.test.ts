@@ -4,7 +4,7 @@ import type { Dataset } from '../data/types';
 import { parseHash } from '../router';
 import { FIXTURE } from '../test/fixtures';
 import { TESTE, TILES } from '../tiles/registry';
-import { creaEdizione, fileDelSito, type Destinazione, type Edizione } from '.';
+import { creaEdizione, deveCreare, fileDelSito, type Destinazione, type Edizione } from '.';
 
 const d = FIXTURE as Dataset;
 const crea = (dati: Dataset = d, precedente: Edizione | null = null) => creaEdizione(dati, precedente) as Edizione;
@@ -499,5 +499,77 @@ describe('la pagina di un’edizione', () => {
     const prima = html(e);
     vi.useFakeTimers({ now: new Date('2031-03-03T10:00:00') });
     expect(html(e)).toBe(prima);
+  });
+});
+
+describe('l’archivio', () => {
+  const BASE = 'https://altro-utente.github.io/altro-radar/';
+  const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc123.css' };
+  const prima = creaEdizione(d, null) as Edizione;
+  const seconda = creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima) as Edizione;
+  const archivio = (...ed: Edizione[]) => new DOMParser().parseFromString(fileDelSito(ed, opzioni)['edizioni/index.html'], 'text/html');
+
+  it('senza edizioni non esistono né pagine né archivio', () => {
+    expect(fileDelSito([], opzioni)).toEqual({});
+  });
+
+  it('elenca tutte le edizioni, dalla più recente, qualunque sia l’ordine in cui arrivano, ciascuna con il suo link', () => {
+    const doc = archivio(prima, seconda);
+    const voci = [...doc.querySelectorAll('main li')];
+    expect(voci.map((v) => v.querySelector('h2')?.textContent)).toEqual(['Settimana del 19 ott 2026', 'Settimana del 12 ott 2026']);
+    expect(voci.map((v) => v.querySelector('a')?.getAttribute('href'))).toEqual(['2026-10-19/', '2026-10-12/']);
+  });
+
+  it('ogni voce ha la data e le due porte, Per te per prima', () => {
+    const t = archivio(prima).querySelector('main li')!.textContent;
+    expect(t).toMatch(/Per te[^]*MCP entra tra le competenze[^]*Per la tua organizzazione[^]*16% delle imprese italiane/);
+  });
+
+  it('una porta senza dati lo dice anche qui', () => {
+    const conVuota = creaEdizione({ status: d.status, radar: d.radar }, null) as Edizione;
+    expect(archivio(conVuota).querySelector('main li')!.textContent).toContain('Dati non disponibili');
+  });
+
+  it('non perde nessuna edizione', () => {
+    const tante = Array.from({ length: 60 }, (_, i) => ({ ...prima, settimana: `20${10 + i}-01-04` }));
+    expect(archivio(...tante).querySelectorAll('main li')).toHaveLength(60);
+  });
+
+  it('ha titolo, descrizione, canonical, testata e tema del sito, e nessun JavaScript', () => {
+    const doc = archivio(prima);
+    expect(doc.title).toBe('AI Radar, le edizioni');
+    expect(doc.querySelector('h1')?.textContent).toBe('Edizioni');
+    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBeTruthy();
+    expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}edizioni/`);
+    expect(doc.querySelector('link[rel="stylesheet"]')?.getAttribute('href')).toBe('../assets/index-abc123.css');
+    expect(doc.querySelector('script')).toBeNull();
+    expect([...doc.querySelectorAll('header a')][0].getAttribute('href')).toBe('../');
+  });
+
+  it('i testi esterni sono neutralizzati anche qui', () => {
+    const e = { ...prima, porte: [{ ...prima.porte[0], titolo: [{ t: '<script>x</script>' }] }, prima.porte[1]] };
+    expect(archivio(e).querySelector('script')).toBeNull();
+  });
+});
+
+describe('decidere se un giro crea l’edizione', () => {
+  it('il giro programmato sì, se il file non c’è', () => {
+    expect(deveCreare({ evento: 'schedule', casella: false, esiste: false })).toBe(true);
+  });
+  it('l’avvio manuale solo con la casella accesa', () => {
+    expect(deveCreare({ evento: 'workflow_dispatch', casella: true, esiste: false })).toBe(true);
+    expect(deveCreare({ evento: 'workflow_dispatch', casella: false, esiste: false })).toBe(false);
+  });
+  it('il push mai, nemmeno con la casella', () => {
+    expect(deveCreare({ evento: 'push', casella: true, esiste: false })).toBe(false);
+    expect(deveCreare({ evento: 'push', casella: false, esiste: false })).toBe(false);
+  });
+  it('mai se il file esiste già', () => {
+    expect(deveCreare({ evento: 'schedule', casella: false, esiste: true })).toBe(false);
+    expect(deveCreare({ evento: 'workflow_dispatch', casella: true, esiste: true })).toBe(false);
+  });
+  it('un evento che non conosce: no', () => {
+    expect(deveCreare({ evento: 'pull_request', casella: true, esiste: false })).toBe(false);
+    expect(deveCreare({ evento: '', casella: true, esiste: false })).toBe(false);
   });
 });

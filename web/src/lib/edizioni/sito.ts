@@ -171,8 +171,37 @@ ${fontiMute(e)}`;
   }, opzioni);
 }
 
-/** Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: la home non ha link che portano qui. */
+function archivio(edizioni: Edizione[], opzioni: OpzioniSito): string {
+  const voci = edizioni.map((e) => `<li>
+<h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
+${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length ? testoPorta(p) : p.meta)}</p>`).join('\n')}
+</li>`).join('\n');
+  return pagina({
+    titolo: 'AI Radar, le edizioni',
+    descrizione: 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.',
+    percorso: 'edizioni/',
+    radice: '../',
+    nav: '<a href="../">Dati di oggi</a>',
+    corpo: `<div class="ed-testa">
+<h1>Edizioni</h1>
+<p class="ed-nota">Il riassunto di ogni settimana. Esce il lunedì e dopo non cambia, salvo correzioni dichiarate.</p>
+</div>
+<ul class="ed-archivio">
+${voci}
+</ul>`,
+  }, opzioni);
+}
+
+/**
+ * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
+ * Un file nuovo del sito è una voce in più in questa mappa: chi costruisce il sito li scrive tutti allo stesso modo.
+ */
 export function fileDelSito(edizioni: Edizione[], opzioni: OpzioniSito): Record<string, string> {
   edizioni.forEach(controlla);
-  return Object.fromEntries(edizioni.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)]));
+  if (!edizioni.length) return {};
+  const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));
+  return {
+    'edizioni/index.html': archivio(recenti, opzioni),
+    ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
+  };
 }

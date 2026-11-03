@@ -228,6 +228,8 @@ export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ru
 }
 
 // ---------------------------------------------------------------- notizie
+/** I temi delle notizie con il loro nome, nell'ordine in cui li mostra un'edizione. */
+export const TEMI_NOTIZIE: Record<string, string> = { politica: 'Politica', ricerca: 'Ricerca', prodotti: 'Prodotti', business: 'Business', altro: 'Altro' };
 /** "N fonti": le fonti distinte tra le notizie date, non i feed configurati. */
 const fontiDi = (items: { fonte: string }[]): string => {
   const k = new Set(items.map((x) => x.fonte)).size;

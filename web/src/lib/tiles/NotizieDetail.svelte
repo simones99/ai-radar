@@ -2,7 +2,7 @@
   import Block from '../charts/Block.svelte';
   import { parseHash, slug, toHash } from '../router';
   import { capitalize, day, lowerFirst } from '../text/format';
-  import { settimanaDelleNotizie } from '../text/frasi';
+  import { settimanaDelleNotizie, TEMI_NOTIZIE as TEMI } from '../text/frasi';
   import Detail from './Detail.svelte';
   import type { DetailProps } from './types';
 
@@ -11,7 +11,6 @@
   const head = $derived(tile.head(data, today));
   const all = $derived(data.news?.notizie ?? []);
   const fonti = $derived([...new Set(all.map((n) => n.fonte))]);
-  const TEMI: Record<string, string> = { politica: 'Politica', ricerca: 'Ricerca', prodotti: 'Prodotti', business: 'Business', altro: 'Altro' };
   const temi = $derived([...new Set(all.map((n) => n.tema ?? 'altro'))].sort());
   let fonte = $state<string | null>(null);
   let tema = $state<string | null>(null);

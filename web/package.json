@@ -11,7 +11,8 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "scatto": "playwright test -c playwright.scatto.config.ts",
-    "anteprima": "node scripts/anteprima.mjs"
+    "anteprima": "node scripts/anteprima.mjs",
+    "edizione": "node scripts/edizione.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "5.3.0",

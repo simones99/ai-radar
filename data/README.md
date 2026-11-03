@@ -1,7 +1,8 @@
 # Dati
 
 Questa cartella la riempie e aggiorna da sola la pipeline (`python -m pipeline.run`),
-ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
+ogni settimana tramite GitHub Actions. Non serve modificarla a mano: l'unica eccezione
+sono le correzioni a un'edizione già uscita.
 
 | File | Contenuto | Fonte |
 | --- | --- | --- |
@@ -22,6 +23,7 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `risorse.json` | Stato settimanale dei link «Per iniziare» delle competenze | Controllo della pipeline |
 | `radar.json` | Radar delle competenze (versione 2: unità vere, soglie fisse, incertezza), calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
+| `edizioni/AAAA-MM-GG.json` | Un'edizione: i testi già composti di una settimana, con il suo lunedì come nome. L'app non la carica: la build ne fa una pagina. Una correzione si fa a mano nel file, aggiungendo a `correzioni` la data e il testo | `npm run edizione`, nel workflow |
 
 I file con storico (arXiv, GitHub, Hugging Face, Adzuna) si
 arricchiscono a ogni raccolta: per questo sono salvati nel repository.

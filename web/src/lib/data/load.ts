@@ -6,6 +6,9 @@ export const FILES = [
 ] as const;
 export type FileKey = (typeof FILES)[number];
 
+/** L'indice con l'ultima edizione, per la home. La build lo scrive solo se esiste un'edizione: per questo non è tra i FILES, che se mancano fanno scattare l'avviso. */
+export const INDICE_EDIZIONI = 'data/edizioni.json';
+
 /** Scarica tutti i JSON in parallelo. Un file che non arriva vale come fonte assente. */
 export async function loadAll(base = 'data/', fetchFn: typeof fetch = fetch): Promise<{ data: Dataset; failed: FileKey[] }> {
   const res = await Promise.allSettled(

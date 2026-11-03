@@ -1,5 +1,6 @@
 // I file del sito che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
+import { INDICE_EDIZIONI } from '../data/load';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
 import { VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
@@ -279,5 +280,6 @@ export function fileDelSito(edizioni: Edizione[], opzioni: OpzioniSito): Record<
     'edizioni/index.html': archivio(recenti, opzioni),
     ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
     'feed.xml': feed(recenti, opzioni),
+    [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
   };
 }

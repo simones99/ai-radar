@@ -67,6 +67,18 @@ for (const [nome, indirizzo] of [['la prima edizione', PRIMA], ['un’edizione c
       expect(await senzaScorrimento(page)).toBe(true);
     });
 
+    test('con «riduci movimento» niente si anima, nemmeno passando su un link', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto(indirizzo);
+      await page.getByRole('main').getByRole('link').first().hover();
+      expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
+      // anche ciò che partirebbe dopo: nessun elemento ha una transizione o un'animazione
+      expect(await page.evaluate(() => [...document.querySelectorAll('*')].filter((el) => {
+        const stile = getComputedStyle(el);
+        return stile.animationName !== 'none' || stile.transitionDuration.split(', ').some((durata) => durata !== '0s');
+      }).length)).toBe(0);
+    });
+
     test('usa il font e la testata del sito', async ({ page }) => {
       await page.goto(indirizzo);
       await expect(page.locator('body')).toHaveCSS('font-family', /Bricolage Grotesque Variable/);

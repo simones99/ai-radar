@@ -108,7 +108,7 @@
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
   /* un bersaglio di 24px per il dito, senza spostare la riga rispetto a quando è testo semplice */
-  .settimana, .segui a { padding-block: 4px; }
+  .settimana, .segui a { padding-block: 5px; }
   /* main non fa una scatola sua: i suoi figli stanno nella griglia di .wrap, come la testata e il colophon */
   main { display: contents; }
   /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto, e la h1 resta per i lettori di schermo */

@@ -46,7 +46,7 @@
 <div class="wrap">
   <header class="testata">
     <span class="logo"><i aria-hidden="true"></i>AI Radar</span>
-    <nav aria-label="Pagina"><a href="#crediti">Foto e fonti</a><a href="#stato">Stato delle fonti</a></nav>
+    <nav aria-label="Pagina">{#if ultimaEdizione}<a href="edizioni/">Edizioni</a>{/if}<a href="#crediti">Foto e fonti</a><a href="#stato">Stato delle fonti</a></nav>
   </header>
 
   <main>
@@ -84,6 +84,7 @@
   </main>
 
   <footer class="colophon">
+    {#if ultimaEdizione}<p class="segui"><a href="feed.xml">Segui con RSS</a>: ogni lunedì un'edizione, senza account né email.</p>{/if}
     <section class="credits" id="crediti" aria-labelledby="crediti-h">
       <h2 id="crediti-h">Foto e fonti</h2>
       <ul>
@@ -107,7 +108,7 @@
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
   /* un bersaglio di 24px per il dito, senza spostare la riga rispetto a quando è testo semplice */
-  .settimana { padding-block: 4px; }
+  .settimana, .segui a { padding-block: 4px; }
   /* main non fa una scatola sua: i suoi figli stanno nella griglia di .wrap, come la testata e il colophon */
   main { display: contents; }
   /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto, e la h1 resta per i lettori di schermo */
@@ -130,6 +131,8 @@
   /* il colophon: crediti e stato delle fonti affiancati da 960px */
   .colophon { --fondo: var(--bg); display: grid; gap: var(--s5); border-top: 1px solid var(--line-2); padding-top: var(--s3); }
   @media (min-width: 960px) { .colophon { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s6); } }
+  .segui { grid-column: 1 / -1; font-size: 14px; line-height: 20px; color: var(--fg-2); }
+  .segui a { color: var(--fg); }
   .credits { display: grid; gap: var(--s3); align-content: start; }
   .credits h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
   .credits > p { max-width: var(--misura); }

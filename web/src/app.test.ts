@@ -94,6 +94,13 @@ describe('App', () => {
       expect(settimana()).toBeNull();
     });
 
+    it('con un’edizione qualsiasi: «Edizioni» in testata porta all’archivio, e «Segui con RSS» in fondo al feed', async () => {
+      vi.stubGlobal('fetch', conIndice(indice('2026-10-05')));
+      await caricata();
+      expect(await within(screen.getByRole('banner')).findByRole('link', { name: 'Edizioni' })).toHaveAttribute('href', 'edizioni/');
+      expect(within(screen.getByRole('contentinfo')).getByRole('link', { name: 'Segui con RSS' })).toHaveAttribute('href', 'feed.xml');
+    });
+
     const senzaIndice: [string, () => Partial<Response>][] = [
       ['manca', () => ({ ok: false, json: async () => { throw new Error('non è JSON'); } })],
       ['al suo posto arriva una pagina HTML', () => ({ ok: true, json: async () => { throw new SyntaxError('non è JSON'); } })],
@@ -108,6 +115,8 @@ describe('App', () => {
         await new Promise((r) => setTimeout(r));
         expect(screen.getByText('Settimana del 12 ott 2026')).toBeInTheDocument();
         expect(settimana()).toBeNull();
+        expect(screen.queryByRole('link', { name: 'Edizioni' })).toBeNull();
+        expect(screen.queryByRole('link', { name: 'Segui con RSS' })).toBeNull();
         expect(screen.queryByRole('alert')).toBeNull();
         expect(document.getElementById('stato')).not.toHaveTextContent('non ha ricevuto i dati');
       });

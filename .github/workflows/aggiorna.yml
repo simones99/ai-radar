@@ -163,13 +163,21 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v5
 
-  # L'errore nella sola creazione dell'edizione non ferma dati e sito, ma deve arrivare la mail di GitHub
+  # L'errore nella sola creazione dell'edizione non ferma dati e sito, ma deve arrivare la mail di GitHub.
+  # Aspetta la pubblicazione per dire com'è andata davvero: gli end-to-end o il caricamento possono aver fermato il sito lo stesso
   edizione-non-creata:
-    needs: aggiorna
+    needs: [aggiorna, pubblica]
     if: ${{ !cancelled() && needs.aggiorna.outputs.edizione == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - name: Manda il giro in rosso
+        env:
+          SITO: ${{ needs.pubblica.result }}
         run: |
-          echo "::error::L'edizione di questa settimana non è stata creata. Dati e sito sono andati avanti: per recuperarla, avvia il giro a mano con la casella accesa."
+          if [ "$SITO" = "success" ]; then
+            esito="Dati e sito sono andati avanti"
+          else
+            esito="Il sito non è uscito, e il motivo è negli altri job"
+          fi
+          echo "::error::L'edizione di questa settimana non è stata creata. $esito. Per recuperarla, avvia il giro a mano con la casella accesa."
           exit 1

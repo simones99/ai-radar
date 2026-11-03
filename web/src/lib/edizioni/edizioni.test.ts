@@ -285,6 +285,43 @@ describe('la pagina di un’edizione', () => {
     expect(html(crea())).not.toContain('simones99');
   });
 
+  describe('l’anteprima di condivisione, nell’HTML grezzo', () => {
+    const tag = (doc: Document, nome: string) => doc.querySelector(`meta[property="${nome}"], meta[name="${nome}"]`)?.getAttribute('content');
+
+    it('ha tutti i tag, con gli indirizzi assoluti che seguono l’indirizzo base', () => {
+      const doc = pagina(crea());
+      expect(tag(doc, 'og:title')).toBe('AI Radar, settimana del 12 ott 2026');
+      expect(tag(doc, 'og:url')).toBe(`${BASE}edizioni/2026-10-12/`);
+      expect(tag(doc, 'og:image')).toBe(`${BASE}edizioni/2026-10-12/anteprima.png`);
+      expect(tag(doc, 'og:type')).toBe('article');
+      expect(tag(doc, 'og:locale')).toBe('it_IT');
+      expect(tag(doc, 'og:site_name')).toBe('AI Radar');
+      expect(tag(doc, 'twitter:card')).toBe('summary_large_image');
+    });
+
+    it('la descrizione ha le due porte, Per te per prima', () => {
+      expect(tag(pagina(crea()), 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+    });
+
+    it('il testo alternativo dice cosa mostra l’immagine: data e due porte', () => {
+      expect(tag(pagina(crea()), 'og:image:alt')).toBe("AI Radar, settimana del 12 ott 2026. Per te: MCP entra tra le competenze da imparare ora; RAG esce. Per la tua organizzazione: 16% delle imprese italiane usa l'AI (UE: 20%).");
+    });
+
+    it('una porta senza dati, nell’immagine, dice «Dati non disponibili»: anche il testo alternativo', () => {
+      const doc = pagina(crea({ status: d.status, radar: d.radar }));
+      expect(tag(doc, 'og:image:alt')).toContain('Per la tua organizzazione: Dati non disponibili.');
+      expect(tag(doc, 'og:description')).toBe('MCP entra tra le competenze da imparare ora; RAG esce.');
+    });
+
+    it('un titolo con le virgolette non esce dall’attributo', () => {
+      const e = crea();
+      const doc = pagina({ ...e, porte: [{ ...e.porte[0], titolo: [{ t: 'A "b" <script>' }] }, e.porte[1]] });
+      expect(tag(doc, 'og:description')).toContain('A "b" <script>');
+      expect(tag(doc, 'og:image:alt')).toContain('A "b" <script>');
+      expect(doc.querySelector('script')).toBeNull();
+    });
+  });
+
   it('il titolo elide l’articolo davanti a 1, 8 e 11', () => {
     expect(pagina({ ...crea(), settimana: '2027-02-08' }).title).toBe('AI Radar, settimana dell’8 feb 2027');
   });
@@ -544,6 +581,20 @@ describe('l’archivio', () => {
     expect(doc.querySelector('link[rel="stylesheet"]')?.getAttribute('href')).toBe('../assets/index-abc123.css');
     expect(doc.querySelector('script')).toBeNull();
     expect([...doc.querySelectorAll('header a')][0].getAttribute('href')).toBe('../');
+  });
+
+  it('ha i suoi tag di anteprima, con l’immagine fissa della home e gli indirizzi assoluti', () => {
+    const doc = archivio(prima);
+    const tag = (nome: string) => doc.querySelector(`meta[property="${nome}"], meta[name="${nome}"]`)?.getAttribute('content');
+    expect(tag('og:title')).toBe('AI Radar, le edizioni');
+    expect(tag('og:description')).toBe(doc.querySelector('meta[name="description"]')?.getAttribute('content'));
+    expect(tag('og:url')).toBe(`${BASE}edizioni/`);
+    expect(tag('og:image')).toBe(`${BASE}anteprima.png`);
+    expect(tag('og:image:alt')).toMatch(/^Il marchio di AI Radar/);
+    expect(tag('og:type')).toBe('website');
+    expect(tag('og:locale')).toBe('it_IT');
+    expect(tag('og:site_name')).toBe('AI Radar');
+    expect(tag('twitter:card')).toBe('summary_large_image');
   });
 
   it('i testi esterni sono neutralizzati anche qui', () => {

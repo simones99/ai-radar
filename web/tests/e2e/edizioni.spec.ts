@@ -92,6 +92,14 @@ test.describe('senza JavaScript', () => {
     await expect(page.locator('body')).toHaveCSS('font-family', /Bricolage Grotesque Variable/);
   });
 
+  test('un crawler trova l’anteprima: la pagina ha la sua immagine, l’archivio quella della home', async ({ page }) => {
+    await page.goto(PRIMA);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://esempio.org/ai-radar/edizioni/2026-10-12/anteprima.png');
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute('content', /^AI Radar, settimana del 12 ott 2026\. Per te: MCP entra/);
+    await page.goto(ARCHIVIO);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://esempio.org/ai-radar/anteprima.png');
+  });
+
   test('l’archivio si legge, e porta all’edizione', async ({ page }) => {
     await page.goto(ARCHIVIO);
     const voci = page.getByRole('main').getByRole('listitem');

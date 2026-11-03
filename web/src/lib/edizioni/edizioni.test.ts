@@ -194,9 +194,10 @@ describe('fonte e licenza su ogni riga', () => {
   const fonti = (e: Edizione, id: string) => card(e, id).fonti;
   const nomi = (xs: { nome: string }[]) => xs.map((f) => f.nome);
 
-  it('ogni card e ogni porta con dati ha almeno una fonte, e ogni fonte ha una licenza', () => {
+  it('ogni card e ogni porta con dati ha almeno una fonte, e ogni fonte ha una licenza; Notizie no, perché ogni voce ha accanto la sua', () => {
     const e = crea();
-    for (const riga of [...e.card, ...e.porte]) {
+    expect(fonti(e, 'notizie')).toEqual([]);
+    for (const riga of [...e.card.filter((c) => c.id !== 'notizie'), ...e.porte]) {
       expect(riga.fonti.length, riga.nome).toBeGreaterThan(0);
       for (const f of riga.fonti) expect(f.licenza, `${riga.nome}: ${f.nome}`).not.toBe('');
     }

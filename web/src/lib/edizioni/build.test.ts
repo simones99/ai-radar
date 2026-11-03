@@ -80,6 +80,14 @@ describe('il sito costruito', () => {
     expect(scrivi).toThrow(/2026-10-12.*senza la sua immagine.*--immagine 2026-10-12/);
   });
 
+  it('home, archivio e pagine hanno la stessa icona, e nella home non resta un segnaposto', () => {
+    const icona = (doc: Document) => doc.querySelector('link[rel="icon"]')?.getAttribute('href');
+    const home = new DOMParser().parseFromString(readFileSync(join(conEdizioni(), 'index.html'), 'utf-8'), 'text/html');
+    expect(icona(home)).toMatch(/^data:image\/svg\+xml,/);
+    expect(icona(pagina('edizioni', 'index.html'))).toBe(icona(home));
+    expect(icona(pagina('edizioni', '2026-10-12', 'index.html'))).toBe(icona(home));
+  });
+
   it('il foglio di stile delle pagine è quello della home, e contiene i token', () => {
     const home = new DOMParser().parseFromString(readFileSync(join(conEdizioni(), 'index.html'), 'utf-8'), 'text/html');
     const dallaHome = home.querySelector('link[rel="stylesheet"]')?.getAttribute('href') as string;

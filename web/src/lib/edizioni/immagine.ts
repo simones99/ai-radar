@@ -1,7 +1,7 @@
 // L'immagine dell'anteprima di un'edizione, fotografata con Playwright. La carica solo il comando: la build la copia soltanto, e non arriva mai fin qui.
 import { chromium, type Page } from '@playwright/test';
 import { dayWith } from '../text/format';
-import type { Edizione } from './tipi';
+import { portaConDati, type Edizione } from './tipi';
 
 const MODELLO = new URL('../../../scripts/immagine-edizione.html', import.meta.url).href;
 // il corpo delle due porte, in pixel: il più grande a cui entrano tutte e due. A 30 si legge ancora nei 400 px di un elenco di post
@@ -18,7 +18,7 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
   await page.goto(MODELLO);
   const contenuto = {
     data: `Settimana ${dayWith('del', e.settimana)}`,
-    porte: e.porte.map((p) => ({ nome: p.nome, parti: p.titolo.length ? p.titolo : [{ t: p.meta }] })),
+    porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }] })),
     da: PIU_GRANDE,
     a: PIU_PICCOLO,
   };

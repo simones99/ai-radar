@@ -2,8 +2,9 @@
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
 import { INDICE_EDIZIONI } from '../data/load';
 import { toHash, type TileId } from '../router';
-import { day, dayWith } from '../text/format';
-import { VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
+import { day, dayWith, isDay } from '../text/format';
+import { ICONA } from '../icona';
+import { eCardNotizie, portaConDati, testoPorta, VERSIONE, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
 
 export interface OpzioniFilePubblici {
   /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
@@ -41,7 +42,6 @@ const linkEsterno = (url: string | null, testo: string): string => {
 
 /** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
 const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.card as TileId, d.elemento, d.params)}`);
-const testoPorta = (p: PortaFissa): string => p.titolo.map((x) => x.t).join('');
 const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
 
 function rigaFonti(fonti: Fonte[]): string {
@@ -52,12 +52,11 @@ function rigaFonti(fonti: Fonte[]): string {
 
 function porta(p: PortaFissa, radice: string): string {
   const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
-  const notizia = p.titolo.length && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
-  const conDati = p.titolo.length > 0;
+  const notizia = portaConDati(p) && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
   return `<article class="ed-porta">
 <h2>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
 ${notizia}
-${conDati && !p.cambiata ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
+${portaConDati(p) && !p.cambiata ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
 ${p.nota ? `<p class="ed-nota">${esc(p.nota)}</p>` : ''}
 <p class="ed-fonte">${esc(p.meta)}</p>
 ${rigaFonti(p.fonti)}
@@ -74,7 +73,7 @@ ${rigaFonti(c.fonti)}
 }
 
 function frasi(e: Edizione, radice: string): string {
-  const card = e.card.filter((c) => c.id !== 'notizie'); // il conteggio delle notizie apre la loro sezione
+  const card = e.card.filter((c) => !eCardNotizie(c));
   const conDati = card.filter((c) => c.frase != null);
   const righe = conDati.filter((c) => c.cambiata);
   const invariate = conDati.filter((c) => !c.cambiata);
@@ -90,7 +89,7 @@ ${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDat
 
 function notizie(e: Edizione, radice: string): string {
   const n = e.notizie;
-  const card = e.card.find((c) => c.id === 'notizie');
+  const card = e.card.find(eCardNotizie);
   // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
   const cifra = card?.cifra && card.cifra !== '0' ? `<strong class="ed-cifra">${esc(card.cifra)}</strong> ` : '';
   const conteggio = card?.frase ? `${cifra}${esc(card.frase)}` : 'Dati non disponibili.';
@@ -122,11 +121,9 @@ function controlla(e: Edizione): void {
   if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
   if (Number.isNaN(Date.parse(e.raccolti))) throw new Error(`Edizione ${e.settimana}: la data di raccolta non è valida, «${e.raccolti}».`);
   for (const c of e.correzioni) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(c.data)) throw new Error(`Edizione ${e.settimana}: una correzione ha una data non valida, «${c.data}»: serve AAAA-MM-GG.`);
+    if (!isDay(c.data)) throw new Error(`Edizione ${e.settimana}: una correzione ha una data non valida, «${c.data}»: serve AAAA-MM-GG.`);
   }
 }
-
-const ICONA = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23121211' stroke-width='4'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%230068d6'/%3E%3C/svg%3E";
 
 /** Il nome dell'immagine di un'edizione nel sito, nella cartella della sua pagina. */
 export const IMMAGINE = 'anteprima.png';
@@ -195,7 +192,7 @@ ${notizie(e, radice)}
 ${fontiNonAggiornate(e)}`;
 }
 
-const descrizioneEdizione = (e: Edizione): string => e.porte.filter((p) => p.titolo.length).map((p) => `${testoPorta(p)}.`).join(' ');
+const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${testoPorta(p)}.`).join(' ');
 
 function paginaEdizione(e: Edizione, opzioni: OpzioniFilePubblici): string {
   const radice = '../../';
@@ -210,7 +207,7 @@ function paginaEdizione(e: Edizione, opzioni: OpzioniFilePubblici): string {
     tipo: 'article',
     immagine: {
       percorso: `edizioni/${e.settimana}/${IMMAGINE}`,
-      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${p.titolo.length ? testoPorta(p) : p.meta}.`).join(' ')}`,
+      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${portaConDati(p) ? testoPorta(p) : p.meta}.`).join(' ')}`,
     },
   }, opzioni);
 }
@@ -221,7 +218,7 @@ const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente:
 function archivio(edizioni: Edizione[], opzioni: OpzioniFilePubblici): string {
   const voci = edizioni.map((e) => `<li>
 <h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
-${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(p.titolo.length ? testoPorta(p) : p.meta)}</p>`).join('\n')}
+${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(portaConDati(p) ? testoPorta(p) : p.meta)}</p>`).join('\n')}
 </li>`).join('\n');
   return pagina({
     titolo: TITOLO_ARCHIVIO,

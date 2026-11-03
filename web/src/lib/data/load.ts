@@ -1,4 +1,5 @@
 import type { Dataset } from './types';
+import { isDay } from '../text/format';
 
 export const FILES = [
   'status', 'radar', 'owid', 'ai_act', 'rapporti', 'news', 'epoch', 'huggingface', 'github', 'arxiv',
@@ -15,7 +16,7 @@ export async function caricaUltimaEdizione(fetchFn: typeof fetch = fetch): Promi
     const r = await fetchFn(INDICE_EDIZIONI, { cache: 'no-cache' });
     if (!r.ok) return null;
     const { ultima } = await r.json();
-    return typeof ultima === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(ultima) ? ultima : null;
+    return typeof ultima === 'string' && isDay(ultima) ? ultima : null;
   } catch {
     return null;
   }

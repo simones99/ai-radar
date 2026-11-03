@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig, runnerImport } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { imagetools } from 'vite-imagetools';
+import { ICONA } from './src/lib/icona.ts';
 import { indirizzoBase } from './src/lib/indirizzoBase.ts';
 
 export default defineConfig(({ mode }) => ({
@@ -11,10 +12,10 @@ export default defineConfig(({ mode }) => ({
     svelte(),
     imagetools(),
     {
-      // gli indirizzi assoluti dell'anteprima in index.html. Prima degli altri passi sull'HTML, che altrimenti
-      // prenderebbero l'immagine di og:image per un file da cercare nel progetto
+      // gli indirizzi assoluti dell'anteprima in index.html, e l'icona che ha anche chi non passa da lì. Prima degli altri passi
+      // sull'HTML, che altrimenti prenderebbero l'immagine di og:image per un file da cercare nel progetto
       name: 'anteprima-home',
-      transformIndexHtml: { order: 'pre', handler: (html) => html.replaceAll('%INDIRIZZO_BASE%', indirizzoBase(process.env.AI_RADAR_BASE_URL)) },
+      transformIndexHtml: { order: 'pre', handler: (html) => html.replaceAll('%INDIRIZZO_BASE%', indirizzoBase(process.env.AI_RADAR_BASE_URL)).replaceAll('%ICONA%', ICONA) },
     },
     {
       // i file che nascono dalle edizioni, nella stessa build: gli end-to-end la rilanciano e svuotano la cartella, e il workflow pubblica quella.

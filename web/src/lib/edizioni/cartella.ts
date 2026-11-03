@@ -35,8 +35,9 @@ function scrivi(file: string, contenuto: string | Uint8Array): void {
   renameSync(`${file}.tmp`, file);
 }
 
+const fileFisso = (dati: string, settimana: string): string => join(dati, 'edizioni', `${settimana}.json`);
 /** L'immagine di un'edizione, accanto al suo file fisso. */
-const fileImmagine = (dati: string, settimana: string): string => join(dati, 'edizioni', `${settimana}.png`);
+const fileImmagine =(dati: string, settimana: string): string => join(dati, 'edizioni', `${settimana}.png`);
 
 /** Scrive nella cartella di uscita tutti i file che nascono dalle edizioni. Un file nuovo del sito basta aggiungerlo a filePubblici. */
 export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
@@ -56,7 +57,7 @@ export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome }: { 
 
 /** Rifà l'immagine di un'edizione già uscita, dopo una correzione: non tocca il file fisso né le altre edizioni. */
 export async function rifaiImmagine({ settimana, dati, fotografa }: { settimana: string; dati: string; fotografa: Giro['fotografa'] }): Promise<string> {
-  const fissa = join(dati, 'edizioni', `${settimana}.json`);
+  const fissa = fileFisso(dati, settimana);
   if (!existsSync(fissa)) throw new Error(`Immagine non rifatta: non c'è un'edizione del ${settimana}.`);
   scrivi(fileImmagine(dati, settimana), await fotografa(JSON.parse(readFileSync(fissa, 'utf-8')) as Edizione));
   return `Immagine dell'edizione del ${settimana} rifatta.`;
@@ -78,8 +79,7 @@ export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro):
   const status = join(dati, 'status.json');
   const aggiornato: string | undefined = existsSync(status) ? JSON.parse(readFileSync(status, 'utf-8')).aggiornato : undefined;
   const settimana = aggiornato ? lunediDi(aggiornato) : null;
-  const fissa = (s: string) => join(dati, 'edizioni', `${s}.json`);
-  const esiste = !!settimana && existsSync(fissa(settimana));
+  const esiste = !!settimana && existsSync(fileFisso(dati, settimana));
   if (!deveCreare({ evento, casella, esiste })) {
     return { messaggio: esiste ? `Nessuna edizione nuova: quella del ${settimana} esiste già.` : `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.` };
   }
@@ -94,7 +94,7 @@ export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro):
   const immagine = fileImmagine(dati, settimana);
   scrivi(immagine, png);
   try {
-    scrivi(fissa(settimana), `${JSON.stringify(edizione, null, 2)}\n`);
+    scrivi(fileFisso(dati, settimana), `${JSON.stringify(edizione, null, 2)}\n`);
   } catch (e) {
     rmSync(immagine, { force: true });
     throw e;

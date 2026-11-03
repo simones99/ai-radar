@@ -47,6 +47,12 @@ export interface CardFissa {
   cambiata: boolean;
 }
 
+/** Una porta senza dati ha il titolo vuoto. */
+export const portaConDati = (p: Pick<PortaFissa, 'titolo'>): boolean => p.titolo.length > 0;
+export const testoPorta = (p: Pick<PortaFissa, 'titolo'>): string => p.titolo.map((x) => x.t).join('');
+/** La card Notizie non è una riga come le altre: la sua frase contiene la data e cambierebbe sempre, e il suo conteggio apre la sezione delle notizie. */
+export const eCardNotizie = (c: Pick<CardFissa, 'id'>): boolean => c.id === 'notizie';
+
 export interface Edizione {
   versione: number;
   /** Il lunedì della settimana, AAAA-MM-GG: è anche la chiave del file e dell'indirizzo. */

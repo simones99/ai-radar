@@ -33,6 +33,8 @@ export const monthYear = (ymStr: string): string => `${monthName(ymStr)} ${ymStr
 
 const pad = (n: number) => String(n).padStart(2, '0');
 export const isoDay = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+/** Una data scritta AAAA-MM-GG, e nient'altro. */
+export const isDay = (s: string): boolean => /^\d{4}-\d{2}-\d{2}$/.test(s);
 export const ym = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
 /** Il lunedì della settimana di una data. */
 export function lunediDi(iso: string): string {

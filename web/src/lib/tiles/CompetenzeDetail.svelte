@@ -8,7 +8,7 @@
   import type { Quadrant } from '../data/types';
   import { apri, toHash } from '../router';
   import { mercato as sceltaMercato, ruolo as sceltaRuolo } from '../scelta.svelte';
-  import { conAnnunci, monthName, per10k, signedPct } from '../text/format';
+  import { conAnnunci, monthName, per10k, quantiAnnunci, signedPct } from '../text/format';
   import { headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
@@ -113,7 +113,8 @@
                 <td role="cell" class="desc">{c.descrizione}</td>
                 <td role="cell" data-label="Quadrante">{#if italia && c.domanda == null}dato non disponibile{:else}{c.quadrante ? quadranti[c.quadrante] : 'dati insufficienti'}{c.incerto ? ' · incerto' : ''}{/if}</td>
                 <td role="cell" class="num" data-label="Slancio">{c.slancio != null ? signedPct(c.slancio) : '—'}</td>
-                <td role="cell" class="num" data-label={colAnnunci}>{c.domanda != null ? annunciDi(c, c.domanda) : '—'}</td>
+                <!-- il conteggio va a capo, così la tabella sta nella scheda; la virgola nascosta tiene le due parti in una frase per chi usa un lettore di schermo. Lo span è uno solo perché, impilata, la cella è una griglia -->
+                <td role="cell" class="num" data-label={colAnnunci}>{#if c.domanda == null}—{:else if italia && c.annunci != null}<span>{conAnnunci(c.domanda, null)}<span class="sr">{', '}</span><br />{quantiAnnunci(c.annunci)}</span>{:else}{annunciDi(c, c.domanda)}{/if}</td>
               </tr>
             {/each}
           </tbody>
@@ -144,7 +145,7 @@
   th, td { text-align: left; padding: var(--s1); border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: top; }
   thead th { font-size: 12px; line-height: 16px; color: var(--fg-3); font-weight: 500; }
   tbody th { font-weight: 500; }
-  td.desc { white-space: normal; min-width: 24ch; color: var(--fg-2); }
+  td.desc { white-space: normal; min-width: 16ch; color: var(--fg-2); } /* il minimo conta solo quando manca spazio: con «Italia» e l'elenco accanto, a 1200px la tabella sta nella scheda */
   td.num { text-align: right; }
   /* sul telefono ogni competenza si impila: il nome, cosa è, e sotto le tre misure con il loro nome */
   .tw { container-type: inline-size; }

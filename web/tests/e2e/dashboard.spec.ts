@@ -625,6 +625,34 @@ for (const { nome, hash, evidenza, altra } of [
   });
 }
 
+for (const width of [1200, 1280]) {
+  test(`tabella delle competenze con «Italia» a ${width}px: il numero di annunci va a capo e la tabella non scorre di lato`, async ({ page }) => {
+    const radar = FIXTURE.radar!;
+    const [prima, ...altre] = radar.competenze;
+    await page.route('**/data/radar.json', (route) => route.fulfill({
+      json: { ...radar, competenze: [{ ...prima, nome: 'LLMOps e messa in produzione', quadrante_it: 'consolida', incerto: true, domanda_it: 38.4, annunci_it: 529 }, ...altre] },
+    }));
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/#competenze?mercato=italia');
+    const tabella = page.getByRole('region', { name: 'Tabella delle competenze' });
+    const cella = tabella.getByRole('row', { name: /LLMOps e messa in produzione/ }).getByRole('cell').last();
+    await expect(cella).toHaveText('38 ogni 10mila, 529 annunci');
+    expect(await tabella.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+    const alto = (testo: string) => cella.evaluate((el, cercato) => {
+      const nodi = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      while (nodi.nextNode()) {
+        if (nodi.currentNode.textContent!.includes(cercato)) {
+          const tratto = document.createRange();
+          tratto.selectNodeContents(nodi.currentNode);
+          return tratto.getBoundingClientRect().top;
+        }
+      }
+      throw new Error(`testo non trovato: ${cercato}`);
+    }, testo);
+    expect(await alto('529 annunci')).toBeGreaterThan(await alto('38 ogni 10mila'));
+  });
+}
+
 for (const colorScheme of ['light', 'dark'] as const) {
   test(`accessibilità nella pagina di una competenza con «Italia», tema ${colorScheme}: nessuna violazione grave`, async ({ page }) => {
     await page.emulateMedia({ colorScheme });

@@ -10,6 +10,8 @@ export interface FonteNonAggiornata { id: string; nome: string; ultimo_successo:
 
 export interface VoceFissa { titolo: string; link: string; data: string; fonte: string }
 export interface NotizieFisse {
+  // totale, periodo e fonti restano come dati della settimana, che dopo non si possono più ricavare. Le pagine non li leggono:
+  // il conteggio mostrato è nella card Notizie, ed è lì che si corregge
   /** Le notizie della settimana, non solo quelle scelte. */
   totale: number;
   periodo: string;

@@ -16,6 +16,14 @@ _Avoid_: copertina, card in evidenza
 Il riassunto fisso di una settimana, con le due porte, le frasi cambiate e le notizie. Esce il lunedì, ha un suo link e dopo non cambia, salvo correzioni dichiarate.
 _Avoid_: numero, newsletter, digest, bollettino
 
+**Feed**:
+Il feed RSS del sito, con una voce per edizione a testo intero. Le fonti da cui arrivano le notizie sono i *feed delle notizie*.
+_Avoid_: newsletter, canale
+
+**Correzione**:
+La modifica dichiarata di un'edizione già uscita, con la data e cosa è cambiato. Si fa a mano, e la voce del feed non torna a essere nuova.
+_Avoid_: errata, rettifica, aggiornamento
+
 **Competenza**:
 Una delle capacità sull'AI che il radar segue, misurata su ricerca, open source e lavoro.
 _Avoid_: skill, tema

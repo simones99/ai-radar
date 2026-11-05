@@ -105,6 +105,14 @@ describe('una voce del feed', () => {
     for (const a of doc.querySelectorAll('a')) expect(a.getAttribute('href')).toMatch(/^https?:\/\//);
   });
 
+  it('il confronto con la settimana prima porta all’edizione con un link assoluto, e la riga cambiata dice com’era', () => {
+    const conAltraCifra = { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, cifra: '×9,9' } : c)) };
+    const doc = testoIntero(creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, conAltraCifra) as Edizione);
+    expect([...doc.querySelectorAll('a')].find((a) => a.textContent === 'settimana del 12 ott 2026')?.getAttribute('href')).toBe(`${BASE}edizioni/2026-10-12/`);
+    expect(doc.body.textContent).toContain("Era ×9,9 all'anno.");
+    expect(doc.querySelector('nav')).toBeNull(); // i link tra le edizioni stanno nella pagina: la voce è già in un elenco
+  });
+
   it('non ripete il titolo, che il lettore mostra già, e non parla di una pagina', () => {
     const doc = testoIntero();
     expect(doc.querySelector('h1')).toBeNull();

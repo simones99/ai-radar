@@ -135,6 +135,43 @@ describe('il confronto con l’edizione precedente', () => {
     expect(card(e, 'notizie').frase).not.toBe(card(crea(), 'notizie').frase);
     expect(card(e, 'notizie').cambiata).toBe(false);
   });
+
+  describe('com’era la settimana prima, salvato nel file fisso', () => {
+    /** L'edizione precedente con una riga scritta a mano, per fissare i valori di prima. */
+    const conRiga = (id: string, riga: Partial<Edizione['card'][number]>) => {
+      const prima = crea();
+      return { ...prima, card: prima.card.map((c) => (c.id === id ? { ...c, ...riga } : c)) };
+    };
+
+    it('la prima edizione non ha niente con cui confrontarsi, e una card uguale non dice nulla', () => {
+      expect(crea().card.map((c) => c.era)).toEqual(crea().card.map(() => null));
+      expect(dopo(settimanaDopo, crea()).card.map((c) => c.era)).toEqual(crea().card.map(() => null));
+    });
+    it('con la cifra diversa dà la cifra di prima, con la sua unità', () => {
+      expect(card(dopo(settimanaDopo, conRiga('modelli', { cifra: '×9,9', unita: 'all’anno' })), 'modelli').era).toBe('Era ×9,9 all’anno.');
+      expect(card(dopo(settimanaDopo, conRiga('business', { cifra: '12', unita: '%' })), 'business').era).toBe('Era 12%.');
+    });
+    it('con la stessa cifra e la frase diversa dà la frase di prima: è quella che è cambiata', () => {
+      expect(card(dopo(settimanaDopo, conRiga('modelli', { frase: 'Un’altra frase.' })), 'modelli').era).toBe('La settimana scorsa: Un’altra frase.');
+    });
+    it('Open source dà anche la frase se è cambiato il tipo: 26 su 100 di un altro tipo non è lo stesso numero', () => {
+      const altroTipo = conRiga('open', { cifra: '26', frase: 'Modelli di tendenza su Hugging Face di tipo «generazione di testo».' });
+      expect(card(dopo(settimanaDopo, altroTipo), 'open').era).toBe('Era 26 su 100: Modelli di tendenza su Hugging Face di tipo «generazione di testo».');
+      const stessoTipo = conRiga('open', { cifra: '26' });
+      expect(card(dopo(settimanaDopo, stessoTipo), 'open').era).toBe('Era 26 su 100.');
+    });
+    it('Norme dà la frase: il numero di prima è un conto alla rovescia, non un confronto', () => {
+      expect(card(dopo(settimanaDopo, conRiga('norme', { cifra: '12', frase: 'Alla scadenza di prima.' })), 'norme').era).toBe('La settimana scorsa: Alla scadenza di prima.');
+    });
+    it('Rapporti dà la frase: il mese di prima non è una misura', () => {
+      expect(card(dopo(settimanaDopo, conRiga('rapporti', { cifra: 'Marzo', frase: 'Prossimo rapporto previsto: Un altro.' })), 'rapporti').era).toBe('La settimana scorsa: Prossimo rapporto previsto: Un altro.');
+    });
+    it('una card che la settimana prima non aveva dati non dice com’era', () => {
+      const senza = dopo(settimanaDopo, conRiga('modelli', { cifra: null, unita: null, frase: null }));
+      expect(card(senza, 'modelli').cambiata).toBe(true);
+      expect(card(senza, 'modelli').era).toBeNull();
+    });
+  });
 });
 
 describe('le notizie scelte', () => {
@@ -273,7 +310,7 @@ describe('la pagina di un’edizione', () => {
   const html = (e: Edizione) => file(e)[`edizioni/${e.settimana}/index.html`];
   const pagina = (e: Edizione) => new DOMParser().parseFromString(html(e), 'text/html');
   const titoli = (doc: Document) => [...doc.querySelectorAll('h2')].map((h) => h.textContent);
-  const link = (doc: Document, nome: string | RegExp) => [...doc.querySelectorAll('a')].filter((a) => (typeof nome === 'string' ? a.textContent === nome : nome.test(a.textContent ?? '')));
+  const link = (doc: ParentNode, nome: string | RegExp) => [...doc.querySelectorAll('a')].filter((a) => (typeof nome === 'string' ? a.textContent === nome : nome.test(a.textContent ?? '')));
   /** La sezione che comincia con questo titolo. */
   const sezione = (doc: Document, titolo: string) => [...doc.querySelectorAll('section')].find((s) => s.querySelector('h2')?.textContent === titolo);
   const settimanaDopo: Dataset = { ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } };
@@ -402,6 +439,34 @@ describe('la pagina di un’edizione', () => {
       expect(s.textContent).toContain('Quanto cresce il calcolo');
       expect(s.textContent).not.toContain("Imprese italiane che usano l'AI");
       expect(titoli(doc)).not.toContain('La situazione');
+    });
+    it('una riga cambiata dice com’era', () => {
+      const doc = pagina(crea(settimanaDopo, { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, cifra: '×9,9' } : c)) }));
+      const riga = [...sezione(doc, 'Cambiato dalla settimana scorsa')!.querySelectorAll('li')].find((li) => li.textContent?.includes('Modelli e ricerca'))!;
+      expect([...riga.querySelectorAll('p')].map((p) => p.textContent)).toContain("Era ×9,9 all'anno.");
+    });
+    it('dice con quale settimana si confronta, con il link a quell’edizione', () => {
+      const s = sezione(pagina(crea(settimanaDopo, conModelli)), 'Cambiato dalla settimana scorsa')!;
+      expect(s.textContent).toContain('Rispetto alla settimana del 12 ott 2026.');
+      expect(link(s, 'settimana del 12 ott 2026')[0].getAttribute('href')).toBe('../../edizioni/2026-10-12/');
+    });
+    it('la prima edizione non si confronta con nessuna', () => {
+      expect(pagina(crea()).body.textContent).not.toContain('Rispetto alla settimana');
+    });
+    it('in fondo porta all’edizione prima e a quella dopo, quando ci sono', () => {
+      const seconda = crea(settimanaDopo, prima);
+      const terza = crea({ ...d, status: { ...d.status!, aggiornato: '2026-10-29T08:00:00+00:00' } }, seconda);
+      const tutte = file(prima, terza, seconda);
+      const voci = (settimana: string) => [...new DOMParser().parseFromString(tutte[`edizioni/${settimana}/index.html`], 'text/html').querySelectorAll('nav[aria-label="Altre edizioni"] a')].map((a) => [a.textContent, a.getAttribute('href'), a.getAttribute('rel')]);
+      expect(voci('2026-10-19')).toEqual([
+        ['Edizione precedente: settimana del 12 ott 2026', '../2026-10-12/', 'prev'],
+        ['Edizione successiva: settimana del 26 ott 2026', '../2026-10-26/', 'next'],
+      ]);
+      expect(voci('2026-10-12')).toEqual([['Edizione successiva: settimana del 19 ott 2026', '../2026-10-19/', 'next']]);
+      expect(voci('2026-10-26')).toEqual([['Edizione precedente: settimana del 19 ott 2026', '../2026-10-19/', 'prev']]);
+    });
+    it('un’edizione sola non ha quel blocco', () => {
+      expect(pagina(crea()).querySelector('nav[aria-label="Altre edizioni"]')).toBeNull();
     });
     it('nomina le card invariate in una riga, ciascuna con il suo link, e Notizie non è tra loro', () => {
       const doc = pagina(crea(settimanaDopo, conModelli));

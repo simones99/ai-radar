@@ -3,7 +3,7 @@
 import { ICONA } from '../icona';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
-import { eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
+import { cifraConUnita, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
 
 export interface OpzioniPagine {
   /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
@@ -61,10 +61,10 @@ ${rigaFonti(p.fonti)}
 }
 
 function rigaCard(c: CardFissa, radice: string): string {
-  const unita = c.unita ? `${c.unita === '%' ? '' : ' '}${esc(c.unita)}` : '';
   return `<li>
 <h3><a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a></h3>
-<p><strong class="ed-cifra">${esc(c.cifra ?? '')}${unita}</strong> ${esc(c.frase ?? '')}</p>
+<p><strong class="ed-cifra">${esc(cifraConUnita(c))}</strong> ${esc(c.frase ?? '')}</p>
+${c.era ? `<p class="ed-nota">${esc(c.era)}</p>` : ''}
 ${rigaFonti(c.fonti)}
 </li>`;
 }
@@ -78,6 +78,7 @@ function frasi(e: Edizione, radice: string): string {
   const elenco = (xs: CardFissa[]) => xs.map((c) => `<a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a>`).join(', ');
   return `<section>
 <h2>${e.precedente ? 'Cambiato dalla settimana scorsa' : 'La situazione'}</h2>
+${e.precedente ? `<p class="ed-nota">Rispetto alla <a href="${esc(`${radice}edizioni/${e.precedente}/`)}">settimana ${esc(dayWith('del', e.precedente))}</a>.</p>` : ''}
 ${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : '<p>Nessuna frase è cambiata dalla settimana scorsa.</p>'}
 ${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
 ${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}
@@ -183,7 +184,14 @@ ${fontiNonAggiornate(e)}`;
 
 export const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${testoPorta(p)}.`).join(' ');
 
-export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine): string {
+/** Le edizioni accanto a questa nell'archivio. Solo nella pagina: nel lettore di feed le voci sono già in fila, e questi link cambiano quando ne esce una nuova. */
+function altreEdizioni(precedente?: Edizione, successiva?: Edizione): string {
+  const voce = (rel: 'prev' | 'next', nome: string, altra: Edizione) => `<a rel="${rel}" href="../${esc(altra.settimana)}/">Edizione ${nome}: settimana ${esc(dayWith('del', altra.settimana))}</a>`;
+  const voci = [precedente && voce('prev', 'precedente', precedente), successiva && voce('next', 'successiva', successiva)].filter(Boolean);
+  return voci.length ? `<nav class="ed-altre" aria-label="Altre edizioni">\n${voci.join('\n')}\n</nav>` : '';
+}
+
+export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine, { precedente, successiva }: { precedente?: Edizione; successiva?: Edizione } = {}): string {
   const radice = '../../';
   return pagina({
     titolo: titoloPagina(e),
@@ -192,7 +200,7 @@ export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine): string {
     radice,
     nav: `<a href="../">Edizioni</a><a href="${radice}">Dati di oggi</a>`,
     corpo: corpoEdizione(e, radice, `<p class="ed-fonte">Edizione</p>
-<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`),
+<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`) + altreEdizioni(precedente, successiva),
     tipo: 'article',
     immagine: {
       percorso: `edizioni/${e.settimana}/${IMMAGINE}`,

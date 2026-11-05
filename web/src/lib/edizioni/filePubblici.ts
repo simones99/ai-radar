@@ -28,7 +28,7 @@ export function filePubblici(edizioni: Edizione[], opzioni: OpzioniFilePubblici)
   const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));
   return {
     'edizioni/index.html': archivio(recenti, opzioni),
-    ...Object.fromEntries(recenti.map((e) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni)])),
+    ...Object.fromEntries(recenti.map((e, i) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni, { precedente: recenti[i + 1], successiva: recenti[i - 1] })])),
     'feed.xml': feed(recenti, opzioni.indirizzoBase),
     [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
     // nell'HTML e non dall'app: un lettore di feed non esegue JavaScript. Senza edizioni la home resta quella uscita dalla build

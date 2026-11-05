@@ -105,6 +105,7 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-voci .ed-fonte { display: block; }
 .ed-cifra { color: var(--accent); font-weight: 700; }
 .ed-archivio p strong { font-weight: 600; }
+.ed-altre { display: grid; justify-items: start; gap: var(--s1); padding-top: var(--s3); border-top: 1px solid var(--line-2); }
 
 /* i menu a tendina, una pillola come le scelte: il segno di apertura disegnato con due sfumature nel colore del testo, in tutti e due i temi.
    16px perché il telefono non ingrandisca la pagina al tocco */

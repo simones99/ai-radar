@@ -54,6 +54,8 @@ export const portaConDati = (p: Pick<PortaFissa, 'titolo'>): boolean => p.titolo
 export const testoPorta = (p: Pick<PortaFissa, 'titolo'>): string => p.titolo.map((x) => x.t).join('');
 /** La cifra con la sua unità: «5 su 16», ma «16%». */
 export const cifraConUnita = (c: Pick<CardFissa, 'cifra' | 'unita'>): string => `${c.cifra ?? ''}${c.unita ? `${c.unita === '%' ? '' : ' '}${c.unita}` : ''}`;
+/** Competenze ha il numero già nella frase: come in home (senzaCifra in tiles/registry), la cifra da sola lo ripeterebbe. */
+export const cifraNellaFrase = (c: Pick<CardFissa, 'id'>): boolean => c.id === 'competenze';
 /** La card Notizie non è una riga come le altre: la sua frase contiene la data e cambierebbe sempre, e il suo conteggio apre la sezione delle notizie. */
 export const eCardNotizie = (c: Pick<CardFissa, 'id'>): boolean => c.id === 'notizie';
 

@@ -93,9 +93,9 @@ describe('una voce del feed', () => {
   });
 
   it('il conteggio delle notizie è la frase salvata nel file fisso: una correzione a quella frase si vede anche qui', () => {
-    expect(testoIntero().body.textContent).toContain('2 Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.');
+    expect(testoIntero().body.textContent).toMatch(/2\s+Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti\./);
     const corretta = { ...prima, card: prima.card.map((c) => (c.id === 'notizie' ? { ...c, cifra: '3', frase: 'Notizie corrette a mano, da 3 fonti.' } : c)) };
-    expect(testoIntero(corretta).body.textContent).toContain('3 Notizie corrette a mano, da 3 fonti.');
+    expect(testoIntero(corretta).body.textContent).toMatch(/3\s+Notizie corrette a mano, da 3 fonti\./);
   });
 
   it('i link alle card sono assoluti e seguono l’indirizzo base: nel lettore non c’è una pagina da cui partire', () => {

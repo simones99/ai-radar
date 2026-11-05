@@ -3,7 +3,7 @@
 import { ICONA } from '../icona';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
-import { cifraConUnita, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
+import { cifraConUnita, cifraNellaFrase, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
 
 export interface OpzioniPagine {
   /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
@@ -66,10 +66,16 @@ ${rigaFonti(p.fonti)}
 </article>`;
 }
 
+/** La cifra in un paragrafo suo, grande con l'unità piccola come in home: messa nella frase, si leggeva «47 Notizie nei 7 giorni». */
+function cifraGrande(c: Pick<CardFissa, 'cifra' | 'unita'>): string {
+  return c.cifra ? `<p class="ed-cifra"><strong>${esc(c.cifra)}</strong>${esc(cifraConUnita(c).slice(c.cifra.length))}</p>` : '';
+}
+
 function rigaCard(c: CardFissa, radice: string): string {
   return `<li>
 <h3><a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a></h3>
-<p><strong class="ed-cifra">${esc(cifraConUnita(c))}</strong> ${esc(c.frase ?? '')}</p>
+${cifraNellaFrase(c) ? '' : cifraGrande(c)}
+<p>${esc(c.frase ?? '')}</p>
 ${c.era ? `<p class="ed-nota">${esc(c.era)}</p>` : ''}
 ${rigaFonti(c.fonti)}
 </li>`;
@@ -98,15 +104,14 @@ function notizie(e: Edizione, radice: string): string {
   const n = e.notizie;
   const card = e.card.find(eCardNotizie);
   // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
-  const cifra = card?.cifra && card.cifra !== '0' ? `<strong class="ed-cifra">${esc(card.cifra)}</strong> ` : '';
-  const conteggio = card?.frase ? `${cifra}${esc(card.frase)}` : 'Dati non disponibili.';
+  const conteggio = card?.frase ? `${card.cifra && card.cifra !== '0' ? cifraGrande({ cifra: card.cifra, unita: null }) : ''}\n<p>${esc(card.frase)}</p>` : '<p>Dati non disponibili.</p>';
   const temi = n.temi.map((t) => `<h3>${esc(t.nome)}</h3>
 <ul class="ed-voci">
 ${t.voci.map((v) => `<li>${linkEsterno(v.link, v.titolo)} <span class="ed-fonte">${esc(v.fonte)} · ${esc(day(v.data))}</span></li>`).join('\n')}
 </ul>`).join('\n');
   return `<section>
 <h2>Notizie</h2>
-<p>${conteggio}</p>
+${conteggio}
 ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono solo titolo, data e link all'articolo originale, nella sua lingua.</p>\n${temi}` : ''}
 <p><a href="${esc(`${radice}${toHash('notizie')}`)}">Le altre notizie, nella card Notizie</a></p>
 </section>`;

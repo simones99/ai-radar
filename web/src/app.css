@@ -104,7 +104,9 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-righe, .ed-voci, .ed-archivio { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
 .ed-righe li, .ed-archivio li { display: grid; gap: var(--s1); padding-top: var(--s2); border-top: 1px solid var(--line-2); }
 .ed-voci .ed-fonte { display: block; }
-.ed-cifra { color: var(--accent); font-weight: 700; }
+/* la cifra come in home, un gradino più piccola: qui è una colonna di lettura, non una griglia di card */
+.ed-cifra { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 4px; font-weight: 500; color: var(--fg-2); }
+.ed-cifra strong { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--fg); }
 .ed-archivio p strong { font-weight: 600; }
 .ed-altre { display: grid; justify-items: start; gap: var(--s1); padding-top: var(--s3); border-top: 1px solid var(--line-2); }
 

@@ -429,7 +429,7 @@ describe('la pagina di un’edizione', () => {
       expect(titoli(doc)).not.toContain('Cambiato dalla settimana scorsa');
       const righe = sezione(doc, 'La situazione')!.textContent;
       for (const c of crea().card.filter((x) => x.id !== 'notizie')) expect(righe).toContain(c.frase);
-      expect(sezione(doc, 'Notizie')!.textContent).toContain('2 Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.');
+      expect(sezione(doc, 'Notizie')!.textContent).toMatch(/2\s+Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti\./);
     });
     it('non dice «Nessun cambio» accanto alle porte', () => {
       expect(pagina(crea()).body.textContent).not.toContain('Nessun cambio qui');
@@ -520,6 +520,27 @@ describe('la pagina di un’edizione', () => {
     });
   });
 
+  describe('cifra e frase di una riga', () => {
+    const riga = (doc: Document, nome: string) => [...doc.querySelectorAll('li')].find((li) => li.querySelector('h3')?.textContent === nome)!;
+    const paragrafi = (el: Element) => [...el.querySelectorAll('p')].map((p) => p.textContent);
+
+    it('stanno in due paragrafi, come i due livelli della home: senza foglio di stile non si incollano', () => {
+      const doc = pagina(crea());
+      expect(paragrafi(riga(doc, 'Business')).slice(0, 2)).toEqual(['16%', "Imprese italiane che usano l'AI nel 2025. UE: 20%."]);
+      expect(paragrafi(riga(doc, 'Modelli e ricerca')).slice(0, 2)).toEqual(["×4,8 all'anno", 'Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.']);
+    });
+    it('Competenze ha già il numero nella frase, e non lo ripete: come nella home', () => {
+      expect(TILES.filter((t) => t.senzaCifra).map((t) => t.id)).toEqual(['competenze']);
+      const r = riga(pagina(crea()), 'Competenze');
+      expect(paragrafi(r)[0]).toBe("2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
+      expect(r.textContent).not.toContain('2 su 5');
+    });
+    it('il conteggio delle notizie sta in due paragrafi anche lui', () => {
+      const ps = [...sezione(pagina(crea()), 'Notizie')!.querySelectorAll('p')].map((p) => p.textContent);
+      expect(ps.slice(0, 2)).toEqual(['2', 'Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.']);
+    });
+  });
+
   it('una porta senza dati dice «Dati non disponibili», senza link e senza fonte', () => {
     const doc = pagina(crea({ status: d.status, radar: d.radar }));
     const italia = doc.querySelectorAll('article')[1];
@@ -568,7 +589,7 @@ describe('la pagina di un’edizione', () => {
       const e = crea();
       const corretta = { ...e, card: e.card.map((c) => (c.id === 'notizie' ? { ...c, cifra: '3', frase: 'Notizie corrette a mano, da 3 fonti.' } : c)) };
       const t = sezione(pagina(corretta), 'Notizie')!.textContent;
-      expect(t).toContain('3 Notizie corrette a mano, da 3 fonti.');
+      expect(t).toMatch(/3\s+Notizie corrette a mano, da 3 fonti\./);
       expect(t).not.toContain('nei 7 giorni');
     });
     it('senza il file delle notizie dice «Dati non disponibili»', () => {

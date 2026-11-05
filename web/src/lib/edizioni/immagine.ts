@@ -19,7 +19,7 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
   const contenuto = {
     data: `Settimana ${dayWith('del', e.settimana)}`,
     // senza dati la frase è già la riga meta: non si ripete
-    porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }], meta: portaConDati(p) ? p.meta : '' })),
+    porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }], meta: portaConDati(p) ? p.meta : '', ripetuta: portaConDati(p) && !p.cambiata })),
     da: PIU_GRANDE,
     a: PIU_PICCOLO,
   };
@@ -33,7 +33,10 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
         if (parte.em) riga.appendChild(document.createElement('em')).textContent = parte.t;
         else riga.append(parte.t);
       }
-      articoli[i].querySelector('footer')!.textContent = porta.meta;
+      const fondo = articoli[i].querySelector('footer')!;
+      // una porta ripetuta sembrerebbe una notizia nuova, in un post accanto a quello della settimana prima
+      if (porta.ripetuta) fondo.appendChild(document.createElement('strong')).textContent = 'Nessun cambio dalla settimana scorsa';
+      if (porta.meta) fondo.appendChild(document.createElement('span')).textContent = porta.meta;
     });
     const caricati = await document.fonts.load('500 40px "Bricolage Grotesque Variable"', document.body.textContent ?? '');
     if (!caricati.length) throw new Error('Il font del sito non si carica: serve npm ci in web/.');

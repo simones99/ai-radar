@@ -185,6 +185,14 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
     await expect(page.getByRole('article').nth(1)).toContainText(base.porte[1].meta);
   });
 
+  test('una porta ripetuta dice «Nessun cambio dalla settimana scorsa», e una nuova no', async ({ page }) => {
+    await preparaImmagine(page, { ...base, porte: [{ ...base.porte[0], cambiata: false }, base.porte[1]] });
+    await expect(page.getByRole('article').nth(0)).toContainText('Nessun cambio dalla settimana scorsa');
+    await expect(page.getByRole('article').nth(1)).not.toContainText('Nessun cambio');
+    const [a, b] = await misure(page);
+    expect(a.corpo).toBe(b.corpo); // le due teste restano alla pari anche se una delle due ha una riga in più
+  });
+
   test('una porta senza dati non ripete «Dati non disponibili» nella riga meta', async ({ page }) => {
     await preparaImmagine(page, senzaDati);
     expect(await page.getByRole('article').nth(1).textContent()).toBe('Per la tua organizzazioneDati non disponibili');

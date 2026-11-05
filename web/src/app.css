@@ -89,6 +89,7 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-fonte { font-size: 12px; line-height: 16px; color: var(--fg-3); }
 .ed-corretta { margin-top: var(--s1); padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 20px; }
 .ed-corretta strong { font-weight: 600; }
+.ed-quieta { margin-top: var(--s1); font-weight: 500; }
 /* le due porte, alla pari: una sopra l'altra, con lo stesso peso */
 .ed-porte { display: grid; gap: var(--s2); }
 .ed-porta { display: grid; gap: var(--s1); padding: var(--s3); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); }

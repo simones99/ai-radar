@@ -128,7 +128,8 @@ test.describe('senza JavaScript', () => {
   test('una settimana dopo si legge cosa è ripetuto', async ({ page }) => {
     await page.goto(SECONDA);
     await expect(page.getByText('Nessun cambio qui dalla settimana scorsa')).toHaveCount(2);
-    await expect(page.getByRole('heading', { level: 2, name: 'Cambiato dalla settimana scorsa' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Nulla è cambiato dalla settimana scorsa' })).toBeVisible();
+    await expect(page.getByText(/^Settimana senza novità/)).toBeVisible();
     await expect(page.getByText(/^Invariate: Competenze/)).toBeVisible();
   });
 });

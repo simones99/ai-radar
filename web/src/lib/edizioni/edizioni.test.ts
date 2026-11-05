@@ -481,9 +481,36 @@ describe('la pagina di un’edizione', () => {
       expect(riga.textContent).toBe('Invariate: Competenze, Open source, Business, GeopoliticAI, Persone e lavoro, Norme, Rapporti.');
       expect(riga.querySelector('a')?.getAttribute('href')).toBe('../../#competenze');
     });
-    it('una settimana senza novità lo dice', () => {
+    it('una settimana senza novità lo dice in testa, con il titolo giusto e senza ripeterlo sotto', () => {
+      const conNotizia = { ...settimanaDopo, news: { ...d.news!, notizie: [{ titolo: 'Una notizia di questa settimana', link: 'https://esempio.org/a', data: '2026-10-20', fonte: 'Esempio', tema: 'ricerca' }] } };
+      const doc = pagina(crea(conNotizia, prima));
+      const riga = [...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Settimana senza novità'))!;
+      expect(riga.textContent).toBe('Settimana senza novità: le frasi sono quelle della settimana scorsa. Qui sotto le notizie.');
+      expect(riga.compareDocumentPosition(doc.querySelector('article')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(titoli(doc)).not.toContain('Cambiato dalla settimana scorsa');
+      expect(titoli(doc)).toContain('Nulla è cambiato dalla settimana scorsa');
+      expect(doc.body.textContent).not.toContain('Nessuna frase è cambiata');
+      expect(sezione(doc, 'Nulla è cambiato dalla settimana scorsa')!.textContent).toContain('Rispetto alla settimana del 12 ott 2026.');
+    });
+    it('una settimana senza novità e senza notizie non promette notizie', () => {
+      const t = pagina(crea({ ...settimanaDopo, news: { ...d.news!, notizie: [] } }, prima)).body.textContent;
+      expect(t).toContain('Settimana senza novità: le frasi sono quelle della settimana scorsa.');
+      expect(t).not.toContain('Qui sotto le notizie');
+    });
+    it('una settimana con una sola cosa cambiata non è senza novità', () => {
+      expect(pagina(crea(settimanaDopo, conModelli)).body.textContent).not.toContain('Settimana senza novità');
+      const conPorta = { ...prima, porte: [{ ...prima.porte[0], titolo: [{ t: 'Altra notizia' }] }, prima.porte[1]] };
+      const doc = pagina(crea(settimanaDopo, conPorta));
+      expect(doc.body.textContent).not.toContain('Settimana senza novità');
+      // la porta è cambiata, le frasi no: il titolo non può dire che è cambiato nulla
+      expect(titoli(doc)).toContain('Nessuna frase è cambiata dalla settimana scorsa');
+      expect(titoli(doc)).not.toContain('Nulla è cambiato dalla settimana scorsa');
+    });
+    it('una porta ripetuta lo dice anche nella descrizione e nel testo alternativo dell’anteprima', () => {
       const doc = pagina(crea(settimanaDopo, prima));
-      expect(sezione(doc, 'Cambiato dalla settimana scorsa')!.textContent).toContain('Nessuna frase è cambiata dalla settimana scorsa.');
+      const tag = (nome: string) => doc.querySelector(`meta[property="${nome}"]`)?.getAttribute('content');
+      expect(tag('og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio). 16% delle imprese italiane usa l'AI (UE: 20%) (nessun cambio).");
+      expect(tag('og:image:alt')).toContain('Per te: MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio).');
     });
     it('una porta ripetuta resta visibile e dice «Nessun cambio qui dalla settimana scorsa»', () => {
       const [perTe, italia] = [...pagina(crea(settimanaDopo, prima)).querySelectorAll('article')];
@@ -651,6 +678,12 @@ describe('l’archivio', () => {
   it('ogni voce ha la data e le due porte, Per te per prima', () => {
     const t = archivio(prima).querySelector('main li')!.textContent;
     expect(t).toMatch(/Per te[^]*MCP entra tra le competenze[^]*Per la tua organizzazione[^]*16% delle imprese italiane/);
+  });
+
+  it('una porta ripetuta dice che non è cambiata, e una nuova no', () => {
+    const [nuova, ripetuta] = [...archivio(prima, seconda).querySelectorAll('main li')].reverse();
+    expect(ripetuta.textContent).toContain('RAG esce (nessun cambio)');
+    expect(nuova.textContent).not.toContain('nessun cambio');
   });
 
   it('una porta senza dati lo dice anche qui', () => {

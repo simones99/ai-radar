@@ -47,6 +47,12 @@ function rigaFonti(fonti: Fonte[]): string {
   return `<p class="ed-fonte">${fonti.length === 1 ? 'Fonte' : 'Fonti'}: ${elenco}.</p>`;
 }
 
+/** Una porta in una riga, dove non c'è spazio per altro: chi la vede fuori dalla pagina non deve scambiare una frase ripetuta per una novità. */
+const portaInBreve = (p: PortaFissa): string => `${testoPorta(p)}${p.cambiata ? '' : ' (nessun cambio)'}`;
+
+/** Né le porte né le frasi diverse dall'edizione precedente; la prima edizione non ha con cosa confrontarsi. */
+const senzaNovita = (e: Edizione): boolean => !!e.precedente && !e.porte.some((p) => p.cambiata) && !e.card.some((c) => c.cambiata);
+
 function porta(p: PortaFissa, radice: string): string {
   const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
   const notizia = portaConDati(p) && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
@@ -76,10 +82,13 @@ function frasi(e: Edizione, radice: string): string {
   const invariate = conDati.filter((c) => !c.cambiata);
   const senzaDati = card.filter((c) => c.frase == null);
   const elenco = (xs: CardFissa[]) => xs.map((c) => `<a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a>`).join(', ');
+  const titolo = !e.precedente ? 'La situazione'
+    : righe.length ? 'Cambiato dalla settimana scorsa'
+      : senzaNovita(e) ? 'Nulla è cambiato dalla settimana scorsa' : 'Nessuna frase è cambiata dalla settimana scorsa';
   return `<section>
-<h2>${e.precedente ? 'Cambiato dalla settimana scorsa' : 'La situazione'}</h2>
+<h2>${titolo}</h2>
 ${e.precedente ? `<p class="ed-nota">Rispetto alla <a href="${esc(`${radice}edizioni/${e.precedente}/`)}">settimana ${esc(dayWith('del', e.precedente))}</a>.</p>` : ''}
-${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : '<p>Nessuna frase è cambiata dalla settimana scorsa.</p>'}
+${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : ''}
 ${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
 ${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}
 </section>`;
@@ -172,6 +181,7 @@ export function corpoEdizione(e: Edizione, radice: string, intestazione = ''): s
   return `<div class="ed-testa">
 ${intestazione}
 <p class="ed-nota">Questa edizione resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Il sito mostra i dati di oggi, quindi può dire altro.</p>
+${senzaNovita(e) ? `<p class="ed-quieta">Settimana senza novità: le frasi sono quelle della settimana scorsa.${e.notizie.temi.length ? ' Qui sotto le notizie.' : ''}</p>` : ''}
 ${correzioni}
 </div>
 <div class="ed-porte">
@@ -182,7 +192,7 @@ ${notizie(e, radice)}
 ${fontiNonAggiornate(e)}`;
 }
 
-export const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${testoPorta(p)}.`).join(' ');
+export const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${portaInBreve(p)}.`).join(' ');
 
 /** Le edizioni accanto a questa nell'archivio. Solo nella pagina: nel lettore di feed le voci sono già in fila, e questi link cambiano quando ne esce una nuova. */
 function altreEdizioni(precedente?: Edizione, successiva?: Edizione): string {
@@ -204,7 +214,7 @@ export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine, { precedente
     tipo: 'article',
     immagine: {
       percorso: `edizioni/${e.settimana}/${IMMAGINE}`,
-      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${portaConDati(p) ? testoPorta(p) : p.meta}.`).join(' ')}`,
+      alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${portaConDati(p) ? portaInBreve(p) : p.meta}.`).join(' ')}`,
     },
   }, opzioni);
 }
@@ -215,7 +225,7 @@ export const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più r
 export function archivio(edizioni: Edizione[], opzioni: OpzioniPagine): string {
   const voci = edizioni.map((e) => `<li>
 <h2><a href="${esc(e.settimana)}/">Settimana ${esc(dayWith('del', e.settimana))}</a></h2>
-${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(portaConDati(p) ? testoPorta(p) : p.meta)}</p>`).join('\n')}
+${e.porte.map((p) => `<p><strong>${esc(p.nome)}:</strong> ${esc(portaConDati(p) ? portaInBreve(p) : p.meta)}</p>`).join('\n')}
 </li>`).join('\n');
   return pagina({
     titolo: TITOLO_ARCHIVIO,

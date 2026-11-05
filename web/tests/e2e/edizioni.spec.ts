@@ -134,6 +134,20 @@ test.describe('senza JavaScript', () => {
   });
 });
 
+test('si passa da un’edizione a quella accanto senza tornare all’archivio', async ({ page }) => {
+  await page.goto(PRIMA);
+  await page.getByRole('navigation', { name: 'Altre edizioni' }).getByRole('link', { name: 'Edizione successiva: settimana del 19 ott 2026' }).click();
+  await expect(page).toHaveURL(new RegExp(`${SECONDA}$`));
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Settimana del 19 ott 2026');
+  await page.getByRole('navigation', { name: 'Altre edizioni' }).getByRole('link', { name: 'Edizione precedente: settimana del 12 ott 2026' }).click();
+  await expect(page).toHaveURL(new RegExp(`${PRIMA}$`));
+});
+
+test('il titolo è la prima cosa del contenuto, senza un’etichetta sopra', async ({ page }) => {
+  await page.goto(PRIMA);
+  expect(await page.getByRole('main').evaluate((main) => main.textContent?.trim().startsWith('Settimana del 12 ott 2026'))).toBe(true);
+});
+
 test('da tastiera: prima il salto al contenuto, poi la testata; il link di una porta apre la sua card nella home', async ({ page }) => {
   await page.goto(PRIMA);
   await page.keyboard.press('Tab');

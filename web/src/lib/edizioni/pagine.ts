@@ -113,7 +113,7 @@ function notizie(e: Edizione, radice: string): string {
   const n = e.notizie;
   const card = e.card.find(eCardNotizie);
   // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
-  const conteggio = card?.frase ? `${card.cifra && card.cifra !== '0' ? cifraGrande({ cifra: card.cifra, unita: null }) : ''}\n<p>${esc(card.frase)}</p>` : '<p>Dati non disponibili.</p>';
+  const conteggio = card?.frase ? `<div class="ed-conteggio">\n${card.cifra && card.cifra !== '0' ? cifraGrande({ cifra: card.cifra, unita: null }) : ''}\n<p>${esc(card.frase)}</p>\n</div>` : '<p>Dati non disponibili.</p>';
   const temi = n.temi.map((t) => `<h3>${esc(t.nome)}</h3>
 <ul class="ed-voci">
 ${t.voci.map((v) => `<li>${linkEsterno(v.link, v.titolo)} <span class="ed-fonte">${esc(v.fonte)} · ${esc(day(v.data))}</span></li>`).join('\n')}
@@ -223,8 +223,7 @@ export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine, { precedente
     percorso: `edizioni/${e.settimana}/`,
     radice,
     nav: `<a href="../">Edizioni</a><a href="${radice}">Dati di oggi</a>`,
-    corpo: corpoEdizione(e, radice, `<p class="ed-fonte">Edizione</p>
-<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`) + altreEdizioni(precedente, successiva),
+    corpo: corpoEdizione(e, radice, `<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`) + altreEdizioni(precedente, successiva),
     tipo: 'article',
     immagine: {
       percorso: `edizioni/${e.settimana}/${IMMAGINE}`,

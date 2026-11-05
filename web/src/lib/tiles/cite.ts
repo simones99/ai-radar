@@ -4,7 +4,7 @@ import type { OwidSeries } from '../data/types';
 
 export const MISSING = 'Dati non disponibili in questo aggiornamento.';
 
-const LICENZE: Record<string, string> = {
+export const LICENZE: Record<string, string> = {
   'CC BY 4.0': 'https://creativecommons.org/licenses/by/4.0/',
   'CC BY-ND 4.0': 'https://creativecommons.org/licenses/by-nd/4.0/',
 };

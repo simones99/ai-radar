@@ -74,7 +74,7 @@ export function headOpen(d: Dataset, _today?: Date): Head {
 }
 
 // ---------------------------------------------------------------- business
-// Numero chiave e titolo: imprese italiane che usano l'AI (Eurostat, CC BY 4.0), interi.
+// Numero chiave e titolo: imprese italiane che usano l'AI (Eurostat, riuso consentito citando la fonte), interi.
 // Senza Eurostat il titolo resta sugli investimenti AI Index (CC BY-ND 4.0): importi brevi, nessun rapporto tra anni.
 
 /** Articolo davanti a una percentuale intera: "l'8%", "l'11%", "l'80%", "il 16%". */

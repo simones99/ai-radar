@@ -269,6 +269,11 @@ describe('fonte e licenza su ogni riga', () => {
     expect(g.licenza).toBe(d.geopoliticai!.licenza);
   });
 
+  it('Eurostat e AI Act dicono solo ciò che le fonti permettono di dire: la CC BY di Eurostat copre i testi, non i dati', () => {
+    expect(fonti(crea(), 'business')[0].licenza).toBe('riuso consentito citando la fonte');
+    expect(fonti(crea(), 'norme')[0].licenza).toBe("testo ufficiale dell'UE");
+  });
+
   it('una riga di GeopoliticAI mostra le fonti del dato che riporta: la card la capacità, la porta i modelli di grande scala', () => {
     const g = d.geopoliticai!;
     expect(fonti(crea(), 'geopoliticai')).toEqual([{ nome: 'Epoch AI, Epoch Capabilities Index', url: g.url_eci, licenza: g.licenza }]);
@@ -594,6 +599,18 @@ describe('la pagina di un’edizione', () => {
     const competenze = righe[0];
     expect(competenze.textContent).toContain("The Adzuna API (termini d'uso di Adzuna)");
     expect(competenze.querySelector('a[href^="../../#"]')?.textContent).toBe('Competenze');
+  });
+
+  it('una licenza Creative Commons è un link al suo testo, le altre condizioni restano testo', () => {
+    const righe = [...sezione(pagina(crea()), 'La situazione')!.querySelectorAll('li')];
+    const riga = (nome: string) => righe.find((r) => r.querySelector('a[href^="../../#"]')?.textContent === nome)!;
+    expect(riga('Modelli e ricerca').querySelector('a[href="https://creativecommons.org/licenses/by/4.0/"]')?.textContent).toBe('CC BY 4.0');
+    expect(riga('Modelli e ricerca').textContent).toContain('Epoch AI (CC BY 4.0)');
+    expect(riga('Competenze').querySelector('a[href*="creativecommons.org"]')).toBeNull();
+
+    const conND = crea();
+    const conLicenzaND = { ...conND, card: conND.card.map((c) => (c.id === 'modelli' ? { ...c, fonti: c.fonti.map((f) => ({ ...f, licenza: 'CC BY-ND 4.0' })) } : c)) };
+    expect(sezione(pagina(conLicenzaND), 'La situazione')!.querySelector('a[href="https://creativecommons.org/licenses/by-nd/4.0/"]')?.textContent).toBe('CC BY-ND 4.0');
   });
 
   describe('la sezione delle notizie', () => {

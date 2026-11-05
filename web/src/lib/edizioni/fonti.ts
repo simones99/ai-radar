@@ -18,7 +18,7 @@ const TABELLA: Record<TileId, (d: Dataset, oggi: Date, elemento: string | null) 
   modelli: (d) => [{ nome: 'Epoch AI', url: d.epoch?.url ?? 'https://epoch.ai/data/ai-models', licenza: 'CC BY 4.0' }],
   open: (d) => [{ nome: 'Hugging Face', url: d.huggingface?.url ?? 'https://huggingface.co', licenza: "termini d'uso di Hugging Face" }],
   notizie: () => [], // nessuna porta ci arriva e la sua riga non ha fonti: ogni notizia ha accanto la sua
-  business: (d) => [{ nome: 'Eurostat', url: d.eurostat?.url ?? 'https://ec.europa.eu/eurostat', licenza: 'CC BY 4.0' }],
+  business: (d) => [{ nome: 'Eurostat', url: d.eurostat?.url ?? 'https://ec.europa.eu/eurostat', licenza: 'riuso consentito citando la fonte' }], // la CC BY di Eurostat copre i testi, non i dati
   geopoliticai: (d, _oggi, elemento) => {
     const g = d.geopoliticai;
     // la porta su chi addestra i modelli di grande scala conta i modelli; la card riporta la capacità
@@ -31,7 +31,7 @@ const TABELLA: Record<TileId, (d: Dataset, oggi: Date, elemento: string | null) 
   },
   norme: (d, oggi, elemento) => {
     const s = d.ai_act?.scadenze.find((x) => x.data === elemento) ?? nextDeadline(d.ai_act?.scadenze, oggi);
-    return [{ nome: 'AI Act', url: s?.fonte ?? null, licenza: "atto pubblico dell'UE" }];
+    return [{ nome: 'AI Act', url: s?.fonte ?? null, licenza: "testo ufficiale dell'UE" }];
   },
   rapporti: (d, oggi) => {
     const r = nextReport(d.rapporti, oggi)?.report;

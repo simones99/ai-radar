@@ -3,6 +3,7 @@
 import { ICONA } from '../icona';
 import { toHash, type TileId } from '../router';
 import { day, dayWith } from '../text/format';
+import { LICENZE } from '../tiles/cite';
 import { cifraConUnita, cifraNellaFrase, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
 
 export interface OpzioniPagine {
@@ -43,7 +44,7 @@ export const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayW
 
 function rigaFonti(fonti: Fonte[]): string {
   if (!fonti.length) return '';
-  const elenco = fonti.map((f) => `${linkEsterno(f.url, f.nome)} (${esc(f.licenza)})`).join(', ');
+  const elenco = fonti.map((f) => `${linkEsterno(f.url, f.nome)} (${linkEsterno(LICENZE[f.licenza] ?? null, f.licenza)})`).join(', ');
   return `<p class="ed-fonte">${fonti.length === 1 ? 'Fonte' : 'Fonti'}: ${elenco}.</p>`;
 }
 

@@ -83,6 +83,9 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .edizione h1 { font-weight: 600; font-size: clamp(28px, 6vw, 36px); line-height: 1.15; letter-spacing: -.01em; }
 .edizione h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
 .edizione h3 { font-weight: 600; font-size: 16px; line-height: 24px; }
+.edizione h3 span { font-weight: 400; color: var(--fg-2); white-space: nowrap; }
+/* il nome della card piccolo sopra la cifra, come in home */
+.edizione h4 { font-weight: 500; font-size: 14px; line-height: 24px; }
 .edizione footer { border-top: 1px solid var(--line-2); padding-top: var(--s3); }
 .ed-testa { display: grid; gap: var(--s1); }
 .ed-nota { font-size: 14px; line-height: 20px; color: var(--fg-2); }
@@ -101,6 +104,7 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-notizia em { font-style: normal; color: var(--accent); font-weight: 700; }
 .ed-ripetuta { font-size: 14px; line-height: 20px; font-weight: 500; }
 /* le righe: frasi, voci e archivio */
+.ed-gruppo { display: grid; gap: var(--s2); margin-top: var(--s2); }
 .ed-righe, .ed-voci, .ed-archivio { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
 .ed-righe li, .ed-archivio li { display: grid; gap: var(--s1); padding-top: var(--s2); border-top: 1px solid var(--line-2); }
 .ed-voci .ed-fonte { display: block; }

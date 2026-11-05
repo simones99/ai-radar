@@ -37,6 +37,8 @@ export interface PortaFissa {
 export interface CardFissa {
   id: string;
   nome: string;
+  /** La testa a cui appartiene: l'id della sua porta. */
+  testa: PortaFissa['id'];
   // null: quella settimana la card non aveva dati
   cifra: string | null;
   unita: string | null;

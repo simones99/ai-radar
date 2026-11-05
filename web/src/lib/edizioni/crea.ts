@@ -11,16 +11,16 @@ import { notizieDi } from './notizie';
 import { cifraConUnita, eCardNotizie, testoPorta, VERSIONE, type CardFissa, type Edizione, type PortaFissa } from './tipi';
 
 // La vista di partenza: nessun ruolo, «Tutti i Paesi», nessun settore. Non passa da tiles/registry, che legge le scelte ricordate.
-const CARD: { id: TileId; nome: string; face: (d: Dataset, oggi: Date) => Face | null }[] = [
-  { id: 'competenze', nome: 'Competenze', face: faceCompetenze },
-  { id: 'modelli', nome: 'Modelli e ricerca', face: faceModelli },
-  { id: 'open', nome: 'Open source', face: faceOpen },
-  { id: 'notizie', nome: 'Notizie', face: faceNotizie },
-  { id: 'business', nome: 'Business', face: faceBusiness },
-  { id: 'geopoliticai', nome: 'GeopoliticAI', face: faceGeopoliticai },
-  { id: 'persone', nome: 'Persone e lavoro', face: facePersone },
-  { id: 'norme', nome: 'Norme', face: faceNorme },
-  { id: 'rapporti', nome: 'Rapporti', face: faceRapporti },
+const CARD: { id: TileId; nome: string; testa: PortaFissa['id']; face: (d: Dataset, oggi: Date) => Face | null }[] = [
+  { id: 'competenze', nome: 'Competenze', testa: 'per-te', face: faceCompetenze },
+  { id: 'modelli', nome: 'Modelli e ricerca', testa: 'per-te', face: faceModelli },
+  { id: 'open', nome: 'Open source', testa: 'per-te', face: faceOpen },
+  { id: 'notizie', nome: 'Notizie', testa: 'per-te', face: faceNotizie },
+  { id: 'geopoliticai', nome: 'GeopoliticAI', testa: 'italia', face: faceGeopoliticai },
+  { id: 'business', nome: 'Business', testa: 'italia', face: faceBusiness },
+  { id: 'persone', nome: 'Persone e lavoro', testa: 'italia', face: facePersone },
+  { id: 'norme', nome: 'Norme', testa: 'italia', face: faceNorme },
+  { id: 'rapporti', nome: 'Rapporti', testa: 'italia', face: faceRapporti },
 ];
 
 type SenzaConfronto<T> = Omit<T, 'cambiata'>;
@@ -65,7 +65,7 @@ function porta(id: PortaFissa['id'], nome: string, etichetta: string, p: Door, d
 function frase(c: (typeof CARD)[number], d: Dataset, oggi: Date, precedente: Edizione | null): CardFissa {
   const f = c.face(d, oggi);
   const destinazione = { card: c.id, elemento: null };
-  const fissa: SenzaConfronto<CardFissa> = { id: c.id, nome: c.nome, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione), era: null };
+  const fissa: SenzaConfronto<CardFissa> = { id: c.id, nome: c.nome, testa: c.testa, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione), era: null };
   const prima = precedente?.card.find((x) => x.id === c.id);
   const diversa = !eCardNotizie(c) && cambiata(fissa, prima, stessaCard);
   return { ...fissa, cambiata: diversa, era: diversa ? eraPrima(fissa, prima) : null };

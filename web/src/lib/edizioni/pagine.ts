@@ -73,7 +73,7 @@ function cifraGrande(c: Pick<CardFissa, 'cifra' | 'unita'>): string {
 
 function rigaCard(c: CardFissa, radice: string): string {
   return `<li>
-<h3><a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a></h3>
+<h4><a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a></h4>
 ${cifraNellaFrase(c) ? '' : cifraGrande(c)}
 <p>${esc(c.frase ?? '')}</p>
 ${c.era ? `<p class="ed-nota">${esc(c.era)}</p>` : ''}
@@ -81,22 +81,31 @@ ${rigaFonti(c.fonti)}
 </li>`;
 }
 
-function frasi(e: Edizione, radice: string): string {
-  const card = e.card.filter((c) => !eCardNotizie(c));
-  const conDati = card.filter((c) => c.frase != null);
+/** Le righe di una testa: chi decide in un'organizzazione deve vedere dove comincia la sua parte, e trovarci anche ciò che non è cambiato. */
+function frasiDellaTesta(p: PortaFissa, card: CardFissa[], radice: string): string {
+  const proprie = card.filter((c) => c.testa === p.id);
+  const conDati = proprie.filter((c) => c.frase != null);
   const righe = conDati.filter((c) => c.cambiata);
   const invariate = conDati.filter((c) => !c.cambiata);
-  const senzaDati = card.filter((c) => c.frase == null);
+  const senzaDati = proprie.filter((c) => c.frase == null);
   const elenco = (xs: CardFissa[]) => xs.map((c) => `<a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a>`).join(', ');
+  return `<div class="ed-gruppo">
+<h3>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h3>
+${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : ''}
+${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
+${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}
+</div>`;
+}
+
+function frasi(e: Edizione, radice: string): string {
+  const card = e.card.filter((c) => !eCardNotizie(c));
   const titolo = !e.precedente ? 'La situazione'
-    : righe.length ? 'Cambiato dalla settimana scorsa'
+    : card.some((c) => c.frase != null && c.cambiata) ? 'Cambiato dalla settimana scorsa'
       : senzaNovita(e) ? 'Nulla è cambiato dalla settimana scorsa' : 'Nessuna frase è cambiata dalla settimana scorsa';
   return `<section>
 <h2>${titolo}</h2>
 ${e.precedente ? `<p class="ed-nota">Rispetto alla <a href="${esc(`${radice}edizioni/${e.precedente}/`)}">settimana ${esc(dayWith('del', e.precedente))}</a>.</p>` : ''}
-${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : ''}
-${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
-${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}
+${e.porte.map((p) => frasiDellaTesta(p, card, radice)).join('\n')}
 </section>`;
 }
 

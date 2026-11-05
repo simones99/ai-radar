@@ -38,7 +38,8 @@ describe('creare un’edizione', () => {
 
   it('contiene tutte le nove frasi di card, ciascuna con cifra, unità, frase e destinazione', () => {
     const e = crea();
-    expect(e.card.map((c) => c.id)).toEqual(['competenze', 'modelli', 'open', 'notizie', 'business', 'geopoliticai', 'persone', 'norme', 'rapporti']);
+    expect(e.card.map((c) => c.id)).toEqual(TILES.map((t) => t.id)); // nell'ordine della home
+    expect(e.card.map((c) => [c.id, c.testa])).toEqual(TILES.map((t) => [t.id, t.testa]));
     expect(card(e, 'business')).toMatchObject({ nome: 'Business', cifra: '16', unita: '%', frase: "Imprese italiane che usano l'AI nel 2025. UE: 20%.", destinazione: { card: 'business', elemento: null } });
     // la data delle frasi è quella dei dati: dal 15 ottobre al 2 dicembre 2026
     expect(card(e, 'norme')).toMatchObject({ cifra: '48', unita: 'giorni' });
@@ -478,7 +479,7 @@ describe('la pagina di un’edizione', () => {
     it('nomina le card invariate in una riga, ciascuna con il suo link, e Notizie non è tra loro', () => {
       const doc = pagina(crea(settimanaDopo, conModelli));
       const riga = [...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Invariate'))!;
-      expect(riga.textContent).toBe('Invariate: Competenze, Open source, Business, GeopoliticAI, Persone e lavoro, Norme, Rapporti.');
+      expect(riga.textContent).toBe('Invariate: Competenze, Open source.');
       expect(riga.querySelector('a')?.getAttribute('href')).toBe('../../#competenze');
     });
     it('una settimana senza novità lo dice in testa, con il titolo giusto e senza ripeterlo sotto', () => {
@@ -520,8 +521,36 @@ describe('la pagina di un’edizione', () => {
     });
   });
 
+  describe('le due teste', () => {
+    const gruppi = (doc: Document, titolo: string) => [...sezione(doc, titolo)!.querySelectorAll('h3')].map((h) => h.textContent);
+    const gruppo = (doc: Document, titolo: string, testa: string) => [...sezione(doc, titolo)!.querySelectorAll('div')].find((g) => g.querySelector('h3')?.textContent?.startsWith(testa))!;
+
+    it('le righe stanno sotto la loro testa, con le etichette e l’ordine della home', () => {
+      const doc = pagina(crea());
+      expect(gruppi(doc, 'La situazione')).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
+      const nomi = (testa: string) => [...gruppo(doc, 'La situazione', testa).querySelectorAll('h4')].map((h) => h.textContent);
+      expect(nomi('Per te')).toEqual(['Competenze', 'Modelli e ricerca', 'Open source']);
+      expect(nomi('Per la tua')).toEqual(['GeopoliticAI', 'Business', 'Persone e lavoro', 'Norme', 'Rapporti']);
+    });
+    it('le card invariate stanno nella loro testa: chi legge la sua parte le trova lì', () => {
+      const prima = crea();
+      const doc = pagina(crea(settimanaDopo, { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, frase: 'Altra.' } : c)) }));
+      const invariate = (testa: string) => [...gruppo(doc, 'Cambiato dalla settimana scorsa', testa).querySelectorAll('p')].find((p) => p.textContent?.startsWith('Invariate'))?.textContent;
+      expect(invariate('Per te')).toBe('Invariate: Competenze, Open source.');
+      expect(invariate('Per la tua')).toBe('Invariate: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.');
+    });
+    it('una card senza dati lo dice nella sua testa', () => {
+      const doc = pagina(crea({ ...d, epoch: undefined }));
+      expect(gruppo(doc, 'La situazione', 'Per te').textContent).toContain('Dati non disponibili: Modelli e ricerca.');
+    });
+    it('una testa con tutte le card senza dati resta, e lo dice', () => {
+      const doc = pagina(crea({ status: d.status, radar: d.radar }));
+      expect(gruppo(doc, 'La situazione', 'Per la tua').textContent).toContain('Dati non disponibili: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.');
+    });
+  });
+
   describe('cifra e frase di una riga', () => {
-    const riga = (doc: Document, nome: string) => [...doc.querySelectorAll('li')].find((li) => li.querySelector('h3')?.textContent === nome)!;
+    const riga = (doc: Document, nome: string) => [...doc.querySelectorAll('li')].find((li) => li.querySelector('h4')?.textContent === nome)!;
     const paragrafi = (el: Element) => [...el.querySelectorAll('p')].map((p) => p.textContent);
 
     it('stanno in due paragrafi, come i due livelli della home: senza foglio di stile non si incollano', () => {

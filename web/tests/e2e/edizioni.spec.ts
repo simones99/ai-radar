@@ -98,7 +98,7 @@ test.describe('senza JavaScript', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Settimana del 12 ott 2026');
     await expect(page.getByRole('link', { name: 'MCP entra tra le competenze da imparare ora; RAG esce' })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'La situazione' })).toBeVisible();
-    await expect(page.getByText('Le card del sito mostrano i dati di oggi')).toBeVisible();
+    await expect(page.getByText('Il sito mostra i dati di oggi')).toBeVisible();
     await expect(page.getByText('Corretta il 20 ott 2026:')).toBeVisible();
     await expect(page.getByRole('link', { name: 'The Adzuna API' }).first()).toBeVisible();
     await expect(page.getByRole('link', { name: TITOLO_LUNGO })).toBeVisible(); // il titolo esterno è testo, con < e & compresi

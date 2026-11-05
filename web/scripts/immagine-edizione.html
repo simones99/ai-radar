@@ -16,10 +16,12 @@
       h1 { font-weight: 600; font-size: 40px; line-height: 48px; letter-spacing: -.01em; white-space: nowrap; }
       main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); min-height: 0; }
       /* le due teste alla pari: stessa scatola, stesso corpo, stesso peso. Il corpo lo sceglie immagine.ts, sulla frase più lunga delle due */
-      article { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: var(--s2); min-height: 0; padding: var(--s4); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; }
+      article { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--s2); min-height: 0; padding: var(--s4); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; }
       h2 { font-weight: 600; font-size: 28px; line-height: 32px; color: var(--fg-2); text-wrap: nowrap; }
       article p { min-height: 0; font-weight: 500; font-size: var(--corpo); line-height: 1.15; letter-spacing: -.01em; overflow: hidden; overflow-wrap: break-word; }
       article p em { font-style: normal; font-weight: 700; color: var(--accent); }
+      /* chi vede solo l'immagine non conosce il sito: la riga meta dice da dove viene la notizia */
+      footer { font-size: 22px; line-height: 28px; color: var(--fg-2); }
     </style>
   </head>
   <body>
@@ -28,8 +30,8 @@
       <h1></h1>
     </header>
     <main>
-      <article><h2></h2><p></p></article>
-      <article><h2></h2><p></p></article>
+      <article><h2></h2><p></p><footer></footer></article>
+      <article><h2></h2><p></p><footer></footer></article>
     </main>
   </body>
 </html>

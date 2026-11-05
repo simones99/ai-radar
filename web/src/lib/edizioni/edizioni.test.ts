@@ -385,10 +385,17 @@ describe('la pagina di un’edizione', () => {
     expect(link(doc, 'Edizioni')[0].getAttribute('href')).toBe('../');
   });
 
-  it('dice che le card mostrano i dati di oggi e quando sono stati raccolti quelli dell’edizione', () => {
+  it('dice che il sito mostra i dati di oggi e quando sono stati raccolti quelli dell’edizione', () => {
     const t = pagina(crea()).body.textContent;
-    expect(t).toMatch(/le card del sito mostrano i dati di oggi/i);
+    expect(t).toMatch(/il sito mostra i dati di oggi, quindi può dire altro/i);
     expect(t).toContain('15 ott 2026');
+  });
+
+  it('parla a chi legge: niente termini interni del progetto', () => {
+    const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
+    for (const doc of [pagina(crea()), pagina(tutte)]) expect(doc.body.textContent).not.toMatch(/a questo giro|le card del sito/i);
+    const archivio = new DOMParser().parseFromString(file(crea())['edizioni/index.html'], 'text/html');
+    expect(archivio.querySelector('meta[name="description"]')?.getAttribute('content')).not.toMatch(/porte/);
   });
 
   it('mostra le due porte, Per te per prima, con la meta, la fonte e il link alla card', () => {
@@ -604,15 +611,15 @@ describe('la pagina di un’edizione', () => {
   });
 
   it('dice quali fonti non hanno dati aggiornati, in errore o non configurate, con una frase vera per tutte e due, e l’ultimo dato che hanno dato', () => {
-    const s = sezione(pagina(crea()), 'Senza dati aggiornati a questo giro')!;
+    const s = sezione(pagina(crea()), 'Senza dati aggiornati questa settimana')!;
     expect(s.textContent).toContain('arXiv');
     expect(s.textContent).toContain('8 ott 2026');
     expect(s.textContent).toContain('Adzuna');
     expect(pagina(crea()).body.textContent).not.toMatch(/hanno risposto/);
     const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
-    expect(pagina(tutte).body.textContent).toContain('Tutte le fonti hanno dati aggiornati a questo giro.');
+    expect(pagina(tutte).body.textContent).toContain('Tutte le fonti hanno dati aggiornati questa settimana.');
     expect(pagina(tutte).body.textContent).not.toMatch(/hanno risposto/);
-    expect(sezione(pagina(tutte), 'Senza dati aggiornati a questo giro')).toBeUndefined();
+    expect(sezione(pagina(tutte), 'Senza dati aggiornati questa settimana')).toBeUndefined();
   });
 
   it('è la stessa con la stessa edizione: niente dipende dal momento della build', () => {

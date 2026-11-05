@@ -18,7 +18,8 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
   await page.goto(MODELLO);
   const contenuto = {
     data: `Settimana ${dayWith('del', e.settimana)}`,
-    porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }] })),
+    // senza dati la frase è già la riga meta: non si ripete
+    porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }], meta: portaConDati(p) ? p.meta : '' })),
     da: PIU_GRANDE,
     a: PIU_PICCOLO,
   };
@@ -32,6 +33,7 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
         if (parte.em) riga.appendChild(document.createElement('em')).textContent = parte.t;
         else riga.append(parte.t);
       }
+      articoli[i].querySelector('footer')!.textContent = porta.meta;
     });
     const caricati = await document.fonts.load('500 40px "Bricolage Grotesque Variable"', document.body.textContent ?? '');
     if (!caricati.length) throw new Error('Il font del sito non si carica: serve npm ci in web/.');

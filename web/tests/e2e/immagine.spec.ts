@@ -22,9 +22,9 @@ const RAPPORTO = 'A settembre esce State of Generative AI in the Enterprise';
 const SCADENZA = 'Tra 30 giorni: alto rischio nei prodotti regolati (allegato I)';
 
 const CASI = [
-  ['le entrate e uscite accanto ai modelli europei', conPorte(ENTRATE_E_USCITE, MODELLI_EUROPEI), 40],
-  ['le entrate e uscite accanto a un rapporto', conPorte(ENTRATE_E_USCITE, RAPPORTO), 40],
-  ['le entrate e uscite accanto a una scadenza', conPorte(ENTRATE_E_USCITE, SCADENZA), 40],
+  ['le entrate e uscite accanto ai modelli europei', conPorte(ENTRATE_E_USCITE, MODELLI_EUROPEI), 38],
+  ['le entrate e uscite accanto a un rapporto', conPorte(ENTRATE_E_USCITE, RAPPORTO), 38],
+  ['le entrate e uscite accanto a una scadenza', conPorte(ENTRATE_E_USCITE, SCADENZA), 38],
   ['tutte le competenze che entrano insieme', conPorte(TUTTE_ENTRANO, MODELLI_EUROPEI), 30],
   ['le frasi più corte', conPorte('RAG esce da Impara ora', 'Tra 3 giorni: divieti'), 56],
 ] as const;
@@ -177,6 +177,17 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
     await expect(page.getByRole('heading', { level: 2 })).toHaveText(['Per te', 'Per la tua organizzazione']);
     await expect(page.getByRole('article').getByRole('paragraph')).toHaveText(['MCP entra tra le competenze da imparare ora; RAG esce', "16% delle imprese italiane usa l'AI (UE: 20%)"]);
     await expect(page.getByRole('article').getByRole('emphasis').first()).toHaveText('MCP');
+  });
+
+  test('sotto la frase c’è la riga meta di ogni porta: chi vede solo l’immagine sa da dove viene la notizia', async ({ page }) => {
+    await preparaImmagine(page, base);
+    await expect(page.getByRole('article').nth(0)).toContainText('Radar delle competenze · dati al 15 ott 2026');
+    await expect(page.getByRole('article').nth(1)).toContainText(base.porte[1].meta);
+  });
+
+  test('una porta senza dati non ripete «Dati non disponibili» nella riga meta', async ({ page }) => {
+    await preparaImmagine(page, senzaDati);
+    expect(await page.getByRole('article').nth(1).textContent()).toBe('Per la tua organizzazioneDati non disponibili');
   });
 
   test('usa il font del sito, e resta nel tema chiaro anche con il sistema scuro', async ({ page }) => {

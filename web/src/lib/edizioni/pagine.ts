@@ -105,10 +105,10 @@ ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono s
 
 /** Una fonte in errore e una non configurata non hanno fatto la stessa cosa, ma a tutte e due mancano i dati di questo giro. */
 function fontiNonAggiornate(e: Edizione): string {
-  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">Tutte le fonti hanno dati aggiornati a questo giro.</p>';
+  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">Tutte le fonti hanno dati aggiornati questa settimana.</p>';
   const righe = e.fonti_non_aggiornate.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
   return `<section>
-<h2>Senza dati aggiornati a questo giro</h2>
+<h2>Senza dati aggiornati questa settimana</h2>
 <ul class="ed-voci">
 ${righe}
 </ul>
@@ -171,7 +171,7 @@ export function corpoEdizione(e: Edizione, radice: string, intestazione = ''): s
   const correzioni = e.correzioni.map((c) => `<p class="ed-corretta"><strong>Corretta ${esc(dayWith('il', c.data))}:</strong> ${esc(c.testo)}</p>`).join('\n');
   return `<div class="ed-testa">
 ${intestazione}
-<p class="ed-nota">Questa edizione resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Le card del sito mostrano i dati di oggi, quindi possono dire altro.</p>
+<p class="ed-nota">Questa edizione resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Il sito mostra i dati di oggi, quindi può dire altro.</p>
 ${correzioni}
 </div>
 <div class="ed-porte">
@@ -210,7 +210,7 @@ export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine, { precedente
 }
 
 export const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
-export const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con le due porte, le frasi cambiate e le notizie.';
+export const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con quello che è cambiato e le notizie.';
 
 export function archivio(edizioni: Edizione[], opzioni: OpzioniPagine): string {
   const voci = edizioni.map((e) => `<li>

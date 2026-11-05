@@ -70,6 +70,28 @@ def test_se_il_salvataggio_dell_edizione_fallisce_il_log_spiega_il_rimedio(tmp_p
     assert "casella" in giro.stdout
 
 
+def installa_chromium(esito_di_npx: int) -> subprocess.CompletedProcess:
+    """Il comando vero del passo, con un npx finto: il download non si prova in locale."""
+    comando = f"npx() {{ return {esito_di_npx}; }}\n{passo('Installa Chromium')['run']}"
+    return subprocess.run([SH, "-c", comando], capture_output=True, text=True, encoding="utf-8")
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_se_chromium_non_si_installa_il_log_ricorda_la_casella_e_il_giro_resta_rosso():
+    # il job finale qui non parte: il passo dell'edizione risulta saltato, non fallito
+    giro = installa_chromium(1)
+    assert giro.returncode == 1
+    assert "::error::" in giro.stdout
+    assert "casella" in giro.stdout
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_se_chromium_si_installa_non_c_e_nessun_errore():
+    giro = installa_chromium(0)
+    assert giro.returncode == 0
+    assert "::error::" not in giro.stdout
+
+
 def giro_finale(esito_del_sito: str) -> subprocess.CompletedProcess:
     """Il passo del job finale, con una shell come quella del runner e l'esito della pubblicazione che gli dà GitHub."""
     finale = job("aggiorna.yml", "edizione-non-creata")["steps"][0]

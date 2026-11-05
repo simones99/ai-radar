@@ -95,7 +95,11 @@ jobs:
       # Serve all'immagine dell'edizione, ai test con il browser e agli end-to-end
       - name: Installa Chromium
         working-directory: web
-        run: npx playwright install --with-deps chromium
+        run: |
+          npx playwright install --with-deps chromium || {
+            echo "::error::Chromium non si è installato: il sito non esce e l'edizione non si crea. I dati raccolti sono già salvati. Se era il giro del lunedì, per recuperare l'edizione avvia il giro a mano con la casella accesa."
+            exit 1
+          }
 
       # Il file dell'edizione e la sua immagine nascono qui, senza commit: diventano definitivi solo dopo gli end-to-end. Evento e casella li valuta
       # il comando, che su un push o con il file già presente non fa nulla. Se fallisce, anche solo per l'immagine, non scrive niente: dati e sito

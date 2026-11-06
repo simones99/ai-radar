@@ -41,7 +41,7 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Sv
 | --- | --- | --- |
 | `ADZUNA_APP_ID` e `ADZUNA_APP_KEY` | Domanda di competenze nel lavoro, Europa e USA | Gratuite su [developer.adzuna.com](https://developer.adzuna.com) |
 
-**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (un giro qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Prima di renderla pubblica conviene chiedere conferma scritta ad Adzuna dal loro modulo di contatto. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
+**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (un giro qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Per questa pagina, che mostra solo conteggi aggregati con la fonte citata, la conferma scritta è stata chiesta ad Adzuna il 5 novembre 2026 ed è in attesa di risposta. Chi pubblica una propria copia la chieda a sua volta dal loro modulo di contatto. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
 
 `GITHUB_TOKEN` non va creato: GitHub lo fornisce in automatico al workflow.
 

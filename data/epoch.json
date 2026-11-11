@@ -3298,7 +3298,7 @@
    "m": "DeepSeek-R1",
    "o": "DeepSeek",
    "d": "2025-01-20",
-   "c": 3.5e+24,
+   "c": 3.3e+24,
    "f": false,
    "a": "Cina",
    "open": true
@@ -3424,7 +3424,7 @@
    "m": "DeepSeek-R1 (May 2025)",
    "o": "DeepSeek",
    "d": "2025-05-28",
-   "c": 4.020010000000001e+24,
+   "c": 3.3e+24,
    "f": false,
    "a": "Cina",
    "open": true

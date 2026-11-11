@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-11-03",
+ "aggiornato": "2026-11-09",
  "siti": {
   "Colossus 2": {
    "lat": 34.98929,
@@ -201,6 +201,11 @@
    "lon": -112.01925,
    "posizione": "epoch"
   },
+  "Meta Aiken": {
+   "lat": 33.64243,
+   "lon": -81.8428,
+   "posizione": "epoch"
+  },
   "Google Midlothian": {
    "lat": 32.44248,
    "lon": -97.06137,
@@ -256,11 +261,6 @@
    "lon": -86.36847,
    "posizione": "epoch"
   },
-  "Huawei Wuhu": {
-   "lat": 31.29177,
-   "lon": 118.29981,
-   "posizione": "epoch"
-  },
   "CoreWeave Ellendale ND": {
    "lat": 46.0153,
    "lon": -98.57252,
@@ -269,11 +269,6 @@
   "Meta Sarpy": {
    "lat": 41.11153,
    "lon": -96.14507,
-   "posizione": "epoch"
-  },
-  "Huawei Horinger": {
-   "lat": 40.53969,
-   "lon": 111.82774,
    "posizione": "epoch"
   },
   "CoreWeave Chester VA": {
@@ -291,14 +286,14 @@
    "lon": -76.14879,
    "posizione": "epoch"
   },
+  "Huawei Horinger": {
+   "lat": 40.53969,
+   "lon": 111.82774,
+   "posizione": "epoch"
+  },
   "CoreWeave Marble NC": {
    "lat": 35.18747,
    "lon": -83.91607,
-   "posizione": "epoch"
-  },
-  "Meta Aiken": {
-   "lat": 33.64243,
-   "lon": -81.8428,
    "posizione": "epoch"
   },
   "Core42 Lake Mariner": {
@@ -319,6 +314,11 @@
   "Microsoft-Nebius New Jersey": {
    "lat": 39.42675,
    "lon": -75.01675,
+   "posizione": "epoch"
+  },
+  "Huawei Wuhu": {
+   "lat": 31.29177,
+   "lon": 118.29981,
    "posizione": "epoch"
   },
   "CoreWeave Norway": {

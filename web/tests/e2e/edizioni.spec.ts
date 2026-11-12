@@ -4,7 +4,8 @@ import { existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
-import { creaEdizione, filePubblici, foglioDellaHome, type Edizione } from '../../src/lib/edizioni';
+import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
+import { filePubblici, foglioDellaHome } from '../../src/lib/statico';
 import type { Dataset } from '../../src/lib/data/types';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
@@ -23,7 +24,7 @@ const ARCHIVIO = '/edizioni/';
 
 async function serviEdizioni(page: Page, request: APIRequestContext) {
   const home = await (await request.get('/')).text();
-  const file = filePubblici([conCorrezione, seconda], { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici({ edizioni: [conCorrezione, seconda] }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
   for (const [percorso, body] of Object.entries(file)) {
     // il feed con il tipo con cui lo serve GitHub Pages
     const contentType = percorso.endsWith('.xml') ? 'application/xml' : 'text/html; charset=utf-8';

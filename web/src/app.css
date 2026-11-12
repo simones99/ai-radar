@@ -65,12 +65,12 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 560px) { .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 
-/* La testata, della home e delle pagine delle edizioni. Dove non stanno in una riga i link vanno sotto il nome, ognuno intero */
+/* La testata, della home e delle pagine statiche. Dove non stanno in una riga i link vanno sotto il nome, ognuno intero, e se non bastano vanno a capo */
 .testata { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s2); }
 .logo { white-space: nowrap; display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; text-decoration: none; }
 .logo i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--fg); position: relative; }
 .logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
-.testata nav { display: flex; gap: var(--s3); font-size: 14px; }
+.testata nav { display: flex; flex-wrap: wrap; gap: 0 var(--s3); font-size: 14px; }
 .testata nav a { white-space: nowrap; text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
 @media (hover: hover) { .testata nav a:hover { color: var(--fg); } }
 
@@ -91,7 +91,7 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-nota { max-width: 62ch; font-size: 14px; line-height: 20px; color: var(--fg-2); }
 .ed-conteggio { display: grid; gap: var(--s1); }
 .ed-fonte { font-size: 12px; line-height: 16px; color: var(--fg-3); }
-.ed-corretta { margin-top: var(--s1); padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 20px; }
+.ed-corretta, .ed-avviso { margin-top: var(--s1); padding: var(--s2); border-radius: var(--r-md); background: var(--accent-soft); font-size: 14px; line-height: 20px; }
 .ed-corretta strong { font-weight: 600; }
 .ed-quieta { margin-top: var(--s1); font-weight: 500; }
 /* le due porte, alla pari: una sopra l'altra, con lo stesso peso */
@@ -113,6 +113,10 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-cifra { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 4px; font-weight: 500; color: var(--fg-2); }
 .ed-cifra strong { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--fg); }
 .ed-archivio p strong { font-weight: 600; }
+.edizione table { border-collapse: collapse; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.edizione th, .edizione td { padding: var(--s1) var(--s3) var(--s1) 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line-2); }
+.edizione thead th { border-top: 0; font-weight: 500; color: var(--fg-2); }
+.edizione tbody th { font-weight: 500; white-space: nowrap; }
 .ed-altre { display: grid; justify-items: start; gap: var(--s1); padding-top: var(--s3); border-top: 1px solid var(--line-2); }
 
 /* i menu a tendina, una pillola come le scelte: il segno di apertura disegnato con due sfumature nel colore del testo, in tutti e due i temi.

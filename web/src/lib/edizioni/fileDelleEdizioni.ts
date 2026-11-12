@@ -1,11 +1,12 @@
-// I file pubblici che nascono dalle edizioni, come mappa da percorso a contenuto: chi costruisce il sito li scrive così come sono.
+// I file pubblici che nascono dalle edizioni, come mappa da percorso a contenuto: la mappa del sito li comprende così come sono.
 import { INDICE_EDIZIONI } from '../data/load';
 import { isDay } from '../text/format';
 import { feed } from './feed';
-import { archivio, linkAlFeed, paginaEdizione, type OpzioniPagine } from './pagine';
+import { linkAlFeed, type OpzioniPagine } from '../statico/pagina';
+import { archivio, paginaEdizione } from './pagine';
 import { VERSIONE, type Edizione } from './tipi';
 
-export interface OpzioniFilePubblici extends OpzioniPagine {
+export interface OpzioniFileDelleEdizioni extends OpzioniPagine {
   /** L'HTML della home uscito dalla build: con almeno un'edizione la mappa ne restituisce una copia con il link al feed. */
   home?: string;
 }
@@ -20,9 +21,8 @@ function controlla(e: Edizione): void {
 
 /**
  * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
- * Un file nuovo del sito è una voce in più in questa mappa: chi costruisce il sito li scrive tutti allo stesso modo.
  */
-export function filePubblici(edizioni: Edizione[], opzioni: OpzioniFilePubblici): Record<string, string> {
+export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniFileDelleEdizioni): Record<string, string> {
   edizioni.forEach(controlla);
   if (!edizioni.length) return {};
   const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));

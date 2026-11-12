@@ -1,10 +1,9 @@
-// Il modulo Edizioni visto dal disco: legge e scrive data/edizioni/ per il comando e per la build. Solo Node, mai nel browser.
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { FILES } from '../data/load';
-import type { Dataset } from '../data/types';
+// Il modulo Edizioni visto dal disco: legge e scrive data/edizioni/ per il comando, e per la build tramite il sito. Solo Node, mai nel browser.
+import { copyFileSync, existsSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { leggiDati, scrivi } from '../data/cartella';
 import { lunediDi } from '../text/format';
-import { creaEdizione, deveCreare, filePubblici, foglioDellaHome, IMMAGINE } from '.';
+import { creaEdizione, deveCreare, IMMAGINE } from '.';
 import type { Edizione } from './tipi';
 
 /** Tutte le edizioni salvate; se la cartella non c'è ancora, nessuna. Il nome del file è l'indirizzo della pagina: deve essere la sua settimana. */
@@ -18,36 +17,12 @@ export function leggiEdizioni(dati: string): Edizione[] {
   });
 }
 
-/** I JSON della cartella principale, gli stessi che carica l'app. Come nell'app, un file che manca vale come fonte assente. */
-function leggiDati(dati: string): Dataset {
-  const parti: Record<string, unknown> = {};
-  for (const k of FILES) {
-    const file = join(dati, `${k}.json`);
-    if (existsSync(file)) parti[k] = JSON.parse(readFileSync(file, 'utf-8'));
-  }
-  return parti as Dataset;
-}
-
-/** Mai un file scritto a metà: un giro interrotto non lascia un'edizione che sembra buona. */
-function scrivi(file: string, contenuto: string | Uint8Array): void {
-  mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(`${file}.tmp`, contenuto);
-  renameSync(`${file}.tmp`, file);
-}
-
 const fileFisso = (dati: string, settimana: string): string => join(dati, 'edizioni', `${settimana}.json`);
 /** L'immagine di un'edizione, accanto al suo file fisso. */
 const fileImmagine =(dati: string, settimana: string): string => join(dati, 'edizioni', `${settimana}.png`);
 
-/** Scrive nella cartella di uscita tutti i file che nascono dalle edizioni. Un file nuovo del sito basta aggiungerlo a filePubblici. */
-export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
-  const edizioni = leggiEdizioni(dati);
-  const file = filePubblici(edizioni, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome });
-  for (const [percorso, contenuto] of Object.entries(file)) {
-    mkdirSync(dirname(join(uscita, percorso)), { recursive: true });
-    writeFileSync(join(uscita, percorso), contenuto);
-  }
-  // le immagini si copiano soltanto: nascono una volta sola, con il comando
+/** Copia l'immagine di ogni edizione accanto alla sua pagina, nella cartella di uscita della build. Le immagini nascono una volta sola, con il comando. */
+export function copiaImmagini({ dati, uscita, edizioni }: { dati: string; uscita: string; edizioni: Edizione[] }): void {
   for (const { settimana } of edizioni) {
     const immagine = fileImmagine(dati, settimana);
     if (!existsSync(immagine)) throw new Error(`L'edizione del ${settimana} è senza la sua immagine: rifalla con npm run edizione -- --immagine ${settimana}`);

@@ -6,9 +6,10 @@ import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
-import { scriviFilePubblici } from './cartella';
+import { scriviFilePubblici } from '../statico/cartella';
 import { creaEdizione, type Edizione } from '.';
 
+const d = FIXTURE as Dataset;
 const ALTRO_INDIRIZZO = 'https://altro-utente.github.io/altro-radar/';
 /** Non serve un'immagine vera: la build non la guarda. */
 const PNG = (settimana: string) => `il png del ${settimana}`;
@@ -31,7 +32,6 @@ describe('il sito costruito', () => {
     const vuota = join(cartella, 'vuota');
     mkdirSync(join(dati, 'edizioni'), { recursive: true });
     mkdirSync(vuota);
-    const d = FIXTURE as Dataset;
     const prima = creaEdizione(d, null) as Edizione;
     const seconda = creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima) as Edizione;
     for (const e of [prima, seconda]) {
@@ -39,6 +39,8 @@ describe('il sito costruito', () => {
       writeFileSync(join(dati, 'edizioni', `${e.settimana}.png`), PNG(e.settimana));
     }
     writeFileSync(join(dati, 'edizioni', 'LEGGIMI.txt'), 'non è un’edizione');
+    // le pagine delle competenze nascono da radar.json, con le edizioni e senza
+    for (const cartellaDati of [dati, vuota]) writeFileSync(join(cartellaDati, 'radar.json'), JSON.stringify(d.radar));
     build(conEdizioni(), dati);
     build(senzaEdizioni(), vuota);
   }, 300_000);
@@ -130,6 +132,27 @@ describe('il sito costruito', () => {
 
   it('senza edizioni il feed non esiste', () => {
     expect(existsSync(join(senzaEdizioni(), 'feed.xml'))).toBe(false);
+  });
+
+  it('con radar.json ci sono l’indice e una pagina per competenza, anche senza edizioni, con accanto la copia dell’immagine della home finché il workflow non fa la sua', () => {
+    const competenze = d.radar!.competenze.map((c) => c.id);
+    for (const sito of [conEdizioni(), senzaEdizioni()]) {
+      expect(readdirSync(join(sito, 'competenze')).sort()).toEqual([...competenze, 'index.html'].sort());
+      const home = readFileSync(join(sito, 'anteprima.png'));
+      for (const id of competenze) {
+        expect(readdirSync(join(sito, 'competenze', id)).sort()).toEqual(['anteprima.png', 'index.html']);
+        expect(readFileSync(join(sito, 'competenze', id, 'anteprima.png')).equals(home)).toBe(true);
+      }
+    }
+    expect(pagina('competenze', 'mcp', 'index.html').querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(`${ALTRO_INDIRIZZO}competenze/mcp/anteprima.png`);
+  });
+
+  it('senza radar.json non nasce nessuna pagina delle competenze, e la scrittura del sito riesce', () => {
+    const uscita = join(cartella, 'senza-radar');
+    mkdirSync(uscita, { recursive: true });
+    writeFileSync(join(uscita, 'anteprima.png'), 'png della home');
+    scriviFilePubblici({ dati: join(cartella, 'nessun-dato'), uscita, indirizzoBase: ALTRO_INDIRIZZO, htmlHome: '<link rel="stylesheet" href="./assets/a.css">' });
+    expect(existsSync(join(uscita, 'competenze'))).toBe(false);
   });
 
   it('l’indice per la home sta con gli altri dati dell’app e dice l’ultima edizione; senza edizioni non esiste', () => {

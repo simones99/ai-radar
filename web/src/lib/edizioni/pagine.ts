@@ -1,52 +1,12 @@
-// Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa.
-// Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
-import { ICONA } from '../icona';
+// Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa. Lo scheletro è quello di tutte le pagine statiche.
 import { toHash, type TileId } from '../router';
+import { esc, linkEsterno, pagina, rigaFonti, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
 import { day, dayWith } from '../text/format';
-import { LICENZE } from '../tiles/cite';
-import { cifraConUnita, cifraNellaFrase, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type Fonte, type PortaFissa } from './tipi';
-
-export interface OpzioniPagine {
-  /** L'indirizzo pubblico del sito, con la barra finale: da qui nascono gli indirizzi assoluti. */
-  indirizzoBase: string;
-  /** Il foglio di stile della home, relativo alla radice del sito: il suo nome cambia a ogni build. */
-  foglio: string;
-}
-
-/** Il foglio di stile che la build ha dato alla home, relativo alla radice del sito. */
-export function foglioDellaHome(html: string): string {
-  const link = html.match(/<link\b[^>]*\brel="stylesheet"[^>]*>/)?.[0];
-  const href = link?.match(/\bhref="(?:\.\/)?([^"]+)"/)?.[1];
-  if (!href) throw new Error('La home non ha un foglio di stile: le pagine delle edizioni non saprebbero quale usare.');
-  return href;
-}
-
-// I titoli delle notizie arrivano da fonti esterne, e un'edizione corretta a mano può contenere di tutto: niente entra nella pagina senza passare da qui.
-export const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
-
-/** L'indirizzo se è http o https, altrimenti null: il resto non diventa un link. */
-function linkSicuro(url: string | null): string | null {
-  if (!url) return null;
-  try {
-    return ['http:', 'https:'].includes(new URL(url).protocol) ? url.trim() : null;
-  } catch {
-    return null;
-  }
-}
-const linkEsterno = (url: string | null, testo: string): string => {
-  const sicuro = linkSicuro(url);
-  return sicuro ? `<a href="${esc(sicuro)}" target="_blank" rel="noopener">${esc(testo)}</a>` : esc(testo);
-};
+import { cifraConUnita, cifraNellaFrase, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type PortaFissa } from './tipi';
 
 /** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
 const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.card as TileId, d.elemento, d.params)}`);
 export const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
-
-function rigaFonti(fonti: Fonte[]): string {
-  if (!fonti.length) return '';
-  const elenco = fonti.map((f) => `${linkEsterno(f.url, f.nome)} (${linkEsterno(LICENZE[f.licenza] ?? null, f.licenza)})`).join(', ');
-  return `<p class="ed-fonte">${fonti.length === 1 ? 'Fonte' : 'Fonti'}: ${elenco}.</p>`;
-}
 
 /** Una porta in una riga, dove non c'è spazio per altro: chi la vede fuori dalla pagina non deve scambiare una frase ripetuta per una novità. */
 const portaInBreve = (p: PortaFissa): string => `${testoPorta(p)}${p.cambiata ? '' : ' (nessun cambio)'}`;
@@ -144,49 +104,6 @@ export const IMMAGINE = 'anteprima.png';
 /** L'immagine fissa della home, con il testo alternativo che ha in index.html: l'archivio non ne ha una propria. */
 const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
 
-/** Il link con cui un lettore di feed trova il feed partendo da una pagina. */
-export const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_ARCHIVIO)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
-
-/** Lo scheletro comune delle pagine. radice: la radice del sito vista dalla pagina; percorso: la pagina vista dalla radice. */
-function pagina(o: { titolo: string; descrizione: string; percorso: string; radice: string; nav: string; corpo: string; tipo: 'article' | 'website'; immagine: { percorso: string; alt: string } }, opzioni: OpzioniPagine): string {
-  return `<!doctype html>
-<html lang="it">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>${esc(o.titolo)}</title>
-<meta name="description" content="${esc(o.descrizione)}" />
-<link rel="canonical" href="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
-<meta property="og:title" content="${esc(o.titolo)}" />
-<meta property="og:description" content="${esc(o.descrizione)}" />
-<meta property="og:url" content="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
-<meta property="og:image" content="${esc(`${opzioni.indirizzoBase}${o.immagine.percorso}`)}" />
-<meta property="og:image:alt" content="${esc(o.immagine.alt)}" />
-<meta property="og:type" content="${o.tipo}" />
-<meta property="og:locale" content="it_IT" />
-<meta property="og:site_name" content="AI Radar" />
-<meta name="twitter:card" content="summary_large_image" />
-${linkAlFeed(opzioni.indirizzoBase)}
-<link rel="icon" href="${esc(ICONA)}" />
-<link rel="stylesheet" href="${esc(`${o.radice}${opzioni.foglio}`)}" />
-</head>
-<body>
-<a class="skip" href="#contenuto">Vai al contenuto</a>
-<div class="edizione">
-<header class="testata">
-<a class="logo" href="${o.radice}"><i aria-hidden="true"></i>AI Radar</a>
-<nav aria-label="Pagina">${o.nav}<a href="${o.radice}feed.xml">Segui con RSS</a></nav>
-</header>
-<main id="contenuto" tabindex="-1">
-${o.corpo}
-</main>
-<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p></footer>
-</div>
-</body>
-</html>
-`;
-}
-
 /**
  * Il testo di un'edizione, lo stesso nella pagina e nella voce del feed.
  * radice: la radice del sito vista dai link; intestazione: il titolo, che nella voce mostra già il lettore di feed.
@@ -233,7 +150,7 @@ export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine, { precedente
   }, opzioni);
 }
 
-export const TITOLO_ARCHIVIO = 'AI Radar, le edizioni';
+export const TITOLO_ARCHIVIO = TITOLO_DEL_FEED;
 export const DESCRIZIONE_ARCHIVIO = 'Tutte le edizioni di AI Radar, dalla più recente: il riassunto fisso di ogni settimana, con quello che è cambiato e le notizie.';
 
 export function archivio(edizioni: Edizione[], opzioni: OpzioniPagine): string {

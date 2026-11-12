@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 import type { Dataset } from '../../src/lib/data/types';
-import { creaEdizione, filePubblici, foglioDellaHome, type Edizione } from '../../src/lib/edizioni';
+import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
+import { filePubblici, foglioDellaHome } from '../../src/lib/statico';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
 const QUESTA_SETTIMANA = '2026-10-12'; // i dati del FIXTURE sono aggiornati il 15 ottobre 2026
@@ -15,7 +16,7 @@ const edizione = creaEdizione(FIXTURE as Dataset, null) as Edizione;
 /** I file delle edizioni che il sito costruito non ha, compreso l'indice: l'ultima edizione è quella passata. */
 async function conEdizioni(page: Page, request: APIRequestContext, ultima = QUESTA_SETTIMANA) {
   const home = await (await request.get('/')).text();
-  const file = filePubblici([edizione], { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici({ edizioni: [edizione] }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
   for (const [percorso, body] of Object.entries(file)) {
     const contentType = percorso.endsWith('.xml') ? 'application/xml' : 'text/html; charset=utf-8';
     await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType, body }));

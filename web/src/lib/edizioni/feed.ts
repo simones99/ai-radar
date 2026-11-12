@@ -1,5 +1,6 @@
 // Il feed RSS: una voce per edizione, a testo intero, con lo stesso testo della pagina.
-import { corpoEdizione, descrizioneEdizione, DESCRIZIONE_ARCHIVIO, esc, titoloPagina, TITOLO_ARCHIVIO } from './pagine';
+import { esc } from '../statico/pagina';
+import { corpoEdizione, descrizioneEdizione, DESCRIZIONE_ARCHIVIO, titoloPagina, TITOLO_ARCHIVIO } from './pagine';
 import type { Edizione } from './tipi';
 
 const VOCI_DEL_FEED = 26; // chi si iscrive non scarica anni di storico: quello sta nell'archivio

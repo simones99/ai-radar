@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
-import { creaEdizione, filePubblici, type Edizione } from '.';
+import { creaEdizione, fileDelleEdizioni, type Edizione } from '.';
 
 const BASE = 'https://altro-utente.github.io/altro-radar/';
 const d = FIXTURE as Dataset;
@@ -10,7 +10,7 @@ const prima = creaEdizione(d, null) as Edizione;
 const seconda = creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima) as Edizione;
 
 const opzioni = (indirizzoBase = BASE) => ({ indirizzoBase, foglio: 'assets/index-abc123.css' });
-const xml = (...ed: Edizione[]) => filePubblici(ed, opzioni())['feed.xml'];
+const xml = (...ed: Edizione[]) => fileDelleEdizioni(ed, opzioni())['feed.xml'];
 const leggi = (testo: string) => {
   const doc = new DOMParser().parseFromString(testo, 'application/xml');
   expect(doc.querySelector('parsererror')).toBeNull();
@@ -22,7 +22,7 @@ const voci = (...ed: Edizione[]) => [...canale(...ed).querySelectorAll('item')];
 
 describe('il canale del feed', () => {
   it('prima della prima edizione non esiste', () => {
-    expect(filePubblici([], opzioni())).not.toHaveProperty(['feed.xml']);
+    expect(fileDelleEdizioni([], opzioni())).not.toHaveProperty(['feed.xml']);
   });
 
   it('è RSS 2.0, in italiano, e ha titolo, link e descrizione', () => {
@@ -53,9 +53,9 @@ describe('il canale del feed', () => {
     expect(v).toHaveLength(26);
     expect(figlio(v[0], 'title')?.textContent).toContain('2039');
     expect(figlio(v[25], 'title')?.textContent).toContain('2014');
-    const archivio = new DOMParser().parseFromString(filePubblici(tante, opzioni())['edizioni/index.html'], 'text/html');
+    const archivio = new DOMParser().parseFromString(fileDelleEdizioni(tante, opzioni())['edizioni/index.html'], 'text/html');
     expect(archivio.querySelectorAll('main li')).toHaveLength(30);
-    expect(Object.keys(filePubblici(tante, opzioni())).filter((p) => /^edizioni\/\d/.test(p))).toHaveLength(30);
+    expect(Object.keys(fileDelleEdizioni(tante, opzioni())).filter((p) => /^edizioni\/\d/.test(p))).toHaveLength(30);
   });
 });
 
@@ -129,7 +129,7 @@ describe('una voce del feed', () => {
     });
 
     it('resta uguale con un altro indirizzo base, mentre il link lo segue', () => {
-      const altrove = filePubblici([prima], opzioni('https://altrove.example/radar/'))['feed.xml'];
+      const altrove = fileDelleEdizioni([prima], opzioni('https://altrove.example/radar/'))['feed.xml'];
       expect(guid(altrove).textContent).toBe(guid(xml(prima)).textContent);
       expect(figlio(leggi(altrove).querySelector('item')!, 'link')?.textContent).toBe('https://altrove.example/radar/edizioni/2026-10-12/');
     });
@@ -202,7 +202,7 @@ describe('neutralizzare i testi esterni nel feed', () => {
 });
 
 describe('trovare il feed dalle pagine', () => {
-  const pagina = (percorso: string) => new DOMParser().parseFromString(filePubblici([prima, seconda], opzioni())[percorso], 'text/html');
+  const pagina = (percorso: string) => new DOMParser().parseFromString(fileDelleEdizioni([prima, seconda], opzioni())[percorso], 'text/html');
 
   it.each([
     ['edizioni/2026-10-12/index.html', '../../feed.xml'],

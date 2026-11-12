@@ -4,7 +4,7 @@ import type { Dataset } from '../data/types';
 import { parseHash } from '../router';
 import { FIXTURE } from '../test/fixtures';
 import { TESTE, TILES } from '../tiles/registry';
-import { creaEdizione, deveCreare, filePubblici, type Destinazione, type Edizione } from '.';
+import { creaEdizione, deveCreare, fileDelleEdizioni, type Destinazione, type Edizione } from '.';
 
 const d = FIXTURE as Dataset;
 const crea = (dati: Dataset = d, precedente: Edizione | null = null) => creaEdizione(dati, precedente) as Edizione;
@@ -312,7 +312,7 @@ describe('le fonti senza dati aggiornati a questo giro', () => {
 describe('la pagina di un’edizione', () => {
   const BASE = 'https://altro-utente.github.io/altro-radar/';
   const FOGLIO = 'assets/index-abc123.css';
-  const file = (...ed: Edizione[]) => filePubblici(ed, { indirizzoBase: BASE, foglio: FOGLIO });
+  const file = (...ed: Edizione[]) => fileDelleEdizioni(ed, { indirizzoBase: BASE, foglio: FOGLIO });
   const html = (e: Edizione) => file(e)[`edizioni/${e.settimana}/index.html`];
   const pagina = (e: Edizione) => new DOMParser().parseFromString(html(e), 'text/html');
   const titoli = (doc: Document) => [...doc.querySelectorAll('h2')].map((h) => h.textContent);
@@ -729,10 +729,10 @@ describe('l’archivio', () => {
   const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc123.css' };
   const prima = creaEdizione(d, null) as Edizione;
   const seconda = creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima) as Edizione;
-  const archivio = (...ed: Edizione[]) => new DOMParser().parseFromString(filePubblici(ed, opzioni)['edizioni/index.html'], 'text/html');
+  const archivio = (...ed: Edizione[]) => new DOMParser().parseFromString(fileDelleEdizioni(ed, opzioni)['edizioni/index.html'], 'text/html');
 
   it('senza edizioni non esistono né pagine né archivio', () => {
-    expect(filePubblici([], opzioni)).toEqual({});
+    expect(fileDelleEdizioni([], opzioni)).toEqual({});
   });
 
   it('elenca tutte le edizioni, dalla più recente, qualunque sia l’ordine in cui arrivano, ciascuna con il suo link', () => {
@@ -800,12 +800,12 @@ describe('l’indice per la home', () => {
   const seconda = crea({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima);
 
   it('dice qual è l’ultima edizione, qualunque sia l’ordine in cui arrivano', () => {
-    expect(JSON.parse(filePubblici([prima, seconda], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
-    expect(JSON.parse(filePubblici([seconda, prima], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
+    expect(JSON.parse(fileDelleEdizioni([prima, seconda], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
+    expect(JSON.parse(fileDelleEdizioni([seconda, prima], opzioni)['data/edizioni.json'])).toEqual({ ultima: '2026-10-19' });
   });
 
   it('senza edizioni non esiste', () => {
-    expect(filePubblici([], opzioni)).not.toHaveProperty(['data/edizioni.json']);
+    expect(fileDelleEdizioni([], opzioni)).not.toHaveProperty(['data/edizioni.json']);
   });
 });
 

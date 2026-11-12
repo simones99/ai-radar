@@ -18,13 +18,14 @@ export default defineConfig(({ mode }) => ({
       transformIndexHtml: { order: 'pre', handler: (html) => html.replaceAll('%INDIRIZZO_BASE%', indirizzoBase(process.env.AI_RADAR_BASE_URL)).replaceAll('%ICONA%', ICONA) },
     },
     {
-      // i file che nascono dalle edizioni, nella stessa build: gli end-to-end la rilanciano e svuotano la cartella, e il workflow pubblica quella.
-      // Dopo la scrittura perché serve il nome del foglio di stile della home. Le edizioni si leggono dalla loro cartella: non passano da public/data, e l'app non le carica
-      name: 'edizioni',
+      // i file statici del sito (le edizioni, e le pagine che nascono dai dati), nella stessa build: gli end-to-end la rilanciano e svuotano la cartella,
+      // e il workflow pubblica quella. Dopo la scrittura perché serve il nome del foglio di stile della home. I dati si leggono dalla loro cartella:
+      // le edizioni non passano da public/data, e l'app non le carica
+      name: 'file-statici',
       async writeBundle({ dir }, bundle) {
         const home = bundle['index.html'];
         if (!dir || home?.type !== 'asset') return;
-        const { module } = await runnerImport<typeof import('./src/lib/edizioni/cartella.ts')>(fileURLToPath(new URL('./src/lib/edizioni/cartella.ts', import.meta.url)));
+        const { module } = await runnerImport<typeof import('./src/lib/statico/cartella.ts')>(fileURLToPath(new URL('./src/lib/statico/cartella.ts', import.meta.url)));
         module.scriviFilePubblici({
           dati: process.env.AI_RADAR_DATA_DIR ?? fileURLToPath(new URL('../data', import.meta.url)),
           uscita: dir,

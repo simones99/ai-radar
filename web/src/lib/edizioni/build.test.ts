@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
-import { scriviFilePubblici } from './cartella';
+import { scriviFilePubblici } from '../statico/cartella';
 import { creaEdizione, type Edizione } from '.';
 
 const ALTRO_INDIRIZZO = 'https://altro-utente.github.io/altro-radar/';

@@ -41,6 +41,7 @@ jobs:
     timeout-minutes: 60
     outputs:
       edizione: ${{ steps.edizione.outcome }}
+      anteprime: ${{ steps.anteprime.outcome }}
     steps:
       # l'ultimo commit del ramo, non quello che ha fatto partire il giro: un giro rimasto in coda parte così
       # dai dati salvati dal giro prima, e pubblica anche i push arrivati nel frattempo
@@ -135,6 +136,16 @@ jobs:
             exit 1
           }
 
+      # Sulla build che verrà pubblicata: gli end-to-end la rifanno e svuotano la cartella, quindi le immagini non possono nascere prima.
+      # Le scrive in _site, mai in un commit, e in ogni giro che pubblica, anche sul push. Se fallisce il sito esce lo stesso, con la copia
+      # dell'immagine della home che la build mette accanto a ogni pagina, e il job in fondo manda il giro in rosso
+      - name: Fai le anteprime delle competenze
+        id: anteprime
+        continue-on-error: true
+        timeout-minutes: 10
+        working-directory: web
+        run: npm run anteprime-competenze
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
@@ -166,4 +177,23 @@ jobs:
             esito="Il sito non è uscito, e il motivo è negli altri job"
           fi
           echo "::error::L'edizione di questa settimana non è stata creata. $esito. Per recuperarla, avvia il giro a mano con la casella accesa."
+          exit 1
+
+  # Le anteprime fallite non fermano il sito, ma deve arrivare la mail di GitHub. Come per l'edizione, aspetta la pubblicazione per dire
+  # com'è andata davvero. Non c'è niente da recuperare a mano: le immagini non stanno nel repository, e ogni giro che pubblica le rifà
+  anteprime-non-fatte:
+    needs: [aggiorna, pubblica]
+    if: ${{ !cancelled() && needs.aggiorna.outputs.anteprime == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manda il giro in rosso
+        env:
+          SITO: ${{ needs.pubblica.result }}
+        run: |
+          if [ "$SITO" = "success" ]; then
+            esito="Il sito è uscito, e le pagine delle competenze hanno l'immagine della home al posto della loro"
+          else
+            esito="Il sito non è uscito, e il motivo è negli altri job"
+          fi
+          echo "::error::Le anteprime delle competenze non si sono fatte, il motivo è nel log del passo «Fai le anteprime delle competenze». $esito. Il prossimo giro riprova da solo."
           exit 1

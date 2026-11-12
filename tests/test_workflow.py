@@ -32,6 +32,22 @@ def test_chromium_arriva_dopo_la_raccolta_e_il_salvataggio_dei_dati():
     assert [p for p in passi if p in attesi] == attesi
 
 
+def test_le_anteprime_delle_competenze_si_fanno_dopo_gli_end_to_end_e_prima_del_caricamento_del_sito():
+    # gli end-to-end rifanno la build e svuotano la cartella: prima, le immagini andrebbero perse
+    passi = [p.get("name") or p.get("uses") for p in job("aggiorna.yml", "aggiorna")["steps"]]
+    anteprime = passi.index("Fai le anteprime delle competenze")
+    assert passi.index("Test end-to-end") < anteprime < passi.index("actions/upload-pages-artifact@v5")
+    assert "npm run anteprime-competenze" in passo("Fai le anteprime delle competenze")["run"]
+
+
+def test_le_anteprime_partono_in_ogni_giro_e_se_falliscono_il_sito_esce_lo_stesso():
+    anteprime = passo("Fai le anteprime delle competenze")
+    assert "if" not in anteprime
+    assert anteprime["continue-on-error"] is True
+    # l'esito arriva al job finale, che manda il giro in rosso
+    assert job("aggiorna.yml", "aggiorna")["outputs"]["anteprime"] == f"${{{{ steps.{anteprime['id']}.outcome }}}}"
+
+
 def test_i_test_prima_della_raccolta_non_usano_il_browser():
     assert "npm test" in passo("Test dell'app")["run"]
     assert "test:browser" not in passo("Test dell'app")["run"]
@@ -92,9 +108,9 @@ def test_se_chromium_si_installa_non_c_e_nessun_errore():
     assert "::error::" not in giro.stdout
 
 
-def giro_finale(esito_del_sito: str) -> subprocess.CompletedProcess:
-    """Il passo del job finale, con una shell come quella del runner e l'esito della pubblicazione che gli dà GitHub."""
-    finale = job("aggiorna.yml", "edizione-non-creata")["steps"][0]
+def giro_finale(nome: str, esito_del_sito: str) -> subprocess.CompletedProcess:
+    """Il passo di un job finale, con una shell come quella del runner e l'esito della pubblicazione che gli dà GitHub."""
+    finale = job("aggiorna.yml", nome)["steps"][0]
     assert finale["env"] == {"SITO": "${{ needs.pubblica.result }}"}
     return subprocess.run([SH, "-c", finale["run"]], env={**os.environ, "SITO": esito_del_sito}, capture_output=True, text=True, encoding="utf-8")
 
@@ -107,7 +123,7 @@ def test_il_job_finale_aspetta_la_pubblicazione_per_saperne_l_esito():
 
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
 def test_col_sito_uscito_il_job_finale_dice_che_dati_e_sito_sono_andati_avanti_e_il_giro_resta_rosso():
-    giro = giro_finale("success")
+    giro = giro_finale("edizione-non-creata", "success")
     assert giro.returncode == 1
     assert "::error::" in giro.stdout
     assert "Dati e sito sono andati avanti" in giro.stdout
@@ -117,9 +133,34 @@ def test_col_sito_uscito_il_job_finale_dice_che_dati_e_sito_sono_andati_avanti_e
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
 @pytest.mark.parametrize("esito", ["failure", "skipped"])
 def test_col_sito_non_uscito_il_job_finale_non_dice_che_e_andato_avanti(esito):
-    giro = giro_finale(esito)
+    giro = giro_finale("edizione-non-creata", esito)
     assert giro.returncode == 1
     assert "::error::" in giro.stdout
     assert "andati avanti" not in giro.stdout
     assert "non è uscito" in giro.stdout
     assert "casella" in giro.stdout
+
+
+def test_il_job_finale_delle_anteprime_aspetta_la_pubblicazione_e_parte_solo_se_il_passo_e_fallito():
+    finale = job("aggiorna.yml", "anteprime-non-fatte")
+    assert finale["needs"] == ["aggiorna", "pubblica"]
+    assert finale["if"] == "${{ !cancelled() && needs.aggiorna.outputs.anteprime == 'failure' }}"
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_col_sito_uscito_il_job_delle_anteprime_dice_che_le_pagine_hanno_l_immagine_della_home_e_il_giro_resta_rosso():
+    giro = giro_finale("anteprime-non-fatte", "success")
+    assert giro.returncode == 1
+    assert "::error::" in giro.stdout
+    assert "immagine della home" in giro.stdout
+    assert "prossimo giro" in giro.stdout
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+@pytest.mark.parametrize("esito", ["failure", "skipped"])
+def test_col_sito_non_uscito_il_job_delle_anteprime_non_dice_che_le_pagine_sono_uscite(esito):
+    giro = giro_finale("anteprime-non-fatte", esito)
+    assert giro.returncode == 1
+    assert "::error::" in giro.stdout
+    assert "immagine della home" not in giro.stdout
+    assert "non è uscito" in giro.stdout

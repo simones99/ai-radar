@@ -44,6 +44,11 @@ export function rigaFonti(fonti: Fonte[]): string {
   return `<p class="ed-fonte">${fonti.length === 1 ? 'Fonte' : 'Fonti'}: ${elenco}.</p>`;
 }
 
+/** Il nome dell'immagine di anteprima di una pagina, nella cartella della pagina stessa. */
+export const IMMAGINE = 'anteprima.png';
+/** L'immagine fissa della home, con il testo alternativo che ha in index.html: la usano le pagine che non ne hanno una propria. */
+export const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
+
 /** Il nome del feed del sito, che è anche quello dell'archivio delle edizioni: il feed ha una voce per edizione. */
 export const TITOLO_DEL_FEED = 'AI Radar, le edizioni';
 

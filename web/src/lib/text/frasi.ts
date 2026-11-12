@@ -217,12 +217,32 @@ export function headCompetenze(d: Dataset, _today?: Date, params: Params = {}): 
   };
 }
 
-/** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
-export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
+/** L'avviso di una competenza dal dato incerto: dice solo che il margine è largo, come il punto vuoto sul radar, non giudica la competenza. */
+export const avvisoIncerto = (r: Pick<RigaPagina, 'incerto_perche'>): string => `Dato incerto: ${r.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.`;
+
+/** La riga sotto la cifra dello slancio: l'unità, e le note sul valore di un mese fa e sul margine, quando ci sono. */
+export function dettagliSlancio(r: RigaPagina): { unita: string; note: string[] } {
+  const m = r.slancio_margine;
+  return {
+    unita: 'in 6 mesi, rispetto all’AI',
+    note: [
+      ...(r.sp != null ? [`era ${signedPct(r.sp)} un mese fa`] : []),
+      ...(m ? [`margine: da ${signedPct(m[0])} a ${signedPct(m[1])}${margineSuZero(r) ? ', include lo zero' : ''}`] : []),
+    ],
+  };
+}
+
+/** Dove sta una competenza in un mercato: il quadrante, da dove viene se è appena cambiato ed eventuale movimento. Senza il mercato a cui si riferisce. */
+export function statoCompetenza(r: RigaPagina, quadranti: Record<Quadrant, string>): string {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
   const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
+  return `${quadranti[r.quadrante]}${prima}${moving}.`;
+}
+
+/** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
+export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
   const dove = mercato === 'italia' ? 'In Italia: ' : ''; // nella pagina non ci sono i bottoni: lo dice la frase
-  const stato = r.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${dove}${quadranti[r.quadrante]}${prima}${moving}.`;
+  const stato = r.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${dove}${statoCompetenza(r, quadranti)}`;
   const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
   return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
 }

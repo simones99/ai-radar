@@ -1,6 +1,6 @@
 // Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa. Lo scheletro è quello di tutte le pagine statiche.
 import { toHash, type TileId } from '../router';
-import { esc, linkEsterno, pagina, rigaFonti, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, rigaFonti, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
 import { day, dayWith } from '../text/format';
 import { cifraConUnita, cifraNellaFrase, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type PortaFissa } from './tipi';
 
@@ -98,11 +98,6 @@ ${righe}
 </ul>
 </section>`;
 }
-
-/** Il nome dell'immagine di un'edizione nel sito, nella cartella della sua pagina. */
-export const IMMAGINE = 'anteprima.png';
-/** L'immagine fissa della home, con il testo alternativo che ha in index.html: l'archivio non ne ha una propria. */
-const IMMAGINE_HOME = { percorso: 'anteprima.png', alt: "Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia." };
 
 /**
  * Il testo di un'edizione, lo stesso nella pagina e nella voce del feed.

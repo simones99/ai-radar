@@ -2,10 +2,10 @@
   import Block from '../charts/Block.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import type { Cite, Series } from '../charts/types';
-  import { margineSuZero, pubblicatoDi, type Mercato, type RigaPagina } from '../data/derive';
+  import { pubblicatoDi, type Mercato, type RigaPagina } from '../data/derive';
   import type { Quadrant, Radar } from '../data/types';
   import { day, dayWith, monthShort, nf, per10k, quantiAnnunci, signedPct } from '../text/format';
-  import { ITALIA_SENZA_DATO } from '../text/frasi';
+  import { avvisoIncerto, dettagliSlancio, ITALIA_SENZA_DATO } from '../text/frasi';
 
   let { row, quadranti, mercato = 'tutti', storico = [], indietro = '#competenze' }: {
     row: RigaPagina;
@@ -25,13 +25,13 @@
   const FONTE: Record<string, string> = { arxiv: 'paper su arXiv', github: 'repository su GitHub', lavoro: 'annunci di lavoro' };
   const cite = (t: string, href: string): Cite => [{ t: 'Fonte: ' }, { t, href }, { t: '.' }];
 
+  const slancio = $derived(dettagliSlancio(row));
   const seg = $derived(row.segnali ?? {});
   const heavy = $derived(
     (Object.entries(seg) as [string, { peso: number } | null | undefined][])
       .filter(([, s]) => s && s.peso > 0)
       .sort(([, a], [, b]) => (b?.peso ?? 0) - (a?.peso ?? 0))[0]?.[0] ?? null,
   );
-  const margin = $derived(row.slancio_margine ?? null);
   const paperM = $derived(seg.arxiv?.mensile ?? []);
   const repoM = $derived(seg.github?.mensile ?? []);
   const ril = $derived(seg.lavoro?.rilevazioni ?? []);
@@ -57,7 +57,7 @@
 
 <nav class="back" aria-label="Competenze"><a href={indietro}>← Tutte le competenze</a></nav>
 {#if row.incerto}
-  <p class="warn" role="note">Dato incerto: {row.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.</p>
+  <p class="warn" role="note">{avvisoIncerto(row)}</p>
 {/if}
 
 <Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
@@ -66,7 +66,7 @@
 </Block>
 <Block span={4} title="Slancio">
   <p class="fig">{signedPct(row.slancio)}</p>
-  <p class="sub">in 6 mesi, rispetto all’AI{row.sp != null ? ` · era ${signedPct(row.sp)} un mese fa` : ''}{margin ? ` · margine: da ${signedPct(margin[0])} a ${signedPct(margin[1])}${margineSuZero(row) ? ', include lo zero' : ''}` : ''}</p>
+  <p class="sub">{[slancio.unita, ...slancio.note].join(' · ')}</p>
 </Block>
 <!-- dice solo se il margine è largo, come il punto vuoto sul radar: non dà un giudizio sulla competenza -->
 <Block span={4} title="Incertezza del dato">

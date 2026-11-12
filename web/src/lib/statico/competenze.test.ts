@@ -1,0 +1,155 @@
+// Le pagine statiche delle competenze, lette come le legge chi arriva da un motore di ricerca: l'HTML che esce dalla mappa del sito.
+import { describe, expect, it } from 'vitest';
+import type { Dataset, Radar } from '../data/types';
+import { METODO_COMPETENZE } from '../text/metodo';
+import { FIXTURE } from '../test/fixtures';
+import { filePubblici } from '.';
+
+const BASE = 'https://esempio.org/ai-radar/';
+const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc.css' };
+const RADAR = (FIXTURE as Dataset).radar as Radar;
+
+const file = (radar?: Radar) => filePubblici({ edizioni: [], radar }, opzioni);
+const pagina = (id: string, radar: Radar = RADAR) => {
+  const html = file(radar)[`competenze/${id}/index.html`];
+  expect(html, `nessuna pagina per ${id}`).toBeDefined();
+  return new DOMParser().parseFromString(html, 'text/html');
+};
+
+describe('le pagine delle competenze', () => {
+  it('ogni competenza del radar ha la sua pagina, anche senza edizioni', () => {
+    const percorsi = Object.keys(file(RADAR)).filter((p) => /^competenze\/[^/]+\/index\.html$/.test(p));
+    expect(percorsi.sort()).toEqual(['agenti', 'mcp', 'rag', 'robotica', 'vector-db'].map((id) => `competenze/${id}/index.html`));
+  });
+
+  it('senza radar.json, o con quello della pipeline vecchia, non nasce nessuna pagina', () => {
+    const competenze = (radar: Radar | undefined) => Object.keys(file(radar)).filter((p) => p.startsWith('competenze/'));
+    expect(competenze(undefined)).toEqual([]);
+    expect(competenze({ ...RADAR, versione: 1 } as unknown as Radar)).toEqual([]);
+  });
+
+  it('canonical, indirizzo e immagine sono assoluti dall’indirizzo base, e la pagina è un articolo', () => {
+    const doc = pagina('vector-db');
+    const meta = (p: string) => doc.querySelector(`meta[property="${p}"]`)?.getAttribute('content');
+    expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}competenze/vector-db/`);
+    expect(meta('og:url')).toBe(`${BASE}competenze/vector-db/`);
+    expect(meta('og:image')).toBe(`${BASE}competenze/vector-db/anteprima.png`);
+    expect(meta('og:type')).toBe('article');
+  });
+
+  /** Il radar con una competenza cambiata: per le varianti che il FIXTURE non ha. */
+  const conCompetenza = (id: string, cambi: Partial<Radar['competenze'][number]>): Radar => ({
+    ...RADAR, competenze: RADAR.competenze.map((c) => (c.id === id ? { ...c, ...cambi } : c)),
+  });
+  /** Il radar in cui una competenza non ha il dato italiano. */
+  const senzaItalia = (id: string) => conCompetenza(id, { domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null });
+  const testo = (doc: Document) => doc.querySelector('main')?.textContent?.replace(/\s+/g, ' ') ?? '';
+
+  it('in testa ci sono la descrizione e dove sta la competenza con tutti i Paesi e in Italia', () => {
+    const t = testo(pagina('mcp'));
+    expect(t).toContain('Lo standard per collegare strumenti.');
+    expect(t).toContain('Tutti i Paesi: Impara ora, un mese fa Da consolidare.');
+    expect(t).toContain("Italia: Da provare, un mese fa Tieni d'occhio.");
+  });
+
+  it('se per l’Italia il dato manca lo dice con la frase dell’app, e il resto resta', () => {
+    const t = testo(pagina('mcp', senzaItalia('mcp')));
+    expect(t).toContain('Tutti i Paesi: Impara ora, un mese fa Da consolidare.');
+    expect(t).toContain('Per l’Italia il dato non è disponibile in questo momento.');
+    expect(t).not.toContain('Italia: Da provare');
+  });
+
+  it('dice la data dei dati, e che la pagina segue i dati di ogni lunedì', () => {
+    const t = testo(pagina('agenti'));
+    expect(t).toContain('Dati raccolti il 15 ott 2026.');
+    expect(t).toContain('si aggiorna ogni lunedì');
+  });
+
+  it('un dato incerto ha l’avviso con il motivo, uno normale no', () => {
+    expect(pagina('robotica').querySelector('[role="note"]')?.textContent).toBe('Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.');
+    expect(pagina('agenti').querySelector('[role="note"]')).toBeNull();
+  });
+
+  /** Il testo di una sezione, cercata per il suo titolo. */
+  const sezione = (doc: Document, h2: string) => {
+    const s = [...doc.querySelectorAll('section')].find((x) => x.querySelector('h2')?.textContent === h2);
+    expect(s, `nessuna sezione «${h2}»`).toBeDefined();
+    return s!.textContent!.replace(/\s+/g, ' ');
+  };
+
+  it('la domanda ha l’unità, il Paese a metà classifica e l’Italia con i suoi annunci, e il valore di un mese fa', () => {
+    const t = sezione(pagina('mcp'), 'Domanda');
+    expect(t).toContain('Paese a metà classifica 3,4 annunci ogni 10mila era 3,4 un mese fa');
+    expect(t).toContain('Italia 2,6 annunci ogni 10mila 32 annunci · era 2,4 un mese fa');
+  });
+
+  it('senza il dato italiano la domanda dell’Italia è la frase dell’app', () => {
+    const t = sezione(pagina('mcp', senzaItalia('mcp')), 'Domanda');
+    expect(t).toContain('Italia Per l’Italia il dato non è disponibile in questo momento.');
+  });
+
+  it('lo slancio ha l’unità, il valore di un mese fa e il margine, e dice quando il margine include lo zero', () => {
+    expect(sezione(pagina('mcp'), 'Slancio')).toContain('+15% in 6 mesi, rispetto all’AI era −27% un mese fa · margine: da +5% a +27%');
+    expect(sezione(pagina('vector-db'), 'Slancio')).toContain('margine: da −5% a +16%, include lo zero');
+  });
+
+  it('fonti e licenze sono quelle della card Competenze, e il metodo è quello della card, per intero', () => {
+    const doc = pagina('agenti');
+    const t = sezione(doc, 'Fonti e metodo');
+    expect(t).toContain("Fonti: arXiv (metadati CC0), GitHub (termini d'uso di GitHub), The Adzuna API (termini d'uso di Adzuna).");
+    expect(doc.querySelector('main a[href="https://www.adzuna.co.uk"]')).not.toBeNull();
+    for (const paragrafo of METODO_COMPETENZE) expect(t).toContain(paragrafo);
+  });
+
+  it('due link aprono la competenza nell’app: con tutti i Paesi e già sul mercato Italia', () => {
+    const link = [...pagina('vector-db').querySelectorAll('main a')].map((a) => a.getAttribute('href'));
+    expect(link).toContain('../../#competenze/vector-db');
+    expect(link).toContain('../../#competenze/vector-db?mercato=italia');
+  });
+
+  it('una competenza fuori dal radar ha comunque la sua pagina: nome, descrizione, fonti e app, e una frase al posto delle misure', () => {
+    const doc = pagina('rag', conCompetenza('rag', { slancio: null, slancio_margine: null, quadrante: null, quadrante_calcolato: null, quadrante_it: null, quadrante_calcolato_it: null }));
+    const t = testo(doc);
+    expect(doc.querySelector('h1')?.textContent).toBe('RAG e ricerca semantica');
+    expect(t).toContain('Recupero di informazioni.');
+    expect(t).toContain('I dati di questa competenza non sono disponibili questa settimana.');
+    expect(t).not.toContain('Tutti i Paesi:');
+    expect([...doc.querySelectorAll('h2')].map((h) => h.textContent)).toEqual(['Fonti e metodo', 'Nell’app']);
+  });
+
+  const descrizione = (doc: Document) => doc.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
+
+  it('la descrizione dice lo stato nei due mercati e la domanda con l’unità, poi la competenza; og:description è uguale', () => {
+    const doc = pagina('robotica');
+    expect(descrizione(doc)).toBe('Da provare con tutti i Paesi, Da provare in Italia. Domanda: 0,2 annunci ogni 10mila nel Paese a metà classifica, 0,3 in Italia. Robot.');
+    expect(doc.querySelector('meta[property="og:description"]')?.getAttribute('content')).toBe(descrizione(doc));
+  });
+
+  it('senza il dato italiano la descrizione lo dice, e senza dati dice solo questo prima della competenza', () => {
+    expect(descrizione(pagina('robotica', senzaItalia('robotica'))))
+      .toBe('Da provare con tutti i Paesi. Per l’Italia il dato non è disponibile in questo momento. Domanda: 0,2 annunci ogni 10mila nel Paese a metà classifica. Robot.');
+    expect(descrizione(pagina('rag', conCompetenza('rag', { slancio: null, quadrante: null }))))
+      .toBe('I dati di questa competenza non sono disponibili questa settimana. Recupero di informazioni.');
+  });
+
+  it('una descrizione lunga si accorcia sulla competenza, a parola intera, e resta entro 160 caratteri', () => {
+    const lunga = 'Sistemi che pianificano e usano strumenti per completare compiti in più passi, con memoria, controllo degli errori e richieste di conferma a chi li usa.';
+    const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: lunga })));
+    expect(d.length).toBeLessThanOrEqual(160);
+    expect(d).toMatch(/^Impara ora con tutti i Paesi, Impara ora in Italia\. Domanda: 26 annunci ogni 10mila nel Paese a metà classifica, 37 in Italia\. Sistemi che \S.*\S…$/);
+    expect(lunga.startsWith(d.slice(d.lastIndexOf('Italia. ') + 'Italia. '.length, -1))).toBe(true);
+  });
+
+  it('una parola sola più lunga dello spazio rimasto si taglia lo stesso: la descrizione resta entro 160 caratteri', () => {
+    const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: 'x'.repeat(200) })));
+    expect(d.length).toBeLessThanOrEqual(160);
+    expect(d).toMatch(/Italia\. x+…$/);
+  });
+
+  it('il titolo dice la competenza, gli annunci di lavoro e l’Italia, e finisce con AI Radar', () => {
+    const doc = pagina('mcp');
+    expect(doc.title).toBe('Model Context Protocol (MCP) negli annunci di lavoro, in Italia e all’estero · AI Radar');
+    expect(doc.querySelector('meta[property="og:title"]')?.getAttribute('content')).toBe(doc.title);
+    expect(doc.querySelector('h1')?.textContent).toBe('Model Context Protocol (MCP)');
+  });
+});

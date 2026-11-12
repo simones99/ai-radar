@@ -15,10 +15,14 @@ describe('i file pubblici del sito', () => {
     expect(Object.keys(file)).toEqual(expect.arrayContaining([`edizioni/${edizione.settimana}/index.html`, 'edizioni/index.html', 'feed.xml']));
   });
 
-  it('per ora i file sono esattamente quelli delle edizioni, con il radar e senza', () => {
-    for (const radar of [d.radar, undefined]) {
-      expect(filePubblici({ edizioni: [edizione], radar }, opzioni)).toEqual(fileDelleEdizioni([edizione], opzioni));
-      expect(filePubblici({ edizioni: [], radar }, opzioni)).toEqual({});
-    }
+  it('senza il radar i file sono esattamente quelli delle edizioni', () => {
+    expect(filePubblici({ edizioni: [edizione] }, opzioni)).toEqual(fileDelleEdizioni([edizione], opzioni));
+    expect(filePubblici({ edizioni: [] }, opzioni)).toEqual({});
+  });
+
+  it('il radar aggiunge le pagine delle competenze e non cambia i file delle edizioni', () => {
+    const file = filePubblici({ edizioni: [edizione], radar: d.radar }, opzioni);
+    expect(file).toMatchObject(fileDelleEdizioni([edizione], opzioni));
+    expect(Object.keys(file).filter((p) => p.startsWith('competenze/')).length).toBeGreaterThan(0);
   });
 });

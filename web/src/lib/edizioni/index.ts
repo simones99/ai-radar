@@ -1,7 +1,7 @@
 // Il modulo Edizioni: tre operazioni pure, che non toccano file, orologio o rete.
 export { creaEdizione } from './crea';
 export { fileDelleEdizioni, type OpzioniFileDelleEdizioni } from './fileDelleEdizioni';
-export { IMMAGINE } from './pagine';
+export { IMMAGINE } from '../statico/pagina';
 export type { Destinazione, Edizione } from './tipi';
 
 /**

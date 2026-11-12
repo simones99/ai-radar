@@ -1,6 +1,6 @@
-// I dati visti dal disco, per chi lavora in Node: il comando delle edizioni e la build. Mai nel browser, dove li carica load.ts.
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+// I dati visti dal disco, per chi lavora in Node: i comandi delle edizioni e delle anteprime, e la build. Mai nel browser, dove li carica load.ts.
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { FILES, type FileKey } from './load';
 import type { Dataset } from './types';
 
@@ -15,4 +15,11 @@ export function leggiDati(dati: string, quali: readonly FileKey[] = FILES): Data
     if (existsSync(file)) parti[k] = JSON.parse(readFileSync(file, 'utf-8'));
   }
   return parti as Dataset;
+}
+
+/** Mai un file scritto a metà: un giro interrotto non lascia un'edizione, o un'immagine, che sembra buona. */
+export function scrivi(file: string, contenuto: string | Uint8Array): void {
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(`${file}.tmp`, contenuto);
+  renameSync(`${file}.tmp`, file);
 }

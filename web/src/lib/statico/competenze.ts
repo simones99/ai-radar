@@ -5,8 +5,8 @@ import type { Quadrant, Radar } from '../data/types';
 import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
 import { dayWith, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
-import { avvisoIncerto, contaPer, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
-import { IN_CRESCITA, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
+import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
+import { IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
 import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
 
 type Competenza = Radar['competenze'][number];
@@ -19,8 +19,8 @@ interface DueMercati { tutti: RigaPagina; italia: RigaPagina }
 
 /** Dove sta la competenza in ciascun mercato, con i nomi dei mercati dei bottoni dell'app. Senza il dato italiano resta la frase dell'app, che lo dice già. */
 function stato({ tutti, italia }: DueMercati, r: Radar): string {
-  return `<p>Tutti i Paesi: ${esc(statoCompetenza(tutti, r.quadranti))}</p>
-<p>${italia.senzaDato ? esc(`${ITALIA_SENZA_DATO}.`) : `Italia: ${esc(statoCompetenza(italia, r.quadranti))}`}</p>`;
+  return `<p>${MERCATI.tutti}: ${esc(statoCompetenza(tutti, r.quadranti))}</p>
+<p>${italia.senzaDato ? esc(`${ITALIA_SENZA_DATO}.`) : `${MERCATI.italia}: ${esc(statoCompetenza(italia, r.quadranti))}`}</p>`;
 }
 
 /** Una cifra grande con l'unità piccola, come nelle edizioni, e sotto le note: valore di un mese fa, annunci, margine. */
@@ -38,7 +38,7 @@ function misureDi({ tutti, italia }: DueMercati): string {
 <h2>Domanda</h2>
 <h3>Paese a metà classifica</h3>
 ${domandaDi(tutti, false)}
-<h3>Italia</h3>
+<h3>${MERCATI.italia}</h3>
 ${italia.senzaDato ? `<p>${esc(`${ITALIA_SENZA_DATO}.`)}</p>` : domandaDi(italia, true)}
 </section>
 <section>
@@ -53,7 +53,7 @@ function percorsoSulRadar(c: Competenza, r: Radar): string {
     .filter((m) => m.tutti || m.italia);
   const cella = (q: (typeof mesi)[number]['tutti']) => (q ? esc(r.quadranti[q]) : '—');
   const tabella = mesi.length ? `<table>
-<thead><tr><th scope="col">Mese</th><th scope="col">Tutti i Paesi</th><th scope="col">Italia</th></tr></thead>
+<thead><tr><th scope="col">Mese</th><th scope="col">${MERCATI.tutti}</th><th scope="col">${MERCATI.italia}</th></tr></thead>
 <tbody>
 ${mesi.map((m) => `<tr><th scope="row">${esc(meseDelPercorso(m.mese))}</th><td>${cella(m.tutti)}</td><td>${cella(m.italia)}</td></tr>`).join('\n')}
 </tbody>
@@ -149,7 +149,7 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
     radice: RADICE,
     nav: navDelleCompetenze(RADICE, opzioni),
     tipo: 'article',
-    immagine: { percorso: `${percorso}${IMMAGINE}`, alt: IMMAGINE_HOME.alt },
+    immagine: { percorso: `${percorso}${IMMAGINE}`, alt: testoAlternativo(anteprimaDi(c, r)) },
     corpo: `<div class="ed-testa">
 <h1>${esc(c.nome)}</h1>
 ${misure ? stato(misure, r) : `<p>${SENZA_DATI}</p>`}
@@ -188,11 +188,11 @@ function gruppiDellIndice(r: Radar): string {
   const conDati = (Object.keys(r.quadranti) as Quadrant[]).flatMap((q) => {
     const nelQuadrante = voci.filter((v) => v.tutti?.quadrante === q);
     return nelQuadrante.length ? [gruppo(r.quadranti[q], nelQuadrante.map(({ c, italia }) => ({
-      c, italia: !italia || italia.senzaDato ? `${ITALIA_SENZA_DATO}.` : `Italia: ${r.quadranti[italia.quadrante]}`,
+      c, italia: !italia || italia.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${MERCATI.italia}: ${r.quadranti[italia.quadrante]}`,
     })))] : [];
   });
   const senzaDati = voci.filter((v) => !v.tutti).map(({ c }) => ({ c, italia: null }));
-  return [...conDati, ...(senzaDati.length ? [gruppo('Dati non disponibili', senzaDati)] : [])].join('\n');
+  return [...conDati, ...(senzaDati.length ? [gruppo(DATI_NON_DISPONIBILI, senzaDati)] : [])].join('\n');
 }
 
 /** L'indice delle competenze: da qui si arriva a ogni pagina, anche partendo da un'edizione. */
@@ -213,9 +213,38 @@ ${gruppiDellIndice(r)}`,
   }, { ...opzioni, linkAlleCompetenze: false }); // l'indice non porta a se stesso
 }
 
-/** Le immagini di anteprima che le pagine delle competenze si aspettano, per percorso: la build ci mette quella della home, il workflow quella della competenza. */
-export const immaginiDelleCompetenze = (radar: Radar | undefined): string[] =>
-  radar ? competenzeDi(radar).map((c) => `competenze/${c.id}/${IMMAGINE}`) : [];
+/**
+ * Un mercato nell'anteprima: il nome del bottone dell'app e il quadrante, o che il dato manca. In una riga sola, quindi senza ITALIA_SENZA_DATO.
+ * Il tono: «caldo» per Impara ora, in evidenza come sul radar dell'app, «manca» per il dato che non c'è.
+ */
+export interface MercatoInAnteprima { nome: string; testo: string; tono: 'caldo' | 'manca' | null }
+/** Cosa mostra l'immagine di anteprima di una competenza, e quindi il suo testo alternativo. Nessuna cifra: in un post, senza unità e contesto, si leggerebbe male. */
+export interface Anteprima { id: string; nome: string; data: string; mercati: [MercatoInAnteprima, MercatoInAnteprima] }
+
+function anteprimaDi(c: Competenza, r: Radar): Anteprima {
+  const tutti = rigaPagina(r, c.id);
+  const italia = rigaPagina(r, c.id, 'italia');
+  const mercato = (nome: string, q: Quadrant | null): MercatoInAnteprima =>
+    ({ nome, testo: q ? r.quadranti[q] : DATI_NON_DISPONIBILI, tono: !q ? 'manca' : q === 'impara-ora' ? 'caldo' : null });
+  return {
+    id: c.id,
+    nome: c.nome,
+    data: `Dati ${dayWith('del', r.generato)}`,
+    // senza tutti i Paesi la pagina non ha misure, nemmeno quelle italiane: l'immagine fa lo stesso
+    mercati: [mercato(MERCATI.tutti, tutti?.quadrante ?? null), mercato(MERCATI.italia, tutti && italia && !italia.senzaDato ? italia.quadrante : null)],
+  };
+}
+
+/** Il testo alternativo dell'anteprima: le stesse cose dell'immagine, nello stesso ordine. Se l'immagine non si è potuta fare resta questo, sopra il segnaposto. */
+const testoAlternativo = (a: Anteprima): string =>
+  `${a.nome} su AI Radar. ${a.mercati.map((m) => `${m.nome}: ${m.testo}.`).join(' ')} ${a.data}.`;
+
+/**
+ * Le immagini di anteprima che le pagine delle competenze si aspettano, con il percorso e cosa devono mostrare:
+ * la build ci mette quella della home, il comando delle anteprime quella della competenza.
+ */
+export const anteprimeDelleCompetenze = (radar: Radar | undefined): { percorso: string; anteprima: Anteprima }[] =>
+  radar ? competenzeDi(radar).map((c) => ({ percorso: `competenze/${c.id}/${IMMAGINE}`, anteprima: anteprimaDi(c, radar) })) : [];
 
 /** Se le pagine delle competenze nascono: serve un radar.json della pipeline nuova con almeno una competenza. */
 export const nasconoLePagineDelleCompetenze = (radar: Radar | undefined): boolean => !!radar && competenzeDi(radar).length > 0;

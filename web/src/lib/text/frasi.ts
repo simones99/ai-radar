@@ -319,7 +319,9 @@ export interface Door {
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
   scelta?: string; // ruolo, settore o mercato ricordati, per l'etichetta (Per te · Prodotto · Italia)
 }
-const NO_DATA: Door = { title: [], meta: 'Dati non disponibili', target: null };
+/** Al posto di un dato che manca, dove non c'è spazio per una frase: una porta, un gruppo dell'indice, un mercato nell'anteprima. */
+export const DATI_NON_DISPONIBILI = 'Dati non disponibili';
+const NO_DATA: Door = { title: [], meta: DATI_NON_DISPONIBILI, target: null };
 
 /** "A", "A e B", "A, B e C", con i nomi in evidenza. */
 const names = (rows: RadarRowM[]): TitleParts =>

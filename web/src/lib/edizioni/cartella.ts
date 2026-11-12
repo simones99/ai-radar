@@ -1,7 +1,7 @@
 // Il modulo Edizioni visto dal disco: legge e scrive data/edizioni/ per il comando, e per la build tramite il sito. Solo Node, mai nel browser.
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { leggiDati } from '../data/cartella';
+import { copyFileSync, existsSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { leggiDati, scrivi } from '../data/cartella';
 import { lunediDi } from '../text/format';
 import { creaEdizione, deveCreare, IMMAGINE } from '.';
 import type { Edizione } from './tipi';
@@ -15,13 +15,6 @@ export function leggiEdizioni(dati: string): Edizione[] {
     if (`${e.settimana}.json` !== nome) throw new Error(`data/edizioni/${nome}: il nome del file deve essere la sua settimana, che è ${e.settimana}.`);
     return e;
   });
-}
-
-/** Mai un file scritto a metà: un giro interrotto non lascia un'edizione che sembra buona. */
-function scrivi(file: string, contenuto: string | Uint8Array): void {
-  mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(`${file}.tmp`, contenuto);
-  renameSync(`${file}.tmp`, file);
 }
 
 const fileFisso = (dati: string, settimana: string): string => join(dati, 'edizioni', `${settimana}.json`);

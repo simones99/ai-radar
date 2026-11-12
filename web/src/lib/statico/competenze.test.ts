@@ -37,6 +37,15 @@ describe('le pagine delle competenze', () => {
     expect(meta('og:type')).toBe('article');
   });
 
+  it('il testo alternativo dell’anteprima dice quello che c’è nell’immagine: nome, quadrante nei due mercati e data dei dati', () => {
+    const alt = (doc: Document) => doc.querySelector('meta[property="og:image:alt"]')?.getAttribute('content');
+    expect(alt(pagina('mcp'))).toBe('Model Context Protocol (MCP) su AI Radar. Tutti i Paesi: Impara ora. Italia: Da provare. Dati del 15 ott 2026.');
+    expect(alt(pagina('mcp', conCompetenza('mcp', { domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null }))))
+      .toBe('Model Context Protocol (MCP) su AI Radar. Tutti i Paesi: Impara ora. Italia: Dati non disponibili. Dati del 15 ott 2026.');
+    expect(alt(pagina('rag', conCompetenza('rag', { slancio: null, quadrante: null }))))
+      .toBe('RAG e ricerca semantica su AI Radar. Tutti i Paesi: Dati non disponibili. Italia: Dati non disponibili. Dati del 15 ott 2026.');
+  });
+
   /** Il radar con una competenza cambiata: per le varianti che il FIXTURE non ha. */
   const conCompetenza = (id: string, cambi: Partial<Radar['competenze'][number]>): Radar => ({
     ...RADAR, competenze: RADAR.competenze.map((c) => (c.id === id ? { ...c, ...cambi } : c)),

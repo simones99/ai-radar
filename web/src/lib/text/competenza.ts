@@ -2,6 +2,9 @@
 import type { RepoNuovo, Risorsa } from '../data/types';
 import { dayWith, monthShort, nf } from './format';
 
+/** I due mercati, con i nomi dei bottoni dell'app: gli stessi nella pagina statica e nella sua anteprima. */
+export const MERCATI = { tutti: 'Tutti i Paesi', italia: 'Italia' } as const;
+
 /** Una parte fissa della pagina di una competenza: il titolo, la nota sotto, e la frase che ne prende il posto quando non c'è niente da mostrare. */
 export interface TestiParte { titolo: string; nota: string; vuota: string }
 

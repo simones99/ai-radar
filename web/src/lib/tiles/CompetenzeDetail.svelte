@@ -10,7 +10,7 @@
   import { mercato as sceltaMercato, ruolo as sceltaRuolo } from '../scelta.svelte';
   import { conAnnunci, monthName, per10k, quantiAnnunci, signedPct } from '../text/format';
   import { headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
-  import { METODO_COMPETENZE } from '../text/competenza';
+  import { MERCATI, METODO_COMPETENZE } from '../text/competenza';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
   import type { DetailProps } from './types';
@@ -62,8 +62,8 @@
         </div>
       {/if}
       <div class="chips" role="group" aria-label="Mercato">
-        <button type="button" aria-pressed={mercato === 'tutti'} onclick={() => sceltaMercato.scegli(null)}>Tutti i Paesi</button>
-        <button type="button" aria-pressed={mercato === 'italia'} onclick={() => sceltaMercato.scegli('italia')}>Italia</button>
+        <button type="button" aria-pressed={mercato === 'tutti'} onclick={() => sceltaMercato.scegli(null)}>{MERCATI.tutti}</button>
+        <button type="button" aria-pressed={mercato === 'italia'} onclick={() => sceltaMercato.scegli('italia')}>{MERCATI.italia}</button>
       </div>
     </div>
     {#if rows.length}

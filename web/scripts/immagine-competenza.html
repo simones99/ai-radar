@@ -1,0 +1,40 @@
+<!doctype html>
+<!-- L'immagine dell'anteprima della pagina di una competenza: marchio, data dei dati, nome e quadrante nei due mercati, con i token e il font del sito. La riempie e la fotografa src/lib/statico/immagine.ts. -->
+<html lang="it" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>Anteprima di una competenza</title>
+    <link rel="stylesheet" href="../node_modules/@fontsource-variable/bricolage-grotesque/opsz.css" />
+    <link rel="stylesheet" href="../src/app.css" />
+    <style>
+      html, body { overflow: hidden; }
+      body { width: 1200px; height: 630px; padding: var(--s5); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--s4); }
+      header { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
+      .logo { gap: var(--s2); font-size: 40px; line-height: 48px; }
+      .logo i { flex: none; width: 36px; height: 36px; border-width: 5px; }
+      .logo i::after { inset: 7px; }
+      header p { font-weight: 600; font-size: 32px; line-height: 40px; color: var(--fg-2); white-space: nowrap; }
+      /* il nome è la notizia: il corpo più grande a cui entra lo sceglie immagine.ts */
+      h1 { min-height: 0; font-weight: 600; font-size: var(--corpo); line-height: 1.05; letter-spacing: -.02em; overflow: hidden; overflow-wrap: break-word; }
+      main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+      /* i due mercati alla pari, come i due bottoni dell'app */
+      article { display: grid; gap: var(--s1); padding: var(--s4); background: var(--card); border-radius: var(--r-lg); box-shadow: var(--shadow); overflow: hidden; }
+      h2 { font-weight: 600; font-size: 28px; line-height: 32px; color: var(--fg-2); white-space: nowrap; }
+      article p { font-weight: 600; font-size: 44px; line-height: 52px; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; }
+      /* il blu segna il dato in evidenza, come Impara ora sul radar dell'app */
+      article p.caldo { color: var(--accent); }
+      article p.manca { font-weight: 500; color: var(--fg-3); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="logo"><i></i>AI Radar</span>
+      <p></p>
+    </header>
+    <h1></h1>
+    <main>
+      <article><h2></h2><p></p></article>
+      <article><h2></h2><p></p></article>
+    </main>
+  </body>
+</html>

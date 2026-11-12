@@ -10,7 +10,7 @@
   import { mercato as sceltaMercato, ruolo as sceltaRuolo } from '../scelta.svelte';
   import { conAnnunci, monthName, per10k, quantiAnnunci, signedPct } from '../text/format';
   import { headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
-  import { METODO_COMPETENZE } from '../text/metodo';
+  import { METODO_COMPETENZE } from '../text/competenza';
   import Detail from './Detail.svelte';
   import SkillView from './SkillView.svelte';
   import type { DetailProps } from './types';

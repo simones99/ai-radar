@@ -1,4 +1,31 @@
-// Il metodo delle competenze, come lo legge chi apre la card e chi apre la pagina statica di una competenza: un solo testo.
+// I testi fissi della pagina di una competenza e il metodo della card: gli stessi nell'app e nella pagina statica, scritti una volta sola.
+import type { RepoNuovo, Risorsa } from '../data/types';
+import { dayWith, monthShort, nf } from './format';
+
+/** Una parte fissa della pagina di una competenza: il titolo, la nota sotto, e la frase che ne prende il posto quando non c'è niente da mostrare. */
+export interface TestiParte { titolo: string; nota: string; vuota: string }
+
+export const PERCORSO: TestiParte = {
+  titolo: 'Il percorso sul radar',
+  nota: 'Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo.',
+  vuota: 'Lo storico arriva con i prossimi aggiornamenti.',
+};
+/** Un mese del percorso: «set 2026». */
+export const meseDelPercorso = (mese: string): string => `${monthShort(mese)} ${mese.slice(0, 4)}`;
+
+export const PER_INIZIARE: TestiParte = { titolo: 'Per iniziare', nota: 'Scelte a mano, gratuite.', vuota: 'Nessuna risorsa disponibile.' };
+/** Accanto al titolo di una risorsa: il tipo, e la lingua se non è l'italiano. */
+export const metaRisorsa = (r: Risorsa): string => `${r.tipo}${r.lingua !== 'it' ? ' · in inglese' : ''}`;
+
+export const IN_CRESCITA: TestiParte = {
+  titolo: 'Cosa si muove adesso',
+  nota: 'I repository con il suo topic creati negli ultimi 90 giorni, i più stellati.',
+  vuota: 'Nessun repository nuovo con questo topic negli ultimi 90 giorni.',
+};
+/** Accanto al nome di un repository: le stelle e quando è nato. */
+export const metaRepository = (r: RepoNuovo): string => `${nf(r.stelle)} stelle · creato ${dayWith('il', r.creato)}`;
+
+/** Il metodo delle competenze, come lo legge chi apre la card e chi apre la pagina statica di una competenza. */
 export const METODO_COMPETENZE = [
   'Slancio: quanto è cambiata negli ultimi 6 mesi interi la quota della competenza sul totale dell’AI. Si stima con una retta sui dati di ogni mese, non confrontando solo due periodi.',
   'Paper: quota dei paper AI su arXiv che la citano nell’abstract. Repository: quota dei nuovi repository GitHub con il suo topic sui nuovi repository AI (topic llm, ai, artificial-intelligence, generative-ai). Annunci: quota degli annunci che la citano, quando ci sono almeno 8 settimane di rilevazioni con la stessa ricerca.',

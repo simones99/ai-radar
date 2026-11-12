@@ -77,6 +77,9 @@ test.describe('senza JavaScript', () => {
     await expect(page.getByText('Tutti i Paesi: Impara ora, un mese fa Da consolidare.')).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'Domanda' })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'Slancio' })).toBeVisible();
+    await expect(page.getByRole('table')).toBeVisible();
+    await expect(page.getByRole('row', { name: 'set 2026 Impara ora Da provare' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'acme/mcp-kit' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'The Adzuna API' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Apri MCP nell’app, sul mercato Italia' })).toBeVisible();
     await expect(page.locator('script')).toHaveCount(0);

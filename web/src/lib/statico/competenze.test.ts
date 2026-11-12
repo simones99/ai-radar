@@ -1,7 +1,7 @@
 // Le pagine statiche delle competenze, lette come le legge chi arriva da un motore di ricerca: l'HTML che esce dalla mappa del sito.
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
-import { METODO_COMPETENZE } from '../text/metodo';
+import { METODO_COMPETENZE } from '../text/competenza';
 import { FIXTURE } from '../test/fixtures';
 import { filePubblici } from '.';
 
@@ -114,7 +114,7 @@ describe('le pagine delle competenze', () => {
     expect(t).toContain('Recupero di informazioni.');
     expect(t).toContain('I dati di questa competenza non sono disponibili questa settimana.');
     expect(t).not.toContain('Tutti i Paesi:');
-    expect([...doc.querySelectorAll('h2')].map((h) => h.textContent)).toEqual(['Fonti e metodo', 'Nell’app']);
+    expect([...doc.querySelectorAll('h2')].map((h) => h.textContent)).toEqual(['Il percorso sul radar', 'Per iniziare', 'Cosa si muove adesso', 'Fonti e metodo', 'Nell’app']);
   });
 
   const descrizione = (doc: Document) => doc.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
@@ -144,6 +144,75 @@ describe('le pagine delle competenze', () => {
     const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: 'x'.repeat(200) })));
     expect(d.length).toBeLessThanOrEqual(160);
     expect(d).toMatch(/Italia\. x+…$/);
+  });
+
+  /** Le righe di una tabella come testo, cella per cella: intestazione compresa. */
+  const righe = (doc: Document) => [...doc.querySelectorAll('main table tr')].map((tr) => [...tr.querySelectorAll('th, td')].map((c) => c.textContent?.trim()));
+
+  it('il percorso sul radar è una tabella con il quadrante di ogni mese con tutti i Paesi e in Italia', () => {
+    const doc = pagina('mcp');
+    expect(sezione(doc, 'Il percorso sul radar')).toContain('Il quadrante di ogni mese. Cambia solo dopo due mesi di fila nel quadrante nuovo.');
+    expect(righe(doc)).toEqual([
+      ['Mese', 'Tutti i Paesi', 'Italia'],
+      ['lug 2026', 'Da consolidare', "Tieni d'occhio"],
+      ['ago 2026', 'Da consolidare', "Tieni d'occhio"],
+      ['set 2026', 'Impara ora', 'Da provare'],
+    ]);
+  });
+
+  it('dove manca il quadrante italiano la cella lo dice, e senza nessun mese italiano c’è la frase dell’app', () => {
+    const storico = RADAR.storico!.map((p) => ({ ...p, competenze: { ...p.competenze, mcp: { ...p.competenze.mcp, pubblicato_it: null } } }));
+    const doc = pagina('mcp', { ...RADAR, storico } as Radar);
+    expect(righe(doc).slice(1).map((r) => r[2])).toEqual(['—', '—', '—']);
+    expect(sezione(doc, 'Il percorso sul radar')).toContain('Per l’Italia il dato non è disponibile in questo momento.');
+  });
+
+  it('senza storico il percorso dice che arriva con i prossimi aggiornamenti', () => {
+    const doc = pagina('mcp', { ...RADAR, storico: [] });
+    expect(doc.querySelector('main table')).toBeNull();
+    expect(sezione(doc, 'Il percorso sul radar')).toContain('Lo storico arriva con i prossimi aggiornamenti.');
+  });
+
+  it('«Conta per» elenca i ruoli della competenza nell’ordine di radar.json, e manca quando non ce ne sono', () => {
+    expect(testo(pagina('rag'))).toContain('Conta per: Sviluppo software, Prodotto, Dati e analisi');
+    expect(testo(pagina('robotica'))).not.toContain('Conta per');
+    expect(testo(pagina('rag', conCompetenza('rag', { slancio: null, quadrante: null })))).toContain('Conta per: Sviluppo software, Prodotto, Dati e analisi');
+  });
+
+  it('«Per iniziare» e «Cosa si muove adesso» mostrano le voci dell’app, con tipo, lingua, stelle e data', () => {
+    const doc = pagina('mcp');
+    const iniziare = sezione(doc, 'Per iniziare');
+    expect(iniziare).toContain('Scelte a mano, gratuite.');
+    expect(iniziare).toContain('Documentazione ufficiale di MCP: introduzione documentazione · in inglese');
+    expect(iniziare).toMatch(/Corso in italiano di prova corso(?! · in inglese)/);
+    expect(doc.querySelector('main a[href="https://modelcontextprotocol.io/docs/getting-started/intro"]')?.textContent).toBe('Documentazione ufficiale di MCP: introduzione');
+    const muove = sezione(doc, 'Cosa si muove adesso');
+    expect(muove).toContain('I repository con il suo topic creati negli ultimi 90 giorni, i più stellati.');
+    expect(muove).toContain('acme/mcp-kit 1.200 stelle · creato il 2 ago 2026 Kit per server MCP.');
+    expect(doc.querySelector('main a[href="https://github.com/acme/mcp-kit"]')?.textContent).toBe('acme/mcp-kit');
+  });
+
+  it('senza voci le due sezioni restano, con le frasi dell’app', () => {
+    const doc = pagina('rag');
+    expect(sezione(doc, 'Per iniziare')).toContain('Nessuna risorsa disponibile.');
+    expect(sezione(doc, 'Cosa si muove adesso')).toContain('Nessun repository nuovo con questo topic negli ultimi 90 giorni.');
+  });
+
+  it('i testi esterni restano testo, e un indirizzo che non è http o https non diventa un link', () => {
+    const strano = '<img src=x onerror="alert(1)"> & \'virgolette\'';
+    const doc = pagina('mcp', conCompetenza('mcp', {
+      in_crescita: [{ nome: `<b>acme</b>/kit & "co"`, url: 'javascript:alert(1)', descrizione: strano, stelle: 3, creato: '2026-10-01' }],
+      per_iniziare: [{ titolo: strano, url: 'javascript:alert(2)', tipo: 'guida', lingua: 'it' }],
+    }));
+    expect(doc.querySelector('main img, main b')).toBeNull();
+    expect([...doc.querySelectorAll('main a')].map((a) => a.getAttribute('href'))).not.toContainEqual(expect.stringMatching(/^javascript:/));
+    expect(sezione(doc, 'Cosa si muove adesso')).toContain(`<b>acme</b>/kit & "co"`);
+    expect(sezione(doc, 'Cosa si muove adesso')).toContain(strano);
+    expect(sezione(doc, 'Per iniziare')).toContain(strano);
+  });
+
+  it('una competenza senza dati mostra comunque le risorse', () => {
+    expect(sezione(pagina('mcp', conCompetenza('mcp', { slancio: null, quadrante: null })), 'Per iniziare')).toContain('Documentazione ufficiale di MCP: introduzione');
   });
 
   it('il titolo dice la competenza, gli annunci di lavoro e l’Italia, e finisce con AI Radar', () => {

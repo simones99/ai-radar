@@ -232,6 +232,12 @@ export function dettagliSlancio(r: RigaPagina): { unita: string; note: string[] 
   };
 }
 
+/** «Conta per: …», con i ruoli della competenza nell'ordine dei ruoli; vuota se la competenza non ne ha. */
+export function contaPer(diCompetenza: string[] | undefined, ruoli: Ruolo[]): string {
+  const nomi = ruoli.filter((x) => diCompetenza?.includes(x.id)).map((x) => x.nome).join(', ');
+  return nomi && `Conta per: ${nomi}`;
+}
+
 /** Dove sta una competenza in un mercato: il quadrante, da dove viene se è appena cambiato ed eventuale movimento. Senza il mercato a cui si riferisce. */
 export function statoCompetenza(r: RigaPagina, quadranti: Record<Quadrant, string>): string {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
@@ -243,8 +249,8 @@ export function statoCompetenza(r: RigaPagina, quadranti: Record<Quadrant, strin
 export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
   const dove = mercato === 'italia' ? 'In Italia: ' : ''; // nella pagina non ci sono i bottoni: lo dice la frase
   const stato = r.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${dove}${statoCompetenza(r, quadranti)}`;
-  const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
-  return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
+  const conta = contaPer(r.ruoli, ruoli);
+  return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: conta }) };
 }
 
 // ---------------------------------------------------------------- notizie

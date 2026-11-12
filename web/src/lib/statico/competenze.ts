@@ -1,13 +1,13 @@
 // Le pagine statiche delle competenze: una per competenza di radar.json, con i dati di oggi, per chi arriva da un motore di ricerca o senza JavaScript.
 // Non sono edizioni: si rifanno a ogni build. Le parole e le cifre sono quelle della pagina della competenza nell'app.
-import { competenzeDi, rigaPagina, type RigaPagina } from '../data/derive';
+import { competenzeDi, pubblicatoDi, rigaPagina, type RigaPagina } from '../data/derive';
 import type { Radar } from '../data/types';
 import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
 import { dayWith, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
-import { avvisoIncerto, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
-import { METODO_COMPETENZE } from '../text/metodo';
-import { esc, IMMAGINE, IMMAGINE_HOME, pagina, rigaFonti, type OpzioniPagine } from './pagina';
+import { avvisoIncerto, contaPer, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
+import { IN_CRESCITA, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
+import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
 
 type Competenza = Radar['competenze'][number];
 
@@ -45,6 +45,44 @@ ${italia.senzaDato ? `<p>${esc(`${ITALIA_SENZA_DATO}.`)}</p>` : domandaDi(italia
 ${cifra(signedPct(tutti.slancio), ` ${unita}`, note)}
 </section>`;
 }
+
+/** Il quadrante di ogni mese dello storico, con tutti i Paesi e in Italia: dove manca un mercato la cella lo dice con un trattino, e se manca in tutti i mesi lo dice la frase dell'app. */
+function percorsoSulRadar(c: Competenza, r: Radar): string {
+  const mesi = (r.storico ?? []).map((p) => ({ mese: p.mese, tutti: pubblicatoDi(p.competenze[c.id], 'tutti'), italia: pubblicatoDi(p.competenze[c.id], 'italia') }))
+    .filter((m) => m.tutti || m.italia);
+  const cella = (q: (typeof mesi)[number]['tutti']) => (q ? esc(r.quadranti[q]) : '—');
+  const tabella = mesi.length ? `<table>
+<thead><tr><th scope="col">Mese</th><th scope="col">Tutti i Paesi</th><th scope="col">Italia</th></tr></thead>
+<tbody>
+${mesi.map((m) => `<tr><th scope="row">${esc(meseDelPercorso(m.mese))}</th><td>${cella(m.tutti)}</td><td>${cella(m.italia)}</td></tr>`).join('\n')}
+</tbody>
+</table>
+${mesi.some((m) => m.italia) ? '' : `<p class="ed-nota">${esc(`${ITALIA_SENZA_DATO}.`)}</p>`}` : `<p>${esc(PERCORSO.vuota)}</p>`;
+  return `<section>
+<h2>${esc(PERCORSO.titolo)}</h2>
+<p class="ed-nota">${esc(PERCORSO.nota)}</p>
+${tabella}
+</section>`;
+}
+
+/** Una sezione con il suo titolo e la nota dell'app; senza voci la frase dell'app, come nella pagina della competenza. */
+function elenco(testi: TestiParte, voci: string[]): string {
+  return `<section>
+<h2>${esc(testi.titolo)}</h2>
+<p class="ed-nota">${esc(testi.nota)}</p>
+${voci.length ? `<ul class="ed-voci">\n${voci.join('\n')}\n</ul>` : `<p>${esc(testi.vuota)}</p>`}
+</section>`;
+}
+
+// Risorse e repository vengono da fuori: titoli, descrizioni e indirizzi passano tutti dall'escape e dai link sicuri.
+
+/** Le risorse scelte a mano per iniziare, con tipo e lingua. */
+const perIniziare = (c: Competenza): string =>
+  elenco(PER_INIZIARE, (c.per_iniziare ?? []).map((x) => `<li>${linkEsterno(x.url, x.titolo)} <span class="ed-fonte">${esc(metaRisorsa(x))}</span></li>`));
+
+/** I repository nuovi più stellati con il suo topic, con stelle, data e descrizione. */
+const inCrescita = (c: Competenza): string =>
+  elenco(IN_CRESCITA, (c.in_crescita ?? []).map((x) => `<li>${linkEsterno(x.url, x.nome)} <span class="ed-fonte">${esc(metaRepository(x))}</span>${x.descrizione ? ` <span class="ed-nota">${esc(x.descrizione)}</span>` : ''}</li>`));
 
 const RADICE = '../../';
 /** Quanto di una descrizione un motore di ricerca mostra per intero. */
@@ -97,6 +135,7 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
   const tutti = rigaPagina(r, c.id);
   const italia = rigaPagina(r, c.id, 'italia');
   const misure = tutti && italia ? { tutti, italia } : null;
+  const conta = contaPer(c.ruoli, r.ruoli ?? []);
   return pagina({
     titolo: titolo(c),
     descrizione: descrizione(c, misure, r),
@@ -109,10 +148,14 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
 <h1>${esc(c.nome)}</h1>
 ${misure ? stato(misure, r) : `<p>${SENZA_DATI}</p>`}
 <p>${esc(c.descrizione)}</p>
+${conta && `<p class="ed-nota">${esc(conta)}</p>`}
 <p class="ed-nota">Dati raccolti ${esc(dayWith('il', r.generato))}. La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.</p>
 ${misure?.tutti.incerto ? `<p class="ed-avviso" role="note">${esc(avvisoIncerto(misure.tutti))}</p>` : ''}
 </div>
 ${misure ? misureDi(misure) : ''}
+${percorsoSulRadar(c, r)}
+${perIniziare(c)}
+${inCrescita(c)}
 ${inFondo(c, r)}`,
   }, opzioni);
 }

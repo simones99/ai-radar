@@ -113,6 +113,10 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .ed-cifra { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 4px; font-weight: 500; color: var(--fg-2); }
 .ed-cifra strong { font-weight: 600; font-size: 32px; line-height: 40px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--fg); }
 .ed-archivio p strong { font-weight: 600; }
+.edizione table { border-collapse: collapse; font-size: 14px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.edizione th, .edizione td { padding: var(--s1) var(--s3) var(--s1) 0; text-align: left; vertical-align: top; border-top: 1px solid var(--line-2); }
+.edizione thead th { border-top: 0; font-weight: 500; color: var(--fg-2); }
+.edizione tbody th { font-weight: 500; white-space: nowrap; }
 .ed-altre { display: grid; justify-items: start; gap: var(--s1); padding-top: var(--s3); border-top: 1px solid var(--line-2); }
 
 /* i menu a tendina, una pillola come le scelte: il segno di apertura disegnato con due sfumature nel colore del testo, in tutti e due i temi.

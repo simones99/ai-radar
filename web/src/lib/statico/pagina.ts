@@ -11,7 +11,14 @@ export interface OpzioniPagine {
   indirizzoBase: string;
   /** Il foglio di stile della home, relativo alla radice del sito: il suo nome cambia a ogni build. */
   foglio: string;
+  /** La testata porta all'indice delle competenze: vale quando le loro pagine esistono, e non nell'indice stesso. È il link con cui un crawler le trova partendo da un'edizione. */
+  linkAlleCompetenze?: boolean;
+  /** Le edizioni esistono: le pagine che non ne fanno parte portano al loro archivio. */
+  linkAlleEdizioni?: boolean;
 }
+
+/** L'indice delle competenze, visto dalla radice del sito. */
+export const INDICE_COMPETENZE = 'competenze/';
 
 /** Il foglio di stile che la build ha dato alla home, relativo alla radice del sito. */
 export function foglioDellaHome(html: string): string {
@@ -98,7 +105,7 @@ ${linkAlFeed(opzioni.indirizzoBase)}
 <div class="edizione">
 <header class="testata">
 <a class="logo" href="${o.radice}"><i aria-hidden="true"></i>AI Radar</a>
-<nav aria-label="Pagina">${o.nav}<a href="${o.radice}feed.xml">Segui con RSS</a></nav>
+<nav aria-label="Pagina">${opzioni.linkAlleCompetenze ? `<a href="${o.radice}${INDICE_COMPETENZE}">Competenze</a>` : ''}${o.nav}<a href="${o.radice}feed.xml">Segui con RSS</a></nav>
 </header>
 <main id="contenuto" tabindex="-1">
 ${o.corpo}

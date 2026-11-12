@@ -222,3 +222,58 @@ describe('le pagine delle competenze', () => {
     expect(doc.querySelector('h1')?.textContent).toBe('Model Context Protocol (MCP)');
   });
 });
+
+describe('l’indice delle competenze', () => {
+  const indice = (radar: Radar = RADAR) => {
+    const html = file(radar)['competenze/index.html'];
+    expect(html, 'nessun indice').toBeDefined();
+    return new DOMParser().parseFromString(html, 'text/html');
+  };
+
+  it('nasce con le pagine delle competenze, e senza radar.json non c’è', () => {
+    expect(file(RADAR)).toHaveProperty(['competenze/index.html']);
+    expect(file(undefined)).not.toHaveProperty(['competenze/index.html']);
+  });
+
+  /** Ogni gruppo dell'indice: il titolo, e per ogni voce il link e il testo. */
+  const gruppi = (doc: Document) => [...doc.querySelectorAll('main section')].map((s) => ({
+    titolo: s.querySelector('h2')?.textContent,
+    voci: [...s.querySelectorAll('li')].map((li) => ({ href: li.querySelector('a')?.getAttribute('href'), testo: li.textContent?.replace(/\s+/g, ' ').trim() })),
+  }));
+  const conCompetenza = (id: string, cambi: Partial<Radar['competenze'][number]>): Radar => ({
+    ...RADAR, competenze: RADAR.competenze.map((c) => (c.id === id ? { ...c, ...cambi } : c)),
+  });
+
+  it('le competenze stanno in gruppi per quadrante con tutti i Paesi, nell’ordine del radar, con il quadrante in Italia accanto', () => {
+    expect(gruppi(indice())).toEqual([
+      { titolo: 'Impara ora', voci: [
+        { href: 'agenti/', testo: 'Agenti AI Italia: Impara ora' },
+        { href: 'mcp/', testo: 'Model Context Protocol (MCP) Italia: Da provare' },
+      ] },
+      { titolo: 'Da provare', voci: [{ href: 'robotica/', testo: 'AI fisica e robotica Italia: Da provare' }] },
+      { titolo: 'Da consolidare', voci: [{ href: 'rag/', testo: 'RAG e ricerca semantica Italia: Da consolidare' }] },
+      { titolo: "Tieni d'occhio", voci: [{ href: 'vector-db/', testo: "Database vettoriali Italia: Tieni d'occhio" }] },
+    ]);
+  });
+
+  it('senza il dato italiano la voce dice la frase dell’app; senza dati la competenza sta in fondo, sotto «Dati non disponibili»', () => {
+    const radar = conCompetenza('mcp', { domanda_it: null, annunci_it: null, quadrante_it: null, quadrante_calcolato_it: null });
+    expect(gruppi(indice(radar))[0].voci[1].testo).toBe('Model Context Protocol (MCP) Per l’Italia il dato non è disponibile in questo momento.');
+    const g = gruppi(indice(conCompetenza('rag', { slancio: null, quadrante: null })));
+    expect(g.map((x) => x.titolo)).toEqual(['Impara ora', 'Da provare', "Tieni d'occhio", 'Dati non disponibili']);
+    expect(g.at(-1)?.voci).toEqual([{ href: 'rag/', testo: 'RAG e ricerca semantica' }]);
+  });
+
+  it('titolo, descrizione e indirizzi seguono l’indirizzo base; l’anteprima è quella della home, con il suo testo alternativo', () => {
+    const doc = indice();
+    const meta = (p: string) => doc.querySelector(`meta[property="${p}"]`)?.getAttribute('content');
+    expect(doc.title).toBe('Le competenze sull’AI negli annunci di lavoro, in Italia e all’estero · AI Radar');
+    expect(doc.querySelector('h1')?.textContent).toBe('Competenze');
+    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe('Le 5 competenze sull’AI che il radar segue, con tutti i Paesi e in Italia: ricerca, open source e annunci di lavoro. Si aggiorna ogni lunedì.');
+    expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}competenze/`);
+    expect(meta('og:type')).toBe('website');
+    expect(meta('og:image')).toBe(`${BASE}anteprima.png`);
+    expect(meta('og:image:alt')).toBe("Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia.");
+    expect(doc.querySelector('main')?.textContent).toContain('Dati raccolti il 15 ott 2026.');
+  });
+});

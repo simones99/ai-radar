@@ -65,12 +65,12 @@ details[open] > summary::before { margin-top: 3px; transform: rotate(-135deg); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 560px) { .lungo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 
-/* La testata, della home e delle pagine delle edizioni. Dove non stanno in una riga i link vanno sotto il nome, ognuno intero */
+/* La testata, della home e delle pagine statiche. Dove non stanno in una riga i link vanno sotto il nome, ognuno intero, e se non bastano vanno a capo */
 .testata { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s2); }
 .logo { white-space: nowrap; display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; text-decoration: none; }
 .logo i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--fg); position: relative; }
 .logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
-.testata nav { display: flex; gap: var(--s3); font-size: 14px; }
+.testata nav { display: flex; flex-wrap: wrap; gap: 0 var(--s3); font-size: 14px; }
 .testata nav a { white-space: nowrap; text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
 @media (hover: hover) { .testata nav a:hover { color: var(--fg); } }
 

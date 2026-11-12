@@ -134,10 +134,10 @@ describe('il sito costruito', () => {
     expect(existsSync(join(senzaEdizioni(), 'feed.xml'))).toBe(false);
   });
 
-  it('con radar.json ogni competenza ha la sua pagina, anche senza edizioni, con accanto la copia dell’immagine della home finché il workflow non fa la sua', () => {
+  it('con radar.json ci sono l’indice e una pagina per competenza, anche senza edizioni, con accanto la copia dell’immagine della home finché il workflow non fa la sua', () => {
     const competenze = d.radar!.competenze.map((c) => c.id);
     for (const sito of [conEdizioni(), senzaEdizioni()]) {
-      expect(readdirSync(join(sito, 'competenze')).sort()).toEqual([...competenze].sort());
+      expect(readdirSync(join(sito, 'competenze')).sort()).toEqual([...competenze, 'index.html'].sort());
       const home = readFileSync(join(sito, 'anteprima.png'));
       for (const id of competenze) {
         expect(readdirSync(join(sito, 'competenze', id)).sort()).toEqual(['anteprima.png', 'index.html']);

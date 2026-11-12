@@ -5,16 +5,21 @@ import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 import type { Dataset } from '../../src/lib/data/types';
+import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
 import { filePubblici, foglioDellaHome } from '../../src/lib/statico';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
 const d = FIXTURE as Dataset;
 const MCP = '/competenze/mcp/';
 const ROBOTICA = '/competenze/robotica/'; // ha l'avviso di dato incerto
+const INDICE = '/competenze/';
+// un'edizione accanto alle competenze: la sua testata è il link con cui un crawler arriva all'indice
+const edizione = creaEdizione(d, null) as Edizione;
+const EDIZIONE = `/edizioni/${edizione.settimana}/`;
 
 async function serviCompetenze(page: Page, request: APIRequestContext) {
   const home = await (await request.get('/')).text();
-  const file = filePubblici({ edizioni: [], radar: d.radar }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
   for (const [percorso, body] of Object.entries(file)) {
     await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType: 'text/html; charset=utf-8', body }));
   }
@@ -33,7 +38,7 @@ test.beforeEach(async ({ page, request }) => {
 const violazioniGravi = async (page: Page) =>
   (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
 
-for (const [nome, indirizzo] of [['una competenza', MCP], ['una competenza dal dato incerto', ROBOTICA]] as const) {
+for (const [nome, indirizzo] of [['una competenza', MCP], ['una competenza dal dato incerto', ROBOTICA], ['l’indice delle competenze', INDICE]] as const) {
   test.describe(nome, () => {
     test('axe non trova problemi gravi, nel tema chiaro', async ({ page }) => {
       await page.emulateMedia({ colorScheme: 'light' });
@@ -86,10 +91,51 @@ test.describe('senza JavaScript', () => {
     await expect(page.locator('body')).toHaveCSS('font-family', /Bricolage Grotesque Variable/);
   });
 
+  test('l’indice si legge tutto: gruppi per quadrante, competenze con l’Italia accanto, e porta alle pagine', async ({ page }) => {
+    await page.goto(INDICE);
+    await expect(page).toHaveTitle('Le competenze sull’AI negli annunci di lavoro, in Italia e all’estero · AI Radar');
+    await expect(page.getByRole('heading', { level: 2, name: 'Impara ora' })).toBeVisible();
+    await expect(page.getByText('Italia: Da provare').first()).toBeVisible();
+    await page.getByRole('link', { name: 'Model Context Protocol (MCP)' }).click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Model Context Protocol (MCP)');
+    await expect(page.locator('script')).toHaveCount(0);
+  });
+
+  test('da un’edizione la testata porta all’indice delle competenze', async ({ page }) => {
+    await page.goto(EDIZIONE);
+    await page.getByRole('banner').getByRole('link', { name: 'Competenze' }).click();
+    await expect(page).toHaveURL(new RegExp(`${INDICE}$`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Competenze');
+  });
+
   test('il dato incerto si vede come avviso', async ({ page }) => {
     await page.goto(ROBOTICA);
     await expect(page.getByRole('note')).toHaveText('Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.');
   });
+});
+
+test('dall’indice si apre una competenza, e dalla sua testata si torna all’indice', async ({ page }) => {
+  await page.goto(INDICE);
+  await expect(page.getByRole('heading', { level: 2, name: 'Impara ora' })).toBeVisible();
+  await page.getByRole('link', { name: 'Model Context Protocol (MCP)' }).click();
+  await expect(page).toHaveURL(new RegExp(`${MCP}$`));
+  await page.getByRole('banner').getByRole('link', { name: 'Competenze' }).click();
+  await expect(page).toHaveURL(new RegExp(`${INDICE}$`));
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Competenze');
+});
+
+test('l’indice da tastiera: prima il salto al contenuto, poi le competenze, e Invio apre la pagina', async ({ page }) => {
+  await page.goto(INDICE);
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Vai al contenuto' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#contenuto')).toBeFocused();
+  await page.keyboard.press('Tab');
+  const prima = page.getByRole('main').getByRole('link').first();
+  await expect(prima).toBeFocused();
+  await expect(prima).toHaveCSS('outline-style', 'solid');
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/competenze\/agenti\/$/);
 });
 
 test('da tastiera: prima il salto al contenuto, poi la testata; il link all’app apre la competenza sul mercato Italia', async ({ page }) => {
@@ -109,7 +155,7 @@ test('da tastiera: prima il salto al contenuto, poi la testata; il link all’ap
 test('il sito costruito ha una pagina per ogni competenza dei dati veri, servita come HTML con il suo titolo', async ({ request }) => {
   // request non passa da page.route: legge i file che la build ha scritto davvero
   const uscita = fileURLToPath(new URL('../../../_site/competenze', import.meta.url));
-  const id = existsSync(uscita) ? readdirSync(uscita) : [];
+  const id = existsSync(uscita) ? readdirSync(uscita, { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name) : [];
   expect(id.length).toBeGreaterThan(0);
   for (const competenza of id) {
     const risposta = await request.get(`/competenze/${competenza}/`);

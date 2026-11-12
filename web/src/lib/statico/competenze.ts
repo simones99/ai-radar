@@ -1,16 +1,17 @@
 // Le pagine statiche delle competenze: una per competenza di radar.json, con i dati di oggi, per chi arriva da un motore di ricerca o senza JavaScript.
 // Non sono edizioni: si rifanno a ogni build. Le parole e le cifre sono quelle della pagina della competenza nell'app.
 import { competenzeDi, pubblicatoDi, rigaPagina, type RigaPagina } from '../data/derive';
-import type { Radar } from '../data/types';
+import type { Quadrant, Radar } from '../data/types';
 import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
 import { dayWith, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
 import { IN_CRESCITA, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
-import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
 
 type Competenza = Radar['competenze'][number];
 
+export const TITOLO_INDICE = 'Le competenze sull’AI negli annunci di lavoro, in Italia e all’estero · AI Radar';
 const titolo = (c: Competenza): string => `${c.nome} negli annunci di lavoro, in Italia e all’estero · AI Radar`;
 
 /** La competenza letta sui due mercati insieme: la pagina statica non ha i bottoni per scegliere. */
@@ -85,6 +86,11 @@ const inCrescita = (c: Competenza): string =>
   elenco(IN_CRESCITA, (c.in_crescita ?? []).map((x) => `<li>${linkEsterno(x.url, x.nome)} <span class="ed-fonte">${esc(metaRepository(x))}</span>${x.descrizione ? ` <span class="ed-nota">${esc(x.descrizione)}</span>` : ''}</li>`));
 
 const RADICE = '../../';
+/** I link della testata di una pagina delle competenze, prima di «Segui con RSS»: le edizioni, se esistono, e i dati di oggi nell'app. */
+const navDelleCompetenze = (radice: string, opzioni: OpzioniPagine): string =>
+  `${opzioni.linkAlleEdizioni ? `<a href="${radice}edizioni/">Edizioni</a>` : ''}<a href="${radice}">Dati di oggi</a>`;
+/** La data dei dati, in testa alle pagine e all'indice: non sono fissi come un'edizione. */
+const datiRaccolti = (r: Radar): string => `Dati raccolti ${dayWith('il', r.generato)}. La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.`;
 /** Quanto di una descrizione un motore di ricerca mostra per intero. */
 const DESCRIZIONE_MAX = 160;
 /** Al posto delle misure, quando la competenza non sta sul radar nemmeno con tutti i Paesi: la pagina resta, perché un link salvato non si rompa. */
@@ -141,7 +147,7 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
     descrizione: descrizione(c, misure, r),
     percorso,
     radice: RADICE,
-    nav: `<a href="${RADICE}">Dati di oggi</a>`,
+    nav: navDelleCompetenze(RADICE, opzioni),
     tipo: 'article',
     immagine: { percorso: `${percorso}${IMMAGINE}`, alt: IMMAGINE_HOME.alt },
     corpo: `<div class="ed-testa">
@@ -149,7 +155,7 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
 ${misure ? stato(misure, r) : `<p>${SENZA_DATI}</p>`}
 <p>${esc(c.descrizione)}</p>
 ${conta && `<p class="ed-nota">${esc(conta)}</p>`}
-<p class="ed-nota">Dati raccolti ${esc(dayWith('il', r.generato))}. La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.</p>
+<p class="ed-nota">${esc(datiRaccolti(r))}</p>
 ${misure?.tutti.incerto ? `<p class="ed-avviso" role="note">${esc(avvisoIncerto(misure.tutti))}</p>` : ''}
 </div>
 ${misure ? misureDi(misure) : ''}
@@ -160,12 +166,65 @@ ${inFondo(c, r)}`,
   }, opzioni);
 }
 
+/** Un gruppo dell'indice: il titolo e le voci, ognuna con il link alla sua pagina e, sotto, la riga sull'Italia se c'è. */
+function gruppo(titolo: string, voci: { c: Competenza; italia: string | null }[]): string {
+  return `<section>
+<h2>${esc(titolo)}</h2>
+<ul class="ed-archivio">
+${voci.map(({ c, italia }) => `<li>
+<h3><a href="${esc(c.id)}/">${esc(c.nome)}</a></h3>
+${italia ? `<p>${esc(italia)}</p>` : ''}
+</li>`).join('\n')}
+</ul>
+</section>`;
+}
+
+/**
+ * I gruppi dell'indice: uno per quadrante con tutti i Paesi, nell'ordine dei quadranti di radar.json e, dentro, delle competenze.
+ * Accanto a ogni competenza il quadrante in Italia, o la frase dell'app; le competenze fuori dal radar stanno in fondo.
+ */
+function gruppiDellIndice(r: Radar): string {
+  const voci = competenzeDi(r).map((c) => ({ c, tutti: rigaPagina(r, c.id), italia: rigaPagina(r, c.id, 'italia') }));
+  const conDati = (Object.keys(r.quadranti) as Quadrant[]).flatMap((q) => {
+    const nelQuadrante = voci.filter((v) => v.tutti?.quadrante === q);
+    return nelQuadrante.length ? [gruppo(r.quadranti[q], nelQuadrante.map(({ c, italia }) => ({
+      c, italia: !italia || italia.senzaDato ? `${ITALIA_SENZA_DATO}.` : `Italia: ${r.quadranti[italia.quadrante]}`,
+    })))] : [];
+  });
+  const senzaDati = voci.filter((v) => !v.tutti).map(({ c }) => ({ c, italia: null }));
+  return [...conDati, ...(senzaDati.length ? [gruppo('Dati non disponibili', senzaDati)] : [])].join('\n');
+}
+
+/** L'indice delle competenze: da qui si arriva a ogni pagina, anche partendo da un'edizione. */
+function indice(r: Radar, opzioni: OpzioniPagine): string {
+  return pagina({
+    titolo: TITOLO_INDICE,
+    descrizione: `Le ${competenzeDi(r).length} competenze sull’AI che il radar segue, con tutti i Paesi e in Italia: ricerca, open source e annunci di lavoro. Si aggiorna ogni lunedì.`,
+    percorso: INDICE_COMPETENZE,
+    radice: '../',
+    nav: navDelleCompetenze('../', opzioni),
+    tipo: 'website',
+    immagine: IMMAGINE_HOME,
+    corpo: `<div class="ed-testa">
+<h1>Competenze</h1>
+<p class="ed-nota">${esc(datiRaccolti(r))}</p>
+</div>
+${gruppiDellIndice(r)}`,
+  }, { ...opzioni, linkAlleCompetenze: false }); // l'indice non porta a se stesso
+}
+
 /** Le immagini di anteprima che le pagine delle competenze si aspettano, per percorso: la build ci mette quella della home, il workflow quella della competenza. */
 export const immaginiDelleCompetenze = (radar: Radar | undefined): string[] =>
   radar ? competenzeDi(radar).map((c) => `competenze/${c.id}/${IMMAGINE}`) : [];
 
+/** Se le pagine delle competenze nascono: serve un radar.json della pipeline nuova con almeno una competenza. */
+export const nasconoLePagineDelleCompetenze = (radar: Radar | undefined): boolean => !!radar && competenzeDi(radar).length > 0;
+
 /** Le pagine delle competenze, per percorso. Senza radar.json, o con quello della pipeline vecchia che l'app non legge, non ne nasce nessuna. */
 export function fileDelleCompetenze(radar: Radar | undefined, opzioni: OpzioniPagine): Record<string, string> {
-  if (!radar) return {};
-  return Object.fromEntries(competenzeDi(radar).map((c) => [`competenze/${c.id}/index.html`, paginaCompetenza(c, radar, opzioni)]));
+  if (!radar || !nasconoLePagineDelleCompetenze(radar)) return {};
+  return {
+    'competenze/index.html': indice(radar, opzioni),
+    ...Object.fromEntries(competenzeDi(radar).map((c) => [`competenze/${c.id}/index.html`, paginaCompetenza(c, radar, opzioni)])),
+  };
 }

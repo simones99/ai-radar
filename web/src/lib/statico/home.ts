@@ -1,11 +1,13 @@
 // La home in chiaro: il testo della settimana dei dati dentro il contenitore dell'app, per chi legge l'HTML senza eseguire JavaScript.
 // All'avvio l'app lo toglie e si monta al suo posto. Operazione pura: la data delle frasi è quella dei dati, mai l'orologio della build.
 import type { Dataset } from '../data/types';
-import { settimanaDeiDati, type Destinazione, type Edizione, type PortaDellaSettimana, type SettimanaDeiDati } from '../edizioni';
-import { portaConDati } from '../edizioni/tipi';
+import { settimanaDeiDati, type CardDellaSettimana, type Destinazione, type Edizione, type PortaDellaSettimana, type SettimanaDeiDati } from '../edizioni';
+import { cifraGrande } from '../edizioni/pagine';
+import { cifraNellaFrase, portaConDati } from '../edizioni/tipi';
 import { FRASE_DI_APERTURA } from '../text/apertura';
+import { FONTI_DEI_DATI } from '../text/fonti';
 import { dayWith } from '../text/format';
-import { esc, INDICE_COMPETENZE, linkAlFeed, rigaFonti } from './pagina';
+import { esc, INDICE_COMPETENZE, linkAlFeed, linkEsterno, rigaFonti } from './pagina';
 
 export interface HomeInChiaro {
   /** L'HTML della home uscito dalla build, con il contenitore vuoto dell'app. */
@@ -62,20 +64,58 @@ ${rigaFonti(p.fonti)}
 </article>`;
 }
 
+/** Una card come nell'edizione: nome, cifra con l'unità e frase. Il nome porta a una pagina solo se la card ne ha una. */
+function rigaCard(c: CardDellaSettimana, link: Link): string {
+  return `<li>
+<h4>${conLink(versoUnaPagina(c.destinazione, link), esc(c.nome))}</h4>
+${cifraNellaFrase(c) ? '' : cifraGrande(c)}
+<p>${esc(c.frase ?? '')}</p>
+${rigaFonti(c.fonti)}
+</li>`;
+}
+
+/** Le card di una testa sotto il suo nome. Quelle senza dati stanno in una riga che lo dice, come nell'edizione, e non spariscono. */
+function cardDellaTesta(p: PortaDellaSettimana, card: CardDellaSettimana[], link: Link): string {
+  const proprie = card.filter((c) => c.testa === p.id);
+  const conDati = proprie.filter((c) => c.frase != null);
+  const senzaDati = proprie.filter((c) => c.frase == null);
+  return `<div class="ed-gruppo">
+<h3>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h3>
+${conDati.length ? `<ul class="ed-righe">\n${conDati.map((c) => rigaCard(c, link)).join('\n')}\n</ul>` : ''}
+${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${senzaDati.map((c) => conLink(versoUnaPagina(c.destinazione, link), esc(c.nome))).join(', ')}.</p>` : ''}
+</div>`;
+}
+
+/** Le nove card divise per testa: senza confronto con la settimana prima, come la prima edizione. */
+function situazione(s: SettimanaDeiDati, link: Link): string {
+  return `<section>
+<h2>La situazione</h2>
+${s.porte.map((p) => cardDellaTesta(p, s.card, link)).join('\n')}
+</section>`;
+}
+
+/** In fondo, sempre, le fonti dei dati come nel colophon dell'app; con almeno un'edizione anche il feed. */
+function fondo(conFeed: boolean): string {
+  return `<footer>
+<p class="ed-nota">Dati di ${FONTI_DEI_DATI.map((f) => linkEsterno(f.url, f.nome)).join(', ')}. Il progetto non è affiliato a nessuna delle fonti.</p>
+${conFeed ? `<p class="ed-nota"><a href="feed.xml">Segui con RSS</a></p>\n` : ''}</footer>`;
+}
+
 /**
- * Il testo statico, in ordine: testata, settimana e frase di apertura, le due porte. Senza dati sulla settimana restano testata e frase.
- * Le sezioni del corpo seguono l'ordine della home: quelle che vengono dopo le porte si aggiungono in coda a sezioni.
+ * Il testo statico, in ordine: testata, settimana e frase di apertura, le due porte, le card per testa, e in fondo le fonti e il feed.
+ * Senza dati sulla settimana restano testata, frase e fondo.
  */
-function testoStatico(s: SettimanaDeiDati | null, link: Link): string {
+function testoStatico(s: SettimanaDeiDati | null, link: Link, conFeed: boolean): string {
   const sezioni = [
     apertura(s, link),
-    ...(s ? [`<div class="ed-porte">\n${s.porte.map((p) => porta(p, link)).join('\n')}\n</div>`] : []),
+    ...(s ? [`<div class="ed-porte">\n${s.porte.map((p) => porta(p, link)).join('\n')}\n</div>`, situazione(s, link)] : []),
   ];
   return `<div class="edizione">
 ${testata(link)}
 <main>
 ${sezioni.join('\n')}
 </main>
+${fondo(conFeed)}
 </div>`;
 }
 
@@ -88,5 +128,5 @@ export function homeInChiaro({ home, dataset, edizioni, indirizzoBase, pagine }:
   const esistono = new Set(pagine);
   const link: Link = (cartella) => (esistono.has(`${cartella}index.html`) ? cartella : null);
   const conFeed = edizioni.length ? home.replace('</head>', () => `  ${linkAlFeed(indirizzoBase)}\n  </head>`) : home;
-  return conFeed.replace(CONTENITORE, () => `<div id="app">\n${testoStatico(settimanaDeiDati(dataset), link)}\n</div>`);
+  return conFeed.replace(CONTENITORE, () => `<div id="app">\n${testoStatico(settimanaDeiDati(dataset), link, edizioni.length > 0)}\n</div>`);
 }

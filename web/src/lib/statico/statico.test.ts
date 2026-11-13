@@ -4,6 +4,7 @@ import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
 import { indirizzoBase } from '../indirizzoBase';
 import { FIXTURE } from '../test/fixtures';
+import { FONTI_DEI_DATI } from '../text/fonti';
 import { filePubblici, type ContenutoStatico, type OpzioniFilePubblici } from '.';
 
 const opzioni = { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: 'assets/index-abc.css' };
@@ -78,13 +79,88 @@ describe('la home in chiaro', () => {
     expect(app).toContain('Settimana del 12 ott 2026');
     expect(titoli(doc, 1)).toEqual([FRASE_DI_APERTURA]);
     expect(doc.querySelectorAll('h1')).toHaveLength(1);
-    expect(titoli(doc, 2)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
+    expect(titoli(doc, 2)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia", 'La situazione']);
     expect(app).toContain('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(app).toContain('Radar delle competenze · dati al 15 ott 2026');
     expect(app).toContain("16% delle imprese italiane usa l'AI (UE: 20%)");
     // la settimana sta sopra la frase, le porte sotto
     expect(app.indexOf('Settimana del 12 ott 2026')).toBeLessThan(app.indexOf(FRASE_DI_APERTURA));
     expect(app.indexOf(FRASE_DI_APERTURA)).toBeLessThan(app.indexOf('MCP entra'));
+  });
+
+  describe('le card', () => {
+    /** Le righe delle card sotto il titolo di una testa, come le legge chi scorre la pagina. */
+    const righe = (doc: Document, testa: string) => {
+      const titolo = [...testo(doc).querySelectorAll('h3')].find((h) => pulito(h.textContent).startsWith(testa));
+      return [...(titolo?.parentElement?.querySelectorAll('li') ?? [])].map((li) => pulito(li.textContent));
+    };
+
+    it('con tutti i dati ci sono le nove card divise per testa, con il nome della testa sopra e per ognuna nome, cifra con l’unità e frase', () => {
+      const doc = leggi({ edizioni: [edizione], dataset: d });
+      expect(titoli(doc, 3)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
+      // dalle fixture, sulla data dei dati: giovedì 15 ottobre 2026. Competenze ha già il numero nella frase
+      const perTe = [
+        "Competenze 2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.",
+        "Modelli e ricerca ×4,8 all'anno Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.",
+        'Open source 37 su 100 Modelli di tendenza su Hugging Face di tipo «immagine e testo».',
+        'Notizie 2 Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.',
+      ];
+      const italia = [
+        'GeopoliticAI 18,8 punti sotto gli USA Capacità del miglior modello europeo, Mistral Large 4, nel 2026, anno in corso: 150,0 ECI. Gli USA arrivano a 168,8, la Cina a 157,9.',
+        "Business 16% Imprese italiane che usano l'AI nel 2025. UE: 20%.",
+        "Persone e lavoro 30% Italiani che usano l'AI generativa. Mondo: 18%.",
+        "Norme 48 giorni Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura.",
+        'Rapporti Ottobre 2026 Prossimo rapporto previsto: State of AI Report.',
+      ];
+      for (const [testa, attese] of [['Per te', perTe], ['Per la tua organizzazione', italia]] as const) {
+        const lette = righe(doc, testa);
+        expect(lette, testa).toHaveLength(attese.length);
+        attese.forEach((attesa, i) => expect(lette[i], testa).toContain(attesa));
+      }
+      // le card vengono dopo le porte
+      const app = pulito(testo(doc).textContent);
+      expect(app.indexOf("16% delle imprese italiane usa l'AI")).toBeLessThan(app.indexOf('Modelli e ricerca'));
+    });
+
+    it('una card senza dati non sparisce: sta nella riga «Dati non disponibili» della sua testa', () => {
+      const doc = leggi({ edizioni: [], dataset: { ...d, epoch: undefined } });
+      expect(righe(doc, 'Per te').map((r) => r.split(' ')[0])).toEqual(['Competenze', 'Open', 'Notizie']);
+      const gruppo = [...testo(doc).querySelectorAll('h3')].find((h) => pulito(h.textContent).startsWith('Per te'))!.parentElement!;
+      expect(pulito(gruppo.textContent)).toContain('Dati non disponibili: Modelli e ricerca.');
+      expect(pulito(testo(doc).textContent).match(/Dati non disponibili/g)).toHaveLength(1);
+    });
+
+    it('la card Competenze porta all’indice quando nasce, le altre restano testo', () => {
+      const nomi = (doc: Document) => [...testo(doc).querySelectorAll('h4')].map((h) => [pulito(h.textContent), h.querySelector('a')?.getAttribute('href') ?? null]);
+      expect(nomi(leggi({ edizioni: [edizione], dataset: d }))).toEqual([
+        ['Competenze', 'competenze/'], ['Modelli e ricerca', null], ['Open source', null], ['Notizie', null],
+        ['GeopoliticAI', null], ['Business', null], ['Persone e lavoro', null], ['Norme', null], ['Rapporti', null],
+      ]);
+      // senza il radar l'indice delle competenze non nasce, e la card resta testo come le altre
+      const senzaRadar = leggi({ edizioni: [], dataset: { ...d, radar: undefined } });
+      expect(testo(senzaRadar).querySelectorAll('a[href^="competenze"]')).toHaveLength(0);
+    });
+  });
+
+  describe('in fondo', () => {
+    const fondo = (doc: Document) => testo(doc).querySelector('footer');
+    const linkDelFondo = (doc: Document) => [...(fondo(doc)?.querySelectorAll('a') ?? [])].map((a) => [pulito(a.textContent), a.getAttribute('href')]);
+
+    it('la riga delle fonti dei dati c’è sempre, anche senza lo stato del giro, con le stesse fonti del colophon dell’app', () => {
+      const colophon = FONTI_DEI_DATI.map((f) => [f.nome, f.url]);
+      for (const dataset of [d, { ...d, status: undefined }, {}]) {
+        const doc = leggi({ edizioni: [], dataset });
+        expect(pulito(fondo(doc)?.textContent ?? '')).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
+        expect(linkDelFondo(doc)).toEqual(colophon);
+      }
+    });
+
+    it('con almeno un’edizione c’è il link al feed, senza edizioni no', () => {
+      const alFeed = (doc: Document) => linkDelFondo(doc).filter(([, href]) => href === 'feed.xml');
+      expect(alFeed(leggi({ edizioni: [edizione], dataset: d }))).toEqual([['Segui con RSS', 'feed.xml']]);
+      expect(alFeed(leggi({ edizioni: [edizione], dataset: {} }))).toEqual([['Segui con RSS', 'feed.xml']]);
+      expect(alFeed(leggi({ edizioni: [], dataset: d }))).toEqual([]);
+    });
   });
 
   describe('i link', () => {
@@ -113,16 +189,16 @@ describe('la home in chiaro', () => {
     });
 
     it('la notizia di una porta che parla di una competenza porta alla sua pagina, quella su più competenze all’indice, le altre restano testo', () => {
-      expect(linkDi(leggi({ edizioni: [], dataset: soloMcp }), 'main')).toEqual([['MCP entra tra le competenze da imparare ora', 'competenze/mcp/']]);
+      expect(linkDi(leggi({ edizioni: [], dataset: soloMcp }), 'article')).toEqual([['MCP entra tra le competenze da imparare ora', 'competenze/mcp/']]);
       // MCP entra e RAG esce: in app la porta apre la card Competenze; la notizia di Business non ha una pagina statica
-      expect(linkDi(leggi({ edizioni: [], dataset: d }), 'main')).toEqual([['MCP entra tra le competenze da imparare ora; RAG esce', 'competenze/']]);
+      expect(linkDi(leggi({ edizioni: [], dataset: d }), 'article')).toEqual([['MCP entra tra le competenze da imparare ora; RAG esce', 'competenze/']]);
     });
 
     it('nessun link contiene #, e ognuno porta a una voce della mappa', () => {
       for (const contenuto of [{ edizioni: [edizione], dataset: d }, { edizioni: [altra], dataset: soloMcp }, { edizioni: [], dataset: { status: d.status } }, { edizioni: [], dataset: {} }]) {
         const { file, doc } = conHome(contenuto);
         for (const [testoLink, href] of tutti(doc)) expect(href, testoLink).not.toContain('#');
-        for (const [testoLink, href] of linkDi(doc)) expect(Object.keys(file), testoLink).toContain(`${href}index.html`);
+        for (const [testoLink, href] of linkDi(doc)) expect(Object.keys(file), testoLink).toContain(href.endsWith('/') ? `${href}index.html` : href);
       }
     });
   });

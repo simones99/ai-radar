@@ -27,8 +27,8 @@ ${rigaFonti(p.fonti)}
 </article>`;
 }
 
-/** La cifra in un paragrafo suo, grande con l'unità piccola come in home: messa nella frase, si leggeva «47 Notizie nei 7 giorni». */
-function cifraGrande(c: Pick<CardFissa, 'cifra' | 'unita'>): string {
+/** La cifra in un paragrafo suo, grande con l'unità piccola come in home: messa nella frase, si leggeva «47 Notizie nei 7 giorni». La usa anche la home in chiaro. */
+export function cifraGrande(c: Pick<CardFissa, 'cifra' | 'unita'>): string {
   return c.cifra ? `<p class="ed-cifra"><strong>${esc(c.cifra)}</strong>${esc(cifraConUnita(c).slice(c.cifra.length))}</p>` : '';
 }
 

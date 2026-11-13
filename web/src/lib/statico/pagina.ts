@@ -45,6 +45,9 @@ export const linkEsterno = (url: string | null, testo: string): string => {
   return sicuro ? `<a href="${esc(sicuro)}" target="_blank" rel="noopener">${esc(testo)}</a>` : esc(testo);
 };
 
+/** L'HTML dentro un link a un indirizzo del sito, o così com'è quando l'indirizzo non c'è. */
+export const inLink = (href: string | null, html: string): string => (href ? `<a href="${esc(href)}">${html}</a>` : html);
+
 export function rigaFonti(fonti: Fonte[]): string {
   if (!fonti.length) return '';
   const elenco = fonti.map((f) => `${linkEsterno(f.url, f.nome)} (${linkEsterno(LICENZE[f.licenza] ?? null, f.licenza)})`).join(', ');

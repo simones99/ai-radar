@@ -6,9 +6,6 @@ import type { OpzioniPagine } from '../statico/pagina';
 import { archivio, paginaEdizione } from './pagine';
 import { VERSIONE, type Edizione } from './tipi';
 
-/** La home, con il link al feed, la scrive la mappa dei file pubblici: è la home in chiaro. */
-export type OpzioniFileDelleEdizioni = OpzioniPagine;
-
 function controlla(e: Edizione): void {
   if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
   // l'istante intero deve essere leggibile e il giorno con cui comincia deve esistere: è quello che le pagine, il feed e la sitemap scrivono
@@ -22,8 +19,9 @@ function controlla(e: Edizione): void {
 
 /**
  * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
+ * La home, con il link al feed, la scrive la mappa dei file pubblici: è la home in chiaro.
  */
-export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniFileDelleEdizioni): Record<string, string> {
+export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniPagine): Record<string, string> {
   edizioni.forEach(controlla);
   if (!edizioni.length) return {};
   const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));

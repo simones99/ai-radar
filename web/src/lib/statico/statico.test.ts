@@ -7,9 +7,10 @@ import { FIXTURE } from '../test/fixtures';
 import { FONTI_DEI_DATI } from '../text/fonti';
 import { filePubblici, type ContenutoStatico, type OpzioniFilePubblici } from '.';
 
-const opzioni = { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: 'assets/index-abc.css' };
+/** Le opzioni delle pagine, senza la home. */
+const opzioniDellePagine = { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: 'assets/index-abc.css' };
 /** L'indirizzo assoluto di una cartella del sito, dall'indirizzo base delle opzioni. */
-const assoluto = (cartella: string) => `${opzioni.indirizzoBase}${cartella}`;
+const assoluto = (cartella: string) => `${opzioniDellePagine.indirizzoBase}${cartella}`;
 /** La testa della home uscita dalla build: titolo, descrizione, canonical, anteprima e foglio di stile. */
 const TESTA_HOME = `<head>
 <title>AI Radar</title>
@@ -25,6 +26,7 @@ const HOME = `<!doctype html><html lang="it">${TESTA_HOME}<body>
 <div id="app"></div>
 <script type="module" src="./assets/index-abc.js"></script>
 </body></html>`;
+const opzioni: OpzioniFilePubblici = { ...opzioniDellePagine, home: HOME };
 const d = FIXTURE as Dataset;
 const edizione = creaEdizione(d, null) as Edizione;
 const PAGINA = `edizioni/${edizione.settimana}/index.html`;
@@ -37,17 +39,21 @@ describe('i file pubblici del sito', () => {
     expect(Object.keys(file)).toEqual(expect.arrayContaining([PAGINA, 'edizioni/index.html', 'feed.xml']));
   });
 
-  it('senza il radar i file sono esattamente quelli delle edizioni, più la sitemap', () => {
-    const { 'sitemap.xml': sitemap, ...resto } = filePubblici({ edizioni: [edizione], dataset: {} }, opzioni);
+  it('senza il radar i file sono esattamente quelli delle edizioni, più la home e la sitemap', () => {
+    const { 'sitemap.xml': sitemap, 'index.html': home, ...resto } = filePubblici({ edizioni: [edizione], dataset: {} }, opzioni);
     expect(sitemap).toBeDefined();
-    expect(resto).toEqual(fileDelleEdizioni([edizione], opzioni));
-    expect(Object.keys(filePubblici({ edizioni: [], dataset: {} }, opzioni))).toEqual(['sitemap.xml']);
+    expect(home).toBeDefined();
+    expect(resto).toEqual(fileDelleEdizioni([edizione], opzioniDellePagine));
+  });
+
+  it('la home c’è sempre, anche senza edizioni né dati: con la sitemap è tutta la mappa', () => {
+    expect(Object.keys(filePubblici({ edizioni: [], dataset: {} }, opzioni)).sort()).toEqual(['index.html', 'sitemap.xml']);
   });
 
   it('il radar aggiunge le pagine delle competenze, e i file delle edizioni cambiano solo per il link «Competenze» nella testata', () => {
     const file = filePubblici({ edizioni: [edizione], dataset: d }, opzioni);
     expect(Object.keys(file).filter((p) => p.startsWith('competenze/')).length).toBeGreaterThan(0);
-    for (const [percorso, contenuto] of Object.entries(fileDelleEdizioni([edizione], opzioni))) {
+    for (const [percorso, contenuto] of Object.entries(fileDelleEdizioni([edizione], opzioniDellePagine))) {
       expect(file[percorso].replace(LINK_COMPETENZE, ''), percorso).toBe(contenuto);
     }
   });
@@ -57,7 +63,7 @@ describe('la home in chiaro', () => {
   const FRASE_DI_APERTURA = "Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.";
   /** La mappa con la home della build, e la sua voce index.html letta come la legge un motore: senza eseguire niente. */
   const conHome = (c: ContenutoStatico) => {
-    const file = filePubblici(c, { ...opzioni, home: HOME });
+    const file = filePubblici(c, opzioni);
     return { file, doc: new DOMParser().parseFromString(file['index.html'], 'text/html') };
   };
   const leggi = (c: ContenutoStatico) => conHome(c).doc;
@@ -319,8 +325,8 @@ describe('la sitemap', () => {
   });
 
   it('la copia della home che la mappa contiene con le edizioni non aggiunge una seconda voce', () => {
-    expect(filePubblici({ edizioni: [edizione], dataset: {} }, { ...opzioni, home: HOME })['index.html']).toBeDefined();
-    expect(indirizzi({ edizioni: [edizione], dataset: {} }, { ...opzioni, home: HOME })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
+    expect(filePubblici({ edizioni: [edizione], dataset: {} }, opzioni)['index.html']).toBeDefined();
+    expect(indirizzi({ edizioni: [edizione], dataset: {} }, opzioni)).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
   });
 
   it('ogni indirizzo è assoluto e segue l’indirizzo base, anche quando non è quello predefinito', () => {
@@ -332,10 +338,10 @@ describe('la sitemap', () => {
   });
 
   it('ogni indirizzo coincide con il canonical scritto nella pagina della mappa a quel percorso', () => {
-    const file = filePubblici({ edizioni: [edizione], dataset: d }, { ...opzioni, home: HOME });
+    const file = filePubblici({ edizioni: [edizione], dataset: d }, opzioni);
     const canonical = (percorso: string) => new DOMParser().parseFromString(file[percorso], 'text/html').querySelector('link[rel="canonical"]')?.getAttribute('href');
-    for (const l of indirizzi({ edizioni: [edizione], dataset: d }, { ...opzioni, home: HOME })) {
-      expect(canonical(`${l!.slice(opzioni.indirizzoBase.length)}index.html`)).toBe(l);
+    for (const l of indirizzi({ edizioni: [edizione], dataset: d }, opzioni)) {
+      expect(canonical(`${l!.slice(opzioniDellePagine.indirizzoBase.length)}index.html`)).toBe(l);
     }
   });
 
@@ -358,7 +364,7 @@ describe('la sitemap', () => {
     /** Ogni indirizzo con il suo lastmod, o null se non ce l'ha. */
     const date = (c: ContenutoStatico, o: OpzioniFilePubblici = opzioni) =>
       Object.fromEntries([...leggi(filePubblici(c, o)['sitemap.xml']).querySelectorAll('url')]
-        .map((u) => [u.querySelector('loc')!.textContent!.slice(opzioni.indirizzoBase.length), u.querySelector('lastmod')?.textContent ?? null]));
+        .map((u) => [u.querySelector('loc')!.textContent!.slice(opzioniDellePagine.indirizzoBase.length), u.querySelector('lastmod')?.textContent ?? null]));
     // la prima edizione è raccolta il 15 ottobre e corretta il 2 novembre, la seconda raccolta il 22 ottobre e mai corretta
     const corretta: Edizione = { ...edizione, correzioni: [{ data: '2026-11-02', testo: 'Una cifra era sbagliata.' }] };
     const seconda: Edizione = { ...edizione, settimana: '2026-10-19', raccolti: '2026-10-22T07:30:00+00:00', precedente: edizione.settimana, correzioni: [] };

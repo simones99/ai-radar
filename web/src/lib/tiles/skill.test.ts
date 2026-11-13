@@ -112,6 +112,33 @@ describe('La pagina di una competenza segue il mercato', () => {
     pagina('mcp', italia, senzaItalia);
     expect(within(screen.getByRole('region', { name: 'Annunci' })).getByRole('img', { name: 'Annunci su MCP ogni 10mila' })).not.toHaveTextContent('Italia');
   });
+  describe('l’avviso del dato incerto, con i testi della pagina statica', () => {
+    const avvisi = () => screen.queryAllByRole('note').map((n) => n.textContent);
+    it('incerta solo in Italia: con «Italia» l’avviso dice il mercato, con annunci e soglia; con «Tutti i Paesi» non c’è', () => {
+      const { unmount } = pagina('mcp', italia);
+      expect(avvisi()).toEqual(['Dato incerto in Italia: annunci italiani vicini alla soglia (32, la soglia è circa 37). La posizione sul radar può cambiare molto.']);
+      unmount();
+      pagina('mcp');
+      expect(avvisi()).toEqual([]);
+    });
+    for (const params of [{}, italia]) {
+      it(`con lo slancio incerto l’avviso è uno solo, senza mercato, ${params === italia ? 'con «Italia»' : 'con «Tutti i Paesi»'}`, () => {
+        pagina('robotica', params);
+        expect(avvisi()).toEqual(['Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.']);
+      });
+    }
+    it('con lo slancio incerto e la domanda italiana vicina alla soglia, con «Italia» l’avviso dice anche il motivo italiano, una volta sola', () => {
+      pagina('robotica', italia, conCompetenza('robotica', { incerto_perche_it: 'pochi paper (45 al mese) e annunci italiani vicini alla soglia (43, la soglia è circa 40)' }));
+      expect(avvisi()).toEqual(['Dato incerto: pochi paper (45 al mese) e annunci italiani vicini alla soglia (43, la soglia è circa 40). La posizione sul radar può cambiare molto.']);
+    });
+    it('una competenza solida nei due mercati non ha avvisi', () => {
+      for (const params of [{}, italia]) {
+        const { unmount } = pagina('agenti', params);
+        expect(avvisi()).toEqual([]);
+        unmount();
+      }
+    });
+  });
   it('il percorso sul radar e il titolo usano i quadranti del mercato scelto', () => {
     const { unmount } = pagina('mcp');
     const percorso = () => within(screen.getByRole('list', { name: 'Il percorso sul radar' })).getAllByRole('listitem').map((li) => li.textContent);

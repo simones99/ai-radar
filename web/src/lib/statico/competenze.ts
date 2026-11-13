@@ -23,6 +23,15 @@ function stato({ tutti, italia }: DueMercati, r: Radar): string {
 <p>${italia.senzaDato ? esc(`${ITALIA_SENZA_DATO}.`) : `${MERCATI.italia}: ${esc(statoCompetenza(italia, r.quadranti))}`}</p>`;
 }
 
+/**
+ * L'avviso del dato incerto, dalla riga italiana: la sua incertezza comprende quella dello slancio, che vale nei due mercati.
+ * Così l'avviso è uno solo, e nomina l'Italia quando l'incertezza è solo sua.
+ */
+function avviso(misure: DueMercati | null): string {
+  const testo = misure && avvisoIncerto(misure.italia, 'italia');
+  return testo ? `<p class="ed-avviso" role="note">${esc(testo)}</p>` : '';
+}
+
 /** Una cifra grande con l'unità piccola, come nelle edizioni, e sotto le note: valore di un mese fa, annunci, margine. */
 const cifra = (valore: string, unita: string, note: string[]): string =>
   `<p class="ed-cifra"><strong>${esc(valore)}</strong>${esc(unita)}</p>${note.length ? `
@@ -167,7 +176,7 @@ ${misure ? stato(misure, r) : `<p>${SENZA_DATI}</p>`}
 <p>${esc(c.descrizione)}</p>
 ${conta && `<p class="ed-nota">${esc(conta)}</p>`}
 <p class="ed-nota">${esc(datiRaccolti(r))}</p>
-${misure?.tutti.incerto ? `<p class="ed-avviso" role="note">${esc(avvisoIncerto(misure.tutti))}</p>` : ''}
+${avviso(misure)}
 </div>
 ${misure ? misureDi(misure) : ''}
 ${percorsoSulRadar(c, r)}

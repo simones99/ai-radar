@@ -36,6 +36,13 @@ describe('Competenze', () => {
     expect(metodo).toHaveTextContent('La soglia è la stessa');
     expect(metodo).toHaveTextContent('I quadranti sono propri, con la stessa conferma di due mesi di fila');
   });
+  it('il metodo dice quando la domanda italiana rende incerto il dato, e perché pochi annunci molto sotto la soglia no', () => {
+    show(CompetenzeDetail, tile);
+    const metodo = screen.getByRole('region', { name: 'Come si calcola' });
+    expect(metodo).toHaveTextContent('Con «Italia» il dato è incerto anche quando la domanda è troppo vicina alla soglia');
+    expect(metodo).toHaveTextContent('margine all’80% del numero di annunci italiani');
+    expect(metodo).toHaveTextContent('molto sotto la soglia, resta invece un dato solido');
+  });
   it('il cambio di metodo della domanda è scritto sotto il radar e nel metodo', () => {
     show(CompetenzeDetail, tile);
     expect(screen.getByText('Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.')).toBeInTheDocument();
@@ -241,10 +248,10 @@ describe('Competenze: il mercato', () => {
       expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('MCP entra tra le competenze da imparare ora');
       expect(screen.queryByText(/sotto soglia/)).toBeNull();
     });
-    it('il fumetto di un punto dice quadrante italiano, numero e annunci; lo slancio è lo stesso', () => {
+    it('il fumetto di un punto dice quadrante italiano, numero e annunci, e l’incertezza italiana; lo slancio è lo stesso', () => {
       show(CompetenzeDetail, tile, null, { mercato: 'italia' });
       expect(within(radar()).getByRole('link', { name: /^Model Context Protocol/ })).toHaveAccessibleName(
-        "Model Context Protocol (MCP): Da provare (era Tieni d'occhio). Slancio +15% in 6 mesi, 2,6 ogni 10mila, 32 annunci. Un mese fa: slancio −27%, 2,4 ogni 10mila.");
+        "Model Context Protocol (MCP): Da provare (era Tieni d'occhio). Slancio +15% in 6 mesi, 2,6 ogni 10mila, 32 annunci. Dato incerto. Un mese fa: slancio −27%, 2,4 ogni 10mila.");
     });
     it('l’asse della domanda è lo stesso nei due mercati', () => {
       show(CompetenzeDetail, tile, null, { mercato: 'italia' });
@@ -266,7 +273,7 @@ describe('Competenze: il mercato', () => {
     it('le due tabelle dicono numero e annunci; lo slancio non cambia', () => {
       show(CompetenzeDetail, tile, null, { mercato: 'italia' });
       expect(riga('Radar delle competenze', 'Model Context Protocol (MCP)').slice(0, 3)).toEqual(['Da provare', '+15%', '2,6 ogni 10mila, 32 annunci']);
-      expect(riga('Le competenze una per una', 'Model Context Protocol (MCP)').slice(1)).toEqual(['Da provare', '+15%', '2,6 ogni 10mila, 32 annunci']);
+      expect(riga('Le competenze una per una', 'Model Context Protocol (MCP)').slice(1)).toEqual(['Da provare · incerto', '+15%', '2,6 ogni 10mila, 32 annunci']);
       expect(within(blocco('Le competenze una per una')).getByRole('columnheader', { name: 'Annunci in Italia' })).toBeInTheDocument();
     });
     it('sotto il radar la riga che spiega il mercato; con «Tutti i Paesi» non c’è', () => {

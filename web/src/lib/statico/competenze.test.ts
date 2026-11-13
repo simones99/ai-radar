@@ -92,6 +92,27 @@ describe('le pagine delle competenze', () => {
     expect(pagina('agenti').querySelector('[role="note"]')).toBeNull();
   });
 
+  const avvisi = (doc: Document) => [...doc.querySelectorAll('[role="note"]')].map((n) => n.textContent);
+
+  it('incerta solo in Italia: l’avviso dice il mercato, con annunci e soglia, e nessun avviso per tutti i Paesi', () => {
+    expect(avvisi(pagina('mcp'))).toEqual(['Dato incerto in Italia: annunci italiani vicini alla soglia (32, la soglia è circa 37). La posizione sul radar può cambiare molto.']);
+  });
+
+  it('con lo slancio incerto l’avviso è uno solo, senza mercato', () => {
+    expect(avvisi(pagina('robotica'))).toEqual(['Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.']);
+  });
+
+  it('con lo slancio incerto e la domanda italiana vicina alla soglia l’avviso è uno e dice anche il motivo italiano, una volta sola', () => {
+    const tuttiEDue = conCompetenza('robotica', { incerto_perche_it: 'pochi paper (45 al mese) e annunci italiani vicini alla soglia (43, la soglia è circa 40)' });
+    expect(avvisi(pagina('robotica', tuttiEDue))).toEqual(['Dato incerto: pochi paper (45 al mese) e annunci italiani vicini alla soglia (43, la soglia è circa 40). La posizione sul radar può cambiare molto.']);
+  });
+
+  it('con un radar.json di prima, senza l’incertezza italiana, l’avviso resta quello dello slancio', () => {
+    const prima = conCompetenza('robotica', { incerto_it: undefined, incerto_perche_it: undefined });
+    expect(avvisi(pagina('robotica', prima))).toEqual(['Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.']);
+    expect(avvisi(pagina('mcp', conCompetenza('mcp', { incerto_it: undefined, incerto_perche_it: undefined })))).toEqual([]);
+  });
+
   /** Il testo di una sezione, cercata per il suo titolo. */
   const sezione = (doc: Document, h2: string) => {
     const s = [...doc.querySelectorAll('section')].find((x) => x.querySelector('h2')?.textContent === h2);
@@ -121,6 +142,13 @@ describe('le pagine delle competenze', () => {
     expect(t).toContain("Fonti: arXiv (metadati CC0), GitHub (termini d'uso di GitHub), The Adzuna API (termini d'uso di Adzuna).");
     expect(doc.querySelector('main a[href="https://www.adzuna.co.uk"]')).not.toBeNull();
     for (const paragrafo of METODO_COMPETENZE) expect(t).toContain(paragrafo);
+  });
+
+  it('il metodo spiega l’incertezza della domanda italiana vicino alla soglia', () => {
+    const t = sezione(pagina('agenti'), 'Fonti e metodo');
+    expect(t).toContain('Con «Italia» il dato è incerto anche quando la domanda è troppo vicina alla soglia');
+    expect(t).toContain('margine all’80% del numero di annunci italiani');
+    expect(t).toContain('molto sotto la soglia, resta invece un dato solido');
   });
 
   it('due link aprono la competenza nell’app: con tutti i Paesi e già sul mercato Italia', () => {

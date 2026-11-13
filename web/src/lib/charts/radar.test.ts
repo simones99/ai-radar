@@ -73,6 +73,17 @@ describe('Radar', () => {
     expect(unc).toHaveLength(1);
     expect(unc[0]).toHaveAccessibleName(/^AI fisica e robotica/);
   });
+  it('nel mercato Italia è un dato incerto anche il punto di chi ha la domanda italiana vicina alla soglia, e in Tutti i Paesi no', () => {
+    const vicina = { ...radar, competenze: radar.competenze.map((c) => (c.id === 'rag' ? { ...c, incerto_it: true, incerto_perche_it: 'annunci italiani vicini alla soglia (76, la soglia è circa 37)' } : c)) };
+    const incerti = (mercato: 'tutti' | 'italia') => {
+      const { unmount } = render(Radar, { rows: radarRows(vicina, mercato), quadranti: radar.quadranti, href, mercato });
+      const nomi = screen.queryAllByRole('link', { name: /Dato incerto/ }).map((a) => a.textContent?.split(':')[0]);
+      unmount();
+      return nomi.sort();
+    };
+    expect(incerti('italia')).toEqual(['AI fisica e robotica', 'Model Context Protocol (MCP)', 'RAG e ricerca semantica']);
+    expect(incerti('tutti')).toEqual(['AI fisica e robotica']);
+  });
   it('tacche 0 e 3: etichetta sì, linea piena no; le soglie scritte sulle linee', () => {
     const { container } = render(Radar, { rows, quadranti: radar.quadranti });
     expect(container.querySelectorAll('line.tick')).toHaveLength(8);

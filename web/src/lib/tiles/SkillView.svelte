@@ -18,6 +18,9 @@
   } = $props();
 
   const italia = $derived(mercato === 'italia');
+  const avviso = $derived(avvisoIncerto(row, mercato));
+  // incerta in Italia per la sola domanda: lo slancio è solido, e la fonte che pesa di più non spiega l'incertezza
+  const soloDomanda = $derived(italia && row.incerto && !row.slancioIncerto);
   const eraDomanda = $derived(row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : '');
   const sottoDomanda = $derived(italia
     ? `ogni 10mila in Italia${row.annunci != null ? `, ${quantiAnnunci(row.annunci)}` : ''}${eraDomanda}${row.domandaTutti != null ? ` · Paese a metà classifica: ${per10k(row.domandaTutti)}` : ''}`
@@ -57,8 +60,8 @@
 </script>
 
 <nav class="back" aria-label="Competenze"><a href={indietro}>← Tutte le competenze</a></nav>
-{#if row.incerto}
-  <p class="warn" role="note">{avvisoIncerto(row)}</p>
+{#if avviso}
+  <p class="warn" role="note">{avviso}</p>
 {/if}
 
 <Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
@@ -72,7 +75,7 @@
 <!-- dice solo se il margine è largo, come il punto vuoto sul radar: non dà un giudizio sulla competenza -->
 <Block span={4} title="Incertezza del dato">
   <p class="fig">{row.incerto ? 'alta' : 'normale'}</p>
-  <p class="sub">{heavy ? `pesa di più: ${FONTE[heavy]}` : ''}</p>
+  <p class="sub">{soloDomanda ? 'per la domanda italiana, vicina alla soglia' : heavy ? `pesa di più: ${FONTE[heavy]}` : ''}</p>
 </Block>
 
 <Block span={4} title="Paper" note="Paper su arXiv che ne parlano ogni 1.000 paper AI, mese per mese." cite={cite('arXiv', 'https://arxiv.org')}

@@ -37,8 +37,13 @@ export interface RadarRow {
   quadrante_calcolato?: Quadrant | null;
   quadrante_it?: Quadrant | null;
   quadrante_calcolato_it?: Quadrant | null;
+  /** Incerta per lo slancio: il margine all'80% dello slancio è largo. Vale nei due mercati. */
   incerto?: boolean;
   incerto_perche?: string | null;
+  /** Incerta nel mercato Italia: per lo slancio, o con la domanda italiana vicina alla soglia. */
+  incerto_it?: boolean;
+  /** Il motivo italiano: quello dello slancio, quello della domanda («annunci italiani vicini alla soglia (43, la soglia è circa 40)»), o tutti e due. */
+  incerto_perche_it?: string | null;
   slancio_prec?: number | null;
   domanda_prec?: number | null;
   quadrante_prec?: Quadrant | null;

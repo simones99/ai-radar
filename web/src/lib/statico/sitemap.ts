@@ -1,20 +1,14 @@
 // La sitemap: l'indirizzo assoluto di ogni pagina del sito pensata per essere letta da fuori, perché un motore di ricerca le trovi
 // senza passare dalla home, che è riempita da JavaScript. Operazione pura: nasce dalle altre voci della mappa dei file pubblici.
-import type { Radar } from '../data/types';
 import type { Edizione } from '../edizioni';
 import { isoDay, parseDay } from '../text/format';
 import { giornoDeiDati } from './competenze';
+import type { ContenutoStatico } from './contenuto';
 import { esc } from './pagina';
 
 export const SITEMAP = 'sitemap.xml';
 
 const PAGINA = /(^|\/)index\.html$/;
-
-/** Da cosa nascono le date di ultimo cambio: le edizioni, già controllate dalla mappa, e i dati del radar, che possono mancare. */
-export interface DatiDellaSitemap {
-  edizioni: Edizione[];
-  radar?: Radar;
-}
 
 /** La più recente tra date AAAA-MM-GG, che in quella forma si confrontano come testo. */
 const piuRecente = (date: string[]): string => date.reduce((a, b) => (b > a ? b : a));
@@ -26,7 +20,7 @@ const ultimoCambio = (e: Edizione): string => piuRecente([isoDay(parseDay(e.racc
  * La data di ultimo cambio della pagina in una cartella, se ha una regola e i dati per seguirla. Viene sempre dai dati, mai dall'orologio:
  * ogni edizione la sua, l'archivio la più recente tra quelle delle edizioni, la home e le competenze il giorno dei dati del radar.
  */
-function dateDelleCartelle({ edizioni, radar }: DatiDellaSitemap): (cartella: string) => string | null {
+function dateDelleCartelle({ edizioni, radar }: ContenutoStatico): (cartella: string) => string | null {
   const date = new Map(edizioni.map((e) => [`edizioni/${e.settimana}/`, ultimoCambio(e)]));
   if (edizioni.length) date.set('edizioni/', piuRecente([...date.values()]));
   const deiDati = radar ? giornoDeiDati(radar) : null;
@@ -39,7 +33,7 @@ function dateDelleCartelle({ edizioni, radar }: DatiDellaSitemap): (cartella: st
  * non ne ha la copia; le altre seguono in ordine di percorso, con la cartella e la barra finale, come il loro canonical.
  * Ogni indirizzo porta lastmod quando la sua pagina ha una data di ultimo cambio nei dati; senza, esce solo loc.
  */
-export function sitemap(percorsi: string[], dati: DatiDellaSitemap, indirizzoBase: string): string {
+export function sitemap(percorsi: string[], dati: ContenutoStatico, indirizzoBase: string): string {
   const cartelle = percorsi.filter((p) => PAGINA.test(p)).map((p) => p.replace(PAGINA, '$1')).filter((c) => c !== '').sort();
   const dataDi = dateDelleCartelle(dati);
   const voce = (c: string) => {
@@ -53,7 +47,7 @@ ${['', ...cartelle].map(voce).join('\n')}
 `;
 }
 
-export const ROBOTS = 'robots.txt';
+const ROBOTS = 'robots.txt';
 
 /**
  * robots.txt, come voce della mappa dei file pubblici: c'è solo quando l'indirizzo base è la radice di un dominio, perché i crawler

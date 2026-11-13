@@ -2,10 +2,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
+import { indirizzoBase } from '../indirizzoBase';
 import { FIXTURE } from '../test/fixtures';
 import { filePubblici, type ContenutoStatico, type OpzioniFilePubblici } from '.';
 
 const opzioni = { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: 'assets/index-abc.css' };
+/** L'indirizzo assoluto di una cartella del sito, dall'indirizzo base delle opzioni. */
+const assoluto = (cartella: string) => `${opzioni.indirizzoBase}${cartella}`;
+/** La home uscita dalla build, con il suo canonical. */
+const HOME = `<!doctype html><html><head><link rel="canonical" href="${assoluto('')}" /></head><body></body></html>`;
 const d = FIXTURE as Dataset;
 const edizione = creaEdizione(d, null) as Edizione;
 const PAGINA = `edizioni/${edizione.settimana}/index.html`;
@@ -76,33 +81,24 @@ describe('la sitemap', () => {
   };
 
   it('c’è sempre, e senza edizioni né radar ha la sola home', () => {
-    expect(indirizzi({ edizioni: [] })).toEqual(['https://esempio.org/ai-radar/']);
+    expect(indirizzi({ edizioni: [] })).toEqual([assoluto('')]);
   });
 
   it('con edizioni e radar elenca la home, l’indice e ogni competenza, l’archivio e ogni edizione, in ordine di percorso, e nient’altro', () => {
     expect(indirizzi({ edizioni: [edizione], radar: d.radar })).toEqual([
-      'https://esempio.org/ai-radar/',
-      'https://esempio.org/ai-radar/competenze/',
-      'https://esempio.org/ai-radar/competenze/agenti/',
-      'https://esempio.org/ai-radar/competenze/mcp/',
-      'https://esempio.org/ai-radar/competenze/rag/',
-      'https://esempio.org/ai-radar/competenze/robotica/',
-      'https://esempio.org/ai-radar/competenze/vector-db/',
-      'https://esempio.org/ai-radar/edizioni/',
-      `https://esempio.org/ai-radar/edizioni/${edizione.settimana}/`,
-    ]);
+      '', 'competenze/', 'competenze/agenti/', 'competenze/mcp/', 'competenze/rag/', 'competenze/robotica/', 'competenze/vector-db/',
+      'edizioni/', `edizioni/${edizione.settimana}/`,
+    ].map(assoluto));
   });
 
   it('senza edizioni ha home e competenze, senza radar home ed edizioni', () => {
-    expect(indirizzi({ edizioni: [], radar: d.radar })).toEqual(['', 'competenze/', 'competenze/agenti/', 'competenze/mcp/', 'competenze/rag/', 'competenze/robotica/', 'competenze/vector-db/'].map((c) => `https://esempio.org/ai-radar/${c}`));
-    expect(indirizzi({ edizioni: [edizione] })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map((c) => `https://esempio.org/ai-radar/${c}`));
+    expect(indirizzi({ edizioni: [], radar: d.radar })).toEqual(['', 'competenze/', 'competenze/agenti/', 'competenze/mcp/', 'competenze/rag/', 'competenze/robotica/', 'competenze/vector-db/'].map(assoluto));
+    expect(indirizzi({ edizioni: [edizione] })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
   });
 
   it('la copia della home che la mappa contiene con le edizioni non aggiunge una seconda voce', () => {
-    const home = '<!doctype html><html><head><link rel="canonical" href="https://esempio.org/ai-radar/" /></head><body></body></html>';
-    const file = filePubblici({ edizioni: [edizione] }, { ...opzioni, home });
-    expect(file['index.html']).toBeDefined();
-    expect(indirizzi({ edizioni: [edizione] }, { ...opzioni, home })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map((c) => `https://esempio.org/ai-radar/${c}`));
+    expect(filePubblici({ edizioni: [edizione] }, { ...opzioni, home: HOME })['index.html']).toBeDefined();
+    expect(indirizzi({ edizioni: [edizione] }, { ...opzioni, home: HOME })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
   });
 
   it('ogni indirizzo è assoluto e segue l’indirizzo base, anche quando non è quello predefinito', () => {
@@ -114,10 +110,9 @@ describe('la sitemap', () => {
   });
 
   it('ogni indirizzo coincide con il canonical scritto nella pagina della mappa a quel percorso', () => {
-    const home = '<!doctype html><html><head><link rel="canonical" href="https://esempio.org/ai-radar/" /></head><body></body></html>';
-    const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, home });
+    const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, home: HOME });
     const canonical = (percorso: string) => new DOMParser().parseFromString(file[percorso], 'text/html').querySelector('link[rel="canonical"]')?.getAttribute('href');
-    for (const l of indirizzi({ edizioni: [edizione], radar: d.radar }, { ...opzioni, home })) {
+    for (const l of indirizzi({ edizioni: [edizione], radar: d.radar }, { ...opzioni, home: HOME })) {
       expect(canonical(`${l!.slice(opzioni.indirizzoBase.length)}index.html`)).toBe(l);
     }
   });
@@ -210,7 +205,7 @@ describe('la sitemap', () => {
     const radar = JSON.parse(JSON.stringify(d.radar).replaceAll('"vector-db"', '"vector&db<\'x\'>"'));
     const testo = filePubblici({ edizioni: [], radar }, opzioni)['sitemap.xml'];
     expect(testo).toContain('competenze/vector&amp;db&lt;&#39;x&#39;&gt;/');
-    expect(indirizzi({ edizioni: [], radar })).toContain('https://esempio.org/ai-radar/competenze/vector&db<\'x\'>/');
+    expect(indirizzi({ edizioni: [], radar })).toContain(assoluto('competenze/vector&db<\'x\'>/'));
   });
 });
 
@@ -227,9 +222,10 @@ describe('robots.txt', () => {
   });
 
   it('non c’è con l’indirizzo predefinito in /ai-radar/, né con qualunque altro percorso diverso da /', () => {
-    for (const indirizzoBase of ['https://simones99.github.io/ai-radar/', 'https://esempio.org/ai-radar/', 'https://radar.esempio.it/sito/']) {
-      const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, indirizzoBase });
-      expect(Object.keys(file), indirizzoBase).not.toContain('robots.txt');
+    // indirizzoBase senza un valore dà l'indirizzo predefinito
+    for (const base of [indirizzoBase(undefined), 'https://esempio.org/ai-radar/', 'https://radar.esempio.it/sito/']) {
+      const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, indirizzoBase: base });
+      expect(Object.keys(file), base).not.toContain('robots.txt');
     }
   });
 });

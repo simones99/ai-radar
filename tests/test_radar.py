@@ -436,6 +436,68 @@ def test_italian_job_ads_do_not_depend_on_the_total(tmp_path, monkeypatch):
     assert demand_row(tmp_path, monkeypatch, snaps)["annunci_it"] == 39
 
 
+def italian_ads(counts: list[int], totale: int) -> list[dict]:
+    """Rilevazioni italiane con questi annunci della competenza, tutte con lo stesso totale del Paese."""
+    return [snap(w, "it", n, totale=totale) for w, n in zip(WEEKS, counts)]
+
+
+@pytest.mark.parametrize("counts,totale", [
+    ([3, 2, 4, 3], 133000),          # 3 annunci, la soglia è circa 40: molto sotto
+    ([150, 148, 152, 150], 133000),  # 150 annunci: molto sopra
+    ([0, 0, 0, 0], 133000),          # nessun annuncio: sotto la soglia senza incertezza
+])
+def test_italian_job_ads_far_from_the_threshold_do_not_make_italy_uncertain(tmp_path, monkeypatch, counts, totale):
+    r = demand_row(tmp_path, monkeypatch, italian_ads(counts, totale))
+    assert (r["incerto_it"], r["incerto_perche_it"]) == (False, None)
+
+
+@pytest.mark.parametrize("counts,totale,perche", [
+    ([43, 42, 44, 43], 133000, "annunci italiani vicini alla soglia (43, la soglia è circa 40)"),  # sopra, come DB vettoriali
+    ([30, 29, 31, 30], 117000, "annunci italiani vicini alla soglia (30, la soglia è circa 35)"),  # sotto, come Multimodali
+    # la soglia viene dalla mediana dei totali delle stesse rilevazioni: 120.000, 130.000, 140.000 e 150.000 fanno 135.000,
+    # cioè 40,5 annunci, e la metà va in su
+    ([43, 42, 44, 43], [120000, 150000, 130000, 140000], "annunci italiani vicini alla soglia (43, la soglia è circa 41)"),
+])
+def test_italian_job_ads_near_the_threshold_make_italy_uncertain(tmp_path, monkeypatch, counts, totale, perche):
+    totali = totale if isinstance(totale, list) else [totale] * len(counts)
+    r = demand_row(tmp_path, monkeypatch, [snap(w, "it", n, totale=t) for w, n, t in zip(WEEKS, counts, totali)])
+    assert (r["incerto_it"], r["incerto_perche_it"]) == (True, perche)
+    assert (r["incerto"], r["incerto_perche"]) == (False, None)  # lo slancio è solido: Tutti i Paesi non cambia
+
+
+@pytest.mark.parametrize("counts,totale,quadrante_it", [
+    ([43, 42, 44, 43], 133000, "impara-ora"),  # 3,2 ogni 10mila: sopra la soglia, e resta sopra
+    ([30, 29, 31, 30], 117000, "prova"),       # 2,6 ogni 10mila: sotto, e resta sotto
+])
+def test_demand_near_the_threshold_changes_no_quadrant_history_or_version(tmp_path, monkeypatch, counts, totale, quadrante_it):
+    """La regola aggiunge solo l'incertezza italiana: quadranti nei due mercati, storico e versione restano quelli."""
+    out = rising_radar(tmp_path, monkeypatch, italian_ads(counts, totale) + [snap(w, "us", 200) for w in WEEKS])
+    r = out["competenze"][0]
+    assert r["incerto_it"] is True
+    assert (r["quadrante_it"], r["quadrante_calcolato_it"], r["quadrante_prec_it"]) == (quadrante_it,) * 3
+    assert (r["quadrante"], r["quadrante_calcolato"], r["quadrante_prec"]) == ("impara-ora",) * 3
+    assert (r["incerto"], r["incerto_perche"]) == (False, None)
+    assert out["versione"] == 2
+    assert all(set(p["competenze"]["a"]) == {"slancio", "incerto", "domanda", "calcolato", "pubblicato", "domanda_it", "calcolato_it", "pubblicato_it"}
+               for p in out["storico"])
+    assert out["storico"][-1]["competenze"]["a"]["incerto"] is False
+
+
+NOISY = ({"a": [3, 9, 2, 12, 4, 10, 3, 14, 2, 11, 5, 15]}, {"a": [20, 45, 15, 60, 18, 70, 25, 80, 22, 90, 30, 85]})
+
+
+@pytest.mark.parametrize("counts,perche_it", [
+    ([3, 2, 4, 3], "pochi paper (8 al mese) e pochi repository nuovi (55 al mese)"),
+    ([43, 42, 44, 43], "pochi paper (8 al mese), pochi repository nuovi (55 al mese)"
+                       " e annunci italiani vicini alla soglia (43, la soglia è circa 40)"),
+])
+def test_uncertain_momentum_makes_italy_uncertain_too_and_the_reason_says_both(tmp_path, monkeypatch, counts, perche_it):
+    write_inputs(tmp_path, monkeypatch, *NOISY, {"snapshots": italian_ads(counts, 133000)})
+    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    assert (r["incerto"], r["incerto_perche"]) == (True, "pochi paper (8 al mese) e pochi repository nuovi (55 al mese)")
+    assert (r["incerto_it"], r["incerto_perche_it"]) == (True, perche_it)
+
+
 def italy_goes_up(from_week: str, it_prima: int = 10, it_dopo: int = 50) -> list[dict]:
     """Italia da 1 a 5 ogni 10mila dalla settimana data; gli USA sempre a 20: «Tutti i Paesi» non si muove."""
     return [snap(w, "it", it_dopo if w >= from_week else it_prima) for w in WEEKS] + [snap(w, "us", 200) for w in WEEKS]
@@ -511,6 +573,21 @@ def test_without_italian_data_the_italian_fields_are_null_and_the_radar_goes_on(
     assert r["quadrante"] == "impara-ora"  # il mercato di tutti i Paesi resta
     for p in out["storico"]:
         assert {k: p["competenze"]["a"][k] for k in ("domanda_it", "calcolato_it", "pubblicato_it")} == dict.fromkeys(("domanda_it", "calcolato_it", "pubblicato_it"))
+
+
+@pytest.mark.parametrize("italia", [
+    [],
+    [{"data": WEEKS[-1], "paese": "it", "totale": 133000, "competenze": {}, "query": {}}],
+    [{**snap(WEEKS[-1], "it", 43, totale=133000), "totale": 0}],
+])
+def test_without_italian_data_demand_does_not_make_italy_uncertain(tmp_path, monkeypatch, italia):
+    """Gli USA vicini alla soglia (43 contro circa 40) non contano: la regola guarda solo gli annunci italiani."""
+    vicini = [snap(w, "us", n, totale=133000) for w, n in zip(WEEKS, [43, 42, 44, 43])]
+    r = rising_radar(tmp_path, monkeypatch, vicini + italia)["competenze"][0]
+    assert (r["incerto_it"], r["incerto_perche_it"]) == (False, None)
+    write_inputs(tmp_path, monkeypatch, *NOISY, {"snapshots": vicini + italia})
+    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    assert (r["incerto_it"], r["incerto_perche_it"]) == (True, "pochi paper (8 al mese) e pochi repository nuovi (55 al mese)")
 
 
 def test_italy_out_of_the_window_has_no_italian_view_today(tmp_path, monkeypatch):

@@ -118,8 +118,9 @@ export function rigaPagina(r: Radar, id: string, mercato: Mercato = 'tutti'): Ri
   const tutti = radarRows(r).find((x) => x.id === id);
   const nelMercato = radarRows(r, mercato).find((x) => x.id === id);
   const riga = nelMercato ?? tutti;
-  const slancioIncerto = !!r.competenze.find((c) => c.id === id)?.incerto;
-  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato, slancioIncerto } : null;
+  // la riga di tutti i Paesi ha l'incertezza del solo slancio; c'è sempre quando c'è quella italiana, perché la domanda
+  // di tutti i Paesi è la mediana tra i Paesi, Italia compresa
+  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato, slancioIncerto: !!tutti?.incerto } : null;
 }
 
 export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {

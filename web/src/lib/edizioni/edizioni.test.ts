@@ -698,6 +698,19 @@ describe('la pagina di un’edizione', () => {
     it('una correzione senza una data valida ferma il sito con un messaggio chiaro', () => {
       expect(() => file(corretta({ data: 'ieri', testo: 'Testo.' }))).toThrow(/2026-10-12.*correzion.*data/i);
     });
+    it('una correzione con un giorno che non esiste ferma il sito, invece di uscire datata al mese dopo', () => {
+      for (const data of ['2026-02-30', '2026-13-01', '2026-11-08T10:00:00']) {
+        expect(() => file(corretta({ data, testo: 'Testo.' })), data).toThrow(/2026-10-12.*correzion.*data/i);
+      }
+    });
+  });
+
+  it('una data di raccolta che non comincia con un giorno AAAA-MM-GG che esiste ferma il sito con un messaggio chiaro', () => {
+    for (const raccolti of ['2026-02-30T08:00:00+00:00', 'Nov 9 2026', '15/10/2026', '2026-10-15T99:00:00']) {
+      expect(() => file({ ...crea(), raccolti }), raccolti).toThrow(/2026-10-12.*raccolt/i);
+      expect(() => file({ ...crea(), raccolti }), raccolti).toThrow(`«${raccolti}»`);
+    }
+    expect(() => file({ ...crea(), raccolti: '2026-10-15' })).not.toThrow();
   });
 
   it('una versione del file che il sito non conosce ferma il sito con un messaggio chiaro', () => {

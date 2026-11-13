@@ -16,7 +16,7 @@ export async function preparaAnteprima(page: Page, a: Anteprima): Promise<void> 
   await page.setViewportSize({ width: 1200, height: 630 });
   await page.goto(MODELLO);
   const esito = await page.evaluate(async ({ a, da, fino }) => {
-    document.querySelector('header p')!.textContent = a.data;
+    document.querySelector('header p')!.textContent = a.data ?? '';
     document.querySelector('h1')!.textContent = a.nome;
     const articoli = [...document.querySelectorAll('article')];
     a.mercati.forEach((m, i) => {

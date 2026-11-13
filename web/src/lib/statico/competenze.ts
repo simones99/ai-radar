@@ -4,7 +4,7 @@ import { competenzeDi, pubblicatoDi, rigaPagina, type RigaPagina } from '../data
 import type { Quadrant, Radar } from '../data/types';
 import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
-import { dayWith, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
+import { dayWith, isDay, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
 import { IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
 import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
@@ -89,8 +89,19 @@ const RADICE = '../../';
 /** I link della testata di una pagina delle competenze, prima di «Segui con RSS»: le edizioni, se esistono, e i dati di oggi nell'app. */
 const navDelleCompetenze = (radice: string, opzioni: OpzioniPagine): string =>
   `${opzioni.linkAlleEdizioni ? `<a href="${radice}edizioni/">Edizioni</a>` : ''}<a href="${radice}">Dati di oggi</a>`;
-/** La data dei dati, in testa alle pagine e all'indice: non sono fissi come un'edizione. */
-const datiRaccolti = (r: Radar): string => `Dati raccolti ${dayWith('il', r.generato)}. La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.`;
+/**
+ * Il giorno dei dati, AAAA-MM-GG: quello che le pagine dichiarano e la sitemap dà come ultimo cambio. Null se generato non comincia
+ * con un giorno che esiste: una data illeggibile, o impossibile come il 30 febbraio, che non va scritta come se fosse un'altra.
+ */
+export function giornoDeiDati(r: Radar): string | null {
+  const giorno = r.generato.slice(0, 10);
+  return isDay(giorno) ? giorno : null;
+}
+/** La data dei dati, in testa alle pagine e all'indice: non sono fissi come un'edizione. Senza un giorno valido la data non si scrive. */
+function datiRaccolti(r: Radar): string {
+  const giorno = giornoDeiDati(r);
+  return `${giorno ? `Dati raccolti ${dayWith('il', giorno)}. ` : ''}La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.`;
+}
 /** Quanto di una descrizione un motore di ricerca mostra per intero. */
 const DESCRIZIONE_MAX = 160;
 /** Al posto delle misure, quando la competenza non sta sul radar nemmeno con tutti i Paesi: la pagina resta, perché un link salvato non si rompa. */
@@ -218,18 +229,22 @@ ${gruppiDellIndice(r)}`,
  * Il tono: «caldo» per Impara ora, in evidenza come sul radar dell'app, «manca» per il dato che non c'è.
  */
 export interface MercatoInAnteprima { nome: string; testo: string; tono: 'caldo' | 'manca' | null }
-/** Cosa mostra l'immagine di anteprima di una competenza, e quindi il suo testo alternativo. Nessuna cifra: in un post, senza unità e contesto, si leggerebbe male. */
-export interface Anteprima { id: string; nome: string; data: string; mercati: [MercatoInAnteprima, MercatoInAnteprima] }
+/**
+ * Cosa mostra l'immagine di anteprima di una competenza, e quindi il suo testo alternativo. Nessuna cifra: in un post, senza unità e contesto, si leggerebbe male.
+ * La data è null quando generato non ha un giorno valido: come le pagine, l'immagine allora non ne scrive nessuna.
+ */
+export interface Anteprima { id: string; nome: string; data: string | null; mercati: [MercatoInAnteprima, MercatoInAnteprima] }
 
 function anteprimaDi(c: Competenza, r: Radar): Anteprima {
   const tutti = rigaPagina(r, c.id);
   const italia = rigaPagina(r, c.id, 'italia');
   const mercato = (nome: string, q: Quadrant | null): MercatoInAnteprima =>
     ({ nome, testo: q ? r.quadranti[q] : DATI_NON_DISPONIBILI, tono: !q ? 'manca' : q === 'impara-ora' ? 'caldo' : null });
+  const giorno = giornoDeiDati(r);
   return {
     id: c.id,
     nome: c.nome,
-    data: `Dati ${dayWith('del', r.generato)}`,
+    data: giorno ? `Dati ${dayWith('del', giorno)}` : null,
     // senza tutti i Paesi la pagina non ha misure, nemmeno quelle italiane: l'immagine fa lo stesso
     mercati: [mercato(MERCATI.tutti, tutti?.quadrante ?? null), mercato(MERCATI.italia, tutti && italia && !italia.senzaDato ? italia.quadrante : null)],
   };
@@ -237,7 +252,7 @@ function anteprimaDi(c: Competenza, r: Radar): Anteprima {
 
 /** Il testo alternativo dell'anteprima: le stesse cose dell'immagine, nello stesso ordine. Se l'immagine non si è potuta fare resta questo, sopra il segnaposto. */
 const testoAlternativo = (a: Anteprima): string =>
-  `${a.nome} su AI Radar. ${a.mercati.map((m) => `${m.nome}: ${m.testo}.`).join(' ')} ${a.data}.`;
+  `${a.nome} su AI Radar. ${a.mercati.map((m) => `${m.nome}: ${m.testo}.`).join(' ')}${a.data ? ` ${a.data}.` : ''}`;
 
 /**
  * Le immagini di anteprima che le pagine delle competenze si aspettano, con il percorso e cosa devono mostrare:

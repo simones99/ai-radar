@@ -74,6 +74,19 @@ describe('le pagine delle competenze', () => {
     expect(t).toContain('si aggiorna ogni lunedì');
   });
 
+  it('con un generato che non comincia con un giorno che esiste le pagine nascono senza data, né nel testo né nell’anteprima', () => {
+    for (const generato of ['2026-02-30', '2026-02-30T06:15:00+00:00', 'ieri', '']) {
+      const radar = { ...RADAR, generato };
+      for (const doc of [pagina('agenti', radar), new DOMParser().parseFromString(file(radar)['competenze/index.html'], 'text/html')]) {
+        const t = testo(doc);
+        expect(t, generato).not.toContain('Dati raccolti');
+        expect(t, generato).toContain('La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.');
+      }
+      expect(pagina('mcp', radar).querySelector('meta[property="og:image:alt"]')?.getAttribute('content'), generato)
+        .toBe('Model Context Protocol (MCP) su AI Radar. Tutti i Paesi: Impara ora. Italia: Da provare.');
+    }
+  });
+
   it('un dato incerto ha l’avviso con il motivo, uno normale no', () => {
     expect(pagina('robotica').querySelector('[role="note"]')?.textContent).toBe('Dato incerto: pochi paper (45 al mese). La posizione sul radar può cambiare molto.');
     expect(pagina('agenti').querySelector('[role="note"]')).toBeNull();

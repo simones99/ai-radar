@@ -13,7 +13,10 @@ export interface OpzioniFileDelleEdizioni extends OpzioniPagine {
 
 function controlla(e: Edizione): void {
   if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
-  if (Number.isNaN(Date.parse(e.raccolti))) throw new Error(`Edizione ${e.settimana}: la data di raccolta non è valida, «${e.raccolti}».`);
+  // l'istante intero deve essere leggibile e il giorno con cui comincia deve esistere: è quello che le pagine, il feed e la sitemap scrivono
+  if (Number.isNaN(Date.parse(e.raccolti)) || !isDay(e.raccolti.slice(0, 10))) {
+    throw new Error(`Edizione ${e.settimana}: la data di raccolta non è valida, «${e.raccolti}»: serve un istante che comincia con AAAA-MM-GG.`);
+  }
   for (const c of e.correzioni) {
     if (!isDay(c.data)) throw new Error(`Edizione ${e.settimana}: una correzione ha una data non valida, «${c.data}»: serve AAAA-MM-GG.`);
   }

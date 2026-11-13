@@ -4,7 +4,7 @@ Fino a novembre 2026 una competenza era incerta solo per lo slancio, che è ugua
 
 ## La regola
 
-- Il conto è il numero di annunci italiani che il radar già calcola, la mediana delle ultime 4 rilevazioni con la stessa ricerca. La soglia in annunci è la soglia della domanda, 3 ogni 10mila, applicata alla mediana del totale italiano delle stesse rilevazioni.
+- Il conto è il numero di annunci italiani che il radar già calcola, la mediana delle ultime 4 rilevazioni con la stessa ricerca. La soglia in annunci è il numero di annunci che darebbe proprio 3 ogni 10mila, ricavato dalla domanda italiana mostrata: *n · 3 / domanda italiana*. Così annunci e soglia stanno sempre dalla stessa parte del quadrante. La mediana dei totali italiani non lo garantirebbe: la mediana dei rapporti e il rapporto delle mediane non coincidono, e con i dati del 9 novembre darebbe circa 39 per tutte e lascerebbe solida Multimodali.
 - Il margine all'80% di un conto di *n* annunci va da *n − 1,2816·√n* a *n + 1,2816·√n*. Con 0 annunci il margine è nullo, e la competenza è sotto la soglia senza incertezza.
 - Incerta in Italia vuol dire incerta per lo slancio oppure con la domanda italiana vicina alla soglia. Senza dato italiano la domanda non rende incerto il dato.
 

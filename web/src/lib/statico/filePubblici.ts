@@ -21,5 +21,5 @@ export function filePubblici({ edizioni, radar }: ContenutoStatico, opzioni: Opz
   // le testate portano alle competenze e alle edizioni solo se le loro pagine nascono
   const conLink = { ...opzioni, linkAlleCompetenze: nasconoLePagineDelleCompetenze(radar), linkAlleEdizioni: edizioni.length > 0 };
   const file = { ...fileDelleEdizioni(edizioni, conLink), ...fileDelleCompetenze(radar, conLink) };
-  return { ...file, [SITEMAP]: sitemap(Object.keys(file), opzioni.indirizzoBase) };
+  return { ...file, [SITEMAP]: sitemap(Object.keys(file), { edizioni, radar }, opzioni.indirizzoBase) };
 }

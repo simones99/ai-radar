@@ -1,5 +1,5 @@
 // La mappa dei file pubblici del sito: le edizioni, e i dati di radar.json per le pagine che ne nascono.
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
 import { FIXTURE } from '../test/fixtures';
@@ -127,13 +127,83 @@ describe('la sitemap', () => {
     expect(loc.filter((l) => /\.(xml|json|png)$|#/.test(l!))).toEqual([]);
   });
 
-  it('è XML ben formato nel namespace delle sitemap, con soli elementi url e loc', () => {
+  it('è XML ben formato nel namespace delle sitemap, con soli elementi url, loc e lastmod, e lastmod dopo loc', () => {
     const doc = leggi(filePubblici({ edizioni: [edizione], radar: d.radar }, opzioni)['sitemap.xml']);
     expect(doc.documentElement.localName).toBe('urlset');
     expect(doc.documentElement.namespaceURI).toBe('http://www.sitemaps.org/schemas/sitemap/0.9');
     const nomi = new Set([...doc.documentElement.querySelectorAll('*')].map((e) => `${e.namespaceURI} ${e.localName}`));
-    expect([...nomi].sort()).toEqual(['http://www.sitemaps.org/schemas/sitemap/0.9 loc', 'http://www.sitemaps.org/schemas/sitemap/0.9 url']);
-    for (const url of doc.documentElement.children) expect([...url.children].map((e) => e.localName)).toEqual(['loc']);
+    expect([...nomi].sort()).toEqual(['lastmod', 'loc', 'url'].map((n) => `http://www.sitemaps.org/schemas/sitemap/0.9 ${n}`));
+    for (const url of doc.documentElement.children) expect([...url.children].map((e) => e.localName)).toEqual(['loc', 'lastmod']);
+    for (const lastmod of doc.querySelectorAll('lastmod')) expect(lastmod.textContent).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  describe('la data di ultimo cambio', () => {
+    /** Ogni indirizzo con il suo lastmod, o null se non ce l'ha. */
+    const date = (c: ContenutoStatico, o: OpzioniFilePubblici = opzioni) =>
+      Object.fromEntries([...leggi(filePubblici(c, o)['sitemap.xml']).querySelectorAll('url')]
+        .map((u) => [u.querySelector('loc')!.textContent!.slice(opzioni.indirizzoBase.length), u.querySelector('lastmod')?.textContent ?? null]));
+    // la prima edizione è raccolta il 15 ottobre e corretta il 2 novembre, la seconda raccolta il 22 ottobre e mai corretta
+    const corretta: Edizione = { ...edizione, correzioni: [{ data: '2026-11-02', testo: 'Una cifra era sbagliata.' }] };
+    const seconda: Edizione = { ...edizione, settimana: '2026-10-19', raccolti: '2026-10-22T07:30:00+00:00', precedente: edizione.settimana, correzioni: [] };
+
+    it('una pagina di edizione ha il giorno della sua raccolta, o la sua correzione più recente', () => {
+      expect(edizione.settimana).toBe('2026-10-12');
+      expect(date({ edizioni: [edizione] })['edizioni/2026-10-12/']).toBe('2026-10-15');
+      const d2 = date({ edizioni: [corretta, seconda] });
+      expect(d2['edizioni/2026-10-12/']).toBe('2026-11-02');
+      expect(d2['edizioni/2026-10-19/']).toBe('2026-10-22');
+    });
+
+    it('l’archivio ha la data più recente tra quelle delle sue edizioni, correzioni comprese', () => {
+      expect(date({ edizioni: [edizione, seconda] })['edizioni/']).toBe('2026-10-22');
+      expect(date({ edizioni: [corretta, seconda] })['edizioni/']).toBe('2026-11-02');
+    });
+
+    it('home, indice e pagine delle competenze hanno il giorno di generato di radar.json, e senza radar la home non ha data', () => {
+      const radar = { ...d.radar!, generato: '2026-10-26' };
+      expect(date({ edizioni: [corretta, seconda], radar })).toEqual({
+        '': '2026-10-26',
+        'competenze/': '2026-10-26',
+        'competenze/agenti/': '2026-10-26',
+        'competenze/mcp/': '2026-10-26',
+        'competenze/rag/': '2026-10-26',
+        'competenze/robotica/': '2026-10-26',
+        'competenze/vector-db/': '2026-10-26',
+        'edizioni/': '2026-11-02',
+        'edizioni/2026-10-12/': '2026-11-02',
+        'edizioni/2026-10-19/': '2026-10-22',
+      });
+      expect(date({ edizioni: [seconda] })['']).toBeNull();
+      expect(date({ edizioni: [] })).toEqual({ '': null });
+    });
+
+    it('un generato con l’ora vale per il suo giorno, uno non valido non dà nessuna data', () => {
+      expect(date({ edizioni: [], radar: { ...d.radar!, generato: '2026-10-26T06:15:00+00:00' } })['competenze/mcp/']).toBe('2026-10-26');
+      // un giorno che non esiste: le pagine delle competenze nascono, ma nessuna ha la data
+      const conDate = date({ edizioni: [seconda], radar: { ...d.radar!, generato: '2026-02-30' } });
+      expect(conDate['']).toBeNull();
+      expect(conDate['competenze/']).toBeNull();
+      expect(conDate['competenze/mcp/']).toBeNull();
+      expect(conDate['edizioni/2026-10-19/']).toBe('2026-10-22');
+      // una data illeggibile, con un radar senza competenze: c'è la sola home, senza data
+      for (const generato of ['ieri', '26/10/2026', '2026-13-01', '']) {
+        expect(date({ edizioni: [], radar: { ...d.radar!, competenze: [], generato } }), generato).toEqual({ '': null });
+      }
+    });
+
+    it('nessuna data viene dall’orologio: con gli stessi dati, in giorni e ore diversi, il testo è lo stesso', () => {
+      const contenuto = { edizioni: [corretta, seconda], radar: d.radar };
+      try {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-11-16T05:00:00Z'));
+        const lunedi = filePubblici(contenuto, opzioni)['sitemap.xml'];
+        vi.setSystemTime(new Date('2027-03-04T23:59:00Z'));
+        expect(filePubblici(contenuto, opzioni)['sitemap.xml']).toBe(lunedi);
+        expect(lunedi).not.toMatch(/2026-11-16|2027-03-0[45]/);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   it('un indirizzo con caratteri speciali passa dall’escape XML', () => {

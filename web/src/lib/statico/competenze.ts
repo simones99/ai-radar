@@ -4,7 +4,7 @@ import { competenzeDi, pubblicatoDi, rigaPagina, type RigaPagina } from '../data
 import type { Quadrant, Radar } from '../data/types';
 import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
-import { dayWith, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
+import { dayWith, isDay, isoDay, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
 import { IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
 import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
@@ -91,6 +91,14 @@ const navDelleCompetenze = (radice: string, opzioni: OpzioniPagine): string =>
   `${opzioni.linkAlleEdizioni ? `<a href="${radice}edizioni/">Edizioni</a>` : ''}<a href="${radice}">Dati di oggi</a>`;
 /** La data dei dati, in testa alle pagine e all'indice: non sono fissi come un'edizione. */
 const datiRaccolti = (r: Radar): string => `Dati raccolti ${dayWith('il', r.generato)}. La pagina mostra sempre i dati più recenti e si aggiorna ogni lunedì.`;
+/**
+ * Il giorno dei dati, AAAA-MM-GG: quello che le pagine dichiarano in «Dati raccolti», letto allo stesso modo. Null se generato non comincia
+ * con un giorno che esiste: una data illeggibile, o impossibile come il 30 febbraio, che il calendario sposterebbe al mese dopo.
+ */
+export function giornoDeiDati(r: Radar): string | null {
+  const giorno = r.generato.slice(0, 10);
+  return isDay(giorno) && isoDay(parseDay(giorno)) === giorno ? giorno : null;
+}
 /** Quanto di una descrizione un motore di ricerca mostra per intero. */
 const DESCRIZIONE_MAX = 160;
 /** Al posto delle misure, quando la competenza non sta sul radar nemmeno con tutti i Paesi: la pagina resta, perché un link salvato non si rompa. */

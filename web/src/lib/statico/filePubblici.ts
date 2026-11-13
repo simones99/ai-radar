@@ -3,6 +3,7 @@ import type { Radar } from '../data/types';
 import { fileDelleEdizioni, type Edizione } from '../edizioni';
 import { fileDelleCompetenze, nasconoLePagineDelleCompetenze } from './competenze';
 import type { OpzioniPagine } from './pagina';
+import { SITEMAP, sitemap } from './sitemap';
 
 /** Da cosa nascono i file statici: le edizioni salvate e i dati di oggi del radar, che può mancare. */
 export interface ContenutoStatico {
@@ -19,5 +20,6 @@ export interface OpzioniFilePubblici extends OpzioniPagine {
 export function filePubblici({ edizioni, radar }: ContenutoStatico, opzioni: OpzioniFilePubblici): Record<string, string> {
   // le testate portano alle competenze e alle edizioni solo se le loro pagine nascono
   const conLink = { ...opzioni, linkAlleCompetenze: nasconoLePagineDelleCompetenze(radar), linkAlleEdizioni: edizioni.length > 0 };
-  return { ...fileDelleEdizioni(edizioni, conLink), ...fileDelleCompetenze(radar, conLink) };
+  const file = { ...fileDelleEdizioni(edizioni, conLink), ...fileDelleCompetenze(radar, conLink) };
+  return { ...file, [SITEMAP]: sitemap(Object.keys(file), opzioni.indirizzoBase) };
 }

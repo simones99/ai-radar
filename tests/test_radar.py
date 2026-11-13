@@ -458,6 +458,8 @@ def test_italian_job_ads_far_from_the_threshold_do_not_make_italy_uncertain(tmp_
     # Multimodali il 9 novembre: 2,56 ogni 10mila con 30 annunci, quindi la soglia di 3 ogni 10mila vale 35 annunci.
     # La mediana dei totali (129.778) darebbe 39: 30 annunci e la soglia a 39 non tornerebbero con 2,56 contro 3.
     ([35, 33, 22, 27], [135078, 126809, 132748, 106800], "annunci italiani vicini alla soglia (30, la soglia è circa 35)"),
+    # 3 ogni 10mila su 121.333 annunci sono 36,4: la soglia viene dalla mediana vera, 30,5, non dai 31 mostrati (darebbero 37)
+    ([30, 31, 30, 31], 121333, "annunci italiani vicini alla soglia (31, la soglia è circa 36)"),
 ])
 def test_italian_job_ads_near_the_threshold_make_italy_uncertain(tmp_path, monkeypatch, counts, totale, perche):
     r = demand_row(tmp_path, monkeypatch, italian_ads(counts, totale))

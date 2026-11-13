@@ -1,11 +1,13 @@
 // Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa. Lo scheletro è quello di tutte le pagine statiche.
 import { toHash, type TileId } from '../router';
-import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, rigaFonti, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
 import { day, dayWith } from '../text/format';
-import { cifraConUnita, cifraNellaFrase, eCardNotizie, portaConDati, testoPorta, type CardFissa, type Destinazione, type Edizione, type PortaFissa } from './tipi';
+import { cardDellaTesta, cifraGrande, porta, type LinkDellaDestinazione } from './porteECard';
+import { eCardNotizie, portaConDati, testoPorta, type Edizione, type PortaFissa } from './tipi';
 
 /** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
-const hrefCard = (d: Destinazione, radice: string): string => esc(`${radice}${toHash(d.card as TileId, d.elemento, d.params)}`);
+const versoLaCard = (radice: string): LinkDellaDestinazione => (destinazione) =>
+  destinazione && `${radice}${toHash(destinazione.card as TileId, destinazione.elemento, destinazione.params)}`;
 export const titoloPagina = (e: Edizione): string => `AI Radar, settimana ${dayWith('del', e.settimana)}`;
 
 /** Una porta in una riga, dove non c'è spazio per altro: chi la vede fuori dalla pagina non deve scambiare una frase ripetuta per una novità. */
@@ -13,50 +15,6 @@ const portaInBreve = (p: PortaFissa): string => `${testoPorta(p)}${p.cambiata ? 
 
 /** Né le porte né le frasi diverse dall'edizione precedente; la prima edizione non ha con cosa confrontarsi. */
 const senzaNovita = (e: Edizione): boolean => !!e.precedente && !e.porte.some((p) => p.cambiata) && !e.card.some((c) => c.cambiata);
-
-function porta(p: PortaFissa, radice: string): string {
-  const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
-  const notizia = portaConDati(p) && p.destinazione ? `<p class="ed-notizia"><a href="${hrefCard(p.destinazione, radice)}">${titolo}</a></p>` : '';
-  return `<article class="ed-porta">
-<h2>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
-${notizia}
-${portaConDati(p) && !p.cambiata ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
-${p.nota ? `<p class="ed-nota">${esc(p.nota)}</p>` : ''}
-<p class="ed-fonte">${esc(p.meta)}</p>
-${rigaFonti(p.fonti)}
-</article>`;
-}
-
-/** La cifra in un paragrafo suo, grande con l'unità piccola come in home: messa nella frase, si leggeva «47 Notizie nei 7 giorni». */
-function cifraGrande(c: Pick<CardFissa, 'cifra' | 'unita'>): string {
-  return c.cifra ? `<p class="ed-cifra"><strong>${esc(c.cifra)}</strong>${esc(cifraConUnita(c).slice(c.cifra.length))}</p>` : '';
-}
-
-function rigaCard(c: CardFissa, radice: string): string {
-  return `<li>
-<h4><a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a></h4>
-${cifraNellaFrase(c) ? '' : cifraGrande(c)}
-<p>${esc(c.frase ?? '')}</p>
-${c.era ? `<p class="ed-nota">${esc(c.era)}</p>` : ''}
-${rigaFonti(c.fonti)}
-</li>`;
-}
-
-/** Le righe di una testa: chi decide in un'organizzazione deve vedere dove comincia la sua parte, e trovarci anche ciò che non è cambiato. */
-function frasiDellaTesta(p: PortaFissa, card: CardFissa[], radice: string): string {
-  const proprie = card.filter((c) => c.testa === p.id);
-  const conDati = proprie.filter((c) => c.frase != null);
-  const righe = conDati.filter((c) => c.cambiata);
-  const invariate = conDati.filter((c) => !c.cambiata);
-  const senzaDati = proprie.filter((c) => c.frase == null);
-  const elenco = (xs: CardFissa[]) => xs.map((c) => `<a href="${hrefCard(c.destinazione, radice)}">${esc(c.nome)}</a>`).join(', ');
-  return `<div class="ed-gruppo">
-<h3>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h3>
-${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, radice)).join('\n')}\n</ul>` : ''}
-${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
-${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}
-</div>`;
-}
 
 function frasi(e: Edizione, radice: string): string {
   const card = e.card.filter((c) => !eCardNotizie(c));
@@ -66,7 +24,7 @@ function frasi(e: Edizione, radice: string): string {
   return `<section>
 <h2>${titolo}</h2>
 ${e.precedente ? `<p class="ed-nota">Rispetto alla <a href="${esc(`${radice}edizioni/${e.precedente}/`)}">settimana ${esc(dayWith('del', e.precedente))}</a>.</p>` : ''}
-${e.porte.map((p) => frasiDellaTesta(p, card, radice)).join('\n')}
+${e.porte.map((p) => cardDellaTesta(p, card, versoLaCard(radice))).join('\n')}
 </section>`;
 }
 
@@ -112,7 +70,7 @@ ${senzaNovita(e) ? `<p class="ed-quieta">Settimana senza novità: le frasi sono 
 ${correzioni}
 </div>
 <div class="ed-porte">
-${e.porte.map((p) => porta(p, radice)).join('\n')}
+${e.porte.map((p) => porta(p, versoLaCard(radice))).join('\n')}
 </div>
 ${frasi(e, radice)}
 ${notizie(e, radice)}

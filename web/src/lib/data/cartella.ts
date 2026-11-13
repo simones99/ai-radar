@@ -17,6 +17,23 @@ export function leggiDati(dati: string, quali: readonly FileKey[] = FILES): Data
   return parti as Dataset;
 }
 
+/**
+ * I JSON chiesti come li vede l'app: un file che manca, illeggibile o con null vale come fonte assente.
+ * Per chi deve uscire con i dati che ci sono, come la home in chiaro, che dice quali mancano.
+ */
+export function leggiDatiComeLApp(dati: string, quali: readonly FileKey[] = FILES): Dataset {
+  const parti: Record<string, unknown> = {};
+  for (const k of quali) {
+    try {
+      const valore: unknown = JSON.parse(readFileSync(join(dati, `${k}.json`), 'utf-8'));
+      if (valore != null) parti[k] = valore;
+    } catch {
+      // che manchi o sia rotto, per l'app il file non è arrivato
+    }
+  }
+  return parti as Dataset;
+}
+
 /** Mai un file scritto a metà: un giro interrotto non lascia un'edizione, o un'immagine, che sembra buona. */
 export function scrivi(file: string, contenuto: string | Uint8Array): void {
   mkdirSync(dirname(file), { recursive: true });

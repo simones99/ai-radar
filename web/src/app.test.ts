@@ -26,6 +26,12 @@ describe('App', () => {
     expect(within(crediti).getAllByRole('link', { name: 'CC BY-SA 4.0' })[0]).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-sa/4.0/');
     expect(within(crediti).getAllByRole('link', { name: 'CC0' })[0]).toHaveAttribute('href', 'https://creativecommons.org/publicdomain/zero/1.0/');
     expect(within(crediti).getByRole('link', { name: 'Licenze del software' })).toHaveAttribute('href', 'THIRD_PARTY_LICENSES.txt');
+    const datiDi = [...crediti.querySelectorAll('p')].find((p) => p.textContent!.startsWith('Dati di'))!;
+    expect([...datiDi.querySelectorAll('a')].slice(0, 7).map((a) => [a.textContent, a.getAttribute('href')])).toEqual([
+      ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['arXiv', 'https://arxiv.org'], ['GitHub', 'https://github.com'], ['Hugging Face', 'https://huggingface.co'],
+      ['The Adzuna API', 'https://www.adzuna.co.uk'], ['Eurostat', 'https://ec.europa.eu/eurostat'], ['Our World in Data', 'https://ourworldindata.org'],
+    ]);
+    expect(datiDi.textContent).toMatch(/^Dati di Epoch AI, arXiv, GitHub, Hugging Face, The Adzuna API, Eurostat, Our World in Data\. /);
   });
 
   describe('un file di dati non arriva', () => {

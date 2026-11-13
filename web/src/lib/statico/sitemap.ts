@@ -20,7 +20,7 @@ const ultimoCambio = (e: Edizione): string => piuRecente([isoDay(parseDay(e.racc
  * La data di ultimo cambio della pagina in una cartella, se ha una regola e i dati per seguirla. Viene sempre dai dati, mai dall'orologio:
  * ogni edizione la sua, l'archivio la più recente tra quelle delle edizioni, la home e le competenze il giorno dei dati del radar.
  */
-function dateDelleCartelle({ edizioni, radar }: ContenutoStatico): (cartella: string) => string | null {
+function dateDelleCartelle({ edizioni, dataset: { radar } }: ContenutoStatico): (cartella: string) => string | null {
   const date = new Map(edizioni.map((e) => [`edizioni/${e.settimana}/`, ultimoCambio(e)]));
   if (edizioni.length) date.set('edizioni/', piuRecente([...date.values()]));
   const deiDati = radar ? giornoDeiDati(radar) : null;

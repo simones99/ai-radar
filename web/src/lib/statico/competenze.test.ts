@@ -6,10 +6,10 @@ import { FIXTURE } from '../test/fixtures';
 import { filePubblici } from '.';
 
 const BASE = 'https://esempio.org/ai-radar/';
-const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc.css' };
+const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc.css', home: '<div id="app"></div>' };
 const RADAR = (FIXTURE as Dataset).radar as Radar;
 
-const file = (radar?: Radar) => filePubblici({ edizioni: [], radar }, opzioni);
+const file = (radar?: Radar) => filePubblici({ edizioni: [], dataset: { radar } }, opzioni);
 const pagina = (id: string, radar: Radar = RADAR) => {
   const html = file(radar)[`competenze/${id}/index.html`];
   expect(html, `nessuna pagina per ${id}`).toBeDefined();

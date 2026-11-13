@@ -24,8 +24,9 @@ const ARCHIVIO = '/edizioni/';
 
 async function serviEdizioni(page: Page, request: APIRequestContext) {
   const home = await (await request.get('/')).text();
-  const file = filePubblici({ edizioni: [conCorrezione, seconda] }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici({ edizioni: [conCorrezione, seconda], dataset: {} }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home), home });
   for (const [percorso, body] of Object.entries(file)) {
+    if (percorso === 'index.html') continue; // la home resta quella della build
     // il feed con il tipo con cui lo serve GitHub Pages
     const contentType = percorso.endsWith('.xml') ? 'application/xml' : 'text/html; charset=utf-8';
     await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType, body }));

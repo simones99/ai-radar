@@ -2,14 +2,9 @@
 import { INDICE_EDIZIONI } from '../data/load';
 import { isDay } from '../text/format';
 import { feed } from './feed';
-import { linkAlFeed, type OpzioniPagine } from '../statico/pagina';
+import type { OpzioniPagine } from '../statico/pagina';
 import { archivio, paginaEdizione } from './pagine';
 import { VERSIONE, type Edizione } from './tipi';
-
-export interface OpzioniFileDelleEdizioni extends OpzioniPagine {
-  /** L'HTML della home uscito dalla build: con almeno un'edizione la mappa ne restituisce una copia con il link al feed. */
-  home?: string;
-}
 
 function controlla(e: Edizione): void {
   if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
@@ -24,8 +19,9 @@ function controlla(e: Edizione): void {
 
 /**
  * Tutti i file che nascono dalle edizioni, per percorso. Senza edizioni non ne nasce nessuno: gli indirizzi esistono dalla prima in poi.
+ * La home, con il link al feed, la scrive la mappa dei file pubblici: è la home in chiaro.
  */
-export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniFileDelleEdizioni): Record<string, string> {
+export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniPagine): Record<string, string> {
   edizioni.forEach(controlla);
   if (!edizioni.length) return {};
   const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));
@@ -34,7 +30,5 @@ export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniFileDell
     ...Object.fromEntries(recenti.map((e, i) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni, { precedente: recenti[i + 1], successiva: recenti[i - 1] })])),
     'feed.xml': feed(recenti, opzioni.indirizzoBase),
     [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
-    // nell'HTML e non dall'app: un lettore di feed non esegue JavaScript. Senza edizioni la home resta quella uscita dalla build
-    ...(opzioni.home ? { 'index.html': opzioni.home.replace('</head>', () => `  ${linkAlFeed(opzioni.indirizzoBase)}\n  </head>`) } : {}),
   };
 }

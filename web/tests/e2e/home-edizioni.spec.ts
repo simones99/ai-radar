@@ -16,8 +16,9 @@ const edizione = creaEdizione(FIXTURE as Dataset, null) as Edizione;
 /** I file delle edizioni che il sito costruito non ha, compreso l'indice: l'ultima edizione è quella passata. */
 async function conEdizioni(page: Page, request: APIRequestContext, ultima = QUESTA_SETTIMANA) {
   const home = await (await request.get('/')).text();
-  const file = filePubblici({ edizioni: [edizione] }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici({ edizioni: [edizione], dataset: {} }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home), home });
   for (const [percorso, body] of Object.entries(file)) {
+    if (percorso === 'index.html') continue; // la home resta quella della build
     const contentType = percorso.endsWith('.xml') ? 'application/xml' : 'text/html; charset=utf-8';
     await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType, body }));
   }

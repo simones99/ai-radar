@@ -104,11 +104,21 @@ describe('il sito costruito', () => {
     expect(existsSync(join(senzaEdizioni(), 'edizioni'))).toBe(false);
   });
 
-  it('con le edizioni la home guadagna il link al feed per i lettori, leggibile senza JavaScript, e questa è la sua sola differenza', () => {
+  it('con le edizioni la home guadagna il link al feed per i lettori, leggibile senza JavaScript, e nel testo in chiaro il link all’archivio nella testata e quello al feed in fondo: sono le sue sole differenze', () => {
     const con = readFileSync(join(conEdizioni(), 'index.html'), 'utf-8');
     const link = new DOMParser().parseFromString(con, 'text/html').head.querySelector('link[rel="alternate"][type="application/rss+xml"]');
     expect(link?.getAttribute('href')).toBe(`${ALTRO_INDIRIZZO}feed.xml`);
-    expect(con.replace(/\s*<link rel="alternate"[^>]*>/, '')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
+    // i dati di questa build non hanno lo stato del giro: la home in chiaro non ha la settimana, che porterebbe all'edizione.
+    // Tolti quei tre link, le due home hanno la stessa testa, lo stesso testo e gli stessi link
+    const leggi = (html: string, togli: string[] = []) => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      for (const selettore of togli) doc.querySelectorAll(selettore).forEach((e) => e.remove());
+      const spazi = (s: string) => s.replace(/\s+/g, ' ').trim();
+      return { testa: spazi(doc.head.outerHTML), testo: spazi(doc.body.textContent ?? ''), link: [...doc.body.querySelectorAll('a')].map((a) => [spazi(a.textContent ?? ''), a.getAttribute('href')]) };
+    };
+    const senza = readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8');
+    expect(leggi(con, ['link[rel="alternate"]', 'a[href="edizioni/"]', 'a[href="feed.xml"]'])).toEqual(leggi(senza));
+    expect(leggi(con).link).toEqual(expect.arrayContaining([['Edizioni', 'edizioni/'], ['Segui con RSS', 'feed.xml']]));
   });
 
   it('senza edizioni la home non ha il link al feed', () => {
@@ -153,6 +163,33 @@ describe('il sito costruito', () => {
     writeFileSync(join(uscita, 'anteprima.png'), 'png della home');
     scriviFilePubblici({ dati: join(cartella, 'nessun-dato'), uscita, indirizzoBase: ALTRO_INDIRIZZO, htmlHome: '<link rel="stylesheet" href="./assets/a.css">' });
     expect(existsSync(join(uscita, 'competenze'))).toBe(false);
+  });
+
+  describe('un file di dati rotto', () => {
+    const HOME = '<link rel="stylesheet" href="./assets/a.css"><div id="app"></div>';
+    /** Una cartella con tutti i dati delle prove, e i file dati scritti così come sono. */
+    const conDati = (nome: string, rotti: Record<string, string>) => {
+      const dati = join(cartella, nome);
+      const uscita = join(dati, 'uscita');
+      mkdirSync(uscita, { recursive: true });
+      writeFileSync(join(uscita, 'anteprima.png'), 'png della home');
+      for (const [k, v] of Object.entries(FIXTURE)) writeFileSync(join(dati, `${k}.json`), JSON.stringify(v));
+      for (const [k, v] of Object.entries(rotti)) writeFileSync(join(dati, `${k}.json`), v);
+      return { scrivi: () => scriviFilePubblici({ dati, uscita, indirizzoBase: ALTRO_INDIRIZZO, htmlHome: HOME }), home: () => readFileSync(join(uscita, 'index.html'), 'utf-8') };
+    };
+    const testo = (html: string) => (new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '').replace(/\s+/g, ' ');
+
+    it('illeggibile o con null vale come fonte assente, come nell’app: la build riesce e la home in chiaro dice che mancano i suoi dati', () => {
+      const { scrivi, home } = conDati('fonti-rotte', { epoch: '{ rotto', news: 'null' });
+      expect(scrivi).not.toThrow();
+      expect(testo(home())).toContain('Dati non disponibili: Modelli e ricerca, Notizie.');
+      // le pagine che non dipendono da quei file nascono come sempre
+      expect(existsSync(join(cartella, 'fonti-rotte', 'uscita', 'competenze', 'mcp', 'index.html'))).toBe(true);
+    });
+
+    it('radar.json illeggibile ferma la build: le pagine delle competenze sparirebbero dal sito', () => {
+      expect(conDati('radar-rotto', { radar: '{ rotto' }).scrivi).toThrow();
+    });
   });
 
   it('l’indice per la home sta con gli altri dati dell’app e dice l’ultima edizione; senza edizioni non esiste', () => {

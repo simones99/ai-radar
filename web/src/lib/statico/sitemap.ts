@@ -20,3 +20,14 @@ ${loc.map((l) => `<url><loc>${esc(l)}</loc></url>`).join('\n')}
 </urlset>
 `;
 }
+
+export const ROBOTS = 'robots.txt';
+
+/**
+ * robots.txt, come voce della mappa dei file pubblici: c'è solo quando l'indirizzo base è la radice di un dominio, perché i crawler
+ * lo leggono solo lì e in una sottocartella verrebbe ignorato. Vale per tutti i crawler, non esclude niente e indica la sitemap.
+ */
+export function robots(indirizzoBase: string): Record<string, string> {
+  if (new URL(indirizzoBase).pathname !== '/') return {};
+  return { [ROBOTS]: `User-agent: *\nAllow: /\n\nSitemap: ${indirizzoBase}${SITEMAP}\n` };
+}

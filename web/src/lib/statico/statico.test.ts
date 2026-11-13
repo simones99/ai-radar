@@ -143,3 +143,23 @@ describe('la sitemap', () => {
     expect(indirizzi({ edizioni: [], radar })).toContain('https://esempio.org/ai-radar/competenze/vector&db<\'x\'>/');
   });
 });
+
+describe('robots.txt', () => {
+  it('alla radice di un dominio c’è, vale per tutti i crawler, non esclude niente e indica la sitemap', () => {
+    const file = filePubblici({ edizioni: [edizione] }, { ...opzioni, indirizzoBase: 'https://altro-utente.github.io/' });
+    expect(file['robots.txt'], 'la mappa non ha robots.txt').toBeDefined();
+    expect(file['robots.txt'].trim().split('\n')).toEqual(['User-agent: *', 'Allow: /', '', 'Sitemap: https://altro-utente.github.io/sitemap.xml']);
+  });
+
+  it('c’è anche su un dominio proprio, e anche senza edizioni né radar', () => {
+    const file = filePubblici({ edizioni: [] }, { ...opzioni, indirizzoBase: 'https://radar.esempio.it/' });
+    expect(file['robots.txt']).toContain('Sitemap: https://radar.esempio.it/sitemap.xml\n');
+  });
+
+  it('non c’è con l’indirizzo predefinito in /ai-radar/, né con qualunque altro percorso diverso da /', () => {
+    for (const indirizzoBase of ['https://simones99.github.io/ai-radar/', 'https://esempio.org/ai-radar/', 'https://radar.esempio.it/sito/']) {
+      const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, indirizzoBase });
+      expect(Object.keys(file), indirizzoBase).not.toContain('robots.txt');
+    }
+  });
+});

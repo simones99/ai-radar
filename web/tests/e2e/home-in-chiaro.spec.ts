@@ -14,6 +14,9 @@ const settimana = settimanaDeiDati(leggiDati(DATI));
 /** Il testo delle porte con dati, come lo legge chi guarda la pagina. */
 const PORTE = (settimana?.porte ?? []).filter(portaConDati).map(testoPorta);
 
+/** Il titolo della sezione delle card nel testo statico: l'app non ce l'ha. */
+const SITUAZIONE = 'La situazione';
+
 /** Quante volte un testo si legge nella pagina. */
 const volte = (page: Page, testo: string) => page.evaluate((t) => document.body.innerText.replace(/\s+/g, ' ').split(t).length - 1, testo);
 
@@ -27,11 +30,12 @@ test.describe('con JavaScript', () => {
     });
   });
 
-  test('l’app prende il posto del testo statico: un solo h1, e il testo di ogni porta una volta sola', async ({ page }) => {
+  test('l’app prende il posto del testo statico: il testo statico non c’è più, un solo h1, e il testo di ogni porta una volta sola', async ({ page }) => {
     expect(PORTE.length, 'nella cartella dei dati non ci sono porte con dati').toBeGreaterThan(0);
     await page.goto('/');
     await expect(page.getByRole('link', { name: 'Stato delle fonti' })).toBeVisible();
     await expect(page.getByText('Caricamento dei dati…')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: SITUAZIONE, exact: true })).toHaveCount(0);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(FRASE_DI_APERTURA);
     await expect(page.locator('h1')).toHaveCount(1);
     for (const testo of PORTE) expect(await volte(page, testo), testo).toBe(1);
@@ -41,9 +45,10 @@ test.describe('con JavaScript', () => {
 test.describe('senza JavaScript', () => {
   test.use({ javaScriptEnabled: false });
 
-  test('il testo statico c’è: la frase di apertura, le porte, e la testata porta all’indice delle competenze', async ({ page }) => {
+  test('il testo statico c’è: la frase di apertura, le porte, le card, e la testata porta all’indice delle competenze', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(FRASE_DI_APERTURA);
+    await expect(page.getByRole('heading', { name: SITUAZIONE, exact: true })).toBeVisible();
     for (const testo of PORTE) expect(await volte(page, testo), testo).toBe(1);
     await page.getByRole('banner').getByRole('link', { name: 'Competenze' }).click();
     await expect(page).toHaveURL(/\/competenze\/$/);

@@ -18,6 +18,7 @@
   } = $props();
 
   const italia = $derived(mercato === 'italia');
+  const avviso = $derived(avvisoIncerto(row, mercato));
   const eraDomanda = $derived(row.dp != null ? ` · era ${per10k(row.dp)} un mese fa` : '');
   const sottoDomanda = $derived(italia
     ? `ogni 10mila in Italia${row.annunci != null ? `, ${quantiAnnunci(row.annunci)}` : ''}${eraDomanda}${row.domandaTutti != null ? ` · Paese a metà classifica: ${per10k(row.domandaTutti)}` : ''}`
@@ -57,8 +58,8 @@
 </script>
 
 <nav class="back" aria-label="Competenze"><a href={indietro}>← Tutte le competenze</a></nav>
-{#if row.incerto}
-  <p class="warn" role="note">{avvisoIncerto(row)}</p>
+{#if avviso}
+  <p class="warn" role="note">{avviso}</p>
 {/if}
 
 <Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>

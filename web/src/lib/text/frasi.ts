@@ -6,6 +6,7 @@ import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/types';
 import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
+import { MERCATI } from './competenza';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, parseDay, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string; scelta?: string } // scelta: quella ricordata, accanto al nome della card (Competenze · Italia)
@@ -217,8 +218,16 @@ export function headCompetenze(d: Dataset, _today?: Date, params: Params = {}): 
   };
 }
 
-/** L'avviso di una competenza dal dato incerto: dice solo che il margine è largo, come il punto vuoto sul radar, non giudica la competenza. */
-export const avvisoIncerto = (r: Pick<RigaPagina, 'incerto_perche'>): string => `Dato incerto: ${r.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.`;
+/**
+ * L'avviso di una competenza dal dato incerto nel mercato: dice solo che il margine è largo, come il punto vuoto sul radar, non giudica la competenza.
+ * Nomina l'Italia quando l'incertezza è solo sua, per la domanda vicina alla soglia. Con lo slancio incerto vale nei due mercati e l'avviso è uno:
+ * nel mercato Italia il motivo italiano mette già insieme lo slancio e, se c'è, la domanda.
+ */
+export function avvisoIncerto(r: Pick<RigaPagina, 'incerto' | 'incerto_perche' | 'slancioIncerto'>, mercato: Mercato): string | null {
+  if (!r.incerto) return null;
+  const dove = mercato === 'italia' && !r.slancioIncerto ? ` in ${MERCATI.italia}` : '';
+  return `Dato incerto${dove}: ${r.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.`;
+}
 
 /** La riga sotto la cifra dello slancio: l'unità, e le note sul valore di un mese fa e sul margine, quando ci sono. */
 export function dettagliSlancio(r: RigaPagina): { unita: string; note: string[] } {

@@ -109,6 +109,8 @@ export interface RigaPagina extends RadarRowM {
   domandaTutti: number | null;
   /** Il mercato non ha il dato: la riga è quella di tutti i Paesi, e la pagina lo dice al posto del numero. */
   senzaDato: boolean;
+  /** Lo slancio è incerto: vale nei due mercati, qualunque sia quello scelto. */
+  slancioIncerto: boolean;
 }
 
 /** Null se la competenza non ha una pagina: non sta sul radar nemmeno con tutti i Paesi. */
@@ -116,7 +118,8 @@ export function rigaPagina(r: Radar, id: string, mercato: Mercato = 'tutti'): Ri
   const tutti = radarRows(r).find((x) => x.id === id);
   const nelMercato = radarRows(r, mercato).find((x) => x.id === id);
   const riga = nelMercato ?? tutti;
-  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato } : null;
+  const slancioIncerto = !!r.competenze.find((c) => c.id === id)?.incerto;
+  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato, slancioIncerto } : null;
 }
 
 export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {

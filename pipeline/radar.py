@@ -146,13 +146,14 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
 
     trends = []
     valori: dict[str, float] = {}
-    annunci_it = None
+    annunci_it = mediana_annunci_it = None
     for c in paesi:
         own = sorted((x for x in same if x["paese"] == c), key=lambda x: x["data"])
         ultime = own[-RILEVAZIONI_DOMANDA:]
         valori[c] = median(per_10mila(x) for x in ultime)
         if c == "it":
-            annunci_it = int(median(x["competenze"][sid] for x in ultime) + 0.5)  # 4,5 fa 5: round() darebbe 4
+            mediana_annunci_it = median(x["competenze"][sid] for x in ultime)
+            annunci_it = int(mediana_annunci_it + 0.5)  # 4,5 fa 5: round() darebbe 4
         if len(own) < 2 or _days(own[0]["data"], own[-1]["data"]) < MIN_GIORNI_LAVORO:
             continue
         t = trend([_days(own[0]["data"], x["data"]) / GIORNI_MESE for x in own],
@@ -171,7 +172,8 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
         "annunci_it": annunci_it,
         # gli annunci che darebbero la soglia della domanda: n · 3 / domanda italiana, così annunci e soglia stanno
         # dalla stessa parte di domanda italiana e 3 ogni 10mila. La mediana dei totali non lo garantirebbe.
-        "soglia_annunci_it": SOGLIA_DOMANDA * annunci_it / valori["it"] if annunci_it and valori["it"] else None,
+        # n è la mediana vera, non arrotondata: con 4 rilevazioni può valere 30,5, e i 31 mostrati sposterebbero la soglia.
+        "soglia_annunci_it": SOGLIA_DOMANDA * mediana_annunci_it / valori["it"] if mediana_annunci_it and valori["it"] else None,
         "ogni_10mila": {c: round(v, 2) for c, v in sorted(valori.items())},
         "data": newest,
         "rilevazioni": [{"data": d, "mediana": round(median(v.values()), 3), "it": round(v["it"], 3) if "it" in v else None}
@@ -211,7 +213,7 @@ def _perche(sig: dict, used: list[tuple[str, dict]]) -> list[str]:
     return parts or ["segnali con andamento irregolare"]
 
 
-def _vicina_alla_soglia(lav: dict | None) -> str | None:
+def _motivo_soglia_it(lav: dict | None) -> str | None:
     """Il motivo dell'incertezza italiana della domanda, se la soglia in annunci cade nel margine all'80% del conto."""
     if lav is None or lav["soglia_annunci_it"] is None:
         return None  # senza dato italiano la domanda non rende incerta l'Italia; con 0 annunci il margine è nullo
@@ -243,10 +245,10 @@ def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
         incerto = rapporto(t, FINESTRA) > RAPPORTO_MAX
         motivi = _perche(sig, used) if incerto else []
     lav = sig["lavoro"]
-    vicina_it = _vicina_alla_soglia(lav)
+    motivo_domanda_it = _motivo_soglia_it(lav)
     perche = " e ".join(motivi) or None
     # l'Italia somma i due motivi in un elenco: «a, b e c»; con il solo slancio la frase è quella di sempre
-    perche_it = f"{', '.join(motivi)} e {vicina_it}" if motivi and vicina_it else perche or vicina_it
+    perche_it = f"{', '.join(motivi)} e {motivo_domanda_it}" if motivi and motivo_domanda_it else perche or motivo_domanda_it
     return {
         "slancio": slancio,
         "slancio_margine": lo_hi,
@@ -255,7 +257,7 @@ def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
         "annunci_it": lav["annunci_it"] if lav else None,
         "incerto": incerto,
         "incerto_perche": perche,
-        "incerto_it": incerto or vicina_it is not None,
+        "incerto_it": incerto or motivo_domanda_it is not None,
         "incerto_perche_it": perche_it,
         "segnali": {k: _out_signal(k, s, pesi.get(k, 0.0)) for k, s in sig.items()},
     }

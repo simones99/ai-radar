@@ -22,15 +22,15 @@ Il rischio vero stava vicino alla soglia:
 
 Con la regola queste tre diventano incerte in Italia. Nessuna delle 7 con meno di 8 annunci lo diventa.
 
-## Considered Options
-
-- Un minimo di annunci sotto il quale il quadrante italiano non si mostra: toglierebbe proprio le competenze molto sotto la soglia, che sono i casi più sicuri, e lascerebbe solide quelle con 30-45 annunci, dove pochi annunci decidono il quadrante.
-- Cambiare il quadrante o non confermarlo quando la domanda è vicina alla soglia: la regola dello slancio incerto non tocca il quadrante, e due regole diverse per la stessa parola confonderebbero chi legge.
-- Un margine anche per la domanda di Tutti i Paesi: quel valore è la mediana tra 8 Paesi e non un conto di annunci, e la formula non vale.
-
 ## Consequences
 
 - Il livello dell'80% è lo stesso dello slancio, così il sito ha un solo modo di dire «incerto».
 - L'approssimazione normale di un conto è grossolana sotto i 10 annunci. Lì però la soglia è lontana molte volte il margine, e il risultato non cambia.
 - Una competenza può essere incerta in Italia e solida con tutti i Paesi: la pagina deve dire a quale mercato si riferisce l'avviso.
 - Lo storico mensile non registra l'incertezza: il percorso sul radar mostra solo i quadranti.
+
+## Considered Options
+
+- Un minimo di annunci sotto il quale il quadrante italiano non si mostra: toglierebbe proprio le competenze molto sotto la soglia, che sono i casi più sicuri, e lascerebbe solide quelle con 30-45 annunci, dove pochi annunci decidono il quadrante.
+- Cambiare il quadrante o non confermarlo quando la domanda è vicina alla soglia: la regola dello slancio incerto non tocca il quadrante, e due regole diverse per la stessa parola confonderebbero chi legge.
+- Un margine anche per la domanda di Tutti i Paesi: quel valore è la mediana tra 8 Paesi e non un conto di annunci, e la formula non vale.

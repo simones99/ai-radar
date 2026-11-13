@@ -436,9 +436,10 @@ def test_italian_job_ads_do_not_depend_on_the_total(tmp_path, monkeypatch):
     assert demand_row(tmp_path, monkeypatch, snaps)["annunci_it"] == 39
 
 
-def italian_ads(counts: list[int], totale: int) -> list[dict]:
-    """Rilevazioni italiane con questi annunci della competenza, tutte con lo stesso totale del Paese."""
-    return [snap(w, "it", n, totale=totale) for w, n in zip(WEEKS, counts)]
+def italian_ads(counts: list[int], totale: int | list[int]) -> list[dict]:
+    """Rilevazioni italiane con questi annunci della competenza: il totale del Paese è lo stesso per tutte, o uno a settimana."""
+    totali = totale if isinstance(totale, list) else [totale] * len(counts)
+    return [snap(w, "it", n, totale=t) for w, n, t in zip(WEEKS, counts, totali)]
 
 
 @pytest.mark.parametrize("counts,totale", [
@@ -457,10 +458,11 @@ def test_italian_job_ads_far_from_the_threshold_do_not_make_italy_uncertain(tmp_
     # Multimodali il 9 novembre: 2,56 ogni 10mila con 30 annunci, quindi la soglia di 3 ogni 10mila vale 35 annunci.
     # La mediana dei totali (129.778) darebbe 39: 30 annunci e la soglia a 39 non tornerebbero con 2,56 contro 3.
     ([35, 33, 22, 27], [135078, 126809, 132748, 106800], "annunci italiani vicini alla soglia (30, la soglia è circa 35)"),
+    # 3 ogni 10mila su 121.333 annunci sono 36,4: la soglia viene dalla mediana vera, 30,5, non dai 31 mostrati (darebbero 37)
+    ([30, 31, 30, 31], 121333, "annunci italiani vicini alla soglia (31, la soglia è circa 36)"),
 ])
 def test_italian_job_ads_near_the_threshold_make_italy_uncertain(tmp_path, monkeypatch, counts, totale, perche):
-    totali = totale if isinstance(totale, list) else [totale] * len(counts)
-    r = demand_row(tmp_path, monkeypatch, [snap(w, "it", n, totale=t) for w, n, t in zip(WEEKS, counts, totali)])
+    r = demand_row(tmp_path, monkeypatch, italian_ads(counts, totale))
     assert (r["incerto_it"], r["incerto_perche_it"]) == (True, perche)
     assert (r["incerto"], r["incerto_perche"]) == (False, None)  # lo slancio è solido: Tutti i Paesi non cambia
 
@@ -486,14 +488,19 @@ def test_demand_near_the_threshold_changes_no_quadrant_history_or_version(tmp_pa
 NOISY = ({"a": [3, 9, 2, 12, 4, 10, 3, 14, 2, 11, 5, 15]}, {"a": [20, 45, 15, 60, 18, 70, 25, 80, 22, 90, 30, 85]})
 
 
+def noisy_row(tmp_path, monkeypatch, snaps: list[dict]) -> dict:
+    """La competenza con lo slancio incerto (pochi paper e repository irregolari) e queste rilevazioni del lavoro."""
+    write_inputs(tmp_path, monkeypatch, *NOISY, {"snapshots": snaps})
+    return run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+
+
 @pytest.mark.parametrize("counts,perche_it", [
     ([3, 2, 4, 3], "pochi paper (8 al mese) e pochi repository nuovi (55 al mese)"),
     ([43, 42, 44, 43], "pochi paper (8 al mese), pochi repository nuovi (55 al mese)"
                        " e annunci italiani vicini alla soglia (43, la soglia è circa 40)"),
 ])
 def test_uncertain_momentum_makes_italy_uncertain_too_and_the_reason_says_both(tmp_path, monkeypatch, counts, perche_it):
-    write_inputs(tmp_path, monkeypatch, *NOISY, {"snapshots": italian_ads(counts, 133000)})
-    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    r = noisy_row(tmp_path, monkeypatch, italian_ads(counts, 133000))
     assert (r["incerto"], r["incerto_perche"]) == (True, "pochi paper (8 al mese) e pochi repository nuovi (55 al mese)")
     assert (r["incerto_it"], r["incerto_perche_it"]) == (True, perche_it)
 
@@ -585,8 +592,7 @@ def test_without_italian_data_demand_does_not_make_italy_uncertain(tmp_path, mon
     vicini = [snap(w, "us", n, totale=133000) for w, n in zip(WEEKS, [43, 42, 44, 43])]
     r = rising_radar(tmp_path, monkeypatch, vicini + italia)["competenze"][0]
     assert (r["incerto_it"], r["incerto_perche_it"]) == (False, None)
-    write_inputs(tmp_path, monkeypatch, *NOISY, {"snapshots": vicini + italia})
-    r = run_radar([{"id": "a", "nome": "A"}])["competenze"][0]
+    r = noisy_row(tmp_path, monkeypatch, vicini + italia)
     assert (r["incerto_it"], r["incerto_perche_it"]) == (True, "pochi paper (8 al mese) e pochi repository nuovi (55 al mese)")
 
 

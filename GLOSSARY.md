@@ -52,6 +52,10 @@ _Avoid_: Paese, zona, geografia (come nomi della scelta)
 Il valore di domanda che sta a metà tra gli 8 Paesi seguiti: la mediana dei loro valori e, con un numero pari di Paesi, il valore a metà tra i due centrali. È la domanda del mercato «Tutti i Paesi». Non è un Paese preciso: da una competenza all'altra può essere un Paese diverso, o nessuno.
 _Avoid_: media dei Paesi, Paese mediano, Paese medio
 
+**Dato incerto**:
+Una competenza la cui posizione sul radar può cambiare con poco, segnata da un punto vuoto. In tutti e due i mercati lo è quando il margine all'80% dello slancio è largo; nel mercato Italia anche quando la soglia della domanda, contata in annunci italiani, cade dentro il margine all'80% del numero di annunci della competenza. Pochi annunci molto sotto la soglia non rendono incerto il dato.
+_Avoid_: non affidabile (è il segno di Eurostat sui settori), dato debole, pochi annunci, sotto soglia (come sinonimi)
+
 **Settore**:
 L'attività economica di un'organizzazione, come la classifica Eurostat (per esempio manifattura, commercio, ICT). Finanza, pubblica amministrazione, sanità, istruzione e agricoltura non sono settori rilevati.
 _Avoid_: industria, comparto, ambito

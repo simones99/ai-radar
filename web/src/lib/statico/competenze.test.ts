@@ -123,6 +123,13 @@ describe('le pagine delle competenze', () => {
     for (const paragrafo of METODO_COMPETENZE) expect(t).toContain(paragrafo);
   });
 
+  it('il metodo spiega l’incertezza della domanda italiana vicino alla soglia', () => {
+    const t = sezione(pagina('agenti'), 'Fonti e metodo');
+    expect(t).toContain('Con «Italia» il dato è incerto anche quando la domanda è troppo vicina alla soglia');
+    expect(t).toContain('margine all’80% del numero di annunci italiani');
+    expect(t).toContain('molto sotto la soglia, resta invece un dato solido');
+  });
+
   it('due link aprono la competenza nell’app: con tutti i Paesi e già sul mercato Italia', () => {
     const link = [...pagina('vector-db').querySelectorAll('main a')].map((a) => a.getAttribute('href'));
     expect(link).toContain('../../#competenze/vector-db');

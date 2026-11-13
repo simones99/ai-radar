@@ -36,6 +36,13 @@ describe('Competenze', () => {
     expect(metodo).toHaveTextContent('La soglia è la stessa');
     expect(metodo).toHaveTextContent('I quadranti sono propri, con la stessa conferma di due mesi di fila');
   });
+  it('il metodo dice quando la domanda italiana rende incerto il dato, e perché pochi annunci molto sotto la soglia no', () => {
+    show(CompetenzeDetail, tile);
+    const metodo = screen.getByRole('region', { name: 'Come si calcola' });
+    expect(metodo).toHaveTextContent('Con «Italia» il dato è incerto anche quando la domanda è troppo vicina alla soglia');
+    expect(metodo).toHaveTextContent('margine all’80% del numero di annunci italiani');
+    expect(metodo).toHaveTextContent('molto sotto la soglia, resta invece un dato solido');
+  });
   it('il cambio di metodo della domanda è scritto sotto il radar e nel metodo', () => {
     show(CompetenzeDetail, tile);
     expect(screen.getByText('Da novembre 2026 la domanda è la mediana delle ultime 4 rilevazioni, nel Paese a metà classifica.')).toBeInTheDocument();

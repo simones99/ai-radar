@@ -260,6 +260,13 @@ describe('porta Per te con il mercato', () => {
       expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
       expect(p).not.toHaveProperty('nota');
     });
+    it('chi è incerta solo in Italia, per la domanda vicina alla soglia, non fa notizia in Italia; con tutti i Paesi sì', () => {
+      const vicina = { incerto: false, incerto_it: true, incerto_perche_it: 'annunci italiani vicini alla soglia (43, la soglia è circa 40)' };
+      const entra = { quadrante: 'impara-ora', quadrante_it: 'impara-ora', domanda: 0.7, domanda_it: 3.2, slancio_prec: 0.3, quadrante_prec: 'consolida', quadrante_prec_it: 'consolida' } as const;
+      const r = inItalia([{ ...entra, ...vicina }, { quadrante_it: 'prova', slancio_prec: 0.3, quadrante_prec_it: 'osserva' }]);
+      expect(text(doorPerTe(r, today, null, 'italia').title)).toBe('C1 passa a Da provare');
+      expect(text(doorPerTe(r, today).title)).toBe('C0 entra tra le competenze da imparare ora');
+    });
     it('2. un altro cambio di quadrante', () => {
       const p = doorPerTe(inItalia([{ quadrante_it: 'prova', slancio_prec: 0.3, quadrante_prec_it: 'osserva' }]), today, null, 'italia');
       expect(text(p.title)).toBe('C0 passa a Da provare');

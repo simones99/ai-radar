@@ -139,6 +139,24 @@ describe('La pagina di una competenza segue il mercato', () => {
       }
     });
   });
+  describe('il blocco Incertezza del dato', () => {
+    const incertezza = () => screen.getByRole('region', { name: 'Incertezza del dato' });
+    it('incerta solo per la domanda italiana: con «Italia» dice la domanda e non spiega lo slancio; con «Tutti i Paesi» resta lo slancio', () => {
+      const { unmount } = pagina('mcp', italia);
+      expect(incertezza()).toHaveTextContent('alta');
+      expect(incertezza()).toHaveTextContent('per la domanda italiana, vicina alla soglia');
+      expect(incertezza()).not.toHaveTextContent('pesa di più');
+      unmount();
+      pagina('mcp');
+      expect(incertezza()).toHaveTextContent('normale');
+      expect(incertezza()).toHaveTextContent('pesa di più: repository su GitHub');
+    });
+    it('con lo slancio incerto, anche con la domanda italiana vicina alla soglia, con «Italia» spiega lo slancio', () => {
+      pagina('robotica', italia, conCompetenza('robotica', { incerto_perche_it: 'pochi paper (45 al mese) e annunci italiani vicini alla soglia (43, la soglia è circa 40)' }));
+      expect(incertezza()).toHaveTextContent('alta');
+      expect(incertezza()).toHaveTextContent('pesa di più: paper su arXiv');
+    });
+  });
   it('il percorso sul radar e il titolo usano i quadranti del mercato scelto', () => {
     const { unmount } = pagina('mcp');
     const percorso = () => within(screen.getByRole('list', { name: 'Il percorso sul radar' })).getAllByRole('listitem').map((li) => li.textContent);

@@ -4,6 +4,7 @@
   import type { Dataset } from './lib/data/types';
   import { scorrimento } from './lib/movimento';
   import { PHOTOS } from './lib/photos';
+  import { FONTI_DEI_DATI } from './lib/text/fonti';
   import { dayWith, lunediDi } from './lib/text/format';
   import Doors from './lib/tiles/Doors.svelte';
   import SourcesStatus from './lib/tiles/SourcesStatus.svelte';
@@ -34,12 +35,6 @@
     t?.focus({ preventScroll: true });
     t?.scrollIntoView?.({ block: 'start', behavior: scorrimento() });
   }
-
-  const FONTI = [
-    ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['arXiv', 'https://arxiv.org'],
-    ['GitHub', 'https://github.com'], ['Hugging Face', 'https://huggingface.co'], ['The Adzuna API', 'https://www.adzuna.co.uk'],
-    ['Eurostat', 'https://ec.europa.eu/eurostat'], ['Our World in Data', 'https://ourworldindata.org'],
-  ];
 </script>
 
 <a class="skip" href="#contenuto" onclick={salta}>Vai al contenuto</a>
@@ -94,7 +89,7 @@
         {/each}
       </ul>
       <p class="small muted">
-        Dati di {#each FONTI as [n, u], i (n)}<a href={u} target="_blank" rel="noopener">{n}</a>{i < FONTI.length - 1 ? ', ' : '.'}{/each}
+        Dati di {#each FONTI_DEI_DATI as f, i (f.nome)}<a href={f.url} target="_blank" rel="noopener">{f.nome}</a>{i < FONTI_DEI_DATI.length - 1 ? ', ' : '.'}{/each}
         Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
         <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
       </p>

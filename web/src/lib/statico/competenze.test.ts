@@ -9,7 +9,7 @@ const BASE = 'https://esempio.org/ai-radar/';
 const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc.css' };
 const RADAR = (FIXTURE as Dataset).radar as Radar;
 
-const file = (radar?: Radar) => filePubblici({ edizioni: [], radar }, opzioni);
+const file = (radar?: Radar) => filePubblici({ edizioni: [], dataset: { radar } }, opzioni);
 const pagina = (id: string, radar: Radar = RADAR) => {
   const html = file(radar)[`competenze/${id}/index.html`];
   expect(html, `nessuna pagina per ${id}`).toBeDefined();

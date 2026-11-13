@@ -14,14 +14,14 @@ import { foglioDellaHome, IMMAGINE_HOME } from './pagina';
  */
 export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
   const edizioni = leggiEdizioni(dati);
-  const { radar } = leggiDati(dati, ['radar']);
-  const file = filePubblici({ edizioni, radar }, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome });
+  const dataset = leggiDati(dati);
+  const file = filePubblici({ edizioni, dataset }, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome });
   for (const [percorso, contenuto] of Object.entries(file)) {
     mkdirSync(dirname(join(uscita, percorso)), { recursive: true });
     writeFileSync(join(uscita, percorso), contenuto);
   }
   copiaImmagini({ dati, uscita, edizioni });
-  for (const { percorso } of anteprimeDelleCompetenze(radar)) copyFileSync(join(uscita, IMMAGINE_HOME.percorso), join(uscita, percorso));
+  for (const { percorso } of anteprimeDelleCompetenze(dataset.radar)) copyFileSync(join(uscita, IMMAGINE_HOME.percorso), join(uscita, percorso));
 }
 
 /**

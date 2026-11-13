@@ -1,4 +1,4 @@
-// La mappa dei file pubblici del sito: le edizioni, e i dati di radar.json per le pagine che ne nascono.
+// La mappa dei file pubblici del sito: le edizioni, e il dataset, di cui radar.json fa nascere le pagine delle competenze.
 import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
@@ -19,19 +19,19 @@ const LINK_COMPETENZE = /<a href="[^"]*competenze\/">Competenze<\/a>/;
 
 describe('i file pubblici del sito', () => {
   it('con un’edizione e il radar ci sono la pagina dell’edizione, l’archivio e il feed', () => {
-    const file = filePubblici({ edizioni: [edizione], radar: d.radar }, opzioni);
+    const file = filePubblici({ edizioni: [edizione], dataset: d }, opzioni);
     expect(Object.keys(file)).toEqual(expect.arrayContaining([PAGINA, 'edizioni/index.html', 'feed.xml']));
   });
 
   it('senza il radar i file sono esattamente quelli delle edizioni, più la sitemap', () => {
-    const { 'sitemap.xml': sitemap, ...resto } = filePubblici({ edizioni: [edizione] }, opzioni);
+    const { 'sitemap.xml': sitemap, ...resto } = filePubblici({ edizioni: [edizione], dataset: {} }, opzioni);
     expect(sitemap).toBeDefined();
     expect(resto).toEqual(fileDelleEdizioni([edizione], opzioni));
-    expect(Object.keys(filePubblici({ edizioni: [] }, opzioni))).toEqual(['sitemap.xml']);
+    expect(Object.keys(filePubblici({ edizioni: [], dataset: {} }, opzioni))).toEqual(['sitemap.xml']);
   });
 
   it('il radar aggiunge le pagine delle competenze, e i file delle edizioni cambiano solo per il link «Competenze» nella testata', () => {
-    const file = filePubblici({ edizioni: [edizione], radar: d.radar }, opzioni);
+    const file = filePubblici({ edizioni: [edizione], dataset: d }, opzioni);
     expect(Object.keys(file).filter((p) => p.startsWith('competenze/')).length).toBeGreaterThan(0);
     for (const [percorso, contenuto] of Object.entries(fileDelleEdizioni([edizione], opzioni))) {
       expect(file[percorso].replace(LINK_COMPETENZE, ''), percorso).toBe(contenuto);
@@ -40,7 +40,7 @@ describe('i file pubblici del sito', () => {
 });
 
 describe('il link «Competenze» nella testata', () => {
-  const file = filePubblici({ edizioni: [edizione], radar: d.radar }, opzioni);
+  const file = filePubblici({ edizioni: [edizione], dataset: d }, opzioni);
   const testata = (percorso: string) => new DOMParser().parseFromString(file[percorso], 'text/html').querySelector('header nav');
   const linkCompetenze = (percorso: string) => [...testata(percorso)!.querySelectorAll('a')].find((a) => a.textContent === 'Competenze')?.getAttribute('href');
 
@@ -59,12 +59,12 @@ describe('il link «Competenze» nella testata', () => {
     expect(nav('competenze/mcp/index.html')).toEqual([['Competenze', '../../competenze/'], ['Edizioni', '../../edizioni/'], ['Dati di oggi', '../../'], ['Segui con RSS', '../../feed.xml']]);
     expect(nav(PAGINA)).toEqual([['Competenze', '../../competenze/'], ['Edizioni', '../'], ['Dati di oggi', '../../'], ['Segui con RSS', '../../feed.xml']]);
     expect(nav('competenze/index.html')).toEqual([['Edizioni', '../edizioni/'], ['Dati di oggi', '../'], ['Segui con RSS', '../feed.xml']]);
-    const senzaEdizioni = filePubblici({ edizioni: [], radar: d.radar }, opzioni);
+    const senzaEdizioni = filePubblici({ edizioni: [], dataset: d }, opzioni);
     expect(nav('competenze/mcp/index.html', senzaEdizioni).map(([t]) => t)).toEqual(['Competenze', 'Dati di oggi', 'Segui con RSS']);
   });
 
   it('senza le pagine delle competenze nessuna testata ha il link', () => {
-    for (const html of Object.values(filePubblici({ edizioni: [edizione] }, opzioni))) expect(html).not.toMatch(LINK_COMPETENZE);
+    for (const html of Object.values(filePubblici({ edizioni: [edizione], dataset: {} }, opzioni))) expect(html).not.toMatch(LINK_COMPETENZE);
   });
 });
 
@@ -81,49 +81,49 @@ describe('la sitemap', () => {
   };
 
   it('c’è sempre, e senza edizioni né radar ha la sola home', () => {
-    expect(indirizzi({ edizioni: [] })).toEqual([assoluto('')]);
+    expect(indirizzi({ edizioni: [], dataset: {} })).toEqual([assoluto('')]);
   });
 
   it('con edizioni e radar elenca la home, l’indice e ogni competenza, l’archivio e ogni edizione, in ordine di percorso, e nient’altro', () => {
-    expect(indirizzi({ edizioni: [edizione], radar: d.radar })).toEqual([
+    expect(indirizzi({ edizioni: [edizione], dataset: d })).toEqual([
       '', 'competenze/', 'competenze/agenti/', 'competenze/mcp/', 'competenze/rag/', 'competenze/robotica/', 'competenze/vector-db/',
       'edizioni/', `edizioni/${edizione.settimana}/`,
     ].map(assoluto));
   });
 
   it('senza edizioni ha home e competenze, senza radar home ed edizioni', () => {
-    expect(indirizzi({ edizioni: [], radar: d.radar })).toEqual(['', 'competenze/', 'competenze/agenti/', 'competenze/mcp/', 'competenze/rag/', 'competenze/robotica/', 'competenze/vector-db/'].map(assoluto));
-    expect(indirizzi({ edizioni: [edizione] })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
+    expect(indirizzi({ edizioni: [], dataset: d })).toEqual(['', 'competenze/', 'competenze/agenti/', 'competenze/mcp/', 'competenze/rag/', 'competenze/robotica/', 'competenze/vector-db/'].map(assoluto));
+    expect(indirizzi({ edizioni: [edizione], dataset: {} })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
   });
 
   it('la copia della home che la mappa contiene con le edizioni non aggiunge una seconda voce', () => {
-    expect(filePubblici({ edizioni: [edizione] }, { ...opzioni, home: HOME })['index.html']).toBeDefined();
-    expect(indirizzi({ edizioni: [edizione] }, { ...opzioni, home: HOME })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
+    expect(filePubblici({ edizioni: [edizione], dataset: {} }, { ...opzioni, home: HOME })['index.html']).toBeDefined();
+    expect(indirizzi({ edizioni: [edizione], dataset: {} }, { ...opzioni, home: HOME })).toEqual(['', 'edizioni/', `edizioni/${edizione.settimana}/`].map(assoluto));
   });
 
   it('ogni indirizzo è assoluto e segue l’indirizzo base, anche quando non è quello predefinito', () => {
     const base = 'https://altro-utente.github.io/altro-radar/';
-    const loc = indirizzi({ edizioni: [edizione], radar: d.radar }, { ...opzioni, indirizzoBase: base });
+    const loc = indirizzi({ edizioni: [edizione], dataset: d }, { ...opzioni, indirizzoBase: base });
     expect(loc[0]).toBe(base);
     expect(loc).toHaveLength(9);
     for (const l of loc) expect(l!.startsWith(base), l!).toBe(true);
   });
 
   it('ogni indirizzo coincide con il canonical scritto nella pagina della mappa a quel percorso', () => {
-    const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, home: HOME });
+    const file = filePubblici({ edizioni: [edizione], dataset: d }, { ...opzioni, home: HOME });
     const canonical = (percorso: string) => new DOMParser().parseFromString(file[percorso], 'text/html').querySelector('link[rel="canonical"]')?.getAttribute('href');
-    for (const l of indirizzi({ edizioni: [edizione], radar: d.radar }, { ...opzioni, home: HOME })) {
+    for (const l of indirizzi({ edizioni: [edizione], dataset: d }, { ...opzioni, home: HOME })) {
       expect(canonical(`${l!.slice(opzioni.indirizzoBase.length)}index.html`)).toBe(l);
     }
   });
 
   it('il feed, le immagini e i file JSON non ci sono', () => {
-    const loc = indirizzi({ edizioni: [edizione], radar: d.radar });
+    const loc = indirizzi({ edizioni: [edizione], dataset: d });
     expect(loc.filter((l) => /\.(xml|json|png)$|#/.test(l!))).toEqual([]);
   });
 
   it('è XML ben formato nel namespace delle sitemap, con soli elementi url, loc e lastmod, e lastmod dopo loc', () => {
-    const doc = leggi(filePubblici({ edizioni: [edizione], radar: d.radar }, opzioni)['sitemap.xml']);
+    const doc = leggi(filePubblici({ edizioni: [edizione], dataset: d }, opzioni)['sitemap.xml']);
     expect(doc.documentElement.localName).toBe('urlset');
     expect(doc.documentElement.namespaceURI).toBe('http://www.sitemaps.org/schemas/sitemap/0.9');
     const nomi = new Set([...doc.documentElement.querySelectorAll('*')].map((e) => `${e.namespaceURI} ${e.localName}`));
@@ -143,20 +143,20 @@ describe('la sitemap', () => {
 
     it('una pagina di edizione ha il giorno della sua raccolta, o la sua correzione più recente', () => {
       expect(edizione.settimana).toBe('2026-10-12');
-      expect(date({ edizioni: [edizione] })['edizioni/2026-10-12/']).toBe('2026-10-15');
-      const d2 = date({ edizioni: [corretta, seconda] });
+      expect(date({ edizioni: [edizione], dataset: {} })['edizioni/2026-10-12/']).toBe('2026-10-15');
+      const d2 = date({ edizioni: [corretta, seconda], dataset: {} });
       expect(d2['edizioni/2026-10-12/']).toBe('2026-11-02');
       expect(d2['edizioni/2026-10-19/']).toBe('2026-10-22');
     });
 
     it('l’archivio ha la data più recente tra quelle delle sue edizioni, correzioni comprese', () => {
-      expect(date({ edizioni: [edizione, seconda] })['edizioni/']).toBe('2026-10-22');
-      expect(date({ edizioni: [corretta, seconda] })['edizioni/']).toBe('2026-11-02');
+      expect(date({ edizioni: [edizione, seconda], dataset: {} })['edizioni/']).toBe('2026-10-22');
+      expect(date({ edizioni: [corretta, seconda], dataset: {} })['edizioni/']).toBe('2026-11-02');
     });
 
     it('home, indice e pagine delle competenze hanno il giorno di generato di radar.json, e senza radar la home non ha data', () => {
       const radar = { ...d.radar!, generato: '2026-10-26' };
-      expect(date({ edizioni: [corretta, seconda], radar })).toEqual({
+      expect(date({ edizioni: [corretta, seconda], dataset: { radar } })).toEqual({
         '': '2026-10-26',
         'competenze/': '2026-10-26',
         'competenze/agenti/': '2026-10-26',
@@ -168,26 +168,26 @@ describe('la sitemap', () => {
         'edizioni/2026-10-12/': '2026-11-02',
         'edizioni/2026-10-19/': '2026-10-22',
       });
-      expect(date({ edizioni: [seconda] })['']).toBeNull();
-      expect(date({ edizioni: [] })).toEqual({ '': null });
+      expect(date({ edizioni: [seconda], dataset: {} })['']).toBeNull();
+      expect(date({ edizioni: [], dataset: {} })).toEqual({ '': null });
     });
 
     it('un generato con l’ora vale per il suo giorno, uno non valido non dà nessuna data', () => {
-      expect(date({ edizioni: [], radar: { ...d.radar!, generato: '2026-10-26T06:15:00+00:00' } })['competenze/mcp/']).toBe('2026-10-26');
+      expect(date({ edizioni: [], dataset: { radar: { ...d.radar!, generato: '2026-10-26T06:15:00+00:00' } } })['competenze/mcp/']).toBe('2026-10-26');
       // un giorno che non esiste: le pagine delle competenze nascono, ma nessuna ha la data
-      const conDate = date({ edizioni: [seconda], radar: { ...d.radar!, generato: '2026-02-30' } });
+      const conDate = date({ edizioni: [seconda], dataset: { radar: { ...d.radar!, generato: '2026-02-30' } } });
       expect(conDate['']).toBeNull();
       expect(conDate['competenze/']).toBeNull();
       expect(conDate['competenze/mcp/']).toBeNull();
       expect(conDate['edizioni/2026-10-19/']).toBe('2026-10-22');
       // una data illeggibile, con un radar senza competenze: c'è la sola home, senza data
       for (const generato of ['ieri', '26/10/2026', '2026-13-01', '']) {
-        expect(date({ edizioni: [], radar: { ...d.radar!, competenze: [], generato } }), generato).toEqual({ '': null });
+        expect(date({ edizioni: [], dataset: { radar: { ...d.radar!, competenze: [], generato } } }), generato).toEqual({ '': null });
       }
     });
 
     it('nessuna data viene dall’orologio: con gli stessi dati, in giorni e ore diversi, il testo è lo stesso', () => {
-      const contenuto = { edizioni: [corretta, seconda], radar: d.radar };
+      const contenuto = { edizioni: [corretta, seconda], dataset: d };
       try {
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-11-16T05:00:00Z'));
@@ -203,28 +203,28 @@ describe('la sitemap', () => {
 
   it('un indirizzo con caratteri speciali passa dall’escape XML', () => {
     const radar = JSON.parse(JSON.stringify(d.radar).replaceAll('"vector-db"', '"vector&db<\'x\'>"'));
-    const testo = filePubblici({ edizioni: [], radar }, opzioni)['sitemap.xml'];
+    const testo = filePubblici({ edizioni: [], dataset: { radar } }, opzioni)['sitemap.xml'];
     expect(testo).toContain('competenze/vector&amp;db&lt;&#39;x&#39;&gt;/');
-    expect(indirizzi({ edizioni: [], radar })).toContain(assoluto('competenze/vector&db<\'x\'>/'));
+    expect(indirizzi({ edizioni: [], dataset: { radar } })).toContain(assoluto('competenze/vector&db<\'x\'>/'));
   });
 });
 
 describe('robots.txt', () => {
   it('alla radice di un dominio c’è, vale per tutti i crawler, non esclude niente e indica la sitemap', () => {
-    const file = filePubblici({ edizioni: [edizione] }, { ...opzioni, indirizzoBase: 'https://altro-utente.github.io/' });
+    const file = filePubblici({ edizioni: [edizione], dataset: {} }, { ...opzioni, indirizzoBase: 'https://altro-utente.github.io/' });
     expect(file['robots.txt'], 'la mappa non ha robots.txt').toBeDefined();
     expect(file['robots.txt'].trim().split('\n')).toEqual(['User-agent: *', 'Allow: /', '', 'Sitemap: https://altro-utente.github.io/sitemap.xml']);
   });
 
   it('c’è anche su un dominio proprio, e anche senza edizioni né radar', () => {
-    const file = filePubblici({ edizioni: [] }, { ...opzioni, indirizzoBase: 'https://radar.esempio.it/' });
+    const file = filePubblici({ edizioni: [], dataset: {} }, { ...opzioni, indirizzoBase: 'https://radar.esempio.it/' });
     expect(file['robots.txt']).toContain('Sitemap: https://radar.esempio.it/sitemap.xml\n');
   });
 
   it('non c’è con l’indirizzo predefinito in /ai-radar/, né con qualunque altro percorso diverso da /', () => {
     // indirizzoBase senza un valore dà l'indirizzo predefinito
     for (const base of [indirizzoBase(undefined), 'https://esempio.org/ai-radar/', 'https://radar.esempio.it/sito/']) {
-      const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { ...opzioni, indirizzoBase: base });
+      const file = filePubblici({ edizioni: [edizione], dataset: d }, { ...opzioni, indirizzoBase: base });
       expect(Object.keys(file), base).not.toContain('robots.txt');
     }
   });

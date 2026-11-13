@@ -19,7 +19,7 @@ const EDIZIONE = `/edizioni/${edizione.settimana}/`;
 
 async function serviCompetenze(page: Page, request: APIRequestContext) {
   const home = await (await request.get('/')).text();
-  const file = filePubblici({ edizioni: [edizione], radar: d.radar }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
+  const file = filePubblici({ edizioni: [edizione], dataset: d }, { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: foglioDellaHome(home) });
   for (const [percorso, body] of Object.entries(file)) {
     await page.route(`**/${percorso.replace(/index\.html$/, '')}`, (route) => route.fulfill({ contentType: 'text/html; charset=utf-8', body }));
   }

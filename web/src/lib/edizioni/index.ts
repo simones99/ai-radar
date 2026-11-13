@@ -1,5 +1,6 @@
-// Il modulo Edizioni: tre operazioni pure, che non toccano file, orologio o rete.
+// Il modulo Edizioni: operazioni pure, che non toccano file, orologio o rete.
 export { creaEdizione } from './crea';
+export { settimanaDeiDati, type CardDellaSettimana, type PortaDellaSettimana, type SettimanaDeiDati } from './settimana';
 export { fileDelleEdizioni, type OpzioniFileDelleEdizioni } from './fileDelleEdizioni';
 export { IMMAGINE } from '../statico/pagina';
 export type { Destinazione, Edizione } from './tipi';

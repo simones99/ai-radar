@@ -454,9 +454,9 @@ def test_italian_job_ads_far_from_the_threshold_do_not_make_italy_uncertain(tmp_
 @pytest.mark.parametrize("counts,totale,perche", [
     ([43, 42, 44, 43], 133000, "annunci italiani vicini alla soglia (43, la soglia è circa 40)"),  # sopra, come DB vettoriali
     ([30, 29, 31, 30], 117000, "annunci italiani vicini alla soglia (30, la soglia è circa 35)"),  # sotto, come Multimodali
-    # la soglia viene dalla mediana dei totali delle stesse rilevazioni: 120.000, 130.000, 140.000 e 150.000 fanno 135.000,
-    # cioè 40,5 annunci, e la metà va in su
-    ([43, 42, 44, 43], [120000, 150000, 130000, 140000], "annunci italiani vicini alla soglia (43, la soglia è circa 41)"),
+    # Multimodali il 9 novembre: 2,56 ogni 10mila con 30 annunci, quindi la soglia di 3 ogni 10mila vale 35 annunci.
+    # La mediana dei totali (129.778) darebbe 39: 30 annunci e la soglia a 39 non tornerebbero con 2,56 contro 3.
+    ([35, 33, 22, 27], [135078, 126809, 132748, 106800], "annunci italiani vicini alla soglia (30, la soglia è circa 35)"),
 ])
 def test_italian_job_ads_near_the_threshold_make_italy_uncertain(tmp_path, monkeypatch, counts, totale, perche):
     totali = totale if isinstance(totale, list) else [totale] * len(counts)

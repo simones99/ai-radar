@@ -18,8 +18,8 @@ Tutti i Paesi e Italia hanno i propri quadranti, con le stesse regole e lo stess
 Una competenza è incerta se il margine all'80% dello slancio è largo:
 (1 + alto) / (1 + basso) > RAPPORTO_MAX.
 Nel mercato Italia è incerta anche se la domanda italiana è vicina alla soglia: la soglia in annunci
-(SOGLIA_DOMANDA sulla mediana dei totali delle stesse rilevazioni) cade nel margine all'80% del numero
-di annunci, n ± 1,2816·√n. Il quadrante non cambia: la regola aggiunge solo incerto_it e il suo motivo.
+(n · SOGLIA_DOMANDA / domanda italiana, dalle stesse rilevazioni) cade nel margine all'80% del numero
+di annunci n, n ± 1,2816·√n. Il quadrante non cambia: la regola aggiunge solo incerto_it e il suo motivo.
 
 Lo storico si ricalcola ogni volta: il punto di k mesi fa usa le serie fermate a k mesi prima
 e le rilevazioni del lavoro di almeno 28 x k giorni prima. Dove la domanda manca (prima della
@@ -146,14 +146,13 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
 
     trends = []
     valori: dict[str, float] = {}
-    annunci_it = soglia_it = None
+    annunci_it = None
     for c in paesi:
         own = sorted((x for x in same if x["paese"] == c), key=lambda x: x["data"])
         ultime = own[-RILEVAZIONI_DOMANDA:]
         valori[c] = median(per_10mila(x) for x in ultime)
         if c == "it":
             annunci_it = int(median(x["competenze"][sid] for x in ultime) + 0.5)  # 4,5 fa 5: round() darebbe 4
-            soglia_it = SOGLIA_DOMANDA / 10000 * median(x["totale"] for x in ultime)
         if len(own) < 2 or _days(own[0]["data"], own[-1]["data"]) < MIN_GIORNI_LAVORO:
             continue
         t = trend([_days(own[0]["data"], x["data"]) / GIORNI_MESE for x in own],
@@ -170,7 +169,9 @@ def jobs_signal(jobs: dict, sid: str) -> dict | None:
         "mediana": round(median(valori.values()), 3),
         "it": round(valori["it"], 3) if "it" in valori else None,
         "annunci_it": annunci_it,
-        "soglia_annunci_it": soglia_it,
+        # gli annunci che darebbero la soglia della domanda: n · 3 / domanda italiana, così annunci e soglia stanno
+        # dalla stessa parte di domanda italiana e 3 ogni 10mila. La mediana dei totali non lo garantirebbe.
+        "soglia_annunci_it": SOGLIA_DOMANDA * annunci_it / valori["it"] if annunci_it and valori["it"] else None,
         "ogni_10mila": {c: round(v, 2) for c, v in sorted(valori.items())},
         "data": newest,
         "rilevazioni": [{"data": d, "mediana": round(median(v.values()), 3), "it": round(v["it"], 3) if "it" in v else None}
@@ -212,8 +213,8 @@ def _perche(sig: dict, used: list[tuple[str, dict]]) -> list[str]:
 
 def _vicina_alla_soglia(lav: dict | None) -> str | None:
     """Il motivo dell'incertezza italiana della domanda, se la soglia in annunci cade nel margine all'80% del conto."""
-    if lav is None or lav["annunci_it"] is None:
-        return None  # senza dato italiano la domanda non rende incerta l'Italia
+    if lav is None or lav["soglia_annunci_it"] is None:
+        return None  # senza dato italiano la domanda non rende incerta l'Italia; con 0 annunci il margine è nullo
     n, soglia = lav["annunci_it"], lav["soglia_annunci_it"]
     if abs(soglia - n) > Z_80 * sqrt(n):
         return None

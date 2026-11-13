@@ -213,7 +213,7 @@ def _perche(sig: dict, used: list[tuple[str, dict]]) -> list[str]:
     return parts or ["segnali con andamento irregolare"]
 
 
-def _vicina_alla_soglia(lav: dict | None) -> str | None:
+def _motivo_soglia_it(lav: dict | None) -> str | None:
     """Il motivo dell'incertezza italiana della domanda, se la soglia in annunci cade nel margine all'80% del conto."""
     if lav is None or lav["soglia_annunci_it"] is None:
         return None  # senza dato italiano la domanda non rende incerta l'Italia; con 0 annunci il margine è nullo
@@ -245,10 +245,10 @@ def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
         incerto = rapporto(t, FINESTRA) > RAPPORTO_MAX
         motivi = _perche(sig, used) if incerto else []
     lav = sig["lavoro"]
-    vicina_it = _vicina_alla_soglia(lav)
+    motivo_domanda_it = _motivo_soglia_it(lav)
     perche = " e ".join(motivi) or None
     # l'Italia somma i due motivi in un elenco: «a, b e c»; con il solo slancio la frase è quella di sempre
-    perche_it = f"{', '.join(motivi)} e {vicina_it}" if motivi and vicina_it else perche or vicina_it
+    perche_it = f"{', '.join(motivi)} e {motivo_domanda_it}" if motivi and motivo_domanda_it else perche or motivo_domanda_it
     return {
         "slancio": slancio,
         "slancio_margine": lo_hi,
@@ -257,7 +257,7 @@ def _row(sk: dict, arx: dict, gh: dict, jobs: dict) -> dict:
         "annunci_it": lav["annunci_it"] if lav else None,
         "incerto": incerto,
         "incerto_perche": perche,
-        "incerto_it": incerto or vicina_it is not None,
+        "incerto_it": incerto or motivo_domanda_it is not None,
         "incerto_perche_it": perche_it,
         "segnali": {k: _out_signal(k, s, pesi.get(k, 0.0)) for k, s in sig.items()},
     }

@@ -49,9 +49,17 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      # l'indirizzo pubblico del sito, per tutti i passi del job: la build che verrà pubblicata è quella rilanciata dagli end-to-end
+      # l'indirizzo pubblico del sito, per tutti i passi del job: la build che verrà pubblicata è quella rilanciata dagli end-to-end.
+      # Un repository <utente>.github.io è pubblicato alla radice del dominio, e lì la build scrive anche robots.txt
       - name: Ricava l'indirizzo base dal nome del repository
-        run: echo "AI_RADAR_BASE_URL=https://${GITHUB_REPOSITORY_OWNER,,}.github.io/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_ENV"
+        run: |
+          utente="${GITHUB_REPOSITORY_OWNER,,}"
+          repository="${GITHUB_REPOSITORY#*/}"
+          if [ "${repository,,}" = "$utente.github.io" ]; then
+            echo "AI_RADAR_BASE_URL=https://$utente.github.io/" >> "$GITHUB_ENV"
+          else
+            echo "AI_RADAR_BASE_URL=https://$utente.github.io/$repository/" >> "$GITHUB_ENV"
+          fi
 
       - uses: actions/setup-python@v7
         with:

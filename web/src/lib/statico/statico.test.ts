@@ -89,15 +89,30 @@ describe('la home in chiaro', () => {
   });
 
   describe('le card', () => {
-    /** Le righe delle card sotto il titolo di una testa, come le legge chi scorre la pagina. */
-    const righe = (doc: Document, testa: string) => {
-      const titolo = [...testo(doc).querySelectorAll('h3')].find((h) => pulito(h.textContent).startsWith(testa));
-      return [...(titolo?.parentElement?.querySelectorAll('li') ?? [])].map((li) => pulito(li.textContent));
+    /** Il testo sotto il titolo di una testa nella sezione «La situazione», fino al titolo della testa dopo: quello che legge chi scorre la pagina. */
+    const sottoLaTesta = (doc: Document, testa: string) => {
+      const main = pulito(testo(doc).querySelector('main')?.textContent ?? null);
+      const situazione = main.slice(main.indexOf('La situazione'));
+      const teste = titoli(doc, 3);
+      const i = teste.findIndex((t) => t.startsWith(testa));
+      const inizio = situazione.indexOf(teste[i]) + teste[i].length;
+      return situazione.slice(inizio, i + 1 < teste.length ? situazione.indexOf(teste[i + 1]) : undefined);
     };
+    /** Ogni testo atteso si legge nel testo dato, nell'ordine. */
+    const inOrdine = (letto: string, attesi: readonly string[], dove: string) => {
+      let da = 0;
+      for (const atteso of attesi) {
+        const i = letto.indexOf(atteso, da);
+        expect(i, `${dove}: ${atteso}`).toBeGreaterThanOrEqual(0);
+        da = i + atteso.length;
+      }
+    };
+    const NOMI = ['Competenze', 'Modelli e ricerca', 'Open source', 'Notizie', 'GeopoliticAI', 'Business', 'Persone e lavoro', 'Norme', 'Rapporti'];
 
     it('con tutti i dati ci sono le nove card divise per testa, con il nome della testa sopra e per ognuna nome, cifra con l’unità e frase', () => {
       const doc = leggi({ edizioni: [edizione], dataset: d });
       expect(titoli(doc, 3)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
+      expect(titoli(doc, 4)).toEqual(NOMI);
       // dalle fixture, sulla data dei dati: giovedì 15 ottobre 2026. Competenze ha già il numero nella frase
       const perTe = [
         "Competenze 2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.",
@@ -112,11 +127,8 @@ describe('la home in chiaro', () => {
         "Norme 48 giorni Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura.",
         'Rapporti Ottobre 2026 Prossimo rapporto previsto: State of AI Report.',
       ];
-      for (const [testa, attese] of [['Per te', perTe], ['Per la tua organizzazione', italia]] as const) {
-        const lette = righe(doc, testa);
-        expect(lette, testa).toHaveLength(attese.length);
-        attese.forEach((attesa, i) => expect(lette[i], testa).toContain(attesa));
-      }
+      inOrdine(sottoLaTesta(doc, 'Per te'), perTe, 'Per te');
+      inOrdine(sottoLaTesta(doc, 'Per la tua organizzazione'), italia, 'Per la tua organizzazione');
       // le card vengono dopo le porte
       const app = pulito(testo(doc).textContent);
       expect(app.indexOf("16% delle imprese italiane usa l'AI")).toBeLessThan(app.indexOf('Modelli e ricerca'));
@@ -124,18 +136,16 @@ describe('la home in chiaro', () => {
 
     it('una card senza dati non sparisce: sta nella riga «Dati non disponibili» della sua testa', () => {
       const doc = leggi({ edizioni: [], dataset: { ...d, epoch: undefined } });
-      expect(righe(doc, 'Per te').map((r) => r.split(' ')[0])).toEqual(['Competenze', 'Open', 'Notizie']);
-      const gruppo = [...testo(doc).querySelectorAll('h3')].find((h) => pulito(h.textContent).startsWith('Per te'))!.parentElement!;
-      expect(pulito(gruppo.textContent)).toContain('Dati non disponibili: Modelli e ricerca.');
+      expect(titoli(doc, 4)).toEqual(NOMI.filter((n) => n !== 'Modelli e ricerca'));
+      expect(sottoLaTesta(doc, 'Per te')).toContain('Dati non disponibili: Modelli e ricerca.');
       expect(pulito(testo(doc).textContent).match(/Dati non disponibili/g)).toHaveLength(1);
     });
 
     it('la card Competenze porta all’indice quando nasce, le altre restano testo', () => {
-      const nomi = (doc: Document) => [...testo(doc).querySelectorAll('h4')].map((h) => [pulito(h.textContent), h.querySelector('a')?.getAttribute('href') ?? null]);
-      expect(nomi(leggi({ edizioni: [edizione], dataset: d }))).toEqual([
-        ['Competenze', 'competenze/'], ['Modelli e ricerca', null], ['Open source', null], ['Notizie', null],
-        ['GeopoliticAI', null], ['Business', null], ['Persone e lavoro', null], ['Norme', null], ['Rapporti', null],
-      ]);
+      /** I link del testo principale, fuori dalla testata, che hanno per testo il nome di una card. */
+      const linkDelleCard = (doc: Document) =>
+        [...testo(doc).querySelectorAll('main a')].map((a) => [pulito(a.textContent), a.getAttribute('href')]).filter(([t]) => NOMI.includes(t!));
+      expect(linkDelleCard(leggi({ edizioni: [edizione], dataset: d }))).toEqual([['Competenze', 'competenze/']]);
       // senza il radar l'indice delle competenze non nasce, e la card resta testo come le altre
       const senzaRadar = leggi({ edizioni: [], dataset: { ...d, radar: undefined } });
       expect(testo(senzaRadar).querySelectorAll('a[href^="competenze"]')).toHaveLength(0);

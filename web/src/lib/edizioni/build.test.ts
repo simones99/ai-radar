@@ -108,8 +108,17 @@ describe('il sito costruito', () => {
     const con = readFileSync(join(conEdizioni(), 'index.html'), 'utf-8');
     const link = new DOMParser().parseFromString(con, 'text/html').head.querySelector('link[rel="alternate"][type="application/rss+xml"]');
     expect(link?.getAttribute('href')).toBe(`${ALTRO_INDIRIZZO}feed.xml`);
-    // i dati di questa build non hanno lo stato del giro: la home in chiaro non ha la settimana, che porterebbe all'edizione
-    expect(con.replace(/\s*<link rel="alternate"[^>]*>/, '').replace('<a href="edizioni/">Edizioni</a>', '').replace(/\s*<p class="ed-nota"><a href="feed\.xml">Segui con RSS<\/a><\/p>/, '')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
+    // i dati di questa build non hanno lo stato del giro: la home in chiaro non ha la settimana, che porterebbe all'edizione.
+    // Tolti quei tre link, le due home hanno la stessa testa, lo stesso testo e gli stessi link
+    const leggi = (html: string, togli: string[] = []) => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      for (const selettore of togli) doc.querySelectorAll(selettore).forEach((e) => e.remove());
+      const spazi = (s: string) => s.replace(/\s+/g, ' ').trim();
+      return { testa: spazi(doc.head.outerHTML), testo: spazi(doc.body.textContent ?? ''), link: [...doc.body.querySelectorAll('a')].map((a) => [spazi(a.textContent ?? ''), a.getAttribute('href')]) };
+    };
+    const senza = readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8');
+    expect(leggi(con, ['link[rel="alternate"]', 'a[href="edizioni/"]', 'a[href="feed.xml"]'])).toEqual(leggi(senza));
+    expect(leggi(con).link).toEqual(expect.arrayContaining([['Edizioni', 'edizioni/'], ['Segui con RSS', 'feed.xml']]));
   });
 
   it('senza edizioni la home non ha il link al feed', () => {

@@ -156,6 +156,33 @@ describe('il sito costruito', () => {
     expect(existsSync(join(uscita, 'competenze'))).toBe(false);
   });
 
+  describe('un file di dati rotto', () => {
+    const HOME = '<link rel="stylesheet" href="./assets/a.css"><div id="app"></div>';
+    /** Una cartella con tutti i dati delle prove, e i file dati scritti così come sono. */
+    const conDati = (nome: string, rotti: Record<string, string>) => {
+      const dati = join(cartella, nome);
+      const uscita = join(dati, 'uscita');
+      mkdirSync(uscita, { recursive: true });
+      writeFileSync(join(uscita, 'anteprima.png'), 'png della home');
+      for (const [k, v] of Object.entries(FIXTURE)) writeFileSync(join(dati, `${k}.json`), JSON.stringify(v));
+      for (const [k, v] of Object.entries(rotti)) writeFileSync(join(dati, `${k}.json`), v);
+      return { scrivi: () => scriviFilePubblici({ dati, uscita, indirizzoBase: ALTRO_INDIRIZZO, htmlHome: HOME }), home: () => readFileSync(join(uscita, 'index.html'), 'utf-8') };
+    };
+    const testo = (html: string) => (new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '').replace(/\s+/g, ' ');
+
+    it('illeggibile o con null vale come fonte assente, come nell’app: la build riesce e la home in chiaro dice che mancano i suoi dati', () => {
+      const { scrivi, home } = conDati('fonti-rotte', { epoch: '{ rotto', news: 'null' });
+      expect(scrivi).not.toThrow();
+      expect(testo(home())).toContain('Dati non disponibili: Modelli e ricerca, Notizie.');
+      // le pagine che non dipendono da quei file nascono come sempre
+      expect(existsSync(join(cartella, 'fonti-rotte', 'uscita', 'competenze', 'mcp', 'index.html'))).toBe(true);
+    });
+
+    it('radar.json illeggibile ferma la build: le pagine delle competenze sparirebbero dal sito', () => {
+      expect(conDati('radar-rotto', { radar: '{ rotto' }).scrivi).toThrow();
+    });
+  });
+
   it('l’indice per la home sta con gli altri dati dell’app e dice l’ultima edizione; senza edizioni non esiste', () => {
     expect(JSON.parse(readFileSync(join(conEdizioni(), 'data', 'edizioni.json'), 'utf-8'))).toEqual({ ultima: '2026-10-19' });
     expect(existsSync(join(senzaEdizioni(), 'data', 'edizioni.json'))).toBe(false);

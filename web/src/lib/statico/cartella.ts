@@ -1,7 +1,8 @@
 // I file statici visti dal disco: la build gli passa la cartella dei dati e quella di uscita, il comando delle anteprime le stesse. Solo Node, mai nel browser.
 import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { leggiDati, scrivi } from '../data/cartella';
+import { leggiDati, leggiDatiComeLApp, scrivi } from '../data/cartella';
+import { FILES } from '../data/load';
 import { copiaImmagini, leggiEdizioni } from '../edizioni/cartella';
 import { filePubblici } from './filePubblici';
 import { anteprimeDelleCompetenze, type Anteprima } from './competenze';
@@ -14,7 +15,9 @@ import { foglioDellaHome, IMMAGINE_HOME } from './pagina';
  */
 export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
   const edizioni = leggiEdizioni(dati);
-  const dataset = leggiDati(dati);
+  // un file di dati rotto vale come fonte assente, come nell'app, e la home in chiaro lo dice. radar.json no: rotto ferma la build,
+  // perché senza le pagine delle competenze sparirebbero dal sito
+  const dataset = { ...leggiDatiComeLApp(dati, FILES.filter((k) => k !== 'radar')), ...leggiDati(dati, ['radar']) };
   const file = filePubblici({ edizioni, dataset }, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome });
   for (const [percorso, contenuto] of Object.entries(file)) {
     mkdirSync(dirname(join(uscita, percorso)), { recursive: true });

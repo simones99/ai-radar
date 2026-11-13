@@ -4,6 +4,7 @@
   import type { Dataset } from './lib/data/types';
   import { scorrimento } from './lib/movimento';
   import { PHOTOS } from './lib/photos';
+  import { FRASE_DI_APERTURA } from './lib/text/apertura';
   import { FONTI_DEI_DATI } from './lib/text/fonti';
   import { dayWith, lunediDi } from './lib/text/format';
   import Doors from './lib/tiles/Doors.svelte';
@@ -65,7 +66,7 @@
           <!-- porta all'edizione solo se è proprio di questa settimana: un'edizione vecchia direbbe un'altra cosa -->
           <p class="small muted">{#if ultimaEdizione === settimana}<a class="settimana" href="edizioni/{settimana}/">Settimana {dayWith('del', settimana)}</a>{:else}Settimana {dayWith('del', settimana)}{/if}</p>
         {/if}
-        <h1 id="contenuto" tabindex="-1">Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
+        <h1 id="contenuto" tabindex="-1">{FRASE_DI_APERTURA}</h1>
       </section>
       {#if phase === 'ready'}<Doors {data} {today} />{/if}
     </div>

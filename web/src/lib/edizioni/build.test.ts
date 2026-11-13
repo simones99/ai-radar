@@ -104,11 +104,12 @@ describe('il sito costruito', () => {
     expect(existsSync(join(senzaEdizioni(), 'edizioni'))).toBe(false);
   });
 
-  it('con le edizioni la home guadagna il link al feed per i lettori, leggibile senza JavaScript, e questa è la sua sola differenza', () => {
+  it('con le edizioni la home guadagna il link al feed per i lettori, leggibile senza JavaScript, e il link all’archivio nella testata in chiaro: sono le sue sole differenze', () => {
     const con = readFileSync(join(conEdizioni(), 'index.html'), 'utf-8');
     const link = new DOMParser().parseFromString(con, 'text/html').head.querySelector('link[rel="alternate"][type="application/rss+xml"]');
     expect(link?.getAttribute('href')).toBe(`${ALTRO_INDIRIZZO}feed.xml`);
-    expect(con.replace(/\s*<link rel="alternate"[^>]*>/, '')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
+    // i dati di questa build non hanno lo stato del giro: la home in chiaro non ha la settimana, che porterebbe all'edizione
+    expect(con.replace(/\s*<link rel="alternate"[^>]*>/, '').replace('<a href="edizioni/">Edizioni</a>', '')).toBe(readFileSync(join(senzaEdizioni(), 'index.html'), 'utf-8'));
   });
 
   it('senza edizioni la home non ha il link al feed', () => {

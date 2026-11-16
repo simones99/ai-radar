@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-11-09",
+ "aggiornato": "2026-11-16",
  "siti": {
   "Colossus 2": {
    "lat": 34.98929,
@@ -42,7 +42,7 @@
    "posizione": "epoch"
   },
   "Microsoft Fairwater Wisconsin": {
-   "lat": 42.68393,
+   "lat": 42.6837,
    "lon": -87.9152,
    "posizione": "epoch"
   },

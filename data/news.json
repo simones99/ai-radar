@@ -55,17 +55,395 @@
  "giorni": 45,
  "notizie": [
   {
-   "titolo": "Google ships four TPU variants in one year as it ramps up competition with Nvidia",
-   "link": "https://the-decoder.com/google-ships-four-tpu-variants-in-one-year-as-it-ramps-up-competition-with-nvidia/",
-   "data": "2026-11-09",
+   "titolo": "LVMH’s Media Division announces strategic partnership with OpenAI",
+   "link": "https://openai.com/index/lvmh-media-division-partnership",
+   "data": "2026-11-16",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "The King’s Trust and OpenAI launch £1m partnership",
+   "link": "https://openai.com/index/the-kings-trust-and-openai",
+   "data": "2026-11-16",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic's Claude Fable 5.2 doesn't generate images, it paints them",
+   "link": "https://the-decoder.com/anthropics-claude-fable-5-2-doesnt-generate-images-it-paints-them/",
+   "data": "2026-11-15",
    "fonte": "The Decoder",
    "tema": "prodotti"
   },
   {
-   "titolo": "Nvidia espionage scandal weakens Huang's lobby against tighter AI chip export controls",
-   "link": "https://the-decoder.com/nvidia-espionage-scandal-weakens-huangs-lobby-against-tighter-ai-chip-export-controls/",
-   "data": "2026-11-09",
+   "titolo": "Firm linked to Jensen Huang's ex-lover reportedly brokered nearly $12 billion in Nvidia chip orders for China",
+   "link": "https://the-decoder.com/firm-linked-to-jensen-huangs-ex-lover-reportedly-brokered-nearly-12-billion-in-nvidia-chip-orders-for-china/",
+   "data": "2026-11-15",
    "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Australia's central bank finds AI hitting young workers first, especially in software and customer service",
+   "link": "https://the-decoder.com/australias-central-bank-finds-ai-hitting-young-workers-first-especially-in-software-and-customer-service/",
+   "data": "2026-11-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Meituan releases a 1.6-trillion-parameter agent model that never touched an Nvidia GPU",
+   "link": "https://the-decoder.com/meituan-releases-a-1-6-trillion-parameter-agent-model-that-never-touched-an-nvidia-gpu/",
+   "data": "2026-11-15",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "A step toward defining the Standard Model on a lattice",
+   "link": "https://openai.com/index/step-toward-defining-the-standard-model",
+   "data": "2026-11-15",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Our new blog for science",
+   "link": "https://openai.com/index/our-new-blog-for-science",
+   "data": "2026-11-15",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic CEO Amodei admits \"there's a huge uncertainty in what's going to happen next year\" days before a record IPO",
+   "link": "https://the-decoder.com/anthropic-ceo-amodei-admits-theres-a-huge-uncertainty-in-whats-going-to-happen-next-year-days-before-a-record-ipo/",
+   "data": "2026-11-14",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Gemini 4 Carbon takes the MathArena crown but costs 15 times more than GPT-6.1 Sol",
+   "link": "https://the-decoder.com/gemini-4-carbon-takes-the-matharena-crown-but-costs-15-times-more-than-gpt-6-1-sol/",
+   "data": "2026-11-14",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic says outdated prompting habits are slowing down Claude Opus 5.5",
+   "link": "https://the-decoder.com/anthropic-says-outdated-prompting-habits-are-slowing-down-claude-opus-5-5/",
+   "data": "2026-11-14",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "OpenAI reassigns robotics researchers to other teams as general-purpose models might make specialized robotics AI unnecessary",
+   "link": "https://the-decoder.com/openai-reassigns-robotics-researchers-to-other-teams-as-general-purpose-models-might-make-specialized-robotics-ai-unnecessary/",
+   "data": "2026-11-14",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Anthropic can already retrain Mythos with \"a fraction of the compute originally needed,\" says former researcher Coxon",
+   "link": "https://the-decoder.com/anthropic-can-already-retrain-mythos-with-a-fraction-of-the-compute-originally-needed-says-former-researcher-coxon/",
+   "data": "2026-11-14",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Runway's open-source Praxis-1 turns video AI into a robot controller",
+   "link": "https://the-decoder.com/runways-open-source-praxis-1-turns-video-ai-into-a-robot-controller/",
+   "data": "2026-11-14",
+   "fonte": "The Decoder",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] The No AI Slop Manifesto",
+   "link": "https://latent.space/p/ainews-the-no-ai-slop-manifesto/",
+   "data": "2026-11-14",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Introducing ChatGPT Wallet",
+   "link": "https://openai.com/index/introducing-chatgpt-wallet",
+   "data": "2026-11-13",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Shield helps technicians hand off legacy portal work with OpenAI",
+   "link": "https://openai.com/business/customer-stories/shield",
+   "data": "2026-11-13",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] Jensen Huang resigns after 33 years leading NVIDIA",
+   "link": "https://latent.space/p/ainews-jensen-huang-resigns-after-33-years-leading-nvidia/",
+   "data": "2026-11-13",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "AI Ambition: ArtCraft Cloned Photoshop and Now Wants to \"Rebuild Everything\"",
+   "link": "https://latent.space/p/artcraft/",
+   "data": "2026-11-13",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Build a Robot Pick-and-Place Simulation with SimReady Assets",
+   "link": "https://huggingface.co/blog/nvidia/simready-assets-robot-pick-and-place",
+   "data": "2026-11-13",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "XYBench: Helping with the problem behind the question",
+   "link": "https://huggingface.co/blog/allenai/xybench",
+   "data": "2026-11-13",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "llama.cpp v1.0.0 : A stronger foundation for the local AI ecosystem",
+   "link": "https://huggingface.co/blog/ggml-org/llama-cpp-v1",
+   "data": "2026-11-13",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Incident report: AI agents attempted exploits on our website during a third-party alignment evaluation",
+   "link": "https://epoch.ai/publications/incident-report-ai-agents-attempted-exploits-on-our-website",
+   "data": "2026-11-13",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Prohibited AI Practices under the AI Act",
+   "link": "https://artificialintelligenceact.eu/prohibited-ai-practices-under-the-ai-act/?utm_source=rss&utm_medium=rss&utm_campaign=prohibited-ai-practices-under-the-ai-act",
+   "data": "2026-11-13",
+   "fonte": "EU AI Act Newsletter",
+   "tema": "politica"
+  },
+  {
+   "titolo": "How Amplitude ships product improvements in 1–2 days with OpenAI",
+   "link": "https://openai.com/business/customer-stories/amplitude",
+   "data": "2026-11-12",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Gondola doubles revenue as its team builds more with Codex",
+   "link": "https://openai.com/business/customer-stories/gondola",
+   "data": "2026-11-12",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Holiday Extras is rethinking what it can build with Codex",
+   "link": "https://openai.com/business/customer-stories/holidays-extras-codex",
+   "data": "2026-11-12",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Supporting research on AI and children’s safety",
+   "link": "https://openai.com/index/children-first-declaration",
+   "data": "2026-11-12",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Gilbert + Tobin rethinks the business of law with AI",
+   "link": "https://openai.com/index/gilbert-tobin-sam-nickless",
+   "data": "2026-11-12",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] D-Day (Decision Models Day)",
+   "link": "https://latent.space/p/ainews-d-day-decision-models-day/",
+   "data": "2026-11-12",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "The Jev Revolution: What Engineers Are Already Building with System One Models",
+   "link": "https://latent.space/p/jev-revolution/",
+   "data": "2026-11-12",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "LLMON: An LLM-Native Markup Language, now in Granite 4.1 3B and 8B",
+   "link": "https://huggingface.co/blog/ibm-granite/llmon-an-llm-native-markup-language-now-in-granite",
+   "data": "2026-11-12",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "The Definitive Fine-Tuning Guide for 3D Generation Models",
+   "link": "https://huggingface.co/blog/3d-lora-finetuning",
+   "data": "2026-11-12",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Introducing Gemini 4 Hydrogen",
+   "link": "https://deepmind.google/blog/introducing-gemini-4-hydrogen/",
+   "data": "2026-11-12",
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Google Search gets a major upgrade with Gemini 4 Hydrogen",
+   "link": "https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/",
+   "data": "2026-11-12",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "ChatGPT Plus for veterans and servicemembers",
+   "link": "https://openai.com/index/chatgpt-plus-for-veterans",
+   "data": "2026-11-11",
+   "fonte": "OpenAI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "[AINews] Mercor $750m Series D at $20B valuation, $3B run rate",
+   "link": "https://latent.space/p/ainews-mercor-750m-series-d-at-20b-valuation-3b-run-rate/",
+   "data": "2026-11-11",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "AI Engineer Code Summit: OpenAI on New Ways of Working With Codex",
+   "link": "https://latent.space/p/codex-work/",
+   "data": "2026-11-11",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "BotPsy: On-Device Personal Assistant with a Sub-Billion-Parameter Agentic Language Model",
+   "link": "https://huggingface.co/blog/qvac/botpsy",
+   "data": "2026-11-11",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Token Pooling-Aware Training for Multi-Vector Embedding Models",
+   "link": "https://huggingface.co/blog/token-pooling",
+   "data": "2026-11-11",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "AlphaGenome 2: Deciphering how cells read DNA to better understand disease",
+   "link": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/",
+   "data": "2026-11-11",
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Gemini Decisions API: Fast, calibrated multimodal decisions",
+   "link": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/",
+   "data": "2026-11-11",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Try Tabletop: Customizable, collaborative spaces for groups to plan, play and do more together.",
+   "link": "https://blog.google/innovation-and-ai/models-and-research/google-labs/tabletop/",
+   "data": "2026-11-11",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Experience the art and legacy of Dr. Esther Mahlangu",
+   "link": "https://blog.google/company-news/outreach-and-initiatives/arts-culture/esther-mahlangu/",
+   "data": "2026-11-11",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Designing for Agents — Zeno Rocha, Resend",
+   "link": "https://latent.space/p/resend/",
+   "data": "2026-11-10",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "NaiveAI Promises 2,100 Tokens per Second. How Well Does It Code?",
+   "link": "https://latent.space/p/naiveai/",
+   "data": "2026-11-10",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "[AINews] Fable 5.2 retakes World #1 LLM spot as $ANT IPO roadshow begins",
+   "link": "https://latent.space/p/ainews-fable-5-2-retakes-world-1-llm-spot-as-ant-ipo-roadshow-begins/",
+   "data": "2026-11-10",
+   "fonte": "Latent Space",
+   "tema": "business"
+  },
+  {
+   "titolo": "Pay for Hugging Face Hub with your Google Cloud Account",
+   "link": "https://huggingface.co/blog/hub-gcp-marketplace",
+   "data": "2026-11-10",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Decision Models in Hugging Face",
+   "link": "https://huggingface.co/blog/decision",
+   "data": "2026-11-10",
+   "fonte": "Hugging Face",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Gemini 4 Carbon is now available",
+   "link": "https://deepmind.google/blog/gemini-4-carbon-is-now-available/",
+   "data": "2026-11-10",
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Introducing AlphaProof Code: a breakthrough in verifying complex software at depth",
+   "link": "https://deepmind.google/blog/introducing-alphaproof-code/",
+   "data": "2026-11-10",
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Opening the datasets behind our AI weather models",
+   "link": "https://deepmind.google/blog/opening-the-datasets-behind-our-ai-weather-models/",
+   "data": "2026-11-10",
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
+  },
+  {
+   "titolo": "Gemini Intelligence: New features, on more devices",
+   "link": "https://blog.google/products-and-platforms/platforms/android/gemini-intelligence-november-features-devices/",
+   "data": "2026-11-10",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "We’re bringing Adobe’s creative and productivity tools closer to your everyday Google apps.",
+   "link": "https://blog.google/company-news/inside-google/company-announcements/adobe-google-partnership-integration/",
+   "data": "2026-11-10",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Google Cloud launches Gemini for healthcare.",
+   "link": "https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/gemini-for-healthcare/",
+   "data": "2026-11-10",
+   "fonte": "Google AI",
+   "tema": "prodotti"
+  },
+  {
+   "titolo": "Locating the source of a mysterious beep with Claude",
+   "link": "https://simonwillison.net/2026/Nov/9/mysterious-beeps/",
+   "data": "2026-11-09",
+   "fonte": "Simon Willison",
    "tema": "prodotti"
   },
   {
@@ -74,6 +452,13 @@
    "data": "2026-11-09",
    "fonte": "Simon Willison",
    "tema": "prodotti"
+  },
+  {
+   "titolo": "What Frontier Labs Buy: A Data Deep Dive with Handshake AI — Garrett Lord & Team",
+   "link": "https://latent.space/p/handshake/",
+   "data": "2026-11-09",
+   "fonte": "Latent Space",
+   "tema": "business"
   },
   {
    "titolo": "Import AI 480: Self-sustaining space economies; AI for science progress, and Meta builds perfect hands for a superintelligence",
@@ -90,32 +475,18 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "Andrej Karpathy built a curated video platform in a weekend using Claude and 20 years of Hacker News",
-   "link": "https://the-decoder.com/andrej-karpathy-built-a-curated-video-platform-in-a-weekend-using-claude-and-20-years-of-hacker-news/",
-   "data": "2026-11-08",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
+   "titolo": "Gemini Robotics 2.5 accelerates real-world general dexterity",
+   "link": "https://deepmind.google/blog/gemini-robotics-2-5-accelerates-real-world-physical-intelligence/",
+   "data": "2026-11-09",
+   "fonte": "Google DeepMind",
+   "tema": "ricerca"
   },
   {
-   "titolo": "The brain-as-computer metaphor shaped modern AI but may be misleading the consciousness debate",
-   "link": "https://the-decoder.com/the-brain-as-computer-metaphor-shaped-modern-ai-but-may-be-misleading-the-consciousness-debate/",
-   "data": "2026-11-08",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "The inventor of the bitter lesson has a bitter lesson for LLM scaling enthusiasts",
-   "link": "https://the-decoder.com/the-inventor-of-the-bitter-lesson-has-a-bitter-lesson-for-llm-scaling-enthusiasts/",
-   "data": "2026-11-08",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI coding agents still need human cleanup on nearly three out of four tasks in a real-world test",
-   "link": "https://the-decoder.com/ai-coding-agents-still-need-human-cleanup-on-nearly-three-out-of-four-tasks-in-a-real-world-test/",
-   "data": "2026-11-08",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
+   "titolo": "Inference Performance Index: changing the way we measure inference capacity",
+   "link": "https://epoch.ai/publications/inference-performance-index",
+   "data": "2026-11-09",
+   "fonte": "Epoch AI",
+   "tema": "ricerca"
   },
   {
    "titolo": "How Stanford Teaches AI-Native Engineering — Mihail Eric, Monaco",
@@ -123,83 +494,6 @@
    "data": "2026-11-08",
    "fonte": "Latent Space",
    "tema": "business"
-  },
-  {
-   "titolo": "[One Million AI Engineer Special] How Stanford Teaches AI-Native Engineering — Mihail Eric, Monaco",
-   "link": "https://latent.space/p/one_million_ai_engineer_special_how_stanford_teaches_ai-native_engineering_mihail_eric_monaco/",
-   "data": "2026-11-08",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "Anthropic pushes ahead with pre-Thanksgiving IPO despite tech selloff, accepts lower valuation",
-   "link": "https://the-decoder.com/anthropic-pushes-ahead-with-pre-thanksgiving-ipo-despite-tech-selloff-accepts-lower-valuation/",
-   "data": "2026-11-07",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "AI auditors catch most agent misbehavior but flood reviewers with false alarms, new study finds",
-   "link": "https://the-decoder.com/ai-auditors-catch-most-agent-misbehavior-but-flood-reviewers-with-false-alarms-new-study-finds/",
-   "data": "2026-11-07",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Thinking Machines' Inkling 2 Small drops 316 F-bombs across benchmark runs",
-   "link": "https://the-decoder.com/thinking-machines-inkling-2-small-drops-316-f-bombs-across-benchmark-runs/",
-   "data": "2026-11-07",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "The gap between open and closed AI models in cyber capabilities keeps shrinking",
-   "link": "https://the-decoder.com/the-gap-between-open-and-closed-ai-models-in-cyber-capabilities-keeps-shrinking/",
-   "data": "2026-11-07",
-   "fonte": "The Decoder",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "[AINews] Anthropic IPO: Whither Now?",
-   "link": "https://latent.space/p/ainews-anthropic-ipo-whither-now/",
-   "data": "2026-11-07",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "Partnering with Hacktron to find vulnerabilities in OpenAI’s systems",
-   "link": "https://openai.com/index/partnering-with-hacktron",
-   "data": "2026-11-06",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Measuring how AI agents handle everyday wet-lab science",
-   "link": "https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science",
-   "data": "2026-11-06",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Controlling Biology - Fabian Theis, Helmholtz Munich",
-   "link": "https://latent.space/p/controlling-biology-fabian-theis-helmholtz-munich/",
-   "data": "2026-11-06",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "[AINews] Inkling 2 Small: 17A-594B trained in 68 hours on 12T tokens, beating Muse Spark",
-   "link": "https://latent.space/p/ainews-inkling-2-small-17a-594b-trained-in-68-hours-on-12t-tokens-beating-muse-spark/",
-   "data": "2026-11-06",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "ToyBlocks: A controlled world for robot learning and evaluation",
-   "link": "https://huggingface.co/blog/allenai/toyblocks",
-   "data": "2026-11-06",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
   },
   {
    "titolo": "Egyptian and Nigerian English join the Open ASR Leaderboard",
@@ -213,69 +507,6 @@
    "link": "https://epoch.ai/publications/huawei-horinger-china-compute-gap",
    "data": "2026-11-06",
    "fonte": "Epoch AI",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Australian universities are creating AI-native graduates",
-   "link": "https://openai.com/index/australian-universities-ai-native-graduates",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Cult.fit builds operational muscle with Codex",
-   "link": "https://openai.com/index/cultfit-builds-with-codex",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "GPT‑6 Cyber: Advancing the frontier of aligned cybersecurity agents",
-   "link": "https://openai.com/index/introducing-gpt-6-cyber",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Merge builds product and business tools with OpenAI technology",
-   "link": "https://openai.com/index/merge-builds-with-openai",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Setting a new standard for responsible AI infrastructure",
-   "link": "https://openai.com/index/setting-new-standard-responsible-ai-infrastructure",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Flipsnack grows product signups with conversion optimization",
-   "link": "https://openai.com/ads/customers/flipsnack",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Franklin Templeton uses OpenAI to support investment research",
-   "link": "https://openai.com/index/franklin-templeton",
-   "data": "2026-11-05",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "[AINews] It's Swapping Season",
-   "link": "https://latent.space/p/ainews-it-s-swapping-season/",
-   "data": "2026-11-05",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "New NVIDIA Cosmos 3 Open Models for Interactive World Simulation",
-   "link": "https://huggingface.co/blog/nvidia/cosmos-interactive-world-simulation",
-   "data": "2026-11-05",
-   "fonte": "Hugging Face",
    "tema": "ricerca"
   },
   {
@@ -300,41 +531,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "OpenAI to acquire Pierre Computer Company, Inc.",
-   "link": "https://openai.com/index/openai-to-acquire-pierre",
-   "data": "2026-11-04",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Daybreak Red is now available in AWS GovCloud (US-East)",
-   "link": "https://openai.com/index/daybreak-red-aws-govcloud",
-   "data": "2026-11-04",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "A thousand fewer paths to root",
-   "link": "https://openai.com/index/a-thousand-fewer-paths-to-root",
-   "data": "2026-11-04",
-   "fonte": "OpenAI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "[AINews] Behind Latent Space: Kill My SaaS, Jev & AI in 2026 | AIEi Shanghai",
-   "link": "https://latent.space/p/ainews-behind-latent-space-kill-my-saas-jev-ai-in-2026-aiei-shanghai/",
-   "data": "2026-11-04",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "Dharma Field Extractor: Any Document In, Structured Fields in JSON Out",
-   "link": "https://huggingface.co/blog/Dharma-AI/dharma-field-extractor",
-   "data": "2026-11-04",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "Broadcom TPU compute shipments doubled from Q2 to Q3 2026, reaching 2 million H100-equivalents",
    "link": "https://epoch.ai/data-insights/tpu-production-doubling",
    "data": "2026-11-04",
@@ -356,34 +552,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "[AINews] LLMs can read & write neural network weights: \"Weight Space Programming\" cuts Autoresearch out of the RSI loop",
-   "link": "https://latent.space/p/ainews-llms-can-read-write-neural-network-weights-weight-space-programming-cuts-autoresearch-out-of/",
-   "data": "2026-11-03",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "Palette: teaching a small model to build decks in your design language",
-   "link": "https://huggingface.co/blog/ibm-research/palette-deck-building",
-   "data": "2026-11-03",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "CWE-bench v2: More coverage, quality, and transparency",
-   "link": "https://huggingface.co/blog/cwe-bench",
-   "data": "2026-11-03",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Transformers Model Integration Contracts",
-   "link": "https://huggingface.co/blog/transformers-mic",
-   "data": "2026-11-03",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "Agentic cheminformatics with Google Antigravity",
    "link": "https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/",
    "data": "2026-11-03",
@@ -396,20 +564,6 @@
    "data": "2026-11-02",
    "fonte": "Simon Willison",
    "tema": "prodotti"
-  },
-  {
-   "titolo": "Building AI for Lawyers - Jacob Lauritzen, CTO of Legora",
-   "link": "https://latent.space/p/building-ai-for-lawyers-jacob-lauritzen-cto-of-legora/",
-   "data": "2026-11-02",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "Building Legal Agents When You Can't See the Data - Jacob Lauritzen, CTO of Legora",
-   "link": "https://latent.space/p/building_legal_agents_when_you_can_t_see_the_data_-_jacob_lauritzen_cto_of_legora/",
-   "data": "2026-11-02",
-   "fonte": "Latent Space",
-   "tema": "business"
   },
   {
    "titolo": "Import AI 479: Spacewar; low-latency tasks versus LLMs; Genie 4",
@@ -426,20 +580,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Agents Prompt People: Using Agents for Long-Horizon Financial Work",
-   "link": "https://latent.space/p/arca/",
-   "data": "2026-10-31",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
-   "titolo": "[AINews] Google admits AI Mode hurts Search revenue; -15% $500B drop worst since 2004 IPO. AI Bear Market coming?",
-   "link": "https://latent.space/p/ainews-google-admits-ai-mode-hurts-search-revenue-15-500b-drop-worst-since-2004-ipo-ai-bear-market-c/",
-   "data": "2026-10-31",
-   "fonte": "Latent Space",
-   "tema": "business"
-  },
-  {
    "titolo": "Speeding up planning decisions with AI",
    "link": "https://deepmind.google/blog/speeding-up-planning-decisions-with-ai/",
    "data": "2026-10-30",
@@ -451,27 +591,6 @@
    "link": "https://epoch.ai/data-insights/biorxiv-llms-vs-ai-tools",
    "data": "2026-10-30",
    "fonte": "Epoch AI",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Granite Switch 4.1.1 — Update models like you update software",
-   "link": "https://huggingface.co/blog/ibm-granite/granite-switch-4-1-1",
-   "data": "2026-10-29",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Announcing Project ProtoStar: Making Publicly Funded Science AI-Ready",
-   "link": "https://huggingface.co/blog/announcing-project-protostar",
-   "data": "2026-10-29",
-   "fonte": "Hugging Face",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Welcome Le Chonk: Mistral Large 4 on Hugging Face",
-   "link": "https://huggingface.co/blog/mistral-large4",
-   "data": "2026-10-29",
-   "fonte": "Hugging Face",
    "tema": "ricerca"
   },
   {
@@ -566,45 +685,10 @@
    "tema": "ricerca"
   },
   {
-   "titolo": "Accelerating the search for antimicrobial peptides with Google Antigravity",
-   "link": "https://deepmind.google/blog/accelerating-antimicrobial-discovery/",
-   "data": "2026-10-15",
-   "fonte": "Google DeepMind",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Google DeepMind and Singapore Government collaborate to build fine-tuned AI model for scam detection",
-   "link": "https://deepmind.google/blog/on-device-ai-scam-detection-mddi/",
-   "data": "2026-10-14",
-   "fonte": "Google DeepMind",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "AI systems are improving rapidly at Slay the Spire and its sequel",
    "link": "https://epoch.ai/publications/ai-systems-are-improving-rapidly-at-slay-the-spire-and-its-sequel",
    "data": "2026-10-14",
    "fonte": "Epoch AI",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Developing Gemini 4 Argon responsibly and safely",
-   "link": "https://deepmind.google/blog/developing-gemini-4-argon-responsibly-and-safely/",
-   "data": "2026-10-13",
-   "fonte": "Google DeepMind",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Gemini 4 Argon for Robotics",
-   "link": "https://deepmind.google/blog/gemini-4-argon-for-robotics/",
-   "data": "2026-10-13",
-   "fonte": "Google DeepMind",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Gemini 4 Argon: Built to solve your hardest problems",
-   "link": "https://deepmind.google/blog/introducing-gemini-4-argon/",
-   "data": "2026-10-13",
-   "fonte": "Google DeepMind",
    "tema": "ricerca"
   },
   {
@@ -650,34 +734,6 @@
    "tema": "prodotti"
   },
   {
-   "titolo": "Introducing Playground: Create and play custom games",
-   "link": "https://blog.google/innovation-and-ai/technology/ai/playground-experimental-gaming-platform/",
-   "data": "2026-10-07",
-   "fonte": "Google AI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "US adults are no more likely to face cyber incidents than when Claude Fable 5 launched",
-   "link": "https://epoch.ai/data-insights/cyber-incidents-flat-since-fable-5",
-   "data": "2026-10-07",
-   "fonte": "Epoch AI",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "EBR-bench update",
-   "link": "https://epoch.ai/publications/ebr-bench-update",
-   "data": "2026-10-07",
-   "fonte": "Epoch AI",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "EmbeddingGemma 2: an open, lightweight multimodal embedding model",
-   "link": "https://deepmind.google/blog/embeddinggemma-2-an-open-lightweight-multimodal-embedding-model/",
-   "data": "2026-10-06",
-   "fonte": "Google DeepMind",
-   "tema": "ricerca"
-  },
-  {
    "titolo": "Import AI 475: Swarm scaling; Google DeepMind watermarks biology; and the AI science economy",
    "link": "https://jack-clark.net/2026/10/05/import-ai-475-swarm-scaling-google-deepmind-watermarks-biology-and-the-ai-science-economy/",
    "data": "2026-10-05",
@@ -688,41 +744,6 @@
    "titolo": "We're going to need default hard budget caps on pretty much everything",
    "link": "https://simonwillison.net/2026/Oct/3/default-hard-budget-caps/",
    "data": "2026-10-03",
-   "fonte": "Simon Willison",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "The latest AI news we announced in September 2026",
-   "link": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-september-2026/",
-   "data": "2026-10-02",
-   "fonte": "Google AI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "OpenAI DevDay 2026 live blog",
-   "link": "https://simonwillison.net/2026/Sep/29/openai-devday-2026-live-blog/",
-   "data": "2026-09-29",
-   "fonte": "Simon Willison",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "Import AI 474: Platonic mindspace; TPUs in space; Zhipu starts an outer RSI loop",
-   "link": "https://jack-clark.net/2026/09/28/import-ai-474-platonic-mindspace-tpus-in-space-zhipu-starts-an-outer-rsi-loop/",
-   "data": "2026-09-28",
-   "fonte": "Import AI",
-   "tema": "ricerca"
-  },
-  {
-   "titolo": "Watch the winning trailer from the Future Vision XPRIZE, The Gifted.",
-   "link": "https://blog.google/innovation-and-ai/technology/ai/winner-future-vision-xprize/",
-   "data": "2026-09-28",
-   "fonte": "Google AI",
-   "tema": "prodotti"
-  },
-  {
-   "titolo": "2026 in LLMs (so far)",
-   "link": "https://simonwillison.net/2026/Sep/27/2026-in-llms-so-far/",
-   "data": "2026-09-27",
    "fonte": "Simon Willison",
    "tema": "prodotti"
   }

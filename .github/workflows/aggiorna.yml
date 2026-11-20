@@ -39,6 +39,10 @@ jobs:
   aggiorna:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # l'ID del sito Umami per il contatore delle visite, per tutto il job: la build che verrà pubblicata è quella rilanciata dagli end-to-end.
+    # È una variabile e non un secret, perché finisce comunque nell'HTML pubblico. Senza la variabile il sito esce senza contatore
+    env:
+      AI_RADAR_UMAMI_ID: ${{ vars.UMAMI_WEBSITE_ID }}
     outputs:
       edizione: ${{ steps.edizione.outcome }}
       anteprime: ${{ steps.anteprime.outcome }}

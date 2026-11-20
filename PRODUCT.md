@@ -41,7 +41,7 @@ Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, 
 - Edizioni: una pagina statica per settimana (`/edizioni/AAAA-MM-GG/`), con le due porte, le frasi cambiate, fino a 3 notizie per tema, fonte e licenza su ogni riga, e un'immagine di anteprima propria. L'archivio (`/edizioni/`) le tiene tutte. Il testo non cambia, salvo correzioni dichiarate con la data e cosa è cambiato. I testi sono scritti dai dati con regole fisse, senza note d'autore.
 - Feed: RSS (`/feed.xml`) con una voce per edizione a testo intero, le ultime 26. Una correzione compare nella voce, che non torna a essere nuova.
 - Terminologia: codice, test e testi usano i termini di `GLOSSARY.md`, ed evitano i sinonimi che il glossario esclude.
-- Solo fonti pubbliche e servizi gratuiti: GitHub Actions e GitHub Pages, nessun account, nessuna newsletter, nessun testo copiato. Le notizie mostrano solo titolo, data e link.
+- Solo fonti pubbliche e servizi gratuiti: GitHub Actions e GitHub Pages, Umami Cloud per contare le visite (`docs/adr/0004-visite-contate-con-umami-cloud.md`), nessun account per chi legge, nessuna newsletter, nessun testo copiato. Le notizie mostrano solo titolo, data e link.
 - Oggi le frasi e le notizie delle porte sono scritte dai dati con regole fisse, senza LLM. È la scelta attuale, non un vincolo dichiarato.
 - Solo italiano; traduzioni fuori perimetro.
 - Le chiavi API (Artificial Analysis, Adzuna) sono facoltative: senza, i grafici che ne dipendono spiegano cosa manca.
@@ -65,7 +65,7 @@ Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, 
 
 1. **Ogni numero ha la sua fonte.** Fonte cliccabile e licenza accanto al dato, e la si può ricontrollare ripetendo la stessa ricerca.
 2. **Dati mancanti detti onestamente.** Un dato che manca non diventa mai uno zero o un vuoto muto: lo dice una frase.
-3. **Gratis e aperto.** Solo fonti pubbliche e servizi gratuiti, nessun account, nessun testo copiato.
+3. **Gratis e aperto.** Solo fonti pubbliche e servizi gratuiti, nessun account per chi legge, nessun testo copiato.
 4. **Due teste alla pari.** Nessuna delle due viene sacrificata all'altra, in home come nelle card.
 5. **Prudenza nelle misure.** Soglie fisse, unità vere, cambi confermati nel tempo: meglio un segnale lento che uno che salta.
 

@@ -36,6 +36,18 @@ _Avoid_: newsletter, canale
 La modifica dichiarata di un'edizione già uscita, con la data e cosa è cambiato. Si fa a mano, e la voce del feed non torna a essere nuova.
 _Avoid_: errata, rettifica, aggiornamento
 
+**Contatore delle visite**:
+Il servizio che conta le visite alle pagine di AI Radar, Umami Cloud, senza cookie. È acceso o spento per tutto il sito insieme, e dove è acceso c'è la riga sul contatore.
+_Avoid_: analytics, tracciamento, tracker, statistiche (per il contatore)
+
+**Riga sul contatore**:
+La frase in fondo a una pagina che dice a chi legge che il sito conta le visite e come, con il link all'informativa di Umami. C'è in una pagina se e solo se lì il contatore delle visite è acceso.
+_Avoid_: riga del contatore, banner, avviso, informativa (la riga porta a quella di Umami, non lo è)
+
+**Visita di ritorno**:
+La visita di chi Umami riconosce come già passato sul sito in un'altra settimana dello stesso mese di calendario. Chi torna nella stessa settimana, o in un mese diverso, non fa una visita di ritorno.
+_Avoid_: utente fedele, retention (nei testi in italiano)
+
 **Competenza**:
 Una delle capacità sull'AI che il radar segue, misurata su ricerca, open source e lavoro.
 _Avoid_: skill, tema
@@ -85,7 +97,7 @@ L'unità con cui si misura la potenza di calcolo di un data center: quante GPU N
 _Avoid_: GPU, chip, potenza installata
 
 **Sito**:
-Un data center che Epoch conta in *AI data centers*, con i suoi H100 equivalenti attuali e uno stato, operativo o in costruzione. Un cluster del censimento *GPU clusters*, come Leonardo al CINECA, non è un sito.
+Un data center che Epoch conta in *AI data centers*, con i suoi H100 equivalenti attuali e uno stato, operativo o in costruzione. Un cluster del censimento *GPU clusters*, come Leonardo al CINECA, non è un sito. Fuori dalla mappa, nei testi, nel codice e negli ADR, «il sito» è AI Radar stesso, il sito web: dove i due possono confondersi, il data center è un «sito di Epoch».
 _Avoid_: cluster, impianto, struttura, campus
 
 **Filo della catena**:

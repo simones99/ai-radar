@@ -5,6 +5,10 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { imagetools } from 'vite-imagetools';
 import { ICONA } from './src/lib/icona.ts';
 import { indirizzoBase } from './src/lib/indirizzoBase.ts';
+import { idUmami } from './src/lib/umami.ts';
+
+// l'ID del sito Umami, controllato quando si legge la configurazione: un ID sbagliato ferma la build prima che scriva qualcosa
+const umami = idUmami(process.env.AI_RADAR_UMAMI_ID);
 
 export default defineConfig(({ mode }) => ({
   base: './',
@@ -31,6 +35,7 @@ export default defineConfig(({ mode }) => ({
           uscita: dir,
           indirizzoBase: indirizzoBase(process.env.AI_RADAR_BASE_URL),
           htmlHome: String(home.source),
+          idUmami: umami,
         });
       },
     },

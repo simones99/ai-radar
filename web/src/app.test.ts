@@ -129,6 +129,49 @@ describe('App', () => {
     }
   });
 
+  describe('la riga sul contatore', () => {
+    // la pagina con lo script di Umami nel <head>, che jsdom non scarica né esegue. Il tag è quello che dà Umami, scritto qui a mano:
+    // se chi lo scrive nella build e chi lo riconosce nell'app sbagliassero tutti e due allo stesso modo, la prova se ne accorgerebbe
+    const SCRIPT = '<script defer src="https://cloud.umami.is/script.js" data-website-id="bb5f6910-f64e-4045-879e-df65209b7ad5"></script>';
+    const conLoScript = () => document.head.insertAdjacentHTML('beforeend', SCRIPT);
+    afterEach(() => document.head.querySelectorAll('script[src^="https://cloud.umami.is/"]').forEach((s) => s.remove()));
+    const conIDati = () => vi.fn(async (url: string) => {
+      const k = url.split('/').pop()!.replace('.json', '');
+      if (k === 'edizioni') return { ok: true, json: async () => ({ ultima: '2026-10-12' }) } as Response;
+      return { ok: true, json: async () => (FIXTURE as Record<string, unknown>)[k] } as Response;
+    });
+    const caricata = async () => {
+      vi.stubGlobal('fetch', conIDati());
+      render(App);
+      await screen.findByRole('link', { name: /MCP entra/ });
+      return within(screen.getByRole('contentinfo'));
+    };
+
+    it('con lo script di Umami nella pagina, la nota con le fonti dice come si contano le visite e porta all’informativa di Umami', async () => {
+      conLoScript();
+      const colophon = await caricata();
+      expect(colophon.getByText(/Il progetto non è affiliato a nessuna delle fonti/)).toHaveTextContent(
+        'Il progetto non è affiliato a nessuna delle fonti. Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
+      );
+      const umami = colophon.getByRole('link', { name: 'Umami' });
+      expect(umami).toHaveAttribute('href', 'https://umami.is/privacy');
+      expect(umami).toHaveAttribute('target', '_blank');
+      expect(umami).toHaveAttribute('rel', 'noopener');
+      // il resto del colophon resta dov'è
+      expect(await colophon.findByRole('link', { name: 'Segui con RSS' })).toHaveAttribute('href', 'feed.xml');
+      expect(colophon.getByRole('heading', { name: 'Foto e fonti' })).toBeInTheDocument();
+      expect(colophon.getByRole('heading', { name: 'Stato delle fonti' })).toBeInTheDocument();
+      expect(colophon.getByRole('link', { name: 'Licenze del software' })).toHaveAttribute('href', 'THIRD_PARTY_LICENSES.txt');
+    });
+
+    it('senza lo script, il colophon non parla di visite', async () => {
+      const colophon = await caricata();
+      expect(colophon.getByText(/Il progetto non è affiliato a nessuna delle fonti/)).toBeInTheDocument();
+      expect(screen.getByRole('contentinfo')).not.toHaveTextContent('visite');
+      expect(colophon.queryByRole('link', { name: 'Umami' })).toBeNull();
+    });
+  });
+
   it('nessun dato raggiungibile: avviso e Riprova', async () => {
     const fetchFn = vi.fn(async () => { throw new TypeError('offline'); });
     vi.stubGlobal('fetch', fetchFn);

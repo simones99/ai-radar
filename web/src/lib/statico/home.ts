@@ -5,7 +5,7 @@ import { cardDellaTesta, porta, settimanaDeiDati, type Edizione, type LinkDellaD
 import { FRASE_DI_APERTURA } from '../text/apertura';
 import { FONTI_DEI_DATI } from '../text/fonti';
 import { dayWith } from '../text/format';
-import { esc, inLink, INDICE_COMPETENZE, linkAlFeed, linkEsterno } from './pagina';
+import { esc, inLink, INDICE_COMPETENZE, linkAlFeed, linkEsterno, rigaSulContatore } from './pagina';
 
 export interface HomeInChiaro {
   /** L'HTML della home uscito dalla build, con il contenitore vuoto dell'app. */
@@ -15,6 +15,8 @@ export interface HomeInChiaro {
   indirizzoBase: string;
   /** Le altre voci della mappa dei file pubblici: un link nasce solo verso una pagina che c'è. */
   pagine: readonly string[];
+  /** In fondo c'è la riga sul contatore: va dove c'è lo script di Umami. */
+  conLaRigaSulContatore?: boolean;
 }
 
 const CONTENITORE = /<div id="app">\s*<\/div>/;
@@ -56,18 +58,18 @@ ${s.porte.map((p) => cardDellaTesta(p, s.card, verso)).join('\n')}
 </section>`;
 }
 
-/** In fondo, sempre, le fonti dei dati come nel colophon dell'app; con almeno un'edizione anche il feed. */
-function fondo(conFeed: boolean): string {
+/** In fondo, sempre, le fonti dei dati come nel colophon dell'app; con lo script di Umami la riga sul contatore; con almeno un'edizione anche il feed. */
+function fondo(conFeed: boolean, conLaRigaSulContatore: boolean): string {
   return `<footer>
 <p class="ed-nota">Dati di ${FONTI_DEI_DATI.map((f) => linkEsterno(f.url, f.nome)).join(', ')}. Il progetto non è affiliato a nessuna delle fonti.</p>
-${conFeed ? `<p class="ed-nota"><a href="feed.xml">Segui con RSS</a></p>\n` : ''}</footer>`;
+${conLaRigaSulContatore ? `${rigaSulContatore()}\n` : ''}${conFeed ? `<p class="ed-nota"><a href="feed.xml">Segui con RSS</a></p>\n` : ''}</footer>`;
 }
 
 /**
- * Il testo statico, in ordine: testata, settimana e frase di apertura, le due porte, le card per testa, e in fondo le fonti e il feed.
+ * Il testo statico, in ordine: testata, settimana e frase di apertura, le due porte, le card per testa, e in fondo le fonti, il contatore e il feed.
  * Senza dati sulla settimana restano testata, frase e fondo.
  */
-function testoStatico(s: SettimanaDeiDati | null, link: Link, conFeed: boolean): string {
+function testoStatico(s: SettimanaDeiDati | null, link: Link, { conFeed, conLaRigaSulContatore }: { conFeed: boolean; conLaRigaSulContatore: boolean }): string {
   const verso = versoUnaPagina(link);
   const sezioni = [
     apertura(s, link),
@@ -78,7 +80,7 @@ ${testata(link)}
 <main>
 ${sezioni.join('\n')}
 </main>
-${fondo(conFeed)}
+${fondo(conFeed, conLaRigaSulContatore)}
 </div>`;
 }
 
@@ -86,10 +88,10 @@ ${fondo(conFeed)}
  * La home con il testo della settimana dei dati dentro il contenitore dell'app. Titolo, descrizione, canonical e anteprima restano quelli
  * ricevuti; con almeno un'edizione la testa guadagna il link al feed, nell'HTML perché un lettore di feed non esegue JavaScript.
  */
-export function homeInChiaro({ home, dataset, edizioni, indirizzoBase, pagine }: HomeInChiaro): string {
+export function homeInChiaro({ home, dataset, edizioni, indirizzoBase, pagine, conLaRigaSulContatore = false }: HomeInChiaro): string {
   // senza il contenitore vuoto il testo non ha dove andare, e la home resta com'è: l'end-to-end della home in chiaro se ne accorge
   const esistono = new Set(pagine);
   const link: Link = (cartella) => (esistono.has(`${cartella}index.html`) ? cartella : null);
   const daRiempire = edizioni.length ? home.replace('</head>', () => `  ${linkAlFeed(indirizzoBase)}\n  </head>`) : home;
-  return daRiempire.replace(CONTENITORE, () => `<div id="app">\n${testoStatico(settimanaDeiDati(dataset), link, edizioni.length > 0)}\n</div>`);
+  return daRiempire.replace(CONTENITORE, () => `<div id="app">\n${testoStatico(settimanaDeiDati(dataset), link, { conFeed: edizioni.length > 0, conLaRigaSulContatore })}\n</div>`);
 }

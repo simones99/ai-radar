@@ -3,8 +3,10 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { within } from '@testing-library/svelte';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
+import { ID, pagine, righeSulContatore, scriptDiUmami } from '../test/contatore';
 import { FIXTURE } from '../test/fixtures';
 import { scriviFilePubblici } from '../statico/cartella';
 import { creaEdizione, type Edizione } from '.';
@@ -20,10 +22,12 @@ describe('il sito costruito', () => {
   const senzaEdizioni = () => join(cartella, 'senza');
   const pagina = (...parti: string[]) => new DOMParser().parseFromString(readFileSync(join(conEdizioni(), ...parti), 'utf-8'), 'text/html');
 
-  const build = (uscita: string, dati: string) =>
+  // senza l'ID di Umami, anche quando il workflow lo dà a tutto il job: chi lo vuole lo passa
+  const build = (uscita: string, dati: string, ambiente: Record<string, string> = {}) =>
     execFileSync(process.execPath, ['node_modules/vite/bin/vite.js', 'build', '--outDir', uscita, '--emptyOutDir', '--logLevel', 'error'], {
       // senza un browser a disposizione: la build le immagini le copia soltanto
-      env: { ...process.env, NODE_ENV: 'production', AI_RADAR_BASE_URL: ALTRO_INDIRIZZO, AI_RADAR_DATA_DIR: dati, PLAYWRIGHT_BROWSERS_PATH: join(cartella, 'nessun-browser') },
+      env: { ...process.env, NODE_ENV: 'production', AI_RADAR_BASE_URL: ALTRO_INDIRIZZO, AI_RADAR_DATA_DIR: dati, PLAYWRIGHT_BROWSERS_PATH: join(cartella, 'nessun-browser'), AI_RADAR_UMAMI_ID: '', ...ambiente },
+      stdio: 'pipe',
     });
 
   beforeAll(() => {
@@ -189,6 +193,58 @@ describe('il sito costruito', () => {
 
     it('radar.json illeggibile ferma la build: le pagine delle competenze sparirebbero dal sito', () => {
       expect(conDati('radar-rotto', { radar: '{ rotto' }).scrivi).toThrow();
+    });
+  });
+
+  describe('il contatore delle visite', () => {
+    const conUmami = () => join(cartella, 'con-umami');
+    const fileFissi = () => join(cartella, 'dati', 'edizioni');
+    /** Le pagine HTML di un sito costruito, per percorso. */
+    const pagineDelSito = (sito: string) => pagine(Object.fromEntries(readdirSync(sito, { recursive: true, encoding: 'utf-8' }).filter((p) => p.endsWith('.html')).map((p) => [p, readFileSync(join(sito, p), 'utf-8')])));
+    let fissiPrima: Record<string, string>;
+
+    beforeAll(() => {
+      fissiPrima = Object.fromEntries(readdirSync(fileFissi()).map((f) => [f, readFileSync(join(fileFissi(), f), 'utf-8')]));
+      build(conUmami(), join(cartella, 'dati'), { AI_RADAR_UMAMI_ID: ID });
+    }, 300_000);
+
+    it('con l’ID in AI_RADAR_UMAMI_ID ogni pagina, home compresa, ha nel <head> lo script di Umami, che conta solo sull’host dell’indirizzo base', () => {
+      const tutte = pagineDelSito(conUmami());
+      expect(tutte.map(([p]) => p.replaceAll('\\', '/'))).toEqual(expect.arrayContaining(['index.html', 'edizioni/index.html', 'edizioni/2026-10-12/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+      for (const [percorso, doc] of tutte) {
+        const script = scriptDiUmami(doc);
+        expect(script, percorso).toHaveLength(1);
+        expect(script[0].parentElement, percorso).toBe(doc.head);
+        expect(script[0].getAttribute('data-website-id'), percorso).toBe(ID);
+        expect(script[0].getAttribute('data-domains'), percorso).toBe('altro-utente.github.io');
+      }
+    });
+
+    it('senza l’ID nessuna pagina ha lo script', () => {
+      for (const sito of [conEdizioni(), senzaEdizioni()]) {
+        const tutte = pagineDelSito(sito);
+        expect(tutte.length).toBeGreaterThan(0);
+        for (const [percorso, doc] of tutte) expect(scriptDiUmami(doc), percorso).toEqual([]);
+      }
+    });
+
+    it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link all’informativa di Umami; senza, nessuna', () => {
+      for (const [percorso, doc] of pagineDelSito(conUmami())) {
+        expect(righeSulContatore(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
+          'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
+        ]);
+        expect(within(righeSulContatore(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
+      }
+      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagineDelSito(sito)) expect(righeSulContatore(doc), percorso).toEqual([]);
+    });
+
+    it('i file fissi delle edizioni non cambiano, e nemmeno l’indice che legge la home', () => {
+      expect(Object.fromEntries(readdirSync(fileFissi()).map((f) => [f, readFileSync(join(fileFissi(), f), 'utf-8')]))).toEqual(fissiPrima);
+      expect(readFileSync(join(conUmami(), 'data', 'edizioni.json'), 'utf-8')).toBe(readFileSync(join(conEdizioni(), 'data', 'edizioni.json'), 'utf-8'));
+    });
+
+    it('un ID che non è un UUID ferma la build, con un messaggio che nomina la variabile da correggere', () => {
+      expect(() => build(join(cartella, 'id-rotto'), join(cartella, 'vuota'), { AI_RADAR_UMAMI_ID: 'il-mio-sito' })).toThrow(/AI_RADAR_UMAMI_ID/);
     });
   });
 

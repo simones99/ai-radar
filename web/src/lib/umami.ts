@@ -3,7 +3,8 @@
 import { esc } from './statico/pagina';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const SCRIPT = 'https://cloud.umami.is/script.js';
+/** L'indirizzo dello script di Umami Cloud: chi scrive il tag e chi lo riconosce usano questo. */
+export const SCRIPT_DI_UMAMI = 'https://cloud.umami.is/script.js';
 
 /** L'ID del sito Umami, o null se non c'è. Un valore che non è un UUID ferma la build: altrimenti non si conterebbe niente, senza saperlo. */
 export function idUmami(valore: string | undefined): string | null {
@@ -30,8 +31,8 @@ export function idDegliEndToEnd({ CI, AI_RADAR_UMAMI_ID }: { CI?: string; AI_RAD
  */
 export function scriptUmami(id: string, indirizzoBase: string): string {
   // gli attributi si scrivono come quelli delle pagine: un valore non controllato resta un valore, e non diventa HTML
-  return `<script defer src="${SCRIPT}" data-website-id="${esc(id)}" data-domains="${esc(new URL(indirizzoBase).hostname)}"></script>`;
+  return `<script defer src="${SCRIPT_DI_UMAMI}" data-website-id="${esc(id)}" data-domains="${esc(new URL(indirizzoBase).hostname)}"></script>`;
 }
 
 /** La pagina ha lo script di Umami, come lo scrive scriptUmami: l'app lo chiede alla pagina in cui gira, invece di farselo dire dalla build. */
-export const haLoScriptDiUmami = (pagina: Document): boolean => pagina.querySelector(`script[src="${SCRIPT}"]`) !== null;
+export const haLoScriptDiUmami = (pagina: Document): boolean => pagina.querySelector(`script[src="${SCRIPT_DI_UMAMI}"]`) !== null;

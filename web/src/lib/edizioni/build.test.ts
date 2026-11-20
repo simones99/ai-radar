@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { within } from '@testing-library/svelte';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
+import { ID, pagine, righeDelContatore, scriptDiUmami } from '../test/contatore';
 import { FIXTURE } from '../test/fixtures';
 import { scriviFilePubblici } from '../statico/cartella';
 import { creaEdizione, type Edizione } from '.';
@@ -196,13 +197,10 @@ describe('il sito costruito', () => {
   });
 
   describe('il contatore delle visite', () => {
-    const ID = 'bb5f6910-f64e-4045-879e-df65209b7ad5';
     const conUmami = () => join(cartella, 'con-umami');
     const fileFissi = () => join(cartella, 'dati', 'edizioni');
     /** Le pagine HTML di un sito costruito, per percorso. */
-    const pagine = (sito: string) =>
-      readdirSync(sito, { recursive: true, encoding: 'utf-8' }).filter((p) => p.endsWith('.html')).map((p) => [p, new DOMParser().parseFromString(readFileSync(join(sito, p), 'utf-8'), 'text/html')] as const);
-    const scriptDiUmami = (doc: Document) => [...doc.querySelectorAll('script[src*="umami"]')];
+    const pagineDelSito = (sito: string) => pagine(Object.fromEntries(readdirSync(sito, { recursive: true, encoding: 'utf-8' }).filter((p) => p.endsWith('.html')).map((p) => [p, readFileSync(join(sito, p), 'utf-8')])));
     let fissiPrima: Record<string, string>;
 
     beforeAll(() => {
@@ -211,7 +209,7 @@ describe('il sito costruito', () => {
     }, 300_000);
 
     it('con l’ID in AI_RADAR_UMAMI_ID ogni pagina, home compresa, ha nel <head> lo script di Umami, che conta solo sull’host dell’indirizzo base', () => {
-      const tutte = pagine(conUmami());
+      const tutte = pagineDelSito(conUmami());
       expect(tutte.map(([p]) => p.replaceAll('\\', '/'))).toEqual(expect.arrayContaining(['index.html', 'edizioni/index.html', 'edizioni/2026-10-12/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
       for (const [percorso, doc] of tutte) {
         const script = scriptDiUmami(doc);
@@ -224,22 +222,20 @@ describe('il sito costruito', () => {
 
     it('senza l’ID nessuna pagina ha lo script', () => {
       for (const sito of [conEdizioni(), senzaEdizioni()]) {
-        const tutte = pagine(sito);
+        const tutte = pagineDelSito(sito);
         expect(tutte.length).toBeGreaterThan(0);
         for (const [percorso, doc] of tutte) expect(scriptDiUmami(doc), percorso).toEqual([]);
       }
     });
 
     it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link all’informativa di Umami; senza, nessuna', () => {
-      // nel piè di pagina, come lo trova chi usa un lettore di schermo: la pagina letta non ha una finestra che calcoli gli stili, da qui hidden: true
-      const riga = (doc: Document) => within(within(doc.body).getByRole('contentinfo', { hidden: true })).queryAllByText(/Il sito conta le visite con/);
-      for (const [percorso, doc] of pagine(conUmami())) {
-        expect(riga(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
+      for (const [percorso, doc] of pagineDelSito(conUmami())) {
+        expect(righeDelContatore(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
           'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
         ]);
-        expect(within(riga(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
+        expect(within(righeDelContatore(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
       }
-      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagine(sito)) expect(riga(doc), percorso).toEqual([]);
+      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagineDelSito(sito)) expect(righeDelContatore(doc), percorso).toEqual([]);
     });
 
     it('i file fissi delle edizioni non cambiano, e nemmeno l’indice che legge la home', () => {

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
 import { indirizzoBase } from '../indirizzoBase';
+import { ID, pagine, piede, righeDelContatore, scriptDiUmami } from '../test/contatore';
 import { FIXTURE } from '../test/fixtures';
 import { FONTI_DEI_DATI } from '../text/fonti';
 import { filePubblici, type ContenutoStatico, type OpzioniFilePubblici } from '.';
@@ -486,121 +487,107 @@ describe('robots.txt', () => {
   });
 });
 
-describe('lo script di Umami', () => {
-  const ID = 'bb5f6910-f64e-4045-879e-df65209b7ad5';
+// lo script e la riga nascono dallo stesso ID, sulla stessa mappa
+describe('il contatore delle visite', () => {
   const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
-  /** Le voci HTML della mappa, lette come le legge un motore: senza eseguire niente. */
-  const pagine = (file: Record<string, string>) =>
-    Object.entries(file).filter(([percorso]) => percorso.endsWith('.html')).map(([percorso, html]) => [percorso, new DOMParser().parseFromString(html, 'text/html')] as const);
-  const scriptDiUmami = (doc: Document) => [...doc.querySelectorAll('script[src*="umami"]')];
 
-  it('con un ID ogni pagina, home compresa, ha nel <head> uno e un solo script di Umami Cloud, che conta solo sull’host pubblico del sito', () => {
-    for (const [base, host] of [['https://esempio.org/ai-radar/', 'esempio.org'], ['https://altro-utente.github.io/', 'altro-utente.github.io']]) {
-      const file = filePubblici(tutto, { ...opzioni, indirizzoBase: base, idUmami: ID });
+  describe('lo script di Umami', () => {
+    it('con un ID ogni pagina, home compresa, ha nel <head> uno e un solo script di Umami Cloud, che conta solo sull’host pubblico del sito', () => {
+      for (const [base, host] of [['https://esempio.org/ai-radar/', 'esempio.org'], ['https://altro-utente.github.io/', 'altro-utente.github.io']]) {
+        const file = filePubblici(tutto, { ...opzioni, indirizzoBase: base, idUmami: ID });
+        expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+        for (const [percorso, doc] of pagine(file)) {
+          const script = scriptDiUmami(doc);
+          expect(script, percorso).toHaveLength(1);
+          expect(script[0].parentElement, percorso).toBe(doc.head);
+          expect(script[0].getAttribute('src'), percorso).toBe('https://cloud.umami.is/script.js');
+          expect(script[0].hasAttribute('defer'), percorso).toBe(true);
+          expect(script[0].getAttribute('data-website-id'), percorso).toBe(ID);
+          expect(script[0].getAttribute('data-domains'), percorso).toBe(host);
+        }
+      }
+    });
+
+    it('con un ID, una pagina senza <head> chiuso è un errore che la nomina, invece di uscire senza lo script e senza dirlo', () => {
+      const home = HOME.replace('</head>', '');
+      expect(() => filePubblici(tutto, { ...opzioni, home, idUmami: ID })).toThrow(/index\.html/);
+      // senza ID non c'è niente da aggiungere
+      expect(() => filePubblici(tutto, { ...opzioni, home })).not.toThrow();
+    });
+
+    it('senza ID nessuna pagina ha lo script', () => {
+      for (const idUmami of [undefined, null]) {
+        const file = pagine(filePubblici(tutto, { ...opzioni, idUmami }));
+        expect(file.length).toBeGreaterThan(0);
+        for (const [percorso, doc] of file) expect(scriptDiUmami(doc), percorso).toEqual([]);
+      }
+    });
+
+    it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID', () => {
+      const testa = (doc: Document) => ({
+        titolo: doc.title,
+        meta: [...doc.head.querySelectorAll('meta[name], meta[property]')].map((m) => [m.getAttribute('name') ?? m.getAttribute('property'), m.getAttribute('content')]),
+        link: [...doc.head.querySelectorAll('link')].map((l) => [l.getAttribute('rel'), l.getAttribute('href')]),
+      });
+      const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+        expect(testa(doc).meta.length, percorso).toBeGreaterThan(0);
+        expect(testa(doc), percorso).toEqual(testa(senza[percorso]));
+      }
+    });
+
+    it('i file che non sono pagine restano identici con e senza ID: il feed, la sitemap e l’indice delle edizioni', () => {
+      const nonPagine = (file: Record<string, string>) => Object.fromEntries(Object.entries(file).filter(([percorso]) => !percorso.endsWith('.html')));
+      const con = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
+      expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'sitemap.xml', 'data/edizioni.json']));
+      expect(con).toEqual(nonPagine(filePubblici(tutto, opzioni)));
+    });
+  });
+
+  describe('la riga sul contatore', () => {
+    const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.';
+    const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
+
+    it('con un ID ogni pagina statica e la home in chiaro hanno in fondo la riga, con «Umami» che porta alla sua informativa come gli altri link esterni', () => {
+      const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
       expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
       for (const [percorso, doc] of pagine(file)) {
-        const script = scriptDiUmami(doc);
-        expect(script, percorso).toHaveLength(1);
-        expect(script[0].parentElement, percorso).toBe(doc.head);
-        expect(script[0].getAttribute('src'), percorso).toBe('https://cloud.umami.is/script.js');
-        expect(script[0].hasAttribute('defer'), percorso).toBe(true);
-        expect(script[0].getAttribute('data-website-id'), percorso).toBe(ID);
-        expect(script[0].getAttribute('data-domains'), percorso).toBe(host);
+        const riga = righeDelContatore(doc);
+        expect(riga, percorso).toHaveLength(1);
+        expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
+        const link = within(riga[0]).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
+        expect(link, percorso).toEqual([['Umami', 'https://umami.is/privacy', '_blank', 'noopener']]);
       }
-    }
-  });
-
-  it('con un ID, una pagina senza <head> chiuso è un errore che la nomina, invece di uscire senza lo script e senza dirlo', () => {
-    const home = HOME.replace('</head>', '');
-    expect(() => filePubblici(tutto, { ...opzioni, home, idUmami: ID })).toThrow(/index\.html/);
-    // senza ID non c'è niente da aggiungere
-    expect(() => filePubblici(tutto, { ...opzioni, home })).not.toThrow();
-  });
-
-  it('senza ID nessuna pagina ha lo script', () => {
-    for (const idUmami of [undefined, null]) {
-      const file = pagine(filePubblici(tutto, { ...opzioni, idUmami }));
-      expect(file.length).toBeGreaterThan(0);
-      for (const [percorso, doc] of file) expect(scriptDiUmami(doc), percorso).toEqual([]);
-    }
-  });
-
-  it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID', () => {
-    const testa = (doc: Document) => ({
-      titolo: doc.title,
-      meta: [...doc.head.querySelectorAll('meta[name], meta[property]')].map((m) => [m.getAttribute('name') ?? m.getAttribute('property'), m.getAttribute('content')]),
-      link: [...doc.head.querySelectorAll('link')].map((l) => [l.getAttribute('rel'), l.getAttribute('href')]),
     });
-    const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
-    for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
-      expect(testa(doc).meta.length, percorso).toBeGreaterThan(0);
-      expect(testa(doc), percorso).toEqual(testa(senza[percorso]));
-    }
-  });
 
-  it('i file che non sono pagine restano identici con e senza ID: il feed, la sitemap e l’indice delle edizioni', () => {
-    const nonPagine = (file: Record<string, string>) => Object.fromEntries(Object.entries(file).filter(([percorso]) => !percorso.endsWith('.html')));
-    const con = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
-    expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'sitemap.xml', 'data/edizioni.json']));
-    expect(con).toEqual(nonPagine(filePubblici(tutto, opzioni)));
-  });
-});
-
-describe('la riga sul contatore', () => {
-  const ID = 'bb5f6910-f64e-4045-879e-df65209b7ad5';
-  const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.';
-  const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
-  const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
-  /** Le voci HTML della mappa, lette come le legge un motore: senza eseguire niente. */
-  const pagine = (file: Record<string, string>) =>
-    Object.entries(file).filter(([percorso]) => percorso.endsWith('.html')).map(([percorso, html]) => [percorso, new DOMParser().parseFromString(html, 'text/html')] as const);
-  /**
-   * Il piè di pagina, come lo trova chi usa un lettore di schermo. hidden: true perché la pagina letta non ha una finestra che calcoli
-   * gli stili; che la riga non sia nascosta lo prova la sua prova.
-   */
-  const piede = (doc: Document) => within(doc.body).getByRole('contentinfo', { hidden: true });
-  /** Le righe del piè di pagina che parlano del contatore. */
-  const righe = (doc: Document) => within(piede(doc)).queryAllByText(/Il sito conta le visite con/);
-
-  it('con un ID ogni pagina statica e la home in chiaro hanno in fondo la riga, con «Umami» che porta alla sua informativa come gli altri link esterni', () => {
-    const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
-    expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
-    for (const [percorso, doc] of pagine(file)) {
-      const riga = righe(doc);
-      expect(riga, percorso).toHaveLength(1);
-      expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
-      const link = within(riga[0]).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
-      expect(link, percorso).toEqual([['Umami', 'https://umami.is/privacy', '_blank', 'noopener']]);
-    }
-  });
-
-  it('nelle pagine statiche sta accanto a «Il progetto non è affiliato a nessuna delle fonti», nella home in chiaro accanto alle fonti dei dati', () => {
-    for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
-      expect(righe(doc), percorso).toHaveLength(1);
-      const fondo = pulito(piede(doc).textContent);
-      expect(fondo, percorso).toContain('Il progetto non è affiliato a nessuna delle fonti.');
-      if (percorso === 'index.html') expect(fondo).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
-    }
-  });
-
-  it('senza ID la riga non c’è in nessuna voce della mappa', () => {
-    for (const idUmami of [undefined, null]) {
-      for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
-        const file = filePubblici(contenuto, { ...opzioni, idUmami });
-        expect(Object.keys(file).length).toBeGreaterThan(0);
-        for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|umami\.is\/privacy/);
+    it('nelle pagine statiche sta accanto a «Il progetto non è affiliato a nessuna delle fonti», nella home in chiaro accanto alle fonti dei dati', () => {
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+        expect(righeDelContatore(doc), percorso).toHaveLength(1);
+        const fondo = pulito(piede(doc).textContent);
+        expect(fondo, percorso).toContain('Il progetto non è affiliato a nessuna delle fonti.');
+        if (percorso === 'index.html') expect(fondo).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
       }
-    }
-  });
+    });
 
-  it('è testo normale del piè di pagina: niente di nascosto, e la navigazione resta quella senza ID', () => {
-    const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
-    const nav = (doc: Document) => within(doc.body).queryAllByRole('navigation', { hidden: true }).map((n) => n.outerHTML);
-    for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
-      const riga = righe(doc)[0];
-      expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();
-      expect(riga.querySelectorAll('[hidden], [aria-hidden]'), percorso).toHaveLength(0);
-      expect(nav(doc), percorso).toEqual(nav(senza[percorso]));
-    }
+    it('senza ID la riga non c’è in nessuna voce della mappa', () => {
+      for (const idUmami of [undefined, null]) {
+        for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
+          const file = filePubblici(contenuto, { ...opzioni, idUmami });
+          expect(Object.keys(file).length).toBeGreaterThan(0);
+          for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|umami\.is\/privacy/);
+        }
+      }
+    });
+
+    it('è testo normale del piè di pagina: niente di nascosto, e la navigazione resta quella senza ID', () => {
+      const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
+      const nav = (doc: Document) => within(doc.body).queryAllByRole('navigation', { hidden: true }).map((n) => n.outerHTML);
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+        const riga = righeDelContatore(doc)[0];
+        expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();
+        expect(riga.querySelectorAll('[hidden], [aria-hidden]'), percorso).toHaveLength(0);
+        expect(nav(doc), percorso).toEqual(nav(senza[percorso]));
+      }
+    });
   });
 });

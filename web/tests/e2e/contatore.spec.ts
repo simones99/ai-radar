@@ -12,9 +12,9 @@ import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
 import { indirizzoBase } from '../../src/lib/indirizzoBase';
 import { filePubblici, foglioDellaHome } from '../../src/lib/statico';
 import { FIXTURE } from '../../src/lib/test/fixtures';
+import { SCRIPT_DI_UMAMI } from '../../src/lib/umami';
 
 const ID = process.env.AI_RADAR_UMAMI_ID!;
-const SCRIPT = 'https://cloud.umami.is/script.js';
 const HOST = new URL(indirizzoBase(process.env.AI_RADAR_BASE_URL)).hostname;
 const DATI = process.env.AI_RADAR_DATA_DIR ?? fileURLToPath(new URL('../../../data', import.meta.url));
 const COMPETENZA = leggiDati(DATI, ['radar']).radar?.competenze[0]?.id;
@@ -44,12 +44,12 @@ for (const [nome, indirizzo] of [['la home', '/'], ['un’edizione', EDIZIONE], 
   test(`${nome} ha lo script di Umami, e in locale non manda niente a Umami`, async ({ page }) => {
     if (indirizzo.startsWith('/competenze/')) expect(COMPETENZA, 'nella cartella dei dati non ci sono competenze').toBeTruthy();
     const richieste = await richiesteVersoUmami(page, indirizzo);
-    const script = page.locator(`head script[src="${SCRIPT}"]`);
+    const script = page.locator(`head script[src="${SCRIPT_DI_UMAMI}"]`);
     await expect(script).toHaveCount(1);
     await expect(script).toHaveAttribute('data-website-id', ID);
     await expect(script).toHaveAttribute('data-domains', HOST);
     // il browser va a prendere lo script, e basta: nessun invio
-    expect(richieste).toEqual([`GET ${SCRIPT}`]);
+    expect(richieste).toEqual([`GET ${SCRIPT_DI_UMAMI}`]);
   });
 }
 

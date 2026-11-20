@@ -27,7 +27,8 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──┬─► 
 2. **Prepara le impostazioni prima di caricare i file**, perché il primo caricamento avvia subito il workflow:
    - *Settings → Pages → Build and deployment → Source:* **GitHub Actions**;
    - *Settings → Actions → General → Workflow permissions →* **Read and write permissions** (serve al workflow per salvare i dati nel repository);
-   - le chiavi facoltative in *Settings → Secrets and variables → Actions → New repository secret* (vedi sotto). Senza chiavi la dashboard funziona lo stesso; i due grafici che ne hanno bisogno spiegano cosa manca.
+   - le chiavi facoltative in *Settings → Secrets and variables → Actions → New repository secret* (vedi sotto). Senza chiavi la dashboard funziona lo stesso; i due grafici che ne hanno bisogno spiegano cosa manca;
+   - se vuoi contare le visite, la variabile facoltativa `UMAMI_WEBSITE_ID` in *Settings → Secrets and variables → Actions → Variables* (vedi [Le visite](#le-visite)). Senza, il sito non conta niente.
 3. **Carica i file.** Dalla cartella del progetto:
    ```bash
    git init -b main
@@ -111,6 +112,40 @@ Un'edizione esistente non si sovrascrive. Senza dati in tutte e due le porte l'e
 3. Fai il commit dei due file e il push: il push ripubblica il sito.
 
 Pagina e voce del feed mostrano «Corretta il…» con il testo della correzione. L'identificativo della voce non cambia, quindi i lettori di feed non la segnalano come nuova.
+
+## Le visite
+
+Il sito conta le visite con [Umami Cloud](https://umami.is), sul piano Hobby gratuito, con la regione dei dati UE. Il contatore non usa cookie, e le statistiche non contengono indirizzi IP. Lo script sta in ogni pagina HTML del sito: l'app, la home in chiaro, le edizioni con l'archivio, le pagine delle competenze con l'indice. In fondo a ogni pagina una riga dice a chi legge che il sito conta le visite, con il link all'[informativa di Umami](https://umami.is/privacy). Perché Umami, e cosa si accetta in privacy, è in [`docs/adr/0004-visite-contate-con-umami-cloud.md`](docs/adr/0004-visite-contate-con-umami-cloud.md).
+
+I numeri delle visite non si pubblicano, né qui né nel sito, e il pannello di Umami non ha un link pubblico.
+
+**L'ID del sito.** Sta nella variabile del repository `UMAMI_WEBSITE_ID`, in *Settings → Secrets and variables → Actions → Variables*. È una variabile e non un secret, perché finisce comunque nell'HTML pubblico. Il workflow *Aggiorna e pubblica* la passa alla build come `AI_RADAR_UMAMI_ID`.
+
+- Per cambiare l'ID si cambia il valore della variabile. Per togliere il contatore si cancella la variabile: il sito esce senza script e senza riga. In tutti e due i casi il cambio vale dalla pubblicazione successiva, con un push o un avvio manuale.
+- Un valore che non è un UUID ferma la build con un messaggio che nomina la variabile, e resta pubblicato il sito di prima.
+- In locale la build ha il contatore solo con `AI_RADAR_UMAMI_ID` impostata. Anche così lo script conta solo sull'host dell'indirizzo base, quindi le prove in locale e gli end-to-end non mandano niente a Umami.
+
+**Le proprie visite.** Per non contarle, apri il sito pubblicato, poi la console del browser, e scrivi `localStorage.setItem('umami.disabled', 1)`. Va fatto su ogni browser e su ogni dispositivo. Per tornare a contarle: `localStorage.removeItem('umami.disabled')`.
+
+**In una copia del progetto.** Senza la variabile `UMAMI_WEBSITE_ID` il contatore resta spento: nessuno script, nessuna riga, niente arriva a Umami. Per accenderne uno tuo:
+
+1. apri un account su [Umami Cloud](https://cloud.umami.is) e aggiungi un sito con il dominio della tua copia, per esempio `<tuo-utente>.github.io`;
+2. copia il suo ID, il valore di `data-website-id` nel codice di tracciamento, nella variabile del repository `UMAMI_WEBSITE_ID`;
+3. ripubblica il sito, con un push o un avvio manuale.
+
+Lo script conta solo sull'host del tuo indirizzo base. La riga in pagina dice che le statistiche sono conservate in UE: se scegli un'altra regione, o un altro servizio, va cambiata.
+
+**Le tre misure del lunedì.** Ogni lunedì, nel pannello di Umami, sulla settimana da lunedì a domenica appena finita:
+
+1. **le visite alla home**: le visite della pagina `/ai-radar/`;
+2. **le visite alle edizioni e alle competenze**: le visite delle pagine sotto `/ai-radar/edizioni/` e, a parte, di quelle sotto `/ai-radar/competenze/`;
+3. **le visite di ritorno**: nel report *Retention*, chi era già passato in un'altra settimana dello stesso mese.
+
+Il ritorno vale solo dentro il mese di calendario: Umami riconosce un visitatore con un sale che cambia ogni mese, quindi a inizio mese chi torna conta come nuovo e i ritorni ripartono da zero.
+
+Le soglie delle tre misure si fissano dopo quattro settimane piene di dati, non prima. La prima settimana dopo l'accensione è parziale: le quattro settimane partono dal primo lunedì pieno.
+
+Il piano Hobby conta fino a 100.000 eventi al mese e conserva i dati 6 mesi. L'uso si controlla nel pannello di Umami, in *Settings → Usage*.
 
 ## Personalizzare
 

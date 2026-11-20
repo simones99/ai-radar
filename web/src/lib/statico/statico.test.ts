@@ -529,15 +529,18 @@ describe('la pagina Privacy', () => {
 
     it('dice cosa raccoglie Umami, che non ci sono cookie, la base giuridica, i 6 mesi, Umami come responsabile e dove sono i dati', () => {
       const raccolta = pulito(sezione('Cosa si raccoglie e perché').textContent);
-      for (const frase of ['l’indirizzo e il titolo della pagina', 'la pagina da cui arrivi', 'la lingua del browser', 'la dimensione dello schermo', 'il browser, il sistema operativo e il tipo di dispositivo', 'una posizione approssimativa', 'un sale che cambia ogni mese', 'le statistiche non lo contengono', 'non usa cookie', 'il sito funziona lo stesso']) {
+      for (const frase of ['l’indirizzo e il titolo della pagina', 'la pagina da cui arrivi', 'la lingua del browser', 'la dimensione dello schermo', 'la data e l’ora della visita', 'il browser, il sistema operativo e il tipo di dispositivo', 'una posizione approssimativa', 'un sale che cambia ogni mese', 'le statistiche non lo contengono', 'non usa cookie', 'il sito funziona lo stesso']) {
         expect(raccolta).toContain(frase);
       }
       expect(pulito(sezione('Base giuridica').textContent)).toContain('legittimo interesse del titolare a capire se e come il sito viene letto (art. 6, par. 1, lett. f del GDPR)');
       expect(pulito(sezione('Per quanto tempo').textContent)).toContain('Le statistiche restano su Umami 6 mesi');
       const responsabile = sezione('Chi tratta i dati per conto del titolare');
-      expect(pulito(responsabile.textContent)).toContain('Umami Software, Inc. tratta i dati delle visite per conto del titolare con il servizio Umami Cloud, come responsabile del trattamento.');
+      expect(pulito(responsabile.textContent)).toContain('Umami Software, Inc., con sede a San Francisco, negli Stati Uniti, tratta i dati delle visite per conto del titolare con il servizio Umami Cloud, come responsabile del trattamento, secondo il suo accordo sul trattamento dei dati.');
       expect(pulito(responsabile.textContent)).toContain('Le statistiche sono conservate in UE.');
-      expect(link(responsabile)).toEqual([['informativa sulla privacy', 'https://umami.is/privacy'], ['elenco dei suoi sub-responsabili', 'https://umami.is/subprocessors']]);
+      expect(pulito(responsabile.textContent)).toContain('possono essere trasferiti negli Stati Uniti con le clausole contrattuali tipo dell’UE');
+      expect(link(responsabile)).toEqual([
+        ['accordo sul trattamento dei dati', 'https://umami.is/dpa'], ['informativa sulla privacy', 'https://umami.is/privacy'], ['elenco dei suoi sub-responsabili', 'https://umami.is/subprocessors'],
+      ]);
       expect(link(sezione('Chi ospita il sito')).map(([, href]) => href)).toEqual([
         'https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection',
         'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',

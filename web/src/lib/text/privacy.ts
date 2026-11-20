@@ -43,7 +43,7 @@ export const PRIVACY: TestoDellaPrivacy = {
       titolo: 'Cosa si raccoglie e perché',
       paragrafi: [
         ['Il sito conta le visite con Umami Cloud, per sapere quante persone leggono la home, le edizioni e le competenze, e quante tornano.'],
-        ['A ogni pagina aperta lo script di Umami manda l’indirizzo e il titolo della pagina, la pagina da cui arrivi, la lingua del browser e la dimensione dello schermo. Dalla richiesta Umami ricava il browser, il sistema operativo e il tipo di dispositivo, e dall’indirizzo IP una posizione approssimativa: paese, regione e città.'],
+        ['A ogni pagina aperta lo script di Umami manda l’indirizzo e il titolo della pagina, la pagina da cui arrivi, la lingua del browser e la dimensione dello schermo. Umami registra la data e l’ora della visita, e dalla richiesta ricava il browser, il sistema operativo e il tipo di dispositivo, e dall’indirizzo IP una posizione approssimativa: paese, regione e città.'],
         ['Per riconoscere chi torna, Umami calcola un codice del visitatore con un hash dell’indirizzo IP e del browser, insieme a un sale che cambia ogni mese. L’indirizzo IP serve al calcolo, ma le statistiche non lo contengono.'],
         ['Il contatore non usa cookie e non scrive niente nel tuo browser. I numeri si guardano solo tutti insieme, e non si incrociano con altri dati.'],
         ['Puoi bloccare lo script con un ad-blocker o con le impostazioni del browser: il sito funziona lo stesso.'],
@@ -66,8 +66,8 @@ export const PRIVACY: TestoDellaPrivacy = {
     {
       titolo: 'Chi tratta i dati per conto del titolare',
       paragrafi: [
-        ['Umami Software, Inc. tratta i dati delle visite per conto del titolare con il servizio Umami Cloud, come responsabile del trattamento.'],
-        ['Le statistiche sono conservate in UE. Rete di distribuzione, sicurezza, assistenza e log possono passare da servizi fuori dall’UE.'],
+        ['Umami Software, Inc., con sede a San Francisco, negli Stati Uniti, tratta i dati delle visite per conto del titolare con il servizio Umami Cloud, come responsabile del trattamento, secondo il suo ', { testo: 'accordo sul trattamento dei dati', url: 'https://umami.is/dpa' }, '.'],
+        ['Le statistiche sono conservate in UE. Rete di distribuzione, sicurezza, assistenza e log possono passare da servizi fuori dall’UE: alcuni dati possono essere trasferiti negli Stati Uniti con le clausole contrattuali tipo dell’UE, che l’accordo comprende.'],
         ['Le regole di Umami sono nella sua ', { testo: 'informativa sulla privacy', url: INFORMATIVA_DI_UMAMI }, ', e i fornitori di cui si serve nell’', { testo: 'elenco dei suoi sub-responsabili', url: 'https://umami.is/subprocessors' }, '.'],
       ],
     },

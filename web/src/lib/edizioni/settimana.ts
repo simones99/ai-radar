@@ -1,7 +1,7 @@
 // Le porte e le card della settimana dei dati, senza il confronto con la settimana prima: l'edizione ci aggiunge il confronto, la home in chiaro no.
 import type { Dataset } from '../data/types';
 import type { TileId } from '../router';
-import { lunediDi, parseDay } from '../text/format';
+import { isDay, lunediDi, parseDay } from '../text/format';
 import {
   doorItalia, doorPerTe, faceBusiness, faceCompetenze, faceGeopoliticai, faceModelli, faceNorme, faceNotizie, faceOpen, facePersone, faceRapporti,
   type Door, type Face,
@@ -56,13 +56,18 @@ function frase(c: (typeof CARD)[number], d: Dataset, oggi: Date): CardDellaSetti
   return { id: c.id, nome: c.nome, testa: c.testa, cifra: f?.fig ?? null, unita: f?.unit ?? null, frase: f?.sent ?? null, destinazione, fonti: fontiDi(d, oggi, destinazione) };
 }
 
+/** Un istante di raccolta che si legge per intero e comincia con un giorno che esiste: da qui nascono la settimana, le date delle pagine, del feed e della sitemap. */
+export const raccoltaValida = (raccolti: string | undefined): raccolti is string =>
+  !!raccolti && !Number.isNaN(Date.parse(raccolti)) && isDay(raccolti.slice(0, 10));
+
 /**
  * Le due porte e le nove card della settimana dei dati, nella vista di partenza. La data delle frasi è quella dei dati, mai l'orologio.
- * Null solo senza dati sulla settimana, cioè senza status.aggiornato: una porta o una card senza dati resta, vuota.
+ * Null solo senza dati sulla settimana: senza status.aggiornato, o con un istante che non si legge o che non comincia con un giorno che esiste,
+ * la stessa regola con cui il sito accetta un'edizione. Meglio nessuna settimana che una sbagliata. Una porta o una card senza dati resta, vuota.
  */
 export function settimanaDeiDati(d: Dataset): SettimanaDeiDati | null {
   const raccolti = d.status?.aggiornato;
-  if (!raccolti) return null;
+  if (!raccoltaValida(raccolti)) return null;
   const oggi = parseDay(raccolti);
   return {
     settimana: lunediDi(raccolti),

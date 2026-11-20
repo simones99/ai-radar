@@ -58,6 +58,12 @@ describe('la settimana dei dati', () => {
     expect(settimanaDeiDati({})).toBeNull();
   });
 
+  it('con una data di raccolta illeggibile, o un giorno che non esiste, non c’è una settimana: meglio nessuna che una sbagliata', () => {
+    for (const aggiornato of ['Nov 9 2026', '2026-02-30T06:15:00+00:00', '2026-11-09 alle sei', 'ieri', '']) {
+      expect(settimanaDeiDati({ ...d, status: { ...d.status!, aggiornato } }), aggiornato).toBeNull();
+    }
+  });
+
   it('con solo lo stato ci sono lo stesso le porte e le nove card, tutte senza dati', () => {
     const s = leggi({ status: d.status });
     expect(s.porte.map((p) => [p.id, p.titolo, p.meta, p.destinazione])).toEqual([['per-te', [], 'Dati non disponibili', null], ['italia', [], 'Dati non disponibili', null]]);

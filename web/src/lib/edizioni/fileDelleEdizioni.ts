@@ -2,6 +2,7 @@
 import { INDICE_EDIZIONI } from '../data/load';
 import { isDay } from '../text/format';
 import { feed } from './feed';
+import { raccoltaValida } from './settimana';
 import type { OpzioniPagine } from '../statico/pagina';
 import { archivio, paginaEdizione } from './pagine';
 import { VERSIONE, type Edizione } from './tipi';
@@ -9,7 +10,7 @@ import { VERSIONE, type Edizione } from './tipi';
 function controlla(e: Edizione): void {
   if (e.versione !== VERSIONE) throw new Error(`Edizione ${e.settimana}: versione ${e.versione} sconosciuta, il sito conosce la ${VERSIONE}.`);
   // l'istante intero deve essere leggibile e il giorno con cui comincia deve esistere: è quello che le pagine, il feed e la sitemap scrivono
-  if (Number.isNaN(Date.parse(e.raccolti)) || !isDay(e.raccolti.slice(0, 10))) {
+  if (!raccoltaValida(e.raccolti)) {
     throw new Error(`Edizione ${e.settimana}: la data di raccolta non è valida, «${e.raccolti}»: serve un istante che comincia con AAAA-MM-GG.`);
   }
   for (const c of e.correzioni) {

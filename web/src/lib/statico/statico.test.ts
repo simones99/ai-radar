@@ -79,6 +79,14 @@ describe('la home in chiaro', () => {
     expect(doc.querySelectorAll('h1')).toHaveLength(1);
   });
 
+  it('con una data di raccolta illeggibile, o un giorno che non esiste, la build esce lo stesso, senza scrivere una settimana sbagliata', () => {
+    for (const aggiornato of ['Nov 9 2026', '2026-02-30T06:15:00+00:00']) {
+      const doc = leggi({ edizioni: [], dataset: { ...d, status: { ...d.status!, aggiornato } } });
+      expect(titoli(doc, 1), aggiornato).toEqual([FRASE_DI_APERTURA]);
+      expect(pulito(testo(doc).textContent), aggiornato).not.toContain('Settimana del');
+    }
+  });
+
   it('con tutti i dati ha la settimana dei dati, la frase come unico h1 e le due porte con la loro notizia', () => {
     const doc = leggi({ edizioni: [edizione], dataset: d });
     const app = pulito(testo(doc).textContent);

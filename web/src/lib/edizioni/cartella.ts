@@ -3,7 +3,7 @@ import { copyFileSync, existsSync, readdirSync, readFileSync, rmSync } from 'nod
 import { join } from 'node:path';
 import { leggiDati, scrivi } from '../data/cartella';
 import { lunediDi } from '../text/format';
-import { creaEdizione, deveCreare, IMMAGINE } from '.';
+import { creaEdizione, deveCreare, IMMAGINE, raccoltaValida } from '.';
 import type { Edizione } from './tipi';
 
 /** Tutte le edizioni salvate; se la cartella non c'è ancora, nessuna. Il nome del file è l'indirizzo della pagina: deve essere la sua settimana. */
@@ -53,12 +53,12 @@ export interface Giro {
 export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro): Promise<{ messaggio: string; creata?: string }> {
   const status = join(dati, 'status.json');
   const aggiornato: string | undefined = existsSync(status) ? JSON.parse(readFileSync(status, 'utf-8')).aggiornato : undefined;
-  const settimana = aggiornato ? lunediDi(aggiornato) : null;
+  const settimana = raccoltaValida(aggiornato) ? lunediDi(aggiornato) : null;
   const esiste = !!settimana && existsSync(fileFisso(dati, settimana));
   if (!deveCreare({ evento, casella, esiste })) {
     return { messaggio: esiste ? `Nessuna edizione nuova: quella del ${settimana} esiste già.` : `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.` };
   }
-  if (!settimana) throw new Error('Edizione non creata: i dati sono senza data, in status.json.');
+  if (!settimana) throw new Error('Edizione non creata: i dati sono senza una data valida, in status.json.');
   // l'edizione con cui confrontarsi: la più recente tra quelle uscite prima di questa settimana
   const precedente = leggiEdizioni(dati).filter((e) => e.settimana < settimana).sort((a, b) => a.settimana.localeCompare(b.settimana)).at(-1) ?? null;
   const edizione = creaEdizione(leggiDati(dati), precedente);

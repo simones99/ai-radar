@@ -1,5 +1,5 @@
 // Il comando quando non arriva a fare un'immagine, quindi senza Chromium. Quando la fa: comando.browser.test.ts, con gli end-to-end.
-import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { comandoSuDatiDiProva } from '../test/comando';
@@ -34,6 +34,16 @@ describe('il comando che fissa l’edizione, senza browser', { timeout: 60_000 }
   it('un push non crea nemmeno senza lo stato delle fonti, e non è un errore', () => {
     rmSync(join(dati(), 'status.json'));
     expect(lancia('push').status).toBe(0);
+  });
+
+  it('con una data di raccolta illeggibile un push non crea e non è un errore; il lunedì l’edizione non esce, e il giro dice perché', () => {
+    const status = join(dati(), 'status.json');
+    writeFileSync(status, JSON.stringify({ ...JSON.parse(readFileSync(status, 'utf-8')), aggiornato: 'Nov 9 2026' }));
+    expect(lancia('push').status).toBe(0);
+    const giro = lancia('schedule');
+    expect(giro.status).toBe(1);
+    expect(giro.stderr).toMatch(/senza una data valida/);
+    expect(existsSync(edizioni()) ? readdirSync(edizioni()) : []).toEqual([]);
   });
 
   it('l’avvio manuale con la casella spenta non crea', () => {

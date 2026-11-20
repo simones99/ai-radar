@@ -10,6 +10,18 @@ export function idUmami(valore: string | undefined): string | null {
   return valore;
 }
 
+/** Un ID che nessun sito Umami ha: gli end-to-end in locale lo usano perché le prove del contatore girino, e non conta niente. */
+const ID_DI_PROVA = '00000000-0000-4000-8000-000000000000';
+
+/**
+ * L'ID con cui gira la build degli end-to-end. Nel workflow (CI) è la build che viene pubblicata: ha solo l'ID del repository, e senza
+ * la variabile esce senza contatore, come il sito. In locale, senza un ID, ne usa uno di prova.
+ */
+export function idDegliEndToEnd({ CI, AI_RADAR_UMAMI_ID }: { CI?: string; AI_RADAR_UMAMI_ID?: string }): string {
+  if (AI_RADAR_UMAMI_ID) return AI_RADAR_UMAMI_ID;
+  return CI ? '' : ID_DI_PROVA;
+}
+
 /**
  * Lo script di Umami Cloud per il <head> di una pagina, con i valori predefiniti di Umami per tutto il resto. Conta solo sull'host
  * dell'indirizzo base: le prove in locale, gli end-to-end e le copie pubblicate altrove con lo stesso ID non mandano niente.

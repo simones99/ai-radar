@@ -54,6 +54,9 @@ def test_l_id_di_umami_arriva_dalla_variabile_del_repository_a_tutto_il_job_comp
     assert aggiorna["env"]["AI_RADAR_UMAMI_ID"] == "${{ vars.UMAMI_WEBSITE_ID }}"
     assert all("AI_RADAR_UMAMI_ID" not in p.get("env", {}) for p in aggiorna["steps"])
     assert "npm run e2e" in passo("Test end-to-end")["run"]
+    # la build degli end-to-end usa l'ID di prova solo fuori dal workflow, e lo sa da CI, che GitHub dà a ogni job: nessuno lo spegne
+    workflow = yaml.safe_load((WORKFLOWS / "aggiorna.yml").read_text(encoding="utf-8"))
+    assert all("CI" not in ambiente.get("env", {}) for ambiente in [workflow, aggiorna, *aggiorna["steps"]])
 
 
 def test_i_test_prima_della_raccolta_non_usano_il_browser():

@@ -1,6 +1,7 @@
 // Il contatore delle visite sul sito costruito, che è quello che viene pubblicato: ogni pagina ha lo script di Umami, e servita in locale
 // non manda niente, perché lo script conta solo sull'host pubblico del sito. L'edizione di prova nasce dal FIXTURE, come in edizioni.spec.ts,
-// con lo stesso ID e lo stesso indirizzo base della build. L'ID, se il repository non lo dà, è quello di prova di playwright.config.ts.
+// con lo stesso ID e lo stesso indirizzo base della build. L'ID lo sceglie playwright.config.ts: in locale, se manca, è uno di prova; nel workflow
+// è solo quello del repository, e senza la build esce senza contatore: queste prove si saltano, e senza-contatore.spec.ts prova che non c'è.
 // Le stesse pagine, senza JavaScript, hanno in fondo la riga che lo dice a chi legge.
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
@@ -19,6 +20,8 @@ const DATI = process.env.AI_RADAR_DATA_DIR ?? fileURLToPath(new URL('../../../da
 const COMPETENZA = leggiDati(DATI, ['radar']).radar?.competenze[0]?.id;
 const edizione = creaEdizione(FIXTURE as Dataset, null) as Edizione;
 const EDIZIONE = `/edizioni/${edizione.settimana}/`;
+
+test.skip(!ID, 'nel workflow senza la variabile UMAMI_WEBSITE_ID la build degli end-to-end, che è quella pubblicata, esce senza contatore');
 
 test.beforeEach(async ({ page, request }) => {
   const home = await (await request.get('/')).text();
@@ -39,7 +42,6 @@ async function richiesteVersoUmami(page: Page, indirizzo: string): Promise<strin
 
 for (const [nome, indirizzo] of [['la home', '/'], ['un’edizione', EDIZIONE], ['una pagina di competenza', `/competenze/${COMPETENZA}/`]] as const) {
   test(`${nome} ha lo script di Umami, e in locale non manda niente a Umami`, async ({ page }) => {
-    expect(ID, 'manca l’ID di Umami: lo dà playwright.config.ts').toBeTruthy();
     if (indirizzo.startsWith('/competenze/')) expect(COMPETENZA, 'nella cartella dei dati non ci sono competenze').toBeTruthy();
     const richieste = await richiesteVersoUmami(page, indirizzo);
     const script = page.locator(`head script[src="${SCRIPT}"]`);

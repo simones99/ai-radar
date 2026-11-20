@@ -1,8 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
+import { idDegliEndToEnd } from './src/lib/umami';
 
-// La build degli end-to-end ha lo script di Umami, come quella pubblicata: con l'ID del repository nel workflow, con uno di prova in locale.
-// Qui non conta niente, perché lo script conta solo sull'host pubblico del sito. Lo leggono anche le prove, che girano con questo stesso ambiente
-process.env.AI_RADAR_UMAMI_ID ||= '00000000-0000-4000-8000-000000000000';
+// La build degli end-to-end è quella pubblicata: nel workflow ha lo script di Umami solo con l'ID del repository, e senza la variabile esce
+// senza contatore, e le prove del contatore si saltano. In locale, senza un ID, ne usa uno di prova, che non conta niente perché lo script
+// conta solo sull'host pubblico del sito. Lo leggono anche le prove, che girano con questo stesso ambiente
+process.env.AI_RADAR_UMAMI_ID = idDegliEndToEnd(process.env);
 
 export default defineConfig({
   testDir: 'tests/e2e',

@@ -229,6 +229,16 @@ describe('il sito costruito', () => {
       }
     });
 
+    it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link all’informativa di Umami; senza, nessuna', () => {
+      const riga = (doc: Document) => [...doc.querySelectorAll('footer p')].filter((p) => p.querySelector('a[href="https://umami.is/privacy"]'));
+      for (const [percorso, doc] of pagine(conUmami())) {
+        expect(riga(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
+          'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
+        ]);
+      }
+      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagine(sito)) expect(riga(doc), percorso).toEqual([]);
+    });
+
     it('i file fissi delle edizioni non cambiano, e nemmeno l’indice che legge la home', () => {
       expect(Object.fromEntries(readdirSync(fileFissi()).map((f) => [f, readFileSync(join(fileFissi(), f), 'utf-8')]))).toEqual(fissiPrima);
       expect(readFileSync(join(conUmami(), 'data', 'edizioni.json'), 'utf-8')).toBe(readFileSync(join(conEdizioni(), 'data', 'edizioni.json'), 'utf-8'));

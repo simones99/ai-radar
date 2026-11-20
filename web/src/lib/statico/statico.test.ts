@@ -537,3 +537,56 @@ describe('lo script di Umami', () => {
     expect(con).toEqual(nonPagine(filePubblici(tutto, opzioni)));
   });
 });
+
+describe('la riga sul contatore', () => {
+  const ID = 'bb5f6910-f64e-4045-879e-df65209b7ad5';
+  const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.';
+  const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
+  const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
+  /** Le voci HTML della mappa, lette come le legge un motore: senza eseguire niente. */
+  const pagine = (file: Record<string, string>) =>
+    Object.entries(file).filter(([percorso]) => percorso.endsWith('.html')).map(([percorso, html]) => [percorso, new DOMParser().parseFromString(html, 'text/html')] as const);
+  /** I paragrafi del piè di pagina che parlano del contatore. */
+  const righe = (doc: Document) => [...doc.querySelectorAll('footer p')].filter((p) => pulito(p.textContent).includes('Umami'));
+
+  it('con un ID ogni pagina statica e la home in chiaro hanno in fondo la riga, con «Umami» che porta alla sua informativa come gli altri link esterni', () => {
+    const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
+    expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+    for (const [percorso, doc] of pagine(file)) {
+      const riga = righe(doc);
+      expect(riga, percorso).toHaveLength(1);
+      expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
+      const link = [...riga[0].querySelectorAll('a')].map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
+      expect(link, percorso).toEqual([['Umami', 'https://umami.is/privacy', '_blank', 'noopener']]);
+    }
+  });
+
+  it('nelle pagine statiche sta accanto a «Il progetto non è affiliato a nessuna delle fonti», nella home in chiaro accanto alle fonti dei dati', () => {
+    for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      const fondo = pulito(righe(doc)[0]?.closest('footer')?.textContent ?? '');
+      expect(fondo, percorso).toContain('Il progetto non è affiliato a nessuna delle fonti.');
+      if (percorso === 'index.html') expect(fondo).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
+    }
+  });
+
+  it('senza ID la riga non c’è in nessuna voce della mappa', () => {
+    for (const idUmami of [undefined, null]) {
+      for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
+        const file = filePubblici(contenuto, { ...opzioni, idUmami });
+        expect(Object.keys(file).length).toBeGreaterThan(0);
+        for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|umami\.is\/privacy/);
+      }
+    }
+  });
+
+  it('è testo normale del piè di pagina: niente di nascosto, e la navigazione resta quella senza ID', () => {
+    const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
+    const nav = (doc: Document) => [...doc.querySelectorAll('nav')].map((n) => n.outerHTML);
+    for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      const riga = righe(doc)[0];
+      expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();
+      expect(riga.querySelectorAll('[hidden], [aria-hidden]'), percorso).toHaveLength(0);
+      expect(nav(doc), percorso).toEqual(nav(senza[percorso]));
+    }
+  });
+});

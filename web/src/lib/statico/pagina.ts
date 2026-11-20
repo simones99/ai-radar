@@ -1,6 +1,7 @@
 // Lo scheletro delle pagine statiche del sito, e ciò che serve a ogni pagina per non far passare un testo o un link pericoloso.
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
 import { ICONA } from '../icona';
+import { RIGA_DEL_CONTATORE } from '../text/contatore';
 import { LICENZE } from '../tiles/cite';
 
 /** Da dove viene un dato: il nome, l'indirizzo se c'è e la licenza con cui si riusa. */
@@ -15,6 +16,8 @@ export interface OpzioniPagine {
   linkAlleCompetenze?: boolean;
   /** Le edizioni esistono: le pagine che non ne fanno parte portano al loro archivio, e tutte portano al feed. Senza edizioni il feed non c'è, e nessun link ci porta. */
   linkAlleEdizioni?: boolean;
+  /** Le pagine hanno lo script di Umami: in fondo c'è la riga che dice a chi legge come si contano le visite. */
+  conIlContatore?: boolean;
 }
 
 /** L'indice delle competenze, visto dalla radice del sito. */
@@ -47,6 +50,10 @@ export const linkEsterno = (url: string | null, testo: string): string => {
 
 /** L'HTML dentro un link a un indirizzo del sito, o così com'è quando l'indirizzo non c'è. */
 export const inLink = (href: string | null, html: string): string => (href ? `<a href="${esc(href)}">${html}</a>` : html);
+
+/** La riga sul contatore delle visite, per il piè di pagina: il link a Umami si apre come gli altri link esterni. */
+export const rigaDelContatore = (): string =>
+  `<p class="ed-nota">${esc(RIGA_DEL_CONTATORE.prima)}${linkEsterno(RIGA_DEL_CONTATORE.link.url, RIGA_DEL_CONTATORE.link.testo)}${esc(RIGA_DEL_CONTATORE.dopo)}</p>`;
 
 export function rigaFonti(fonti: Fonte[]): string {
   if (!fonti.length) return '';
@@ -112,7 +119,7 @@ ${opzioni.linkAlleEdizioni ? `${linkAlFeed(opzioni.indirizzoBase)}\n` : ''}<link
 <main id="contenuto" tabindex="-1">
 ${o.corpo}
 </main>
-<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p></footer>
+<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p>${opzioni.conIlContatore ? `\n${rigaDelContatore()}` : ''}</footer>
 </div>
 </body>
 </html>

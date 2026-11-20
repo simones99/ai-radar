@@ -484,3 +484,56 @@ describe('robots.txt', () => {
     }
   });
 });
+
+describe('lo script di Umami', () => {
+  const ID = 'bb5f6910-f64e-4045-879e-df65209b7ad5';
+  const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
+  /** Le voci HTML della mappa, lette come le legge un motore: senza eseguire niente. */
+  const pagine = (file: Record<string, string>) =>
+    Object.entries(file).filter(([percorso]) => percorso.endsWith('.html')).map(([percorso, html]) => [percorso, new DOMParser().parseFromString(html, 'text/html')] as const);
+  const scriptDiUmami = (doc: Document) => [...doc.querySelectorAll('script[src*="umami"]')];
+
+  it('con un ID ogni pagina, home compresa, ha nel <head> uno e un solo script di Umami Cloud, che conta solo sull’host pubblico del sito', () => {
+    for (const [base, host] of [['https://esempio.org/ai-radar/', 'esempio.org'], ['https://altro-utente.github.io/', 'altro-utente.github.io']]) {
+      const file = filePubblici(tutto, { ...opzioni, indirizzoBase: base, idUmami: ID });
+      expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+      for (const [percorso, doc] of pagine(file)) {
+        const script = scriptDiUmami(doc);
+        expect(script, percorso).toHaveLength(1);
+        expect(script[0].parentElement, percorso).toBe(doc.head);
+        expect(script[0].getAttribute('src'), percorso).toBe('https://cloud.umami.is/script.js');
+        expect(script[0].hasAttribute('defer'), percorso).toBe(true);
+        expect(script[0].getAttribute('data-website-id'), percorso).toBe(ID);
+        expect(script[0].getAttribute('data-domains'), percorso).toBe(host);
+      }
+    }
+  });
+
+  it('senza ID nessuna pagina ha lo script', () => {
+    for (const idUmami of [undefined, null]) {
+      const file = pagine(filePubblici(tutto, { ...opzioni, idUmami }));
+      expect(file.length).toBeGreaterThan(0);
+      for (const [percorso, doc] of file) expect(scriptDiUmami(doc), percorso).toEqual([]);
+    }
+  });
+
+  it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID', () => {
+    const testa = (doc: Document) => ({
+      titolo: doc.title,
+      meta: [...doc.head.querySelectorAll('meta[name], meta[property]')].map((m) => [m.getAttribute('name') ?? m.getAttribute('property'), m.getAttribute('content')]),
+      link: [...doc.head.querySelectorAll('link')].map((l) => [l.getAttribute('rel'), l.getAttribute('href')]),
+    });
+    const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
+    for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      expect(testa(doc).meta.length, percorso).toBeGreaterThan(0);
+      expect(testa(doc), percorso).toEqual(testa(senza[percorso]));
+    }
+  });
+
+  it('i file che non sono pagine restano identici con e senza ID: il feed, la sitemap e l’indice delle edizioni', () => {
+    const nonPagine = (file: Record<string, string>) => Object.fromEntries(Object.entries(file).filter(([percorso]) => !percorso.endsWith('.html')));
+    const con = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
+    expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'sitemap.xml', 'data/edizioni.json']));
+    expect(con).toEqual(nonPagine(filePubblici(tutto, opzioni)));
+  });
+});

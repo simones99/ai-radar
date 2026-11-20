@@ -13,12 +13,19 @@ import { foglioDellaHome, IMMAGINE_HOME } from './pagina';
  * Accanto a ogni pagina di competenza va la copia dell'immagine della home, già nella cartella di uscita: il comando delle anteprime la sostituisce
  * con quella della competenza, e se non ci riesce il tag dell'immagine non porta comunque a un file che manca.
  */
-export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome }: { dati: string; uscita: string; indirizzoBase: string; htmlHome: string }): void {
+export function scriviFilePubblici({ dati, uscita, indirizzoBase, htmlHome, idUmami }: {
+  dati: string;
+  uscita: string;
+  indirizzoBase: string;
+  htmlHome: string;
+  /** L'ID del sito Umami, già controllato: senza, le pagine escono senza contatore. */
+  idUmami?: string | null;
+}): void {
   const edizioni = leggiEdizioni(dati);
   // un file di dati rotto vale come fonte assente, come nell'app, e la home in chiaro lo dice. radar.json no: rotto ferma la build,
   // perché senza le pagine delle competenze sparirebbero dal sito
   const dataset = { ...leggiDatiComeLApp(dati, FILES.filter((k) => k !== 'radar')), ...leggiDati(dati, ['radar']) };
-  const file = filePubblici({ edizioni, dataset }, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome });
+  const file = filePubblici({ edizioni, dataset }, { indirizzoBase, foglio: foglioDellaHome(htmlHome), home: htmlHome, idUmami });
   for (const [percorso, contenuto] of Object.entries(file)) {
     mkdirSync(dirname(join(uscita, percorso)), { recursive: true });
     writeFileSync(join(uscita, percorso), contenuto);

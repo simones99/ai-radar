@@ -22,7 +22,7 @@ describe('la settimana dei dati', () => {
 
   it('ha le due porte con la notizia della vista di partenza, senza il confronto', () => {
     const [perTe, italia] = leggi().porte;
-    expect(perTe).toMatchObject({ id: 'per-te', nome: 'Per te', etichetta: 'Su cosa formarti', meta: 'Radar delle competenze · dati al 15 ott 2026', destinazione: { card: 'competenze', elemento: null } });
+    expect(perTe).toMatchObject({ id: 'per-te', nome: 'Per te', etichetta: 'Su cosa formarti', meta: 'Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026', destinazione: { card: 'competenze', elemento: null } });
     expect(testo(perTe.titolo)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(italia).toMatchObject({ id: 'italia', nome: 'Per la tua organizzazione', etichetta: "L'AI in Italia", destinazione: { card: 'business', elemento: null } });
     expect(testo(italia.titolo)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");

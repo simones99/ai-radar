@@ -29,7 +29,7 @@ describe('creare un’edizione', () => {
     expect(perTe.nome).toBe('Per te');
     expect(testo(perTe.titolo)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(perTe.titolo[0]).toEqual({ t: 'MCP', em: true });
-    expect(perTe.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
+    expect(perTe.meta).toBe('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     expect(perTe.destinazione).toEqual({ card: 'competenze', elemento: null });
     expect(italia.nome).toBe('Per la tua organizzazione');
     expect(testo(italia.titolo)).toBe("16% delle imprese italiane usa l'AI (UE: 20%)");
@@ -412,7 +412,7 @@ describe('la pagina di un’edizione', () => {
     expect(a?.textContent).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(a?.getAttribute('href')).toBe('../../#competenze');
     expect(a?.querySelector('em')?.textContent).toBe('MCP');
-    expect(porte[0].textContent).toContain('Radar delle competenze · dati al 15 ott 2026');
+    expect(porte[0].textContent).toContain('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     expect(porte[0].textContent).toContain('The Adzuna API');
   });
 

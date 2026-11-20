@@ -14,7 +14,7 @@ describe('Doors', () => {
     expect(perTe.querySelector('em')).toHaveTextContent('MCP');
     const italia = screen.getByRole('link', { name: /Per la tua organizzazione.*L'AI in Italia.*16% delle imprese italiane usa l'AI/ });
     expect(italia).toHaveAttribute('href', '#business');
-    expect(screen.getByText('Radar delle competenze · dati al 15 ott 2026')).toBeInTheDocument();
+    expect(screen.getByText('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026')).toBeInTheDocument();
   });
   it('senza dati: porte non cliccabili che lo dicono', () => {
     render(Doors, { data: {}, today });

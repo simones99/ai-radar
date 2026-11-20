@@ -45,7 +45,7 @@ Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, 
 - Oggi le frasi e le notizie delle porte sono scritte dai dati con regole fisse, senza LLM. È la scelta attuale, non un vincolo dichiarato.
 - Solo italiano; traduzioni fuori perimetro.
 - Le chiavi API (Artificial Analysis, Adzuna) sono facoltative: senza, i grafici che ne dipendono spiegano cosa manca.
-- Da chiarire: se i termini di Adzuna coprono una pagina pubblica con conteggi aggregati (README, *Nota su Adzuna*).
+- I conteggi aggregati di Adzuna si pubblicano con la conferma scritta di Adzuna del 16 novembre 2026, nel rispetto dei loro termini d'uso: ogni dato sugli annunci cita *The Adzuna API*, anche nell'immagine d'anteprima (README, *Nota su Adzuna*).
 
 ## Brand Commitments
 

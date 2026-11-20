@@ -21,10 +21,11 @@ const MODELLI_EUROPEI = '12 dei 30 modelli di grande scala del 2026 sono europei
 const RAPPORTO = 'A settembre esce State of Generative AI in the Enterprise';
 const SCADENZA = 'Tra 30 giorni: alto rischio nei prodotti regolati (allegato I)';
 
+// La riga meta di Per te cita The Adzuna API, come chiedono i termini d'uso di Adzuna, e va su due righe: le frasi più lunghe scendono da 38 a 35 px.
 const CASI = [
-  ['le entrate e uscite accanto ai modelli europei', conPorte(ENTRATE_E_USCITE, MODELLI_EUROPEI), 38],
-  ['le entrate e uscite accanto a un rapporto', conPorte(ENTRATE_E_USCITE, RAPPORTO), 38],
-  ['le entrate e uscite accanto a una scadenza', conPorte(ENTRATE_E_USCITE, SCADENZA), 38],
+  ['le entrate e uscite accanto ai modelli europei', conPorte(ENTRATE_E_USCITE, MODELLI_EUROPEI), 35],
+  ['le entrate e uscite accanto a un rapporto', conPorte(ENTRATE_E_USCITE, RAPPORTO), 35],
+  ['le entrate e uscite accanto a una scadenza', conPorte(ENTRATE_E_USCITE, SCADENZA), 35],
   ['tutte le competenze che entrano insieme', conPorte(TUTTE_ENTRANO, MODELLI_EUROPEI), 30],
   ['le frasi più corte', conPorte('RAG esce da Impara ora', 'Tra 3 giorni: divieti'), 56],
 ] as const;
@@ -181,7 +182,7 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
 
   test('sotto la frase c’è la riga meta di ogni porta: chi vede solo l’immagine sa da dove viene la notizia', async ({ page }) => {
     await preparaImmagine(page, base);
-    await expect(page.getByRole('article').nth(0)).toContainText('Radar delle competenze · dati al 15 ott 2026');
+    await expect(page.getByRole('article').nth(0)).toContainText('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     await expect(page.getByRole('article').nth(1)).toContainText(base.porte[1].meta);
   });
 

@@ -87,7 +87,7 @@ describe('la home in chiaro', () => {
     expect(doc.querySelectorAll('h1')).toHaveLength(1);
     expect(titoli(doc, 2)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia", 'La situazione']);
     expect(app).toContain('MCP entra tra le competenze da imparare ora; RAG esce');
-    expect(app).toContain('Radar delle competenze · dati al 15 ott 2026');
+    expect(app).toContain('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     expect(app).toContain("16% delle imprese italiane usa l'AI (UE: 20%)");
     // la settimana sta sopra la frase, le porte sotto
     expect(app.indexOf('Settimana del 12 ott 2026')).toBeLessThan(app.indexOf(FRASE_DI_APERTURA));

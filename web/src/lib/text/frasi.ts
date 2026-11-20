@@ -396,7 +396,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   if (!radarDisponibile(d.radar)) return NO_DATA;
   const italia = mercato === 'italia';
   const rows = radarRows(d.radar, mercato);
-  const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
+  const meta = `Radar delle competenze su arXiv, GitHub e The Adzuna API · dati ${dayWith('al', d.radar.generato)}`;
   // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const sure = rows.filter((r) => !r.incerto);
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza

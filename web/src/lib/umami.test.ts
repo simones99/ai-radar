@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { idDegliEndToEnd, idUmami } from './umami';
+import { idDegliEndToEnd, idUmami, scriptUmami } from './umami';
+
+describe('scriptUmami', () => {
+  const nelHead = (tag: string) => new DOMParser().parseFromString(`<!doctype html><html><head>${tag}</head><body></body></html>`, 'text/html');
+
+  it('un ID con caratteri dell’HTML resta il valore del suo attributo, e non scrive altro nella pagina', () => {
+    const id = '"><img src=x onerror=alert(1)>';
+    const doc = nelHead(scriptUmami(id, 'https://esempio.org/ai-radar/'));
+    expect(doc.head.children).toHaveLength(1);
+    expect(doc.body.children).toHaveLength(0);
+    expect(doc.head.children[0].getAttribute('data-website-id')).toBe(id);
+    expect(doc.head.children[0].getAttribute('data-domains')).toBe('esempio.org');
+  });
+});
 
 describe('idUmami', () => {
   it('senza un valore non c’è il contatore', () => {

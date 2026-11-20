@@ -509,6 +509,13 @@ describe('lo script di Umami', () => {
     }
   });
 
+  it('con un ID, una pagina senza <head> chiuso è un errore che la nomina, invece di uscire senza lo script e senza dirlo', () => {
+    const home = HOME.replace('</head>', '');
+    expect(() => filePubblici(tutto, { ...opzioni, home, idUmami: ID })).toThrow(/index\.html/);
+    // senza ID non c'è niente da aggiungere
+    expect(() => filePubblici(tutto, { ...opzioni, home })).not.toThrow();
+  });
+
   it('senza ID nessuna pagina ha lo script', () => {
     for (const idUmami of [undefined, null]) {
       const file = pagine(filePubblici(tutto, { ...opzioni, idUmami }));

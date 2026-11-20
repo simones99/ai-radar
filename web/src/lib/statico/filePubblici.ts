@@ -29,10 +29,15 @@ export function filePubblici(contenuto: ContenutoStatico, opzioni: OpzioniFilePu
 
 /**
  * Lo script di Umami nel <head> di ogni voce HTML della mappa, anche di quelle che arriveranno: si aggiunge qui, quando la build scrive la pagina,
- * e non entra mai nei file fissi delle edizioni (ADR 0002). Le voci che non sono pagine restano come sono.
+ * e non entra mai nei file fissi delle edizioni (ADR 0002). Le voci che non sono pagine restano come sono. Una pagina senza </head> ferma la build:
+ * uscirebbe con la riga sul contatore ma senza lo script.
  */
 function conLoScriptDiUmami(file: Record<string, string>, { idUmami, indirizzoBase }: OpzioniFilePubblici): Record<string, string> {
   if (!idUmami) return file;
   const script = scriptUmami(idUmami, indirizzoBase);
-  return Object.fromEntries(Object.entries(file).map(([percorso, html]) => [percorso, percorso.endsWith('.html') ? html.replace('</head>', () => `${script}\n</head>`) : html]));
+  const conLoScript = (percorso: string, html: string) => {
+    if (!html.includes('</head>')) throw new Error(`${percorso} non ha </head>: non c'è dove mettere lo script di Umami`);
+    return html.replace('</head>', () => `${script}\n</head>`);
+  };
+  return Object.fromEntries(Object.entries(file).map(([percorso, html]) => [percorso, percorso.endsWith('.html') ? conLoScript(percorso, html) : html]));
 }

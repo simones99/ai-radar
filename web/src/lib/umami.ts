@@ -34,4 +34,4 @@ export function scriptUmami(id: string, indirizzoBase: string): string {
 }
 
 /** La pagina ha lo script di Umami, come lo scrive scriptUmami: l'app lo chiede alla pagina in cui gira, invece di farselo dire dalla build. */
-export const conIlContatore = (pagina: Document): boolean => pagina.querySelector(`script[src="${SCRIPT}"]`) !== null;
+export const haLoScriptDiUmami = (pagina: Document): boolean => pagina.querySelector(`script[src="${SCRIPT}"]`) !== null;

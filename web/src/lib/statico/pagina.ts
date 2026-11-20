@@ -16,8 +16,8 @@ export interface OpzioniPagine {
   linkAlleCompetenze?: boolean;
   /** Le edizioni esistono: le pagine che non ne fanno parte portano al loro archivio, e tutte portano al feed. Senza edizioni il feed non c'è, e nessun link ci porta. */
   linkAlleEdizioni?: boolean;
-  /** Le pagine hanno lo script di Umami: in fondo c'è la riga che dice a chi legge come si contano le visite. */
-  conIlContatore?: boolean;
+  /** In fondo c'è la riga che dice a chi legge come si contano le visite: va dove c'è lo script di Umami, e la mappa dei file pubblici la ricava dall'ID. */
+  conLaRigaDelContatore?: boolean;
 }
 
 /** L'indice delle competenze, visto dalla radice del sito. */
@@ -119,7 +119,7 @@ ${opzioni.linkAlleEdizioni ? `${linkAlFeed(opzioni.indirizzoBase)}\n` : ''}<link
 <main id="contenuto" tabindex="-1">
 ${o.corpo}
 </main>
-<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p>${opzioni.conIlContatore ? `\n${rigaDelContatore()}` : ''}</footer>
+<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p>${opzioni.conLaRigaDelContatore ? `\n${rigaDelContatore()}` : ''}</footer>
 </div>
 </body>
 </html>

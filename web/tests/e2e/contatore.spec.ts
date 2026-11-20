@@ -1,7 +1,9 @@
 // Il contatore delle visite sul sito costruito, che è quello che viene pubblicato: ogni pagina ha lo script di Umami, e servita in locale
 // non manda niente, perché lo script conta solo sull'host pubblico del sito. L'edizione di prova nasce dal FIXTURE, come in edizioni.spec.ts,
 // con lo stesso ID e lo stesso indirizzo base della build. L'ID, se il repository non lo dà, è quello di prova di playwright.config.ts.
+// Le stesse pagine, senza JavaScript, hanno in fondo la riga che lo dice a chi legge.
 import { fileURLToPath } from 'node:url';
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page, type Request } from '@playwright/test';
 import { leggiDati } from '../../src/lib/data/cartella';
 import type { Dataset } from '../../src/lib/data/types';
@@ -48,3 +50,29 @@ for (const [nome, indirizzo] of [['la home', '/'], ['un’edizione', EDIZIONE], 
     expect(richieste).toEqual([`GET ${SCRIPT}`]);
   });
 }
+
+// cast: come in dashboard.spec.ts, @axe-core/playwright usa un altro playwright-core
+const violazioniGravi = async (page: Page) =>
+  (await new AxeBuilder({ page: page as never }).analyze()).violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+
+// le pagine statiche non hanno altro JavaScript che lo script di Umami; la home resta in chiaro senza l'app, come quando l'app non arriva.
+// axe ha bisogno di JavaScript, per questo non lo si spegne
+test.describe('la riga sul contatore', () => {
+  for (const [nome, indirizzo] of [['la home in chiaro', '/'], ['un’edizione', EDIZIONE], ['una pagina di competenza', `/competenze/${COMPETENZA}/`]] as const) {
+    for (const [tema, colorScheme] of [['chiaro', 'light'], ['scuro', 'dark']] as const) {
+      test(`${nome}, in tema ${tema} a 320 px: la riga si legge in fondo e va a capo, e axe non trova problemi gravi`, async ({ page }) => {
+        if (indirizzo === '/') await page.route('**/assets/*.js', (route) => route.abort());
+        await page.emulateMedia({ colorScheme });
+        await page.setViewportSize({ width: 320, height: 640 });
+        await page.goto(indirizzo);
+        const riga = page.locator('footer p', { hasText: 'Il sito conta le visite con Umami' });
+        await expect(riga).toHaveCount(1);
+        await riga.scrollIntoViewIfNeeded();
+        await expect(riga).toBeVisible();
+        await expect(riga.getByRole('link', { name: 'Umami' })).toHaveAttribute('href', 'https://umami.is/privacy');
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+        expect(await violazioniGravi(page)).toEqual([]);
+      });
+    }
+  }
+});

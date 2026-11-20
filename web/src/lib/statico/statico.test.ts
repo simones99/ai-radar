@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
 import { indirizzoBase } from '../indirizzoBase';
-import { ID, pagine, piede, righeDelContatore, scriptDiUmami } from '../test/contatore';
+import { ID, pagine, piede, righeSulContatore, scriptDiUmami } from '../test/contatore';
 import { FIXTURE } from '../test/fixtures';
 import { FONTI_DEI_DATI } from '../text/fonti';
 import { filePubblici, type ContenutoStatico, type OpzioniFilePubblici } from '.';
@@ -552,7 +552,7 @@ describe('il contatore delle visite', () => {
       const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
       expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
       for (const [percorso, doc] of pagine(file)) {
-        const riga = righeDelContatore(doc);
+        const riga = righeSulContatore(doc);
         expect(riga, percorso).toHaveLength(1);
         expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
         const link = within(riga[0]).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
@@ -562,7 +562,7 @@ describe('il contatore delle visite', () => {
 
     it('nelle pagine statiche sta accanto a «Il progetto non è affiliato a nessuna delle fonti», nella home in chiaro accanto alle fonti dei dati', () => {
       for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
-        expect(righeDelContatore(doc), percorso).toHaveLength(1);
+        expect(righeSulContatore(doc), percorso).toHaveLength(1);
         const fondo = pulito(piede(doc).textContent);
         expect(fondo, percorso).toContain('Il progetto non è affiliato a nessuna delle fonti.');
         if (percorso === 'index.html') expect(fondo).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
@@ -583,7 +583,7 @@ describe('il contatore delle visite', () => {
       const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
       const nav = (doc: Document) => within(doc.body).queryAllByRole('navigation', { hidden: true }).map((n) => n.outerHTML);
       for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
-        const riga = righeDelContatore(doc)[0];
+        const riga = righeSulContatore(doc)[0];
         expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();
         expect(riga.querySelectorAll('[hidden], [aria-hidden]'), percorso).toHaveLength(0);
         expect(nav(doc), percorso).toEqual(nav(senza[percorso]));

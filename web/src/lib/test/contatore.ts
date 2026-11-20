@@ -19,4 +19,4 @@ export const scriptDiUmami = (doc: Document) => [...doc.querySelectorAll('script
 export const piede = (doc: Document) => within(doc.body).getByRole('contentinfo', { hidden: true });
 
 /** Le righe del piè di pagina che parlano del contatore. */
-export const righeDelContatore = (doc: Document) => within(piede(doc)).queryAllByText(/Il sito conta le visite con/);
+export const righeSulContatore = (doc: Document) => within(piede(doc)).queryAllByText(/Il sito conta le visite con/);

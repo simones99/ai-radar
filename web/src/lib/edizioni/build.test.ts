@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { within } from '@testing-library/svelte';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
-import { ID, pagine, righeDelContatore, scriptDiUmami } from '../test/contatore';
+import { ID, pagine, righeSulContatore, scriptDiUmami } from '../test/contatore';
 import { FIXTURE } from '../test/fixtures';
 import { scriviFilePubblici } from '../statico/cartella';
 import { creaEdizione, type Edizione } from '.';
@@ -230,12 +230,12 @@ describe('il sito costruito', () => {
 
     it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link all’informativa di Umami; senza, nessuna', () => {
       for (const [percorso, doc] of pagineDelSito(conUmami())) {
-        expect(righeDelContatore(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
+        expect(righeSulContatore(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
           'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
         ]);
-        expect(within(righeDelContatore(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
+        expect(within(righeSulContatore(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
       }
-      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagineDelSito(sito)) expect(righeDelContatore(doc), percorso).toEqual([]);
+      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagineDelSito(sito)) expect(righeSulContatore(doc), percorso).toEqual([]);
     });
 
     it('i file fissi delle edizioni non cambiano, e nemmeno l’indice che legge la home', () => {

@@ -8,7 +8,7 @@ import type { OpzioniPagine } from './pagina';
 import { robots, SITEMAP, sitemap } from './sitemap';
 
 /** Le opzioni delle pagine, senza la riga sul contatore: la mappa la ricava dall'ID di Umami, perché ci sia se e solo se c'è lo script. */
-export interface OpzioniFilePubblici extends Omit<OpzioniPagine, 'conLaRigaDelContatore'> {
+export interface OpzioniFilePubblici extends Omit<OpzioniPagine, 'conLaRigaSulContatore'> {
   /** L'HTML della home uscito dalla build: la mappa ne restituisce sempre una copia, con il testo della settimana dei dati e, se ci sono edizioni, il link al feed. */
   home: string;
   /** L'ID del sito Umami, già controllato: con un ID ogni pagina porta lo script che conta le visite e la riga che lo dice, senza nessuna delle due. */
@@ -19,12 +19,12 @@ export interface OpzioniFilePubblici extends Omit<OpzioniPagine, 'conLaRigaDelCo
 export function filePubblici(contenuto: ContenutoStatico, opzioni: OpzioniFilePubblici): Record<string, string> {
   const { edizioni, dataset } = contenuto;
   // la riga sul contatore c'è se e solo se c'è lo script: tutti e due nascono dall'ID
-  const conLaRigaDelContatore = Boolean(opzioni.idUmami);
+  const conLaRigaSulContatore = Boolean(opzioni.idUmami);
   // le testate portano alle competenze e alle edizioni solo se le loro pagine nascono
-  const opzioniDellePagine: OpzioniPagine = { ...opzioni, linkAlleCompetenze: nasconoLePagineDelleCompetenze(dataset.radar), linkAlleEdizioni: edizioni.length > 0, conLaRigaDelContatore };
+  const opzioniDellePagine: OpzioniPagine = { ...opzioni, linkAlleCompetenze: nasconoLePagineDelleCompetenze(dataset.radar), linkAlleEdizioni: edizioni.length > 0, conLaRigaSulContatore };
   const pagine = { ...fileDelleEdizioni(edizioni, opzioniDellePagine), ...fileDelleCompetenze(dataset.radar, opzioniDellePagine) };
   // la home porta solo alle pagine che ci sono: nasce dopo le altre voci
-  const file = { ...pagine, 'index.html': homeInChiaro({ home: opzioni.home, dataset, edizioni, indirizzoBase: opzioni.indirizzoBase, pagine: Object.keys(pagine), conLaRigaDelContatore }) };
+  const file = { ...pagine, 'index.html': homeInChiaro({ home: opzioni.home, dataset, edizioni, indirizzoBase: opzioni.indirizzoBase, pagine: Object.keys(pagine), conLaRigaSulContatore }) };
   return { ...conLoScriptDiUmami(file, opzioni), [SITEMAP]: sitemap(Object.keys(file), contenuto, opzioni.indirizzoBase), ...robots(opzioni.indirizzoBase) };
 }
 

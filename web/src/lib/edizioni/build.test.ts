@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { within } from '@testing-library/svelte';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
 import { FIXTURE } from '../test/fixtures';
@@ -230,11 +231,13 @@ describe('il sito costruito', () => {
     });
 
     it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link all’informativa di Umami; senza, nessuna', () => {
-      const riga = (doc: Document) => [...doc.querySelectorAll('footer p')].filter((p) => p.querySelector('a[href="https://umami.is/privacy"]'));
+      // nel piè di pagina, come lo trova chi usa un lettore di schermo: la pagina letta non ha una finestra che calcoli gli stili, da qui hidden: true
+      const riga = (doc: Document) => within(within(doc.body).getByRole('contentinfo', { hidden: true })).queryAllByText(/Il sito conta le visite con/);
       for (const [percorso, doc] of pagine(conUmami())) {
         expect(riga(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
           'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
         ]);
+        expect(within(riga(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
       }
       for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagine(sito)) expect(riga(doc), percorso).toEqual([]);
     });

@@ -67,7 +67,7 @@ test.describe('la riga sul contatore', () => {
         await page.emulateMedia({ colorScheme });
         await page.setViewportSize({ width: 320, height: 640 });
         await page.goto(indirizzo);
-        const riga = page.locator('footer p', { hasText: 'Il sito conta le visite con Umami' });
+        const riga = page.getByRole('contentinfo').getByText('Il sito conta le visite con Umami');
         await expect(riga).toHaveCount(1);
         await riga.scrollIntoViewIfNeeded();
         await expect(riga).toBeVisible();

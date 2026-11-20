@@ -1,4 +1,5 @@
 // La mappa dei file pubblici del sito: le edizioni, e il dataset, di cui radar.json fa nascere le pagine delle competenze.
+import { within } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
@@ -553,8 +554,13 @@ describe('la riga sul contatore', () => {
   /** Le voci HTML della mappa, lette come le legge un motore: senza eseguire niente. */
   const pagine = (file: Record<string, string>) =>
     Object.entries(file).filter(([percorso]) => percorso.endsWith('.html')).map(([percorso, html]) => [percorso, new DOMParser().parseFromString(html, 'text/html')] as const);
-  /** I paragrafi del piè di pagina che parlano del contatore. */
-  const righe = (doc: Document) => [...doc.querySelectorAll('footer p')].filter((p) => pulito(p.textContent).includes('Umami'));
+  /**
+   * Il piè di pagina, come lo trova chi usa un lettore di schermo. hidden: true perché la pagina letta non ha una finestra che calcoli
+   * gli stili; che la riga non sia nascosta lo prova la sua prova.
+   */
+  const piede = (doc: Document) => within(doc.body).getByRole('contentinfo', { hidden: true });
+  /** Le righe del piè di pagina che parlano del contatore. */
+  const righe = (doc: Document) => within(piede(doc)).queryAllByText(/Il sito conta le visite con/);
 
   it('con un ID ogni pagina statica e la home in chiaro hanno in fondo la riga, con «Umami» che porta alla sua informativa come gli altri link esterni', () => {
     const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
@@ -563,14 +569,15 @@ describe('la riga sul contatore', () => {
       const riga = righe(doc);
       expect(riga, percorso).toHaveLength(1);
       expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
-      const link = [...riga[0].querySelectorAll('a')].map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
+      const link = within(riga[0]).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
       expect(link, percorso).toEqual([['Umami', 'https://umami.is/privacy', '_blank', 'noopener']]);
     }
   });
 
   it('nelle pagine statiche sta accanto a «Il progetto non è affiliato a nessuna delle fonti», nella home in chiaro accanto alle fonti dei dati', () => {
     for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
-      const fondo = pulito(righe(doc)[0]?.closest('footer')?.textContent ?? '');
+      expect(righe(doc), percorso).toHaveLength(1);
+      const fondo = pulito(piede(doc).textContent);
       expect(fondo, percorso).toContain('Il progetto non è affiliato a nessuna delle fonti.');
       if (percorso === 'index.html') expect(fondo).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
     }
@@ -588,7 +595,7 @@ describe('la riga sul contatore', () => {
 
   it('è testo normale del piè di pagina: niente di nascosto, e la navigazione resta quella senza ID', () => {
     const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
-    const nav = (doc: Document) => [...doc.querySelectorAll('nav')].map((n) => n.outerHTML);
+    const nav = (doc: Document) => within(doc.body).queryAllByRole('navigation', { hidden: true }).map((n) => n.outerHTML);
     for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
       const riga = righe(doc)[0];
       expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();

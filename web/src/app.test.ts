@@ -2,7 +2,6 @@ import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App.svelte';
 import { FIXTURE } from './lib/test/fixtures';
-import { scriptUmami } from './lib/umami';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -131,8 +130,10 @@ describe('App', () => {
   });
 
   describe('la riga sul contatore', () => {
-    // la pagina come la scrive la build con un ID di Umami: lo script nel <head>, che jsdom non scarica né esegue
-    const conLoScript = () => document.head.insertAdjacentHTML('beforeend', scriptUmami('00000000-0000-4000-8000-000000000000', 'https://simones99.github.io/ai-radar/'));
+    // la pagina con lo script di Umami nel <head>, che jsdom non scarica né esegue. Il tag è quello che dà Umami, scritto qui a mano:
+    // se chi lo scrive nella build e chi lo riconosce nell'app sbagliassero tutti e due allo stesso modo, la prova se ne accorgerebbe
+    const SCRIPT = '<script defer src="https://cloud.umami.is/script.js" data-website-id="bb5f6910-f64e-4045-879e-df65209b7ad5"></script>';
+    const conLoScript = () => document.head.insertAdjacentHTML('beforeend', SCRIPT);
     afterEach(() => document.head.querySelectorAll('script[src^="https://cloud.umami.is/"]').forEach((s) => s.remove()));
     const conIDati = () => vi.fn(async (url: string) => {
       const k = url.split('/').pop()!.replace('.json', '');

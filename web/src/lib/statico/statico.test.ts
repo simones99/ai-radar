@@ -34,6 +34,8 @@ const edizione = creaEdizione(d, null) as Edizione;
 const PAGINA = `edizioni/${edizione.settimana}/index.html`;
 /** Il link della testata verso l'indice delle competenze, come lo scrive la pagina. */
 const LINK_COMPETENZE = /<a href="[^"]*competenze\/">Competenze<\/a>/;
+/** La pagina Privacy, che c'è solo con l'ID di Umami. */
+const PRIVACY = 'privacy/index.html';
 
 describe('i file pubblici del sito', () => {
   it('con un’edizione e il radar ci sono la pagina dell’edizione, l’archivio e il feed', () => {
@@ -487,6 +489,18 @@ describe('robots.txt', () => {
   });
 });
 
+// la pagina Privacy descrive il contatore delle visite: nasce dallo stesso ID dello script e della riga
+describe('la pagina Privacy', () => {
+  const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
+
+  it('con un ID c’è, con o senza edizioni e dati; senza ID no, perché una copia senza contatore non ha niente da dichiarare', () => {
+    for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
+      expect(Object.keys(filePubblici(contenuto, { ...opzioni, idUmami: ID }))).toContain(PRIVACY);
+      for (const idUmami of [undefined, null]) expect(Object.keys(filePubblici(contenuto, { ...opzioni, idUmami }))).not.toContain(PRIVACY);
+    }
+  });
+});
+
 // lo script e la riga nascono dallo stesso ID, sulla stessa mappa
 describe('il contatore delle visite', () => {
   const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
@@ -523,24 +537,27 @@ describe('il contatore delle visite', () => {
       }
     });
 
-    it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID', () => {
+    it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID, nelle pagine che ci sono in tutti e due', () => {
       const testa = (doc: Document) => ({
         titolo: doc.title,
         meta: [...doc.head.querySelectorAll('meta[name], meta[property]')].map((m) => [m.getAttribute('name') ?? m.getAttribute('property'), m.getAttribute('content')]),
         link: [...doc.head.querySelectorAll('link')].map((l) => [l.getAttribute('rel'), l.getAttribute('href')]),
       });
       const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
-      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID })).filter(([p]) => p !== PRIVACY)) {
         expect(testa(doc).meta.length, percorso).toBeGreaterThan(0);
         expect(testa(doc), percorso).toEqual(testa(senza[percorso]));
       }
     });
 
-    it('i file che non sono pagine restano identici con e senza ID: il feed, la sitemap e l’indice delle edizioni', () => {
+    it('i file che non sono pagine restano identici con e senza ID, il feed e l’indice delle edizioni; la sitemap guadagna solo la pagina Privacy', () => {
       const nonPagine = (file: Record<string, string>) => Object.fromEntries(Object.entries(file).filter(([percorso]) => !percorso.endsWith('.html')));
-      const con = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
-      expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'sitemap.xml', 'data/edizioni.json']));
-      expect(con).toEqual(nonPagine(filePubblici(tutto, opzioni)));
+      const { 'sitemap.xml': sitemapCon, ...con } = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
+      const { 'sitemap.xml': sitemapSenza, ...senza } = nonPagine(filePubblici(tutto, opzioni));
+      expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'data/edizioni.json']));
+      expect(con).toEqual(senza);
+      expect(sitemapCon.replace(`<url><loc>${assoluto('privacy/')}</loc></url>
+`, '')).toBe(sitemapSenza);
     });
   });
 
@@ -582,7 +599,7 @@ describe('il contatore delle visite', () => {
     it('è testo normale del piè di pagina: niente di nascosto, e la navigazione resta quella senza ID', () => {
       const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
       const nav = (doc: Document) => within(doc.body).queryAllByRole('navigation', { hidden: true }).map((n) => n.outerHTML);
-      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID })).filter(([p]) => p !== PRIVACY)) {
         const riga = righeSulContatore(doc)[0];
         expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();
         expect(riga.querySelectorAll('[hidden], [aria-hidden]'), percorso).toHaveLength(0);

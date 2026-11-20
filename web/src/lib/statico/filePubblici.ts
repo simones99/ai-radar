@@ -5,6 +5,7 @@ import { fileDelleCompetenze, nasconoLePagineDelleCompetenze } from './competenz
 import type { ContenutoStatico } from './contenuto';
 import { homeInChiaro } from './home';
 import type { OpzioniPagine } from './pagina';
+import { fileDellaPrivacy } from './privacy';
 import { robots, SITEMAP, sitemap } from './sitemap';
 
 /** Le opzioni delle pagine, senza la riga sul contatore: la mappa la ricava dall'ID di Umami, perché ci sia se e solo se c'è lo script. */
@@ -22,7 +23,8 @@ export function filePubblici(contenuto: ContenutoStatico, opzioni: OpzioniFilePu
   const conLaRigaSulContatore = Boolean(opzioni.idUmami);
   // le testate portano alle competenze e alle edizioni solo se le loro pagine nascono
   const opzioniDellePagine: OpzioniPagine = { ...opzioni, linkAlleCompetenze: nasconoLePagineDelleCompetenze(dataset.radar), linkAlleEdizioni: edizioni.length > 0, conLaRigaSulContatore };
-  const pagine = { ...fileDelleEdizioni(edizioni, opzioniDellePagine), ...fileDelleCompetenze(dataset.radar, opzioniDellePagine) };
+  // la pagina Privacy descrive il contatore: c'è con la riga, che porta lì
+  const pagine = { ...fileDelleEdizioni(edizioni, opzioniDellePagine), ...fileDelleCompetenze(dataset.radar, opzioniDellePagine), ...fileDellaPrivacy(opzioniDellePagine) };
   // la home porta solo alle pagine che ci sono: nasce dopo le altre voci
   const file = { ...pagine, 'index.html': homeInChiaro({ home: opzioni.home, dataset, edizioni, indirizzoBase: opzioni.indirizzoBase, pagine: Object.keys(pagine), conLaRigaSulContatore }) };
   return { ...conLoScriptDiUmami(file, opzioni), [SITEMAP]: sitemap(Object.keys(file), contenuto, opzioni.indirizzoBase), ...robots(opzioni.indirizzoBase) };

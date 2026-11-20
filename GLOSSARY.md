@@ -36,6 +36,10 @@ _Avoid_: newsletter, canale
 La modifica dichiarata di un'edizione già uscita, con la data e cosa è cambiato. Si fa a mano, e la voce del feed non torna a essere nuova.
 _Avoid_: errata, rettifica, aggiornamento
 
+**Visita di ritorno**:
+La visita di chi Umami riconosce come già passato sul sito in un'altra settimana dello stesso mese di calendario. Chi torna nella stessa settimana, o in un mese diverso, non fa una visita di ritorno.
+_Avoid_: utente fedele, retention (nei testi in italiano)
+
 **Competenza**:
 Una delle capacità sull'AI che il radar segue, misurata su ricerca, open source e lavoro.
 _Avoid_: skill, tema

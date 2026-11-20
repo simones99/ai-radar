@@ -288,7 +288,26 @@ describe('il link «Competenze» nella testata', () => {
     expect(nav(PAGINA)).toEqual([['Competenze', '../../competenze/'], ['Edizioni', '../'], ['Dati di oggi', '../../'], ['Segui con RSS', '../../feed.xml']]);
     expect(nav('competenze/index.html')).toEqual([['Edizioni', '../edizioni/'], ['Dati di oggi', '../'], ['Segui con RSS', '../feed.xml']]);
     const senzaEdizioni = filePubblici({ edizioni: [], dataset: d }, opzioni);
-    expect(nav('competenze/mcp/index.html', senzaEdizioni).map(([t]) => t)).toEqual(['Competenze', 'Dati di oggi', 'Segui con RSS']);
+    expect(nav('competenze/mcp/index.html', senzaEdizioni).map(([t]) => t)).toEqual(['Competenze', 'Dati di oggi']);
+  });
+
+  it('senza edizioni il feed non esiste, e nessuna pagina ci porta: né «Segui con RSS» né il link per i lettori di feed', () => {
+    const senzaEdizioni = filePubblici({ edizioni: [], dataset: d }, opzioni);
+    expect(senzaEdizioni['feed.xml']).toBeUndefined();
+    const pagine = Object.entries(senzaEdizioni).filter(([percorso]) => percorso.endsWith('.html'));
+    expect(pagine.map(([percorso]) => percorso)).toEqual(expect.arrayContaining(['index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+    for (const [percorso, html] of pagine) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      expect(doc.querySelector('link[rel="alternate"]'), percorso).toBeNull();
+      expect([...doc.querySelectorAll('a')].filter((a) => a.getAttribute('href')?.endsWith('feed.xml') || a.textContent === 'Segui con RSS'), percorso).toEqual([]);
+    }
+  });
+
+  it('con un’edizione ogni pagina statica porta al feed, con il link per i lettori di feed all’indirizzo assoluto', () => {
+    for (const [percorso, html] of Object.entries(file).filter(([p]) => p.endsWith('.html') && p !== 'index.html')) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      expect(doc.querySelector('link[rel="alternate"][type="application/rss+xml"]')?.getAttribute('href'), percorso).toBe(assoluto('feed.xml'));
+    }
   });
 
   it('senza le pagine delle competenze nessuna testata ha il link', () => {

@@ -89,7 +89,7 @@ Un'**edizione** riassume una settimana: le due porte, le frasi delle card cambia
 | `/edizioni/` | l'archivio con tutte le edizioni, dalla più recente |
 | `/feed.xml` | il feed RSS: una voce per edizione a testo intero, le ultime 26 |
 
-Prima della prima edizione questi indirizzi non esistono, e la home non ha link né `<link rel="alternate">`. Con la prima edizione compaiono «Edizioni» nella testata e «Segui con RSS» in fondo alla pagina; «Settimana del…» diventa un link quando l'ultima edizione è proprio di quella settimana. Porte e card non cambiano.
+Prima della prima edizione questi indirizzi non esistono, e né la home né le pagine delle competenze hanno link al feed o `<link rel="alternate">`. Con la prima edizione compaiono «Edizioni» nella testata e «Segui con RSS» in fondo alla pagina; «Settimana del…» diventa un link quando l'ultima edizione è proprio di quella settimana. Porte e card non cambiano.
 
 **Quando esce.**
 

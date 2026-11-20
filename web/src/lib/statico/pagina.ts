@@ -13,7 +13,7 @@ export interface OpzioniPagine {
   foglio: string;
   /** La testata porta all'indice delle competenze: vale quando le loro pagine esistono, e non nell'indice stesso. È il link con cui un crawler le trova partendo da un'edizione. */
   linkAlleCompetenze?: boolean;
-  /** Le edizioni esistono: le pagine che non ne fanno parte portano al loro archivio. */
+  /** Le edizioni esistono: le pagine che non ne fanno parte portano al loro archivio, e tutte portano al feed. Senza edizioni il feed non c'è, e nessun link ci porta. */
   linkAlleEdizioni?: boolean;
 }
 
@@ -72,7 +72,7 @@ export interface Pagina {
   percorso: string;
   /** La radice del sito vista dalla pagina. */
   radice: string;
-  /** I link della testata prima di «Segui con RSS», che c'è sempre. */
+  /** I link della testata prima di «Segui con RSS», che c'è quando ci sono le edizioni. */
   nav: string;
   corpo: string;
   tipo: 'article' | 'website';
@@ -99,8 +99,7 @@ export function pagina(o: Pagina, opzioni: OpzioniPagine): string {
 <meta property="og:locale" content="it_IT" />
 <meta property="og:site_name" content="AI Radar" />
 <meta name="twitter:card" content="summary_large_image" />
-${linkAlFeed(opzioni.indirizzoBase)}
-<link rel="icon" href="${esc(ICONA)}" />
+${opzioni.linkAlleEdizioni ? `${linkAlFeed(opzioni.indirizzoBase)}\n` : ''}<link rel="icon" href="${esc(ICONA)}" />
 <link rel="stylesheet" href="${esc(`${o.radice}${opzioni.foglio}`)}" />
 </head>
 <body>
@@ -108,7 +107,7 @@ ${linkAlFeed(opzioni.indirizzoBase)}
 <div class="edizione">
 <header class="testata">
 <a class="logo" href="${o.radice}"><i aria-hidden="true"></i>AI Radar</a>
-<nav aria-label="Pagina">${opzioni.linkAlleCompetenze ? `<a href="${o.radice}${INDICE_COMPETENZE}">Competenze</a>` : ''}${o.nav}<a href="${o.radice}feed.xml">Segui con RSS</a></nav>
+<nav aria-label="Pagina">${opzioni.linkAlleCompetenze ? `<a href="${o.radice}${INDICE_COMPETENZE}">Competenze</a>` : ''}${o.nav}${opzioni.linkAlleEdizioni ? `<a href="${o.radice}feed.xml">Segui con RSS</a>` : ''}</nav>
 </header>
 <main id="contenuto" tabindex="-1">
 ${o.corpo}

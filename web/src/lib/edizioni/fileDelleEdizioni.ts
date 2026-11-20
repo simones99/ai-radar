@@ -25,9 +25,11 @@ export function fileDelleEdizioni(edizioni: Edizione[], opzioni: OpzioniPagine):
   edizioni.forEach(controlla);
   if (!edizioni.length) return {};
   const recenti = [...edizioni].sort((a, b) => b.settimana.localeCompare(a.settimana));
+  // qui le edizioni ci sono per forza, e con loro il feed a cui le pagine portano
+  const conEdizioni: OpzioniPagine = { ...opzioni, linkAlleEdizioni: true };
   return {
-    'edizioni/index.html': archivio(recenti, opzioni),
-    ...Object.fromEntries(recenti.map((e, i) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, opzioni, { precedente: recenti[i + 1], successiva: recenti[i - 1] })])),
+    'edizioni/index.html': archivio(recenti, conEdizioni),
+    ...Object.fromEntries(recenti.map((e, i) => [`edizioni/${e.settimana}/index.html`, paginaEdizione(e, conEdizioni, { precedente: recenti[i + 1], successiva: recenti[i - 1] })])),
     'feed.xml': feed(recenti, opzioni.indirizzoBase),
     [INDICE_EDIZIONI]: `${JSON.stringify({ ultima: recenti[0].settimana })}\n`,
   };

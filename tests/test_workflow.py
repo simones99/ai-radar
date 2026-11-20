@@ -48,6 +48,14 @@ def test_le_anteprime_partono_in_ogni_giro_e_se_falliscono_il_sito_esce_lo_stess
     assert job("aggiorna.yml", "aggiorna")["outputs"]["anteprime"] == f"${{{{ steps.{anteprime['id']}.outcome }}}}"
 
 
+def test_l_id_di_umami_arriva_dalla_variabile_del_repository_a_tutto_il_job_compresa_la_build_degli_end_to_end():
+    # vars e non secrets: l'ID finisce comunque nell'HTML pubblico. Sul job, la vede anche la build che gli end-to-end rifanno, che è quella pubblicata
+    aggiorna = job("aggiorna.yml", "aggiorna")
+    assert aggiorna["env"]["AI_RADAR_UMAMI_ID"] == "${{ vars.UMAMI_WEBSITE_ID }}"
+    assert all("AI_RADAR_UMAMI_ID" not in p.get("env", {}) for p in aggiorna["steps"])
+    assert "npm run e2e" in passo("Test end-to-end")["run"]
+
+
 def test_i_test_prima_della_raccolta_non_usano_il_browser():
     assert "npm test" in passo("Test dell'app")["run"]
     assert "test:browser" not in passo("Test dell'app")["run"]

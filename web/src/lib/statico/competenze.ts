@@ -120,12 +120,15 @@ const SENZA_DATI = 'I dati di questa competenza non sono disponibili questa sett
  * Fonti e metodo, e i due modi di aprire la competenza nell'app: lì ci sono i grafici e le scelte. Le fonti sono quelle della card, come nelle edizioni;
  * il metodo è lo stesso testo della card, per intero: chi arriva da fuori non deve aprire l'app per sapere come nasce un numero.
  */
+/** Le fonti del radar, quelle della card come nelle edizioni: una tabella sola per la pagina e per la sua immagine. */
+const fontiDelRadar = (r: Radar) => fontiDi({ radar: r }, parseDay(r.generato), { card: 'competenze', elemento: null });
+
 function inFondo(c: Competenza, r: Radar): string {
   const app = (params = {}) => esc(`${RADICE}${toHash('competenze', c.id, params)}`);
   const nome = esc(c.breve || c.nome);
   return `<section>
 <h2>Fonti e metodo</h2>
-${rigaFonti(fontiDi({ radar: r }, parseDay(r.generato), { card: 'competenze', elemento: null }))}
+${rigaFonti(fontiDelRadar(r))}
 <ul class="ed-voci">
 ${METODO_COMPETENZE.map((m) => `<li class="ed-nota">${esc(m)}</li>`).join('\n')}
 </ul>
@@ -241,8 +244,13 @@ export interface MercatoInAnteprima { nome: string; testo: string; tono: 'caldo'
 /**
  * Cosa mostra l'immagine di anteprima di una competenza, e quindi il suo testo alternativo. Nessuna cifra: in un post, senza unità e contesto, si leggerebbe male.
  * La data è null quando generato non ha un giorno valido: come le pagine, l'immagine allora non ne scrive nessuna.
+ * Le fonti ci sono sempre: il quadrante nasce dalla domanda negli annunci, e i termini d'uso di Adzuna chiedono di citare The Adzuna API ovunque escano i suoi dati,
+ * anche in un post che mostra solo l'immagine.
  */
-export interface Anteprima { id: string; nome: string; data: string | null; mercati: [MercatoInAnteprima, MercatoInAnteprima] }
+export interface Anteprima { id: string; nome: string; data: string | null; mercati: [MercatoInAnteprima, MercatoInAnteprima]; fonti: string }
+
+/** «arXiv, GitHub e The Adzuna API». */
+const nomiInFila = (nomi: string[]): string => (nomi.length < 2 ? nomi.join('') : `${nomi.slice(0, -1).join(', ')} e ${nomi[nomi.length - 1]}`);
 
 function anteprimaDi(c: Competenza, r: Radar): Anteprima {
   const tutti = rigaPagina(r, c.id);
@@ -256,12 +264,13 @@ function anteprimaDi(c: Competenza, r: Radar): Anteprima {
     data: giorno ? `Dati ${dayWith('del', giorno)}` : null,
     // senza tutti i Paesi la pagina non ha misure, nemmeno quelle italiane: l'immagine fa lo stesso
     mercati: [mercato(MERCATI.tutti, tutti?.quadrante ?? null), mercato(MERCATI.italia, tutti && italia && !italia.senzaDato ? italia.quadrante : null)],
+    fonti: `Fonti: ${nomiInFila(fontiDelRadar(r).map((f) => f.nome))}`,
   };
 }
 
 /** Il testo alternativo dell'anteprima: le stesse cose dell'immagine, nello stesso ordine. Se l'immagine non si è potuta fare resta questo, sopra il segnaposto. */
 const testoAlternativo = (a: Anteprima): string =>
-  `${a.nome} su AI Radar. ${a.mercati.map((m) => `${m.nome}: ${m.testo}.`).join(' ')}${a.data ? ` ${a.data}.` : ''}`;
+  `${a.nome} su AI Radar. ${a.mercati.map((m) => `${m.nome}: ${m.testo}.`).join(' ')}${a.data ? ` ${a.data}.` : ''} ${a.fonti}.`;
 
 /**
  * Le immagini di anteprima che le pagine delle competenze si aspettano, con il percorso e cosa devono mostrare:

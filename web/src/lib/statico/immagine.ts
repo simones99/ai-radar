@@ -18,6 +18,7 @@ export async function preparaAnteprima(page: Page, a: Anteprima): Promise<void> 
   const esito = await page.evaluate(async ({ a, da, fino }) => {
     document.querySelector('header p')!.textContent = a.data ?? '';
     document.querySelector('h1')!.textContent = a.nome;
+    document.querySelector('footer p')!.textContent = a.fonti;
     const articoli = [...document.querySelectorAll('article')];
     a.mercati.forEach((m, i) => {
       articoli[i].querySelector('h2')!.textContent = m.nome;
@@ -33,6 +34,7 @@ export async function preparaAnteprima(page: Page, a: Anteprima): Promise<void> 
     const entra = (t: Element) => t.scrollHeight <= t.clientHeight && t.scrollWidth <= t.clientWidth;
     const quadrante = [...document.querySelectorAll('article p')].find((p) => !entra(p));
     if (quadrante) return `quadrante:${quadrante.textContent}`;
+    if (!entra(document.querySelector('footer p')!)) return 'fonti';
     const nome = document.querySelector('h1')!;
     for (let corpo = da; corpo >= fino; corpo--) {
       document.documentElement.style.setProperty('--corpo', `${corpo}px`);
@@ -41,6 +43,7 @@ export async function preparaAnteprima(page: Page, a: Anteprima): Promise<void> 
     return 'nome';
   }, { a, da: PIU_GRANDE, fino: PIU_PICCOLO });
   if (esito === 'font') throw new Error('il font del sito non si carica: serve npm ci in web/.');
+  if (esito === 'fonti') throw new Error(`le fonti «${a.fonti}» non entrano nell'immagine.`);
   if (esito === 'nome') throw new Error(`il nome non entra nell'immagine nemmeno a ${PIU_PICCOLO} px.`);
   if (esito.startsWith('quadrante:')) throw new Error(`il quadrante «${esito.slice('quadrante:'.length)}» non entra nella sua card.`);
 }

@@ -63,7 +63,7 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
    * Ogni testo misurato sui suoi caratteri, con la scatola in cui deve stare: la sua card, o i margini dell'immagine. Un elemento può stare nella pagina
    * anche se il suo testo ne esce. Il nome, in più, finisce prima delle card.
    */
-  const misure = (page: Page) => page.locator('h1, header p, article h2, article p').evaluateAll((testi) => {
+  const misure = (page: Page) => page.locator('h1, header p, article h2, article p, footer p').evaluateAll((testi) => {
     const margine = 40;
     const card = document.querySelector('main')!.getBoundingClientRect();
     return testi.map((t) => {
@@ -87,13 +87,15 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
     });
   }
 
-  test('ha il marchio, la data dei dati, il nome e il quadrante nei due mercati, e nessuna cifra oltre la data', async ({ page }) => {
+  test('ha il marchio, la data dei dati, il nome, il quadrante nei due mercati e le fonti, e nessuna cifra oltre la data', async ({ page }) => {
     await preparaAnteprima(page, anteprima('mcp'));
     await expect(page.getByText('AI Radar', { exact: true })).toBeVisible();
     await expect(page.getByText('Dati del 15 ott 2026', { exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Model Context Protocol (MCP)');
     await expect(page.getByRole('heading', { level: 2 })).toHaveText(['Tutti i Paesi', 'Italia']);
     await expect(page.getByRole('article').getByRole('paragraph')).toHaveText(['Impara ora', 'Da provare']);
+    // il quadrante nasce dalla domanda negli annunci: i termini d'uso di Adzuna chiedono di citarla anche qui, dove il post non porta la pagina
+    await expect(page.getByText('Fonti: arXiv, GitHub e The Adzuna API', { exact: true })).toBeVisible();
     expect((await page.locator('body').textContent())!.replace('15 ott 2026', '')).not.toMatch(/\d/);
   });
 

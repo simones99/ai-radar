@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- L'immagine dell'anteprima della pagina di una competenza: marchio, data dei dati, nome e quadrante nei due mercati, con i token e il font del sito. La riempie e la fotografa src/lib/statico/immagine.ts. -->
+<!-- L'immagine dell'anteprima della pagina di una competenza: marchio, data dei dati, nome, quadrante nei due mercati e fonti, con i token e il font del sito. La riempie e la fotografa src/lib/statico/immagine.ts. -->
 <html lang="it" data-theme="light">
   <head>
     <meta charset="utf-8" />
@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../src/app.css" />
     <style>
       html, body { overflow: hidden; }
-      body { width: 1200px; height: 630px; padding: var(--s5); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--s4); }
+      body { width: 1200px; height: 630px; padding: var(--s5); display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; gap: var(--s4); }
       header { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
       .logo { gap: var(--s2); font-size: 40px; line-height: 48px; }
       .logo i { flex: none; width: 36px; height: 36px; border-width: 5px; }
@@ -24,6 +24,8 @@
       /* il blu segna il dato in evidenza, come Impara ora sul radar dell'app */
       article p.caldo { color: var(--accent); }
       article p.manca { font-weight: 500; color: var(--fg-3); }
+      /* le fonti, come la riga meta delle porte nell'immagine dell'edizione: chi vede solo il post sa da dove viene il quadrante */
+      footer p { font-weight: 500; font-size: 26px; line-height: 32px; color: var(--fg-2); white-space: nowrap; }
     </style>
   </head>
   <body>
@@ -36,5 +38,6 @@
       <article><h2></h2><p></p></article>
       <article><h2></h2><p></p></article>
     </main>
+    <footer><p></p></footer>
   </body>
 </html>

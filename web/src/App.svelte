@@ -5,18 +5,22 @@
   import { scorrimento } from './lib/movimento';
   import { PHOTOS } from './lib/photos';
   import { FRASE_DI_APERTURA } from './lib/text/apertura';
+  import { RIGA_DEL_CONTATORE } from './lib/text/contatore';
   import { FONTI_DEI_DATI } from './lib/text/fonti';
   import { dayWith, lunediDi } from './lib/text/format';
   import Doors from './lib/tiles/Doors.svelte';
   import SourcesStatus from './lib/tiles/SourcesStatus.svelte';
   import { TILES } from './lib/tiles/registry';
   import TileGrid from './lib/tiles/TileGrid.svelte';
+  import { conIlContatore } from './lib/umami';
 
   const today = new Date();
   let phase = $state<'loading' | 'ready' | 'error'>('loading');
   let data = $state<Dataset>({});
   let mancanti = $state<FileKey[]>([]);
   let ultimaEdizione = $state<string | null>(null);
+  // lo script di Umami sta nel <head> scritto dalla build, che c'è già quando parte l'app: la riga dice quello che la pagina fa davvero
+  const contaLeVisite = conIlContatore(document);
 
   async function load() {
     phase = 'loading';
@@ -92,6 +96,7 @@
       <p class="small muted">
         Dati di {#each FONTI_DEI_DATI as f, i (f.nome)}<a href={f.url} target="_blank" rel="noopener">{f.nome}</a>{i < FONTI_DEI_DATI.length - 1 ? ', ' : '.'}{/each}
         Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
+        {#if contaLeVisite}{RIGA_DEL_CONTATORE.prima}<a href={RIGA_DEL_CONTATORE.link.url} target="_blank" rel="noopener">{RIGA_DEL_CONTATORE.link.testo}</a>{RIGA_DEL_CONTATORE.dopo}{/if}
         <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
       </p>
     </section>

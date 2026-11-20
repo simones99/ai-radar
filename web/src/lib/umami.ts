@@ -1,6 +1,7 @@
 // Il contatore delle visite, con Umami Cloud: l'ID del sito arriva dal workflow in AI_RADAR_UMAMI_ID, che lo prende dalla variabile
 // del repository UMAMI_WEBSITE_ID. Senza, il sito esce senza contatore: è lo stato delle build in locale e delle copie del progetto.
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SCRIPT = 'https://cloud.umami.is/script.js';
 
 /** L'ID del sito Umami, o null se non c'è. Un valore che non è un UUID ferma la build: altrimenti non si conterebbe niente, senza saperlo. */
 export function idUmami(valore: string | undefined): string | null {
@@ -14,5 +15,8 @@ export function idUmami(valore: string | undefined): string | null {
  * dell'indirizzo base: le prove in locale, gli end-to-end e le copie pubblicate altrove con lo stesso ID non mandano niente.
  */
 export function scriptUmami(id: string, indirizzoBase: string): string {
-  return `<script defer src="https://cloud.umami.is/script.js" data-website-id="${id}" data-domains="${new URL(indirizzoBase).hostname}"></script>`;
+  return `<script defer src="${SCRIPT}" data-website-id="${id}" data-domains="${new URL(indirizzoBase).hostname}"></script>`;
 }
+
+/** La pagina ha lo script di Umami, come lo scrive scriptUmami: l'app lo chiede alla pagina in cui gira, invece di farselo dire dalla build. */
+export const conIlContatore = (pagina: Document): boolean => pagina.querySelector(`script[src="${SCRIPT}"]`) !== null;

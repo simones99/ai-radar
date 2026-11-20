@@ -76,3 +76,29 @@ test.describe('la riga sul contatore', () => {
     }
   }
 });
+
+// l'app sa del contatore dalla pagina in cui gira: la home costruita ha lo script, e il colophon ha la riga nella nota con le fonti.
+// I dati sono quelli del FIXTURE, come in dashboard.spec.ts
+test.describe('la riga sul contatore nel colophon dell’app', () => {
+  for (const [tema, colorScheme] of [['chiaro', 'light'], ['scuro', 'dark']] as const) {
+    test(`in tema ${tema} a 320 px: la riga si legge accanto alle fonti e va a capo, e axe non trova problemi gravi`, async ({ page }) => {
+      await page.clock.setFixedTime(new Date('2026-10-15T10:00:00'));
+      await page.route('**/data/*.json', (route) => {
+        const body = (FIXTURE as Record<string, unknown>)[new URL(route.request().url()).pathname.split('/').pop()!.replace('.json', '')];
+        return body === undefined ? route.fulfill({ status: 404, body: '' }) : route.fulfill({ json: body });
+      });
+      await page.emulateMedia({ colorScheme });
+      await page.setViewportSize({ width: 320, height: 640 });
+      await page.goto('/');
+      await expect(page.getByRole('link', { name: /MCP entra tra le competenze/ })).toBeVisible();
+      const riga = page.getByRole('contentinfo').locator('p', { hasText: 'Il sito conta le visite con Umami' });
+      await expect(riga).toHaveCount(1);
+      await expect(riga).toContainText('Il progetto non è affiliato a nessuna delle fonti. Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.');
+      await riga.scrollIntoViewIfNeeded();
+      await expect(riga).toBeVisible();
+      await expect(riga.getByRole('link', { name: 'Umami' })).toHaveAttribute('href', 'https://umami.is/privacy');
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+      expect(await violazioniGravi(page)).toEqual([]);
+    });
+  }
+});

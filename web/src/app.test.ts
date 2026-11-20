@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App.svelte';
 import { FIXTURE } from './lib/test/fixtures';
+import { scriptUmami } from './lib/umami';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -127,6 +128,47 @@ describe('App', () => {
         expect(document.getElementById('stato')).not.toHaveTextContent('non ha ricevuto i dati');
       });
     }
+  });
+
+  describe('la riga sul contatore', () => {
+    // la pagina come la scrive la build con un ID di Umami: lo script nel <head>, che jsdom non scarica né esegue
+    const conLoScript = () => document.head.insertAdjacentHTML('beforeend', scriptUmami('00000000-0000-4000-8000-000000000000', 'https://simones99.github.io/ai-radar/'));
+    afterEach(() => document.head.querySelectorAll('script[src^="https://cloud.umami.is/"]').forEach((s) => s.remove()));
+    const conIDati = () => vi.fn(async (url: string) => {
+      const k = url.split('/').pop()!.replace('.json', '');
+      if (k === 'edizioni') return { ok: true, json: async () => ({ ultima: '2026-10-12' }) } as Response;
+      return { ok: true, json: async () => (FIXTURE as Record<string, unknown>)[k] } as Response;
+    });
+    const caricata = async () => {
+      vi.stubGlobal('fetch', conIDati());
+      render(App);
+      await screen.findByRole('link', { name: /MCP entra/ });
+      return within(screen.getByRole('contentinfo'));
+    };
+
+    it('con lo script di Umami nella pagina, la nota con le fonti dice come si contano le visite e porta all’informativa di Umami', async () => {
+      conLoScript();
+      const colophon = await caricata();
+      expect(colophon.getByText(/Il progetto non è affiliato a nessuna delle fonti/)).toHaveTextContent(
+        'Il progetto non è affiliato a nessuna delle fonti. Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
+      );
+      const umami = colophon.getByRole('link', { name: 'Umami' });
+      expect(umami).toHaveAttribute('href', 'https://umami.is/privacy');
+      expect(umami).toHaveAttribute('target', '_blank');
+      expect(umami).toHaveAttribute('rel', 'noopener');
+      // il resto del colophon resta dov'è
+      expect(await colophon.findByRole('link', { name: 'Segui con RSS' })).toHaveAttribute('href', 'feed.xml');
+      expect(colophon.getByRole('heading', { name: 'Foto e fonti' })).toBeInTheDocument();
+      expect(colophon.getByRole('heading', { name: 'Stato delle fonti' })).toBeInTheDocument();
+      expect(colophon.getByRole('link', { name: 'Licenze del software' })).toHaveAttribute('href', 'THIRD_PARTY_LICENSES.txt');
+    });
+
+    it('senza lo script, il colophon non parla di visite', async () => {
+      const colophon = await caricata();
+      expect(colophon.getByText(/Il progetto non è affiliato a nessuna delle fonti/)).toBeInTheDocument();
+      expect(screen.getByRole('contentinfo')).not.toHaveTextContent('visite');
+      expect(colophon.queryByRole('link', { name: 'Umami' })).toBeNull();
+    });
   });
 
   it('nessun dato raggiungibile: avviso e Riprova', async () => {

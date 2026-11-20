@@ -499,6 +499,66 @@ describe('la pagina Privacy', () => {
       for (const idUmami of [undefined, null]) expect(Object.keys(filePubblici(contenuto, { ...opzioni, idUmami }))).not.toContain(PRIVACY);
     }
   });
+
+  describe('quello che dice', () => {
+    const doc = () => new DOMParser().parseFromString(filePubblici(tutto, { ...opzioni, idUmami: ID })[PRIVACY], 'text/html');
+    // hidden: true perché la pagina letta non ha una finestra che calcoli gli stili, come in test/contatore.ts
+    const corpo = () => within(doc().querySelector('main')!);
+    const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
+    /** Il testo di una sezione, sotto il suo titolo. */
+    const sezione = (titolo: string) => corpo().getAllByRole('heading', { level: 2, hidden: true }).find((h) => pulito(h.textContent) === titolo)!.closest('section')!;
+    const link = (el: Element) => within(el as HTMLElement).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href')]);
+
+    it('si intitola Privacy, con il canonical in privacy/, e ha le sezioni dell’informativa in ordine', () => {
+      expect(corpo().getAllByRole('heading', { level: 1, hidden: true }).map((h) => pulito(h.textContent))).toEqual(['Privacy']);
+      expect(doc().querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(assoluto('privacy/'));
+      expect(corpo().getAllByRole('heading', { level: 2, hidden: true }).map((h) => pulito(h.textContent))).toEqual([
+        'Chi è il titolare', 'Cosa si raccoglie e perché', 'Base giuridica', 'Per quanto tempo',
+        'Chi tratta i dati per conto del titolare', 'Chi ospita il sito', 'Nel tuo browser', 'I tuoi diritti',
+      ]);
+    });
+
+    it('il titolare si contatta solo dal profilo GitHub, senza nomi di persona, e le richieste con dati personali passano da una issue', () => {
+      const titolare = sezione('Chi è il titolare');
+      expect(pulito(titolare.textContent)).toBe(
+        'Chi è il titolare AI Radar è un progetto personale. Il titolare del trattamento si contatta dal suo profilo GitHub. '
+        + 'Per una richiesta che contiene dati personali, apri una issue nel repository senza scriverli: ti viene indicato un canale privato.',
+      );
+      expect(link(titolare)).toEqual([['profilo GitHub', 'https://github.com/simones99'], ['issue nel repository', 'https://github.com/simones99/ai-radar/issues']]);
+    });
+
+    it('dice cosa raccoglie Umami, che non ci sono cookie, la base giuridica, i 6 mesi, Umami come responsabile e dove sono i dati', () => {
+      const raccolta = pulito(sezione('Cosa si raccoglie e perché').textContent);
+      for (const frase of ['l’indirizzo e il titolo della pagina', 'la pagina da cui arrivi', 'la lingua del browser', 'la dimensione dello schermo', 'il browser, il sistema operativo e il tipo di dispositivo', 'una posizione approssimativa', 'un sale che cambia ogni mese', 'le statistiche non lo contengono', 'non usa cookie', 'il sito funziona lo stesso']) {
+        expect(raccolta).toContain(frase);
+      }
+      expect(pulito(sezione('Base giuridica').textContent)).toContain('legittimo interesse del titolare a capire se e come il sito viene letto (art. 6, par. 1, lett. f del GDPR)');
+      expect(pulito(sezione('Per quanto tempo').textContent)).toContain('Le statistiche restano su Umami 6 mesi');
+      const responsabile = sezione('Chi tratta i dati per conto del titolare');
+      expect(pulito(responsabile.textContent)).toContain('Umami Software, Inc. tratta i dati delle visite per conto del titolare con il servizio Umami Cloud, come responsabile del trattamento.');
+      expect(pulito(responsabile.textContent)).toContain('Le statistiche sono conservate in UE.');
+      expect(link(responsabile)).toEqual([['informativa sulla privacy', 'https://umami.is/privacy'], ['elenco dei suoi sub-responsabili', 'https://umami.is/subprocessors']]);
+      expect(link(sezione('Chi ospita il sito')).map(([, href]) => href)).toEqual([
+        'https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection',
+        'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',
+      ]);
+    });
+
+    it('elenca i diritti, dice dell’art. 11 e porta al Garante; in fondo la data dell’ultimo aggiornamento', () => {
+      const diritti = sezione('I tuoi diritti');
+      expect(pulito(diritti.textContent)).toContain('(artt. 15-21 del GDPR)');
+      expect(pulito(diritti.textContent)).toContain('(art. 11 del GDPR)');
+      expect(link(diritti)).toEqual([['Garante per la protezione dei dati personali', 'https://www.garanteprivacy.it/']]);
+      expect(pulito(doc().querySelector('main')!.textContent)).toMatch(/Aggiornata il 20 novembre 2026\.$/);
+    });
+
+    it('i link dell’informativa portano fuori come gli altri link esterni', () => {
+      for (const a of doc().querySelectorAll('main a')) {
+        expect(a.getAttribute('href'), a.textContent!).toMatch(/^https:\/\//);
+        expect([a.getAttribute('target'), a.getAttribute('rel')], a.textContent!).toEqual(['_blank', 'noopener']);
+      }
+    });
+  });
 });
 
 // lo script e la riga nascono dallo stesso ID, sulla stessa mappa

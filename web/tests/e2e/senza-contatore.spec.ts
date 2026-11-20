@@ -18,3 +18,9 @@ for (const [nome, indirizzo] of [['la home', '/'], ['l’indice delle competenze
     expect(await risposta.text()).not.toMatch(/umami/i);
   });
 }
+
+// il server di prova, come quello di un'app, può rispondere con la home a un indirizzo che non c'è: conta che la pagina non sia uscita
+test('senza ID la pagina Privacy non esce, né nella sitemap: descrive un contatore che non c’è', async ({ request }) => {
+  expect(await (await request.get('/privacy/')).text()).not.toMatch(/titolare del trattamento/);
+  expect(await (await request.get('/sitemap.xml')).text()).not.toMatch(/privacy/);
+});

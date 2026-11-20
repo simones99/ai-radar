@@ -41,8 +41,12 @@ Il servizio che conta le visite alle pagine di AI Radar, Umami Cloud, senza cook
 _Avoid_: analytics, tracciamento, tracker, statistiche (per il contatore)
 
 **Riga sul contatore**:
-La frase in fondo a una pagina che dice a chi legge che il sito conta le visite e come, con il link all'informativa di Umami. C'è in una pagina se e solo se lì il contatore delle visite è acceso.
-_Avoid_: riga del contatore, banner, avviso, informativa (la riga porta a quella di Umami, non lo è)
+La frase in fondo a una pagina che dice a chi legge che il sito conta le visite e come, con il link «Privacy» alla pagina Privacy. C'è in una pagina se e solo se lì il contatore delle visite è acceso.
+_Avoid_: riga del contatore, banner, avviso, informativa (la riga porta alla pagina Privacy, non lo è)
+
+**Pagina Privacy**:
+La pagina del sito, in `privacy/`, che dice chi è il titolare e come si contatta, cosa raccoglie il contatore delle visite e perché, per quanto tempo, e quali diritti ha chi legge. C'è se e solo se il contatore delle visite è acceso.
+_Avoid_: informativa del sito, privacy policy, cookie policy
 
 **Visita di ritorno**:
 La visita di chi Umami riconosce come già passato sul sito in un'altra settimana dello stesso mese di calendario. Chi torna nella stessa settimana, o in un mese diverso, non fa una visita di ritorno.

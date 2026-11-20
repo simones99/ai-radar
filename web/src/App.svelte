@@ -96,7 +96,8 @@
       <p class="small muted">
         Dati di {#each FONTI_DEI_DATI as f, i (f.nome)}<a href={f.url} target="_blank" rel="noopener">{f.nome}</a>{i < FONTI_DEI_DATI.length - 1 ? ', ' : '.'}{/each}
         Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
-        {#if conLaRigaSulContatore}{RIGA_SUL_CONTATORE.prima}<a href={RIGA_SUL_CONTATORE.link.url} target="_blank" rel="noopener">{RIGA_SUL_CONTATORE.link.testo}</a>{RIGA_SUL_CONTATORE.dopo}{/if}
+        <!-- l'app sta alla radice del sito: la pagina Privacy è accanto -->
+        {#if conLaRigaSulContatore}{RIGA_SUL_CONTATORE.testo} <a href={RIGA_SUL_CONTATORE.link.percorso}>{RIGA_SUL_CONTATORE.link.testo}</a>.{/if}
         <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
       </p>
     </section>

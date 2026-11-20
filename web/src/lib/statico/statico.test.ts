@@ -34,6 +34,8 @@ const edizione = creaEdizione(d, null) as Edizione;
 const PAGINA = `edizioni/${edizione.settimana}/index.html`;
 /** Il link della testata verso l'indice delle competenze, come lo scrive la pagina. */
 const LINK_COMPETENZE = /<a href="[^"]*competenze\/">Competenze<\/a>/;
+/** La pagina Privacy, che c'è solo con l'ID di Umami. */
+const PRIVACY = 'privacy/index.html';
 
 describe('i file pubblici del sito', () => {
   it('con un’edizione e il radar ci sono la pagina dell’edizione, l’archivio e il feed', () => {
@@ -487,6 +489,81 @@ describe('robots.txt', () => {
   });
 });
 
+// la pagina Privacy descrive il contatore delle visite: nasce dallo stesso ID dello script e della riga
+describe('la pagina Privacy', () => {
+  const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
+
+  it('con un ID c’è, con o senza edizioni e dati; senza ID no, perché una copia senza contatore non ha niente da dichiarare', () => {
+    for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
+      expect(Object.keys(filePubblici(contenuto, { ...opzioni, idUmami: ID }))).toContain(PRIVACY);
+      for (const idUmami of [undefined, null]) expect(Object.keys(filePubblici(contenuto, { ...opzioni, idUmami }))).not.toContain(PRIVACY);
+    }
+  });
+
+  describe('quello che dice', () => {
+    const doc = () => new DOMParser().parseFromString(filePubblici(tutto, { ...opzioni, idUmami: ID })[PRIVACY], 'text/html');
+    // hidden: true perché la pagina letta non ha una finestra che calcoli gli stili, come in test/contatore.ts
+    const corpo = () => within(doc().querySelector('main')!);
+    const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
+    /** Il testo di una sezione, sotto il suo titolo. */
+    const sezione = (titolo: string) => corpo().getAllByRole('heading', { level: 2, hidden: true }).find((h) => pulito(h.textContent) === titolo)!.closest('section')!;
+    const link = (el: Element) => within(el as HTMLElement).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href')]);
+
+    it('si intitola Privacy, con il canonical in privacy/, e ha le sezioni dell’informativa in ordine', () => {
+      expect(corpo().getAllByRole('heading', { level: 1, hidden: true }).map((h) => pulito(h.textContent))).toEqual(['Privacy']);
+      expect(doc().querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(assoluto('privacy/'));
+      expect(corpo().getAllByRole('heading', { level: 2, hidden: true }).map((h) => pulito(h.textContent))).toEqual([
+        'Chi è il titolare', 'Cosa si raccoglie e perché', 'Base giuridica', 'Per quanto tempo',
+        'Chi tratta i dati per conto del titolare', 'Chi ospita il sito', 'Nel tuo browser', 'I tuoi diritti',
+      ]);
+    });
+
+    it('il titolare si contatta solo dal profilo GitHub, senza nomi di persona, e le richieste con dati personali passano da una issue', () => {
+      const titolare = sezione('Chi è il titolare');
+      expect(pulito(titolare.textContent)).toBe(
+        'Chi è il titolare AI Radar è un progetto personale. Il titolare del trattamento si contatta dal suo profilo GitHub. '
+        + 'Per una richiesta che contiene dati personali, apri una issue nel repository senza scriverli: ti viene indicato un canale privato.',
+      );
+      expect(link(titolare)).toEqual([['profilo GitHub', 'https://github.com/simones99'], ['issue nel repository', 'https://github.com/simones99/ai-radar/issues']]);
+    });
+
+    it('dice cosa raccoglie Umami, che non ci sono cookie, la base giuridica, i 6 mesi, Umami come responsabile e dove sono i dati', () => {
+      const raccolta = pulito(sezione('Cosa si raccoglie e perché').textContent);
+      for (const frase of ['l’indirizzo e il titolo della pagina', 'la pagina da cui arrivi', 'la lingua del browser', 'la dimensione dello schermo', 'la data e l’ora della visita', 'il browser, il sistema operativo e il tipo di dispositivo', 'una posizione approssimativa', 'un sale che cambia ogni mese', 'le statistiche non lo contengono', 'non usa cookie', 'il sito funziona lo stesso']) {
+        expect(raccolta).toContain(frase);
+      }
+      expect(pulito(sezione('Base giuridica').textContent)).toContain('legittimo interesse del titolare a capire se e come il sito viene letto (art. 6, par. 1, lett. f del GDPR)');
+      expect(pulito(sezione('Per quanto tempo').textContent)).toContain('Le statistiche restano su Umami 6 mesi');
+      const responsabile = sezione('Chi tratta i dati per conto del titolare');
+      expect(pulito(responsabile.textContent)).toContain('Umami Software, Inc., con sede a San Francisco, negli Stati Uniti, tratta i dati delle visite per conto del titolare con il servizio Umami Cloud, come responsabile del trattamento, secondo il suo accordo sul trattamento dei dati.');
+      expect(pulito(responsabile.textContent)).toContain('Le statistiche sono conservate in UE.');
+      expect(pulito(responsabile.textContent)).toContain('possono essere trasferiti negli Stati Uniti con le clausole contrattuali tipo dell’UE');
+      expect(link(responsabile)).toEqual([
+        ['accordo sul trattamento dei dati', 'https://umami.is/dpa'], ['informativa sulla privacy', 'https://umami.is/privacy'], ['elenco dei suoi sub-responsabili', 'https://umami.is/subprocessors'],
+      ]);
+      expect(link(sezione('Chi ospita il sito')).map(([, href]) => href)).toEqual([
+        'https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection',
+        'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement',
+      ]);
+    });
+
+    it('elenca i diritti, dice dell’art. 11 e porta al Garante; in fondo la data dell’ultimo aggiornamento', () => {
+      const diritti = sezione('I tuoi diritti');
+      expect(pulito(diritti.textContent)).toContain('(artt. 15-21 del GDPR)');
+      expect(pulito(diritti.textContent)).toContain('(art. 11 del GDPR)');
+      expect(link(diritti)).toEqual([['Garante per la protezione dei dati personali', 'https://www.garanteprivacy.it/']]);
+      expect(pulito(doc().querySelector('main')!.textContent)).toMatch(/Aggiornata il 20 novembre 2026\.$/);
+    });
+
+    it('i link dell’informativa portano fuori come gli altri link esterni', () => {
+      for (const a of doc().querySelectorAll('main a')) {
+        expect(a.getAttribute('href'), a.textContent!).toMatch(/^https:\/\//);
+        expect([a.getAttribute('target'), a.getAttribute('rel')], a.textContent!).toEqual(['_blank', 'noopener']);
+      }
+    });
+  });
+});
+
 // lo script e la riga nascono dallo stesso ID, sulla stessa mappa
 describe('il contatore delle visite', () => {
   const tutto: ContenutoStatico = { edizioni: [edizione], dataset: d };
@@ -523,40 +600,45 @@ describe('il contatore delle visite', () => {
       }
     });
 
-    it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID', () => {
+    it('titolo, descrizione, canonical e anteprima sono gli stessi con e senza ID, nelle pagine che ci sono in tutti e due', () => {
       const testa = (doc: Document) => ({
         titolo: doc.title,
         meta: [...doc.head.querySelectorAll('meta[name], meta[property]')].map((m) => [m.getAttribute('name') ?? m.getAttribute('property'), m.getAttribute('content')]),
         link: [...doc.head.querySelectorAll('link')].map((l) => [l.getAttribute('rel'), l.getAttribute('href')]),
       });
       const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
-      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID })).filter(([p]) => p !== PRIVACY)) {
         expect(testa(doc).meta.length, percorso).toBeGreaterThan(0);
         expect(testa(doc), percorso).toEqual(testa(senza[percorso]));
       }
     });
 
-    it('i file che non sono pagine restano identici con e senza ID: il feed, la sitemap e l’indice delle edizioni', () => {
+    it('i file che non sono pagine restano identici con e senza ID, il feed e l’indice delle edizioni; la sitemap guadagna solo la pagina Privacy', () => {
       const nonPagine = (file: Record<string, string>) => Object.fromEntries(Object.entries(file).filter(([percorso]) => !percorso.endsWith('.html')));
-      const con = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
-      expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'sitemap.xml', 'data/edizioni.json']));
-      expect(con).toEqual(nonPagine(filePubblici(tutto, opzioni)));
+      const { 'sitemap.xml': sitemapCon, ...con } = nonPagine(filePubblici(tutto, { ...opzioni, idUmami: ID }));
+      const { 'sitemap.xml': sitemapSenza, ...senza } = nonPagine(filePubblici(tutto, opzioni));
+      expect(Object.keys(con)).toEqual(expect.arrayContaining(['feed.xml', 'data/edizioni.json']));
+      expect(con).toEqual(senza);
+      expect(sitemapCon.replace(`<url><loc>${assoluto('privacy/')}</loc></url>
+`, '')).toBe(sitemapSenza);
     });
   });
 
   describe('la riga sul contatore', () => {
-    const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.';
+    const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE. Privacy';
     const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
 
-    it('con un ID ogni pagina statica e la home in chiaro hanno in fondo la riga, con «Umami» che porta alla sua informativa come gli altri link esterni', () => {
+    it('con un ID ogni pagina statica, la home in chiaro e la pagina Privacy hanno in fondo la riga, con «Privacy» che porta alla pagina Privacy del sito, nella stessa scheda', () => {
       const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
-      expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+      expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html', PRIVACY]));
       for (const [percorso, doc] of pagine(file)) {
         const riga = righeSulContatore(doc);
         expect(riga, percorso).toHaveLength(1);
         expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
-        const link = within(riga[0]).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
-        expect(link, percorso).toEqual([['Umami', 'https://umami.is/privacy', '_blank', 'noopener']]);
+        const link = within(riga[0]).getAllByRole('link', { hidden: true });
+        expect(link.map((a) => [pulito(a.textContent), a.getAttribute('target')]), percorso).toEqual([['Privacy', null]]);
+        // l'indirizzo è relativo alla pagina: letto da dove sta la pagina, porta alla pagina Privacy con qualunque indirizzo base
+        expect(new URL(link[0].getAttribute('href')!, assoluto(percorso)).href, percorso).toBe(assoluto('privacy/'));
       }
     });
 
@@ -574,7 +656,7 @@ describe('il contatore delle visite', () => {
         for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
           const file = filePubblici(contenuto, { ...opzioni, idUmami });
           expect(Object.keys(file).length).toBeGreaterThan(0);
-          for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|umami\.is\/privacy/);
+          for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|privacy\//);
         }
       }
     });
@@ -582,7 +664,7 @@ describe('il contatore delle visite', () => {
     it('è testo normale del piè di pagina: niente di nascosto, e la navigazione resta quella senza ID', () => {
       const senza = Object.fromEntries(pagine(filePubblici(tutto, opzioni)));
       const nav = (doc: Document) => within(doc.body).queryAllByRole('navigation', { hidden: true }).map((n) => n.outerHTML);
-      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID }))) {
+      for (const [percorso, doc] of pagine(filePubblici(tutto, { ...opzioni, idUmami: ID })).filter(([p]) => p !== PRIVACY)) {
         const riga = righeSulContatore(doc)[0];
         expect(riga.closest('[hidden], [aria-hidden="true"]'), percorso).toBeNull();
         expect(riga.querySelectorAll('[hidden], [aria-hidden]'), percorso).toHaveLength(0);

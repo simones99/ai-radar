@@ -228,14 +228,22 @@ describe('il sito costruito', () => {
       }
     });
 
-    it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link all’informativa di Umami; senza, nessuna', () => {
-      for (const [percorso, doc] of pagineDelSito(conUmami())) {
+    it('con l’ID ogni pagina, home in chiaro compresa, ha in fondo la riga sul contatore con il link alla pagina Privacy del sito; senza, nessuna', () => {
+      const tutte = pagineDelSito(conUmami());
+      expect(tutte.map(([p]) => p.replaceAll('\\', '/'))).toContain('privacy/index.html');
+      for (const [percorso, doc] of tutte) {
         expect(righeSulContatore(doc).map((p) => p.textContent?.replace(/\s+/g, ' ').trim()), percorso).toEqual([
-          'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
+          'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE. Privacy',
         ]);
-        expect(within(righeSulContatore(doc)[0]).getAllByRole('link', { hidden: true }).map((a) => [a.textContent, a.getAttribute('href')]), percorso).toEqual([['Umami', 'https://umami.is/privacy']]);
+        const link = within(righeSulContatore(doc)[0]).getAllByRole('link', { hidden: true });
+        expect(link.map((a) => a.textContent), percorso).toEqual(['Privacy']);
+        // letto da dove sta la pagina, il link porta alla pagina Privacy sotto l'indirizzo base
+        expect(new URL(link[0].getAttribute('href')!, `${ALTRO_INDIRIZZO}${percorso.replaceAll('\\', '/')}`).href, percorso).toBe(`${ALTRO_INDIRIZZO}privacy/`);
       }
-      for (const sito of [conEdizioni(), senzaEdizioni()]) for (const [percorso, doc] of pagineDelSito(sito)) expect(righeSulContatore(doc), percorso).toEqual([]);
+      for (const sito of [conEdizioni(), senzaEdizioni()]) {
+        for (const [percorso, doc] of pagineDelSito(sito)) expect(righeSulContatore(doc), percorso).toEqual([]);
+        expect(existsSync(join(sito, 'privacy')), sito).toBe(false);
+      }
     });
 
     it('i file fissi delle edizioni non cambiano, e nemmeno l’indice che legge la home', () => {

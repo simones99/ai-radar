@@ -51,9 +51,9 @@ export const linkEsterno = (url: string | null, testo: string): string => {
 /** L'HTML dentro un link a un indirizzo del sito, o così com'è quando l'indirizzo non c'è. */
 export const inLink = (href: string | null, html: string): string => (href ? `<a href="${esc(href)}">${html}</a>` : html);
 
-/** La riga sul contatore delle visite, per il piè di pagina: il link a Umami si apre come gli altri link esterni. */
-export const rigaSulContatore = (): string =>
-  `<p class="ed-nota">${esc(RIGA_SUL_CONTATORE.prima)}${linkEsterno(RIGA_SUL_CONTATORE.link.url, RIGA_SUL_CONTATORE.link.testo)}${esc(RIGA_SUL_CONTATORE.dopo)}</p>`;
+/** La riga sul contatore delle visite, per il piè di pagina di una pagina che vede la radice del sito in radice: il link porta alla pagina Privacy, nella stessa scheda. */
+export const rigaSulContatore = (radice: string): string =>
+  `<p class="ed-nota">${esc(RIGA_SUL_CONTATORE.testo)} ${inLink(`${radice}${RIGA_SUL_CONTATORE.link.percorso}`, esc(RIGA_SUL_CONTATORE.link.testo))}</p>`;
 
 export function rigaFonti(fonti: Fonte[]): string {
   if (!fonti.length) return '';
@@ -119,7 +119,7 @@ ${opzioni.linkAlleEdizioni ? `${linkAlFeed(opzioni.indirizzoBase)}\n` : ''}<link
 <main id="contenuto" tabindex="-1">
 ${o.corpo}
 </main>
-<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p>${opzioni.conLaRigaSulContatore ? `\n${rigaSulContatore()}` : ''}</footer>
+<footer><p class="ed-nota">Il progetto non è affiliato a nessuna delle fonti.</p>${opzioni.conLaRigaSulContatore ? `\n${rigaSulContatore(o.radice)}` : ''}</footer>
 </div>
 </body>
 </html>

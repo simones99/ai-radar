@@ -622,18 +622,20 @@ describe('il contatore delle visite', () => {
   });
 
   describe('la riga sul contatore', () => {
-    const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.';
+    const RIGA = 'Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE. Privacy';
     const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
 
-    it('con un ID ogni pagina statica e la home in chiaro hanno in fondo la riga, con «Umami» che porta alla sua informativa come gli altri link esterni', () => {
+    it('con un ID ogni pagina statica, la home in chiaro e la pagina Privacy hanno in fondo la riga, con «Privacy» che porta alla pagina Privacy del sito, nella stessa scheda', () => {
       const file = filePubblici(tutto, { ...opzioni, idUmami: ID });
-      expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html']));
+      expect(Object.keys(file)).toEqual(expect.arrayContaining(['index.html', PAGINA, 'edizioni/index.html', 'competenze/index.html', 'competenze/mcp/index.html', PRIVACY]));
       for (const [percorso, doc] of pagine(file)) {
         const riga = righeSulContatore(doc);
         expect(riga, percorso).toHaveLength(1);
         expect(pulito(riga[0].textContent), percorso).toBe(RIGA);
-        const link = within(riga[0]).getAllByRole('link', { hidden: true }).map((a) => [pulito(a.textContent), a.getAttribute('href'), a.getAttribute('target'), a.getAttribute('rel')]);
-        expect(link, percorso).toEqual([['Umami', 'https://umami.is/privacy', '_blank', 'noopener']]);
+        const link = within(riga[0]).getAllByRole('link', { hidden: true });
+        expect(link.map((a) => [pulito(a.textContent), a.getAttribute('target')]), percorso).toEqual([['Privacy', null]]);
+        // l'indirizzo è relativo alla pagina: letto da dove sta la pagina, porta alla pagina Privacy con qualunque indirizzo base
+        expect(new URL(link[0].getAttribute('href')!, assoluto(percorso)).href, percorso).toBe(assoluto('privacy/'));
       }
     });
 
@@ -651,7 +653,7 @@ describe('il contatore delle visite', () => {
         for (const contenuto of [tutto, { edizioni: [], dataset: {} }]) {
           const file = filePubblici(contenuto, { ...opzioni, idUmami });
           expect(Object.keys(file).length).toBeGreaterThan(0);
-          for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|umami\.is\/privacy/);
+          for (const [percorso, testo] of Object.entries(file)) expect(testo, percorso).not.toMatch(/Umami|privacy\//);
         }
       }
     });

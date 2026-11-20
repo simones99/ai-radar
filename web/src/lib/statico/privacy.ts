@@ -1,10 +1,8 @@
 // La pagina Privacy del sito: descrive il contatore delle visite, e la mappa dei file pubblici la fa nascere solo dove il contatore è acceso.
 // Il testo sta in text/privacy.ts; qui diventa una pagina statica come le altre, con i link esterni che passano dai link sicuri.
+import { PAGINA_PRIVACY } from '../text/contatore';
 import { PRIVACY, type Pezzo } from '../text/privacy';
 import { esc, IMMAGINE_HOME, linkEsterno, pagina, type OpzioniPagine } from './pagina';
-
-/** La pagina Privacy, vista dalla radice del sito: la riga sul contatore porta qui. */
-export const PAGINA_PRIVACY = 'privacy/';
 
 const pezzo = (p: Pezzo): string => (typeof p === 'string' ? esc(p) : linkEsterno(p.url, p.testo));
 

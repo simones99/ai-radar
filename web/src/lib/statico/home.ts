@@ -62,7 +62,7 @@ ${s.porte.map((p) => cardDellaTesta(p, s.card, verso)).join('\n')}
 function fondo(conFeed: boolean, conLaRigaSulContatore: boolean): string {
   return `<footer>
 <p class="ed-nota">Dati di ${FONTI_DEI_DATI.map((f) => linkEsterno(f.url, f.nome)).join(', ')}. Il progetto non è affiliato a nessuna delle fonti.</p>
-${conLaRigaSulContatore ? `${rigaSulContatore()}\n` : ''}${conFeed ? `<p class="ed-nota"><a href="feed.xml">Segui con RSS</a></p>\n` : ''}</footer>`;
+${conLaRigaSulContatore ? `${rigaSulContatore('')}\n` : ''}${conFeed ? `<p class="ed-nota"><a href="feed.xml">Segui con RSS</a></p>\n` : ''}</footer>`;
 }
 
 /**

@@ -147,16 +147,17 @@ describe('App', () => {
       return within(screen.getByRole('contentinfo'));
     };
 
-    it('con lo script di Umami nella pagina, la nota con le fonti dice come si contano le visite e porta all’informativa di Umami', async () => {
+    it('con lo script di Umami nella pagina, la nota con le fonti dice come si contano le visite e porta alla pagina Privacy del sito', async () => {
       conLoScript();
       const colophon = await caricata();
       expect(colophon.getByText(/Il progetto non è affiliato a nessuna delle fonti/)).toHaveTextContent(
-        'Il progetto non è affiliato a nessuna delle fonti. Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE.',
+        'Il progetto non è affiliato a nessuna delle fonti. Il sito conta le visite con Umami, senza cookie: le statistiche non contengono indirizzi IP e sono conservate in UE. Privacy.',
       );
-      const umami = colophon.getByRole('link', { name: 'Umami' });
-      expect(umami).toHaveAttribute('href', 'https://umami.is/privacy');
-      expect(umami).toHaveAttribute('target', '_blank');
-      expect(umami).toHaveAttribute('rel', 'noopener');
+      // l'app sta alla radice del sito: la pagina Privacy è accanto, e si apre nella stessa scheda
+      const privacy = colophon.getByRole('link', { name: 'Privacy' });
+      expect(privacy).toHaveAttribute('href', 'privacy/');
+      expect(privacy).not.toHaveAttribute('target');
+      expect(colophon.queryByRole('link', { name: 'Umami' })).toBeNull();
       // il resto del colophon resta dov'è
       expect(await colophon.findByRole('link', { name: 'Segui con RSS' })).toHaveAttribute('href', 'feed.xml');
       expect(colophon.getByRole('heading', { name: 'Foto e fonti' })).toBeInTheDocument();
@@ -168,7 +169,7 @@ describe('App', () => {
       const colophon = await caricata();
       expect(colophon.getByText(/Il progetto non è affiliato a nessuna delle fonti/)).toBeInTheDocument();
       expect(screen.getByRole('contentinfo')).not.toHaveTextContent('visite');
-      expect(colophon.queryByRole('link', { name: 'Umami' })).toBeNull();
+      expect(colophon.queryByRole('link', { name: 'Privacy' })).toBeNull();
     });
   });
 

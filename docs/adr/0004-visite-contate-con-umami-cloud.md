@@ -34,5 +34,5 @@ Il sito non ha un banner di consenso: è una decisione dell'autore. Lo script di
 ## Considered Options
 
 - GoatCounter: il più rigoroso, con i server in UE e l'hash tenuto 8 ore. Ma chi torna dopo 8 ore è un visitatore nuovo, e la terza misura andrebbe sostituita con un'approssimazione, per esempio gli arrivi dal feed: direbbe chi segue il sito, non chi torna.
-- Cloudflare Web Analytics: non conta né i visitatori unici né i ritorni, il codice è chiuso, e per un sito su GitHub Pages non c'è modo di escludere il traffico UE.
+- Cloudflare Web Analytics: non conta né i visitatori unici né i ritorni, e il codice è chiuso. Escludere i visitatori dall'UE si può solo per un sito che passa dal proxy di Cloudflare, dove Cloudflare mette lo script da sé: l'opzione è «Enable, excluding visitor data in the EU» della configurazione automatica. Un sito su `github.io` non passa da Cloudflare, e lo script va messo a mano nelle pagine, dove quell'opzione la [guida di Web Analytics](https://developers.cloudflare.com/web-analytics/get-started/) non la offre (letta il 20 novembre 2026).
 - Ospitare Umami da sé: servirebbero un server e un database sempre accesi, che GitHub non dà gratis.

@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { FILES, loadAll, type FileKey } from './lib/data/load';
+  import { caricaUltimaEdizione, FILES, loadAll, type FileKey } from './lib/data/load';
   import type { Dataset } from './lib/data/types';
   import { scorrimento } from './lib/movimento';
   import { PHOTOS } from './lib/photos';
+  import { FRASE_DI_APERTURA } from './lib/text/apertura';
+  import { FONTI_DEI_DATI } from './lib/text/fonti';
   import { dayWith, lunediDi } from './lib/text/format';
   import Doors from './lib/tiles/Doors.svelte';
   import SourcesStatus from './lib/tiles/SourcesStatus.svelte';
@@ -14,9 +16,12 @@
   let phase = $state<'loading' | 'ready' | 'error'>('loading');
   let data = $state<Dataset>({});
   let mancanti = $state<FileKey[]>([]);
+  let ultimaEdizione = $state<string | null>(null);
 
   async function load() {
     phase = 'loading';
+    // facoltativo: i dati non lo aspettano, e se non arriva la home resta senza link
+    caricaUltimaEdizione().then((u) => { ultimaEdizione = u; });
     const r = await loadAll();
     data = r.data;
     mancanti = r.failed;
@@ -31,19 +36,13 @@
     t?.focus({ preventScroll: true });
     t?.scrollIntoView?.({ block: 'start', behavior: scorrimento() });
   }
-
-  const FONTI = [
-    ['Epoch AI', 'https://epoch.ai/data/ai-models'], ['arXiv', 'https://arxiv.org'],
-    ['GitHub', 'https://github.com'], ['Hugging Face', 'https://huggingface.co'], ['The Adzuna API', 'https://www.adzuna.co.uk'],
-    ['Eurostat', 'https://ec.europa.eu/eurostat'], ['Our World in Data', 'https://ourworldindata.org'],
-  ];
 </script>
 
 <a class="skip" href="#contenuto" onclick={salta}>Vai al contenuto</a>
 <div class="wrap">
-  <header class="bar">
+  <header class="testata">
     <span class="logo"><i aria-hidden="true"></i>AI Radar</span>
-    <nav aria-label="Pagina"><a href="#crediti">Foto e fonti</a><a href="#stato">Stato delle fonti</a></nav>
+    <nav aria-label="Pagina">{#if ultimaEdizione}<a href="edizioni/">Edizioni</a>{/if}<a href="#crediti">Foto e fonti</a><a href="#stato">Stato delle fonti</a></nav>
   </header>
 
   <main>
@@ -62,8 +61,12 @@
     <div class="intro">
       <section class="hero">
         <!-- la settimana dei dati, non quella dell'orologio di chi legge: dal suo lunedì, anche quando il giro è partito un altro giorno -->
-        {#if data.status?.aggiornato}<p class="small muted">Settimana {dayWith('del', lunediDi(data.status.aggiornato))}</p>{/if}
-        <h1 id="contenuto" tabindex="-1">Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.</h1>
+        {#if data.status?.aggiornato}
+          {@const settimana = lunediDi(data.status.aggiornato)}
+          <!-- porta all'edizione solo se è proprio di questa settimana: un'edizione vecchia direbbe un'altra cosa -->
+          <p class="small muted">{#if ultimaEdizione === settimana}<a class="settimana" href="edizioni/{settimana}/">Settimana {dayWith('del', settimana)}</a>{:else}Settimana {dayWith('del', settimana)}{/if}</p>
+        {/if}
+        <h1 id="contenuto" tabindex="-1">{FRASE_DI_APERTURA}</h1>
       </section>
       {#if phase === 'ready'}<Doors {data} {today} />{/if}
     </div>
@@ -77,6 +80,7 @@
   </main>
 
   <footer class="colophon">
+    {#if ultimaEdizione}<p class="segui"><a href="feed.xml">Segui con RSS</a>: ogni lunedì un'edizione, senza account né email.</p>{/if}
     <section class="credits" id="crediti" aria-labelledby="crediti-h">
       <h2 id="crediti-h">Foto e fonti</h2>
       <ul>
@@ -86,7 +90,7 @@
         {/each}
       </ul>
       <p class="small muted">
-        Dati di {#each FONTI as [n, u], i (n)}<a href={u} target="_blank" rel="noopener">{n}</a>{i < FONTI.length - 1 ? ', ' : '.'}{/each}
+        Dati di {#each FONTI_DEI_DATI as f, i (f.nome)}<a href={f.url} target="_blank" rel="noopener">{f.nome}</a>{i < FONTI_DEI_DATI.length - 1 ? ', ' : '.'}{/each}
         Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
         <a href="THIRD_PARTY_LICENSES.txt">Licenze del software</a>.
       </p>
@@ -97,16 +101,10 @@
 </div>
 
 <style>
-  /* dove non stanno in una riga i link vanno sotto il nome, ognuno intero */
-  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 var(--s2); }
-  .logo { white-space: nowrap; display: flex; align-items: center; gap: var(--s1); font-weight: 700; font-size: 20px; line-height: 24px; letter-spacing: -.01em; }
-  .logo i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--fg); position: relative; }
-  .logo i::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
-  nav { display: flex; gap: var(--s3); font-size: 14px; }
-  nav a { white-space: nowrap; text-decoration: none; color: var(--fg-2); min-height: 40px; display: inline-flex; align-items: center; }
-  @media (hover: hover) { nav a:hover { color: var(--fg); } }
   .intro { display: grid; gap: var(--s6); }
   .hero { display: grid; gap: var(--s2); max-width: 880px; padding-top: var(--s4); }
+  /* un bersaglio di 24px per il dito, senza spostare la riga rispetto a quando è testo semplice */
+  .settimana, .segui a { padding-block: 5px; }
   /* main non fa una scatola sua: i suoi figli stanno nella griglia di .wrap, come la testata e il colophon */
   main { display: contents; }
   /* da 1200px: intro e porte in una colonna a sinistra, le card a destra; con una card aperta la card prende tutto, e la h1 resta per i lettori di schermo */
@@ -129,6 +127,8 @@
   /* il colophon: crediti e stato delle fonti affiancati da 960px */
   .colophon { --fondo: var(--bg); display: grid; gap: var(--s5); border-top: 1px solid var(--line-2); padding-top: var(--s3); }
   @media (min-width: 960px) { .colophon { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s6); } }
+  .segui { grid-column: 1 / -1; font-size: 14px; line-height: 20px; color: var(--fg-2); }
+  .segui a { color: var(--fg); }
   .credits { display: grid; gap: var(--s3); align-content: start; }
   .credits h2 { font-weight: 600; font-size: 20px; line-height: 24px; }
   .credits > p { max-width: var(--misura); }

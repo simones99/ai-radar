@@ -58,11 +58,15 @@ export const mercatoScelto = (v: string | null | undefined): Mercato => MERCATI_
 export const pubblicatoDi = (punto: NonNullable<Radar['storico']>[number]['competenze'][string] | undefined, mercato: Mercato): Quadrant | null | undefined =>
   mercato === 'italia' ? punto?.pubblicato_it : punto?.pubblicato;
 
-/** La competenza letta sull'Italia: gli stessi campi con i valori italiani. Lo slancio è unico. */
+/**
+ * La competenza letta sull'Italia: gli stessi campi con i valori italiani. Lo slancio è unico.
+ * L'incertezza italiana comprende quella dello slancio; un radar.json di prima, senza, ha solo quella.
+ */
 const sullItalia = (c: RadarRow): CompetenzaNelMercato => ({
   ...c,
   domanda: c.domanda_it ?? null, annunci: c.annunci_it ?? null, quadrante: c.quadrante_it ?? null, quadrante_calcolato: c.quadrante_calcolato_it ?? null,
   domanda_prec: c.domanda_prec_it ?? null, quadrante_prec: c.quadrante_prec_it ?? null,
+  incerto: c.incerto_it ?? c.incerto, incerto_perche: c.incerto_it == null ? c.incerto_perche : c.incerto_perche_it ?? null,
 });
 
 /** Tutte le competenze lette sul mercato, anche quelle senza il dato per stare sul radar. */
@@ -105,6 +109,8 @@ export interface RigaPagina extends RadarRowM {
   domandaTutti: number | null;
   /** Il mercato non ha il dato: la riga è quella di tutti i Paesi, e la pagina lo dice al posto del numero. */
   senzaDato: boolean;
+  /** Lo slancio è incerto: vale nei due mercati, qualunque sia quello scelto. */
+  slancioIncerto: boolean;
 }
 
 /** Null se la competenza non ha una pagina: non sta sul radar nemmeno con tutti i Paesi. */
@@ -112,7 +118,9 @@ export function rigaPagina(r: Radar, id: string, mercato: Mercato = 'tutti'): Ri
   const tutti = radarRows(r).find((x) => x.id === id);
   const nelMercato = radarRows(r, mercato).find((x) => x.id === id);
   const riga = nelMercato ?? tutti;
-  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato } : null;
+  // la riga di tutti i Paesi ha l'incertezza del solo slancio; c'è sempre quando c'è quella italiana, perché la domanda
+  // di tutti i Paesi è la mediana tra i Paesi, Italia compresa
+  return riga ? { ...riga, domandaTutti: tutti?.domanda ?? null, senzaDato: !nelMercato, slancioIncerto: !!tutti?.incerto } : null;
 }
 
 export function radarChanges(rows: RadarRowM[]): { inn: RadarRowM[]; out: RadarRowM[] } {

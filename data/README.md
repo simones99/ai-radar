@@ -1,7 +1,8 @@
 # Dati
 
 Questa cartella la riempie e aggiorna da sola la pipeline (`python -m pipeline.run`),
-ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
+ogni settimana tramite GitHub Actions. Non serve modificarla a mano: l'unica eccezione
+sono le correzioni a un'edizione già uscita.
 
 | File | Contenuto | Fonte |
 | --- | --- | --- |
@@ -11,7 +12,7 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `arxiv.json` | Paper AI al mese, totali e per competenza | arXiv (metadati CC0) |
 | `github.json` | Nuovi repository al mese per topic; serie `base` (nuovi repository AI al mese, somma dei topic di base); `in_crescita` (repository nuovi più stellati per competenza); stelle dei progetti seguiti | GitHub |
 | `huggingface.json` | Modelli di tendenza e tipi di compito | Hugging Face |
-| `jobs.json` | Annunci di lavoro per competenza e Paese | The Adzuna API |
+| `jobs.json` | Annunci di lavoro per competenza e Paese | [The Adzuna API](https://www.adzuna.co.uk) |
 | `eurostat.json` | Imprese UE che usano l'AI | Eurostat, isoc_eb_ai |
 | `eurostat_settori.json` | Per settore, Italia e UE: adozione dell'AI (2021, 2023-2025), scopi e barriere dell'ultimo anno; `null` dove Eurostat non dà il numero, con il flag in `flag` | Eurostat, isoc_eb_ain2 |
 | `news.json` | Titoli e link dai feed RSS configurati | Feed dei siti indicati |
@@ -22,6 +23,8 @@ ogni settimana tramite GitHub Actions. Non serve modificarla a mano.
 | `risorse.json` | Stato settimanale dei link «Per iniziare» delle competenze | Controllo della pipeline |
 | `radar.json` | Radar delle competenze (versione 2: unità vere, soglie fisse, incertezza), calcolato dai file sopra | Calcolo della pipeline |
 | `status.json` | Esito dell'ultimo aggiornamento di ogni fonte | Pipeline |
+| `edizioni/AAAA-MM-GG.json` | Un'edizione: i testi già composti di una settimana, con il suo lunedì come nome. L'app non la carica: la build ne fa una pagina. Una correzione si fa a mano nel file, aggiungendo a `correzioni` la data e il testo, e poi rifacendo l'immagine | `npm run edizione`, nel workflow |
+| `edizioni/AAAA-MM-GG.png` | L'immagine dell'anteprima di quell'edizione, 1200×630: la build la copia soltanto. Dopo una correzione si rifà con `npm run edizione -- --immagine AAAA-MM-GG`, in `web/` | `npm run edizione`, nel workflow |
 
 I file con storico (arXiv, GitHub, Hugging Face, Adzuna) si
-arricchiscono a ogni giro: per questo sono salvati nel repository.
+arricchiscono a ogni raccolta: per questo sono salvati nel repository.

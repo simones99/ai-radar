@@ -8,9 +8,33 @@ Una dashboard pubblica sull'AI, costruita su dati aperti che si aggiornano ogni 
 Una delle due metà del prodotto, ciascuna con il suo pubblico: *Per te* (le persone) e *Per la tua organizzazione* (le organizzazioni).
 _Avoid_: sezione, ingresso
 
+**Porta**:
+La notizia della settimana di una testa, una per testa, in cima alla home e in ogni edizione: una frase scritta dai dati, con la sua fonte, che apre la card da cui viene.
+_Avoid_: door, titolo, notizia (per la porta), ingresso
+
 **Card di spicco**:
 La card che apre una testa, una per testa (Competenze e GeopoliticAI): in home prende tutta la riga, con una figura disegnata dai dati al posto della foto e senza un titolo che faccia concorrenza alla porta, e il suo dettaglio si apre sul titolo grande, senza foto.
 _Avoid_: copertina, card in evidenza
+
+**Edizione**:
+Il riassunto fisso di una settimana, con le due porte, le frasi cambiate e le notizie. Esce il lunedì, ha un suo link e dopo non cambia, salvo correzioni dichiarate.
+_Avoid_: numero, newsletter, digest, bollettino
+
+**Settimana dei dati**:
+La settimana in cui sono stati raccolti i dati che il sito mostra, indicata dal suo lunedì («Settimana del …»). È quella dell'edizione che ne nasce, non la settimana di chi legge.
+_Avoid_: settimana corrente, questa settimana
+
+**Home in chiaro**:
+Il testo della home leggibile senza JavaScript: le porte e le card della settimana dei dati, come in un'edizione ma senza il confronto con la settimana prima. Con JavaScript l'app ne prende il posto.
+_Avoid_: home statica, versione statica, prerender
+
+**Feed**:
+Il feed RSS del sito, con una voce per edizione a testo intero. Le fonti da cui arrivano le notizie sono i *feed delle notizie*.
+_Avoid_: newsletter, canale
+
+**Correzione**:
+La modifica dichiarata di un'edizione già uscita, con la data e cosa è cambiato. Si fa a mano, e la voce del feed non torna a essere nuova.
+_Avoid_: errata, rettifica, aggiornamento
 
 **Competenza**:
 Una delle capacità sull'AI che il radar segue, misurata su ricerca, open source e lavoro.
@@ -27,6 +51,10 @@ _Avoid_: Paese, zona, geografia (come nomi della scelta)
 **Paese a metà classifica**:
 Il valore di domanda che sta a metà tra gli 8 Paesi seguiti: la mediana dei loro valori e, con un numero pari di Paesi, il valore a metà tra i due centrali. È la domanda del mercato «Tutti i Paesi». Non è un Paese preciso: da una competenza all'altra può essere un Paese diverso, o nessuno.
 _Avoid_: media dei Paesi, Paese mediano, Paese medio
+
+**Dato incerto**:
+Una competenza la cui posizione sul radar può cambiare con poco, segnata da un punto vuoto. In tutti e due i mercati lo è quando il margine all'80% dello slancio è largo; nel mercato Italia anche quando la soglia della domanda, contata in annunci italiani, cade dentro il margine all'80% del numero di annunci della competenza. Pochi annunci molto sotto la soglia non rendono incerto il dato.
+_Avoid_: non affidabile (è il segno di Eurostat sui settori), dato debole, pochi annunci, sotto soglia (come sinonimi)
 
 **Settore**:
 L'attività economica di un'organizzazione, come la classifica Eurostat (per esempio manifattura, commercio, ICT). Finanza, pubblica amministrazione, sanità, istruzione e agricoltura non sono settori rilevati.

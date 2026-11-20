@@ -6,6 +6,7 @@ import { quota } from '../data/geopoliticai';
 import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/types';
 import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
+import { MERCATI } from './competenza';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, parseDay, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string; scelta?: string } // scelta: quella ricordata, accanto al nome della card (Competenze · Italia)
@@ -74,7 +75,7 @@ export function headOpen(d: Dataset, _today?: Date): Head {
 }
 
 // ---------------------------------------------------------------- business
-// Numero chiave e titolo: imprese italiane che usano l'AI (Eurostat, CC BY 4.0), interi.
+// Numero chiave e titolo: imprese italiane che usano l'AI (Eurostat, riuso consentito citando la fonte), interi.
 // Senza Eurostat il titolo resta sugli investimenti AI Index (CC BY-ND 4.0): importi brevi, nessun rapporto tra anni.
 
 /** Articolo davanti a una percentuale intera: "l'8%", "l'11%", "l'80%", "il 16%". */
@@ -217,17 +218,53 @@ export function headCompetenze(d: Dataset, _today?: Date, params: Params = {}): 
   };
 }
 
-/** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
-export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
+/**
+ * L'avviso di una competenza dal dato incerto nel mercato: dice solo che il margine è largo, come il punto vuoto sul radar, non giudica la competenza.
+ * Nomina l'Italia quando l'incertezza è solo sua, per la domanda vicina alla soglia. Con lo slancio incerto vale nei due mercati e l'avviso è uno:
+ * nel mercato Italia il motivo italiano mette già insieme lo slancio e, se c'è, la domanda.
+ */
+export function avvisoIncerto(r: Pick<RigaPagina, 'incerto' | 'incerto_perche' | 'slancioIncerto'>, mercato: Mercato): string | null {
+  if (!r.incerto) return null;
+  const dove = mercato === 'italia' && !r.slancioIncerto ? ` in ${MERCATI.italia}` : '';
+  return `Dato incerto${dove}: ${r.incerto_perche ?? 'il margine dello slancio è largo'}. La posizione sul radar può cambiare molto.`;
+}
+
+/** La riga sotto la cifra dello slancio: l'unità, e le note sul valore di un mese fa e sul margine, quando ci sono. */
+export function dettagliSlancio(r: RigaPagina): { unita: string; note: string[] } {
+  const m = r.slancio_margine;
+  return {
+    unita: 'in 6 mesi, rispetto all’AI',
+    note: [
+      ...(r.sp != null ? [`era ${signedPct(r.sp)} un mese fa`] : []),
+      ...(m ? [`margine: da ${signedPct(m[0])} a ${signedPct(m[1])}${margineSuZero(r) ? ', include lo zero' : ''}`] : []),
+    ],
+  };
+}
+
+/** «Conta per: …», con i ruoli della competenza nell'ordine dei ruoli; vuota se la competenza non ne ha. */
+export function contaPer(diCompetenza: string[] | undefined, ruoli: Ruolo[]): string {
+  const nomi = ruoli.filter((x) => diCompetenza?.includes(x.id)).map((x) => x.nome).join(', ');
+  return nomi && `Conta per: ${nomi}`;
+}
+
+/** Dove sta una competenza in un mercato: il quadrante, da dove viene se è appena cambiato ed eventuale movimento. Senza il mercato a cui si riferisce. */
+export function statoCompetenza(r: RigaPagina, quadranti: Record<Quadrant, string>): string {
   const moving = r.moving ? `, in movimento verso ${quadranti[r.moving]}` : '';
   const prima = r.changed && r.qp ? `, un mese fa ${quadranti[r.qp]}` : '';
+  return `${quadranti[r.quadrante]}${prima}${moving}.`;
+}
+
+/** Titolo della pagina di una competenza: il nome; sotto, quadrante del mercato, da dove viene se è appena cambiato, eventuale movimento e descrizione. */
+export function headSkill(r: RigaPagina, quadranti: Record<Quadrant, string>, ruoli: Ruolo[] = [], mercato: Mercato = 'tutti'): Head {
   const dove = mercato === 'italia' ? 'In Italia: ' : ''; // nella pagina non ci sono i bottoni: lo dice la frase
-  const stato = r.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${dove}${quadranti[r.quadrante]}${prima}${moving}.`;
-  const conta = ruoli.filter((x) => r.ruoli?.includes(x.id)).map((x) => x.nome).join(', '); // nell'ordine dei ruoli
-  return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: `Conta per: ${conta}` }) };
+  const stato = r.senzaDato ? `${ITALIA_SENZA_DATO}.` : `${dove}${statoCompetenza(r, quadranti)}`;
+  const conta = contaPer(r.ruoli, ruoli);
+  return { title: plain(r.nome), deck: `${stato} ${r.descrizione}`, ...(conta && { nota: conta }) };
 }
 
 // ---------------------------------------------------------------- notizie
+/** I temi delle notizie con il loro nome, nell'ordine in cui li mostra un'edizione. */
+export const TEMI_NOTIZIE: Record<string, string> = { politica: 'Politica', ricerca: 'Ricerca', prodotti: 'Prodotti', business: 'Business', altro: 'Altro' };
 /** "N fonti": le fonti distinte tra le notizie date, non i feed configurati. */
 const fontiDi = (items: { fonte: string }[]): string => {
   const k = new Set(items.map((x) => x.fonte)).size;
@@ -291,7 +328,9 @@ export interface Door {
   target: { tema: TileId; elemento: string | null; params?: Params } | null; // null: porta non cliccabile
   scelta?: string; // ruolo, settore o mercato ricordati, per l'etichetta (Per te · Prodotto · Italia)
 }
-const NO_DATA: Door = { title: [], meta: 'Dati non disponibili', target: null };
+/** Al posto di un dato che manca, dove non c'è spazio per una frase: una porta, un gruppo dell'indice, un mercato nell'anteprima. */
+export const DATI_NON_DISPONIBILI = 'Dati non disponibili';
+const NO_DATA: Door = { title: [], meta: DATI_NON_DISPONIBILI, target: null };
 
 /** "A", "A e B", "A, B e C", con i nomi in evidenza. */
 const names = (rows: RadarRowM[]): TitleParts =>
@@ -357,7 +396,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   if (!radarDisponibile(d.radar)) return NO_DATA;
   const italia = mercato === 'italia';
   const rows = radarRows(d.radar, mercato);
-  const meta = `Radar delle competenze · dati ${dayWith('al', d.radar.generato)}`;
+  const meta = `Radar delle competenze su arXiv, GitHub e The Adzuna API · dati ${dayWith('al', d.radar.generato)}`;
   // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const sure = rows.filter((r) => !r.incerto);
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza

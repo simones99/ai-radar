@@ -19,7 +19,7 @@ describe('porta Per te', () => {
     const p = doorPerTe(d, today);
     expect(text(p.title)).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(p.title[0]).toEqual({ t: 'MCP', em: true });
-    expect(p.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
+    expect(p.meta).toBe('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     expect(p.target).toEqual({ tema: 'competenze', elemento: null });
   });
   it('1. solo entrate: il link apre chi entra', () => {
@@ -54,7 +54,7 @@ describe('porta Per te', () => {
   it('1. radar dell’11: «dati all’11»', () => {
     const r = radar([{ quadrante: 'consolida', slancio: 0.3, domanda: 0.7, slancio_prec: 0.7, domanda_prec: 0.7, quadrante_prec: 'impara-ora' }]);
     const p = doorPerTe({ radar: { ...r.radar!, generato: '2026-10-11' } }, today);
-    expect(p.meta).toBe('Radar delle competenze · dati all’11 ott 2026');
+    expect(p.meta).toBe('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati all’11 ott 2026');
   });
   it('1. più competenze che escono, nessuna entra', () => {
     const p = doorPerTe(radar([
@@ -260,6 +260,13 @@ describe('porta Per te con il mercato', () => {
       expect(text(p.title)).toBe('C0 entra tra le competenze da imparare ora');
       expect(p).not.toHaveProperty('nota');
     });
+    it('chi è incerta solo in Italia, per la domanda vicina alla soglia, non fa notizia in Italia; con tutti i Paesi sì', () => {
+      const vicina = { incerto: false, incerto_it: true, incerto_perche_it: 'annunci italiani vicini alla soglia (43, la soglia è circa 40)' };
+      const entra = { quadrante: 'impara-ora', quadrante_it: 'impara-ora', domanda: 0.7, domanda_it: 3.2, slancio_prec: 0.3, quadrante_prec: 'consolida', quadrante_prec_it: 'consolida' } as const;
+      const r = inItalia([{ ...entra, ...vicina }, { quadrante_it: 'prova', slancio_prec: 0.3, quadrante_prec_it: 'osserva' }]);
+      expect(text(doorPerTe(r, today, null, 'italia').title)).toBe('C1 passa a Da provare');
+      expect(text(doorPerTe(r, today).title)).toBe('C0 entra tra le competenze da imparare ora');
+    });
     it('2. un altro cambio di quadrante', () => {
       const p = doorPerTe(inItalia([{ quadrante_it: 'prova', slancio_prec: 0.3, quadrante_prec_it: 'osserva' }]), today, null, 'italia');
       expect(text(p.title)).toBe('C0 passa a Da provare');
@@ -360,7 +367,7 @@ describe('porta Per te con il mercato', () => {
       const p = doorPerTe(senzaItalia, today, null, 'italia');
       expect(text(p.title)).toBe('Per l’Italia il dato non è disponibile in questo momento');
       expect(p.scelta).toBe('Italia');
-      expect(p.meta).toBe('Radar delle competenze · dati al 15 ott 2026');
+      expect(p.meta).toBe('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
       expect(p.target).toEqual({ tema: 'competenze', elemento: null, params: { mercato: 'italia' } });
     });
     it('senza radar, o con il radar della pipeline vecchia: porta vuota e non cliccabile anche con «Italia»', () => {

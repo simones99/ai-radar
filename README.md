@@ -1,6 +1,6 @@
 # AI Radar
 
-**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, on business adoption, people and jobs, AI Act deadlines and upcoming reports. A third view, GeopoliticAI, follows the supply chain country by country, from raw materials and chips to data centres and model capability. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
+**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, on business adoption, people and jobs, AI Act deadlines and upcoming reports. A third view, GeopoliticAI, follows the supply chain country by country, from raw materials and chips to data centres and model capability. Every Monday it also publishes a weekly edition with fixed text, its own page and share image, collected in an archive and an RSS feed. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
 
 Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli ogni settimana:
 
@@ -9,11 +9,16 @@ Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli o
 
 In home due porte, *Per te* e *Per la tua organizzazione*, danno la notizia della settimana di ciascuna testa e con un clic aprono la card da cui viene. Sotto ci sono le card, 4 per testa: Competenze, Modelli e ricerca, Open source, Notizie; Business, Persone e lavoro, Norme, Rapporti.
 
-Tutto gira gratis su GitHub: GitHub Actions raccoglie i dati ogni lunedì e GitHub Pages pubblica la pagina.
+Ogni lunedì esce anche un'**edizione**: il riassunto fisso della settimana, con un suo indirizzo, un archivio e un feed RSS. Vedi [Edizioni, feed e correzioni](#edizioni-feed-e-correzioni).
+
+Tutto gira gratis su GitHub: GitHub Actions raccoglie i dati ogni lunedì, o con un avvio manuale, e GitHub Pages pubblica la pagina.
 
 ```
-fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Svelte (D3) ──► GitHub Pages
-                     (GitHub Actions, ogni lunedì)      salvati nel repo
+fonti pubbliche ──► pipeline Python ──► data/*.json ──┬─► app Svelte (D3) ──────────┬─► GitHub Pages
+                     (GitHub Actions, ogni lunedì)    │                             │
+                                                      └─► data/edizioni/ ──► pagine,┘
+                                                          testo fisso e      archivio,
+                                                          immagine           feed
 ```
 
 ## Pubblicarlo in 10 minuti
@@ -32,8 +37,9 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Sv
    git push -u origin main
    ```
    In alternativa usa *Add file → Upload files* sul sito di GitHub, trascinando il contenuto della cartella; in quel caso controlla che la cartella `.github` sia stata caricata, perché alcuni sistemi nascondono le cartelle che iniziano con il punto.
-4. **Segui il primo aggiornamento.** Il caricamento avvia da solo *Aggiorna e pubblica*: lo trovi nella scheda *Actions*. Il primo giro dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Se hai saltato il passo 2, completalo e rilancia con *Actions → Aggiorna e pubblica → Run workflow*.
-5. La dashboard è su `https://<tuo-utente>.github.io/ai-radar/`.
+4. **Avvia il primo giro a mano.** Il caricamento fa partire *Aggiorna e pubblica*, che però pubblica il sito con i dati già presenti nel repository e non ne raccoglie di nuovi. Per raccoglierli usa *Actions → Aggiorna e pubblica → Run workflow*, lasciando spenta la casella «Crea l'edizione di questa settimana»; se hai saltato il passo 2, completalo prima. Il primo giro di raccolta dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Da lì in poi i dati si raccolgono da soli ogni lunedì, e con loro esce l'edizione della settimana.
+5. La dashboard è su `https://<tuo-utente>.github.io/ai-radar/`. I link alle edizioni compaiono in home con la prima edizione. Gli indirizzi di feed e anteprime seguono il nome del tuo repository.
+6. **Segnala la sitemap a Google.** La build scrive `sitemap.xml` accanto all'app, con l'indirizzo di ogni pagina statica: home, competenze, archivio ed edizioni. Scrive anche `robots.txt`, ma solo quando l'indirizzo base (`AI_RADAR_BASE_URL`) è la radice di un dominio, perché i crawler lo cercano solo lì: per un sito in `/ai-radar/` non esce. Il workflow ricava l'indirizzo base dal nome del repository: se lo chiami `<tuo-utente>.github.io`, il sito sta alla radice di `https://<tuo-utente>.github.io/` e `robots.txt` esce da solo, con l'indicazione della sitemap. Dopo il primo rilascio, quindi, la sitemap va segnalata a mano: in [Google Search Console](https://search.google.com/search-console) aggiungi una proprietà di tipo «Prefisso URL» con l'indirizzo base, `https://<tuo-utente>.github.io/ai-radar/`, e in *Sitemap* inserisci `sitemap.xml`, cioè `https://<tuo-utente>.github.io/ai-radar/sitemap.xml`.
 
 ## Chiavi facoltative
 
@@ -41,7 +47,7 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──► app Sv
 | --- | --- | --- |
 | `ADZUNA_APP_ID` e `ADZUNA_APP_KEY` | Domanda di competenze nel lavoro, Europa e USA | Gratuite su [developer.adzuna.com](https://developer.adzuna.com) |
 
-**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*, con limiti di 250 chiamate al giorno e 1.000 a settimana (un giro qui ne usa 136). Non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Per questa pagina, che mostra solo conteggi aggregati con la fonte citata, la conferma scritta è stata chiesta ad Adzuna il 5 novembre 2026 ed è in attesa di risposta. Chi pubblica una propria copia la chieda a sua volta dal loro modulo di contatto. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
+**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*. I limiti di chiamate sono quelli del piano nel proprio account (una raccolta qui ne usa 136). I termini non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Per questa pagina, che mostra solo conteggi aggregati con la fonte citata, la conferma è stata chiesta ad Adzuna il 5 novembre 2026. Adzuna ha risposto per iscritto il 16 novembre 2026 che va bene, purché si rispettino i [termini d'uso](https://developer.adzuna.com/docs/terms_of_service). Per questo ogni dato sugli annunci cita *The Adzuna API*, anche nelle immagini d'anteprima delle edizioni e delle competenze. Chi pubblica una propria copia chieda a sua volta la conferma dal loro modulo di contatto. Se l'accordo finisce, i termini chiedono di togliere subito i dati di Adzuna da tutte le pagine, edizioni comprese: bisogna togliere i secret, eliminare `data/jobs.json` e fare una correzione dichiarata su ogni edizione. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
 
 `GITHUB_TOKEN` non va creato: GitHub lo fornisce in automatico al workflow.
 
@@ -55,7 +61,7 @@ Ogni competenza ha due coordinate in unità vere:
   - la quota di annunci di lavoro che la citano, quando ci sono almeno 8 settimane di rilevazioni con la stessa ricerca.
 
   I segnali più precisi pesano di più, nessuno più di due terzi.
-- **Domanda**: annunci di lavoro che la citano ogni 10.000 annunci attivi, nel **Paese a metà classifica**. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la stessa ricerca (con meno di 4, quelle che ci sono), così una settimana strana non sposta il numero. Il Paese a metà classifica è la mediana tra i Paesi: con un numero pari di Paesi, il valore a metà tra i due centrali. Il metodo è cambiato a novembre 2026: prima contava solo l'ultima rilevazione, e un solo Paese poteva spostare il valore. Lo storico si ricalcola a ogni giro, quindi il nuovo metodo vale anche per i mesi passati.
+- **Domanda**: annunci di lavoro che la citano ogni 10.000 annunci attivi, nel **Paese a metà classifica**. Ogni Paese vale la mediana delle sue ultime 4 rilevazioni con la stessa ricerca (con meno di 4, quelle che ci sono), così una settimana strana non sposta il numero. Il Paese a metà classifica è la mediana tra i Paesi: con un numero pari di Paesi, il valore a metà tra i due centrali. Il metodo è cambiato a novembre 2026: prima contava solo l'ultima rilevazione, e un solo Paese poteva spostare il valore. Lo storico si ricalcola a ogni raccolta, quindi il nuovo metodo vale anche per i mesi passati.
 
 I quadranti hanno **soglie fisse**: slancio sopra 0 (cresce più dell'AI nel suo complesso) e almeno 3 annunci ogni 10mila. **Impara ora** (entrambe), **Da provare** (solo lo slancio), **Da consolidare** (solo la domanda), **Tieni d'occhio** (nessuna delle due). Aggiungere o togliere una competenza non sposta le altre.
 
@@ -73,15 +79,48 @@ Limiti da tenere a mente:
 
 Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 
+## Edizioni, feed e correzioni
+
+Un'**edizione** riassume una settimana: le due porte, le frasi delle card cambiate dalla settimana prima, fino a 3 notizie per tema e le fonti senza dati aggiornati a quel giro. Ogni riga ha fonte, licenza e link alla card. Il testo resta com'è anche quando i dati del sito cambiano: nel file sono salvate le frasi già composte, non i dati da cui derivano.
+
+| Indirizzo | Cosa c'è |
+| --- | --- |
+| `/edizioni/AAAA-MM-GG/` | la pagina di un'edizione, con la data del lunedì, in HTML statico senza JavaScript, e la sua immagine di anteprima |
+| `/edizioni/` | l'archivio con tutte le edizioni, dalla più recente |
+| `/feed.xml` | il feed RSS: una voce per edizione a testo intero, le ultime 26 |
+
+Prima della prima edizione questi indirizzi non esistono, e né la home né le pagine delle competenze hanno link al feed o `<link rel="alternate">`. Con la prima edizione compaiono «Edizioni» nella testata e «Segui con RSS» in fondo alla pagina; «Settimana del…» diventa un link quando l'ultima edizione è proprio di quella settimana. Porte e card non cambiano.
+
+**Quando esce.**
+
+- **Giro del lunedì:** l'edizione esce da sola.
+- **Avvio manuale:** esce solo con la casella «Crea l'edizione di questa settimana», spenta di default. Serve anche a recuperare un lunedì andato male.
+- **Push:** non crea mai un'edizione.
+
+Un'edizione esistente non si sovrascrive. Senza dati in tutte e due le porte l'edizione non esce. Diventa definitiva solo dopo gli end-to-end: se falliscono non si salva e il sito non esce. Se fallisce la sola creazione, dati e sito vanno avanti e il giro finisce in rosso, così arriva la mail di GitHub.
+
+**Dove stanno.** Ogni edizione è in `data/edizioni/AAAA-MM-GG.json`, con accanto l'immagine `AAAA-MM-GG.png`. La build le legge da lì e produce pagine, archivio, feed e un piccolo `data/edizioni.json` con l'ultima edizione, che la home usa per i link. Quell'indice è facoltativo: se manca, la home non mostra né link né avvisi.
+
+**Correggere un'edizione.** È l'unica eccezione alla regola per cui `data/` la scrive solo il workflow:
+
+1. Modifica a mano `data/edizioni/AAAA-MM-GG.json`: correggi il testo e aggiungi una voce a `correzioni`, per esempio `{ "data": "2026-11-05", "testo": "Il dato di Eurostat era quello del 2024." }`.
+2. Rifai la sua immagine, che non tocca il file fisso né le altre edizioni. Se manca Chromium, prima `npx playwright install chromium`.
+   ```bash
+   cd web && npm run edizione -- --immagine AAAA-MM-GG
+   ```
+3. Fai il commit dei due file e il push: il push ripubblica il sito.
+
+Pagina e voce del feed mostrano «Corretta il…» con il testo della correzione. L'identificativo della voce non cambia, quindi i lettori di feed non la segnalano come nuova.
+
 ## Personalizzare
 
-- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Al giro successivo la pipeline ricalcola da sola lo storico di ciò che è cambiato. Ogni competenza ha anche 2-4 `risorse` «Per iniziare»: la pipeline controlla i link ogni settimana e nasconde quelli che danno errore per due settimane di fila.
+- **Competenze**: `config/skills.yaml`. Per ogni competenza si indicano le frasi da cercare su arXiv, un topic GitHub e la frase esatta da cercare negli annunci (in inglese, senza la parola "AI", che nell'indice italiano è una preposizione e viene ignorata). Alla raccolta successiva la pipeline ricalcola da sola lo storico di ciò che è cambiato. Ogni competenza ha anche 2-4 `risorse` «Per iniziare»: la pipeline controlla i link ogni settimana e nasconde quelli che danno errore per due settimane di fila.
 - **Paesi, feed, repository da seguire**: `config/sources.yaml`.
 - **Notizie**: in `config/sources.yaml`, blocco `feeds`. Ogni feed ha un `tema` (politica, ricerca, prodotti, business) e, se serve, degli indirizzi `alternativi` provati in ordine.
 - **Serie di Our World in Data**: in `config/sources.yaml`, blocco `owid` (slug del grafico, colonna, entità, licenza dei dati).
 - **Settori della card Business**: in `config/sources.yaml`, blocco `eurostat_settori` (id, nome, codice NACE e la forma da usare nella frase della porta per ogni settore; i nomi italiani degli scopi e delle barriere accanto ai codici Eurostat). Se Eurostat cambia un codice, il passo si ferma e resta il file del giro prima.
 - **Scadenze dell'AI Act e rapporti**: `config/ai_act.yaml` e `config/rapporti.yaml`, da aggiornare a mano. Ogni voce ha un link alla fonte.
-- **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`.
+- **Cadenza**: la riga `cron` in `.github/workflows/aggiorna.yml`. I dati si raccolgono solo con quel giro o con un avvio manuale: un push pubblica il sito con i dati già salvati. Dopo una modifica a `pipeline/` o `config/`, quindi, per vederne subito l'effetto sui dati serve *Actions → Aggiorna e pubblica → Run workflow*; altrimenti arriva il lunedì dopo.
 
 ## Provarlo sul proprio computer
 
@@ -92,14 +131,18 @@ python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\
 pip install -r requirements.txt
 python -m pytest -q                                     # test della pipeline, senza rete
 python -m pipeline.run --months 7                       # dati veri, storico corto
-cd web && npm ci && npm test                            # test dell'app
+cd web && npm ci && npm test                            # test dell'app, senza browser
 cd .. && python scripts/build_site.py                   # copia i dati e costruisce _site/
 cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
 
+Con Chromium (`npx playwright install chromium`) ci sono anche `npm run test:browser`, i test del comando che fa l'immagine di un'edizione, e `npm run e2e`.
+
 Per lavorare sull'app con il ricaricamento automatico: `mkdir -p web/public/data && cp data/*.json web/public/data/` e poi `cd web && npm run dev`.
 
 Le chiavi si passano come variabili d'ambiente: `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `GITHUB_TOKEN`.
+
+Per provare un'edizione senza rischiare di salvarla nel repository, usa una copia dei dati: `AI_RADAR_DATA_DIR=/una/cartella/a/parte`. La leggono sia `npm run edizione -- --evento schedule` sia la build.
 
 ## Struttura
 
@@ -107,7 +150,8 @@ Le chiavi si passano come variabili d'ambiente: `ADZUNA_APP_ID`, `ADZUNA_APP_KEY
 config/      competenze, fonti, scadenze AI Act, rapporti (da modificare)
 pipeline/    un modulo per fonte + radar.py (calcolo) + run.py (orchestrazione)
 data/        dati raccolti e storico (scritti dalla pipeline)
-web/         app Svelte: porte, card, grafici, foto, test
+data/edizioni/  un JSON e un'immagine per edizione (scritti una volta sola; a mano solo per le correzioni)
+web/         app Svelte: porte, card, grafici, foto, test; pagine delle edizioni, archivio e feed
 scripts/     build_site.py (costruisce _site/), fetch_photos.py (foto da Commons)
 tests/       test della pipeline con risposte HTTP simulate
 .github/     workflow settimanale

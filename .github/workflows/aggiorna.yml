@@ -4,6 +4,15 @@ on:
   schedule:
     - cron: "17 5 * * 1"   # ogni lunedì alle 05:17 UTC (07:17 in Italia d'estate)
   workflow_dispatch:         # pulsante "Run workflow" nella scheda Actions
+    inputs:
+      crea_edizione:
+        description: "Crea l'edizione di questa settimana"
+        type: boolean
+        default: false
+  # un push prova il codice e pubblica il sito con i dati già salvati: i dati li raccolgono solo i due eventi qui sopra.
+  # Dopo una modifica a pipeline/ o config/, quindi, per vederne l'effetto sui dati serve un avvio manuale.
+  # data/edizioni è qui per le correzioni a mano: l'unica eccezione alla regola per cui data/ la scrive solo questo workflow.
+  # Una correzione si pubblica così da sola, e i commit del workflow non fanno partire altri giri
   push:
     branches: [main]
     paths:
@@ -13,6 +22,7 @@ on:
       - "scripts/**"
       - "requirements.txt"
       - ".github/workflows/**"
+      - "data/edizioni/**"
 
 permissions:
   contents: write   # per salvare i dati aggiornati nel repository
@@ -22,17 +32,34 @@ permissions:
 concurrency:
   group: aggiornamento
   cancel-in-progress: false
+  # senza, un giro in attesa viene cancellato dal successivo: un push potrebbe far perdere la raccolta del lunedì
+  queue: max
 
 jobs:
   aggiorna:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      edizione: ${{ steps.edizione.outcome }}
+      anteprime: ${{ steps.anteprime.outcome }}
     steps:
       # l'ultimo commit del ramo, non quello che ha fatto partire il giro: un giro rimasto in coda parte così
       # dai dati salvati dal giro prima, e pubblica anche i push arrivati nel frattempo
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.ref_name }}
+
+      # l'indirizzo pubblico del sito, per tutti i passi del job: la build che verrà pubblicata è quella rilanciata dagli end-to-end.
+      # Un repository <utente>.github.io è pubblicato alla radice del dominio, e lì la build scrive anche robots.txt
+      - name: Ricava l'indirizzo base dal nome del repository
+        run: |
+          utente="${GITHUB_REPOSITORY_OWNER,,}"
+          repository="${GITHUB_REPOSITORY#*/}"
+          if [ "${repository,,}" = "$utente.github.io" ]; then
+            echo "AI_RADAR_BASE_URL=https://$utente.github.io/" >> "$GITHUB_ENV"
+          else
+            echo "AI_RADAR_BASE_URL=https://$utente.github.io/$repository/" >> "$GITHUB_ENV"
+          fi
 
       - uses: actions/setup-python@v7
         with:
@@ -53,6 +80,7 @@ jobs:
       - name: Test della pipeline
         run: python -m pytest -q
 
+      # senza browser: Chromium arriva dopo la raccolta, e questi test non lo richiedono
       - name: Test dell'app
         working-directory: web
         run: |
@@ -60,6 +88,7 @@ jobs:
           npm test
 
       - name: Raccogli i dati
+        if: github.event_name != 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
@@ -68,20 +97,30 @@ jobs:
         run: python -m pipeline.run
 
       - name: Salva i dati nel repository
+        if: github.event_name != 'push'
+        run: python scripts/salva_nel_repo.py data "Dati aggiornati $(date -u +%F)"
+
+      # dopo i dati salvati: come per gli end-to-end, un download fallito non ferma la raccolta del lunedì e lascia i dati nel repository.
+      # Serve all'immagine dell'edizione, ai test con il browser e agli end-to-end
+      - name: Installa Chromium
+        working-directory: web
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
-          if git diff --cached --quiet; then
-            echo "Nessun dato nuovo da salvare."
-          else
-            git commit -m "Dati aggiornati $(date -u +%F)"
-            # un push arrivato mentre il giro girava: i dati vanno sopra. Il rebase passa se il push non tocca data/,
-            # e data/ la scrive solo questo workflow, un giro alla volta. Se tocca i percorsi in `on.push`, il push
-            # ha già messo in coda il suo giro, che pubblicherà anche lui
-            git pull --rebase origin "$GITHUB_REF_NAME"
-            git push origin "HEAD:$GITHUB_REF_NAME"
-          fi
+          npx playwright install --with-deps chromium || {
+            echo "::error::Chromium non si è installato: il sito non esce e l'edizione non si crea. I dati raccolti sono già salvati. Se era il giro del lunedì, per recuperare l'edizione avvia il giro a mano con la casella accesa."
+            exit 1
+          }
+
+      # Il file dell'edizione e la sua immagine nascono qui, senza commit: diventano definitivi solo dopo gli end-to-end. Evento e casella li valuta
+      # il comando, che su un push o con il file già presente non fa nulla. Se fallisce, anche solo per l'immagine, non scrive niente: dati e sito
+      # proseguono e il job in fondo manda il giro in rosso; si rimedia con la casella del giro manuale
+      - name: Crea l'edizione
+        id: edizione
+        continue-on-error: true
+        working-directory: web
+        env:
+          EVENTO: ${{ github.event_name }}
+          CASELLA: ${{ inputs.crea_edizione }}
+        run: npm run edizione -- --evento "$EVENTO" --casella "$CASELLA"
 
       - name: Prepara il sito
         run: python scripts/build_site.py
@@ -89,8 +128,31 @@ jobs:
       - name: Test end-to-end
         working-directory: web
         run: |
-          npx playwright install --with-deps chromium
+          npm run test:browser
           npm run e2e
+
+      # dopo gli end-to-end: se falliscono il job si ferma qui, l'edizione non si salva e il sito non esce.
+      # File fisso e immagine stanno nella stessa cartella, ed entrano nello stesso commit. La settimana la dice il comando,
+      # solo quando l'edizione è nata in questo giro: su un push, o con il file già presente, questo passo non parte
+      - name: Salva l'edizione nel repository
+        if: steps.edizione.outputs.settimana != ''
+        env:
+          SETTIMANA: ${{ steps.edizione.outputs.settimana }}
+        run: |
+          python scripts/salva_nel_repo.py data/edizioni "Edizione del $SETTIMANA" || {
+            echo "::error::L'edizione del $SETTIMANA non è stata salvata e il sito non esce: i dati del giro invece sì. Per rifarla, avvia il giro a mano con la casella accesa."
+            exit 1
+          }
+
+      # Sulla build che verrà pubblicata: gli end-to-end la rifanno e svuotano la cartella, quindi le immagini non possono nascere prima.
+      # Le scrive in _site, mai in un commit, e in ogni giro che pubblica, anche sul push. Se fallisce il sito esce lo stesso, con la copia
+      # dell'immagine della home che la build mette accanto a ogni pagina, e il job in fondo manda il giro in rosso
+      - name: Fai le anteprime delle competenze
+        id: anteprime
+        continue-on-error: true
+        timeout-minutes: 10
+        working-directory: web
+        run: npm run anteprime-competenze
 
       - uses: actions/upload-pages-artifact@v5
         with:
@@ -105,3 +167,41 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # L'errore nella sola creazione dell'edizione non ferma dati e sito, ma deve arrivare la mail di GitHub.
+  # Aspetta la pubblicazione per dire com'è andata davvero: gli end-to-end o il caricamento possono aver fermato il sito lo stesso
+  edizione-non-creata:
+    needs: [aggiorna, pubblica]
+    if: ${{ !cancelled() && needs.aggiorna.outputs.edizione == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manda il giro in rosso
+        env:
+          SITO: ${{ needs.pubblica.result }}
+        run: |
+          if [ "$SITO" = "success" ]; then
+            esito="Dati e sito sono andati avanti"
+          else
+            esito="Il sito non è uscito, e il motivo è negli altri job"
+          fi
+          echo "::error::L'edizione di questa settimana non è stata creata. $esito. Per recuperarla, avvia il giro a mano con la casella accesa."
+          exit 1
+
+  # Le anteprime fallite non fermano il sito, ma deve arrivare la mail di GitHub. Come per l'edizione, aspetta la pubblicazione per dire
+  # com'è andata davvero. Non c'è niente da recuperare a mano: le immagini non stanno nel repository, e ogni giro che pubblica le rifà
+  anteprime-non-fatte:
+    needs: [aggiorna, pubblica]
+    if: ${{ !cancelled() && needs.aggiorna.outputs.anteprime == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manda il giro in rosso
+        env:
+          SITO: ${{ needs.pubblica.result }}
+        run: |
+          if [ "$SITO" = "success" ]; then
+            esito="Il sito è uscito, e le pagine delle competenze hanno l'immagine della home al posto della loro"
+          else
+            esito="Il sito non è uscito, e il motivo è negli altri job"
+          fi
+          echo "::error::Le anteprime delle competenze non si sono fatte, il motivo è nel log del passo «Fai le anteprime delle competenze». $esito. Il prossimo giro riprova da solo."
+          exit 1

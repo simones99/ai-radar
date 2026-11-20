@@ -2,19 +2,15 @@
   import DataTable from '../charts/DataTable.svelte';
   import type { FileKey } from '../data/load';
   import type { Status } from '../data/types';
+  import { NOMI_FONTI } from '../text/fonti';
   import { day, dayWith, daysTo } from '../text/format';
 
   // mancanti: i file di dati che questa pagina non ha ricevuto. Lo stato delle fonti dice com'è andato l'aggiornamento, non se i dati sono arrivati qui
   let { status, today, mancanti = [], onriprova }: { status: Status | undefined; today: Date; mancanti?: FileKey[]; onriprova?: () => void } = $props();
 
-  const NOMI: Record<string, string> = {
-    epoch: 'Epoch AI', geopoliticai: 'Epoch (GeopoliticAI)', arxiv: 'arXiv', github: 'GitHub', huggingface: 'Hugging Face',
-    adzuna: 'Adzuna', eurostat: 'Eurostat', eurostat_settori: 'Eurostat (settori)', owid: 'Our World in Data', ai_act: 'AI Act (a mano)', rapporti: 'Rapporti (a mano)', catena: "Catena dell'AI (dati curati)",
-    feeds: 'Feed delle notizie', risorse: 'Link delle risorse', radar: 'Radar (calcolo)', news: 'Notizie', status: 'Stato delle fonti',
-  };
   const STATI: Record<string, string> = { ok: 'aggiornata', errore: 'errore', 'non configurata': 'non configurata' };
   const fonti = $derived(Object.entries(status?.fonti ?? {}).map(([k, s]) => ({
-    nome: NOMI[k] ?? k, stato: STATI[s.stato] ?? s.stato, ultimo: s.ultimo_successo ? day(s.ultimo_successo) : null, nota: s.messaggio ?? '',
+    nome: NOMI_FONTI[k] ?? k, stato: STATI[s.stato] ?? s.stato, ultimo: s.ultimo_successo ? day(s.ultimo_successo) : null, nota: s.messaggio ?? '',
     problema: s.stato !== 'ok' || !!s.messaggio, // anche una fonte aggiornata può avere un avviso
   })));
   const rows = $derived(fonti.map((f) => [f.nome, f.stato, f.ultimo ?? '—', f.nota]));
@@ -29,7 +25,7 @@
   <h2 id="stato-h">Stato delle fonti</h2>
   {#if mancanti.length && onriprova}
     <div class="mancanti">
-      <p class="small">Questa pagina non ha ricevuto i dati di: <b>{mancanti.map((k) => NOMI[k] ?? k).join(', ')}</b>.</p>
+      <p class="small">Questa pagina non ha ricevuto i dati di: <b>{mancanti.map((k) => NOMI_FONTI[k] ?? k).join(', ')}</b>.</p>
       <button type="button" class="riprova" onclick={onriprova}>Riprova</button>
     </div>
   {/if}

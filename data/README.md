@@ -12,7 +12,7 @@ sono le correzioni a un'edizione già uscita.
 | `arxiv.json` | Paper AI al mese, totali e per competenza | arXiv (metadati CC0) |
 | `github.json` | Nuovi repository al mese per topic; serie `base` (nuovi repository AI al mese, somma dei topic di base); `in_crescita` (repository nuovi più stellati per competenza); stelle dei progetti seguiti | GitHub |
 | `huggingface.json` | Modelli di tendenza e tipi di compito | Hugging Face |
-| `jobs.json` | Annunci di lavoro per competenza e Paese | The Adzuna API |
+| `jobs.json` | Annunci di lavoro per competenza e Paese | [The Adzuna API](https://www.adzuna.co.uk) |
 | `eurostat.json` | Imprese UE che usano l'AI | Eurostat, isoc_eb_ai |
 | `eurostat_settori.json` | Per settore, Italia e UE: adozione dell'AI (2021, 2023-2025), scopi e barriere dell'ultimo anno; `null` dove Eurostat non dà il numero, con il flag in `flag` | Eurostat, isoc_eb_ain2 |
 | `news.json` | Titoli e link dai feed RSS configurati | Feed dei siti indicati |

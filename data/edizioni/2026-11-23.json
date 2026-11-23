@@ -1,0 +1,340 @@
+{
+  "versione": 1,
+  "settimana": "2026-11-23",
+  "raccolti": "2026-11-23T16:17:37+00:00",
+  "precedente": null,
+  "porte": [
+    {
+      "id": "per-te",
+      "nome": "Per te",
+      "etichetta": "Su cosa formarti",
+      "titolo": [
+        {
+          "t": "Slancio di "
+        },
+        {
+          "t": "LLMOps",
+          "em": true
+        },
+        {
+          "t": " da +30% a −10%"
+        }
+      ],
+      "meta": "Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 23 nov 2026",
+      "destinazione": {
+        "card": "competenze",
+        "elemento": "llmops"
+      },
+      "fonti": [
+        {
+          "nome": "arXiv",
+          "url": "https://arxiv.org",
+          "licenza": "metadati CC0"
+        },
+        {
+          "nome": "GitHub",
+          "url": "https://github.com",
+          "licenza": "termini d'uso di GitHub"
+        },
+        {
+          "nome": "The Adzuna API",
+          "url": "https://www.adzuna.co.uk",
+          "licenza": "termini d'uso di Adzuna"
+        }
+      ],
+      "cambiata": true
+    },
+    {
+      "id": "italia",
+      "nome": "Per la tua organizzazione",
+      "etichetta": "L'AI in Italia",
+      "titolo": [
+        {
+          "t": "Tra 9 giorni",
+          "em": true
+        },
+        {
+          "t": ": vietate le app che spogliano"
+        }
+      ],
+      "meta": "AI Act · scadenza del 2 dic 2026",
+      "destinazione": {
+        "card": "norme",
+        "elemento": "2026-12-02"
+      },
+      "fonti": [
+        {
+          "nome": "AI Act",
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744",
+          "licenza": "testo ufficiale dell'UE"
+        }
+      ],
+      "cambiata": true
+    }
+  ],
+  "card": [
+    {
+      "id": "competenze",
+      "nome": "Competenze",
+      "testa": "per-te",
+      "cifra": "4",
+      "unita": "su 16",
+      "frase": "4 competenze su 16 da imparare ora; LLMOps sta perdendo slancio (−10%) e può uscirne.",
+      "destinazione": {
+        "card": "competenze",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "arXiv",
+          "url": "https://arxiv.org",
+          "licenza": "metadati CC0"
+        },
+        {
+          "nome": "GitHub",
+          "url": "https://github.com",
+          "licenza": "termini d'uso di GitHub"
+        },
+        {
+          "nome": "The Adzuna API",
+          "url": "https://www.adzuna.co.uk",
+          "licenza": "termini d'uso di Adzuna"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "modelli",
+      "nome": "Modelli e ricerca",
+      "testa": "per-te",
+      "cifra": "×4,7",
+      "unita": "all'anno",
+      "frase": "Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.",
+      "destinazione": {
+        "card": "modelli",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "Epoch AI",
+          "url": "https://epoch.ai/data/ai-models",
+          "licenza": "CC BY 4.0"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "open",
+      "nome": "Open source",
+      "testa": "per-te",
+      "cifra": "37",
+      "unita": "su 100",
+      "frase": "Modelli di tendenza su Hugging Face di tipo «immagine e testo».",
+      "destinazione": {
+        "card": "open",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "Hugging Face",
+          "url": "https://huggingface.co/models?sort=trending",
+          "licenza": "termini d'uso di Hugging Face"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "notizie",
+      "nome": "Notizie",
+      "testa": "per-te",
+      "cifra": "49",
+      "unita": "",
+      "frase": "Notizie nei 7 giorni fino al 23 nov 2026, da 9 fonti.",
+      "destinazione": {
+        "card": "notizie",
+        "elemento": null
+      },
+      "fonti": [],
+      "era": null,
+      "cambiata": false
+    },
+    {
+      "id": "geopoliticai",
+      "nome": "GeopoliticAI",
+      "testa": "italia",
+      "cifra": "18,8",
+      "unita": "punti sotto gli USA",
+      "frase": "Capacità del miglior modello europeo, Mistral Large 4, nel 2026, anno in corso: 154,6 ECI. Gli USA arrivano a 173,4, la Cina a 161,2.",
+      "destinazione": {
+        "card": "geopoliticai",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "Epoch AI, Epoch Capabilities Index",
+          "url": "https://epoch.ai/eci",
+          "licenza": "CC BY 4.0"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "business",
+      "nome": "Business",
+      "testa": "italia",
+      "cifra": "16",
+      "unita": "%",
+      "frase": "Imprese italiane che usano l'AI nel 2025. UE: 20%.",
+      "destinazione": {
+        "card": "business",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "Eurostat",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/isoc_eb_ai/default/table",
+          "licenza": "riuso consentito citando la fonte"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "persone",
+      "nome": "Persone e lavoro",
+      "testa": "italia",
+      "cifra": "30",
+      "unita": "%",
+      "frase": "Italiani che usano l'AI generativa. Mondo: 18%.",
+      "destinazione": {
+        "card": "persone",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "Microsoft (2026) – with minor processing by Our World in Data",
+          "url": "https://ourworldindata.org/grapher/estimated-share-people-generative-ai",
+          "licenza": "CC BY 4.0"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "norme",
+      "nome": "Norme",
+      "testa": "italia",
+      "cifra": "9",
+      "unita": "giorni",
+      "frase": "Alla prossima scadenza dell'AI Act, il 2 dic 2026: vietate le app che spogliano.",
+      "destinazione": {
+        "card": "norme",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "AI Act",
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202601744",
+          "licenza": "testo ufficiale dell'UE"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    },
+    {
+      "id": "rapporti",
+      "nome": "Rapporti",
+      "testa": "italia",
+      "cifra": "Dicembre",
+      "unita": "2026",
+      "frase": "Prossimo rapporto previsto: State of Generative AI in the Enterprise.",
+      "destinazione": {
+        "card": "rapporti",
+        "elemento": null
+      },
+      "fonti": [
+        {
+          "nome": "State of Generative AI in the Enterprise, Menlo Ventures",
+          "url": "https://menlovc.com",
+          "licenza": "solo link e date previste"
+        }
+      ],
+      "era": null,
+      "cambiata": true
+    }
+  ],
+  "notizie": {
+    "totale": 49,
+    "periodo": "nei 7 giorni fino al 23 nov 2026",
+    "fonti": 9,
+    "regola": "Fino a 3 notizie per tema, le più recenti, senza ripetere una fonte nello stesso tema. Sono scelte da questa regola: non sono una classifica.",
+    "temi": [
+      {
+        "tema": "ricerca",
+        "nome": "Ricerca",
+        "voci": [
+          {
+            "titolo": "Import AI 482: Huawei kernel benchmarks; airborne drone detection; and a national lab’s AI science benchmark",
+            "link": "https://jack-clark.net/2026/11/23/import-ai-482-huawei-kernel-benchmarks-airborne-drone-detection-and-a-national-labs-ai-science-benchmark/",
+            "data": "2026-11-23",
+            "fonte": "Import AI"
+          },
+          {
+            "titolo": "How to build and maintain an agentic evaluation",
+            "link": "https://huggingface.co/blog/agentic-evals",
+            "data": "2026-11-23",
+            "fonte": "Hugging Face"
+          },
+          {
+            "titolo": "Introducing Gemini 4 Neon",
+            "link": "https://deepmind.google/blog/introducing-gemini-4-neon/",
+            "data": "2026-11-18",
+            "fonte": "Google DeepMind"
+          }
+        ]
+      },
+      {
+        "tema": "prodotti",
+        "nome": "Prodotti",
+        "voci": [
+          {
+            "titolo": "Z.ai follows OpenAI into loop transformer territory with its new 750B flagship model",
+            "link": "https://the-decoder.com/z-ai-follows-openai-into-loop-transformer-territory-with-its-new-750b-flagship-model/",
+            "data": "2026-11-23",
+            "fonte": "The Decoder"
+          },
+          {
+            "titolo": "Perplexity and Intelligence",
+            "link": "https://openai.com/index/perplexity-and-intelligence",
+            "data": "2026-11-22",
+            "fonte": "OpenAI"
+          },
+          {
+            "titolo": "Introducing Tool Retrieval in the Gemini API",
+            "link": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/",
+            "data": "2026-11-19",
+            "fonte": "Google AI"
+          }
+        ]
+      },
+      {
+        "tema": "business",
+        "nome": "Business",
+        "voci": [
+          {
+            "titolo": "[AINews] Riemann Hypothesis proved...twice independently",
+            "link": "https://latent.space/p/ainews-riemann-hypothesis-proved-twice-independently/",
+            "data": "2026-11-21",
+            "fonte": "Latent Space"
+          }
+        ]
+      }
+    ]
+  },
+  "fonti_non_aggiornate": [],
+  "correzioni": []
+}

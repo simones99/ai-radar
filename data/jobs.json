@@ -483,6 +483,79 @@
    }
   },
   {
+   "data": "2026-11-23",
+   "paese": "us",
+   "totale": 3208333,
+   "competenze": {
+    "agenti": 15733,
+    "coding-agenti": 1856,
+    "mcp": 2795,
+    "rag": 6362,
+    "valutazione": 1634,
+    "post-training": 172,
+    "context-engineering": 6396,
+    "sicurezza": 188,
+    "governance": 2634,
+    "dati-per-ai": 2137,
+    "text-to-sql": 102,
+    "vector-db": 4662,
+    "multimodale": 4574,
+    "llmops": 4483,
+    "modelli-locali": 75,
+    "robotica": 235
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
    "data": "2026-10-15",
    "paese": "gb",
    "totale": 455347,
@@ -891,6 +964,79 @@
     "llmops": 352,
     "modelli-locali": 7,
     "robotica": 10
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
+   "data": "2026-11-23",
+   "paese": "gb",
+   "totale": 378467,
+   "competenze": {
+    "agenti": 898,
+    "coding-agenti": 196,
+    "mcp": 147,
+    "rag": 256,
+    "valutazione": 50,
+    "post-training": 16,
+    "context-engineering": 267,
+    "sicurezza": 7,
+    "governance": 197,
+    "dati-per-ai": 136,
+    "text-to-sql": 2,
+    "vector-db": 201,
+    "multimodale": 228,
+    "llmops": 339,
+    "modelli-locali": 7,
+    "robotica": 12
    },
    "query": {
     "agenti": {
@@ -1405,6 +1551,79 @@
    }
   },
   {
+   "data": "2026-11-23",
+   "paese": "de",
+   "totale": 662188,
+   "competenze": {
+    "agenti": 970,
+    "coding-agenti": 227,
+    "mcp": 47,
+    "rag": 133,
+    "valutazione": 22,
+    "post-training": 1,
+    "context-engineering": 1595,
+    "sicurezza": 11,
+    "governance": 47,
+    "dati-per-ai": 45,
+    "text-to-sql": 1,
+    "vector-db": 93,
+    "multimodale": 786,
+    "llmops": 374,
+    "modelli-locali": 2,
+    "robotica": 14
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
    "data": "2026-10-15",
    "paese": "fr",
    "totale": 672161,
@@ -1813,6 +2032,79 @@
     "llmops": 603,
     "modelli-locali": 3,
     "robotica": 6
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
+   "data": "2026-11-23",
+   "paese": "fr",
+   "totale": 577969,
+   "competenze": {
+    "agenti": 146,
+    "coding-agenti": 42,
+    "mcp": 49,
+    "rag": 88,
+    "valutazione": 8,
+    "post-training": 7,
+    "context-engineering": 193,
+    "sicurezza": 1,
+    "governance": 9,
+    "dati-per-ai": 16,
+    "text-to-sql": 9,
+    "vector-db": 29,
+    "multimodale": 462,
+    "llmops": 319,
+    "modelli-locali": 3,
+    "robotica": 1
    },
    "query": {
     "agenti": {
@@ -2327,6 +2619,79 @@
    }
   },
   {
+   "data": "2026-11-23",
+   "paese": "it",
+   "totale": 113626,
+   "competenze": {
+    "agenti": 528,
+    "coding-agenti": 1,
+    "mcp": 43,
+    "rag": 102,
+    "valutazione": 8,
+    "post-training": 5,
+    "context-engineering": 169,
+    "sicurezza": 16,
+    "governance": 9,
+    "dati-per-ai": 5,
+    "text-to-sql": 1,
+    "vector-db": 44,
+    "multimodale": 28,
+    "llmops": 141,
+    "modelli-locali": 3,
+    "robotica": 1
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
    "data": "2026-10-15",
    "paese": "es",
    "totale": 97061,
@@ -2735,6 +3100,79 @@
     "llmops": 986,
     "modelli-locali": 2,
     "robotica": 5
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
+   "data": "2026-11-23",
+   "paese": "es",
+   "totale": 191627,
+   "competenze": {
+    "agenti": 926,
+    "coding-agenti": 16,
+    "mcp": 232,
+    "rag": 363,
+    "valutazione": 49,
+    "post-training": 18,
+    "context-engineering": 592,
+    "sicurezza": 17,
+    "governance": 67,
+    "dati-per-ai": 144,
+    "text-to-sql": 14,
+    "vector-db": 325,
+    "multimodale": 506,
+    "llmops": 969,
+    "modelli-locali": 2,
+    "robotica": 6
    },
    "query": {
     "agenti": {
@@ -3249,6 +3687,79 @@
    }
   },
   {
+   "data": "2026-11-23",
+   "paese": "nl",
+   "totale": 92437,
+   "competenze": {
+    "agenti": 101,
+    "coding-agenti": 28,
+    "mcp": 14,
+    "rag": 28,
+    "valutazione": 4,
+    "post-training": 0,
+    "context-engineering": 33,
+    "sicurezza": 2,
+    "governance": 17,
+    "dati-per-ai": 15,
+    "text-to-sql": 1,
+    "vector-db": 0,
+    "multimodale": 37,
+    "llmops": 58,
+    "modelli-locali": 1,
+    "robotica": 0
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
    "data": "2026-10-15",
    "paese": "pl",
    "totale": 97137,
@@ -3657,6 +4168,79 @@
     "llmops": 396,
     "modelli-locali": 1,
     "robotica": 1
+   },
+   "query": {
+    "agenti": {
+     "what_phrase": "agentic AI"
+    },
+    "coding-agenti": {
+     "what_phrase": "coding agent"
+    },
+    "mcp": {
+     "what_phrase": "Model Context Protocol"
+    },
+    "rag": {
+     "what_phrase": "retrieval augmented generation"
+    },
+    "valutazione": {
+     "what_phrase": "LLM evaluation"
+    },
+    "post-training": {
+     "what_phrase": "LLM fine-tuning"
+    },
+    "context-engineering": {
+     "what_phrase": "prompt engineering"
+    },
+    "sicurezza": {
+     "what_phrase": "LLM security"
+    },
+    "governance": {
+     "what_phrase": "model governance"
+    },
+    "dati-per-ai": {
+     "what_phrase": "training data"
+    },
+    "text-to-sql": {
+     "what_phrase": "text-to-SQL"
+    },
+    "vector-db": {
+     "what_phrase": "vector database"
+    },
+    "multimodale": {
+     "what_phrase": "multimodal"
+    },
+    "llmops": {
+     "what_phrase": "MLOps"
+    },
+    "modelli-locali": {
+     "what_phrase": "on-device AI"
+    },
+    "robotica": {
+     "what_phrase": "robot learning"
+    }
+   }
+  },
+  {
+   "data": "2026-11-23",
+   "paese": "pl",
+   "totale": 86837,
+   "competenze": {
+    "agenti": 601,
+    "coding-agenti": 6,
+    "mcp": 115,
+    "rag": 156,
+    "valutazione": 36,
+    "post-training": 5,
+    "context-engineering": 234,
+    "sicurezza": 9,
+    "governance": 19,
+    "dati-per-ai": 30,
+    "text-to-sql": 11,
+    "vector-db": 3,
+    "multimodale": 45,
+    "llmops": 426,
+    "modelli-locali": 2,
+    "robotica": 0
    },
    "query": {
     "agenti": {

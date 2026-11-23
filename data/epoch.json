@@ -3691,6 +3691,15 @@
    "open": true
   },
   {
+   "m": "MiMo-V2.5",
+   "o": "Xiaomi Corp",
+   "d": "2026-04-22",
+   "c": 4.32e+24,
+   "f": false,
+   "a": "Cina",
+   "open": true
+  },
+  {
    "m": "MiMo-V2.5-Pro",
    "o": "Xiaomi Corp",
    "d": "2026-04-23",
@@ -3851,6 +3860,24 @@
    "f": false,
    "a": "USA",
    "open": false
+  },
+  {
+   "m": "Ripple-65B Preview",
+   "o": "Ricursive Intelligence",
+   "d": "2026-11-04",
+   "c": 4.83717e+24,
+   "f": false,
+   "a": "Altri",
+   "open": true
+  },
+  {
+   "m": "Inkling 2 Small",
+   "o": "Thinking Machines",
+   "d": "2026-11-05",
+   "c": 2.13418e+23,
+   "f": false,
+   "a": "USA",
+   "open": true
   }
  ],
  "per_anno": [
@@ -4082,7 +4109,7 @@
   {
    "anno": 2025,
    "area": "USA",
-   "n": 65
+   "n": 66
   },
   {
    "anno": 2025,
@@ -4102,22 +4129,22 @@
   {
    "anno": 2025,
    "area": "Altri",
-   "n": 9
+   "n": 10
   },
   {
    "anno": 2026,
    "area": "USA",
-   "n": 57
+   "n": 60
   },
   {
    "anno": 2026,
    "area": "Cina",
-   "n": 31
+   "n": 34
   },
   {
    "anno": 2026,
    "area": "UE",
-   "n": 1
+   "n": 2
   },
   {
    "anno": 2026,
@@ -4127,7 +4154,7 @@
   {
    "anno": 2026,
    "area": "Altri",
-   "n": 6
+   "n": 7
   }
  ],
  "pesi_aperti": [
@@ -4178,13 +4205,13 @@
   },
   {
    "anno": 2025,
-   "aperti": 46,
-   "totale": 109
+   "aperti": 47,
+   "totale": 111
   },
   {
    "anno": 2026,
-   "aperti": 30,
-   "totale": 95
+   "aperti": 36,
+   "totale": 103
   }
  ],
  "recenti": [
@@ -4194,6 +4221,34 @@
    "d": "2026-11-10",
    "a": "USA",
    "accesso": "API access"
+  },
+  {
+   "m": "Claude Mythos 5.2",
+   "o": "Anthropic",
+   "d": "2026-11-09",
+   "a": "USA",
+   "accesso": "Limited access"
+  },
+  {
+   "m": "Claude Fable 5.2",
+   "o": "Anthropic",
+   "d": "2026-11-09",
+   "a": "USA",
+   "accesso": "API access"
+  },
+  {
+   "m": "Inkling 2 Small",
+   "o": "Thinking Machines",
+   "d": "2026-11-05",
+   "a": "USA",
+   "accesso": "Open weights (unrestricted)"
+  },
+  {
+   "m": "Ripple-65B Preview",
+   "o": "Ricursive Intelligence",
+   "d": "2026-11-04",
+   "a": "n.d.",
+   "accesso": "Open weights (unrestricted)"
   },
   {
    "m": "MAI-Base-2",
@@ -4243,39 +4298,11 @@
    "d": "2026-09-29",
    "a": "USA",
    "accesso": "API access"
-  },
-  {
-   "m": "Claude Sonnet 5.5",
-   "o": "Anthropic",
-   "d": "2026-09-28",
-   "a": "USA",
-   "accesso": "API access"
-  },
-  {
-   "m": "GPT-6 Sol",
-   "o": "OpenAI",
-   "d": "2026-09-22",
-   "a": "USA",
-   "accesso": "API access"
-  },
-  {
-   "m": "GPT-6 Luna Decisions",
-   "o": "OpenAI",
-   "d": "2026-09-22",
-   "a": "USA",
-   "accesso": "API access"
-  },
-  {
-   "m": "GPT-6 Luna",
-   "o": "OpenAI",
-   "d": "2026-09-22",
-   "a": "USA",
-   "accesso": "API access"
   }
  ],
  "anno_in_corso": 2026,
  "fonte": "Epoch AI, Data on AI Models (CC BY 4.0)",
  "url": "https://epoch.ai/data/ai-models",
  "file": "https://epoch.ai/data/notable_ai_models.csv",
- "modelli": 1092
+ "modelli": 1102
 }

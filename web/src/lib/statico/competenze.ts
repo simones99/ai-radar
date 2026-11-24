@@ -4,6 +4,7 @@ import { competenzeDi, pubblicatoDi, rigaPagina, type RigaPagina } from '../data
 import type { Quadrant, Radar } from '../data/types';
 import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
+import { ADZUNA } from '../text/fonti';
 import { dayWith, isDay, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
 import { COMPETENZA_SENZA_DATI, IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE_IN_PAGINA, PER_INIZIARE, PERCORSO } from '../text/competenza';
@@ -145,16 +146,20 @@ ${METODO_COMPETENZE_IN_PAGINA.map((m) => `<li class="ed-nota">${esc(m)}</li>`).j
 </section>`;
 }
 
-/** In testa le misure, che cambiano, poi la competenza: se non c'entra tutto si accorcia lei, a parola intera. */
+/**
+ * Con le misure, solo loro: lo stato nei due mercati e gli annunci, con la fonte. La descrizione si legge da sola, nei risultati di ricerca
+ * e nelle anteprime dei link, e i termini di Adzuna chiedono di citarla ovunque escano i suoi dati; il testo della competenza, che non ci
+ * starebbe se non a pezzi, è nella pagina, e il nome nel titolo. Senza misure la frase che lo dice, poi la competenza, accorciata a parola intera.
+ */
 function descrizione(c: Competenza, misure: DueMercati | null, r: Radar): string {
-  let testa = `${COMPETENZA_SENZA_DATI} `;
   if (misure) {
     const { tutti, italia } = misure;
-    const domanda = `Domanda: ${per10k(tutti.domanda)} annunci ogni 10mila nel Paese a metà classifica`;
-    testa = italia.senzaDato
-      ? `${r.quadranti[tutti.quadrante]} con tutti i Paesi. ${ITALIA_SENZA_DATO}. ${domanda}. `
-      : `${r.quadranti[tutti.quadrante]} con tutti i Paesi, ${r.quadranti[italia.quadrante]} in Italia. ${domanda}, ${per10k(italia.domanda)} in Italia. `;
+    const annunci = `Annunci ogni 10mila su ${ADZUNA.nome}: ${per10k(tutti.domanda)} nel Paese a metà classifica`;
+    return italia.senzaDato
+      ? `${r.quadranti[tutti.quadrante]} con tutti i Paesi. ${ITALIA_SENZA_DATO}. ${annunci}.`
+      : `${r.quadranti[tutti.quadrante]} con tutti i Paesi, ${r.quadranti[italia.quadrante]} in Italia. ${annunci}, ${per10k(italia.domanda)} in Italia.`;
   }
+  const testa = `${COMPETENZA_SENZA_DATI} `;
   const intera = `${testa}${c.descrizione}`;
   if (intera.length <= DESCRIZIONE_MAX) return intera;
   const spazio = DESCRIZIONE_MAX - testa.length - 1; // il posto per «…»

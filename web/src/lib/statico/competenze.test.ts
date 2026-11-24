@@ -200,31 +200,37 @@ describe('le pagine delle competenze', () => {
 
   const descrizione = (doc: Document) => doc.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
 
-  it('la descrizione dice lo stato nei due mercati e la domanda con l’unità, poi la competenza; og:description è uguale', () => {
+  it('la descrizione dice lo stato nei due mercati e gli annunci con la loro fonte, e si ferma lì; og:description è uguale', () => {
     const doc = pagina('robotica');
-    expect(descrizione(doc)).toBe('Da provare con tutti i Paesi, Da provare in Italia. Domanda: 0,2 annunci ogni 10mila nel Paese a metà classifica, 0,3 in Italia. Robot.');
+    expect(descrizione(doc)).toBe('Da provare con tutti i Paesi, Da provare in Italia. Annunci ogni 10mila su The Adzuna API: 0,2 nel Paese a metà classifica, 0,3 in Italia.');
     expect(doc.querySelector('meta[property="og:description"]')?.getAttribute('content')).toBe(descrizione(doc));
   });
 
   it('senza il dato italiano la descrizione lo dice, e senza dati dice solo questo prima della competenza', () => {
     expect(descrizione(pagina('robotica', senzaItalia('robotica'))))
-      .toBe('Da provare con tutti i Paesi. Per l’Italia il dato non è disponibile in questo momento. Domanda: 0,2 annunci ogni 10mila nel Paese a metà classifica. Robot.');
+      .toBe('Da provare con tutti i Paesi. Per l’Italia il dato non è disponibile in questo momento. Annunci ogni 10mila su The Adzuna API: 0,2 nel Paese a metà classifica.');
     expect(descrizione(pagina('rag', conCompetenza('rag', { slancio: null, quadrante: null }))))
       .toBe('I dati di questa competenza non sono disponibili in questo momento. Recupero di informazioni.');
   });
 
-  it('una descrizione lunga si accorcia sulla competenza, a parola intera, e resta entro 160 caratteri', () => {
+  it('con le misure il testo della competenza non entra, nemmeno a pezzi: il nome è nel titolo e il testo nella pagina', () => {
     const lunga = 'Sistemi che pianificano e usano strumenti per completare compiti in più passi, con memoria, controllo degli errori e richieste di conferma a chi li usa.';
-    const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: lunga })));
-    expect(d.length).toBeLessThanOrEqual(160);
-    expect(d).toMatch(/^Impara ora con tutti i Paesi, Impara ora in Italia\. Domanda: 26 annunci ogni 10mila nel Paese a metà classifica, 37 in Italia\. Sistemi che \S.*\S…$/);
-    expect(lunga.startsWith(d.slice(d.lastIndexOf('Italia. ') + 'Italia. '.length, -1))).toBe(true);
+    expect(descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: lunga }))))
+      .toBe('Impara ora con tutti i Paesi, Impara ora in Italia. Annunci ogni 10mila su The Adzuna API: 26 nel Paese a metà classifica, 37 in Italia.');
   });
 
-  it('una parola sola più lunga dello spazio rimasto si taglia lo stesso: la descrizione resta entro 160 caratteri', () => {
-    const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: 'x'.repeat(200) })));
+  it('senza misure una descrizione lunga si accorcia sulla competenza, a parola intera, e resta entro 160 caratteri', () => {
+    const lunga = 'Sistemi che pianificano e usano strumenti per completare compiti in più passi, con memoria, controllo degli errori e richieste di conferma a chi li usa.';
+    const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: lunga, slancio: null, quadrante: null })));
     expect(d.length).toBeLessThanOrEqual(160);
-    expect(d).toMatch(/Italia\. x+…$/);
+    expect(d).toMatch(/^I dati di questa competenza non sono disponibili in questo momento\. Sistemi che \S.*\S…$/);
+    expect(lunga.startsWith(d.slice('I dati di questa competenza non sono disponibili in questo momento. '.length, -1))).toBe(true);
+  });
+
+  it('senza misure una parola sola più lunga dello spazio rimasto si taglia lo stesso: la descrizione resta entro 160 caratteri', () => {
+    const d = descrizione(pagina('agenti', conCompetenza('agenti', { descrizione: 'x'.repeat(200), slancio: null, quadrante: null })));
+    expect(d.length).toBeLessThanOrEqual(160);
+    expect(d).toMatch(/momento\. x+…$/);
   });
 
   /** Le righe di una tabella come testo, cella per cella: intestazione compresa. */

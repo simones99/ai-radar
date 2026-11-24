@@ -59,7 +59,7 @@ test.describe('senza indice', () => {
 });
 
 test.describe('con l’indice', () => {
-  test('l’ultima edizione è di questa settimana: la riga apre l’edizione', async ({ page, request }) => {
+  test('l’ultima edizione è della settimana dei dati: la riga apre l’edizione', async ({ page, request }) => {
     await conEdizioni(page, request);
     await caricata(page);
     await page.getByRole('link', { name: SETTIMANA }).click();

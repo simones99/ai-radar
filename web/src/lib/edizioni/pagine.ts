@@ -47,10 +47,10 @@ ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono s
 
 /** Una fonte in errore e una non configurata non hanno fatto la stessa cosa, ma a tutte e due mancano i dati di questo giro. */
 function fontiNonAggiornate(e: Edizione): string {
-  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">Tutte le fonti hanno dati aggiornati questa settimana.</p>';
+  if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">In questa edizione tutte le fonti hanno dati aggiornati.</p>';
   const righe = e.fonti_non_aggiornate.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
   return `<section>
-<h2>Senza dati aggiornati questa settimana</h2>
+<h2>Senza dati aggiornati in questa edizione</h2>
 <ul class="ed-voci">
 ${righe}
 </ul>

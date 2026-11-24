@@ -120,7 +120,7 @@ function datiRaccolti(r: Radar): string {
 /** Quanto di una descrizione un motore di ricerca mostra per intero. */
 const DESCRIZIONE_MAX = 160;
 /** Al posto delle misure, quando la competenza non sta sul radar nemmeno con tutti i Paesi: la pagina resta, perché un link salvato non si rompa. */
-const SENZA_DATI = 'I dati di questa competenza non sono disponibili questa settimana.';
+const SENZA_DATI = 'I dati di questa competenza non sono disponibili in questo momento.';
 
 /**
  * Fonti e metodo, e i due modi di aprire la competenza nell'app: lì ci sono i grafici e le scelte. Le fonti sono quelle della card, come nelle edizioni;

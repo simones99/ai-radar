@@ -181,7 +181,8 @@ describe('le pagine delle competenze', () => {
     const t = testo(doc);
     expect(doc.querySelector('h1')?.textContent).toBe('RAG e ricerca semantica');
     expect(t).toContain('Recupero di informazioni.');
-    expect(t).toContain('I dati di questa competenza non sono disponibili questa settimana.');
+    expect(t).toContain('I dati di questa competenza non sono disponibili in questo momento.');
+    expect(t).not.toMatch(/questa settimana/i);
     expect(t).not.toContain('Tutti i Paesi:');
     expect([...doc.querySelectorAll('h2')].map((h) => h.textContent)).toEqual(['Il percorso sul radar', 'Per iniziare', 'Cosa si muove adesso', 'Fonti e metodo', 'Nell’app']);
   });
@@ -198,7 +199,7 @@ describe('le pagine delle competenze', () => {
     expect(descrizione(pagina('robotica', senzaItalia('robotica'))))
       .toBe('Da provare con tutti i Paesi. Per l’Italia il dato non è disponibile in questo momento. Domanda: 0,2 annunci ogni 10mila nel Paese a metà classifica. Robot.');
     expect(descrizione(pagina('rag', conCompetenza('rag', { slancio: null, quadrante: null }))))
-      .toBe('I dati di questa competenza non sono disponibili questa settimana. Recupero di informazioni.');
+      .toBe('I dati di questa competenza non sono disponibili in questo momento. Recupero di informazioni.');
   });
 
   it('una descrizione lunga si accorcia sulla competenza, a parola intera, e resta entro 160 caratteri', () => {

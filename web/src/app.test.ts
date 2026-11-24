@@ -86,7 +86,7 @@ describe('App', () => {
     };
     const settimana = () => screen.queryByRole('link', { name: 'Settimana del 12 ott 2026' });
 
-    it('l’ultima edizione è di questa settimana: «Settimana del…» porta all’edizione', async () => {
+    it('l’ultima edizione è della settimana dei dati: «Settimana del…» porta all’edizione', async () => {
       vi.stubGlobal('fetch', conIndice(indice('2026-10-12')));
       await caricata();
       expect(await screen.findByRole('link', { name: 'Settimana del 12 ott 2026' })).toHaveAttribute('href', 'edizioni/2026-10-12/');

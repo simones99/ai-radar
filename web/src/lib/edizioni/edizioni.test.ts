@@ -740,15 +740,21 @@ describe('la pagina di un’edizione', () => {
   });
 
   it('dice quali fonti non hanno dati aggiornati, in errore o non configurate, con una frase vera per tutte e due, e l’ultimo dato che hanno dato', () => {
-    const s = sezione(pagina(crea()), 'Senza dati aggiornati questa settimana')!;
+    const s = sezione(pagina(crea()), 'Senza dati aggiornati in questa edizione')!;
     expect(s.textContent).toContain('arXiv');
     expect(s.textContent).toContain('8 ott 2026');
     expect(s.textContent).toContain('Adzuna');
     expect(pagina(crea()).body.textContent).not.toMatch(/hanno risposto/);
     const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
-    expect(pagina(tutte).body.textContent).toContain('Tutte le fonti hanno dati aggiornati questa settimana.');
+    expect(pagina(tutte).body.textContent).toContain('In questa edizione tutte le fonti hanno dati aggiornati.');
     expect(pagina(tutte).body.textContent).not.toMatch(/hanno risposto/);
-    expect(sezione(pagina(tutte), 'Senza dati aggiornati questa settimana')).toBeUndefined();
+    expect(sezione(pagina(tutte), 'Senza dati aggiornati in questa edizione')).toBeUndefined();
+  });
+
+  it('non dice «questa settimana», che riletta più tardi sarebbe un’altra settimana (glossario, Settimana dei dati)', () => {
+    const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
+    expect(html(crea())).not.toMatch(/questa settimana/i);
+    expect(html(tutte)).not.toMatch(/questa settimana/i);
   });
 
   it('è la stessa con la stessa edizione: niente dipende dal momento della build', () => {

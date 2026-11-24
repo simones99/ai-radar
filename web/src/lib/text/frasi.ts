@@ -70,7 +70,7 @@ export function headOpen(d: Dataset, _today?: Date): Head {
   const first = d.huggingface?.top[0]?.id;
   return {
     title: [{ t: 'Tra i modelli di tendenza vince il tipo ' }, { t: tipoLabel(t[0]), em: true }],
-    deck: `${t[1]} dei 100 modelli più seguiti questa settimana su Hugging Face.${first ? ` Il primo è ${first}.` : ''}`,
+    deck: `${t[1]} dei 100 modelli di tendenza su Hugging Face.${first ? ` Il primo è ${first}.` : ''}`,
   };
 }
 

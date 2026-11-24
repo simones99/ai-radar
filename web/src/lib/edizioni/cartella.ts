@@ -59,7 +59,7 @@ export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro):
     return { messaggio: esiste ? `Nessuna edizione nuova: quella del ${settimana} esiste già.` : `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.` };
   }
   if (!settimana) throw new Error('Edizione non creata: i dati sono senza una data valida, in status.json.');
-  // l'edizione con cui confrontarsi: la più recente tra quelle uscite prima di questa settimana
+  // l'edizione con cui confrontarsi: la più recente tra quelle uscite prima della settimana dei dati
   const precedente = leggiEdizioni(dati).filter((e) => e.settimana < settimana).sort((a, b) => a.settimana.localeCompare(b.settimana)).at(-1) ?? null;
   const edizione = creaEdizione(leggiDati(dati), precedente);
   if (!edizione) throw new Error('Edizione non creata: tutte e due le porte sono senza dati.');

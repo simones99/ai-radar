@@ -351,6 +351,28 @@ describe('la pagina di un’edizione', () => {
       expect(tag(doc, 'twitter:card')).toBe('summary_large_image');
     });
 
+    it('dice chi la scrive, senza nomi di persona: AI Radar, e il profilo GitHub di chi pubblica il sito, preso dall’indirizzo base', () => {
+      const doc = pagina(crea());
+      expect(tag(doc, 'author')).toBe('AI Radar');
+      expect(tag(doc, 'article:author')).toBe('https://github.com/altro-utente');
+    });
+
+    it('con un indirizzo base che non è di GitHub Pages non c’è nessun profilo da indicare', () => {
+      const e = crea();
+      const doc = new DOMParser().parseFromString(fileDelleEdizioni([e], { indirizzoBase: 'https://radar.esempio.org/', foglio: FOGLIO })['edizioni/2026-10-12/index.html'], 'text/html');
+      expect(tag(doc, 'author')).toBe('AI Radar');
+      expect(doc.querySelector('meta[property="article:author"]')).toBeNull();
+    });
+
+    it('è pubblicata quando i dati sono stati raccolti, e modificata solo da una correzione, all’ultima', () => {
+      const doc = pagina(crea());
+      expect(tag(doc, 'article:published_time')).toBe('2026-10-15T08:00:00+00:00');
+      expect(doc.querySelector('meta[property="article:modified_time"]')).toBeNull();
+      const corretta = { ...crea(), correzioni: [{ data: '2026-10-20', testo: 'Una cifra era sbagliata.' }, { data: '2026-10-27', testo: 'Un link era rotto.' }] };
+      expect(tag(pagina(corretta), 'article:modified_time')).toBe('2026-10-27');
+      expect(tag(pagina(corretta), 'article:published_time')).toBe('2026-10-15T08:00:00+00:00');
+    });
+
     it('la descrizione ha le due porte, Per te per prima', () => {
       expect(tag(pagina(crea()), 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
     });
@@ -799,6 +821,8 @@ describe('l’archivio', () => {
     expect(tag('og:locale')).toBe('it_IT');
     expect(tag('og:site_name')).toBe('AI Radar');
     expect(tag('twitter:card')).toBe('summary_large_image');
+    expect(tag('author')).toBe('AI Radar');
+    expect(doc.querySelector('meta[property^="article:"]')).toBeNull();
   });
 
   it('i testi esterni sono neutralizzati anche qui', () => {

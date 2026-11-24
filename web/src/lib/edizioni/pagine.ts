@@ -96,6 +96,8 @@ export function paginaEdizione(e: Edizione, opzioni: OpzioniPagine, { precedente
     nav: `<a href="../">Edizioni</a><a href="${radice}">Dati di oggi</a>`,
     corpo: corpoEdizione(e, radice, `<h1>Settimana ${esc(dayWith('del', e.settimana))}</h1>`) + altreEdizioni(precedente, successiva),
     tipo: 'article',
+    // esce quando si fissa, subito dopo la raccolta; dopo cambia solo con una correzione dichiarata
+    date: { pubblicata: e.raccolti || null, modificata: e.correzioni.map((c) => c.data).sort().at(-1) ?? null },
     immagine: {
       percorso: `edizioni/${e.settimana}/${IMMAGINE}`,
       alt: `${titoloPagina(e)}. ${e.porte.map((p) => `${p.nome}: ${portaConDati(p) ? portaInBreve(p) : p.meta}.`).join(' ')}`,

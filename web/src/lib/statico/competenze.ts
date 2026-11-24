@@ -7,7 +7,7 @@ import { toHash } from '../router';
 import { dayWith, isDay, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
 import { IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
-import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type OpzioniPagine } from './pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type DateArticolo, type OpzioniPagine } from './pagina';
 
 type Competenza = Radar['competenze'][number];
 
@@ -106,6 +106,12 @@ export function giornoDeiDati(r: Radar): string | null {
   const giorno = r.generato.slice(0, 10);
   return isDay(giorno) ? giorno : null;
 }
+/** Quando la pagina di una competenza esce e cambia: si rifà a ogni giro, quindi tutte e due sono il momento dei dati, o almeno il loro giorno. */
+function dateDellaPagina(r: Radar): DateArticolo {
+  const giorno = giornoDeiDati(r);
+  const quando = giorno && !Number.isNaN(Date.parse(r.generato)) ? r.generato : giorno;
+  return { pubblicata: quando, modificata: quando };
+}
 /** La data dei dati, in testa alle pagine e all'indice: non sono fissi come un'edizione. Senza un giorno valido la data non si scrive. */
 function datiRaccolti(r: Radar): string {
   const giorno = giornoDeiDati(r);
@@ -172,6 +178,7 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
     radice: RADICE,
     nav: navDelleCompetenze(RADICE, opzioni),
     tipo: 'article',
+    date: dateDellaPagina(r),
     immagine: { percorso: `${percorso}${IMMAGINE}`, alt: testoAlternativo(anteprimaDi(c, r)) },
     corpo: `<div class="ed-testa">
 <h1>${esc(c.nome)}</h1>

@@ -16,11 +16,12 @@ const leggi = (testo: string) => {
   expect(doc.querySelector('parsererror')).toBeNull();
   return doc;
 };
-const canale = (...ed: Edizione[]) => leggi(xml(...ed)).querySelector('rss > channel')!;
+// l'elemento channel di RSS: il feed, con i suoi dati e le sue voci
+const ilFeed = (...ed: Edizione[]) => leggi(xml(...ed)).querySelector('rss > channel')!;
 const figlio = (el: Element, nome: string) => [...el.children].find((c) => c.tagName === nome);
-const voci = (...ed: Edizione[]) => [...canale(...ed).querySelectorAll('item')];
+const voci = (...ed: Edizione[]) => [...ilFeed(...ed).querySelectorAll('item')];
 
-describe('il canale del feed', () => {
+describe('il feed', () => {
   it('prima della prima edizione non esiste', () => {
     expect(fileDelleEdizioni([], opzioni())).not.toHaveProperty(['feed.xml']);
   });
@@ -29,7 +30,7 @@ describe('il canale del feed', () => {
     const doc = leggi(xml(prima));
     expect(doc.documentElement.tagName).toBe('rss');
     expect(doc.documentElement.getAttribute('version')).toBe('2.0');
-    const c = canale(prima);
+    const c = ilFeed(prima);
     expect(figlio(c, 'language')?.textContent).toBe('it');
     expect(figlio(c, 'title')?.textContent).toBe('AI Radar, le edizioni');
     expect(figlio(c, 'link')?.textContent).toBe(`${BASE}edizioni/`);
@@ -37,7 +38,7 @@ describe('il canale del feed', () => {
   });
 
   it('ha un atom:link verso se stesso, nello spazio dei nomi di Atom', () => {
-    const atom = canale(prima).getElementsByTagNameNS('http://www.w3.org/2005/Atom', 'link')[0];
+    const atom = ilFeed(prima).getElementsByTagNameNS('http://www.w3.org/2005/Atom', 'link')[0];
     expect(atom.getAttribute('href')).toBe(`${BASE}feed.xml`);
     expect(atom.getAttribute('rel')).toBe('self');
     expect(atom.getAttribute('type')).toBe('application/rss+xml');

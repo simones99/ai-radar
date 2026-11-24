@@ -1,7 +1,8 @@
 // Le pagine statiche delle competenze, lette come le legge chi arriva da un motore di ricerca: l'HTML che esce dalla mappa del sito.
 import { describe, expect, it } from 'vitest';
 import type { Dataset, Radar } from '../data/types';
-import { METODO_COMPETENZE } from '../text/competenza';
+import { COMPETENZA_SENZA_DATI, METODO_COMPETENZE, METODO_COMPETENZE_IN_PAGINA } from '../text/competenza';
+import { DATI_NON_DISPONIBILI, ITALIA_SENZA_DATO } from '../text/frasi';
 import { FIXTURE } from '../test/fixtures';
 import { filePubblici } from '.';
 
@@ -160,12 +161,22 @@ describe('le pagine delle competenze', () => {
     const t = sezione(doc, 'Fonti e metodo');
     expect(t).toContain("Fonti: arXiv (metadati CC0), GitHub (termini d'uso di GitHub), The Adzuna API (termini d'uso di Adzuna).");
     expect(doc.querySelector('main a[href="https://www.adzuna.co.uk"]')).not.toBeNull();
-    for (const paragrafo of METODO_COMPETENZE) expect(t).toContain(paragrafo);
+    for (const paragrafo of METODO_COMPETENZE_IN_PAGINA) expect(t).toContain(paragrafo);
+    expect(METODO_COMPETENZE_IN_PAGINA).toHaveLength(METODO_COMPETENZE.length);
+  });
+
+  it('il metodo non nomina i bottoni dell’app, che la pagina non ha: dice «In Italia» e «con tutti i Paesi»', () => {
+    const t = sezione(pagina('agenti'), 'Fonti e metodo');
+    expect(t).not.toMatch(/«Italia»|«Tutti i Paesi»/);
+    expect(t).toContain('In Italia la domanda è quella italiana');
+    expect(t).toContain('Con tutti i Paesi conta solo lo slancio.');
+    // l'app, che i bottoni li ha, tiene il suo testo
+    expect(METODO_COMPETENZE.join(' ')).toContain('Con «Italia» la domanda è quella italiana');
   });
 
   it('il metodo spiega l’incertezza della domanda italiana vicino alla soglia', () => {
     const t = sezione(pagina('agenti'), 'Fonti e metodo');
-    expect(t).toContain('Con «Italia» il dato è incerto anche quando la domanda è troppo vicina alla soglia');
+    expect(t).toContain('In Italia il dato è incerto anche quando la domanda è troppo vicina alla soglia');
     expect(t).toContain('margine all’80% del numero di annunci italiani');
     expect(t).toContain('molto sotto la soglia, resta invece un dato solido');
   });
@@ -181,7 +192,7 @@ describe('le pagine delle competenze', () => {
     const t = testo(doc);
     expect(doc.querySelector('h1')?.textContent).toBe('RAG e ricerca semantica');
     expect(t).toContain('Recupero di informazioni.');
-    expect(t).toContain('I dati di questa competenza non sono disponibili in questo momento.');
+    expect(t).toContain(COMPETENZA_SENZA_DATI);
     expect(t).not.toMatch(/questa settimana/i);
     expect(t).not.toContain('Tutti i Paesi:');
     expect([...doc.querySelectorAll('h2')].map((h) => h.textContent)).toEqual(['Il percorso sul radar', 'Per iniziare', 'Cosa si muove adesso', 'Fonti e metodo', 'Nell’app']);
@@ -233,8 +244,15 @@ describe('le pagine delle competenze', () => {
   it('dove manca il quadrante italiano la cella lo dice, e senza nessun mese italiano c’è la frase dell’app', () => {
     const storico = RADAR.storico!.map((p) => ({ ...p, competenze: { ...p.competenze, mcp: { ...p.competenze.mcp, pubblicato_it: null } } }));
     const doc = pagina('mcp', { ...RADAR, storico } as Radar);
-    expect(righe(doc).slice(1).map((r) => r[2])).toEqual(['—', '—', '—']);
-    expect(sezione(doc, 'Il percorso sul radar')).toContain('Per l’Italia il dato non è disponibile in questo momento.');
+    expect(righe(doc).slice(1).map((r) => r[2])).toEqual([DATI_NON_DISPONIBILI, DATI_NON_DISPONIBILI, DATI_NON_DISPONIBILI]);
+    expect(sezione(doc, 'Il percorso sul radar')).toContain(`${ITALIA_SENZA_DATO}.`);
+  });
+
+  it('una cella senza quadrante lo dice a parole, anche a un lettore di schermo: nessun trattino', () => {
+    const storico = RADAR.storico!.map((p, i) => (i ? p : { ...p, competenze: { ...p.competenze, mcp: { ...p.competenze.mcp, pubblicato: null } } }));
+    const doc = pagina('mcp', { ...RADAR, storico } as Radar);
+    expect(righe(doc)[1]).toEqual(['lug 2026', DATI_NON_DISPONIBILI, "Tieni d'occhio"]);
+    expect(sezione(doc, 'Il percorso sul radar')).not.toContain('—');
   });
 
   it('senza storico il percorso dice che arriva con i prossimi aggiornamenti', () => {
@@ -260,6 +278,24 @@ describe('le pagine delle competenze', () => {
     expect(muove).toContain('I repository con il suo topic creati negli ultimi 90 giorni, i più stellati.');
     expect(muove).toContain('acme/mcp-kit 1.200 stelle · creato il 2 ago 2026 Kit per server MCP.');
     expect(doc.querySelector('main a[href="https://github.com/acme/mcp-kit"]')?.textContent).toBe('acme/mcp-kit');
+  });
+
+  it('un repository senza una data di creazione leggibile non ne scrive nessuna', () => {
+    for (const creato of ['', 'ieri']) {
+      const radar = conCompetenza('mcp', { in_crescita: [{ nome: 'acme/mcp-kit', url: 'https://github.com/acme/mcp-kit', descrizione: '', stelle: 1200, creato }] });
+      const muove = sezione(pagina('mcp', radar), 'Cosa si muove adesso');
+      expect(muove).toContain('acme/mcp-kit 1.200 stelle');
+      expect(muove).not.toMatch(/creato|undefined|NaN/);
+    }
+  });
+
+  it('le frasi sui dati che mancano vengono ognuna dalla sua costante: competenza intera, solo Italia, cella di una tabella', () => {
+    expect(COMPETENZA_SENZA_DATI).toBe('I dati di questa competenza non sono disponibili in questo momento.');
+    expect(ITALIA_SENZA_DATO).toBe('Per l’Italia il dato non è disponibile in questo momento');
+    expect(DATI_NON_DISPONIBILI).toBe('Dati non disponibili');
+    const senzaDati = conCompetenza('rag', { slancio: null, slancio_margine: null, quadrante: null, quadrante_calcolato: null, quadrante_it: null, quadrante_calcolato_it: null });
+    expect(descrizione(pagina('rag', senzaDati)).startsWith(`${COMPETENZA_SENZA_DATI} `)).toBe(true);
+    expect(sezione(pagina('mcp', senzaItalia('mcp')), 'Domanda')).toContain(`${ITALIA_SENZA_DATO}.`);
   });
 
   it('senza voci le due sezioni restano, con le frasi dell’app', () => {

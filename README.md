@@ -40,7 +40,9 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──┬─► 
    In alternativa usa *Add file → Upload files* sul sito di GitHub, trascinando il contenuto della cartella; in quel caso controlla che la cartella `.github` sia stata caricata, perché alcuni sistemi nascondono le cartelle che iniziano con il punto.
 4. **Avvia il primo giro a mano.** Il caricamento fa partire *Aggiorna e pubblica*, che però pubblica il sito con i dati già presenti nel repository e non ne raccoglie di nuovi. Per raccoglierli usa *Actions → Aggiorna e pubblica → Run workflow*, lasciando spenta la casella «Crea l'edizione della settimana dei dati»; se hai saltato il passo 2, completalo prima. Il primo giro di raccolta dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Da lì in poi i dati si raccolgono da soli ogni lunedì, e con loro esce l'edizione della settimana.
 5. La dashboard è su `https://<tuo-utente>.github.io/ai-radar/`. I link alle edizioni compaiono in home con la prima edizione. Gli indirizzi di feed e anteprime seguono il nome del tuo repository.
-6. **Segnala la sitemap a Google.** La build scrive `sitemap.xml` accanto all'app, con l'indirizzo di ogni pagina statica: home, competenze, archivio ed edizioni. Scrive anche `robots.txt`, ma solo quando l'indirizzo base (`AI_RADAR_BASE_URL`) è la radice di un dominio, perché i crawler lo cercano solo lì: per un sito in `/ai-radar/` non esce. Il workflow ricava l'indirizzo base dal nome del repository: se lo chiami `<tuo-utente>.github.io`, il sito sta alla radice di `https://<tuo-utente>.github.io/` e `robots.txt` esce da solo, con l'indicazione della sitemap. Dopo il primo rilascio, quindi, la sitemap va segnalata a mano: in [Google Search Console](https://search.google.com/search-console) aggiungi una proprietà di tipo «Prefisso URL» con l'indirizzo base, `https://<tuo-utente>.github.io/ai-radar/`, e in *Sitemap* inserisci `sitemap.xml`, cioè `https://<tuo-utente>.github.io/ai-radar/sitemap.xml`.
+
+   Il sito si pubblica solo su `<tuo-utente>.github.io`, con o senza il nome del repository: un dominio proprio, con un CNAME, non è previsto. Il workflow ricava l'indirizzo base dal proprietario e dal nome del repository, e da lì nascono canonical, `og:url`, immagini di anteprima, feed, sitemap e il link al profilo GitHub dell'autore. Su un altro host tutti questi indirizzi punterebbero a `github.io`, e `robots.txt` mancherebbe. `AI_RADAR_BASE_URL` la imposta il workflow, e in locale serve solo per le prove: non sceglie l'indirizzo del sito pubblicato.
+6. **Segnala la sitemap a Google.** La build scrive `sitemap.xml` accanto all'app, con l'indirizzo di ogni pagina statica: home, competenze, archivio ed edizioni. Scrive anche `robots.txt`, ma solo quando l'indirizzo base è la radice di un dominio, perché i crawler lo cercano solo lì: per un sito in `/ai-radar/` non esce. Il workflow ricava l'indirizzo base dal nome del repository: se lo chiami `<tuo-utente>.github.io`, il sito sta alla radice di `https://<tuo-utente>.github.io/` e `robots.txt` esce da solo, con l'indicazione della sitemap. Dopo il primo rilascio, quindi, la sitemap va segnalata a mano: in [Google Search Console](https://search.google.com/search-console) aggiungi una proprietà di tipo «Prefisso URL» con l'indirizzo base, `https://<tuo-utente>.github.io/ai-radar/`, e in *Sitemap* inserisci `sitemap.xml`, cioè `https://<tuo-utente>.github.io/ai-radar/sitemap.xml`.
 
 ## Chiavi facoltative
 
@@ -78,6 +80,15 @@ Il radar è **prudente**: il quadrante cambia solo se il calcolo di due mesi di 
 Il radar si può leggere **sull'Italia**: nella card Competenze si sceglie il mercato, «Tutti i Paesi» o «Italia», e la scelta sta nel link (`#competenze?mercato=italia`). Con «Italia» la domanda è quella italiana, la mediana delle ultime 4 rilevazioni in Italia, e accanto si legge il numero di annunci che ci sta dietro. Lo slancio è unico: la crescita si misura nel mondo e non cambia. La soglia è la stessa, 3 annunci ogni 10mila. I quadranti sono propri, con la stessa conferma di due mesi di fila. Dove manca il dato italiano la pagina lo dice e non mostra uno zero.
 
 Ogni competenza ha una sua pagina (`#competenze/mcp`) con l'andamento dei tre segnali, il percorso sul radar, le risorse per iniziare scelte a mano e i repository nuovi più stellati.
+
+Per chi arriva da un motore di ricerca o senza JavaScript, ogni competenza ha anche una pagina in HTML statico, che si rifà a ogni build con i dati di quel giro:
+
+| Indirizzo | Cosa c'è |
+| --- | --- |
+| `/competenze/<id>/` | la pagina di una competenza, con l'`id` di `config/skills.yaml`: dove sta nei due mercati, domanda, slancio, percorso sul radar, risorse, fonti e metodo, e la sua immagine di anteprima |
+| `/competenze/` | l'indice delle competenze, raggruppate per quadrante |
+
+L'`id` diventa la cartella della pagina: può avere solo minuscole, cifre e trattini, e la pipeline ferma il radar se non è così. Le immagini di anteprima delle competenze le fa `npm run anteprime-competenze`, dopo la build e con Chromium: il workflow lo lancia a ogni giro che pubblica.
 
 Limiti da tenere a mente:
 
@@ -179,13 +190,15 @@ cd .. && python scripts/build_site.py                   # copia i dati e costrui
 cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
 
-Con Chromium (`npx playwright install chromium`) ci sono anche `npm run test:browser`, i test del comando che fa l'immagine di un'edizione, e `npm run e2e`.
+Con Chromium (`npx playwright install chromium`) ci sono anche `npm run test:browser`, i test del comando che fa l'immagine di un'edizione, `npm run e2e` e `npm run anteprime-competenze`, che sul sito già costruito in `_site/` sostituisce l'immagine segnaposto di ogni pagina delle competenze con la sua.
 
 Per lavorare sull'app con il ricaricamento automatico: `mkdir -p web/public/data && cp data/*.json web/public/data/` e poi `cd web && npm run dev`.
 
 Le chiavi si passano come variabili d'ambiente: `ADZUNA_APP_ID`, `ADZUNA_APP_KEY`, `GITHUB_TOKEN`.
 
 Per provare un'edizione senza rischiare di salvarla nel repository, usa una copia dei dati: `AI_RADAR_DATA_DIR=/una/cartella/a/parte`. La leggono sia `npm run edizione -- --evento schedule` sia la build.
+
+`build_site.py` copia nell'app i JSON di una cartella sola, e la stessa la passa alla build di Vite, da cui nascono la home in chiaro, le edizioni, le competenze e la sitemap: è la cartella data come argomento, se c'è, altrimenti `AI_RADAR_DATA_DIR`, altrimenti `data/`. Così l'app e le pagine statiche partono sempre dagli stessi dati.
 
 ## Struttura
 

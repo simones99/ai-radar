@@ -39,9 +39,20 @@ export const isoDay = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth(
  */
 export const isDay = (s: string): boolean => /^\d{4}-\d{2}-\d{2}$/.test(s) && isoDay(parseDay(s)) === s;
 export const ym = (d: Date): string => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
-/** Il lunedì della settimana di una data. */
+const GIORNO_ITALIANO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit' });
+
+/**
+ * Il giorno AAAA-MM-GG in Italia: un istante si converte nell'ora italiana, ora legale compresa; un giorno senza ora resta quello,
+ * e così un istante che non si legge, che non ha un'ora da convertire.
+ */
+function giornoItaliano(iso: string): string {
+  const istante = new Date(iso);
+  return iso.length <= 10 || Number.isNaN(istante.getTime()) ? iso.slice(0, 10) : GIORNO_ITALIANO.format(istante);
+}
+
+/** Il lunedì della settimana di una data. Un istante, come la raccolta dei dati che il workflow scrive in UTC, conta nel giorno italiano. */
 export function lunediDi(iso: string): string {
-  const d = parseDay(iso);
+  const d = parseDay(giornoItaliano(iso));
   d.setDate(d.getDate() - (d.getDay() + 6) % 7);
   return isoDay(d);
 }

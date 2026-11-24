@@ -38,6 +38,18 @@ export async function rifaiImmagine({ settimana, dati, fotografa }: { settimana:
   return `Immagine dell'edizione del ${settimana} rifatta.`;
 }
 
+/** Il lunedì della settimana dei dati, da status.aggiornato; null senza il file o senza una data valida. Un file illeggibile è un errore che lo nomina. */
+function settimanaDaStatus(status: string): string | null {
+  if (!existsSync(status)) return null;
+  let aggiornato: unknown;
+  try {
+    aggiornato = JSON.parse(readFileSync(status, 'utf-8'))?.aggiornato;
+  } catch (e) {
+    throw new Error(`Edizione non creata: status.json non si legge, ${e instanceof Error ? e.message : e}.`);
+  }
+  return typeof aggiornato === 'string' && raccoltaValida(aggiornato) ? lunediDi(aggiornato) : null;
+}
+
 export interface Giro {
   evento: string;
   casella: boolean;
@@ -51,14 +63,13 @@ export interface Giro {
  * Lancia un errore quando l'edizione doveva uscire e non può, anche per colpa dell'immagine: per il workflow è una creazione fallita.
  */
 export async function fissaEdizione({ evento, casella, dati, fotografa }: Giro): Promise<{ messaggio: string; creata?: string }> {
-  const status = join(dati, 'status.json');
-  const aggiornato: string | undefined = existsSync(status) ? JSON.parse(readFileSync(status, 'utf-8')).aggiornato : undefined;
-  const settimana = raccoltaValida(aggiornato) ? lunediDi(aggiornato) : null;
-  const esiste = !!settimana && existsSync(fileFisso(dati, settimana));
-  if (!deveCreare({ evento, casella, esiste })) {
-    return { messaggio: esiste ? `Nessuna edizione nuova: quella del ${settimana} esiste già.` : `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.` };
+  // prima evento e casella, senza leggere niente: un giro che non crea mai non si ferma per uno status.json rotto
+  if (!deveCreare({ evento, casella, esiste: false })) {
+    return { messaggio: `Nessuna edizione: non si crea con l'evento «${evento}» e la casella ${casella ? 'accesa' : 'spenta'}.` };
   }
+  const settimana = settimanaDaStatus(join(dati, 'status.json'));
   if (!settimana) throw new Error('Edizione non creata: i dati sono senza una data valida, in status.json.');
+  if (existsSync(fileFisso(dati, settimana))) return { messaggio: `Nessuna edizione nuova: quella del ${settimana} esiste già.` };
   // l'edizione con cui confrontarsi: la più recente tra quelle uscite prima della settimana dei dati
   const precedente = leggiEdizioni(dati).filter((e) => e.settimana < settimana).sort((a, b) => a.settimana.localeCompare(b.settimana)).at(-1) ?? null;
   const edizione = creaEdizione(leggiDati(dati), precedente);

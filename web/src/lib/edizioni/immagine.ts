@@ -23,7 +23,7 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
     da: PIU_GRANDE,
     a: PIU_PICCOLO,
   };
-  const entra = await page.evaluate(async ({ data, porte, da, a }) => {
+  const esito = await page.evaluate(async ({ data, porte, da, a }) => {
     document.querySelector('h1')!.textContent = data;
     const articoli = [...document.querySelectorAll('article')];
     porte.forEach((porta, i) => {
@@ -38,17 +38,20 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
       if (porta.ripetuta) fondo.appendChild(document.createElement('strong')).textContent = 'Nessun cambio dalla settimana scorsa';
       if (porta.meta) fondo.appendChild(document.createElement('span')).textContent = porta.meta;
     });
-    const caricati = await document.fonts.load('500 40px "Bricolage Grotesque Variable"', document.body.textContent ?? '');
-    if (!caricati.length) throw new Error('Il font del sito non si carica: serve npm ci in web/.');
+    // un file del font che manca fa fallire il caricamento; un foglio che manca lascia il font senza nessun file: tutti e due vogliono npm ci,
+    // come nell'immagine della competenza
+    const caricati = await document.fonts.load('500 40px "Bricolage Grotesque Variable"', document.body.textContent ?? '').catch(() => []);
+    if (!caricati.length) return 'font';
     await document.fonts.ready;
     const righe = [...document.querySelectorAll('article p')];
     for (let corpo = da; corpo >= a; corpo--) {
       document.documentElement.style.setProperty('--corpo', `${corpo}px`);
-      if (righe.every((r) => r.scrollHeight <= r.clientHeight && r.scrollWidth <= r.clientWidth)) return true;
+      if (righe.every((r) => r.scrollHeight <= r.clientHeight && r.scrollWidth <= r.clientWidth)) return 'entra';
     }
-    return false;
+    return 'porte';
   }, contenuto);
-  if (!entra) throw new Error(`Edizione ${e.settimana}: le porte non entrano nell'immagine nemmeno a ${PIU_PICCOLO} px.`);
+  if (esito === 'font') throw new Error('Il font del sito non si carica: serve npm ci in web/.');
+  if (esito === 'porte') throw new Error(`Edizione ${e.settimana}: le porte non entrano nell'immagine nemmeno a ${PIU_PICCOLO} px.`);
 }
 
 /** Il PNG dell'edizione, 1200×630, in memoria: finché non è pronto sul disco non si tocca nulla. */

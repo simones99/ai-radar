@@ -59,6 +59,40 @@ def test_l_id_di_umami_arriva_dalla_variabile_del_repository_a_tutto_il_job_comp
     assert all("CI" not in ambiente.get("env", {}) for ambiente in [workflow, aggiorna, *aggiorna["steps"]])
 
 
+def test_il_commit_dell_edizione_arriva_dopo_gli_end_to_end_e_prima_del_caricamento_del_sito():
+    # con gli end-to-end rossi l'edizione non si salva; salvata, esce con il sito che la mostra
+    passi = [p.get("name") or p.get("uses") for p in job("aggiorna.yml", "aggiorna")["steps"]]
+    salva = passi.index("Salva l'edizione nel repository")
+    assert passi.index("Test end-to-end") < salva < passi.index("actions/upload-pages-artifact@v5")
+
+
+def test_se_la_creazione_dell_edizione_fallisce_dati_e_sito_proseguono():
+    edizione = passo("Crea l'edizione")
+    assert edizione["continue-on-error"] is True
+    # l'esito arriva al job finale, che manda il giro in rosso
+    assert job("aggiorna.yml", "aggiorna")["outputs"]["edizione"] == f"${{{{ steps.{edizione['id']}.outcome }}}}"
+
+
+def test_raccolta_e_salvataggio_dei_dati_non_partono_su_un_push():
+    # un push prova il codice e pubblica con i dati già salvati: i dati li raccolgono solo il lunedì e l'avvio manuale
+    for nome in ["Raccogli i dati", "Salva i dati nel repository"]:
+        assert passo(nome)["if"] == "github.event_name != 'push'", nome
+
+
+def test_la_casella_dell_avvio_manuale_parte_spenta():
+    # un avvio manuale raccoglie i dati e basta: l'edizione si crea solo accendendo la casella
+    workflow = yaml.safe_load((WORKFLOWS / "aggiorna.yml").read_text(encoding="utf-8"))
+    # per YAML 1.1 la chiave on è il booleano True
+    casella = workflow[True]["workflow_dispatch"]["inputs"]["crea_edizione"]
+    assert casella["type"] == "boolean"
+    assert casella["default"] is False
+
+
+def test_il_job_finale_dell_edizione_parte_solo_se_la_creazione_e_fallita_e_il_giro_non_e_annullato():
+    finale = job("aggiorna.yml", "edizione-non-creata")
+    assert finale["if"] == "${{ !cancelled() && needs.aggiorna.outputs.edizione == 'failure' }}"
+
+
 def test_i_test_prima_della_raccolta_non_usano_il_browser():
     assert "npm test" in passo("Test dell'app")["run"]
     assert "test:browser" not in passo("Test dell'app")["run"]

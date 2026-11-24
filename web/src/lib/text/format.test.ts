@@ -8,6 +8,26 @@ describe('lunediDi', () => {
     expect(lunediDi('2026-11-01')).toBe('2026-10-26');
     expect(lunediDi('2026-11-03')).toBe('2026-11-02');
   });
+
+  it('un istante conta nel giorno italiano, non in quello UTC: un recupero lunedì dopo mezzanotte è già la settimana nuova', () => {
+    expect(lunediDi('2026-11-22T23:30:00+00:00')).toBe('2026-11-23'); // lunedì 00:30 in Italia
+    expect(lunediDi('2026-11-23T16:17:37+00:00')).toBe('2026-11-23');
+    expect(lunediDi('2026-11-22T22:30:00+00:00')).toBe('2026-11-16'); // domenica 23:30 in Italia
+  });
+
+  it('con l’ora legale: lunedì 00:30 CEST è già lunedì', () => {
+    expect(lunediDi('2026-03-29T22:30:00+00:00')).toBe('2026-03-30');
+    expect(lunediDi('2026-03-29T21:30:00+00:00')).toBe('2026-03-23'); // domenica 23:30 CEST
+  });
+
+  it('un giorno senza ora resta quel giorno', () => {
+    expect(lunediDi('2026-11-23')).toBe('2026-11-23');
+  });
+
+  it('un istante che non si legge non ferma la pagina: conta il giorno con cui comincia', () => {
+    expect(() => lunediDi('2026-11-24Tmezzogiorno')).not.toThrow();
+    expect(lunediDi('2026-11-24Tmezzogiorno')).toBe('2026-11-23');
+  });
 });
 
 describe('formati italiani', () => {

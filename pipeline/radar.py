@@ -30,6 +30,7 @@ nessun numero; un ruolo sconosciuto o con meno di MIN_PER_RUOLO competenze ferma
 """
 from __future__ import annotations
 
+import re
 from datetime import date
 from itertools import chain
 from math import sqrt
@@ -298,6 +299,17 @@ def _publish(points: list[tuple[str, dict]], ids: list[str]) -> None:
                 rows[sid][pubblicato] = q
 
 
+ID_SICURO = re.compile(r"[a-z0-9]+(-[a-z0-9]+)*")
+
+
+def _check_ids(skills: list[dict]) -> None:
+    """L'id diventa la cartella competenze/<id>/ della pagina statica: vuoto, con «..» o «/» porterebbe fuori da competenze/."""
+    for sk in skills:
+        if not isinstance(sk.get("id"), str) or not ID_SICURO.fullmatch(sk["id"]):
+            nome = sk.get("nome") or sk.get("id")
+            raise ValueError(f"competenza {nome!r}: l'id {sk.get('id')!r} non va bene, servono solo minuscole, cifre e trattini")
+
+
 def _check_ruoli(skills: list[dict], ruoli: list[dict]) -> None:
     ids = {r["id"] for r in ruoli}
     for sk in skills:
@@ -312,6 +324,7 @@ def _check_ruoli(skills: list[dict], ruoli: list[dict]) -> None:
 
 def run(skills: list[dict], today: date, ruoli: list[dict] | None = None) -> dict:
     ruoli = ruoli or []
+    _check_ids(skills)
     _check_ruoli(skills, ruoli)
     arx = read_json("arxiv.json", {}) or {}
     if arx.get("completo") is False:  # giro interrotto: con poche serie i confronti sarebbero falsati

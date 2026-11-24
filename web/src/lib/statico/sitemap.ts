@@ -1,6 +1,6 @@
 // La sitemap: l'indirizzo assoluto di ogni pagina del sito pensata per essere letta da fuori, perché un motore di ricerca le trovi
-// senza passare dalla home, che è riempita da JavaScript. Operazione pura: nasce dalle altre voci della mappa dei file pubblici.
-import type { Edizione } from '../edizioni';
+// senza passare dalla home. Operazione pura: nasce dalle altre voci della mappa dei file pubblici.
+import { raccoltaValida, type Edizione } from '../edizioni';
 import { isoDay, parseDay } from '../text/format';
 import { giornoDeiDati } from './competenze';
 import type { ContenutoStatico } from './contenuto';
@@ -13,18 +13,25 @@ const PAGINA = /(^|\/)index\.html$/;
 /** La più recente tra date AAAA-MM-GG, che in quella forma si confrontano come testo. */
 const piuRecente = (date: string[]): string => date.reduce((a, b) => (b > a ? b : a));
 
+/** Il giorno di un istante di raccolta. */
+const giornoDellaRaccolta = (raccolti: string): string => isoDay(parseDay(raccolti));
+
 /** Il giorno più recente tra la raccolta di un'edizione e le sue correzioni: un'edizione cambia solo con una correzione. */
-const ultimoCambio = (e: Edizione): string => piuRecente([isoDay(parseDay(e.raccolti)), ...e.correzioni.map((c) => c.data)]);
+const ultimoCambio = (e: Edizione): string => piuRecente([giornoDellaRaccolta(e.raccolti), ...e.correzioni.map((c) => c.data)]);
 
 /**
  * La data di ultimo cambio della pagina in una cartella, se ha una regola e i dati per seguirla. Viene sempre dai dati, mai dall'orologio:
- * ogni edizione la sua, l'archivio la più recente tra quelle delle edizioni, la home e le competenze il giorno dei dati del radar.
+ * ogni edizione la sua, l'archivio la più recente tra quelle delle edizioni, la home il giorno della raccolta, perché il suo testo nasce
+ * da tutti i dati del giro, e le competenze il giorno dei dati del radar, da cui nascono loro sole. Senza status.json, o con un aggiornato
+ * che non è una raccolta valida, la home non ha data.
  */
-function dateDelleCartelle({ edizioni, dataset: { radar } }: ContenutoStatico): (cartella: string) => string | null {
+function dateDelleCartelle({ edizioni, dataset: { radar, status } }: ContenutoStatico): (cartella: string) => string | null {
   const date = new Map(edizioni.map((e) => [`edizioni/${e.settimana}/`, ultimoCambio(e)]));
   if (edizioni.length) date.set('edizioni/', piuRecente([...date.values()]));
-  const deiDati = radar ? giornoDeiDati(radar) : null;
-  return (c) => (c === '' || c.startsWith('competenze/') ? deiDati : date.get(c) ?? null);
+  const raccolti = status?.aggiornato;
+  if (raccoltaValida(raccolti)) date.set('', giornoDellaRaccolta(raccolti));
+  const delRadar = radar ? giornoDeiDati(radar) : null;
+  return (c) => (c.startsWith('competenze/') ? delRadar : date.get(c) ?? null);
 }
 
 /**

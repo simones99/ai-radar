@@ -3,7 +3,7 @@ import { FIXTURE, FIXTURE_TODAY as today } from '../test/fixtures';
 import type { Dataset } from '../data/types';
 import {
   faceBusiness, faceCompetenze, faceModelli, faceNotizie, faceOpen, facePersone, faceNorme, faceRapporti,
-  cambio, headBusiness, headCompetenze, headNotizie, headNorme, headPersone, headSkill, tipoLabel,
+  cambio, headBusiness, headCompetenze, headNotizie, headNorme, headOpen, headPersone, headSkill, tipoLabel,
 } from './frasi';
 import { radarRows, rigaPagina } from '../data/derive';
 
@@ -188,6 +188,10 @@ describe('articolo prima del giorno', () => {
 });
 
 describe('titoli', () => {
+  it('open source: il sottotitolo dice i modelli di tendenza senza «questa settimana», che il glossario evita', () => {
+    expect(headOpen(d, today).deck).toBe('37 dei 100 modelli di tendenza su Hugging Face. Il primo è google/embeddinggemma-2.');
+  });
+
   it('competenze', () => {
     const h = headCompetenze(d, today);
     expect(text(h.title)).toBe('MCP entra tra le competenze da imparare ora');

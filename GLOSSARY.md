@@ -17,7 +17,7 @@ La card che apre una testa, una per testa (Competenze e GeopoliticAI): in home p
 _Avoid_: copertina, card in evidenza
 
 **Edizione**:
-Il riassunto fisso di una settimana, con le due porte, le frasi cambiate e le notizie. Esce il lunedì, ha un suo link e dopo non cambia, salvo correzioni dichiarate.
+Il riassunto fisso di una settimana, con le due porte, le frasi cambiate e le notizie. Esce il lunedì e ha un suo link. Dopo non cambia il suo contenuto (porte, frasi, notizie e fonti), salvo correzioni dichiarate. La cornice della pagina, cioè titoli delle sezioni, note e testata, segue il sito e può cambiare senza correzione.
 _Avoid_: numero, newsletter, digest, bollettino
 
 **Settimana dei dati**:
@@ -33,7 +33,7 @@ Il feed RSS del sito, con una voce per edizione a testo intero. Le fonti da cui 
 _Avoid_: newsletter, canale
 
 **Correzione**:
-La modifica dichiarata di un'edizione già uscita, con la data e cosa è cambiato. Si fa a mano, e la voce del feed non torna a essere nuova.
+La modifica dichiarata del contenuto di un'edizione già uscita, con la data e cosa è cambiato. Si fa a mano, e la voce del feed non torna a essere nuova.
 _Avoid_: errata, rettifica, aggiornamento
 
 **Contatore delle visite**:

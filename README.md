@@ -38,7 +38,7 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──┬─► 
    git push -u origin main
    ```
    In alternativa usa *Add file → Upload files* sul sito di GitHub, trascinando il contenuto della cartella; in quel caso controlla che la cartella `.github` sia stata caricata, perché alcuni sistemi nascondono le cartelle che iniziano con il punto.
-4. **Avvia il primo giro a mano.** Il caricamento fa partire *Aggiorna e pubblica*, che però pubblica il sito con i dati già presenti nel repository e non ne raccoglie di nuovi. Per raccoglierli usa *Actions → Aggiorna e pubblica → Run workflow*, lasciando spenta la casella «Crea l'edizione di questa settimana»; se hai saltato il passo 2, completalo prima. Il primo giro di raccolta dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Da lì in poi i dati si raccolgono da soli ogni lunedì, e con loro esce l'edizione della settimana.
+4. **Avvia il primo giro a mano.** Il caricamento fa partire *Aggiorna e pubblica*, che però pubblica il sito con i dati già presenti nel repository e non ne raccoglie di nuovi. Per raccoglierli usa *Actions → Aggiorna e pubblica → Run workflow*, lasciando spenta la casella «Crea l'edizione della settimana dei dati»; se hai saltato il passo 2, completalo prima. Il primo giro di raccolta dura circa 25 minuti perché ricostruisce 13 mesi di storico; i successivi pochi minuti. Da lì in poi i dati si raccolgono da soli ogni lunedì, e con loro esce l'edizione della settimana.
 5. La dashboard è su `https://<tuo-utente>.github.io/ai-radar/`. I link alle edizioni compaiono in home con la prima edizione. Gli indirizzi di feed e anteprime seguono il nome del tuo repository.
 6. **Segnala la sitemap a Google.** La build scrive `sitemap.xml` accanto all'app, con l'indirizzo di ogni pagina statica: home, competenze, archivio ed edizioni. Scrive anche `robots.txt`, ma solo quando l'indirizzo base (`AI_RADAR_BASE_URL`) è la radice di un dominio, perché i crawler lo cercano solo lì: per un sito in `/ai-radar/` non esce. Il workflow ricava l'indirizzo base dal nome del repository: se lo chiami `<tuo-utente>.github.io`, il sito sta alla radice di `https://<tuo-utente>.github.io/` e `robots.txt` esce da solo, con l'indicazione della sitemap. Dopo il primo rilascio, quindi, la sitemap va segnalata a mano: in [Google Search Console](https://search.google.com/search-console) aggiungi una proprietà di tipo «Prefisso URL» con l'indirizzo base, `https://<tuo-utente>.github.io/ai-radar/`, e in *Sitemap* inserisci `sitemap.xml`, cioè `https://<tuo-utente>.github.io/ai-radar/sitemap.xml`.
 
@@ -48,7 +48,14 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──┬─► 
 | --- | --- | --- |
 | `ADZUNA_APP_ID` e `ADZUNA_APP_KEY` | Domanda di competenze nel lavoro, Europa e USA | Gratuite su [developer.adzuna.com](https://developer.adzuna.com) |
 
-**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*. I limiti di chiamate sono quelli del piano nel proprio account (una raccolta qui ne usa 136). I termini non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Per questa pagina, che mostra solo conteggi aggregati con la fonte citata, la conferma è stata chiesta ad Adzuna il 5 novembre 2026. Adzuna ha risposto per iscritto il 16 novembre 2026 che va bene, purché si rispettino i [termini d'uso](https://developer.adzuna.com/docs/terms_of_service). Per questo ogni dato sugli annunci cita *The Adzuna API*, anche nelle immagini d'anteprima delle edizioni e delle competenze. Chi pubblica una propria copia chieda a sua volta la conferma dal loro modulo di contatto. Se l'accordo finisce, i termini chiedono di togliere subito i dati di Adzuna da tutte le pagine, edizioni comprese: bisogna togliere i secret, eliminare `data/jobs.json` e fare una correzione dichiarata su ogni edizione. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
+**Nota su Adzuna.** I termini d'uso permettono la "ricerca personale" citando la fonte come *The Adzuna API*. I limiti di chiamate sono quelli del piano nel proprio account (una raccolta qui ne usa 136). I termini non dicono in modo esplicito se una pagina pubblica con conteggi aggregati rientri nella ricerca personale. Per questa pagina, che mostra solo conteggi aggregati con la fonte citata, la conferma è stata chiesta ad Adzuna il 5 novembre 2026. Adzuna ha risposto per iscritto il 16 novembre 2026 che va bene, purché si rispettino i [termini d'uso](https://developer.adzuna.com/docs/terms_of_service). Per questo ogni dato sugli annunci cita *The Adzuna API*, anche nelle immagini d'anteprima delle edizioni e delle competenze. Chi pubblica una propria copia chieda a sua volta la conferma dal loro modulo di contatto. Senza queste chiavi il radar non ha la domanda e quindi non si disegna.
+
+**Se l'accordo con Adzuna finisce.** I termini chiedono di togliere subito i dati di Adzuna da tutte le pagine, edizioni comprese. I dati stanno in due file: `data/jobs.json`, con le rilevazioni, e `data/radar.json`, che ne ricava domanda, annunci, quadranti e storico. `radar.json` si ricalcola da `jobs.json` a ogni raccolta, ma un push non raccoglie: senza un avvio manuale app, home e pagine delle competenze tengono i dati di Adzuna fino al lunedì.
+
+1. Togli i secret `ADZUNA_APP_ID` e `ADZUNA_APP_KEY`.
+2. Elimina `data/jobs.json`, fai il commit e il push.
+3. Avvia il giro a mano, con la casella dell'edizione spenta: la raccolta rifà `radar.json` senza la domanda, e il sito esce senza i dati di Adzuna.
+4. Fai una correzione dichiarata su ogni edizione, immagine compresa (vedi [Correggere un'edizione](#edizioni-feed-e-correzioni)).
 
 `GITHUB_TOKEN` non va creato: GitHub lo fornisce in automatico al workflow.
 
@@ -95,7 +102,7 @@ Prima della prima edizione questi indirizzi non esistono, e né la home né le p
 **Quando esce.**
 
 - **Giro del lunedì:** l'edizione esce da sola.
-- **Avvio manuale:** esce solo con la casella «Crea l'edizione di questa settimana», spenta di default. Serve anche a recuperare un lunedì andato male.
+- **Avvio manuale:** esce solo con la casella «Crea l'edizione della settimana dei dati», spenta di default. Serve anche a recuperare un lunedì andato male.
 - **Push:** non crea mai un'edizione.
 
 Un'edizione esistente non si sovrascrive. Senza dati in tutte e due le porte l'edizione non esce. Diventa definitiva solo dopo gli end-to-end: se falliscono non si salva e il sito non esce. Se fallisce la sola creazione, dati e sito vanno avanti e il giro finisce in rosso, così arriva la mail di GitHub.

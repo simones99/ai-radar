@@ -67,7 +67,7 @@
         <!-- la settimana dei dati, non quella dell'orologio di chi legge: dal suo lunedì, anche quando il giro è partito un altro giorno -->
         {#if data.status?.aggiornato}
           {@const settimana = lunediDi(data.status.aggiornato)}
-          <!-- porta all'edizione solo se è proprio di questa settimana: un'edizione vecchia direbbe un'altra cosa -->
+          <!-- porta all'edizione solo se è proprio della settimana dei dati: un'edizione vecchia direbbe un'altra cosa -->
           <p class="small muted">{#if ultimaEdizione === settimana}<a class="settimana" href="edizioni/{settimana}/">Settimana {dayWith('del', settimana)}</a>{:else}Settimana {dayWith('del', settimana)}{/if}</p>
         {/if}
         <h1 id="contenuto" tabindex="-1">{FRASE_DI_APERTURA}</h1>

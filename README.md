@@ -1,5 +1,10 @@
 # AI Radar
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/immagini/home-scura.png">
+  <img src="docs/immagini/home.png" width="1280" alt="La home di AI Radar il 24 novembre 2026, settimana del 23 novembre. A sinistra le due porte: Per te, «Slancio di LLMOps da +30% a −10%», e Per la tua organizzazione, «Tra 8 giorni: vietate le app che spogliano», scadenza dell'AI Act del 2 dicembre 2026. A destra il radar delle competenze nei quattro quadranti, con Agenti AI, RAG e Multimodali in Impara ora.">
+</picture>
+
 **In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, on business adoption, people and jobs, AI Act deadlines and upcoming reports. A third view, GeopoliticAI, follows the supply chain country by country, from raw materials and chips to data centres and model capability. Every Monday it also publishes a weekly edition with fixed text, its own page and share image, collected in an archive and an RSS feed. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
 
 Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli ogni settimana:
@@ -58,6 +63,7 @@ fonti pubbliche ──► pipeline Python ──► data/*.json ──┬─► 
 2. Elimina `data/jobs.json`, fai il commit e il push.
 3. Avvia il giro a mano, con la casella dell'edizione spenta: la raccolta rifà `radar.json` senza la domanda, e il sito esce senza i dati di Adzuna.
 4. Fai una correzione dichiarata su ogni edizione, immagine compresa (vedi [Correggere un'edizione](#edizioni-feed-e-correzioni)).
+5. Sostituisci lo screenshot della home in cima a questo README (`docs/immagini/home.png` e `home-scura.png`): mostra il radar e la porta *Per te*, che usano i dati di Adzuna.
 
 `GITHUB_TOKEN` non va creato: GitHub lo fornisce in automatico al workflow.
 

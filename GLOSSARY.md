@@ -21,7 +21,7 @@ Il riassunto fisso di una settimana, con le due porte, le frasi cambiate e le no
 _Avoid_: numero, newsletter, digest, bollettino
 
 **Settimana dei dati**:
-La settimana in cui sono stati raccolti i dati che il sito mostra, indicata dal suo lunedì («Settimana del …»). È quella dell'edizione che ne nasce, non la settimana di chi legge.
+La settimana in cui sono stati raccolti i dati che il sito mostra, indicata dal suo lunedì («Settimana del …»). Si conta nell'ora italiana: una raccolta lunedì alle 00:30 in Italia è già della settimana nuova, anche se in UTC è ancora domenica. È quella dell'edizione che ne nasce, non la settimana di chi legge.
 _Avoid_: settimana corrente, questa settimana
 
 **Home in chiaro**:

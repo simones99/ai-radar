@@ -6,6 +6,7 @@
   import type { Quadrant, Radar } from '../data/types';
   import { day, monthShort, nf, per10k, quantiAnnunci, signedPct } from '../text/format';
   import { IN_CRESCITA, meseDelPercorso, metaRepository, metaRisorsa, PER_INIZIARE, PERCORSO } from '../text/competenza';
+  import { ADZUNA } from '../text/fonti';
   import { avvisoIncerto, dettagliSlancio, ITALIA_SENZA_DATO } from '../text/frasi';
 
   let { row, quadranti, mercato = 'tutti', storico = [], indietro = '#competenze' }: {
@@ -64,7 +65,7 @@
   <p class="warn" role="note">{avviso}</p>
 {/if}
 
-<Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}>
+<Block span={4} title="Domanda" missing={row.senzaDato ? `${ITALIA_SENZA_DATO}.` : null} cite={cite(ADZUNA.nome, ADZUNA.url)}>
   <p class="fig">{per10k(row.domanda)}</p>
   <p class="sub">{sottoDomanda}</p>
 </Block>
@@ -88,7 +89,7 @@
   table={{ cols: ['Mese', 'Repository', 'Repository AI'], rows: repoM.map((m) => [m.mese, m.n, m.base]) }}>
   <LineChart series={repo} label="Repository su {row.breve} ogni 1.000 repository AI" height={200} yFormat={yf(repo)} xFormat={monthAt(repoM)} />
 </Block>
-<Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila a ogni rilevazione: il Paese a metà classifica e l’Italia. Il numero in evidenza in Domanda è la mediana delle ultime 4 rilevazioni." cite={cite('The Adzuna API', 'https://www.adzuna.co.uk')}
+<Block span={4} title="Annunci" note="Annunci che la citano ogni 10mila a ogni rilevazione: il Paese a metà classifica e l’Italia. Il numero in evidenza in Domanda è la mediana delle ultime 4 rilevazioni." cite={cite(ADZUNA.nome, ADZUNA.url)}
   missing={ril.length < 2 ? 'Serve un mese di rilevazioni.' : null}
   table={{ cols: ['Rilevazione', 'Paese a metà classifica', 'Italia'], rows: ril.map((r) => [r.data, r.mediana, r.it ?? '—']) }}>
   <LineChart series={annunci} label="Annunci su {row.breve} ogni 10mila{evidenzaItalia ? ', in evidenza l’Italia' : ''}" height={200} yFormat={annunciF(annunci)} xFormat={dayAt} />
@@ -122,7 +123,7 @@
 </Block>
 
 <Block span={12} title="Fonti e metodo">
-  <p class="sub">Fonti: <a href="https://arxiv.org" target="_blank" rel="noopener">arXiv</a>, <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.adzuna.co.uk" target="_blank" rel="noopener">The Adzuna API</a>. Come si calcolano slancio, domanda e incertezza: <a href={indietro}>vedi il metodo</a>.</p>
+  <p class="sub">Fonti: <a href="https://arxiv.org" target="_blank" rel="noopener">arXiv</a>, <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>, <a href={ADZUNA.url} target="_blank" rel="noopener">{ADZUNA.nome}</a>. Come si calcolano slancio, domanda e incertezza: <a href={indietro}>vedi il metodo</a>.</p>
 </Block>
 
 <style>

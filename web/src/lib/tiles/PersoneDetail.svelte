@@ -4,6 +4,7 @@
   import DotPlot from '../charts/DotPlot.svelte';
   import LineChart from '../charts/LineChart.svelte';
   import { competenzeDi, owidLatestByEntity, owidPoints, tNum } from '../data/derive';
+  import { ADZUNA } from '../text/fonti';
   import { exact, monthShort, nf } from '../text/format';
   import { paese } from '../text/paesi';
   import { barsTable, dotsTable, fmtYm, owidCite, seriesTable, MISSING } from './cite';
@@ -67,7 +68,7 @@
   </Block>
   <Block title="Competenze più chieste negli annunci" note="Annunci in Italia che citano la competenza ogni 10mila, mediana delle ultime 4 rilevazioni."
     missing={jobsMissing}
-    cite={[{ t: 'Fonte: ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }, { t: '.' }]}
+    cite={[{ t: 'Fonte: ' }, { t: ADZUNA.nome, href: ADZUNA.url }, { t: '.' }]}
     table={{ cols: ['Competenza', 'Italia, ogni 10mila', 'Annunci in Italia', 'Paese a metà classifica, ogni 10mila'], rows: jobs.map((j) => [j.k, j.v, j.annunci, j.metaClassifica]) }}>
     <Bars label="Competenze più chieste negli annunci" data={[...jobs].reverse()} format={(v) => nf(v, 1)} />
   </Block>

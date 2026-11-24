@@ -5,31 +5,23 @@ import { FILES, type FileKey } from './load';
 import type { Dataset } from './types';
 
 /**
- * I JSON della cartella principale, gli stessi che carica l'app, o solo quelli chiesti. Come nell'app, un file che manca vale come fonte assente.
- * Un file illeggibile invece è un errore: la pipeline non lo scrive mai a metà, quindi è un guasto da vedere.
+ * I JSON della cartella principale, gli stessi che carica l'app, o solo quelli chiesti. Come nell'app, un file che manca o con null vale come fonte assente.
+ * Un file illeggibile invece è un errore: la pipeline non lo scrive mai a metà, quindi è un guasto da vedere. Chi deve uscire con i dati che ci sono,
+ * come la home in chiaro, che dice quali mancano, chiede illeggibile: 'assente' e lo tratta come l'app, come un file non arrivato.
  */
-export function leggiDati(dati: string, quali: readonly FileKey[] = FILES): Dataset {
+export function leggiDati(dati: string, quali: readonly FileKey[] = FILES, { illeggibile = 'errore' }: { illeggibile?: 'errore' | 'assente' } = {}): Dataset {
   const parti: Record<string, unknown> = {};
   for (const k of quali) {
     const file = join(dati, `${k}.json`);
-    if (existsSync(file)) parti[k] = JSON.parse(readFileSync(file, 'utf-8'));
-  }
-  return parti as Dataset;
-}
-
-/**
- * I JSON chiesti come li vede l'app: un file che manca, illeggibile o con null vale come fonte assente.
- * Per chi deve uscire con i dati che ci sono, come la home in chiaro, che dice quali mancano.
- */
-export function leggiDatiComeLApp(dati: string, quali: readonly FileKey[] = FILES): Dataset {
-  const parti: Record<string, unknown> = {};
-  for (const k of quali) {
+    if (!existsSync(file)) continue;
+    let valore: unknown;
     try {
-      const valore: unknown = JSON.parse(readFileSync(join(dati, `${k}.json`), 'utf-8'));
-      if (valore != null) parti[k] = valore;
-    } catch {
-      // che manchi o sia rotto, per l'app il file non è arrivato
+      valore = JSON.parse(readFileSync(file, 'utf-8'));
+    } catch (e) {
+      if (illeggibile === 'errore') throw e;
+      continue;
     }
+    if (valore != null) parti[k] = valore;
   }
   return parti as Dataset;
 }

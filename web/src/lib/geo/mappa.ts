@@ -334,11 +334,12 @@ function vistaDataCenter(g: Geopoliticai): Vista {
     licenza: g.licenza, url_licenza: 'https://creativecommons.org/licenses/by/4.0/', data: day(dc.aggiornato), quote: dc.quote, europa: null,
     nota: 'I siti noti a Epoch coprono circa il 44% del calcolo AI mondiale: le quote sono calcolate solo su questi siti.',
   };
-  return vistaQuote(g, 'Data center', 'nessun sito noto a Epoch', a, `dati scaricati ${dayWith('il', dc.aggiornato)}`);
+  // accanto a ogni quota, non solo nella nota sotto la mappa: letta da sola, «UE 0,5%» sembrerebbe la quota dell'UE nel mondo
+  return vistaQuote(g, 'Data center', 'nessun sito noto a Epoch', a, `dati scaricati ${dayWith('il', dc.aggiornato)}`, 'nei siti noti a Epoch');
 }
 
-/** `dati`: quando è il dato, dopo la fonte nel titolo e nella citazione («dati del 2022»). */
-function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnello, dati: string): Vista {
+/** `dati`: quando è il dato, dopo la fonte nel titolo e nella citazione («dati del 2022»). `su`: su cosa è calcolata una quota, accanto a ogni cifra del tabellone. */
+function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnello, dati: string, su?: string): Vista {
   const ue = new Set(g.zone.ue?.paesi_mappa ?? []);
   const valori = Object.entries(a.quote).sort((x, y) => y[1] - x[1]);
   const inEuropa = (iso: string) => a.europa != null && ue.has(iso);
@@ -349,10 +350,10 @@ function vistaQuote(g: Geopoliticai, nome: string, vuoto: string, a: CatenaAnell
     const paesi = [...paesiZona(g, z)];
     if (a.europa != null && paesi.every((iso) => ue.has(iso))) return { etichetta, valore: pct(a.europa), dettaglio: DATO_UNICO };
     const somma = paesi.reduce((s, iso) => s + (a.quote[iso] ?? 0), 0);
-    return somma > 0 ? { etichetta, valore: pct(Math.round(somma * 10) / 10) } : { etichetta, vuoto };
+    return somma > 0 ? { etichetta, valore: pct(Math.round(somma * 10) / 10), dettaglio: su } : { etichetta, vuoto };
   };
   const [p] = valori;
-  const primo = p ? { etichetta: 'Il primo', nome: NOMI[p[0]] ?? p[0], valore: pct(p[1]) } : null;
+  const primo = p ? { etichetta: 'Il primo', nome: NOMI[p[0]] ?? p[0], valore: pct(p[1]), dettaglio: su } : null;
   const righe: [string, number][] = [...valori, ...(a.europa != null ? [[EUROPA, a.europa] as [string, number]] : [])].sort((x, y) => y[1] - x[1]);
   const nc = /NC/.test(a.licenza) ? ', uso commerciale non consentito' : '';
   return {

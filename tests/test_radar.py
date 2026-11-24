@@ -467,6 +467,18 @@ def test_italian_job_ads_near_the_threshold_make_italy_uncertain(tmp_path, monke
     assert (r["incerto"], r["incerto_perche"]) == (False, None)  # lo slancio è solido: Tutti i Paesi non cambia
 
 
+def test_the_italian_margin_is_on_the_job_ads_shown_not_on_the_exact_median(tmp_path, monkeypatch):
+    """Il margine all'80% è sul numero di annunci che la pagina mostra, la soglia sulla mediana vera (ADR 0003).
+
+    [29, 30, 31, 32] ha mediana 30,5 e la pagina mostra 31. Con 126.000 annunci in Italia la soglia vale 37,8:
+    dista 6,8 dai 31 mostrati, dentro il loro margine di 7,14, quindi è incerta. Dai 30,5 distarebbe 7,3,
+    fuori dal loro margine di 7,08: con il margine sulla mediana vera sarebbe solida.
+    """
+    r = demand_row(tmp_path, monkeypatch, italian_ads([29, 30, 31, 32], 126000))
+    assert r["annunci_it"] == 31
+    assert (r["incerto_it"], r["incerto_perche_it"]) == (True, "annunci italiani vicini alla soglia (31, la soglia è circa 38)")
+
+
 @pytest.mark.parametrize("counts,totale,quadrante_it", [
     ([43, 42, 44, 43], 133000, "impara-ora"),  # 3,2 ogni 10mila: sopra la soglia, e resta sopra
     ([30, 29, 31, 30], 117000, "prova"),       # 2,6 ogni 10mila: sotto, e resta sotto

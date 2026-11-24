@@ -6,7 +6,7 @@ import { fontiDi } from '../edizioni/fonti';
 import { toHash } from '../router';
 import { dayWith, isDay, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
-import { IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE, PER_INIZIARE, PERCORSO } from '../text/competenza';
+import { COMPETENZA_SENZA_DATI, IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE_IN_PAGINA, PER_INIZIARE, PERCORSO } from '../text/competenza';
 import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type DateArticolo, type OpzioniPagine } from './pagina';
 
 type Competenza = Radar['competenze'][number];
@@ -56,11 +56,11 @@ ${cifra(signedPct(tutti.slancio), ` ${unita}`, note)}
 </section>`;
 }
 
-/** Il quadrante di ogni mese dello storico, con tutti i Paesi e in Italia: dove manca un mercato la cella lo dice con un trattino, e se manca in tutti i mesi lo dice la frase dell'app. */
+/** Il quadrante di ogni mese dello storico, con tutti i Paesi e in Italia: dove manca un mercato la cella lo dice a parole, anche a un lettore di schermo, e se manca in tutti i mesi lo dice la frase dell'app. */
 function percorsoSulRadar(c: Competenza, r: Radar): string {
   const mesi = (r.storico ?? []).map((p) => ({ mese: p.mese, tutti: pubblicatoDi(p.competenze[c.id], 'tutti'), italia: pubblicatoDi(p.competenze[c.id], 'italia') }))
     .filter((m) => m.tutti || m.italia);
-  const cella = (q: (typeof mesi)[number]['tutti']) => (q ? esc(r.quadranti[q]) : '—');
+  const cella = (q: (typeof mesi)[number]['tutti']) => esc(q ? r.quadranti[q] : DATI_NON_DISPONIBILI);
   const tabella = mesi.length ? `<table>
 <thead><tr><th scope="col">Mese</th><th scope="col">${MERCATI.tutti}</th><th scope="col">${MERCATI.italia}</th></tr></thead>
 <tbody>
@@ -119,8 +119,7 @@ function datiRaccolti(r: Radar): string {
 }
 /** Quanto di una descrizione un motore di ricerca mostra per intero. */
 const DESCRIZIONE_MAX = 160;
-/** Al posto delle misure, quando la competenza non sta sul radar nemmeno con tutti i Paesi: la pagina resta, perché un link salvato non si rompa. */
-const SENZA_DATI = 'I dati di questa competenza non sono disponibili in questo momento.';
+// una competenza fuori dal radar, nemmeno con tutti i Paesi, ha COMPETENZA_SENZA_DATI al posto delle misure: la pagina resta, perché un link salvato non si rompa
 
 /**
  * Fonti e metodo, e i due modi di aprire la competenza nell'app: lì ci sono i grafici e le scelte. Le fonti sono quelle della card, come nelle edizioni;
@@ -136,7 +135,7 @@ function inFondo(c: Competenza, r: Radar): string {
 <h2>Fonti e metodo</h2>
 ${rigaFonti(fontiDelRadar(r))}
 <ul class="ed-voci">
-${METODO_COMPETENZE.map((m) => `<li class="ed-nota">${esc(m)}</li>`).join('\n')}
+${METODO_COMPETENZE_IN_PAGINA.map((m) => `<li class="ed-nota">${esc(m)}</li>`).join('\n')}
 </ul>
 </section>
 <section>
@@ -148,7 +147,7 @@ ${METODO_COMPETENZE.map((m) => `<li class="ed-nota">${esc(m)}</li>`).join('\n')}
 
 /** In testa le misure, che cambiano, poi la competenza: se non c'entra tutto si accorcia lei, a parola intera. */
 function descrizione(c: Competenza, misure: DueMercati | null, r: Radar): string {
-  let testa = `${SENZA_DATI} `;
+  let testa = `${COMPETENZA_SENZA_DATI} `;
   if (misure) {
     const { tutti, italia } = misure;
     const domanda = `Domanda: ${per10k(tutti.domanda)} annunci ogni 10mila nel Paese a metà classifica`;
@@ -182,7 +181,7 @@ function paginaCompetenza(c: Competenza, r: Radar, opzioni: OpzioniPagine): stri
     immagine: { percorso: `${percorso}${IMMAGINE}`, alt: testoAlternativo(anteprimaDi(c, r)) },
     corpo: `<div class="ed-testa">
 <h1>${esc(c.nome)}</h1>
-${misure ? stato(misure, r) : `<p>${SENZA_DATI}</p>`}
+${misure ? stato(misure, r) : `<p>${COMPETENZA_SENZA_DATI}</p>`}
 <p>${esc(c.descrizione)}</p>
 ${conta && `<p class="ed-nota">${esc(conta)}</p>`}
 <p class="ed-nota">${esc(datiRaccolti(r))}</p>

@@ -81,6 +81,15 @@ Il radar si può leggere **sull'Italia**: nella card Competenze si sceglie il me
 
 Ogni competenza ha una sua pagina (`#competenze/mcp`) con l'andamento dei tre segnali, il percorso sul radar, le risorse per iniziare scelte a mano e i repository nuovi più stellati.
 
+Per chi arriva da un motore di ricerca o senza JavaScript, ogni competenza ha anche una pagina in HTML statico, che si rifà a ogni build con i dati di quel giro:
+
+| Indirizzo | Cosa c'è |
+| --- | --- |
+| `/competenze/<id>/` | la pagina di una competenza, con l'`id` di `config/skills.yaml`: dove sta nei due mercati, domanda, slancio, percorso sul radar, risorse, fonti e metodo, e la sua immagine di anteprima |
+| `/competenze/` | l'indice delle competenze, raggruppate per quadrante |
+
+L'`id` diventa la cartella della pagina: può avere solo minuscole, cifre e trattini, e la pipeline ferma il radar se non è così. Le immagini di anteprima delle competenze le fa `npm run anteprime-competenze`, dopo la build e con Chromium: il workflow lo lancia a ogni giro che pubblica.
+
 Limiti da tenere a mente:
 
 - le ricerche sono per parole chiave, quindi un termine ambiguo può gonfiare o sgonfiare un conteggio;
@@ -181,7 +190,7 @@ cd .. && python scripts/build_site.py                   # copia i dati e costrui
 cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
 
-Con Chromium (`npx playwright install chromium`) ci sono anche `npm run test:browser`, i test del comando che fa l'immagine di un'edizione, e `npm run e2e`.
+Con Chromium (`npx playwright install chromium`) ci sono anche `npm run test:browser`, i test del comando che fa l'immagine di un'edizione, `npm run e2e` e `npm run anteprime-competenze`, che sul sito già costruito in `_site/` sostituisce l'immagine segnaposto di ogni pagina delle competenze con la sua.
 
 Per lavorare sull'app con il ricaricamento automatico: `mkdir -p web/public/data && cp data/*.json web/public/data/` e poi `cd web && npm run dev`.
 

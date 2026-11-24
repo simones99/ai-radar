@@ -694,6 +694,20 @@ def test_unknown_role_stops_the_radar(tmp_path, monkeypatch):
     assert not (common.data_dir() / "radar.json").exists()
 
 
+@pytest.mark.parametrize("cattivo", ["", "../fuori", "a/b", "MCP", "rag e ricerca", ".."])
+def test_un_id_che_non_e_un_percorso_sicuro_ferma_il_radar_e_nomina_la_competenza(tmp_path, monkeypatch, cattivo):
+    # l'id diventa la cartella competenze/<id>/ della pagina statica: solo minuscole, cifre e trattini
+    skills = five_skills(tmp_path, monkeypatch)
+    skills[2] = {**skills[2], "id": cattivo, "nome": "Competenza sbagliata"}
+    with pytest.raises(ValueError, match=r"Competenza sbagliata.*minuscole, cifre e trattini"):
+        radar.run(skills, TODAY, None)
+    assert not (common.data_dir() / "radar.json").exists()
+
+
+def test_gli_id_di_config_skills_yaml_sono_percorsi_sicuri():
+    radar._check_ids(common.load_yaml("skills.yaml")["skills"])
+
+
 def test_role_with_fewer_than_four_skills_stops_the_radar(tmp_path, monkeypatch):
     legami = {i: ["x"] for i in "abcd"} | {"e": ["y"]}
     with pytest.raises(ValueError, match=r"Ruolo Y.*1 competenz.*almeno 4"):

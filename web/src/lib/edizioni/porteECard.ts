@@ -1,7 +1,7 @@
 // Le porte e le card come le scrivono le pagine statiche: le pagine delle edizioni e la home in chiaro. Cambia solo dove porta una destinazione.
 import { esc, inLink, rigaFonti } from '../pagina';
-import type { CardDellaSettimana, PortaDellaSettimana } from './settimana';
-import { cifraConUnita, cifraNellaFrase, portaConDati, type CardFissa, type Destinazione, type PortaFissa } from './tipi';
+import { cifraDi, type CardDellaSettimana, type PortaDellaSettimana } from './settimana';
+import { cifraConUnita, portaConDati, type CardFissa, type Destinazione, type PortaFissa } from './tipi';
 
 /**
  * Dove porta una destinazione nella pagina che la scrive: l'indirizzo, o null quando resta testo.
@@ -36,7 +36,7 @@ export function cifraGrande(c: Pick<CardFissa, 'cifra' | 'unita'>): string {
 function rigaCard(c: CardDaScrivere, link: LinkDellaDestinazione): string {
   return `<li>
 <h4>${inLink(link(c.destinazione), esc(c.nome))}</h4>
-${cifraNellaFrase(c) ? '' : cifraGrande(c)}
+${cifraDi(c.id) === 'nella-frase' ? '' : cifraGrande(c)}
 <p>${esc(c.frase ?? '')}</p>
 ${c.era ? `<p class="ed-nota">${esc(c.era)}</p>` : ''}
 ${rigaFonti(c.fonti)}

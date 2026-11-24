@@ -5,14 +5,14 @@
   <img src="docs/immagini/home.png" width="1280" alt="La home di AI Radar il 24 novembre 2026, settimana del 23 novembre. A sinistra le due porte: Per te, «Slancio di LLMOps da +30% a −10%», e Per la tua organizzazione, «Tra 8 giorni: vietate le app che spogliano», scadenza dell'AI Act del 2 dicembre 2026. A destra il radar delle competenze nei quattro quadranti, con Agenti AI, RAG e Multimodali in Impara ora.">
 </picture>
 
-**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, on business adoption, people and jobs, AI Act deadlines and upcoming reports. A third view, GeopoliticAI, follows the supply chain country by country, from raw materials and chips to data centres and model capability. Every Monday it also publishes a weekly edition with fixed text, its own page and share image, collected in an archive and an RSS feed. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
+**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, for organisations. Its lead card, GeopoliticAI, shows where Italy and Europe stand on each link of the AI supply chain against the US and China, from raw materials and chips to data centres and models: for example, companies based in the Netherlands sell 81.5% of lithography machines, while the EU holds 0.5% of the compute in the AI data centres Epoch AI tracks. The same view covers business adoption, people and jobs, AI Act deadlines and upcoming reports. Every Monday it also publishes a weekly edition with fixed text, its own page and share image, collected in an archive and an RSS feed. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
 
 Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli ogni settimana:
 
 1. **Su cosa formarti**, per le persone. Un radar di 16 competenze che incrocia ricerca (arXiv), open source (GitHub) e mercato del lavoro (Adzuna), con un confronto tra Europa e USA. Accanto, i temi che lo alimentano: modelli e ricerca, open source, notizie dai laboratori e dalle newsletter di riferimento.
-2. **L'AI in Italia**, per le organizzazioni. Un osservatorio con l'Italia in primo piano: imprese che usano l'AI, persone e lavoro, scadenze dell'AI Act, rapporti in arrivo.
+2. **L'AI in Italia**, per le organizzazioni. Un osservatorio con l'Italia in primo piano. La card che apre la testa è **GeopoliticAI**: dove stanno l'Italia e l'Europa, rispetto a USA e Cina, in ogni anello della catena dell'AI, dalle materie prime ai chip, ai data center, ai modelli (vedi [Come si legge GeopoliticAI](#come-si-legge-geopoliticai)). Accanto: imprese che usano l'AI, persone e lavoro, scadenze dell'AI Act, rapporti in arrivo.
 
-In home due porte, *Per te* e *Per la tua organizzazione*, danno la notizia della settimana di ciascuna testa e con un clic aprono la card da cui viene. Sotto ci sono le card, 4 per testa: Competenze, Modelli e ricerca, Open source, Notizie; Business, Persone e lavoro, Norme, Rapporti.
+In home due porte, *Per te* e *Per la tua organizzazione*, danno la notizia della settimana di ciascuna testa e con un clic aprono la card da cui viene. Sotto ci sono le card, 4 e 5: Competenze, Modelli e ricerca, Open source, Notizie; GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.
 
 Ogni lunedì esce anche un'**edizione**: il riassunto fisso della settimana, con un suo indirizzo, un archivio e un feed RSS. Vedi [Edizioni, feed e correzioni](#edizioni-feed-e-correzioni).
 
@@ -103,6 +103,44 @@ Limiti da tenere a mente:
 - negli annunci in Italia, Germania o Francia le parole tecniche inglesi sono comuni ma non universali, quindi il confronto tra Paesi va letto con cautela.
 
 Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
+
+## Come si legge GeopoliticAI
+
+GeopoliticAI risponde a una domanda: in quali passaggi dell'AI l'Europa e l'Italia contano, e in quali dipendono da altri. Con i dati del 23 novembre 2026, per esempio:
+
+- l'81,5% del mercato delle macchine di litografia è di aziende con sede nei Paesi Bassi, e le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML;
+- nei data center AI censiti da Epoch AI, l'UE ha lo 0,5% del calcolo, gli USA l'86%;
+- il miglior modello europeo del 2026, Mistral Large 4, arriva a 154,6 sull'Epoch Capabilities Index; il migliore degli USA a 173,4, quello della Cina a 161,2;
+- la Cina produce il 99% del gallio e l'87% del silicio metallico del mondo.
+
+La catena ha sei **anelli**. Ognuno ha la sua misura, e gli anelli non si sommano:
+
+| Anello | Misura | Fonte | Si aggiorna |
+| --- | --- | --- | --- |
+| Materie prime | quota della produzione mondiale di gallio, terre rare e silicio metallico; quota della raffinazione del germanio | USGS, *Mineral Commodity Summaries 2026*; Commissione europea, studio sulle materie prime critiche 2023 | a mano, a ogni nuova edizione delle fonti |
+| Progettazione dei chip | quota del valore dei chip progettati, per sede dell'azienda | ETO, *Advanced Semiconductor Supply Chain Dataset* (dato 2022) | a mano |
+| Fabbricazione dei chip | quota della capacità produttiva, per luogo dello stabilimento | ETO (dato 2022) | a mano |
+| Macchinari | quota del mercato delle macchine di litografia, per sede dell'azienda | ETO (dato 2025) | a mano |
+| Data center | H100 equivalenti dei siti censiti, operativi o in costruzione | Epoch AI, *AI data centers* | ogni lunedì |
+| Modelli | capacità (Epoch Capabilities Index) e calcolo di addestramento dei modelli nazionali | Epoch AI, *AI models* | ogni lunedì |
+
+Nella card:
+
+- **Chi controlla la catena dell'AI**: una mappa che si apre sul **filo della catena**, un esempio scelto da noi e non un dato: segue un modello USA, UE o cinese attraverso i sei anelli, con una tappa per anello e la sua fonte. Con un clic mostra invece la quota di ogni Paese, anello per anello.
+- **La scheda di un'area**: USA, Cina, Regno Unito, UE, Altri, o un singolo Paese UE, Italia compresa, con la capacità del miglior modello e il calcolo di addestramento del più grande.
+- **Calcolo e capacità per area, anno per anno**: la stessa misura in una tabella che si confronta in orizzontale.
+- **Chi addestra i modelli di grande scala**: la quota dei modelli sopra 10²³ FLOP usciti ogni anno, per area.
+
+Un link apre una vista precisa, per esempio [il filo dell'UE](https://simones99.github.io/ai-radar/#geopoliticai?filo=ue) o [le quote per Paese](https://simones99.github.io/ai-radar/#geopoliticai?vista=quote).
+
+I limiti:
+
+- per progettazione e fabbricazione non esiste una fonte aperta più recente del dato 2022 di ETO;
+- *AI data centers* copre circa il 44% del calcolo AI mondiale, quasi tutto negli USA, e oggi non ha siti in Italia. Il censimento più vecchio di Epoch, *GPU clusters*, fermo a marzo 2026, conta in Italia 9 cluster, tra cui Leonardo al CINECA: la mappa lo dice in una nota, come fotografia datata;
+- Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database, e la scheda dell'Italia lo dice;
+- energia e acqua non sono un anello.
+
+Le scelte sulle fonti, con quelle scartate e perché, sono in `docs/research/fonti-mappa.md`.
 
 ## Edizioni, feed e correzioni
 
@@ -227,6 +265,6 @@ tests/       test della pipeline con risposte HTTP simulate
 
 ## Fonti e licenze
 
-Dati di [Epoch AI](https://epoch.ai/data/ai-models) (CC BY 4.0), [arXiv](https://arxiv.org) (grazie ad arXiv per l'accesso aperto ai metadati), [GitHub](https://github.com), [Hugging Face](https://huggingface.co), [The Adzuna API](https://www.adzuna.co.uk) ed [Eurostat](https://ec.europa.eu/eurostat). Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
+Dati di [Epoch AI](https://epoch.ai/data/ai-models) (CC BY 4.0), [arXiv](https://arxiv.org) (grazie ad arXiv per l'accesso aperto ai metadati), [GitHub](https://github.com), [Hugging Face](https://huggingface.co), [The Adzuna API](https://www.adzuna.co.uk), [Eurostat](https://ec.europa.eu/eurostat), [USGS](https://pubs.usgs.gov/periodicals/mcs2026/mcs2026.pdf) (pubblico dominio), [Commissione europea](https://op.europa.eu/en/publication-detail/-/publication/57318397-fdd4-11ed-a05c-01aa75ed71a1) (CC BY 4.0) ed [ETO](https://eto.tech/dataset-docs/chipexplorer) (CC BY-NC 4.0, quindi solo per un uso non commerciale: vedi `docs/adr/0001-dati-eto-in-cc-by-nc.md`). I confini della mappa sono di Natural Earth (pubblico dominio). Le notizie mostrano solo titolo, data e link agli articoli originali. Il progetto non è affiliato a nessuna delle fonti.
 
 Codice con licenza MIT (vedi `LICENSE`). D3 (ISC), Svelte (MIT) e il font Bricolage Grotesque (OFL) arrivano da npm; i testi delle loro licenze sono in `web/public/THIRD_PARTY_LICENSES.txt`, linkato in fondo alla pagina. Le foto sono da Wikimedia Commons, con autore e licenza indicati in pagina. Our World in Data pubblica in CC BY 4.0, ma i dati restano dei produttori originali, sempre citati: le serie dell'AI Index (Stanford HAI: investimenti, imprese che usano l'AI, annunci di lavoro) sono CC BY-ND 4.0 e vanno citate senza modifiche; le cifre di IEA, NVIDIA e TSMC restano dei produttori. La licenza di ogni serie è nel campo `licenza` di `config/sources.yaml` e compare in pagina accanto alla fonte.

@@ -1,6 +1,6 @@
 // Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa. Lo scheletro è quello di tutte le pagine statiche.
 import { toHash, type TileId } from '../router';
-import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../pagina';
 import { day, dayWith } from '../text/format';
 import { cardDellaTesta, cifraGrande, porta, type LinkDellaDestinazione } from './porteECard';
 import { eCardNotizie, portaConDati, testoPorta, type Edizione, type PortaFissa } from './tipi';

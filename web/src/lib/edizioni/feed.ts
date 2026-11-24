@@ -1,5 +1,5 @@
 // Il feed RSS: una voce per edizione, a testo intero, con lo stesso testo della pagina.
-import { esc } from '../statico/pagina';
+import { esc } from '../pagina';
 import { corpoEdizione, descrizioneEdizione, DESCRIZIONE_ARCHIVIO, titoloPagina, TITOLO_ARCHIVIO } from './pagine';
 import type { Edizione } from './tipi';
 

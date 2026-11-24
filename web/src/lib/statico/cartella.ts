@@ -6,7 +6,7 @@ import { FILES } from '../data/load';
 import { copiaImmagini, leggiEdizioni } from '../edizioni/cartella';
 import { filePubblici } from './filePubblici';
 import { anteprimeDelleCompetenze, type Anteprima } from './competenze';
-import { foglioDellaHome, IMMAGINE_HOME } from './pagina';
+import { foglioDellaHome, IMMAGINE_HOME } from '../pagina';
 
 /**
  * Scrive nella cartella di uscita tutti i file statici del sito: i testi della mappa di filePubblici, e le immagini, che si copiano soltanto.

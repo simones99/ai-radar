@@ -3,7 +3,7 @@ export { creaEdizione } from './crea';
 export { raccoltaValida, settimanaDeiDati, type CardDellaSettimana, type PortaDellaSettimana, type SettimanaDeiDati } from './settimana';
 export { fileDelleEdizioni } from './fileDelleEdizioni';
 export { cardDellaTesta, porta, type LinkDellaDestinazione } from './porteECard';
-export { IMMAGINE } from '../statico/pagina';
+export { IMMAGINE } from '../pagina';
 export type { Destinazione, Edizione } from './tipi';
 
 /**

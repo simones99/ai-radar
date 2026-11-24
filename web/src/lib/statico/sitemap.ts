@@ -4,7 +4,7 @@ import type { Edizione } from '../edizioni';
 import { isoDay, parseDay } from '../text/format';
 import { giornoDeiDati } from './competenze';
 import type { ContenutoStatico } from './contenuto';
-import { esc } from './pagina';
+import { esc } from '../pagina';
 
 export const SITEMAP = 'sitemap.xml';
 

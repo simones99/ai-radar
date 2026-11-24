@@ -1,6 +1,6 @@
 // Il contatore delle visite, con Umami Cloud: l'ID del sito arriva dal workflow in AI_RADAR_UMAMI_ID, che lo prende dalla variabile
 // del repository UMAMI_WEBSITE_ID. Senza, il sito esce senza contatore: è lo stato delle build in locale e delle copie del progetto.
-import { esc } from './statico/pagina';
+import { esc } from './pagina';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 /** L'indirizzo dello script di Umami Cloud: chi scrive il tag e chi lo riconosce usano questo. */

@@ -1,8 +1,9 @@
-// Lo scheletro delle pagine statiche del sito, e ciò che serve a ogni pagina per non far passare un testo o un link pericoloso.
+// Lo scheletro delle pagine statiche del sito, quelle della home in chiaro e quelle delle edizioni: per questo non sta in nessuno dei due moduli.
+// Con lo scheletro, ciò che serve a ogni pagina per non far passare un testo o un link pericoloso.
 // Ogni pagina è HTML statico, senza JavaScript, sul foglio di stile della home: token, font e testata hanno una sola fonte.
-import { ICONA } from '../icona';
-import { RIGA_SUL_CONTATORE } from '../text/contatore';
-import { LICENZE } from '../tiles/cite';
+import { ICONA } from './icona';
+import { RIGA_SUL_CONTATORE } from './text/contatore';
+import { LICENZE } from './tiles/cite';
 
 /** Da dove viene un dato: il nome, l'indirizzo se c'è e la licenza con cui si riusa. */
 export interface Fonte { nome: string; url: string | null; licenza: string }

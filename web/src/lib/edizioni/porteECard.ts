@@ -1,5 +1,5 @@
 // Le porte e le card come le scrivono le pagine statiche: le pagine delle edizioni e la home in chiaro. Cambia solo dove porta una destinazione.
-import { esc, inLink, rigaFonti } from '../statico/pagina';
+import { esc, inLink, rigaFonti } from '../pagina';
 import type { CardDellaSettimana, PortaDellaSettimana } from './settimana';
 import { cifraConUnita, cifraNellaFrase, portaConDati, type CardFissa, type Destinazione, type PortaFissa } from './tipi';
 

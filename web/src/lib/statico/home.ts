@@ -5,7 +5,7 @@ import { cardDellaTesta, porta, settimanaDeiDati, type Edizione, type LinkDellaD
 import { FRASE_DI_APERTURA } from '../text/apertura';
 import { FONTI_DEI_DATI } from '../text/fonti';
 import { dayWith } from '../text/format';
-import { esc, inLink, INDICE_COMPETENZE, linkAlFeed, linkEsterno, rigaSulContatore } from './pagina';
+import { esc, inLink, INDICE_COMPETENZE, linkAlFeed, linkEsterno, rigaSulContatore } from '../pagina';
 
 export interface HomeInChiaro {
   /** L'HTML della home uscito dalla build, con il contenitore vuoto dell'app. */

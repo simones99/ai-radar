@@ -329,10 +329,10 @@ describe('la pagina di un’edizione', () => {
     expect(doc.documentElement.lang).toBe('it');
   });
 
-  it('ha il titolo con la data, la descrizione con le due porte, Per te per prima, e il canonical assoluto', () => {
+  it('ha il titolo con la data, la descrizione con le due porte, Per te per prima, e la fonte degli annunci, e il canonical assoluto', () => {
     const doc = pagina(crea());
     expect(doc.title).toBe('AI Radar, settimana del 12 ott 2026');
-    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
     expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}edizioni/2026-10-12/`);
     expect(html(crea())).not.toContain('simones99');
   });
@@ -373,8 +373,8 @@ describe('la pagina di un’edizione', () => {
       expect(tag(pagina(corretta), 'article:published_time')).toBe('2026-10-15T08:00:00+00:00');
     });
 
-    it('la descrizione ha le due porte, Per te per prima', () => {
-      expect(tag(pagina(crea()), 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+    it('la descrizione ha le due porte, Per te per prima, e la fonte degli annunci', () => {
+      expect(tag(pagina(crea()), 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
     });
 
     it('il testo alternativo dice cosa mostra l’immagine: data e due porte', () => {
@@ -384,7 +384,7 @@ describe('la pagina di un’edizione', () => {
     it('una porta senza dati, nell’immagine, dice «Dati non disponibili»: anche il testo alternativo', () => {
       const doc = pagina(crea({ status: d.status, radar: d.radar }));
       expect(tag(doc, 'og:image:alt')).toContain('Per la tua organizzazione: Dati non disponibili.');
-      expect(tag(doc, 'og:description')).toBe('MCP entra tra le competenze da imparare ora; RAG esce.');
+      expect(tag(doc, 'og:description')).toBe('MCP entra tra le competenze da imparare ora; RAG esce. Annunci: The Adzuna API.');
     });
 
     it('un titolo con le virgolette non esce dall’attributo', () => {
@@ -402,7 +402,16 @@ describe('la pagina di un’edizione', () => {
 
   it('una porta senza dati non entra nella descrizione', () => {
     const doc = pagina(crea({ status: d.status, radar: d.radar }));
-    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe('MCP entra tra le competenze da imparare ora; RAG esce.');
+    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe('MCP entra tra le competenze da imparare ora; RAG esce. Annunci: The Adzuna API.');
+  });
+
+  it('la fonte degli annunci la dicono le fonti salvate delle porte con dati: senza Adzuna tra quelle, la descrizione non la nomina', () => {
+    const e = crea();
+    const senzaAdzuna = pagina({ ...e, porte: [{ ...e.porte[0], fonti: [{ nome: 'arXiv', url: 'https://arxiv.org', licenza: 'metadati CC0' }] }, e.porte[1]] });
+    expect(senzaAdzuna.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+    // Adzuna tra le fonti di una porta senza dati, che nella descrizione non entra, non conta
+    const senzaDati = pagina({ ...e, porte: [{ ...e.porte[0], titolo: [] }, e.porte[1]] });
+    expect(senzaDati.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("16% delle imprese italiane usa l'AI (UE: 20%).");
   });
 
   it('usa il foglio di stile del sito, con un indirizzo relativo, e ha la testata con il ritorno alla home', () => {
@@ -537,7 +546,7 @@ describe('la pagina di un’edizione', () => {
     it('una porta ripetuta lo dice anche nella descrizione e nel testo alternativo dell’anteprima', () => {
       const doc = pagina(crea(settimanaDopo, prima));
       const tag = (nome: string) => doc.querySelector(`meta[property="${nome}"]`)?.getAttribute('content');
-      expect(tag('og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio). 16% delle imprese italiane usa l'AI (UE: 20%) (nessun cambio).");
+      expect(tag('og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio). 16% delle imprese italiane usa l'AI (UE: 20%) (nessun cambio). Annunci: The Adzuna API.");
       expect(tag('og:image:alt')).toContain('Per te: MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio).');
     });
     it('una porta ripetuta resta visibile e dice «Nessun cambio qui dalla settimana scorsa»', () => {

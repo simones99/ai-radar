@@ -75,8 +75,8 @@ describe('una voce del feed', () => {
     expect(figlio(v, 'pubDate')?.textContent).toBe('Thu, 15 Oct 2026 08:00:00 GMT');
   });
 
-  it('la descrizione contiene le due porte, Per te per prima', () => {
-    expect(figlio(voce(), 'description')?.textContent).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+  it('la descrizione contiene le due porte, Per te per prima, e la fonte degli annunci', () => {
+    expect(figlio(voce(), 'description')?.textContent).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
   });
 
   it('ha il testo intero in HTML: porte, frasi, notizie, fonti e link', () => {

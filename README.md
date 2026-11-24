@@ -187,6 +187,8 @@ Le chiavi si passano come variabili d'ambiente: `ADZUNA_APP_ID`, `ADZUNA_APP_KEY
 
 Per provare un'edizione senza rischiare di salvarla nel repository, usa una copia dei dati: `AI_RADAR_DATA_DIR=/una/cartella/a/parte`. La leggono sia `npm run edizione -- --evento schedule` sia la build.
 
+`build_site.py` copia nell'app i JSON di una cartella sola, e la stessa la passa alla build di Vite, da cui nascono la home in chiaro, le edizioni, le competenze e la sitemap: è la cartella data come argomento, se c'è, altrimenti `AI_RADAR_DATA_DIR`, altrimenti `data/`. Così l'app e le pagine statiche partono sempre dagli stessi dati.
+
 ## Struttura
 
 ```

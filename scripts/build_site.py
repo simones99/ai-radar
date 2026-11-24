@@ -2,9 +2,13 @@
 
 Uso:  python scripts/build_site.py [cartella_dati]
 Anteprima locale:  python scripts/build_site.py && (cd web && npm run preview)
+
+La cartella dei dati è l'argomento, se c'è, altrimenti AI_RADAR_DATA_DIR, altrimenti data/: la stessa regola della build di Vite,
+che riceve la cartella scelta, così i JSON dell'app e le pagine statiche nascono dagli stessi dati.
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys
@@ -26,12 +30,19 @@ def copy_data(data_dir: Path, web: Path | None = None) -> int:
     return len(files)
 
 
+def cartella_dei_dati(argomenti: list[str]) -> Path:
+    if argomenti:
+        return Path(argomenti[0])
+    return Path(os.environ.get("AI_RADAR_DATA_DIR") or ROOT / "data")
+
+
 def build(data_dir: Path, run=subprocess.run) -> None:
     n = copy_data(data_dir, WEB)
-    run(["npm", "run", "build"], cwd=WEB, check=True)
+    # npm gira in web/: la cartella arriva a Vite assoluta, e vince su un AI_RADAR_DATA_DIR diverso
+    run(["npm", "run", "build"], cwd=WEB, check=True, env={**os.environ, "AI_RADAR_DATA_DIR": str(data_dir.resolve())})
     (OUT / ".nojekyll").write_text("")
     print(f"Sito pronto in {OUT} ({n} file di dati)")
 
 
 if __name__ == "__main__":
-    build(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "data")
+    build(cartella_dei_dati(sys.argv[1:]))

@@ -1,6 +1,7 @@
 // Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa. Lo scheletro è quello di tutte le pagine statiche.
 import { toHash, type TileId } from '../router';
 import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../pagina';
+import { ADZUNA } from '../text/fonti';
 import { day, dayWith } from '../text/format';
 import { cardDellaTesta, cifraGrande, porta, type LinkDellaDestinazione } from './porteECard';
 import { cifraDi } from './settimana';
@@ -80,7 +81,16 @@ ${notizie(e, radice)}
 ${fontiNonAggiornate(e)}`;
 }
 
-export const descrizioneEdizione = (e: Edizione): string => e.porte.filter(portaConDati).map((p) => `${portaInBreve(p)}.`).join(' ');
+/**
+ * Le porte con dati in fila, per la descrizione della pagina e per la voce del feed. La descrizione si legge da sola, nei risultati di ricerca,
+ * nelle anteprime dei link e nei lettori: quando una porta nasce anche dagli annunci, lo dicono le sue fonti salvate, si chiude con la fonte,
+ * come chiedono i termini di Adzuna.
+ */
+export function descrizioneEdizione(e: Edizione): string {
+  const porte = e.porte.filter(portaConDati);
+  const conAnnunci = porte.some((p) => p.fonti.some((f) => f.nome === ADZUNA.nome));
+  return [...porte.map((p) => `${portaInBreve(p)}.`), ...(conAnnunci ? [`Annunci: ${ADZUNA.nome}.`] : [])].join(' ');
+}
 
 /** Le edizioni accanto a questa nell'archivio. Solo nella pagina: nel lettore di feed le voci sono già in fila, e questi link cambiano quando ne esce una nuova. */
 function altreEdizioni(precedente?: Edizione, successiva?: Edizione): string {

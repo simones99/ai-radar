@@ -5,7 +5,7 @@
   <img src="docs/immagini/home.png" width="1280" alt="La home di AI Radar il 24 novembre 2026, settimana del 23 novembre. A sinistra le due porte: Per te, «Slancio di LLMOps da +30% a −10%», e Per la tua organizzazione, «Tra 8 giorni: vietate le app che spogliano», scadenza dell'AI Act del 2 dicembre 2026. A destra il radar delle competenze nei quattro quadranti, con Agenti AI, RAG e Multimodali in Impara ora.">
 </picture>
 
-**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, for organisations. Its lead card, GeopoliticAI, shows where Italy and Europe stand on each link of the AI supply chain against the US and China, from raw materials and chips to data centres and models: for example, companies based in the Netherlands sell 81.5% of lithography machines, while the EU holds 0.5% of the compute in the AI data centres Epoch AI tracks. The same view covers business adoption, people and jobs, AI Act deadlines and upcoming reports. Every Monday it also publishes a weekly edition with fixed text, its own page and share image, collected in an archive and an RSS feed. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
+**In English.** A public dashboard on open data that updates itself every week: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). Every Monday a Python pipeline on GitHub Actions collects arXiv, GitHub, Adzuna job ads, Eurostat, Epoch AI, Our World in Data and lab news feeds, saves the results as JSON in the repository, and a Svelte + D3 front end on GitHub Pages shows them. Two views: *which skills to learn*, a radar of 16 AI skills that crosses research, open source and job demand in Europe and the US; and *AI in Italy*, for organisations. Its lead card, GeopoliticAI, shows where Italy and Europe stand on each link of the AI supply chain against the US and China, from raw materials and chips to data centres and models: for example, companies based in the Netherlands sell 81.5% of lithography machines, while the EU held 0.5% of the compute in the AI data centres Epoch AI tracked on 23 November 2026. The same view covers business adoption, people and jobs, AI Act deadlines and upcoming reports. Every Monday it also publishes a weekly edition with fixed text, its own page and share image, collected in an archive and an RSS feed. Every source is licensed and cited; pipeline and app are tested in CI. The interface and the rest of this README are in Italian.
 
 Una dashboard pubblica con due teste, su dati aperti che si aggiornano da soli ogni settimana:
 
@@ -109,9 +109,11 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 GeopoliticAI risponde a una domanda: in quali passaggi dell'AI l'Europa e l'Italia contano, e in quali dipendono da altri. Con i dati del 23 novembre 2026, per esempio:
 
 - l'81,5% del mercato delle macchine di litografia è di aziende con sede nei Paesi Bassi, e le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML;
-- nei data center AI censiti da Epoch AI, l'UE ha lo 0,5% del calcolo, gli USA l'86%;
+- nei data center AI censiti da Epoch AI, l'UE ha lo 0,5% del calcolo, gli USA l'86,3%;
 - il miglior modello europeo del 2026, Mistral Large 4, arriva a 154,6 sull'Epoch Capabilities Index; il migliore degli USA a 173,4, quello della Cina a 161,2;
 - la Cina produce il 99% del gallio e l'87% del silicio metallico del mondo.
+
+Questi numeri sono fermi al 23 novembre. Materie prime e chip cambiano solo quando cambiano le fonti; data center e modelli invece ogni lunedì, e i valori aggiornati sono nella card.
 
 La catena ha sei **anelli**. Ognuno ha la sua misura, e gli anelli non si sommano:
 

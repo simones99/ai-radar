@@ -1,13 +1,16 @@
 // La forma del file fisso di un'edizione, data/edizioni/AAAA-MM-GG.json. Ci sono i testi già composti, non i dati da cui
 // derivano: le regole delle frasi possono cambiare senza alterare il passato. Un cambio di forma alza VERSIONE.
-import type { Fonte } from '../statico/pagina';
+// Questo modulo non importa tipi da altri: la forma dei file già usciti non deve cambiare perché cambia una pagina.
 
 export const VERSIONE = 1;
 
 export interface Destinazione { card: string; elemento: string | null; params?: Record<string, string> }
 
-/** Da dove viene una riga: il nome, l'indirizzo se c'è e la licenza con cui si riusa. È la stessa fonte di ogni pagina statica. */
-export type { Fonte };
+/**
+ * Da dove viene una riga, come la salva il file fisso: il nome, l'indirizzo se c'è e la licenza con cui si riusa. Le pagine statiche hanno
+ * la loro fonte, oggi con gli stessi campi: se la loro cambia, le pagine convertono questa, e le edizioni già uscite si leggono come prima.
+ */
+export interface Fonte { nome: string; url: string | null; licenza: string }
 export interface FonteNonAggiornata { id: string; nome: string; ultimo_successo: string | null }
 
 export interface VoceFissa { titolo: string; link: string; data: string; fonte: string }

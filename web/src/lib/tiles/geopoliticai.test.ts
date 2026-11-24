@@ -650,8 +650,14 @@ describe('GeopoliticAI: l’anello dei data center', () => {
     quote(data, { anello: 'datacenter' });
     expect(mappa().getByRole('heading', { level: 4, name: '5. Data center' })).toBeInTheDocument();
     expect(mappa().getByText('Quota degli H100 equivalenti dei siti noti · Epoch AI, dati scaricati il 15 ott 2026')).toBeInTheDocument();
-    expect(cifra('Il primo')).toHaveTextContent(/^USA 86,5%$/);
-    expect(cifra('UE')).toHaveTextContent(/^0,6%$/); // Finlandia e Portogallo
+    // la quota conta solo i siti noti a Epoch, circa il 44% del calcolo mondiale: letta da sola, l'UE sembrerebbe un decimo di quello che è
+    expect(cifra('Il primo')).toHaveTextContent(/^USA 86,5% nei siti noti a Epoch$/);
+    expect(cifra('UE')).toHaveTextContent(/^0,6% nei siti noti a Epoch$/); // Finlandia e Portogallo
+  });
+
+  it('«nei siti noti a Epoch» accompagna solo le quote dei data center, non quelle degli altri anelli', () => {
+    quote(data, { anello: 'fabbricazione' });
+    expect(cifra('Il primo')).not.toHaveTextContent(/siti noti/);
   });
 
   it('l’Italia, che non ha siti, ha la sua frase onesta', () => {

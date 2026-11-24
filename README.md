@@ -109,7 +109,7 @@ Per controllare un conteggio basta ripetere la stessa ricerca sulla fonte.
 GeopoliticAI risponde a una domanda: in quali passaggi dell'AI l'Europa e l'Italia contano, e in quali dipendono da altri. Con i dati del 23 novembre 2026, per esempio:
 
 - l'81,5% del mercato delle macchine di litografia è di aziende con sede nei Paesi Bassi, e le macchine EUV, necessarie per i chip più avanzati, le fa solo ASML;
-- nei data center AI censiti da Epoch AI, l'UE ha lo 0,5% del calcolo, gli USA l'86,3%. Sono però solo i siti che Epoch conosce, circa il 44% del calcolo AI mondiale e quasi tutti negli USA. Un'altra stima di Epoch, [*AI chip imports*](https://epoch.ai/data/ai-chip-imports), conta i chip AI arrivati in ogni Paese dal 2022 a giugno 2026: lì l'UE ha circa il 5% del calcolo, gli USA il 72%, la Cina il 10%. La card usa la prima, quindi lo 0,5% va letto come «nei siti censiti», non come la quota dell'UE nel mondo;
+- nei siti noti a Epoch AI, cioè i data center AI che conta uno per uno, l'UE ha lo 0,5% del calcolo, gli USA l'86,3%. Sono però solo i siti che Epoch conosce, circa il 44% del calcolo AI mondiale e quasi tutti negli USA. Un'altra stima di Epoch, [*AI chip imports*](https://epoch.ai/data/ai-chip-imports), conta i chip AI arrivati in ogni Paese dal 2022 a giugno 2026: lì l'UE ha circa il 5% del calcolo, gli USA il 72%, la Cina il 10%. La card usa la prima, e accanto a ogni quota scrive «nei siti noti a Epoch»: lo 0,5% non è la quota dell'UE nel mondo;
 - il miglior modello europeo del 2026, Mistral Large 4, arriva a 154,6 sull'Epoch Capabilities Index; il migliore degli USA a 173,4, quello della Cina a 161,2;
 - la Cina produce il 99% del gallio e l'87% del silicio metallico del mondo.
 
@@ -123,7 +123,7 @@ La catena ha sei **anelli**. Ognuno ha la sua misura, e gli anelli non si somman
 | Progettazione dei chip | quota del valore dei chip progettati, per sede dell'azienda | ETO, *Advanced Semiconductor Supply Chain Dataset* (dato 2022) | a mano |
 | Fabbricazione dei chip | quota della capacità produttiva, per luogo dello stabilimento | ETO (dato 2022) | a mano |
 | Macchinari | quota del mercato delle macchine di litografia, per sede dell'azienda | ETO (dato 2025) | a mano |
-| Data center | H100 equivalenti dei siti censiti, operativi o in costruzione | Epoch AI, *AI data centers* | ogni lunedì |
+| Data center | quota degli H100 equivalenti dei siti noti a Epoch, operativi o in costruzione | Epoch AI, *AI data centers* | ogni lunedì |
 | Modelli | capacità (Epoch Capabilities Index) e calcolo di addestramento dei modelli nazionali | Epoch AI, *AI models* | ogni lunedì |
 
 Nella card:

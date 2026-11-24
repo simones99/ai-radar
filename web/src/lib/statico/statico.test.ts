@@ -71,7 +71,7 @@ describe('la home in chiaro', () => {
     return { file, doc: new DOMParser().parseFromString(file['index.html'], 'text/html') };
   };
   const leggi = (c: ContenutoStatico) => conHome(c).doc;
-  /** Il testo statico: quello che sta nel contenitore dell'app. */
+  /** La home in chiaro: quello che sta nel contenitore dell'app. */
   const testo = (doc: Document) => doc.getElementById('app')!;
   const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
   const titoli = (doc: Document, livello: number) => [...testo(doc).querySelectorAll(`h${livello}`)].map((h) => pulito(h.textContent));

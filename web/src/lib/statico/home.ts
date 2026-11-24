@@ -66,10 +66,10 @@ ${conLaRigaSulContatore ? `${rigaSulContatore('')}\n` : ''}${conFeed ? `<p class
 }
 
 /**
- * Il testo statico, in ordine: testata, settimana e frase di apertura, le due porte, le card per testa, e in fondo le fonti, il contatore e il feed.
+ * Il testo della home in chiaro, in ordine: testata, settimana e frase di apertura, le due porte, le card per testa, e in fondo le fonti, il contatore e il feed.
  * Senza dati sulla settimana restano testata, frase e fondo.
  */
-function testoStatico(s: SettimanaDeiDati | null, link: Link, { conFeed, conLaRigaSulContatore }: { conFeed: boolean; conLaRigaSulContatore: boolean }): string {
+function testoInChiaro(s: SettimanaDeiDati | null, link: Link, { conFeed, conLaRigaSulContatore }: { conFeed: boolean; conLaRigaSulContatore: boolean }): string {
   const verso = versoUnaPagina(link);
   const sezioni = [
     apertura(s, link),
@@ -93,5 +93,5 @@ export function homeInChiaro({ home, dataset, edizioni, indirizzoBase, pagine, c
   const esistono = new Set(pagine);
   const link: Link = (cartella) => (esistono.has(`${cartella}index.html`) ? cartella : null);
   const daRiempire = edizioni.length ? home.replace('</head>', () => `  ${linkAlFeed(indirizzoBase)}\n  </head>`) : home;
-  return daRiempire.replace(CONTENITORE, () => `<div id="app">\n${testoStatico(settimanaDeiDati(dataset), link, { conFeed: edizioni.length > 0, conLaRigaSulContatore })}\n</div>`);
+  return daRiempire.replace(CONTENITORE, () => `<div id="app">\n${testoInChiaro(settimanaDeiDati(dataset), link, { conFeed: edizioni.length > 0, conLaRigaSulContatore })}\n</div>`);
 }

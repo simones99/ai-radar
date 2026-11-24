@@ -3,7 +3,7 @@ import './app.css';
 import { mount } from 'svelte';
 import App from './App.svelte';
 
-// il contenitore porta il testo statico della home, per chi non esegue JavaScript: l'app ne prende il posto, mai accanto
+// il contenitore porta la home in chiaro, per chi non esegue JavaScript: l'app ne prende il posto, mai accanto
 const contenitore = document.getElementById('app')!;
 contenitore.replaceChildren();
 mount(App, { target: contenitore });

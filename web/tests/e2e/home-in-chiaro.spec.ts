@@ -11,7 +11,7 @@ import { FRASE_DI_APERTURA } from '../../src/lib/text/apertura';
 const d = FIXTURE as Dataset;
 /** Il testo delle due porte con i dati del FIXTURE, raccolti il 15 ottobre 2026, come lo legge chi guarda la pagina. */
 const PORTE = ['MCP entra tra le competenze da imparare ora; RAG esce', "16% delle imprese italiane usa l'AI (UE: 20%)"];
-/** Il titolo della sezione delle card nel testo statico: l'app non ce l'ha. */
+/** Il titolo della sezione delle card nella home in chiaro: l'app non ce l'ha. */
 const SITUAZIONE = 'La situazione';
 
 /** L'HTML della build con il contenitore dell'app di nuovo vuoto, come prima che la build ci scrivesse il testo dei dati veri. */
@@ -47,13 +47,13 @@ const violazioniGravi = async (page: Page) =>
 
 test.describe('con JavaScript', () => {
   test.beforeEach(async ({ page, request }) => {
-    // le frasi dell'app sul giorno dei dati, come quelle del testo statico: la porta di Norme conta i giorni da oggi
+    // le frasi dell'app sul giorno dei dati, come quelle della home in chiaro: la porta di Norme conta i giorni da oggi
     await page.clock.setFixedTime(new Date(d.status!.aggiornato));
     await serviIDatiDelFixture(page);
     await serviLaHomeDelFixture(page, request);
   });
 
-  test('l’app prende il posto del testo statico: il testo statico non c’è più, un solo h1, e il testo di ogni porta una volta sola', async ({ page }) => {
+  test('l’app prende il posto della home in chiaro: la home in chiaro non c’è più, un solo h1, e il testo di ogni porta una volta sola', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('link', { name: 'Stato delle fonti' })).toBeVisible();
     await expect(page.getByText('Caricamento dei dati…')).toHaveCount(0);
@@ -67,7 +67,7 @@ test.describe('con JavaScript', () => {
 test.describe('senza JavaScript', () => {
   test.use({ javaScriptEnabled: false });
 
-  test('la build ha scritto il testo statico nella home: la frase di apertura c’è anche senza l’app', async ({ page }) => {
+  test('la build ha scritto la home in chiaro: la frase di apertura c’è anche senza l’app', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(FRASE_DI_APERTURA);
   });
@@ -75,7 +75,7 @@ test.describe('senza JavaScript', () => {
   test.describe('con i dati del FIXTURE', () => {
     test.beforeEach(async ({ page, request }) => serviLaHomeDelFixture(page, request));
 
-    test('il testo statico c’è: la frase di apertura, le porte, le card, e la testata porta all’indice delle competenze', async ({ page }) => {
+    test('la home in chiaro c’è: la frase di apertura, le porte, le card, e la testata porta all’indice delle competenze', async ({ page }) => {
       await page.goto('/');
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(FRASE_DI_APERTURA);
       await expect(page.getByRole('heading', { name: SITUAZIONE, exact: true })).toBeVisible();
@@ -87,14 +87,14 @@ test.describe('senza JavaScript', () => {
   });
 });
 
-// axe gira dentro la pagina e vuole JavaScript: qui JavaScript c'è, ma gli script del sito non arrivano, e il testo statico resta com'è
+// axe gira dentro la pagina e vuole JavaScript: qui JavaScript c'è, ma gli script del sito non arrivano, e la home in chiaro resta com'è
 test.describe('senza gli script del sito, con i dati del FIXTURE', () => {
   test.beforeEach(async ({ page, request }) => {
     await page.route('**/*.js', (route) => route.abort());
     await serviLaHomeDelFixture(page, request);
   });
 
-  test('il testo statico resta', async ({ page }) => {
+  test('la home in chiaro resta', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: SITUAZIONE, exact: true })).toBeVisible();
   });

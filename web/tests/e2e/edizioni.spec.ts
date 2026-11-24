@@ -6,6 +6,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
 import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
 import { filePubblici, foglioDellaHome } from '../../src/lib/statico';
+import { cartellaDeiDati } from '../../src/lib/data/cartellaDeiDati';
 import type { Dataset } from '../../src/lib/data/types';
 import { FIXTURE } from '../../src/lib/test/fixtures';
 
@@ -195,7 +196,7 @@ for (const [nome, indirizzo] of [['da un’edizione', PRIMA], ['dall’archivio'
 
 test('nel sito costruito ci sono solo le edizioni salvate nei dati: nessuna edizione di prova', () => {
   const cartella = (relativa: string) => fileURLToPath(new URL(relativa, import.meta.url));
-  const salvate = process.env.AI_RADAR_DATA_DIR ? `${process.env.AI_RADAR_DATA_DIR}/edizioni` : cartella('../../../data/edizioni');
+  const salvate = `${cartellaDeiDati()}/edizioni`;
   const nomi = existsSync(salvate) ? readdirSync(salvate).filter((n) => n.endsWith('.json')).map((n) => n.replace('.json', '')) : [];
   const uscita = cartella('../../../_site/edizioni');
   const pagine = existsSync(uscita) ? readdirSync(uscita).filter((n) => n !== 'index.html') : [];

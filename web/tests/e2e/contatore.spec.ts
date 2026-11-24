@@ -3,10 +3,10 @@
 // con lo stesso ID e lo stesso indirizzo base della build. L'ID lo sceglie playwright.config.ts: in locale, se manca, è uno di prova; nel workflow
 // è solo quello del repository, e senza la build esce senza contatore: queste prove si saltano, e senza-contatore.spec.ts prova che non c'è.
 // Le stesse pagine, senza JavaScript, hanno in fondo la riga che lo dice a chi legge, con il link alla pagina Privacy del sito.
-import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page, type Request } from '@playwright/test';
 import { leggiDati } from '../../src/lib/data/cartella';
+import { cartellaDeiDati } from '../../src/lib/data/cartellaDeiDati';
 import type { Dataset } from '../../src/lib/data/types';
 import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
 import { indirizzoBase } from '../../src/lib/indirizzoBase';
@@ -16,7 +16,7 @@ import { SCRIPT_DI_UMAMI } from '../../src/lib/umami';
 
 const ID = process.env.AI_RADAR_UMAMI_ID!;
 const HOST = new URL(indirizzoBase(process.env.AI_RADAR_BASE_URL)).hostname;
-const DATI = process.env.AI_RADAR_DATA_DIR ?? fileURLToPath(new URL('../../../data', import.meta.url));
+const DATI = cartellaDeiDati();
 const COMPETENZA = leggiDati(DATI, ['radar']).radar?.competenze[0]?.id;
 const edizione = creaEdizione(FIXTURE as Dataset, null) as Edizione;
 const EDIZIONE = `/edizioni/${edizione.settimana}/`;

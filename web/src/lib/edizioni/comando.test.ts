@@ -46,6 +46,23 @@ describe('il comando che fissa l’edizione, senza browser', { timeout: 60_000 }
     expect(existsSync(edizioni()) ? readdirSync(edizioni()) : []).toEqual([]);
   });
 
+  it('con uno status.json rotto un giro che non crea non lo legge: nessun errore e nessun file', () => {
+    writeFileSync(join(dati(), 'status.json'), '{ "aggiornato": "2026-10-');
+    for (const [evento, casella] of [['push', 'true'], ['workflow_dispatch', 'false']]) {
+      const giro = lancia(evento, casella);
+      expect(giro.status, `${evento} ${casella}: ${giro.stderr}`).toBe(0);
+    }
+    expect(existsSync(edizioni()) ? readdirSync(edizioni()) : []).toEqual([]);
+  });
+
+  it('con uno status.json rotto il lunedì l’edizione non esce: l’errore nomina status.json, e non resta nessun file', () => {
+    writeFileSync(join(dati(), 'status.json'), '{ "aggiornato": "2026-10-');
+    const giro = lancia('schedule');
+    expect(giro.status).toBe(1);
+    expect(giro.stderr).toMatch(/status\.json/);
+    expect(existsSync(edizioni()) ? readdirSync(edizioni()) : []).toEqual([]);
+  });
+
   it('l’avvio manuale con la casella spenta non crea', () => {
     for (const casella of ['false', '']) {
       expect(lancia('workflow_dispatch', casella).status).toBe(0);

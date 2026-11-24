@@ -25,6 +25,10 @@ describe('il sito costruito con un altro indirizzo base', () => {
   }, 180_000);
   afterAll(() => rmSync(cartella, { recursive: true, force: true }));
 
+  it('l’autore è AI Radar, senza nomi di persona, come nelle pagine statiche', () => {
+    expect(meta('name', 'author')).toBe('AI Radar');
+  });
+
   it('la home ha titolo, descrizione e tipo dell’anteprima, sempre gli stessi', () => {
     expect(og('title')).toBe('AI Radar');
     expect(og('description')).toMatch(/^Cosa succede nell'AI ogni settimana/);

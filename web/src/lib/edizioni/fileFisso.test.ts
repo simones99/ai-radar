@@ -1,5 +1,6 @@
-// Il file fisso di un'edizione già uscita si legge sempre come quando è uscito. La copia in test/edizioni è quella del 23 novembre 2026,
-// la prima edizione vera, identica al byte: il file in data/ può cambiare con una correzione, la copia no.
+// Il file fisso di un'edizione già uscita si legge sempre come quando è uscito. Il test legge la prima edizione vera, quella del
+// 23 novembre 2026, direttamente da data/edizioni/ e non da una copia: i dati stanno in un posto solo, e una correzione dichiarata,
+// per esempio quella che toglie i dati di Adzuna, vale anche qui. Una correzione tiene il formato, quindi il test resta valido.
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { Dataset } from '../data/types';
@@ -8,8 +9,9 @@ import { leggiEdizioni } from './cartella';
 import { creaEdizione, fileDelleEdizioni, type Edizione } from '.';
 import { testoPorta, VERSIONE, type Fonte } from './tipi';
 
-// i test girano da web/, come npm test
-const USCITE = resolve('src/lib/test');
+// i test girano da web/, come npm test: la cartella dei dati del repository, non quella di AI_RADAR_DATA_DIR
+const DATI = resolve('../data');
+const SETTIMANA = '2026-11-23';
 const OPZIONI = { indirizzoBase: 'https://esempio.org/ai-radar/', foglio: 'assets/home.css' };
 
 /**
@@ -34,15 +36,15 @@ function fuoriForma(fonti: Fonte[]): string[] {
 }
 
 describe('l’edizione del 23 novembre 2026', () => {
-  const edizioni = leggiEdizioni(USCITE);
-  const e = edizioni[0];
+  // le edizioni dei lunedì dopo si aggiungono nella stessa cartella: conta solo questa
+  const e = leggiEdizioni(DATI).find((x) => x.settimana === SETTIMANA)!;
   const pagina = () => {
-    const html = fileDelleEdizioni(edizioni, OPZIONI)[`edizioni/${e.settimana}/index.html`];
+    const html = fileDelleEdizioni([e], OPZIONI)[`edizioni/${e.settimana}/index.html`];
     return new DOMParser().parseFromString(html, 'text/html').body.textContent!.replace(/\s+/g, ' ');
   };
 
   it('si legge con la versione di oggi', () => {
-    expect(edizioni.map((x) => x.settimana)).toEqual(['2026-11-23']);
+    expect(e?.settimana).toBe(SETTIMANA);
     expect(e.versione).toBe(VERSIONE);
   });
 

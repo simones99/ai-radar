@@ -218,6 +218,8 @@ def _motivo_soglia_it(lav: dict | None) -> str | None:
     """Il motivo dell'incertezza italiana della domanda, se la soglia in annunci cade nel margine all'80% del conto."""
     if lav is None or lav["soglia_annunci_it"] is None:
         return None  # senza dato italiano la domanda non rende incerta l'Italia; con 0 annunci il margine è nullo
+    # il margine è sul numero di annunci che la pagina mostra, la mediana arrotondata: chi legge rifà il conto con quello.
+    # La soglia invece è sulla mediana vera, perché arrotondata si sposterebbe (ADR 0003)
     n, soglia = lav["annunci_it"], lav["soglia_annunci_it"]
     if abs(soglia - n) > Z_80 * sqrt(n):
         return None

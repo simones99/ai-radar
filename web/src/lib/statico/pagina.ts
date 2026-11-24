@@ -72,7 +72,10 @@ export const TITOLO_DEL_FEED = 'AI Radar, le edizioni';
 /** Il link con cui un lettore di feed trova il feed partendo da una pagina. */
 export const linkAlFeed = (indirizzoBase: string): string => `<link rel="alternate" type="application/rss+xml" title="${esc(TITOLO_DEL_FEED)}" href="${esc(`${indirizzoBase}feed.xml`)}" />`;
 
-export interface Pagina {
+/** Le date di un articolo, in ISO 8601: quando è uscito e, se è cambiato dopo, quando. Una data che manca non esce. */
+export interface DateArticolo { pubblicata: string | null; modificata: string | null }
+
+interface PaginaComune {
   titolo: string;
   descrizione: string;
   /** La pagina vista dalla radice, con la barra finale. */
@@ -82,9 +85,32 @@ export interface Pagina {
   /** I link della testata prima di «Segui con RSS», che c'è quando ci sono le edizioni. */
   nav: string;
   corpo: string;
-  tipo: 'article' | 'website';
   /** L'immagine di anteprima, con il percorso dalla radice. */
   immagine: { percorso: string; alt: string };
+}
+
+export type Pagina = PaginaComune & ({ tipo: 'website' } | { tipo: 'article'; date: DateArticolo });
+
+/** L'autore delle pagine: il progetto, senza nomi di persona, come nella pagina Privacy. */
+export const AUTORE = 'AI Radar';
+
+/**
+ * Il profilo GitHub di chi pubblica il sito, ricavato dall'indirizzo base: `https://<utente>.github.io/…` → `https://github.com/<utente>`.
+ * Così una copia del progetto non punta all'originale. Con un dominio che non è di GitHub Pages non c'è un profilo da indicare.
+ */
+export function profiloGitHub(indirizzoBase: string): string | null {
+  const utente = /^([a-z0-9-]+)\.github\.io$/i.exec(new URL(indirizzoBase).hostname)?.[1];
+  return utente ? `https://github.com/${utente.toLowerCase()}` : null;
+}
+
+/** I tag di un articolo: il profilo di chi lo pubblica e le sue date, solo quelli che ci sono. */
+function tagArticolo(date: DateArticolo, indirizzoBase: string): string {
+  const profilo = profiloGitHub(indirizzoBase);
+  return [
+    profilo && `<meta property="article:author" content="${esc(profilo)}" />`,
+    date.pubblicata && `<meta property="article:published_time" content="${esc(date.pubblicata)}" />`,
+    date.modificata && `<meta property="article:modified_time" content="${esc(date.modificata)}" />`,
+  ].filter(Boolean).map((t) => `${t}\n`).join('');
 }
 
 /** Lo scheletro comune delle pagine statiche. */
@@ -96,6 +122,7 @@ export function pagina(o: Pagina, opzioni: OpzioniPagine): string {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>${esc(o.titolo)}</title>
 <meta name="description" content="${esc(o.descrizione)}" />
+<meta name="author" content="${AUTORE}" />
 <link rel="canonical" href="${esc(`${opzioni.indirizzoBase}${o.percorso}`)}" />
 <meta property="og:title" content="${esc(o.titolo)}" />
 <meta property="og:description" content="${esc(o.descrizione)}" />
@@ -103,7 +130,7 @@ export function pagina(o: Pagina, opzioni: OpzioniPagine): string {
 <meta property="og:image" content="${esc(`${opzioni.indirizzoBase}${o.immagine.percorso}`)}" />
 <meta property="og:image:alt" content="${esc(o.immagine.alt)}" />
 <meta property="og:type" content="${o.tipo}" />
-<meta property="og:locale" content="it_IT" />
+${o.tipo === 'article' ? tagArticolo(o.date, opzioni.indirizzoBase) : ''}<meta property="og:locale" content="it_IT" />
 <meta property="og:site_name" content="AI Radar" />
 <meta name="twitter:card" content="summary_large_image" />
 ${opzioni.linkAlleEdizioni ? `${linkAlFeed(opzioni.indirizzoBase)}\n` : ''}<link rel="icon" href="${esc(ICONA)}" />

@@ -37,6 +37,25 @@ describe('le pagine delle competenze', () => {
     expect(meta('og:type')).toBe('article');
   });
 
+  it('dice chi la scrive, senza nomi di persona: AI Radar, e il profilo GitHub solo quando l’indirizzo base è di GitHub Pages', () => {
+    const autore = (doc: Document) => doc.querySelector('meta[name="author"]')?.getAttribute('content');
+    const profilo = (doc: Document) => doc.querySelector('meta[property="article:author"]')?.getAttribute('content');
+    expect(autore(pagina('mcp'))).toBe('AI Radar');
+    expect(profilo(pagina('mcp'))).toBeUndefined();
+    const suPages = filePubblici({ edizioni: [], dataset: { radar: RADAR } }, { ...opzioni, indirizzoBase: 'https://altro-utente.github.io/altro-radar/' })['competenze/mcp/index.html'];
+    expect(profilo(new DOMParser().parseFromString(suPages, 'text/html'))).toBe('https://github.com/altro-utente');
+  });
+
+  it('è pubblicata e modificata il giorno dei dati, perché si rifà a ogni giro; senza un giorno leggibile non dice nessuna data', () => {
+    const data = (doc: Document, p: string) => doc.querySelector(`meta[property="article:${p}_time"]`)?.getAttribute('content');
+    expect(data(pagina('mcp'), 'published')).toBe('2026-10-15');
+    expect(data(pagina('mcp'), 'modified')).toBe('2026-10-15');
+    const conOra = pagina('mcp', { ...RADAR, generato: '2026-11-23T16:17:37+00:00' });
+    expect(data(conOra, 'published')).toBe('2026-11-23T16:17:37+00:00');
+    const senza = pagina('mcp', { ...RADAR, generato: 'ieri' });
+    expect(senza.querySelector('meta[property^="article:"][property$="_time"]')).toBeNull();
+  });
+
   it('il testo alternativo dell’anteprima dice quello che c’è nell’immagine: nome, quadrante nei due mercati, data dei dati e fonti, con The Adzuna API', () => {
     const alt = (doc: Document) => doc.querySelector('meta[property="og:image:alt"]')?.getAttribute('content');
     expect(alt(pagina('mcp'))).toBe('Model Context Protocol (MCP) su AI Radar. Tutti i Paesi: Impara ora. Italia: Da provare. Dati del 15 ott 2026. Fonti: arXiv, GitHub e The Adzuna API.');
@@ -322,6 +341,8 @@ describe('l’indice delle competenze', () => {
     expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe('Le 5 competenze sull’AI che il radar segue, con tutti i Paesi e in Italia: ricerca, open source e annunci di lavoro. Si aggiorna ogni lunedì.');
     expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}competenze/`);
     expect(meta('og:type')).toBe('website');
+    expect(doc.querySelector('meta[property^="article:"]')).toBeNull();
+    expect(doc.querySelector('meta[name="author"]')?.getAttribute('content')).toBe('AI Radar');
     expect(meta('og:image')).toBe(`${BASE}anteprima.png`);
     expect(meta('og:image:alt')).toBe("Il marchio di AI Radar con la frase: cosa succede nell'AI ogni settimana, su cosa formarti e come si muove l'AI in Italia.");
     expect(doc.querySelector('main')?.textContent).toContain('Dati raccolti il 15 ott 2026.');

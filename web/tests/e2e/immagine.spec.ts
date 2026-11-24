@@ -208,6 +208,20 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
     await expect(page.locator('body')).toHaveCSS('background-color', colori.fondo);
   });
 
+  test('se il file del font non si carica è un errore che dice cosa fare, come per l’immagine della competenza', async ({ page }) => {
+    await page.addInitScript(() => {
+      document.fonts.load = () => Promise.reject(new DOMException('Il file del font non c’è', 'NetworkError'));
+    });
+    await expect(preparaImmagine(page, base)).rejects.toThrow('Il font del sito non si carica: serve npm ci in web/.');
+  });
+
+  test('se il font non ha nessun file è lo stesso errore', async ({ page }) => {
+    await page.addInitScript(() => {
+      document.fonts.load = () => Promise.resolve([]);
+    });
+    await expect(preparaImmagine(page, base)).rejects.toThrow('Il font del sito non si carica: serve npm ci in web/.');
+  });
+
   test('non usa foto né altro che venga da fuori: solo i file del progetto', async ({ page }) => {
     const richieste: string[] = [];
     page.on('request', (r) => richieste.push(r.url()));

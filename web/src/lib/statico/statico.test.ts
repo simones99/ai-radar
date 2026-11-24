@@ -413,10 +413,12 @@ describe('la sitemap', () => {
       expect(date({ edizioni: [corretta, seconda], dataset: {} })['edizioni/']).toBe('2026-11-02');
     });
 
-    it('home, indice e pagine delle competenze hanno il giorno di generato di radar.json, e senza radar la home non ha data', () => {
+    it('la home ha il giorno della raccolta, da status.json, l’indice e le pagine delle competenze il giorno di generato di radar.json', () => {
       const radar = { ...d.radar!, generato: '2026-10-26' };
-      expect(date({ edizioni: [corretta, seconda], dataset: { radar } })).toEqual({
-        '': '2026-10-26',
+      // la raccolta è del 27 ottobre, il radar del 26: la home segue la raccolta, le competenze il radar
+      const status = { ...d.status!, aggiornato: '2026-10-27T06:15:00+00:00' };
+      expect(date({ edizioni: [corretta, seconda], dataset: { radar, status } })).toEqual({
+        '': '2026-10-27',
         'competenze/': '2026-10-26',
         'competenze/agenti/': '2026-10-26',
         'competenze/mcp/': '2026-10-26',
@@ -427,8 +429,27 @@ describe('la sitemap', () => {
         'edizioni/2026-10-12/': '2026-11-02',
         'edizioni/2026-10-19/': '2026-10-22',
       });
+    });
+
+    it('senza radar.json la home ha comunque il giorno della raccolta', () => {
+      const status = { ...d.status!, aggiornato: '2026-10-27T06:15:00+00:00' };
+      expect(date({ edizioni: [seconda], dataset: { status } })['']).toBe('2026-10-27');
+      expect(date({ edizioni: [], dataset: { status } })).toEqual({ '': '2026-10-27' });
+    });
+
+    it('senza status.json, o con un aggiornato non valido, la home non ha data, anche con il radar', () => {
+      const radar = { ...d.radar!, generato: '2026-10-26' };
       expect(date({ edizioni: [seconda], dataset: {} })['']).toBeNull();
       expect(date({ edizioni: [], dataset: {} })).toEqual({ '': null });
+      const senzaStatus = date({ edizioni: [seconda], dataset: { radar } });
+      expect(senzaStatus['']).toBeNull();
+      expect(senzaStatus['competenze/mcp/']).toBe('2026-10-26');
+      // un istante che non si legge, un giorno che non esiste, un giorno scritto in un'altra forma, niente
+      for (const aggiornato of ['ieri', '2026-02-30T06:00:00+00:00', '27/10/2026', '']) {
+        const conDate = date({ edizioni: [], dataset: { radar, status: { ...d.status!, aggiornato } } });
+        expect(conDate[''], aggiornato).toBeNull();
+        expect(conDate['competenze/mcp/'], aggiornato).toBe('2026-10-26');
+      }
     });
 
     it('un generato con l’ora vale per il suo giorno, uno non valido non dà nessuna data', () => {

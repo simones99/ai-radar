@@ -1,7 +1,10 @@
+/** Adzuna chiede di citare The Adzuna API, con il link, ovunque escano i suoi dati: il nome si scrive solo qui. */
+export const ADZUNA = { nome: 'The Adzuna API', url: 'https://www.adzuna.co.uk' } as const;
+
 /** Le fonti dei dati del colophon, nell'ordine in cui si leggono: un elenco solo per l'app e per la home in chiaro. */
 export const FONTI_DEI_DATI: readonly { nome: string; url: string }[] = [
   { nome: 'Epoch AI', url: 'https://epoch.ai/data/ai-models' }, { nome: 'arXiv', url: 'https://arxiv.org' },
-  { nome: 'GitHub', url: 'https://github.com' }, { nome: 'Hugging Face', url: 'https://huggingface.co' }, { nome: 'The Adzuna API', url: 'https://www.adzuna.co.uk' },
+  { nome: 'GitHub', url: 'https://github.com' }, { nome: 'Hugging Face', url: 'https://huggingface.co' }, ADZUNA,
   { nome: 'Eurostat', url: 'https://ec.europa.eu/eurostat' }, { nome: 'Our World in Data', url: 'https://ourworldindata.org' },
 ];
 

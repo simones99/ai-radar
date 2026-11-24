@@ -7,6 +7,7 @@ import type { AiActItem, Dataset, NewsItem, Quadrant, Ruolo } from '../data/type
 import { CHI_ADDESTRA, faccia, percento } from './geopoliticai';
 import { slug, type Params, type TileId } from '../router';
 import { MERCATI } from './competenza';
+import { ADZUNA } from './fonti';
 import { capitalize, dayWith, daysTo, lowerFirst, monthName, monthYear, nf, parseDay, per10k, short, signedPct, ym } from './format';
 
 export interface Face { fig: string; unit: string; sent: string; scelta?: string } // scelta: quella ricordata, accanto al nome della card (Competenze · Italia)
@@ -396,7 +397,7 @@ export function doorPerTe(d: Dataset, _today?: Date, ruoloId: string | null = nu
   if (!radarDisponibile(d.radar)) return NO_DATA;
   const italia = mercato === 'italia';
   const rows = radarRows(d.radar, mercato);
-  const meta = `Radar delle competenze su arXiv, GitHub e The Adzuna API · dati ${dayWith('al', d.radar.generato)}`;
+  const meta = `Radar delle competenze su arXiv, GitHub e ${ADZUNA.nome} · dati ${dayWith('al', d.radar.generato)}`;
   // i dati incerti non fanno notizia (spec Radar 2.0, 7.4)
   const sure = rows.filter((r) => !r.incerto);
   const ruolo = d.radar.ruoli?.find((r) => r.id === ruoloId) ?? null; // un ruolo sconosciuto: come senza

@@ -3,14 +3,14 @@
 import { nextDeadline, nextReport } from '../data/derive';
 import type { Dataset } from '../data/types';
 import type { TileId } from '../router';
-import { NOMI_FONTI } from '../text/fonti';
+import { ADZUNA as ADZUNA_API, NOMI_FONTI } from '../text/fonti';
 import { CHI_ADDESTRA } from '../text/geopoliticai';
 import type { Destinazione, Fonte, FonteNonAggiornata } from './tipi';
 
 // Chi non pubblica con una licenza aperta si riusa alle sue condizioni: lo diciamo così, senza attribuirgli una licenza che non ha.
 const ARXIV: Fonte = { nome: 'arXiv', url: 'https://arxiv.org', licenza: 'metadati CC0' };
 const GITHUB: Fonte = { nome: 'GitHub', url: 'https://github.com', licenza: "termini d'uso di GitHub" };
-const ADZUNA: Fonte = { nome: 'The Adzuna API', url: 'https://www.adzuna.co.uk', licenza: "termini d'uso di Adzuna" };
+const ADZUNA: Fonte = { ...ADZUNA_API, licenza: "termini d'uso di Adzuna" };
 
 // Una voce per card: se ne manca una, è un errore di tipo.
 const TABELLA: Record<TileId, (d: Dataset, oggi: Date, elemento: string | null) => Fonte[]> = {

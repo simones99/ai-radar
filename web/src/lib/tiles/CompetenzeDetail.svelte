@@ -9,6 +9,7 @@
   import { apri, toHash } from '../router';
   import { mercato as sceltaMercato, ruolo as sceltaRuolo } from '../scelta.svelte';
   import { conAnnunci, monthName, per10k, quantiAnnunci, signedPct } from '../text/format';
+  import { ADZUNA } from '../text/fonti';
   import { headSkill, ITALIA_SENZA_DATO } from '../text/frasi';
   import { MERCATI, METODO_COMPETENZE } from '../text/competenza';
   import Detail from './Detail.svelte';
@@ -43,7 +44,7 @@
   const arxivDown = $derived(data.status?.fonti?.arxiv?.stato === 'errore' ? 'In questo giro arXiv non ha risposto: lo slancio viene dagli altri segnali. ' : '');
   const sources: Cite = [
     { t: 'Fonti: ' }, { t: 'arXiv', href: 'https://arxiv.org' }, { t: ', ' }, { t: 'GitHub', href: 'https://github.com' },
-    { t: ', ' }, { t: 'The Adzuna API', href: 'https://www.adzuna.co.uk' }, { t: '.' },
+    { t: ', ' }, { t: ADZUNA.nome, href: ADZUNA.url }, { t: '.' },
   ];
 </script>
 

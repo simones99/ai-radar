@@ -4,6 +4,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
+import { cartellaDeiDati } from '../../src/lib/data/cartellaDeiDati';
 import type { Dataset } from '../../src/lib/data/types';
 import { creaEdizione, type Edizione } from '../../src/lib/edizioni';
 import { filePubblici, foglioDellaHome } from '../../src/lib/statico';
@@ -191,7 +192,7 @@ test.describe('senza JavaScript, come un lettore di feed', () => {
 
   test('la home ha il link al feed solo se ci sono edizioni salvate nei dati, e l’indice lo stesso', async ({ page }) => {
     const cartella = (relativa: string) => fileURLToPath(new URL(relativa, import.meta.url));
-    const salvate = process.env.AI_RADAR_DATA_DIR ? `${process.env.AI_RADAR_DATA_DIR}/edizioni` : cartella('../../../data/edizioni');
+    const salvate = `${cartellaDeiDati()}/edizioni`;
     const ce = existsSync(salvate) && readdirSync(salvate).some((n) => n.endsWith('.json'));
     await page.goto('/');
     await expect(page.locator('head link[rel="alternate"][type="application/rss+xml"]')).toHaveCount(ce ? 1 : 0);

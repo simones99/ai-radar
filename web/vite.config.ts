@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig, runnerImport } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { imagetools } from 'vite-imagetools';
+import { cartellaDeiDati } from './src/lib/data/cartellaDeiDati.ts';
 import { ICONA } from './src/lib/icona.ts';
 import { indirizzoBase } from './src/lib/indirizzoBase.ts';
 import { idUmami } from './src/lib/umami.ts';
@@ -31,7 +32,7 @@ export default defineConfig(({ mode }) => ({
         if (!dir || home?.type !== 'asset') return;
         const { module } = await runnerImport<typeof import('./src/lib/statico/cartella.ts')>(fileURLToPath(new URL('./src/lib/statico/cartella.ts', import.meta.url)));
         module.scriviFilePubblici({
-          dati: process.env.AI_RADAR_DATA_DIR ?? fileURLToPath(new URL('../data', import.meta.url)),
+          dati: cartellaDeiDati(),
           uscita: dir,
           indirizzoBase: indirizzoBase(process.env.AI_RADAR_BASE_URL),
           htmlHome: String(home.source),

@@ -1,9 +1,9 @@
 // L'immagine dell'anteprima di un'edizione, fotografata con Playwright. La carica solo il comando: la build la copia soltanto, e non arriva mai fin qui.
-import { chromium, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { apriFotografo, apriModello, fontCaricato, scegliCorpo } from '../fotografia';
 import { dayWith } from '../text/format';
 import { portaConDati, type Edizione } from './tipi';
 
-const MODELLO = new URL('../../../scripts/immagine-edizione.html', import.meta.url).href;
 // il corpo delle due porte, in pixel: il più grande a cui entrano tutte e due. A 30 si legge ancora nei 400 px di un elenco di post
 const PIU_GRANDE = 72;
 const PIU_PICCOLO = 30;
@@ -14,16 +14,13 @@ const PIU_PICCOLO = 30;
  * L'interfaccia è fotografa: questa è esportata solo per le prove che un PNG non permette, dichiarate in tests/e2e/immagine.spec.ts.
  */
 export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
-  await page.setViewportSize({ width: 1200, height: 630 });
-  await page.goto(MODELLO);
+  await apriModello(page, 'immagine-edizione.html');
   const contenuto = {
     data: `Settimana ${dayWith('del', e.settimana)}`,
     // senza dati la frase è già la riga meta: non si ripete
     porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }], meta: portaConDati(p) ? p.meta : '', ripetuta: portaConDati(p) && !p.cambiata })),
-    da: PIU_GRANDE,
-    a: PIU_PICCOLO,
   };
-  const esito = await page.evaluate(async ({ data, porte, da, a }) => {
+  await page.evaluate(({ data, porte }) => {
     document.querySelector('h1')!.textContent = data;
     const articoli = [...document.querySelectorAll('article')];
     porte.forEach((porta, i) => {
@@ -38,30 +35,17 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
       if (porta.ripetuta) fondo.appendChild(document.createElement('strong')).textContent = 'Nessun cambio dalla settimana scorsa';
       if (porta.meta) fondo.appendChild(document.createElement('span')).textContent = porta.meta;
     });
-    // un file del font che manca fa fallire il caricamento; un foglio che manca lascia il font senza nessun file: tutti e due vogliono npm ci,
-    // come nell'immagine della competenza
-    const caricati = await document.fonts.load('500 40px "Bricolage Grotesque Variable"', document.body.textContent ?? '').catch(() => []);
-    if (!caricati.length) return 'font';
-    await document.fonts.ready;
-    const righe = [...document.querySelectorAll('article p')];
-    for (let corpo = da; corpo >= a; corpo--) {
-      document.documentElement.style.setProperty('--corpo', `${corpo}px`);
-      if (righe.every((r) => r.scrollHeight <= r.clientHeight && r.scrollWidth <= r.clientWidth)) return 'entra';
-    }
-    return 'porte';
   }, contenuto);
-  if (esito === 'font') throw new Error('Il font del sito non si carica: serve npm ci in web/.');
-  if (esito === 'porte') throw new Error(`Edizione ${e.settimana}: le porte non entrano nell'immagine nemmeno a ${PIU_PICCOLO} px.`);
+  if (!(await fontCaricato(page, 500))) throw new Error('Il font del sito non si carica: serve npm ci in web/.');
+  if ((await scegliCorpo(page, 'article p', PIU_GRANDE, PIU_PICCOLO)) === null) throw new Error(`Edizione ${e.settimana}: le porte non entrano nell'immagine nemmeno a ${PIU_PICCOLO} px.`);
 }
 
-/** Il PNG dell'edizione, 1200×630, in memoria: finché non è pronto sul disco non si tocca nulla. */
+/** Il PNG dell'edizione, 1200×630, in memoria: finché non è pronto sul disco non si tocca nulla. Un browser per foto: se ne fa una a giro. */
 export async function fotografa(e: Edizione): Promise<Uint8Array> {
-  const browser = await chromium.launch();
+  const fotografo = await apriFotografo(preparaImmagine);
   try {
-    const page = await browser.newPage({ colorScheme: 'light' });
-    await preparaImmagine(page, e);
-    return await page.screenshot();
+    return await fotografo.fotografa(e);
   } finally {
-    await browser.close();
+    await fotografo.chiudi();
   }
 }

@@ -3,7 +3,7 @@ import { INDICE_EDIZIONI } from '../data/load';
 import { isDay } from '../text/format';
 import { feed } from './feed';
 import { raccoltaValida } from './settimana';
-import type { OpzioniPagine } from '../statico/pagina';
+import type { OpzioniPagine } from '../pagina';
 import { archivio, paginaEdizione } from './pagine';
 import { VERSIONE, type Edizione } from './tipi';
 

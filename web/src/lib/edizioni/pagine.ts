@@ -1,9 +1,12 @@
 // Le pagine delle edizioni e l'archivio, e il testo di un'edizione che la voce del feed riusa. Lo scheletro è quello di tutte le pagine statiche.
 import { toHash, type TileId } from '../router';
-import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../statico/pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../pagina';
 import { day, dayWith } from '../text/format';
 import { cardDellaTesta, cifraGrande, porta, type LinkDellaDestinazione } from './porteECard';
-import { eCardNotizie, portaConDati, testoPorta, type Edizione, type PortaFissa } from './tipi';
+import { cifraDi } from './settimana';
+import { portaConDati, testoPorta, type CardFissa, type Edizione, type PortaFissa } from './tipi';
+
+const eCardNotizie = (c: CardFissa): boolean => cifraDi(c.id) === 'notizie';
 
 /** Il link a una card nasce dalla destinazione salvata: il router riconosce anche i vecchi id. radice: la radice del sito vista da dove sta il link. */
 const versoLaCard = (radice: string): LinkDellaDestinazione => (destinazione) =>

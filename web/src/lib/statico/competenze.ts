@@ -7,7 +7,7 @@ import { toHash } from '../router';
 import { dayWith, isDay, parseDay, per10k, quantiAnnunci, signedPct } from '../text/format';
 import { avvisoIncerto, contaPer, DATI_NON_DISPONIBILI, dettagliSlancio, ITALIA_SENZA_DATO, statoCompetenza } from '../text/frasi';
 import { COMPETENZA_SENZA_DATI, IN_CRESCITA, MERCATI, meseDelPercorso, type TestiParte, metaRepository, metaRisorsa, METODO_COMPETENZE_IN_PAGINA, PER_INIZIARE, PERCORSO } from '../text/competenza';
-import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type DateArticolo, type OpzioniPagine } from './pagina';
+import { esc, IMMAGINE, IMMAGINE_HOME, INDICE_COMPETENZE, linkEsterno, pagina, rigaFonti, type DateArticolo, type OpzioniPagine } from '../pagina';
 
 type Competenza = Radar['competenze'][number];
 

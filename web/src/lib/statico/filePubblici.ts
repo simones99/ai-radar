@@ -4,7 +4,7 @@ import { scriptUmami } from '../umami';
 import { fileDelleCompetenze, nasconoLePagineDelleCompetenze } from './competenze';
 import type { ContenutoStatico } from './contenuto';
 import { homeInChiaro } from './home';
-import type { OpzioniPagine } from './pagina';
+import type { OpzioniPagine } from '../pagina';
 import { fileDellaPrivacy } from './privacy';
 import { robots, SITEMAP, sitemap } from './sitemap';
 

@@ -84,6 +84,8 @@
   </main>
 
   <footer class="colophon">
+    <!-- sempre, anche senza dati: la guida è accanto all'app, in guida/, e non dipende dal giro -->
+    <p class="segui"><a href="guida/">La guida</a>: come si legge il radar, da dove vengono i dati e come è fatto il sito.</p>
     {#if ultimaEdizione}<p class="segui"><a href="feed.xml">Segui con RSS</a>: ogni lunedì un'edizione, senza account né email.</p>{/if}
     <section class="credits" id="crediti" aria-labelledby="crediti-h">
       <h2 id="crediti-h">Foto e fonti</h2>

@@ -52,8 +52,8 @@ ${settimana}<h1>${esc(FRASE_DI_APERTURA)}</h1>
 
 /** Le nove card divise per testa: senza confronto con la settimana prima, come la prima edizione. */
 function situazione(s: SettimanaDeiDati, verso: LinkDellaDestinazione): string {
-  return `<section>
-<h2>La situazione</h2>
+  return `<section aria-labelledby="ed-frasi">
+<h2 id="ed-frasi">La situazione</h2>
 ${s.porte.map((p) => cardDellaTesta(p, s.card, verso)).join('\n')}
 </section>`;
 }

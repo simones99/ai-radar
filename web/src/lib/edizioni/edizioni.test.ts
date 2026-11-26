@@ -1,8 +1,10 @@
 // Il modulo Edizioni dagli ingressi alle uscite: dati del FIXTURE ed edizione precedente in entrata, JSON e file del sito in uscita.
+import { within } from '@testing-library/dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
 import { parseHash } from '../router';
 import { FIXTURE } from '../test/fixtures';
+import { apri } from '../test/pagina';
 import { TESTE, TILES } from '../tiles/registry';
 import { creaEdizione, deveCreare, fileDelleEdizioni, type Destinazione, type Edizione } from '.';
 
@@ -318,39 +320,93 @@ describe('le fonti senza dati aggiornati a questo giro', () => {
   });
 });
 
+// La testa di una pagina non ha ruoli: meta, canonical, foglio di stile e script si leggono per il nome dell'attributo, su un documento di DOMParser.
+/** La testa (e tutto il resto) di una pagina, senza caricarla nel documento del test. */
+const testaDi = (html: string) => new DOMParser().parseFromString(html, 'text/html');
+/** Un tag meta, per name o per property. */
+const meta = (doc: Document, nome: string) => doc.querySelector(`meta[property="${nome}"], meta[name="${nome}"]`);
+/** Il contenuto di un tag meta, undefined se il tag non c'è. */
+const tag = (doc: Document, nome: string) => meta(doc, nome)?.getAttribute('content');
+/** I tag meta il cui property comincia così, come «article:». */
+const metaCheIniziano = (doc: Document, prefisso: string) => doc.querySelectorAll(`meta[property^="${prefisso}"]`);
+const canonical = (doc: Document) => doc.querySelector('link[rel="canonical"]')?.getAttribute('href');
+const foglio = (doc: Document) => doc.querySelector('link[rel="stylesheet"]')?.getAttribute('href');
+/** Il primo script della pagina, ovunque stia: null se non ce n'è. */
+const script = (doc: Document) => doc.querySelector('script');
+
+type Lettura = ReturnType<typeof apri>;
+/** I paragrafi di un elemento, col loro testo, nell'ordine di lettura. */
+const paragrafi = (el: HTMLElement) => within(el).queryAllByRole('paragraph').map((p) => p.textContent);
+
 describe('la pagina di un’edizione', () => {
   const BASE = 'https://altro-utente.github.io/altro-radar/';
   const FOGLIO = 'assets/index-abc123.css';
+  const PER_TE = 'Per te Su cosa formarti';
+  const ITALIA = "Per la tua organizzazione L'AI in Italia";
   const file = (...ed: Edizione[]) => fileDelleEdizioni(ed, { indirizzoBase: BASE, foglio: FOGLIO });
   const html = (e: Edizione) => file(e)[`edizioni/${e.settimana}/index.html`];
-  const pagina = (e: Edizione) => new DOMParser().parseFromString(html(e), 'text/html');
-  const titoli = (doc: Document) => [...doc.querySelectorAll('h2')].map((h) => h.textContent);
-  const link = (doc: ParentNode, nome: string | RegExp) => [...doc.querySelectorAll('a')].filter((a) => (typeof nome === 'string' ? a.textContent === nome : nome.test(a.textContent ?? '')));
-  /** La sezione che comincia con questo titolo. */
-  const sezione = (doc: Document, titolo: string) => [...doc.querySelectorAll('section')].find((s) => s.querySelector('h2')?.textContent === titolo);
+  /** La pagina caricata nel documento del test, da leggere per ruoli e nomi. */
+  const pagina = (e: Edizione) => apri(html(e));
+  /** La pagina come documento a parte, per la testa. */
+  const testa = (e: Edizione) => testaDi(html(e));
+  /** Tutto il testo della pagina. */
+  const tuttoIlTesto = (e: Edizione) => testa(e).body.textContent;
+  /** I titoli di secondo livello: quelli delle porte e delle sezioni. */
+  const titoli = (p: Lettura) => p.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+  /** La sezione che ha questo titolo, o null. */
+  const sezione = (p: Lettura, titolo: string) => p.getByRole('region', { name: titolo });
+  const forseSezione = (p: Lettura, titolo: string) => p.queryByRole('region', { name: titolo });
+  /** La riga di una card: la voce di lista con il titolo di quarto livello che porta il suo nome. */
+  const riga = (el: HTMLElement, nome: string) => within(el).getAllByRole('listitem').find((li) => within(li).queryByRole('heading', { level: 4, name: nome }))!;
+  /** Il link alla card di una riga: sta nel suo titolo. */
+  const linkAllaCard = (r: HTMLElement) => within(within(r).getByRole('heading', { level: 4 })).getByRole('link');
   const settimanaDopo: Dataset = { ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } };
+
+  it('ogni porta è un articolo che porta il nome della sua testa', () => {
+    const p = apri(html(crea()));
+    const perTe = p.getByRole('article', { name: 'Per te Su cosa formarti' });
+    expect(within(perTe).getByRole('link', { name: 'MCP entra tra le competenze da imparare ora; RAG esce' })).toHaveAttribute('href', '../../#competenze');
+    expect(p.getByRole('article', { name: "Per la tua organizzazione L'AI in Italia" })).toHaveTextContent("16% delle imprese italiane usa l'AI (UE: 20%)");
+  });
+
+  it('ogni sezione è una regione con il nome del suo titolo', () => {
+    const p = apri(html({ ...crea(), fonti_non_aggiornate: [{ id: 'eurostat', nome: 'Eurostat', ultimo_successo: null }] }));
+    expect(p.getByRole('region', { name: 'La situazione' })).toHaveTextContent('Quanto cresce il calcolo');
+    expect(p.getByRole('region', { name: 'Notizie' })).toHaveTextContent('Notizie nei 7 giorni');
+    expect(p.getByRole('region', { name: 'Senza dati aggiornati in questa edizione' })).toHaveTextContent('Eurostat');
+  });
+
+  it('nella sezione delle frasi ogni testa è un gruppo con il suo nome', () => {
+    const situazione = within(apri(html(crea())).getByRole('region', { name: 'La situazione' }));
+    expect(situazione.getByRole('group', { name: 'Per te Su cosa formarti' })).toHaveTextContent('2 competenze su 5 da imparare ora');
+    expect(situazione.getByRole('group', { name: "Per la tua organizzazione L'AI in Italia" })).toHaveTextContent("Imprese italiane che usano l'AI nel 2025");
+  });
+
+  it('tra le notizie ogni tema è una lista con il suo nome', () => {
+    const notizie = within(apri(html(crea())).getByRole('region', { name: 'Notizie' }));
+    expect(within(notizie.getByRole('list', { name: 'Prodotti' })).getByRole('link', { name: "Google says self-improving AI isn't anywhere close" })).toBeInTheDocument();
+    expect(within(notizie.getByRole('list', { name: 'Politica' })).getByRole('link', { name: 'AI Act: le linee guida sulla trasparenza' })).toBeInTheDocument();
+  });
 
   it('sta al suo indirizzo, senza JavaScript', () => {
     expect(Object.keys(file(crea()))).toContain('edizioni/2026-10-12/index.html');
-    const doc = pagina(crea());
-    expect(doc.querySelector('script')).toBeNull();
+    const doc = testa(crea());
+    expect(script(doc)).toBeNull();
     expect(html(crea())).not.toMatch(/\son\w+=/);
     expect(doc.documentElement.lang).toBe('it');
   });
 
   it('ha il titolo con la data, la descrizione con le due porte, Per te per prima, e la fonte degli annunci, e il canonical assoluto', () => {
-    const doc = pagina(crea());
+    const doc = testa(crea());
     expect(doc.title).toBe('AI Radar, settimana del 12 ott 2026');
-    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
-    expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}edizioni/2026-10-12/`);
+    expect(tag(doc, 'description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
+    expect(canonical(doc)).toBe(`${BASE}edizioni/2026-10-12/`);
     expect(html(crea())).not.toContain('simones99');
   });
 
   describe('l’anteprima di condivisione, nell’HTML grezzo', () => {
-    const tag = (doc: Document, nome: string) => doc.querySelector(`meta[property="${nome}"], meta[name="${nome}"]`)?.getAttribute('content');
-
     it('ha tutti i tag, con gli indirizzi assoluti che seguono l’indirizzo base', () => {
-      const doc = pagina(crea());
+      const doc = testa(crea());
       expect(tag(doc, 'og:title')).toBe('AI Radar, settimana del 12 ott 2026');
       expect(tag(doc, 'og:url')).toBe(`${BASE}edizioni/2026-10-12/`);
       expect(tag(doc, 'og:image')).toBe(`${BASE}edizioni/2026-10-12/anteprima.png`);
@@ -361,97 +417,96 @@ describe('la pagina di un’edizione', () => {
     });
 
     it('dice chi la scrive, senza nomi di persona: AI Radar, e il profilo GitHub di chi pubblica il sito, preso dall’indirizzo base', () => {
-      const doc = pagina(crea());
+      const doc = testa(crea());
       expect(tag(doc, 'author')).toBe('AI Radar');
       expect(tag(doc, 'article:author')).toBe('https://github.com/altro-utente');
     });
 
     it('con un indirizzo base che non è di GitHub Pages non c’è nessun profilo da indicare', () => {
       const e = crea();
-      const doc = new DOMParser().parseFromString(fileDelleEdizioni([e], { indirizzoBase: 'https://radar.esempio.org/', foglio: FOGLIO })['edizioni/2026-10-12/index.html'], 'text/html');
+      const doc = testaDi(fileDelleEdizioni([e], { indirizzoBase: 'https://radar.esempio.org/', foglio: FOGLIO })['edizioni/2026-10-12/index.html']);
       expect(tag(doc, 'author')).toBe('AI Radar');
-      expect(doc.querySelector('meta[property="article:author"]')).toBeNull();
+      expect(meta(doc, 'article:author')).toBeNull();
     });
 
     it('è pubblicata quando i dati sono stati raccolti, e modificata solo da una correzione, all’ultima', () => {
-      const doc = pagina(crea());
+      const doc = testa(crea());
       expect(tag(doc, 'article:published_time')).toBe('2026-10-15T08:00:00+00:00');
-      expect(doc.querySelector('meta[property="article:modified_time"]')).toBeNull();
+      expect(meta(doc, 'article:modified_time')).toBeNull();
       const corretta = { ...crea(), correzioni: [{ data: '2026-10-20', testo: 'Una cifra era sbagliata.' }, { data: '2026-10-27', testo: 'Un link era rotto.' }] };
-      expect(tag(pagina(corretta), 'article:modified_time')).toBe('2026-10-27');
-      expect(tag(pagina(corretta), 'article:published_time')).toBe('2026-10-15T08:00:00+00:00');
+      expect(tag(testa(corretta), 'article:modified_time')).toBe('2026-10-27');
+      expect(tag(testa(corretta), 'article:published_time')).toBe('2026-10-15T08:00:00+00:00');
     });
 
     it('la descrizione ha le due porte, Per te per prima, e la fonte degli annunci', () => {
-      expect(tag(pagina(crea()), 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
+      expect(tag(testa(crea()), 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%). Annunci: The Adzuna API.");
     });
 
     it('il testo alternativo dice cosa mostra l’immagine: data e due porte', () => {
-      expect(tag(pagina(crea()), 'og:image:alt')).toBe("AI Radar, settimana del 12 ott 2026. Per te: MCP entra tra le competenze da imparare ora; RAG esce. Per la tua organizzazione: 16% delle imprese italiane usa l'AI (UE: 20%).");
+      expect(tag(testa(crea()), 'og:image:alt')).toBe("AI Radar, settimana del 12 ott 2026. Per te: MCP entra tra le competenze da imparare ora; RAG esce. Per la tua organizzazione: 16% delle imprese italiane usa l'AI (UE: 20%).");
     });
 
     it('una porta senza dati, nell’immagine, dice «Dati non disponibili»: anche il testo alternativo', () => {
-      const doc = pagina(crea({ status: d.status, radar: d.radar }));
+      const doc = testa(crea({ status: d.status, radar: d.radar }));
       expect(tag(doc, 'og:image:alt')).toContain('Per la tua organizzazione: Dati non disponibili.');
       expect(tag(doc, 'og:description')).toBe('MCP entra tra le competenze da imparare ora; RAG esce. Annunci: The Adzuna API.');
     });
 
     it('un titolo con le virgolette non esce dall’attributo', () => {
       const e = crea();
-      const doc = pagina({ ...e, porte: [{ ...e.porte[0], titolo: [{ t: 'A "b" <script>' }] }, e.porte[1]] });
+      const doc = testa({ ...e, porte: [{ ...e.porte[0], titolo: [{ t: 'A "b" <script>' }] }, e.porte[1]] });
       expect(tag(doc, 'og:description')).toContain('A "b" <script>');
       expect(tag(doc, 'og:image:alt')).toContain('A "b" <script>');
-      expect(doc.querySelector('script')).toBeNull();
+      expect(script(doc)).toBeNull();
     });
   });
 
   it('il titolo elide l’articolo davanti a 1, 8 e 11', () => {
-    expect(pagina({ ...crea(), settimana: '2027-02-08' }).title).toBe('AI Radar, settimana dell’8 feb 2027');
+    expect(testa({ ...crea(), settimana: '2027-02-08' }).title).toBe('AI Radar, settimana dell’8 feb 2027');
   });
 
   it('una porta senza dati non entra nella descrizione', () => {
-    const doc = pagina(crea({ status: d.status, radar: d.radar }));
-    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBe('MCP entra tra le competenze da imparare ora; RAG esce. Annunci: The Adzuna API.');
+    const doc = testa(crea({ status: d.status, radar: d.radar }));
+    expect(tag(doc, 'description')).toBe('MCP entra tra le competenze da imparare ora; RAG esce. Annunci: The Adzuna API.');
   });
 
   it('la fonte degli annunci la dicono le fonti salvate delle porte con dati: senza Adzuna tra quelle, la descrizione non la nomina', () => {
     const e = crea();
-    const senzaAdzuna = pagina({ ...e, porte: [{ ...e.porte[0], fonti: [{ nome: 'arXiv', url: 'https://arxiv.org', licenza: 'metadati CC0' }] }, e.porte[1]] });
-    expect(senzaAdzuna.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
+    const senzaAdzuna = testa({ ...e, porte: [{ ...e.porte[0], fonti: [{ nome: 'arXiv', url: 'https://arxiv.org', licenza: 'metadati CC0' }] }, e.porte[1]] });
+    expect(tag(senzaAdzuna, 'description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce. 16% delle imprese italiane usa l'AI (UE: 20%).");
     // Adzuna tra le fonti di una porta senza dati, che nella descrizione non entra, non conta
-    const senzaDati = pagina({ ...e, porte: [{ ...e.porte[0], titolo: [] }, e.porte[1]] });
-    expect(senzaDati.querySelector('meta[name="description"]')?.getAttribute('content')).toBe("16% delle imprese italiane usa l'AI (UE: 20%).");
+    const senzaDati = testa({ ...e, porte: [{ ...e.porte[0], titolo: [] }, e.porte[1]] });
+    expect(tag(senzaDati, 'description')).toBe("16% delle imprese italiane usa l'AI (UE: 20%).");
   });
 
   it('usa il foglio di stile del sito, con un indirizzo relativo, e ha la testata con il ritorno alla home', () => {
-    const doc = pagina(crea());
-    expect(doc.querySelector('link[rel="stylesheet"]')?.getAttribute('href')).toBe('../../assets/index-abc123.css');
-    expect(doc.querySelector('header')?.textContent).toContain('AI Radar');
-    expect(link(doc, 'AI Radar')[0].getAttribute('href')).toBe('../../');
-    expect(link(doc, 'Edizioni')[0].getAttribute('href')).toBe('../');
+    expect(foglio(testa(crea()))).toBe('../../assets/index-abc123.css');
+    const testata = pagina(crea()).getByRole('banner');
+    expect(testata.textContent).toContain('AI Radar');
+    expect(within(testata).getByRole('link', { name: 'AI Radar' })).toHaveAttribute('href', '../../');
+    expect(within(testata).getByRole('link', { name: 'Edizioni' })).toHaveAttribute('href', '../');
   });
 
   it('dice che il sito mostra i dati di oggi e quando sono stati raccolti quelli dell’edizione', () => {
-    const t = pagina(crea()).body.textContent;
+    const t = tuttoIlTesto(crea());
     expect(t).toMatch(/il sito mostra i dati di oggi, quindi può dire altro/i);
     expect(t).toContain('15 ott 2026');
   });
 
   it('parla a chi legge: niente termini interni del progetto', () => {
     const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
-    for (const doc of [pagina(crea()), pagina(tutte)]) expect(doc.body.textContent).not.toMatch(/a questo giro|le card del sito/i);
-    const archivio = new DOMParser().parseFromString(file(crea())['edizioni/index.html'], 'text/html');
-    expect(archivio.querySelector('meta[name="description"]')?.getAttribute('content')).not.toMatch(/porte/);
+    for (const e of [crea(), tutte]) expect(tuttoIlTesto(e)).not.toMatch(/a questo giro|le card del sito/i);
+    const archivio = testaDi(file(crea())['edizioni/index.html']);
+    expect(tag(archivio, 'description')).not.toMatch(/porte/);
   });
 
   it('mostra le due porte, Per te per prima, con la meta, la fonte e il link alla card', () => {
-    const doc = pagina(crea());
-    const porte = [...doc.querySelectorAll('article')];
-    expect(porte.map((p) => p.querySelector('h2')?.textContent)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
-    const a = porte[0].querySelector('a[href^="../../#"]');
-    expect(a?.textContent).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
-    expect(a?.getAttribute('href')).toBe('../../#competenze');
-    expect(a?.querySelector('em')?.textContent).toBe('MCP');
+    const porte = pagina(crea()).getAllByRole('article');
+    expect(porte.map((p) => within(p).getByRole('heading', { level: 2 }).textContent)).toEqual([PER_TE, ITALIA]);
+    const a = within(porte[0]).getByRole('link', { name: 'MCP entra tra le competenze da imparare ora; RAG esce' });
+    expect(a.textContent).toBe('MCP entra tra le competenze da imparare ora; RAG esce');
+    expect(a).toHaveAttribute('href', '../../#competenze');
+    expect(within(a).getAllByRole('emphasis')[0].textContent).toBe('MCP');
     expect(porte[0].textContent).toContain('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     expect(porte[0].textContent).toContain('The Adzuna API');
   });
@@ -459,7 +514,7 @@ describe('la pagina di un’edizione', () => {
   it('i link alle card nascono dalla destinazione salvata, compresi elemento, parametri e vecchi id del router', () => {
     const base = crea();
     const conDest = (destinazione: Destinazione) => ({ ...base, porte: [{ ...base.porte[0], destinazione }, base.porte[1]] });
-    const href = (e: Edizione) => pagina(e).querySelector('article a')?.getAttribute('href') as string;
+    const href = (e: Edizione) => within(pagina(e).getByRole('article', { name: PER_TE })).getByRole('link', { name: 'MCP entra tra le competenze da imparare ora; RAG esce' }).getAttribute('href') as string;
     expect(href(conDest({ card: 'norme', elemento: '2026-12-02' }))).toBe('../../#norme/2026-12-02');
     expect(href(conDest({ card: 'business', elemento: null, params: { settore: 'ict', altro: 'a b' } }))).toBe('../../#business?settore=ict&altro=a%20b');
     // «politica» è il vecchio id di Norme: il link salvato resta valido perché il router lo riconosce
@@ -470,15 +525,15 @@ describe('la pagina di un’edizione', () => {
 
   describe('la prima edizione', () => {
     it('mostra tutte le frasi con il titolo «La situazione», e il conteggio delle notizie apre la loro sezione', () => {
-      const doc = pagina(crea());
-      expect(titoli(doc)).toContain('La situazione');
-      expect(titoli(doc)).not.toContain('Cambiato dalla settimana scorsa');
-      const righe = sezione(doc, 'La situazione')!.textContent;
+      const p = pagina(crea());
+      expect(titoli(p)).toContain('La situazione');
+      expect(titoli(p)).not.toContain('Cambiato dalla settimana scorsa');
+      const righe = sezione(p, 'La situazione').textContent;
       for (const c of crea().card.filter((x) => x.id !== 'notizie')) expect(righe).toContain(c.frase);
-      expect(sezione(doc, 'Notizie')!.textContent).toMatch(/2\s+Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti\./);
+      expect(sezione(p, 'Notizie').textContent).toMatch(/2\s+Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti\./);
     });
     it('non dice «Nessun cambio» accanto alle porte', () => {
-      expect(pagina(crea()).body.textContent).not.toContain('Nessun cambio qui');
+      expect(tuttoIlTesto(crea())).not.toContain('Nessun cambio qui');
     });
   });
 
@@ -487,30 +542,30 @@ describe('la pagina di un’edizione', () => {
     const conModelli = { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, frase: 'Altra.' } : c)) };
 
     it('mostra solo le frasi cambiate, sotto «Cambiato dalla settimana scorsa»', () => {
-      const doc = pagina(crea(settimanaDopo, conModelli));
-      const s = sezione(doc, 'Cambiato dalla settimana scorsa')!;
+      const p = pagina(crea(settimanaDopo, conModelli));
+      const s = sezione(p, 'Cambiato dalla settimana scorsa');
       expect(s.textContent).toContain('Quanto cresce il calcolo');
       expect(s.textContent).not.toContain("Imprese italiane che usano l'AI");
-      expect(titoli(doc)).not.toContain('La situazione');
+      expect(titoli(p)).not.toContain('La situazione');
     });
     it('una riga cambiata dice com’era', () => {
-      const doc = pagina(crea(settimanaDopo, { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, cifra: '×9,9' } : c)) }));
-      const riga = [...sezione(doc, 'Cambiato dalla settimana scorsa')!.querySelectorAll('li')].find((li) => li.textContent?.includes('Modelli e ricerca'))!;
-      expect([...riga.querySelectorAll('p')].map((p) => p.textContent)).toContain("Era ×9,9 all'anno.");
+      const p = pagina(crea(settimanaDopo, { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, cifra: '×9,9' } : c)) }));
+      expect(paragrafi(riga(sezione(p, 'Cambiato dalla settimana scorsa'), 'Modelli e ricerca'))).toContain("Era ×9,9 all'anno.");
     });
     it('dice con quale settimana si confronta, con il link a quell’edizione', () => {
-      const s = sezione(pagina(crea(settimanaDopo, conModelli)), 'Cambiato dalla settimana scorsa')!;
+      const s = sezione(pagina(crea(settimanaDopo, conModelli)), 'Cambiato dalla settimana scorsa');
       expect(s.textContent).toContain('Rispetto alla settimana del 12 ott 2026.');
-      expect(link(s, 'settimana del 12 ott 2026')[0].getAttribute('href')).toBe('../../edizioni/2026-10-12/');
+      expect(within(s).getByRole('link', { name: 'settimana del 12 ott 2026' })).toHaveAttribute('href', '../../edizioni/2026-10-12/');
     });
     it('la prima edizione non si confronta con nessuna', () => {
-      expect(pagina(crea()).body.textContent).not.toContain('Rispetto alla settimana');
+      expect(tuttoIlTesto(crea())).not.toContain('Rispetto alla settimana');
     });
     it('in fondo porta all’edizione prima e a quella dopo, quando ci sono', () => {
       const seconda = crea(settimanaDopo, prima);
       const terza = crea({ ...d, status: { ...d.status!, aggiornato: '2026-10-29T08:00:00+00:00' } }, seconda);
       const tutte = file(prima, terza, seconda);
-      const voci = (settimana: string) => [...new DOMParser().parseFromString(tutte[`edizioni/${settimana}/index.html`], 'text/html').querySelectorAll('nav[aria-label="Altre edizioni"] a')].map((a) => [a.textContent, a.getAttribute('href'), a.getAttribute('rel')]);
+      const voci = (settimana: string) => within(apri(tutte[`edizioni/${settimana}/index.html`]).getByRole('navigation', { name: 'Altre edizioni' }))
+        .getAllByRole('link').map((a) => [a.textContent, a.getAttribute('href'), a.getAttribute('rel')]);
       expect(voci('2026-10-19')).toEqual([
         ['Edizione precedente: settimana del 12 ott 2026', '../2026-10-12/', 'prev'],
         ['Edizione successiva: settimana del 26 ott 2026', '../2026-10-26/', 'next'],
@@ -519,47 +574,46 @@ describe('la pagina di un’edizione', () => {
       expect(voci('2026-10-26')).toEqual([['Edizione precedente: settimana del 19 ott 2026', '../2026-10-19/', 'prev']]);
     });
     it('un’edizione sola non ha quel blocco', () => {
-      expect(pagina(crea()).querySelector('nav[aria-label="Altre edizioni"]')).toBeNull();
+      expect(pagina(crea()).queryByRole('navigation', { name: 'Altre edizioni' })).toBeNull();
     });
     it('nomina le card invariate in una riga, ciascuna con il suo link, e Notizie non è tra loro', () => {
-      const doc = pagina(crea(settimanaDopo, conModelli));
-      const riga = [...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Invariate'))!;
+      // la prima riga «Invariate» della pagina, che è quella della prima testa
+      const [riga] = pagina(crea(settimanaDopo, conModelli)).getAllByText(/^Invariate/);
       expect(riga.textContent).toBe('Invariate: Competenze, Open source.');
-      expect(riga.querySelector('a')?.getAttribute('href')).toBe('../../#competenze');
+      expect(within(riga).getAllByRole('link')[0]).toHaveAttribute('href', '../../#competenze');
     });
     it('una settimana senza novità lo dice in testa, con il titolo giusto e senza ripeterlo sotto', () => {
       const conNotizia = { ...settimanaDopo, news: { ...d.news!, notizie: [{ titolo: 'Una notizia di questa settimana', link: 'https://esempio.org/a', data: '2026-10-20', fonte: 'Esempio', tema: 'ricerca' }] } };
-      const doc = pagina(crea(conNotizia, prima));
-      const riga = [...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Settimana senza novità'))!;
+      const p = pagina(crea(conNotizia, prima));
+      const riga = p.getByText(/^Settimana senza novità/);
       expect(riga.textContent).toBe('Settimana senza novità: le frasi sono quelle della settimana scorsa. Qui sotto le notizie.');
-      expect(riga.compareDocumentPosition(doc.querySelector('article')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-      expect(titoli(doc)).not.toContain('Cambiato dalla settimana scorsa');
-      expect(titoli(doc)).toContain('Nulla è cambiato dalla settimana scorsa');
-      expect(doc.body.textContent).not.toContain('Nessuna frase è cambiata');
-      expect(sezione(doc, 'Nulla è cambiato dalla settimana scorsa')!.textContent).toContain('Rispetto alla settimana del 12 ott 2026.');
+      expect(riga.compareDocumentPosition(p.getAllByRole('article')[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(titoli(p)).not.toContain('Cambiato dalla settimana scorsa');
+      expect(titoli(p)).toContain('Nulla è cambiato dalla settimana scorsa');
+      expect(document.body.textContent).not.toContain('Nessuna frase è cambiata');
+      expect(sezione(p, 'Nulla è cambiato dalla settimana scorsa').textContent).toContain('Rispetto alla settimana del 12 ott 2026.');
     });
     it('una settimana senza novità e senza notizie non promette notizie', () => {
-      const t = pagina(crea({ ...settimanaDopo, news: { ...d.news!, notizie: [] } }, prima)).body.textContent;
+      const t = tuttoIlTesto(crea({ ...settimanaDopo, news: { ...d.news!, notizie: [] } }, prima));
       expect(t).toContain('Settimana senza novità: le frasi sono quelle della settimana scorsa.');
       expect(t).not.toContain('Qui sotto le notizie');
     });
     it('una settimana con una sola cosa cambiata non è senza novità', () => {
-      expect(pagina(crea(settimanaDopo, conModelli)).body.textContent).not.toContain('Settimana senza novità');
+      expect(tuttoIlTesto(crea(settimanaDopo, conModelli))).not.toContain('Settimana senza novità');
       const conPorta = { ...prima, porte: [{ ...prima.porte[0], titolo: [{ t: 'Altra notizia' }] }, prima.porte[1]] };
-      const doc = pagina(crea(settimanaDopo, conPorta));
-      expect(doc.body.textContent).not.toContain('Settimana senza novità');
+      const p = pagina(crea(settimanaDopo, conPorta));
+      expect(document.body.textContent).not.toContain('Settimana senza novità');
       // la porta è cambiata, le frasi no: il titolo non può dire che è cambiato nulla
-      expect(titoli(doc)).toContain('Nessuna frase è cambiata dalla settimana scorsa');
-      expect(titoli(doc)).not.toContain('Nulla è cambiato dalla settimana scorsa');
+      expect(titoli(p)).toContain('Nessuna frase è cambiata dalla settimana scorsa');
+      expect(titoli(p)).not.toContain('Nulla è cambiato dalla settimana scorsa');
     });
     it('una porta ripetuta lo dice anche nella descrizione e nel testo alternativo dell’anteprima', () => {
-      const doc = pagina(crea(settimanaDopo, prima));
-      const tag = (nome: string) => doc.querySelector(`meta[property="${nome}"]`)?.getAttribute('content');
-      expect(tag('og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio). 16% delle imprese italiane usa l'AI (UE: 20%) (nessun cambio). Annunci: The Adzuna API.");
-      expect(tag('og:image:alt')).toContain('Per te: MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio).');
+      const doc = testa(crea(settimanaDopo, prima));
+      expect(tag(doc, 'og:description')).toBe("MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio). 16% delle imprese italiane usa l'AI (UE: 20%) (nessun cambio). Annunci: The Adzuna API.");
+      expect(tag(doc, 'og:image:alt')).toContain('Per te: MCP entra tra le competenze da imparare ora; RAG esce (nessun cambio).');
     });
     it('una porta ripetuta resta visibile e dice «Nessun cambio qui dalla settimana scorsa»', () => {
-      const [perTe, italia] = [...pagina(crea(settimanaDopo, prima)).querySelectorAll('article')];
+      const [perTe, italia] = pagina(crea(settimanaDopo, prima)).getAllByRole('article');
       expect(perTe.textContent).toContain('MCP entra tra le competenze');
       expect(perTe.textContent).toContain('Nessun cambio qui dalla settimana scorsa');
       expect(italia.textContent).toContain('Nessun cambio qui dalla settimana scorsa');
@@ -581,21 +635,21 @@ describe('la pagina di un’edizione', () => {
       }
     });
     it('le frasi cambiate stanno sotto «Cambiato dall’edizione del…», con la data della precedente', () => {
-      const doc = pagina(crea(dueSettimaneDopo, conModelli));
-      expect(titoli(doc)).toContain('Cambiato dall’edizione del 12 ott 2026');
+      const p = pagina(crea(dueSettimaneDopo, conModelli));
+      expect(titoli(p)).toContain('Cambiato dall’edizione del 12 ott 2026');
     });
     it('senza novità il titolo è «Nulla è cambiato dall’edizione del…»', () => {
       expect(titoli(pagina(crea(dueSettimaneDopo, prima)))).toContain('Nulla è cambiato dall’edizione del 12 ott 2026');
     });
     it('senza novità la riga in testa dice che le frasi sono quelle dell’edizione del…', () => {
-      const t = pagina(crea({ ...dueSettimaneDopo, news: { ...d.news!, notizie: [] } }, prima)).body.textContent;
+      const t = tuttoIlTesto(crea({ ...dueSettimaneDopo, news: { ...d.news!, notizie: [] } }, prima));
       expect(t).toContain('Settimana senza novità: le frasi sono quelle dell’edizione del 12 ott 2026.');
     });
     it('una porta ripetuta dice «Nessun cambio qui dall’edizione del…», con l’elisione della data', () => {
-      const [perTe, italia] = [...pagina(crea(dueSettimaneDopo, prima)).querySelectorAll('article')];
+      const [perTe, italia] = pagina(crea(dueSettimaneDopo, prima)).getAllByRole('article');
       expect(perTe.textContent).toContain('Nessun cambio qui dall’edizione del 12 ott 2026');
       expect(italia.textContent).toContain('Nessun cambio qui dall’edizione del 12 ott 2026');
-      const [daGiugno] = [...pagina(crea(dueSettimaneDopo, { ...prima, settimana: '2026-06-08' })).querySelectorAll('article')];
+      const [daGiugno] = pagina(crea(dueSettimaneDopo, { ...prima, settimana: '2026-06-08' })).getAllByRole('article');
       expect(daGiugno.textContent).toContain('Nessun cambio qui dall’edizione dell’8 giu 2026');
     });
     it('con la porta cambiata e le frasi no il titolo è «Nessuna frase è cambiata dall’edizione del…»', () => {
@@ -605,119 +659,125 @@ describe('la pagina di un’edizione', () => {
   });
 
   describe('le due teste', () => {
-    const gruppi = (doc: Document, titolo: string) => [...sezione(doc, titolo)!.querySelectorAll('h3')].map((h) => h.textContent);
-    const gruppo = (doc: Document, titolo: string, testa: string) => [...sezione(doc, titolo)!.querySelectorAll('div')].find((g) => g.querySelector('h3')?.textContent?.startsWith(testa))!;
+    /** I nomi delle teste di una sezione, dai loro titoli di terzo livello. */
+    const gruppi = (p: Lettura, titolo: string) => within(sezione(p, titolo)).getAllByRole('heading', { level: 3 }).map((h) => h.textContent);
+    /** Il gruppo di una testa in una sezione. */
+    const gruppo = (p: Lettura, titolo: string, testa: string) => within(sezione(p, titolo)).getByRole('group', { name: testa });
 
     it('le righe stanno sotto la loro testa, con le etichette e l’ordine della home', () => {
-      const doc = pagina(crea());
-      expect(gruppi(doc, 'La situazione')).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
-      const nomi = (testa: string) => [...gruppo(doc, 'La situazione', testa).querySelectorAll('h4')].map((h) => h.textContent);
-      expect(nomi('Per te')).toEqual(['Competenze', 'Modelli e ricerca', 'Open source']);
-      expect(nomi('Per la tua')).toEqual(['GeopoliticAI', 'Business', 'Persone e lavoro', 'Norme', 'Rapporti']);
+      const p = pagina(crea());
+      expect(gruppi(p, 'La situazione')).toEqual([PER_TE, ITALIA]);
+      const nomi = (testa: string) => within(gruppo(p, 'La situazione', testa)).getAllByRole('heading', { level: 4 }).map((h) => h.textContent);
+      expect(nomi(PER_TE)).toEqual(['Competenze', 'Modelli e ricerca', 'Open source']);
+      expect(nomi(ITALIA)).toEqual(['GeopoliticAI', 'Business', 'Persone e lavoro', 'Norme', 'Rapporti']);
     });
     it('le card invariate stanno nella loro testa: chi legge la sua parte le trova lì', () => {
       const prima = crea();
-      const doc = pagina(crea(settimanaDopo, { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, frase: 'Altra.' } : c)) }));
-      const invariate = (testa: string) => [...gruppo(doc, 'Cambiato dalla settimana scorsa', testa).querySelectorAll('p')].find((p) => p.textContent?.startsWith('Invariate'))?.textContent;
-      expect(invariate('Per te')).toBe('Invariate: Competenze, Open source.');
-      expect(invariate('Per la tua')).toBe('Invariate: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.');
+      const p = pagina(crea(settimanaDopo, { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, frase: 'Altra.' } : c)) }));
+      const invariate = (testa: string) => within(gruppo(p, 'Cambiato dalla settimana scorsa', testa)).queryByText(/^Invariate/)?.textContent;
+      expect(invariate(PER_TE)).toBe('Invariate: Competenze, Open source.');
+      expect(invariate(ITALIA)).toBe('Invariate: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.');
     });
     it('una card senza dati lo dice nella sua testa', () => {
-      const doc = pagina(crea({ ...d, epoch: undefined }));
-      expect(gruppo(doc, 'La situazione', 'Per te').textContent).toContain('Dati non disponibili: Modelli e ricerca.');
+      const p = pagina(crea({ ...d, epoch: undefined }));
+      expect(gruppo(p, 'La situazione', PER_TE).textContent).toContain('Dati non disponibili: Modelli e ricerca.');
     });
     it('una testa con tutte le card senza dati resta, e lo dice', () => {
-      const doc = pagina(crea({ status: d.status, radar: d.radar }));
-      expect(gruppo(doc, 'La situazione', 'Per la tua').textContent).toContain('Dati non disponibili: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.');
+      const p = pagina(crea({ status: d.status, radar: d.radar }));
+      expect(gruppo(p, 'La situazione', ITALIA).textContent).toContain('Dati non disponibili: GeopoliticAI, Business, Persone e lavoro, Norme, Rapporti.');
     });
   });
 
   describe('cifra e frase di una riga', () => {
-    const riga = (doc: Document, nome: string) => [...doc.querySelectorAll('li')].find((li) => li.querySelector('h4')?.textContent === nome)!;
-    const paragrafi = (el: Element) => [...el.querySelectorAll('p')].map((p) => p.textContent);
-
     it('stanno in due paragrafi, come i due livelli della home: senza foglio di stile non si incollano', () => {
-      const doc = pagina(crea());
-      expect(paragrafi(riga(doc, 'Business')).slice(0, 2)).toEqual(['16%', "Imprese italiane che usano l'AI nel 2025. UE: 20%."]);
-      expect(paragrafi(riga(doc, 'Modelli e ricerca')).slice(0, 2)).toEqual(["×4,8 all'anno", 'Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.']);
+      const principale = pagina(crea()).getByRole('main');
+      expect(paragrafi(riga(principale, 'Business')).slice(0, 2)).toEqual(['16%', "Imprese italiane che usano l'AI nel 2025. UE: 20%."]);
+      expect(paragrafi(riga(principale, 'Modelli e ricerca')).slice(0, 2)).toEqual(["×4,8 all'anno", 'Quanto cresce il calcolo per addestrare i modelli più grandi, dal 2018.']);
     });
     it('Competenze ha già il numero nella frase, e non lo ripete: come nella home', () => {
       expect(TILES.filter((t) => t.senzaCifra).map((t) => t.id)).toEqual(['competenze']);
-      const r = riga(pagina(crea()), 'Competenze');
+      const r = riga(pagina(crea()).getByRole('main'), 'Competenze');
       expect(paragrafi(r)[0]).toBe("2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.");
       expect(r.textContent).not.toContain('2 su 5');
     });
     it('il conteggio delle notizie sta in due paragrafi anche lui', () => {
-      const ps = [...sezione(pagina(crea()), 'Notizie')!.querySelectorAll('p')].map((p) => p.textContent);
+      const ps = paragrafi(sezione(pagina(crea()), 'Notizie'));
       expect(ps.slice(0, 2)).toEqual(['2', 'Notizie nei 7 giorni fino al 15 ott 2026, da 2 fonti.']);
     });
   });
 
   it('una porta senza dati dice «Dati non disponibili», senza link e senza fonte', () => {
-    const doc = pagina(crea({ status: d.status, radar: d.radar }));
-    const italia = doc.querySelectorAll('article')[1];
+    const italia = pagina(crea({ status: d.status, radar: d.radar })).getByRole('article', { name: ITALIA });
     expect(italia.textContent).toContain('Dati non disponibili');
-    expect(italia.querySelector('a')).toBeNull();
+    expect(within(italia).queryAllByRole('link')).toEqual([]);
     expect(italia.textContent).not.toContain('Nessun cambio');
   });
 
   it('una card senza dati sta in una riga a parte', () => {
-    const doc = pagina(crea({ ...d, epoch: undefined }));
-    expect([...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Dati non'))?.textContent).toBe('Dati non disponibili: Modelli e ricerca.');
+    const [riga] = pagina(crea({ ...d, epoch: undefined })).getAllByText(/^Dati non/);
+    expect(riga.textContent).toBe('Dati non disponibili: Modelli e ricerca.');
   });
 
   it('ogni riga ha fonte, licenza e link alla card', () => {
-    const doc = pagina(crea());
-    const righe = [...sezione(doc, 'La situazione')!.querySelectorAll('li')];
+    const righe = within(sezione(pagina(crea()), 'La situazione')).getAllByRole('listitem');
     expect(righe).toHaveLength(8);
     for (const r of righe) {
       expect(r.textContent).toMatch(/Font[ei]: .+\(.+\)/);
-      expect(r.querySelector('a[href^="../../#"]')).not.toBeNull();
+      expect(linkAllaCard(r).getAttribute('href')).toMatch(/^\.\.\/\.\.\/#/);
     }
     const competenze = righe[0];
     expect(competenze.textContent).toContain("The Adzuna API (termini d'uso di Adzuna)");
-    expect(competenze.querySelector('a[href^="../../#"]')?.textContent).toBe('Competenze');
+    expect(linkAllaCard(competenze).textContent).toBe('Competenze');
   });
 
   it('una licenza Creative Commons è un link al suo testo, le altre condizioni restano testo', () => {
-    const righe = [...sezione(pagina(crea()), 'La situazione')!.querySelectorAll('li')];
-    const riga = (nome: string) => righe.find((r) => r.querySelector('a[href^="../../#"]')?.textContent === nome)!;
-    expect(riga('Modelli e ricerca').querySelector('a[href="https://creativecommons.org/licenses/by/4.0/"]')?.textContent).toBe('CC BY 4.0');
-    expect(riga('Modelli e ricerca').textContent).toContain('Epoch AI (CC BY 4.0)');
-    expect(riga('Competenze').querySelector('a[href*="creativecommons.org"]')).toBeNull();
+    const situazione = sezione(pagina(crea()), 'La situazione');
+    const modelli = riga(situazione, 'Modelli e ricerca');
+    const ccBy = within(modelli).getByRole('link', { name: 'CC BY 4.0' });
+    expect(ccBy).toHaveAttribute('href', 'https://creativecommons.org/licenses/by/4.0/');
+    expect(ccBy.textContent).toBe('CC BY 4.0');
+    expect(modelli.textContent).toContain('Epoch AI (CC BY 4.0)');
+    const indirizzi = within(riga(situazione, 'Competenze')).getAllByRole('link').map((a) => a.getAttribute('href'));
+    expect(indirizzi.filter((h) => h?.includes('creativecommons.org'))).toEqual([]);
 
     const conND = crea();
     const conLicenzaND = { ...conND, card: conND.card.map((c) => (c.id === 'modelli' ? { ...c, fonti: c.fonti.map((f) => ({ ...f, licenza: 'CC BY-ND 4.0' })) } : c)) };
-    expect(sezione(pagina(conLicenzaND), 'La situazione')!.querySelector('a[href="https://creativecommons.org/licenses/by-nd/4.0/"]')?.textContent).toBe('CC BY-ND 4.0');
+    const ccByNd = within(sezione(pagina(conLicenzaND), 'La situazione')).getByRole('link', { name: 'CC BY-ND 4.0' });
+    expect(ccByNd).toHaveAttribute('href', 'https://creativecommons.org/licenses/by-nd/4.0/');
+    expect(ccByNd.textContent).toBe('CC BY-ND 4.0');
   });
 
   describe('la sezione delle notizie', () => {
     it('spiega la regola, porta alla card Notizie e dà titolo, fonte, data e link di ogni voce, sotto il nome del tema', () => {
-      const s = sezione(pagina(crea()), 'Notizie')!;
+      const s = sezione(pagina(crea()), 'Notizie');
       expect(s.textContent).toContain('non sono una classifica');
-      expect(s.querySelector('a[href="../../#notizie"]')).not.toBeNull();
-      expect([...s.querySelectorAll('h3')].map((h) => h.textContent)).toEqual(['Politica', 'Prodotti']);
-      const a = [...s.querySelectorAll('a')].find((x) => x.getAttribute('href') === 'https://the-decoder.com/a')!;
-      expect(a.textContent).toBe("Google says self-improving AI isn't anywhere close");
-      expect(a.closest('li')?.textContent).toContain('The Decoder');
-      expect(a.closest('li')?.textContent).toContain('14 ott 2026');
+      expect(within(s).getByRole('link', { name: 'Le altre notizie, nella card Notizie' })).toHaveAttribute('href', '../../#notizie');
+      expect(within(s).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['Politica', 'Prodotti']);
+      const titolo = "Google says self-improving AI isn't anywhere close";
+      const a = within(s).getByRole('link', { name: titolo });
+      expect(a).toHaveAttribute('href', 'https://the-decoder.com/a');
+      expect(a.textContent).toBe(titolo);
+      // la voce della lista che contiene il link
+      const voce = within(s).getAllByRole('listitem').find((li) => within(li).queryByRole('link', { name: titolo }))!;
+      expect(voce.textContent).toContain('The Decoder');
+      expect(voce.textContent).toContain('14 ott 2026');
       expect(s.textContent).toMatch(/solo titolo, data e link/i);
     });
     it('una settimana senza notizie lo dice, senza temi', () => {
-      const s = sezione(pagina(crea({ ...d, news: { ...d.news!, notizie: [] } })), 'Notizie')!;
+      const s = sezione(pagina(crea({ ...d, news: { ...d.news!, notizie: [] } })), 'Notizie');
       expect(s.textContent).toContain('Nessuna notizia nei 7 giorni fino al 15 ott 2026.');
       expect(s.textContent).not.toContain('0 Nessuna');
-      expect(s.querySelector('h3')).toBeNull();
+      expect(within(s).queryAllByRole('heading', { level: 3 })).toEqual([]);
     });
     it('il conteggio è la frase salvata nel file fisso: una correzione a quella frase si vede', () => {
       const e = crea();
       const corretta = { ...e, card: e.card.map((c) => (c.id === 'notizie' ? { ...c, cifra: '3', frase: 'Notizie corrette a mano, da 3 fonti.' } : c)) };
-      const t = sezione(pagina(corretta), 'Notizie')!.textContent;
+      const t = sezione(pagina(corretta), 'Notizie').textContent;
       expect(t).toMatch(/3\s+Notizie corrette a mano, da 3 fonti\./);
       expect(t).not.toContain('nei 7 giorni');
     });
     it('senza il file delle notizie dice «Dati non disponibili»', () => {
-      expect(sezione(pagina(crea({ ...d, news: undefined })), 'Notizie')!.textContent).toContain('Dati non disponibili');
+      expect(sezione(pagina(crea({ ...d, news: undefined })), 'Notizie').textContent).toContain('Dati non disponibili');
     });
   });
 
@@ -726,26 +786,31 @@ describe('la pagina di un’edizione', () => {
       const e = crea();
       return { ...e, notizie: { ...e.notizie, temi: [{ tema: 'ricerca', nome: 'Ricerca', voci: [{ titolo, link, data: '2026-10-14', fonte }] }] } };
     };
+    /** La lista delle voci del tema, l'unica della sezione Notizie in queste edizioni. */
+    const voci = (e: Edizione) => within(sezione(pagina(e), 'Notizie')).getByRole('list', { name: 'Ricerca' });
+    /** I link dentro le voci. */
+    const linkDelleVoci = (e: Edizione) => within(voci(e)).queryAllByRole('link');
+
     it('< e & nei titoli restano testo, in un titolo e in una fonte', () => {
       const e = conVoce('<img src=x onerror=alert(1)> A & B', 'https://esempio.org/?a=1&b=2');
-      const doc = pagina(e);
-      const a = sezione(doc, 'Notizie')!.querySelector('li a')!;
+      const [a] = linkDelleVoci(e);
       expect(a.textContent).toBe('<img src=x onerror=alert(1)> A & B');
-      expect(a.querySelector('img')).toBeNull();
-      expect(a.getAttribute('href')).toBe('https://esempio.org/?a=1&b=2');
+      expect(within(a).queryByRole('img')).toBeNull();
+      expect(a).toHaveAttribute('href', 'https://esempio.org/?a=1&b=2');
       expect(html(e)).toContain('&lt;img src=x');
       expect(html(e)).toContain('A &amp; B');
       expect(html(e)).toContain('F&lt;1&gt;');
     });
     it('le virgolette non escono da un attributo', () => {
-      const a = sezione(pagina(conVoce('t', 'https://esempio.org/"><script>x</script>')), 'Notizie')!.querySelector('li a');
-      expect(a?.getAttribute('href')).toBe('https://esempio.org/"><script>x</script>');
-      expect(pagina(conVoce('t', 'https://esempio.org/"><script>x</script>')).querySelector('script')).toBeNull();
+      const e = conVoce('t', 'https://esempio.org/"><script>x</script>');
+      const [a] = linkDelleVoci(e);
+      expect(a).toHaveAttribute('href', 'https://esempio.org/"><script>x</script>');
+      expect(script(testa(e))).toBeNull();
     });
     it.each(['javascript:alert(1)', 'JAVASCRIPT:alert(1)', ' javascript:alert(1)', 'data:text/html,x', 'vbscript:x', 'ftp://esempio.org/x', '/relativo', ''])('il link «%s» non diventa un link: la voce resta, come testo', (link) => {
-      const s = sezione(pagina(conVoce('Un titolo', link)), 'Notizie')!;
-      expect(s.querySelector('ul')?.textContent).toContain('Un titolo');
-      expect(s.querySelector('li a')).toBeNull();
+      const lista = voci(conVoce('Un titolo', link));
+      expect(lista.textContent).toContain('Un titolo');
+      expect(within(lista).queryAllByRole('link')).toEqual([]);
     });
     it('anche l’indirizzo di una fonte passa dallo stesso controllo', () => {
       const e = crea();
@@ -753,25 +818,24 @@ describe('la pagina di un’edizione', () => {
       expect(html(f)).not.toContain('javascript:');
     });
     it('le maiuscole di http e https sono ammesse', () => {
-      expect(sezione(pagina(conVoce('t', 'HTTPS://esempio.org/x')), 'Notizie')!.querySelector('li a')).not.toBeNull();
+      expect(linkDelleVoci(conVoce('t', 'HTTPS://esempio.org/x'))).not.toEqual([]);
     });
   });
 
   describe('le correzioni', () => {
     const corretta = (...correzioni: Edizione['correzioni']): Edizione => ({ ...crea(), correzioni });
     it('senza correzioni la pagina non ne parla', () => {
-      expect(pagina(crea()).body.textContent).not.toContain('Corretta');
+      expect(tuttoIlTesto(crea())).not.toContain('Corretta');
     });
     it('mostrano «Corretta il…» e il loro testo, neutralizzato', () => {
-      const doc = pagina(corretta({ data: '2026-10-20', testo: 'Il dato <b>Eurostat</b> era sbagliato.' }, { data: '2026-11-08', testo: 'Seconda.' }));
-      const t = doc.body.textContent;
+      const t = tuttoIlTesto(corretta({ data: '2026-10-20', testo: 'Il dato <b>Eurostat</b> era sbagliato.' }, { data: '2026-11-08', testo: 'Seconda.' }));
       expect(t).toContain('Corretta il 20 ott 2026: Il dato <b>Eurostat</b> era sbagliato.');
       expect(t).toContain('Corretta l’8 nov 2026: Seconda.');
     });
     it('compaiono in testa, prima delle porte', () => {
-      const doc = pagina(corretta({ data: '2026-10-20', testo: 'Testo.' }));
-      const correzione = [...doc.querySelectorAll('p')].find((p) => p.textContent?.startsWith('Corretta'))!;
-      expect(correzione.compareDocumentPosition(doc.querySelector('article')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const p = pagina(corretta({ data: '2026-10-20', testo: 'Testo.' }));
+      const correzione = p.getByText(/^Corretta/);
+      expect(correzione.compareDocumentPosition(p.getAllByRole('article')[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
     it('una correzione senza una data valida ferma il sito con un messaggio chiaro', () => {
       expect(() => file(corretta({ data: 'ieri', testo: 'Testo.' }))).toThrow(/2026-10-12.*correzion.*data/i);
@@ -796,15 +860,15 @@ describe('la pagina di un’edizione', () => {
   });
 
   it('dice quali fonti non hanno dati aggiornati, in errore o non configurate, con una frase vera per tutte e due, e l’ultimo dato che hanno dato', () => {
-    const s = sezione(pagina(crea()), 'Senza dati aggiornati in questa edizione')!;
+    const s = sezione(pagina(crea()), 'Senza dati aggiornati in questa edizione');
     expect(s.textContent).toContain('arXiv');
     expect(s.textContent).toContain('8 ott 2026');
     expect(s.textContent).toContain('Adzuna');
-    expect(pagina(crea()).body.textContent).not.toMatch(/hanno risposto/);
+    expect(tuttoIlTesto(crea())).not.toMatch(/hanno risposto/);
     const tutte = crea({ ...d, status: { aggiornato: d.status!.aggiornato, fonti: {} } });
-    expect(pagina(tutte).body.textContent).toContain('In questa edizione tutte le fonti hanno dati aggiornati.');
-    expect(pagina(tutte).body.textContent).not.toMatch(/hanno risposto/);
-    expect(sezione(pagina(tutte), 'Senza dati aggiornati in questa edizione')).toBeUndefined();
+    expect(tuttoIlTesto(tutte)).toContain('In questa edizione tutte le fonti hanno dati aggiornati.');
+    expect(tuttoIlTesto(tutte)).not.toMatch(/hanno risposto/);
+    expect(forseSezione(pagina(tutte), 'Senza dati aggiornati in questa edizione')).toBeNull();
   });
 
   it('non dice «questa settimana», che riletta più tardi sarebbe un’altra settimana (glossario, Settimana dei dati)', () => {
@@ -826,70 +890,75 @@ describe('l’archivio', () => {
   const opzioni = { indirizzoBase: BASE, foglio: 'assets/index-abc123.css' };
   const prima = creaEdizione(d, null) as Edizione;
   const seconda = creaEdizione({ ...d, status: { ...d.status!, aggiornato: '2026-10-22T08:00:00+00:00' } }, prima) as Edizione;
-  const archivio = (...ed: Edizione[]) => new DOMParser().parseFromString(fileDelleEdizioni(ed, opzioni)['edizioni/index.html'], 'text/html');
+  const html = (...ed: Edizione[]) => fileDelleEdizioni(ed, opzioni)['edizioni/index.html'];
+  /** L'archivio caricato nel documento del test, da leggere per ruoli e nomi. */
+  const archivio = (...ed: Edizione[]) => apri(html(...ed));
+  /** L'archivio come documento a parte, per la testa. */
+  const testa = (...ed: Edizione[]) => testaDi(html(...ed));
+  /** Le voci dell'archivio: le voci di lista del contenuto principale. */
+  const voci = (...ed: Edizione[]) => within(archivio(...ed).getByRole('main')).getAllByRole('listitem');
 
   it('senza edizioni non esistono né pagine né archivio', () => {
     expect(fileDelleEdizioni([], opzioni)).toEqual({});
   });
 
   it('elenca tutte le edizioni, dalla più recente, qualunque sia l’ordine in cui arrivano, ciascuna con il suo link', () => {
-    const doc = archivio(prima, seconda);
-    const voci = [...doc.querySelectorAll('main li')];
-    expect(voci.map((v) => v.querySelector('h2')?.textContent)).toEqual(['Settimana del 19 ott 2026', 'Settimana del 12 ott 2026']);
-    expect(voci.map((v) => v.querySelector('a')?.getAttribute('href'))).toEqual(['2026-10-19/', '2026-10-12/']);
+    const titoli = voci(prima, seconda).map((v) => within(v).getByRole('heading', { level: 2 }));
+    expect(titoli.map((h) => h.textContent)).toEqual(['Settimana del 19 ott 2026', 'Settimana del 12 ott 2026']);
+    expect(titoli.map((h) => within(h).getByRole('link').getAttribute('href'))).toEqual(['2026-10-19/', '2026-10-12/']);
   });
 
   it('ogni voce ha la data e le due porte, Per te per prima', () => {
-    const t = archivio(prima).querySelector('main li')!.textContent;
+    const t = voci(prima)[0].textContent;
     expect(t).toMatch(/Per te[^]*MCP entra tra le competenze[^]*Per la tua organizzazione[^]*16% delle imprese italiane/);
   });
 
   it('una porta ripetuta dice che non è cambiata, e una nuova no', () => {
-    const [nuova, ripetuta] = [...archivio(prima, seconda).querySelectorAll('main li')].reverse();
+    const [nuova, ripetuta] = voci(prima, seconda).reverse();
     expect(ripetuta.textContent).toContain('RAG esce (nessun cambio)');
     expect(nuova.textContent).not.toContain('nessun cambio');
   });
 
   it('una porta senza dati lo dice anche qui', () => {
     const conVuota = creaEdizione({ status: d.status, radar: d.radar }, null) as Edizione;
-    expect(archivio(conVuota).querySelector('main li')!.textContent).toContain('Dati non disponibili');
+    expect(voci(conVuota)[0].textContent).toContain('Dati non disponibili');
   });
 
   it('non perde nessuna edizione', () => {
     const tante = Array.from({ length: 60 }, (_, i) => ({ ...prima, settimana: `20${10 + i}-01-04` }));
-    expect(archivio(...tante).querySelectorAll('main li')).toHaveLength(60);
+    expect(voci(...tante)).toHaveLength(60);
   });
 
   it('ha titolo, descrizione, canonical, testata e tema del sito, e nessun JavaScript', () => {
-    const doc = archivio(prima);
+    const doc = testa(prima);
     expect(doc.title).toBe('AI Radar, le edizioni');
-    expect(doc.querySelector('h1')?.textContent).toBe('Edizioni');
-    expect(doc.querySelector('meta[name="description"]')?.getAttribute('content')).toBeTruthy();
-    expect(doc.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(`${BASE}edizioni/`);
-    expect(doc.querySelector('link[rel="stylesheet"]')?.getAttribute('href')).toBe('../assets/index-abc123.css');
-    expect(doc.querySelector('script')).toBeNull();
-    expect([...doc.querySelectorAll('header a')][0].getAttribute('href')).toBe('../');
+    expect(tag(doc, 'description')).toBeTruthy();
+    expect(canonical(doc)).toBe(`${BASE}edizioni/`);
+    expect(foglio(doc)).toBe('../assets/index-abc123.css');
+    expect(script(doc)).toBeNull();
+    const p = archivio(prima);
+    expect(p.getByRole('heading', { level: 1 }).textContent).toBe('Edizioni');
+    expect(within(p.getByRole('banner')).getAllByRole('link')[0]).toHaveAttribute('href', '../');
   });
 
   it('ha i suoi tag di anteprima, con l’immagine fissa della home e gli indirizzi assoluti', () => {
-    const doc = archivio(prima);
-    const tag = (nome: string) => doc.querySelector(`meta[property="${nome}"], meta[name="${nome}"]`)?.getAttribute('content');
-    expect(tag('og:title')).toBe('AI Radar, le edizioni');
-    expect(tag('og:description')).toBe(doc.querySelector('meta[name="description"]')?.getAttribute('content'));
-    expect(tag('og:url')).toBe(`${BASE}edizioni/`);
-    expect(tag('og:image')).toBe(`${BASE}anteprima.png`);
-    expect(tag('og:image:alt')).toMatch(/^Il marchio di AI Radar/);
-    expect(tag('og:type')).toBe('website');
-    expect(tag('og:locale')).toBe('it_IT');
-    expect(tag('og:site_name')).toBe('AI Radar');
-    expect(tag('twitter:card')).toBe('summary_large_image');
-    expect(tag('author')).toBe('AI Radar');
-    expect(doc.querySelector('meta[property^="article:"]')).toBeNull();
+    const doc = testa(prima);
+    expect(tag(doc, 'og:title')).toBe('AI Radar, le edizioni');
+    expect(tag(doc, 'og:description')).toBe(tag(doc, 'description'));
+    expect(tag(doc, 'og:url')).toBe(`${BASE}edizioni/`);
+    expect(tag(doc, 'og:image')).toBe(`${BASE}anteprima.png`);
+    expect(tag(doc, 'og:image:alt')).toMatch(/^Il marchio di AI Radar/);
+    expect(tag(doc, 'og:type')).toBe('website');
+    expect(tag(doc, 'og:locale')).toBe('it_IT');
+    expect(tag(doc, 'og:site_name')).toBe('AI Radar');
+    expect(tag(doc, 'twitter:card')).toBe('summary_large_image');
+    expect(tag(doc, 'author')).toBe('AI Radar');
+    expect(metaCheIniziano(doc, 'article:')).toHaveLength(0);
   });
 
   it('i testi esterni sono neutralizzati anche qui', () => {
     const e = { ...prima, porte: [{ ...prima.porte[0], titolo: [{ t: '<script>x</script>' }] }, prima.porte[1]] };
-    expect(archivio(e).querySelector('script')).toBeNull();
+    expect(script(testa(e))).toBeNull();
   });
 });
 

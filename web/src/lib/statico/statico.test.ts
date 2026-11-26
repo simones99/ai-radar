@@ -6,6 +6,7 @@ import { creaEdizione, fileDelleEdizioni, type Edizione } from '../edizioni';
 import { indirizzoBase } from '../indirizzoBase';
 import { ID, pagine, piede, righeSulContatore, scriptDiUmami } from '../test/contatore';
 import { FIXTURE } from '../test/fixtures';
+import { apri, pulito } from '../test/pagina';
 import { FONTI_DEI_DATI } from '../text/fonti';
 import { filePubblici, type ContenutoStatico, type OpzioniFilePubblici } from '.';
 
@@ -65,39 +66,44 @@ describe('i file pubblici del sito', () => {
 
 describe('la home in chiaro', () => {
   const FRASE_DI_APERTURA = "Su cosa formarti e cosa succede all'AI in Italia, con dati aperti aggiornati ogni lunedì.";
-  /** La mappa con la home della build, e la sua voce index.html letta come la legge un motore: senza eseguire niente. */
-  const conHome = (c: ContenutoStatico) => {
-    const file = filePubblici(c, opzioni);
-    return { file, doc: new DOMParser().parseFromString(file['index.html'], 'text/html') };
+  /** La mappa dei file pubblici con la home della build. */
+  const fileDi = (c: ContenutoStatico) => filePubblici(c, opzioni);
+  /**
+   * La home della mappa letta come la legge un lettore di schermo, senza eseguire niente, con la mappa da cui viene e il testo
+   * della pagina di fila. Il corpo della home è il contenitore dell'app e il suo script, vuoto: il testo è quello della home in chiaro.
+   * Ogni lettura sostituisce la pagina del test: si finisce di leggere una home prima di aprirne un'altra.
+   */
+  const leggi = (c: ContenutoStatico) => {
+    const file = fileDi(c);
+    return Object.assign(apri(file['index.html']), { file, testo: pulito(document.body.textContent) });
   };
-  const leggi = (c: ContenutoStatico) => conHome(c).doc;
-  /** La home in chiaro: quello che sta nel contenitore dell'app. */
-  const testo = (doc: Document) => doc.getElementById('app')!;
-  const pulito = (s: string | null) => (s ?? '').replace(/\s+/g, ' ').trim();
-  const titoli = (doc: Document, livello: number) => [...testo(doc).querySelectorAll(`h${livello}`)].map((h) => pulito(h.textContent));
+  type Home = ReturnType<typeof leggi>;
+  const titoli = (home: Home, livello: number) => home.queryAllByRole('heading', { level: livello }).map((h) => pulito(h.textContent));
+  /** Dei link, il testo e dove portano. */
+  const coppie = (link: HTMLElement[]): [string, string][] => link.map((a) => [pulito(a.textContent), a.getAttribute('href')!]);
 
   it('c’è sempre, anche senza edizioni né dati: la testata con il nome del sito e la frase di apertura come unico h1', () => {
-    const doc = leggi({ edizioni: [], dataset: {} });
-    expect(testo(doc).querySelector('header')?.textContent).toContain('AI Radar');
-    expect(titoli(doc, 1)).toEqual([FRASE_DI_APERTURA]);
-    expect(doc.querySelectorAll('h1')).toHaveLength(1);
+    const home = leggi({ edizioni: [], dataset: {} });
+    expect(home.getByRole('banner')).toHaveTextContent('AI Radar');
+    expect(titoli(home, 1)).toEqual([FRASE_DI_APERTURA]);
+    expect(home.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   });
 
   it('con una data di raccolta illeggibile, o un giorno che non esiste, la build esce lo stesso, senza scrivere una settimana sbagliata', () => {
     for (const aggiornato of ['Nov 9 2026', '2026-02-30T06:15:00+00:00']) {
-      const doc = leggi({ edizioni: [], dataset: { ...d, status: { ...d.status!, aggiornato } } });
-      expect(titoli(doc, 1), aggiornato).toEqual([FRASE_DI_APERTURA]);
-      expect(pulito(testo(doc).textContent), aggiornato).not.toContain('Settimana del');
+      const home = leggi({ edizioni: [], dataset: { ...d, status: { ...d.status!, aggiornato } } });
+      expect(titoli(home, 1), aggiornato).toEqual([FRASE_DI_APERTURA]);
+      expect(home.testo, aggiornato).not.toContain('Settimana del');
     }
   });
 
   it('con tutti i dati ha la settimana dei dati, la frase come unico h1 e le due porte con la loro notizia', () => {
-    const doc = leggi({ edizioni: [edizione], dataset: d });
-    const app = pulito(testo(doc).textContent);
+    const home = leggi({ edizioni: [edizione], dataset: d });
+    const app = home.testo;
     expect(app).toContain('Settimana del 12 ott 2026');
-    expect(titoli(doc, 1)).toEqual([FRASE_DI_APERTURA]);
-    expect(doc.querySelectorAll('h1')).toHaveLength(1);
-    expect(titoli(doc, 2)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia", 'La situazione']);
+    expect(titoli(home, 1)).toEqual([FRASE_DI_APERTURA]);
+    expect(home.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(titoli(home, 2)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia", 'La situazione']);
     expect(app).toContain('MCP entra tra le competenze da imparare ora; RAG esce');
     expect(app).toContain('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026');
     expect(app).toContain("16% delle imprese italiane usa l'AI (UE: 20%)");
@@ -106,15 +112,26 @@ describe('la home in chiaro', () => {
     expect(app.indexOf(FRASE_DI_APERTURA)).toBeLessThan(app.indexOf('MCP entra'));
   });
 
+  it('le porte sono articoli con il nome della testa, e «La situazione» è una regione con un gruppo per testa', () => {
+    const p = leggi({ edizioni: [edizione], dataset: d });
+    expect(p.getByRole('article', { name: 'Per te Su cosa formarti' })).toHaveTextContent('MCP entra tra le competenze da imparare ora; RAG esce');
+    expect(p.getByRole('article', { name: "Per la tua organizzazione L'AI in Italia" })).toHaveTextContent("16% delle imprese italiane usa l'AI (UE: 20%)");
+    const situazione = within(p.getByRole('region', { name: 'La situazione' }));
+    expect(situazione.getByRole('group', { name: 'Per te Su cosa formarti' })).toHaveTextContent('2 competenze su 5 da imparare ora');
+    expect(situazione.getByRole('group', { name: "Per la tua organizzazione L'AI in Italia" })).toHaveTextContent("Imprese italiane che usano l'AI nel 2025");
+  });
+
   describe('le card', () => {
-    /** Il testo sotto il titolo di una testa nella sezione «La situazione», fino al titolo della testa dopo: quello che legge chi scorre la pagina. */
-    const sottoLaTesta = (doc: Document, testa: string) => {
-      const main = pulito(testo(doc).querySelector('main')?.textContent ?? null);
-      const situazione = main.slice(main.indexOf('La situazione'));
-      const teste = titoli(doc, 3);
-      const i = teste.findIndex((t) => t.startsWith(testa));
-      const inizio = situazione.indexOf(teste[i]) + teste[i].length;
-      return situazione.slice(inizio, i + 1 < teste.length ? situazione.indexOf(teste[i + 1]) : undefined);
+    /**
+     * Il testo sotto il titolo di una testa nella sezione «La situazione», fino alla testa dopo: quello che legge chi scorre la pagina.
+     * Ogni testa è un gruppo con il suo nome, e il gruppo comincia con il titolo.
+     */
+    const sottoLaTesta = (home: Home, testa: string) => {
+      const gruppo = within(home.getByRole('region', { name: 'La situazione' })).getByRole('group', { name: (nome) => nome.startsWith(testa) });
+      const titolo = pulito(within(gruppo).getByRole('heading', { level: 3 }).textContent);
+      const letto = pulito(gruppo.textContent);
+      expect(letto.startsWith(titolo), testa).toBe(true);
+      return letto.slice(titolo.length);
     };
     /** Ogni testo atteso si legge nel testo dato, nell'ordine. */
     const inOrdine = (letto: string, attesi: readonly string[], dove: string) => {
@@ -128,9 +145,9 @@ describe('la home in chiaro', () => {
     const NOMI = ['Competenze', 'Modelli e ricerca', 'Open source', 'Notizie', 'GeopoliticAI', 'Business', 'Persone e lavoro', 'Norme', 'Rapporti'];
 
     it('con tutti i dati ci sono le nove card divise per testa, con il nome della testa sopra e per ognuna nome, cifra con l’unità e frase', () => {
-      const doc = leggi({ edizioni: [edizione], dataset: d });
-      expect(titoli(doc, 3)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
-      expect(titoli(doc, 4)).toEqual(NOMI);
+      const home = leggi({ edizioni: [edizione], dataset: d });
+      expect(titoli(home, 3)).toEqual(['Per te Su cosa formarti', "Per la tua organizzazione L'AI in Italia"]);
+      expect(titoli(home, 4)).toEqual(NOMI);
       // dalle fixture, sulla data dei dati: giovedì 15 ottobre 2026. Competenze ha già il numero nella frase
       const perTe = [
         "Competenze 2 competenze su 5 da imparare ora: crescono più dell'AI e hanno almeno 3 annunci ogni 10mila.",
@@ -145,46 +162,45 @@ describe('la home in chiaro', () => {
         "Norme 48 giorni Alla prossima scadenza dell'AI Act, il 2 dic 2026: fine della transizione per la marcatura.",
         'Rapporti Ottobre 2026 Prossimo rapporto previsto: State of AI Report.',
       ];
-      inOrdine(sottoLaTesta(doc, 'Per te'), perTe, 'Per te');
-      inOrdine(sottoLaTesta(doc, 'Per la tua organizzazione'), italia, 'Per la tua organizzazione');
+      inOrdine(sottoLaTesta(home, 'Per te'), perTe, 'Per te');
+      inOrdine(sottoLaTesta(home, 'Per la tua organizzazione'), italia, 'Per la tua organizzazione');
       // le card vengono dopo le porte
-      const app = pulito(testo(doc).textContent);
+      const app = home.testo;
       expect(app.indexOf("16% delle imprese italiane usa l'AI")).toBeLessThan(app.indexOf('Modelli e ricerca'));
     });
 
     it('una card senza dati non sparisce: sta nella riga «Dati non disponibili» della sua testa', () => {
-      const doc = leggi({ edizioni: [], dataset: { ...d, epoch: undefined } });
-      expect(titoli(doc, 4)).toEqual(NOMI.filter((n) => n !== 'Modelli e ricerca'));
-      expect(sottoLaTesta(doc, 'Per te')).toContain('Dati non disponibili: Modelli e ricerca.');
-      expect(pulito(testo(doc).textContent).match(/Dati non disponibili/g)).toHaveLength(1);
+      const home = leggi({ edizioni: [], dataset: { ...d, epoch: undefined } });
+      expect(titoli(home, 4)).toEqual(NOMI.filter((n) => n !== 'Modelli e ricerca'));
+      expect(sottoLaTesta(home, 'Per te')).toContain('Dati non disponibili: Modelli e ricerca.');
+      expect(home.testo.match(/Dati non disponibili/g)).toHaveLength(1);
     });
 
     it('la card Competenze porta all’indice quando nasce, le altre restano testo', () => {
       /** I link del testo principale, fuori dalla testata, che hanno per testo il nome di una card. */
-      const linkDelleCard = (doc: Document) =>
-        [...testo(doc).querySelectorAll('main a')].map((a) => [pulito(a.textContent), a.getAttribute('href')]).filter(([t]) => NOMI.includes(t!));
+      const linkDelleCard = (home: Home) => coppie(within(home.getByRole('main')).queryAllByRole('link')).filter(([t]) => NOMI.includes(t));
       expect(linkDelleCard(leggi({ edizioni: [edizione], dataset: d }))).toEqual([['Competenze', 'competenze/']]);
       // senza il radar l'indice delle competenze non nasce, e la card resta testo come le altre
       const senzaRadar = leggi({ edizioni: [], dataset: { ...d, radar: undefined } });
-      expect(testo(senzaRadar).querySelectorAll('a[href^="competenze"]')).toHaveLength(0);
+      expect(senzaRadar.queryAllByRole('link').filter((a) => a.getAttribute('href')?.startsWith('competenze'))).toHaveLength(0);
     });
   });
 
   describe('in fondo', () => {
-    const fondo = (doc: Document) => testo(doc).querySelector('footer');
-    const linkDelFondo = (doc: Document) => [...(fondo(doc)?.querySelectorAll('a') ?? [])].map((a) => [pulito(a.textContent), a.getAttribute('href')]);
+    const fondo = (home: Home) => home.getByRole('contentinfo');
+    const linkDelFondo = (home: Home) => coppie(within(fondo(home)).queryAllByRole('link'));
 
     it('la riga delle fonti dei dati c’è sempre, anche senza lo stato del giro, con le stesse fonti del colophon dell’app', () => {
       const colophon = FONTI_DEI_DATI.map((f) => [f.nome, f.url]);
       for (const dataset of [d, { ...d, status: undefined }, {}]) {
-        const doc = leggi({ edizioni: [], dataset });
-        expect(pulito(fondo(doc)?.textContent ?? '')).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
-        expect(linkDelFondo(doc)).toEqual(colophon);
+        const home = leggi({ edizioni: [], dataset });
+        expect(pulito(fondo(home).textContent)).toContain(`Dati di ${FONTI_DEI_DATI.map((f) => f.nome).join(', ')}.`);
+        expect(linkDelFondo(home)).toEqual(colophon);
       }
     });
 
     it('con almeno un’edizione c’è il link al feed, senza edizioni no', () => {
-      const alFeed = (doc: Document) => linkDelFondo(doc).filter(([, href]) => href === 'feed.xml');
+      const alFeed = (home: Home) => linkDelFondo(home).filter(([, href]) => href === 'feed.xml');
       expect(alFeed(leggi({ edizioni: [edizione], dataset: d }))).toEqual([['Segui con RSS', 'feed.xml']]);
       expect(alFeed(leggi({ edizioni: [edizione], dataset: {} }))).toEqual([['Segui con RSS', 'feed.xml']]);
       expect(alFeed(leggi({ edizioni: [], dataset: d }))).toEqual([]);
@@ -192,27 +208,29 @@ describe('la home in chiaro', () => {
   });
 
   describe('i link', () => {
-    const tutti = (doc: Document, dove = '') => [...testo(doc).querySelectorAll(`${dove} a`)].map((a) => [pulito(a.textContent), a.getAttribute('href')!]);
+    /** I link della home, o solo quelli dentro i punti di riferimento con quel ruolo (la testata, le porte), in ordine di lettura. */
+    const tutti = (home: Home, dove?: 'banner' | 'article') =>
+      coppie(dove ? home.queryAllByRole(dove).flatMap((contenitore) => within(contenitore).queryAllByRole('link')) : home.queryAllByRole('link'));
     /** I link dentro il sito: quelli alle fonti dei dati vanno fuori. */
-    const linkDi = (doc: Document, dove = '') => tutti(doc, dove).filter(([, href]) => !/^https?:/.test(href));
+    const linkDi = (home: Home, dove?: 'banner' | 'article') => tutti(home, dove).filter(([, href]) => !/^https?:/.test(href));
     // la settimana dopo quella dei dati, raccolta il 22 ottobre
     const altra: Edizione = { ...edizione, settimana: '2026-10-19', raccolti: '2026-10-22T07:30:00+00:00', precedente: edizione.settimana };
     /** I dati con una sola competenza che entra tra quelle da imparare ora: MCP, senza RAG che esce. */
     const soloMcp: Dataset = { ...d, radar: { ...d.radar!, competenze: d.radar!.competenze.map((c) => (c.id === 'rag' ? { ...c, quadrante_prec: 'consolida' as const } : c)) } };
 
     it('la testata porta all’indice delle competenze e all’archivio solo quando le loro pagine nascono', () => {
-      expect(linkDi(leggi({ edizioni: [edizione], dataset: d }), 'header')).toEqual([['Competenze', 'competenze/'], ['Edizioni', 'edizioni/']]);
-      expect(linkDi(leggi({ edizioni: [], dataset: d }), 'header')).toEqual([['Competenze', 'competenze/']]);
-      expect(linkDi(leggi({ edizioni: [edizione], dataset: { status: d.status } }), 'header')).toEqual([['Edizioni', 'edizioni/']]);
-      expect(linkDi(leggi({ edizioni: [], dataset: {} }), 'header')).toEqual([]);
+      expect(linkDi(leggi({ edizioni: [edizione], dataset: d }), 'banner')).toEqual([['Competenze', 'competenze/'], ['Edizioni', 'edizioni/']]);
+      expect(linkDi(leggi({ edizioni: [], dataset: d }), 'banner')).toEqual([['Competenze', 'competenze/']]);
+      expect(linkDi(leggi({ edizioni: [edizione], dataset: { status: d.status } }), 'banner')).toEqual([['Edizioni', 'edizioni/']]);
+      expect(linkDi(leggi({ edizioni: [], dataset: {} }), 'banner')).toEqual([]);
     });
 
     it('la settimana porta all’edizione di quella settimana solo quando esiste', () => {
       expect(linkDi(leggi({ edizioni: [edizione], dataset: d }))).toContainEqual(['Settimana del 12 ott 2026', 'edizioni/2026-10-12/']);
       for (const edizioni of [[], [altra]]) {
-        const doc = leggi({ edizioni, dataset: d });
-        expect(pulito(testo(doc).textContent)).toContain('Settimana del 12 ott 2026');
-        expect(linkDi(doc).map(([t]) => t)).not.toContain('Settimana del 12 ott 2026');
+        const home = leggi({ edizioni, dataset: d });
+        expect(home.testo).toContain('Settimana del 12 ott 2026');
+        expect(linkDi(home).map(([t]) => t)).not.toContain('Settimana del 12 ott 2026');
       }
     });
 
@@ -224,39 +242,42 @@ describe('la home in chiaro', () => {
 
     it('nessun link contiene #, e ognuno porta a una voce della mappa', () => {
       for (const contenuto of [{ edizioni: [edizione], dataset: d }, { edizioni: [altra], dataset: soloMcp }, { edizioni: [], dataset: { status: d.status } }, { edizioni: [], dataset: {} }]) {
-        const { file, doc } = conHome(contenuto);
-        for (const [testoLink, href] of tutti(doc)) expect(href, testoLink).not.toContain('#');
-        for (const [testoLink, href] of linkDi(doc)) expect(Object.keys(file), testoLink).toContain(href.endsWith('/') ? `${href}index.html` : href);
+        const home = leggi(contenuto);
+        for (const [testoLink, href] of tutti(home)) expect(href, testoLink).not.toContain('#');
+        for (const [testoLink, href] of linkDi(home)) expect(Object.keys(home.file), testoLink).toContain(href.endsWith('/') ? `${href}index.html` : href);
       }
     });
   });
 
   it('senza lo stato del giro restano la testata e la frase di apertura, senza settimana né porte', () => {
-    const doc = leggi({ edizioni: [edizione], dataset: { ...d, status: undefined } });
-    expect(testo(doc).querySelector('header')?.textContent).toContain('AI Radar');
-    expect(titoli(doc, 1)).toEqual([FRASE_DI_APERTURA]);
-    expect(titoli(doc, 2)).toEqual([]);
-    expect(testo(doc).textContent).not.toMatch(/Settimana|MCP entra|imprese italiane/);
+    const home = leggi({ edizioni: [edizione], dataset: { ...d, status: undefined } });
+    expect(home.getByRole('banner')).toHaveTextContent('AI Radar');
+    expect(titoli(home, 1)).toEqual([FRASE_DI_APERTURA]);
+    expect(titoli(home, 2)).toEqual([]);
+    expect(home.testo).not.toMatch(/Settimana|MCP entra|imprese italiane/);
   });
 
   it('la testa è quella ricevuta, con il link al feed solo se ci sono edizioni', () => {
     const testa = (html: string) => html.match(/<head>[\s\S]*<\/head>/)![0];
-    const senza = leggi({ edizioni: [], dataset: d });
-    expect(testa(conHome({ edizioni: [], dataset: d }).file['index.html'])).toBe(TESTA_HOME);
-    expect(senza.head.querySelector('link[rel="alternate"]')).toBeNull();
-    const con = conHome({ edizioni: [edizione], dataset: d }).file['index.html'];
-    const feed = new DOMParser().parseFromString(con, 'text/html').head.querySelectorAll('link[rel="alternate"][type="application/rss+xml"]');
-    expect([...feed].map((l) => l.getAttribute('href'))).toEqual([assoluto('feed.xml')]);
+    /** Gli elementi della testa con quel selettore: la testa non ha ruoli, si legge dai tag. */
+    const nellaTesta = (html: string, selettore: string) => [...new DOMParser().parseFromString(html, 'text/html').head.querySelectorAll(selettore)];
+    const senza = fileDi({ edizioni: [], dataset: d })['index.html'];
+    expect(testa(senza)).toBe(TESTA_HOME);
+    expect(nellaTesta(senza, 'link[rel="alternate"]')).toHaveLength(0);
+    const con = fileDi({ edizioni: [edizione], dataset: d })['index.html'];
+    const feed = nellaTesta(con, 'link[rel="alternate"][type="application/rss+xml"]');
+    expect(feed.map((l) => l.getAttribute('href'))).toEqual([assoluto('feed.xml')]);
     expect(testa(con).replace(/\s*<link rel="alternate"[^>]*>\s*/, '\n')).toBe(TESTA_HOME);
   });
 
   it('un testo con caratteri speciali nei dati esce con l’escape', () => {
     const strano = 'M<i>C</i>P & "co"';
     const radar = { ...d.radar!, competenze: d.radar!.competenze.map((c) => (c.id === 'mcp' ? { ...c, breve: strano } : c)) };
-    const { file, doc } = conHome({ edizioni: [], dataset: { ...d, radar } });
-    expect(file['index.html']).toContain('M&lt;i&gt;C&lt;/i&gt;P &amp; &quot;co&quot;');
-    expect(pulito(testo(doc).textContent)).toContain(`${strano} entra tra le competenze da imparare ora`);
-    expect(testo(doc).querySelector('main i')).toBeNull();
+    const home = leggi({ edizioni: [], dataset: { ...d, radar } });
+    expect(home.file['index.html']).toContain('M&lt;i&gt;C&lt;/i&gt;P &amp; &quot;co&quot;');
+    expect(home.testo).toContain(`${strano} entra tra le competenze da imparare ora`);
+    // nessun elemento nato dal testo: un <i>C</i> diventato markup sarebbe un elemento con il solo testo «C»
+    expect(within(home.getByRole('main')).queryByText('C')).toBeNull();
   });
 
   it('nessuna data viene dall’orologio: con gli stessi dati, in giorni e ore diversi, il testo è lo stesso', () => {
@@ -264,16 +285,18 @@ describe('la home in chiaro', () => {
     try {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2026-11-16T05:00:00Z'));
-      const lunedi = conHome(contenuto).file['index.html'];
+      const lunedi = fileDi(contenuto)['index.html'];
       vi.setSystemTime(new Date('2027-03-04T23:59:00Z'));
-      expect(conHome(contenuto).file['index.html']).toBe(lunedi);
+      expect(fileDi(contenuto)['index.html']).toBe(lunedi);
     } finally {
       vi.useRealTimers();
     }
   });
 
   it('la sitemap ha ancora la home una volta sola, come primo indirizzo', () => {
-    const loc = [...new DOMParser().parseFromString(conHome({ edizioni: [edizione], dataset: d }).file['sitemap.xml'], 'application/xml').querySelectorAll('loc')].map((l) => l.textContent);
+    /** Gli indirizzi della sitemap, in ordine. */
+    const indirizzi = (xml: string) => [...new DOMParser().parseFromString(xml, 'application/xml').querySelectorAll('loc')].map((l) => l.textContent);
+    const loc = indirizzi(fileDi({ edizioni: [edizione], dataset: d })['sitemap.xml']);
     expect(loc[0]).toBe(assoluto(''));
     expect(loc.filter((l) => l === assoluto(''))).toHaveLength(1);
   });

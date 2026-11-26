@@ -194,6 +194,20 @@ test.describe('la pagina fotografata, per ciò che il PNG non dice', () => {
     expect(a.corpo).toBe(b.corpo); // le due teste restano alla pari anche se una delle due ha una riga in più
   });
 
+  test('dopo una settimana saltata la porta ripetuta dice da quale edizione non cambia, e con la precedente del lunedì prima «dalla settimana scorsa»', async ({ page }) => {
+    // base è della settimana del 12 ottobre
+    const ripetuta = (precedente: string): Edizione => ({ ...base, precedente, porte: [{ ...base.porte[0], cambiata: false }, base.porte[1]] });
+    await preparaImmagine(page, ripetuta('2026-10-05'));
+    await expect(page.getByRole('article').nth(0)).toContainText('Nessun cambio dalla settimana scorsa');
+    await preparaImmagine(page, ripetuta('2026-09-28'));
+    await expect(page.getByRole('article').nth(0)).toContainText('Nessun cambio dall’edizione del 28 set 2026');
+    await expect(page.getByRole('article').nth(0)).not.toContainText('settimana scorsa');
+    await preparaImmagine(page, ripetuta('2026-06-08'));
+    await expect(page.getByRole('article').nth(0)).toContainText('Nessun cambio dall’edizione dell’8 giu 2026');
+    const [a, b] = await misure(page);
+    expect(a.corpo).toBe(b.corpo);
+  });
+
   test('una porta senza dati non ripete «Dati non disponibili» nella riga meta', async ({ page }) => {
     await preparaImmagine(page, senzaDati);
     expect(await page.getByRole('article').nth(1).textContent()).toBe('Per la tua organizzazioneDati non disponibili');

@@ -14,13 +14,16 @@ export type PortaDaScrivere = PortaDellaSettimana & Partial<Pick<PortaFissa, 'ca
 /** Una card da scrivere: come per le porte, il confronto c'è solo nell'edizione. */
 export type CardDaScrivere = CardDellaSettimana & Partial<Pick<CardFissa, 'cambiata' | 'era'>>;
 
-/** Una porta: nome della testa, notizia, nota e riga sotto. Senza dati resta la riga che lo dice. */
-export function porta(p: PortaDaScrivere, link: LinkDellaDestinazione): string {
+/**
+ * Una porta: nome della testa, notizia, nota e riga sotto. Senza dati resta la riga che lo dice.
+ * da: nell'edizione, da quando una porta ripetuta non cambia, «dalla settimana scorsa» o «dall’edizione del …». La home in chiaro non confronta.
+ */
+export function porta(p: PortaDaScrivere, link: LinkDellaDestinazione, da?: string): string {
   const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
   return `<article class="ed-porta">
 <h2>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
 ${portaConDati(p) ? `<p class="ed-notizia">${inLink(link(p.destinazione), titolo)}</p>` : ''}
-${portaConDati(p) && p.cambiata === false ? '<p class="ed-ripetuta">Nessun cambio qui dalla settimana scorsa</p>' : ''}
+${portaConDati(p) && p.cambiata === false && da ? `<p class="ed-ripetuta">Nessun cambio qui ${esc(da)}</p>` : ''}
 ${p.nota ? `<p class="ed-nota">${esc(p.nota)}</p>` : ''}
 <p class="ed-fonte">${esc(p.meta)}</p>
 ${rigaFonti(p.fonti)}

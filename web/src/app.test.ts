@@ -129,6 +129,31 @@ describe('App', () => {
     }
   });
 
+  describe('il link alla guida', () => {
+    const guida = () => within(screen.getByRole('contentinfo')).getByRole('link', { name: 'La guida' });
+
+    it('in fondo alla pagina porta alla guida, accanto all’app e nella stessa scheda, e dice cosa ci si trova', async () => {
+      vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+        const k = url.split('/').pop()!.replace('.json', '');
+        return { ok: true, json: async () => (FIXTURE as Record<string, unknown>)[k] } as Response;
+      }));
+      render(App);
+      await screen.findByRole('link', { name: /MCP entra/ });
+      // l'app sta alla radice del sito, la guida in guida/
+      expect(guida()).toHaveAttribute('href', 'guida/');
+      expect(guida()).not.toHaveAttribute('target');
+      expect(guida().closest('p')).toHaveTextContent('La guida: come si legge il radar, da dove vengono i dati e come è fatto il sito.');
+    });
+
+    it('c’è anche senza edizioni e senza dati: la guida non dipende dal giro', async () => {
+      vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, json: async () => undefined }) as Response));
+      render(App);
+      await screen.findByRole('alert');
+      expect(screen.queryByRole('link', { name: 'Segui con RSS' })).toBeNull();
+      expect(guida()).toHaveAttribute('href', 'guida/');
+    });
+  });
+
   describe('la riga sul contatore', () => {
     // la pagina con lo script di Umami nel <head>, che jsdom non scarica né esegue. Il tag è quello che dà Umami, scritto qui a mano:
     // se chi lo scrive nella build e chi lo riconosce nell'app sbagliassero tutti e due allo stesso modo, la prova se ne accorgerebbe

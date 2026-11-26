@@ -3,7 +3,7 @@
  "licenza": "CC BY 4.0",
  "url_modelli": "https://epoch.ai/data/ai-models",
  "url_eci": "https://epoch.ai/eci",
- "scaricato": "2026-11-23",
+ "scaricato": "2026-11-26",
  "anno_corrente": 2026,
  "zone": {
   "usa": {
@@ -2799,7 +2799,7 @@
   }
  },
  "data_center": {
-  "aggiornato": "2026-11-23",
+  "aggiornato": "2026-11-26",
   "quote": {
    "USA": 86.26,
    "MYS": 9.13,

@@ -47,8 +47,8 @@
    "2026-06": 12365,
    "2026-07": 16272,
    "2026-08": 17973,
-   "2026-09": 17838,
-   "2026-10": 25222
+   "2026-09": 17935,
+   "2026-10": 25399
   },
   "coding-agenti": {
    "2025-10": 27,
@@ -62,8 +62,8 @@
    "2026-06": 832,
    "2026-07": 984,
    "2026-08": 1372,
-   "2026-09": 1227,
-   "2026-10": 1415
+   "2026-09": 1229,
+   "2026-10": 1427
   },
   "mcp": {
    "2025-10": 1028,
@@ -77,8 +77,8 @@
    "2026-06": 9161,
    "2026-07": 11008,
    "2026-08": 11737,
-   "2026-09": 14071,
-   "2026-10": 22287
+   "2026-09": 14129,
+   "2026-10": 22429
   },
   "rag": {
    "2025-10": 954,
@@ -92,8 +92,8 @@
    "2026-06": 5824,
    "2026-07": 6280,
    "2026-08": 5909,
-   "2026-09": 6150,
-   "2026-10": 7167
+   "2026-09": 6189,
+   "2026-10": 7238
   },
   "valutazione": {
    "2025-10": 51,
@@ -107,8 +107,8 @@
    "2026-06": 729,
    "2026-07": 1064,
    "2026-08": 1414,
-   "2026-09": 1641,
-   "2026-10": 2270
+   "2026-09": 1650,
+   "2026-10": 2283
   },
   "post-training": {
    "2025-10": 104,
@@ -122,8 +122,8 @@
    "2026-06": 397,
    "2026-07": 382,
    "2026-08": 393,
-   "2026-09": 415,
-   "2026-10": 520
+   "2026-09": 417,
+   "2026-10": 524
   },
   "context-engineering": {
    "2025-10": 230,
@@ -137,8 +137,8 @@
    "2026-06": 2162,
    "2026-07": 2476,
    "2026-08": 2342,
-   "2026-09": 2116,
-   "2026-10": 2438
+   "2026-09": 2127,
+   "2026-10": 2440
   },
   "sicurezza": {
    "2025-10": 48,
@@ -152,8 +152,8 @@
    "2026-06": 652,
    "2026-07": 773,
    "2026-08": 800,
-   "2026-09": 927,
-   "2026-10": 1108
+   "2026-09": 932,
+   "2026-10": 1123
   },
   "governance": {
    "2025-10": 39,
@@ -167,8 +167,8 @@
    "2026-06": 751,
    "2026-07": 784,
    "2026-08": 915,
-   "2026-09": 828,
-   "2026-10": 766
+   "2026-09": 829,
+   "2026-10": 767
   },
   "dati-per-ai": {
    "2025-10": 364,
@@ -182,8 +182,8 @@
    "2026-06": 1668,
    "2026-07": 1937,
    "2026-08": 2064,
-   "2026-09": 2121,
-   "2026-10": 2483
+   "2026-09": 2129,
+   "2026-10": 2514
   },
   "text-to-sql": {
    "2025-10": 20,
@@ -197,8 +197,8 @@
    "2026-06": 178,
    "2026-07": 198,
    "2026-08": 185,
-   "2026-09": 268,
-   "2026-10": 430
+   "2026-09": 274,
+   "2026-10": 432
   },
   "vector-db": {
    "2025-10": 216,
@@ -212,8 +212,8 @@
    "2026-06": 723,
    "2026-07": 707,
    "2026-08": 571,
-   "2026-09": 493,
-   "2026-10": 407
+   "2026-09": 496,
+   "2026-10": 406
   },
   "multimodale": {
    "2025-10": 84,
@@ -228,7 +228,7 @@
    "2026-07": 317,
    "2026-08": 542,
    "2026-09": 423,
-   "2026-10": 564
+   "2026-10": 568
   },
   "llmops": {
    "2025-10": 37,
@@ -242,8 +242,8 @@
    "2026-06": 502,
    "2026-07": 474,
    "2026-08": 431,
-   "2026-09": 397,
-   "2026-10": 370
+   "2026-09": 398,
+   "2026-10": 372
   },
   "modelli-locali": {
    "2025-10": 57,
@@ -257,8 +257,8 @@
    "2026-06": 1042,
    "2026-07": 1052,
    "2026-08": 1173,
-   "2026-09": 1405,
-   "2026-10": 2051
+   "2026-09": 1409,
+   "2026-10": 2076
   },
   "robotica": {
    "2025-10": 13,
@@ -272,8 +272,8 @@
    "2026-06": 80,
    "2026-07": 158,
    "2026-08": 98,
-   "2026-09": 189,
-   "2026-10": 237
+   "2026-09": 193,
+   "2026-10": 238
   }
  },
  "base_topics": [
@@ -295,8 +295,8 @@
    "2026-06": 16010,
    "2026-07": 17305,
    "2026-08": 15728,
-   "2026-09": 16895,
-   "2026-10": 22034
+   "2026-09": 16975,
+   "2026-10": 22198
   },
   "ai": {
    "2025-10": 3816,
@@ -310,8 +310,8 @@
    "2026-06": 13243,
    "2026-07": 13466,
    "2026-08": 11060,
-   "2026-09": 9636,
-   "2026-10": 9603
+   "2026-09": 9655,
+   "2026-10": 9631
   },
   "artificial-intelligence": {
    "2025-10": 615,
@@ -325,8 +325,8 @@
    "2026-06": 2246,
    "2026-07": 4497,
    "2026-08": 3140,
-   "2026-09": 2132,
-   "2026-10": 2205
+   "2026-09": 2148,
+   "2026-10": 2217
   },
   "generative-ai": {
    "2025-10": 442,
@@ -340,8 +340,8 @@
    "2026-06": 1608,
    "2026-07": 1973,
    "2026-08": 1967,
-   "2026-09": 1795,
-   "2026-10": 1906
+   "2026-09": 1805,
+   "2026-10": 1910
   }
  },
  "base": {
@@ -356,8 +356,8 @@
   "2026-06": 33107,
   "2026-07": 37241,
   "2026-08": 31895,
-  "2026-09": 30458,
-  "2026-10": 35748
+  "2026-09": 30583,
+  "2026-10": 35956
  },
  "in_crescita": {
   "agenti": [
@@ -365,22 +365,22 @@
     "nome": "Ebony-Vinyl/dsh-our-free-model",
     "url": "https://github.com/Ebony-Vinyl/dsh-our-free-model",
     "descrizione": "在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全免费，不限量。 All you do is install this plugin in dsh: no login, no sign-up, no API key — the frontier models are just there…",
-    "stelle": 84883,
+    "stelle": 87653,
     "creato": "2026-09-24"
    },
    {
     "nome": "google/elephant-goldfish-model",
     "url": "https://github.com/google/elephant-goldfish-model",
     "descrizione": "Open-source plugin for designing and reviewing software with agents",
-    "stelle": 22350,
+    "stelle": 23101,
     "creato": "2026-09-13"
    },
    {
-    "nome": "lemomo-ai/lemo-opuscar",
-    "url": "https://github.com/lemomo-ai/lemo-opuscar",
-    "descrizione": "A toolbox of film styles made in code for Claude Code: 99 ready to use, and your own. Each style is a style prompt plus a demo film made entirely in code by Claude Opus 5.5, with no video model. By L…",
-    "stelle": 20189,
-    "creato": "2026-09-26"
+    "nome": "BaaRai/ARTEX",
+    "url": "https://github.com/BaaRai/ARTEX",
+    "descrizione": "Actively maintained ARTEX: AI autonomous penetration testing system. Self-hosted, model-agnostic, evidence-backed findings. Community continuation of Autumn-27/ARTEX, AGPL-3.0.",
+    "stelle": 21372,
+    "creato": "2026-10-08"
    }
   ],
   "coding-agenti": [
@@ -388,44 +388,44 @@
     "nome": "ccch1mneyyy/dsh-Go",
     "url": "https://github.com/ccch1mneyyy/dsh-Go",
     "descrizione": "dsh-go — DeepSeek Harness 装进口袋：手机本机运行，也能遥控你的电脑。",
-    "stelle": 30666,
+    "stelle": 32335,
     "creato": "2026-10-25"
    },
    {
     "nome": "kajisho5/ffmpeg-skill",
     "url": "https://github.com/kajisho5/ffmpeg-skill",
     "descrizione": "Local video editor for coding agents: 42 FFmpeg tools with a machine-readable contract and an MCP server, for Claude Code, Cursor and Codex. Cut, captions, reframe, loudness, platform exports. No clo…",
-    "stelle": 10093,
+    "stelle": 11286,
     "creato": "2026-09-03"
    },
    {
     "nome": "microsoft/TokenEconomizer",
     "url": "https://github.com/microsoft/TokenEconomizer",
     "descrizione": "Experience-Driven Black-Box Cost Control for Coding Agents",
-    "stelle": 8005,
+    "stelle": 8128,
     "creato": "2026-10-13"
    }
   ],
   "mcp": [
    {
+    "nome": "BaaRai/ARTEX",
+    "url": "https://github.com/BaaRai/ARTEX",
+    "descrizione": "Actively maintained ARTEX: AI autonomous penetration testing system. Self-hosted, model-agnostic, evidence-backed findings. Community continuation of Autumn-27/ARTEX, AGPL-3.0.",
+    "stelle": 21372,
+    "creato": "2026-10-08"
+   },
+   {
     "nome": "tangency-labs/solidcraft",
     "url": "https://github.com/tangency-labs/solidcraft",
     "descrizione": "SolidCraft: an open-source parametric 3D CAD application built in pure Rust. Desktop, web, and automation through MCP.",
-    "stelle": 17877,
+    "stelle": 18374,
     "creato": "2026-10-07"
-   },
-   {
-    "nome": "BaaRai/ARTEX",
-    "url": "https://github.com/BaaRai/ARTEX",
-    "descrizione": "ARTEX - AI autonomous penetration testing system (English translation; upstream: Autumn-27/ARTEX, AGPL-3.0)",
-    "stelle": 17251,
-    "creato": "2026-10-08"
    },
    {
     "nome": "KKKKhazix/AIHOT",
     "url": "https://github.com/KKKKhazix/AIHOT",
     "descrizione": "一个自己找热点、自己写日报的网站框架。把信源和精选标准换成你的，它就是你的行业热点站。",
-    "stelle": 11286,
+    "stelle": 11447,
     "creato": "2026-09-28"
    }
   ],
@@ -434,14 +434,14 @@
     "nome": "youngyangyang04/llm-master",
     "url": "https://github.com/youngyangyang04/llm-master",
     "descrizione": "大模型（LLM）全栈学习路线与中文教程🔥：覆盖 Prompt Engineering、RAG、AI Agent、MCP、微调、模型部署、Transformer、AI 编程与大厂面试，从入门到生产实践。",
-    "stelle": 1720,
+    "stelle": 1741,
     "creato": "2026-09-12"
    },
    {
     "nome": "Zleap-AI/SAG-Wiki",
     "url": "https://github.com/Zleap-AI/SAG-Wiki",
     "descrizione": "A lightweight knowledge base for people and agents, with ultra fast indexing and most precise retrieval.",
-    "stelle": 1656,
+    "stelle": 1692,
     "creato": "2026-10-18"
    },
    {
@@ -456,15 +456,15 @@
    {
     "nome": "Minglink/dsh-jailbreak-workflow",
     "url": "https://github.com/Minglink/dsh-jailbreak-workflow",
-    "descrizione": "Visual soft-workflow plugin for DeepSeek Harness (dsh-workflow-lite 0.11.0): canvas-to-plan-prompt engine paired with Minglink/dsh-workflows for LLM red-teaming & safety research.",
-    "stelle": 1227,
+    "descrizione": "可视化破甲制作工作流---Visual soft-workflow plugin for DeepSeek Harness (dsh-workflow-lite 0.11.0): canvas-to-plan-prompt engine paired with Minglink/dsh-workflows for LLM red-teaming & safety research.",
+    "stelle": 1269,
     "creato": "2026-11-01"
    },
    {
     "nome": "Continuum-AI-Corp/OrcaReplay",
     "url": "https://github.com/Continuum-AI-Corp/OrcaReplay",
     "descrizione": "OrcaReplay — Time travel for AI agents. Record, replay, fork, and debug any agent run with any model. Built by the OrcaRouter.ai team.",
-    "stelle": 1149,
+    "stelle": 1221,
     "creato": "2026-08-29"
    },
    {
@@ -480,21 +480,21 @@
     "nome": "Valen-Team/Valen",
     "url": "https://github.com/Valen-Team/Valen",
     "descrizione": "Open multimodal decision models, 0.8B to 27B, for text, images and video. Decide with probabilities over your own candidates and locate with bounding boxes, in place of generated text. Free API, ONNX…",
-    "stelle": 935,
+    "stelle": 939,
     "creato": "2026-09-23"
    },
    {
-    "nome": "whitecircle/halo",
-    "url": "https://github.com/whitecircle/halo",
-    "descrizione": "Halo is an open-source framework built by White Circle for training large language and multimodal models",
-    "stelle": 869,
-    "creato": "2026-08-26"
+    "nome": "sous-labs/songe",
+    "url": "https://github.com/sous-labs/songe",
+    "descrizione": "A training engine for your local model, using your idle compute",
+    "stelle": 888,
+    "creato": "2026-11-20"
    },
    {
     "nome": "modelscope/ms-cookbook",
     "url": "https://github.com/modelscope/ms-cookbook",
     "descrizione": "魔搭紫皮书｜ModelScope Cookbook：面向开发者的开源模型应用实战指南，覆盖模型选型、推理、微调、评测、RAG、Agent 与 AIGC，从跑通第一个模型到构建实际应用。",
-    "stelle": 530,
+    "stelle": 546,
     "creato": "2026-09-11"
    }
   ],
@@ -503,21 +503,21 @@
     "nome": "google/elephant-goldfish-model",
     "url": "https://github.com/google/elephant-goldfish-model",
     "descrizione": "Open-source plugin for designing and reviewing software with agents",
-    "stelle": 22350,
+    "stelle": 23101,
     "creato": "2026-09-13"
    },
    {
     "nome": "JuneYaooo/rea-video",
     "url": "https://github.com/JuneYaooo/rea-video",
     "descrizione": "Reverse-engineer any video, shot by shot: filmed, AI-generated or coded, and how to remake it. Breakdowns in the open VIDEO.md format. 逆向一切视频，逐个镜头看是拍的、AI 生成的还是代码做的，再告诉你怎么复刻；拆解结果按 VIDEO.md 格式输出。",
-    "stelle": 12560,
+    "stelle": 13539,
     "creato": "2026-10-29"
    },
    {
     "nome": "JoasASantos/REA-Prompts",
     "url": "https://github.com/JoasASantos/REA-Prompts",
     "descrizione": "REAP - Prompts for you to use REA (Reverse Engineer Anything), get the most out of it, and clone or break down any program",
-    "stelle": 4361,
+    "stelle": 4430,
     "creato": "2026-10-19"
    }
   ],
@@ -526,22 +526,22 @@
     "nome": "qybaihe/bla",
     "url": "https://github.com/qybaihe/bla",
     "descrizione": "🛡️ BLA (bla-agents / Blind LLM Agents) — Open-source Blue Defense MCP server & CLI protecting JS/TS, Electron ASAR, WASM, Python, Native Binaries, SQLite, GGUF/Safetensors & Android DEX against AI re…",
-    "stelle": 6475,
+    "stelle": 6931,
     "creato": "2026-10-25"
    },
    {
     "nome": "N1nEmAn/sapper-v2",
     "url": "https://github.com/N1nEmAn/sapper-v2",
     "descrizione": "The first fruit of the Nüwa tree — an autonomous AI pentest legion (634-team champion, 8h unattended, 1B tokens beat 4.5B). Not just a tool: evolvable by design. Grow your own fruit on the Nüwa Found…",
-    "stelle": 2582,
+    "stelle": 2655,
     "creato": "2026-10-30"
    },
    {
-    "nome": "ThreatDefence/agentic-attack-detections",
-    "url": "https://github.com/ThreatDefence/agentic-attack-detections",
-    "descrizione": "Detection rules and IOCs for AI agent attack frameworks: ARTEX, Cairn, PentAGI, HexStrike, CyberStrikeAI, Strix, Hermes Agent, Agent Zero, RedAmon, Xalgorix, Pentest Swarm AI. KQL hunts for Microsoft…",
-    "stelle": 526,
-    "creato": "2026-11-20"
+    "nome": "z91772524-ai/pojia-next",
+    "url": "https://github.com/z91772524-ai/pojia-next",
+    "descrizione": "四个 AI 客户端的内置提示词一键替换：DSH / WorkBuddy / ZCode / Codex。双击即用、可自证、改前备份、一键还原。免装 Python 单文件 exe；激活码在官方群内按公告领取。",
+    "stelle": 1236,
+    "creato": "2026-09-17"
    }
   ],
   "governance": [
@@ -549,22 +549,22 @@
     "nome": "wuyoscar/AISafetyHot",
     "url": "https://github.com/wuyoscar/AISafetyHot",
     "descrizione": "AI Safety HOT: daily AI safety news, papers and incidents in one place — jailbreaks, prompt injection, alignment, evals, governance. Website, daily digest, RSS and MCP.",
-    "stelle": 2081,
+    "stelle": 2079,
     "creato": "2026-10-01"
    },
    {
     "nome": "agents-universe/agents-universe",
     "url": "https://github.com/agents-universe/agents-universe",
     "descrizione": "不是问答机器人，而是能真正干活的数字分身。共享智能体，共享项目上下文，让项目所有成员一起协同工作。同时智能体会像人一样通过资料或者工作抽象和总结经验到项目上下文中",
-    "stelle": 975,
+    "stelle": 1009,
     "creato": "2026-09-10"
    },
    {
-    "nome": "Atomburstofficial/geiger",
-    "url": "https://github.com/Atomburstofficial/geiger",
-    "descrizione": "A Geiger counter for AI agents — one read-only command that inventories every agent, MCP server, plugin, and AI extension on a machine",
-    "stelle": 173,
-    "creato": "2026-09-06"
+    "nome": "Continuum-AI-Corp/Orca-AI-Incident-Archive",
+    "url": "https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive",
+    "descrizione": "An open database of real-world AI agent incidents.",
+    "stelle": 264,
+    "creato": "2026-09-18"
    }
   ],
   "dati-per-ai": [
@@ -572,7 +572,7 @@
     "nome": "hugues31/duckpad",
     "url": "https://github.com/hugues31/duckpad",
     "descrizione": "The data transformation tool the open-source community deserves.",
-    "stelle": 300,
+    "stelle": 299,
     "creato": "2026-10-25"
    },
    {
@@ -586,7 +586,7 @@
     "nome": "BlueRingsLabs/no-shortcuts",
     "url": "https://github.com/BlueRingsLabs/no-shortcuts",
     "descrizione": "Free Course : Data, Machine Learning, Deep Learning and AI Engineering, the long way round: the math, the code, the systems and the security. 173 lessons, 166 runnable labs, no shortcuts. Free under …",
-    "stelle": 177,
+    "stelle": 178,
     "creato": "2026-09-26"
    }
   ],
@@ -595,22 +595,22 @@
     "nome": "gogoymh/auto-ontology-mcp",
     "url": "https://github.com/gogoymh/auto-ontology-mcp",
     "descrizione": "NVIDIA Auto Ontology's semantic layer and a personal knowledge base as an MCP server for Claude, ChatGPT and other MCP clients. No LLM API key needed.",
-    "stelle": 538,
+    "stelle": 548,
     "creato": "2026-11-06"
-   },
-   {
-    "nome": "Future-Proof-DS/interactive-ai-ml-tools",
-    "url": "https://github.com/Future-Proof-DS/interactive-ai-ml-tools",
-    "descrizione": "Free interactive tools for data scientists to learn MLOps, ML system design and agentic analytics: a production ML system map, ML project structure, data drift simulator, agentic analytics system map…",
-    "stelle": 301,
-    "creato": "2026-11-02"
    },
    {
     "nome": "chaw1/datakeel",
     "url": "https://github.com/chaw1/datakeel",
     "descrizione": "Local-first workbench for auditable AI datasets, traceable business metrics, and human-approved MCP agents.",
-    "stelle": 279,
+    "stelle": 346,
     "creato": "2026-10-23"
+   },
+   {
+    "nome": "Future-Proof-DS/interactive-ai-ml-tools",
+    "url": "https://github.com/Future-Proof-DS/interactive-ai-ml-tools",
+    "descrizione": "Free interactive tools for data scientists to learn MLOps, ML system design and agentic analytics: a production ML system map, ML project structure, data drift simulator, agentic analytics system map…",
+    "stelle": 304,
+    "creato": "2026-11-02"
    }
   ],
   "vector-db": [
@@ -618,14 +618,14 @@
     "nome": "kividbio/kividb",
     "url": "https://github.com/kividbio/kividb",
     "descrizione": "A fast, multi-threaded Redis® and Valkey alternative written in Rust: drop-in compatible, with full-text and vector search built in",
-    "stelle": 1381,
+    "stelle": 1484,
     "creato": "2026-10-16"
    },
    {
     "nome": "chenkanglin198904/Personal_External_Brain",
     "url": "https://github.com/chenkanglin198904/Personal_External_Brain",
     "descrizione": "Not another ChatGPT wrapper. This is a local-first tool that turns your notes, web pages, PDFs and audio/video into a personal knowledge graph — running entirely on your own machine.",
-    "stelle": 200,
+    "stelle": 201,
     "creato": "2026-09-23"
    },
    {
@@ -641,22 +641,22 @@
     "nome": "ARahim3/DigUp",
     "url": "https://github.com/ARahim3/DigUp",
     "descrizione": "Search your computer by what's in your files: photos, PDFs, documents, recordings, videos and code. On-device on Mac, Windows and Linux, built on Google DeepMind's EmbeddingGemma 2.",
-    "stelle": 6500,
+    "stelle": 6551,
     "creato": "2026-10-08"
-   },
-   {
-    "nome": "Tencent/WeMM-Embedding",
-    "url": "https://github.com/Tencent/WeMM-Embedding",
-    "descrizione": "WeMM-Embedding is a family of universal multimodal embedding models by the WeChat Vision Team at Tencent, supporting multimodal understanding and retrieval.",
-    "stelle": 1826,
-    "creato": "2026-08-25"
    },
    {
     "nome": "Valen-Team/Valen",
     "url": "https://github.com/Valen-Team/Valen",
     "descrizione": "Open multimodal decision models, 0.8B to 27B, for text, images and video. Decide with probabilities over your own candidates and locate with bounding boxes, in place of generated text. Free API, ONNX…",
-    "stelle": 935,
+    "stelle": 939,
     "creato": "2026-09-23"
+   },
+   {
+    "nome": "chipfighter/context-attachment-manager",
+    "url": "https://github.com/chipfighter/context-attachment-manager",
+    "descrizione": "Keep long, image-heavy Codex and Claude Code chats fast: earlier images become ID placeholders the model fetches back on demand, even after compaction. Local, cache-friendly, MIT.",
+    "stelle": 823,
+    "creato": "2026-09-24"
    }
   ],
   "llmops": [
@@ -664,14 +664,14 @@
     "nome": "respanai/respan-gateway",
     "url": "https://github.com/respanai/respan-gateway",
     "descrizione": "Open-source LLM gateway in Rust. One endpoint for OpenAI, Anthropic, Gemini and every other vendor. Any SDK, any model, any tool.",
-    "stelle": 1010,
+    "stelle": 1071,
     "creato": "2026-09-25"
    },
    {
     "nome": "jwuthri-cloud/Tracely-ai",
     "url": "https://github.com/jwuthri-cloud/Tracely-ai",
     "descrizione": "Trace-native CI/CD for AI agents: grade production traces, cluster failures, freeze them into replayable regression tests, and block PRs that regress. Self-hostable.",
-    "stelle": 848,
+    "stelle": 845,
     "creato": "2026-10-11"
    },
    {
@@ -687,21 +687,21 @@
     "nome": "AienTech/dossier",
     "url": "https://github.com/AienTech/dossier",
     "descrizione": "A self-hosted job search and resume builder app that writes tailored resumes and cover letters from your profile.",
-    "stelle": 5401,
+    "stelle": 5510,
     "creato": "2026-10-03"
    },
    {
     "nome": "simplexai-labs/linger",
     "url": "https://github.com/simplexai-labs/linger",
     "descrizione": "Linger is An Open-Source Personal Agent That Runs Fully on Your PC.  We aim to break Big Tech’s grip on AI by bringing powerful local AI to everyday computers through efficient model–harness co-desig…",
-    "stelle": 4125,
+    "stelle": 4767,
     "creato": "2026-11-10"
    },
    {
     "nome": "mw00/project-maya",
     "url": "https://github.com/mw00/project-maya",
-    "descrizione": "Run GLM-5.3 (744B), DeepSeek-V4.1-Flash (748B), MiniMax-M3.1-Flash (428B), GLM-5.3-Flash (321B) and Hy4-Flash (220B) on your own GPUs - from 8 GB of VRAM, NVIDIA and AMD, one dashboard, OpenAI- and A…",
-    "stelle": 3266,
+    "descrizione": "Run GLM-5.3 (744B), DeepSeek-V4.1-Flash (748B), MiniMax-M3.1-Flash (428B), GLM-5.3-Flash (321B), Hy4-Flash (220B) and Inkling 2 Mini (26B) on your own GPUs - from 8 GB of VRAM, NVIDIA and AMD, one da…",
+    "stelle": 3368,
     "creato": "2026-10-06"
    }
   ],
@@ -710,21 +710,21 @@
     "nome": "cobanov/awesome-fly",
     "url": "https://github.com/cobanov/awesome-fly",
     "descrizione": "A curated list of fruit fly connectome projects: MaleCNS, FlyWire, brain simulations, embodied models, games, and research tools.",
-    "stelle": 756,
+    "stelle": 761,
     "creato": "2026-09-12"
    },
    {
     "nome": "muellerberndt/cadence",
     "url": "https://github.com/muellerberndt/cadence",
     "descrizione": "A brain that learns from live experience. System 1 by default: perception, memory, plasticity and action. Optional System 2 for self-observation and slow corrections.",
-    "stelle": 644,
+    "stelle": 643,
     "creato": "2026-09-07"
    },
    {
     "nome": "eust-w/opengeniemaster",
     "url": "https://github.com/eust-w/opengeniemaster",
     "descrizione": "Open-source embodied agent framework: execution, feedback, and continual improvement",
-    "stelle": 493,
+    "stelle": 502,
     "creato": "2026-10-27"
    }
   ]
@@ -734,7 +734,7 @@
    "repo": "huggingface/transformers",
    "url": "https://github.com/huggingface/transformers",
    "descrizione": "🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. ",
-   "ultimo_push": "2026-11-23T16:08:14Z",
+   "ultimo_push": "2026-11-26T10:02:09Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -783,6 +783,10 @@
     {
      "data": "2026-11-23",
      "stelle": 169373
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 169351
     }
    ]
   },
@@ -790,7 +794,7 @@
    "repo": "vllm-project/vllm",
    "url": "https://github.com/vllm-project/vllm",
    "descrizione": "A high-throughput and memory-efficient inference and serving engine for LLMs",
-   "ultimo_push": "2026-11-23T15:48:50Z",
+   "ultimo_push": "2026-11-26T09:54:34Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -839,6 +843,10 @@
     {
      "data": "2026-11-23",
      "stelle": 97406
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 97606
     }
    ]
   },
@@ -846,7 +854,7 @@
    "repo": "ollama/ollama",
    "url": "https://github.com/ollama/ollama",
    "descrizione": "Get up and running with Kimi, GLM, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
-   "ultimo_push": "2026-11-22T10:10:02Z",
+   "ultimo_push": "2026-11-26T06:27:01Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -895,6 +903,10 @@
     {
      "data": "2026-11-23",
      "stelle": 187901
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 188177
     }
    ]
   },
@@ -902,7 +914,7 @@
    "repo": "langchain-ai/langgraph",
    "url": "https://github.com/langchain-ai/langgraph",
    "descrizione": "Build resilient agents.",
-   "ultimo_push": "2026-11-22T00:32:52Z",
+   "ultimo_push": "2026-11-26T01:12:20Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -951,6 +963,10 @@
     {
      "data": "2026-11-23",
      "stelle": 45310
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 45446
     }
    ]
   },
@@ -958,7 +974,7 @@
    "repo": "run-llama/llama_index",
    "url": "https://github.com/run-llama/llama_index",
    "descrizione": "LlamaIndex is the document processing platform for AI",
-   "ultimo_push": "2026-11-20T00:46:38Z",
+   "ultimo_push": "2026-11-26T02:31:58Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1007,6 +1023,10 @@
     {
      "data": "2026-11-23",
      "stelle": 52987
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 53014
     }
    ]
   },
@@ -1014,7 +1034,7 @@
    "repo": "modelcontextprotocol/servers",
    "url": "https://github.com/modelcontextprotocol/servers",
    "descrizione": "Model Context Protocol Reference Servers",
-   "ultimo_push": "2026-11-19T16:41:29Z",
+   "ultimo_push": "2026-11-25T05:08:57Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1063,6 +1083,10 @@
     {
      "data": "2026-11-23",
      "stelle": 92190
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 92265
     }
    ]
   },
@@ -1070,7 +1094,7 @@
    "repo": "openai/openai-agents-python",
    "url": "https://github.com/openai/openai-agents-python",
    "descrizione": "A lightweight, powerful framework for multi-agent workflows",
-   "ultimo_push": "2026-11-23T15:35:01Z",
+   "ultimo_push": "2026-11-25T23:01:02Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1119,6 +1143,10 @@
     {
      "data": "2026-11-23",
      "stelle": 30839
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 30883
     }
    ]
   },
@@ -1175,6 +1203,10 @@
     {
      "data": "2026-11-23",
      "stelle": 61965
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 61971
     }
    ]
   },
@@ -1182,7 +1214,7 @@
    "repo": "crewAIInc/crewAI",
    "url": "https://github.com/crewAIInc/crewAI",
    "descrizione": "Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.",
-   "ultimo_push": "2026-11-23T16:06:27Z",
+   "ultimo_push": "2026-11-26T02:09:07Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1231,6 +1263,10 @@
     {
      "data": "2026-11-23",
      "stelle": 61201
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 61290
     }
    ]
   },
@@ -1238,7 +1274,7 @@
    "repo": "anthropics/claude-code",
    "url": "https://github.com/anthropics/claude-code",
    "descrizione": "Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows ",
-   "ultimo_push": "2026-11-23T10:14:33Z",
+   "ultimo_push": "2026-11-26T09:56:59Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1287,6 +1323,10 @@
     {
      "data": "2026-11-23",
      "stelle": 156791
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 157144
     }
    ]
   },
@@ -1294,7 +1334,7 @@
    "repo": "ggml-org/llama.cpp",
    "url": "https://github.com/ggml-org/llama.cpp",
    "descrizione": "LLM inference in C/C++",
-   "ultimo_push": "2026-11-23T15:50:48Z",
+   "ultimo_push": "2026-11-26T09:47:47Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1343,6 +1383,10 @@
     {
      "data": "2026-11-23",
      "stelle": 136160
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 136331
     }
    ]
   },
@@ -1350,7 +1394,7 @@
    "repo": "unslothai/unsloth",
    "url": "https://github.com/unslothai/unsloth",
    "descrizione": "Local UI to run and train LLMs and diffusion models. Supports GGUF, MLX, Qwen3.8, DeepSeek-V4.1, MiniMax-H3, Gemma 4, FLUX and more.",
-   "ultimo_push": "2026-11-23T16:03:11Z",
+   "ultimo_push": "2026-11-26T10:01:22Z",
    "storico": [
     {
      "data": "2026-10-15",
@@ -1399,6 +1443,10 @@
     {
      "data": "2026-11-23",
      "stelle": 80065
+    },
+    {
+     "data": "2026-11-26",
+     "stelle": 80280
     }
    ]
   }

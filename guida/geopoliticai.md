@@ -34,7 +34,7 @@ Un link apre una vista precisa, per esempio [il filo dell'UE](https://simones99.
 ## Limiti
 
 - per progettazione e fabbricazione non esiste una fonte aperta più recente del dato 2022 di ETO;
-- *AI data centers* copre circa il 44% del calcolo AI mondiale, quasi tutto negli USA, e oggi non ha siti in Italia. Il censimento più vecchio di Epoch, *GPU clusters*, fermo a marzo 2026, conta in Italia 9 cluster, tra cui Leonardo al CINECA: la mappa lo dice in una nota, come fotografia datata;
+- *AI data centers* copre circa il 44% del calcolo AI mondiale, quasi tutto negli USA, e oggi non ha siti in Italia. Il censimento più vecchio di Epoch, *GPU clusters*, fermo a marzo 2026, conta in Italia 9 cluster, tra cui Leonardo al CINECA. Un cluster non è un sito, e non entra nelle quote: la mappa lo dice in una nota, come fotografia datata;
 - Epoch non conta nessun modello italiano: Minerva (Sapienza), Velvet (Almawave) e i modelli di iGenius non sono nel suo database, e la scheda dell'Italia lo dice;
 - energia e acqua non sono un anello.
 

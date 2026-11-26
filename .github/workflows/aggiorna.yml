@@ -23,6 +23,10 @@ on:
       - "requirements.txt"
       - ".github/workflows/**"
       - "data/edizioni/**"
+      # la guida: un push che la cambia la ripubblica, come il resto del sito, con i dati già salvati
+      - "guida/**"
+      - "mkdocs.yml"
+      - "requirements-guida.txt"
 
 permissions:
   contents: write   # per salvare i dati aggiornati nel repository
@@ -65,10 +69,15 @@ jobs:
             echo "AI_RADAR_BASE_URL=https://$utente.github.io/$repository/" >> "$GITHUB_ENV"
           fi
 
+      # la guida sta in guida/ accanto all'app, e il suo indirizzo nasce da quello del sito
+      - name: Ricava l'indirizzo della guida
+        run: echo "AI_RADAR_GUIDA_URL=${AI_RADAR_BASE_URL}guida/" >> "$GITHUB_ENV"
+
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: requirements*.txt
 
       - uses: actions/setup-node@v7
         with:
@@ -78,7 +87,7 @@ jobs:
 
       - name: Installa le dipendenze
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements.txt -r requirements-guida.txt
           npm ci --prefix web
 
       - name: Test della pipeline
@@ -90,6 +99,11 @@ jobs:
         run: |
           npm run check
           npm test
+
+      # prima della raccolta, come gli altri test: una guida con un link rotto ferma il giro qui, e non dopo, quando
+      # l'edizione della settimana sarebbe già fatta. La guida che esce è quella rifatta in fondo, dopo gli end-to-end
+      - name: Test della guida
+        run: zensical build --strict
 
       - name: Raccogli i dati
         if: github.event_name != 'push'
@@ -157,6 +171,11 @@ jobs:
         timeout-minutes: 10
         working-directory: web
         run: npm run anteprime-competenze
+
+      # dopo gli end-to-end, che rifanno _site e la svuotano: la guida entra in _site/guida accanto all'app.
+      # È la stessa provata prima della raccolta, quindi qui non ha motivo di fallire
+      - name: Aggiungi la guida al sito
+        run: zensical build --strict
 
       - uses: actions/upload-pages-artifact@v5
         with:

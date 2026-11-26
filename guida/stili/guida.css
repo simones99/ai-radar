@@ -1,0 +1,104 @@
+/* La guida vestita come l'app: font, colori, carte e tema scuro sono quelli di web/src/app.css.
+   Il font sta nella guida (licenza in font/OFL.txt), così nessuna pagina chiama Google Fonts. */
+@font-face {
+  font-family: "Bricolage Grotesque Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("../font/bricolage-grotesque-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Bricolage Grotesque Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("../font/bricolage-grotesque-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --md-text-font: "Bricolage Grotesque Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --md-code-font: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+[data-md-color-scheme="default"] {
+  --bg: #f4f4f2; --card: #ffffff; --fg: #121211; --accent: #0068d6;
+  --ombra: 0 1px 2px rgba(18, 18, 17, .04), 0 8px 24px rgba(18, 18, 17, .06);
+}
+[data-md-color-scheme="slate"] {
+  --bg: #0b0b0a; --card: #161615; --fg: #ececea; --accent: #4ea3ff;
+  --ombra: 0 0 0 1px rgba(255, 255, 255, .06);
+  --md-hue: 60;
+}
+[data-md-color-scheme] {
+  --linea: color-mix(in srgb, var(--fg) 9%, var(--card));
+  --md-default-bg-color: var(--bg);
+  --md-default-fg-color: var(--fg);
+  --md-default-fg-color--light: color-mix(in srgb, var(--fg) 68%, transparent);
+  --md-default-fg-color--lighter: color-mix(in srgb, var(--fg) 40%, transparent);
+  --md-default-fg-color--lightest: color-mix(in srgb, var(--fg) 10%, transparent);
+  --md-primary-fg-color: var(--bg);
+  --md-primary-fg-color--light: var(--bg);
+  --md-primary-fg-color--dark: var(--bg);
+  --md-primary-bg-color: var(--fg);
+  --md-primary-bg-color--light: color-mix(in srgb, var(--fg) 68%, transparent);
+  --md-accent-fg-color: var(--accent);
+  --md-accent-fg-color--transparent: color-mix(in srgb, var(--accent) 10%, transparent);
+  --md-typeset-a-color: var(--accent);
+  --md-code-bg-color: color-mix(in srgb, var(--fg) 5%, var(--card));
+  --md-footer-bg-color: var(--bg);
+  --md-footer-bg-color--dark: var(--bg);
+  --md-footer-fg-color: var(--fg);
+  --md-footer-fg-color--light: color-mix(in srgb, var(--fg) 68%, transparent);
+  --md-footer-fg-color--lighter: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+/* testata: la carta chiara dell'app, senza fascia colorata */
+.md-header { box-shadow: none; border-bottom: 1px solid var(--linea); }
+.md-header__title { font-weight: 650; letter-spacing: -.01em; }
+.md-search__form { background: color-mix(in srgb, var(--fg) 6%, transparent); border-radius: 999px; }
+.md-search__input { color: var(--fg); }
+.md-search__input::placeholder, .md-search__icon { color: color-mix(in srgb, var(--fg) 55%, transparent); }
+/* l'icona dell'app ha l'anello scuro: sul tema scuro lo schiarisce, e il punto resta blu */
+[data-md-color-scheme="slate"] .md-logo img { filter: invert(1) hue-rotate(180deg); }
+
+/* il testo sta su una carta, come le card dell'app */
+.md-content {
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow: var(--ombra);
+  margin: 1.2rem 0 2.4rem;
+}
+.md-content__inner { margin: 0 1.6rem 1.6rem; padding-top: 1.2rem; }
+.md-typeset { font-size: .82rem; line-height: 1.65; }
+.md-typeset p, .md-typeset ul, .md-typeset ol { max-width: 38em; }
+.md-typeset h1 { color: var(--fg); font-weight: 750; letter-spacing: -.025em; font-size: 2.1em; margin-bottom: .8em; }
+.md-typeset h2 { font-weight: 700; letter-spacing: -.015em; }
+.md-typeset a { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset: .18em; }
+.md-typeset img { border-radius: 16px; box-shadow: var(--ombra); }
+
+.md-footer, .md-footer-meta { background: var(--bg); color: var(--fg); }
+.md-footer-meta { border-top: 1px solid var(--linea); }
+
+.md-nav__link--active, .md-nav__item .md-nav__link--active { font-weight: 650; }
+.md-nav__title { color: var(--fg); }
+
+.md-typeset table:not([class]) { border-radius: 16px; border: 1px solid var(--linea); box-shadow: none; font-size: .74rem; }
+.md-typeset table:not([class]) th { background: color-mix(in srgb, var(--fg) 4%, var(--card)); }
+.md-typeset pre > code { border-radius: 16px; }
+.md-typeset code { border-radius: 6px; }
+
+.md-typeset .admonition, .md-typeset details {
+  border: 0; border-radius: 16px; box-shadow: none; font-size: .78rem;
+  background: color-mix(in srgb, var(--accent) 7%, var(--card));
+}
+.md-typeset .admonition > .admonition-title, .md-typeset details > summary {
+  background: transparent; border-radius: 16px 16px 0 0; font-weight: 650;
+}
+.md-typeset .admonition.note, .md-typeset .admonition.tip, .md-typeset .admonition.warning {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--card));
+}
+.md-typeset .note > .admonition-title::before, .md-typeset .tip > .admonition-title::before,
+.md-typeset .warning > .admonition-title::before { background-color: var(--accent); }

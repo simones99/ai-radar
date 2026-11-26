@@ -27,8 +27,9 @@ function frasi(e: Edizione, radice: string): string {
   const titolo = !e.precedente ? 'La situazione'
     : card.some((c) => c.frase != null && c.cambiata) ? `Cambiato ${da}`
       : senzaNovita(e) ? `Nulla è cambiato ${da}` : `Nessuna frase è cambiata ${da}`;
-  return `<section>
-<h2>${esc(titolo)}</h2>
+  // ogni sezione prende il nome dal suo titolo: per un lettore di schermo è una regione da cui saltare
+  return `<section aria-labelledby="ed-frasi">
+<h2 id="ed-frasi">${esc(titolo)}</h2>
 ${e.precedente ? `<p class="ed-nota">Rispetto alla <a href="${esc(`${radice}edizioni/${e.precedente}/`)}">settimana ${esc(dayWith('del', e.precedente))}</a>.</p>` : ''}
 ${e.porte.map((p) => cardDellaTesta(p, card, versoLaCard(radice))).join('\n')}
 </section>`;
@@ -39,12 +40,13 @@ function notizie(e: Edizione, radice: string): string {
   const card = e.card.find(eCardNotizie);
   // cifra e frase come salvate nel file fisso, così una correzione si vede. Con zero notizie la frase dice già «Nessuna notizia»
   const conteggio = card?.frase ? `<div class="ed-conteggio">\n${card.cifra && card.cifra !== '0' ? cifraGrande({ cifra: card.cifra, unita: null }) : ''}\n<p>${esc(card.frase)}</p>\n</div>` : '<p>Dati non disponibili.</p>';
-  const temi = n.temi.map((t) => `<h3>${esc(t.nome)}</h3>
-<ul class="ed-voci">
+  // la lista prende il nome dal tema; l'indice, non il tema, fa l'id: un tema sconosciuto arriva com'è dal feed
+  const temi = n.temi.map((t, i) => `<h3 id="ed-tema-${i}">${esc(t.nome)}</h3>
+<ul class="ed-voci" aria-labelledby="ed-tema-${i}">
 ${t.voci.map((v) => `<li>${linkEsterno(v.link, v.titolo)} <span class="ed-fonte">${esc(v.fonte)} · ${esc(day(v.data))}</span></li>`).join('\n')}
 </ul>`).join('\n');
-  return `<section>
-<h2>Notizie</h2>
+  return `<section aria-labelledby="ed-notizie">
+<h2 id="ed-notizie">Notizie</h2>
 ${conteggio}
 ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono solo titolo, data e link all'articolo originale, nella sua lingua.</p>\n${temi}` : ''}
 <p><a href="${esc(`${radice}${toHash('notizie')}`)}">Le altre notizie, nella card Notizie</a></p>
@@ -55,8 +57,8 @@ ${n.temi.length ? `<p class="ed-nota">${esc(n.regola)} Di ogni notizia ci sono s
 function fontiNonAggiornate(e: Edizione): string {
   if (!e.fonti_non_aggiornate.length) return '<p class="ed-nota">In questa edizione tutte le fonti hanno dati aggiornati.</p>';
   const righe = e.fonti_non_aggiornate.map((f) => `<li>${esc(f.nome)}${f.ultimo_successo ? `: ultimo dato ${esc(dayWith('del', f.ultimo_successo))}` : ''}</li>`).join('\n');
-  return `<section>
-<h2>Senza dati aggiornati in questa edizione</h2>
+  return `<section aria-labelledby="ed-fonti">
+<h2 id="ed-fonti">Senza dati aggiornati in questa edizione</h2>
 <ul class="ed-voci">
 ${righe}
 </ul>

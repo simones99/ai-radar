@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, within } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Dataset } from '../data/types';
@@ -11,7 +11,7 @@ describe('Doors', () => {
     render(Doors, { data: FIXTURE as Dataset, today });
     const perTe = screen.getByRole('link', { name: /Per te.*Su cosa formarti.*MCP entra tra le competenze da imparare ora/ });
     expect(perTe).toHaveAttribute('href', '#competenze');
-    expect(perTe.querySelector('em')).toHaveTextContent('MCP');
+    expect(within(perTe).getAllByRole('emphasis')[0]).toHaveTextContent('MCP');
     const italia = screen.getByRole('link', { name: /Per la tua organizzazione.*L'AI in Italia.*16% delle imprese italiane usa l'AI/ });
     expect(italia).toHaveAttribute('href', '#business');
     expect(screen.getByText('Radar delle competenze su arXiv, GitHub e The Adzuna API · dati al 15 ott 2026')).toBeInTheDocument();

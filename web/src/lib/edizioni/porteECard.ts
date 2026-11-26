@@ -20,8 +20,9 @@ export type CardDaScrivere = CardDellaSettimana & Partial<Pick<CardFissa, 'cambi
  */
 export function porta(p: PortaDaScrivere, link: LinkDellaDestinazione, da?: string): string {
   const titolo = p.titolo.map((x) => (x.em ? `<em>${esc(x.t)}</em>` : esc(x.t))).join('');
-  return `<article class="ed-porta">
-<h2>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
+  // il titolo dà il nome all'articolo: chi legge con un lettore di schermo trova la porta per la sua testa
+  return `<article class="ed-porta" aria-labelledby="porta-${esc(p.id)}">
+<h2 id="porta-${esc(p.id)}">${esc(p.nome)} <span>${esc(p.etichetta)}</span></h2>
 ${portaConDati(p) ? `<p class="ed-notizia">${inLink(link(p.destinazione), titolo)}</p>` : ''}
 ${portaConDati(p) && p.cambiata === false && da ? `<p class="ed-ripetuta">Nessun cambio qui ${esc(da)}</p>` : ''}
 ${p.nota ? `<p class="ed-nota">${esc(p.nota)}</p>` : ''}
@@ -57,8 +58,9 @@ export function cardDellaTesta(p: PortaDaScrivere, card: readonly CardDaScrivere
   const invariate = conDati.filter((c) => c.cambiata === false);
   const senzaDati = proprie.filter((c) => c.frase == null);
   const elenco = (xs: CardDaScrivere[]) => xs.map((c) => inLink(link(c.destinazione), esc(c.nome))).join(', ');
-  return `<div class="ed-gruppo">
-<h3>${esc(p.nome)} <span>${esc(p.etichetta)}</span></h3>
+  // un gruppo con il nome della testa: una sezione dentro la sezione avrebbe preso il suo stile
+  return `<div class="ed-gruppo" role="group" aria-labelledby="testa-${esc(p.id)}">
+<h3 id="testa-${esc(p.id)}">${esc(p.nome)} <span>${esc(p.etichetta)}</span></h3>
 ${righe.length ? `<ul class="ed-righe">\n${righe.map((c) => rigaCard(c, link)).join('\n')}\n</ul>` : ''}
 ${invariate.length ? `<p class="ed-nota">Invariate: ${elenco(invariate)}.</p>` : ''}
 ${senzaDati.length ? `<p class="ed-nota">Dati non disponibili: ${elenco(senzaDati)}.</p>` : ''}

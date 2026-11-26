@@ -41,3 +41,23 @@ jobs:
         run: |
           npm run check
           npm test
+
+  # la guida ha dipendenze sue, come nel job «guida» di «Aggiorna e pubblica»
+  guida:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-guida.txt
+
+      - name: Installa Zensical
+        run: pip install -r requirements-guida.txt
+
+      # si ferma su un link rotto tra le pagine della guida
+      - name: Costruisci la guida
+        run: zensical build --strict

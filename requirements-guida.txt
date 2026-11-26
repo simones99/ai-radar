@@ -1,0 +1,2 @@
+# Solo per costruire la guida (guida/ e mkdocs.yml). Versione fissata: Zensical è giovane, e un aggiornamento si prova prima in locale
+zensical==0.1.3

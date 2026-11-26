@@ -25,7 +25,7 @@ Ogni lunedì esce anche un'**edizione**, il riassunto fisso della settimana con 
 
 ## Positioning
 
-Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, e le misure sono in unità vere (per esempio "+25% in 6 mesi", annunci ogni 10.000). Le soglie del radar sono fisse e il quadrante cambia solo dopo due mesi di fila, quindi una competenza non salta da una settimana all'altra. Dove i dati mancano, la pagina lo dice. Tutto gira gratis su GitHub, e il metodo è scritto nel README.
+Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, e le misure sono in unità vere (per esempio "+25% in 6 mesi", annunci ogni 10.000). Le soglie del radar sono fisse e il quadrante cambia solo dopo due mesi di fila, quindi una competenza non salta da una settimana all'altra. Dove i dati mancano, la pagina lo dice. Tutto gira gratis su GitHub, e il metodo è scritto nella guida, in `guida/`.
 
 ## Operating Context
 
@@ -45,12 +45,12 @@ Ogni numero si può ricontrollare: ha la sua fonte cliccabile e la sua licenza, 
 - Oggi le frasi e le notizie delle porte sono scritte dai dati con regole fisse, senza LLM. È la scelta attuale, non un vincolo dichiarato.
 - Solo italiano; traduzioni fuori perimetro.
 - Le chiavi API (Artificial Analysis, Adzuna) sono facoltative: senza, i grafici che ne dipendono spiegano cosa manca.
-- I conteggi aggregati di Adzuna si pubblicano con la conferma scritta di Adzuna del 16 novembre 2026, nel rispetto dei loro termini d'uso: ogni dato sugli annunci cita *The Adzuna API*, anche nell'immagine d'anteprima (README, *Nota su Adzuna*).
+- I conteggi aggregati di Adzuna si pubblicano con la conferma scritta di Adzuna del 16 novembre 2026, nel rispetto dei loro termini d'uso: ogni dato sugli annunci cita *The Adzuna API*, anche nell'immagine d'anteprima (guida, *Chiavi e Adzuna*).
 
 ## Brand Commitments
 
 - Nome: **AI Radar**. Nomi delle teste: *Per te*, "Su cosa formarti"; *Per la tua organizzazione*, "L'AI in Italia".
-- Voce: italiano piano, frasi brevi e concrete, numeri con l'unità, nessun gergo e nessun tono promozionale. I testi di README, spec e interfaccia sono il riferimento.
+- Voce: italiano piano, frasi brevi e concrete, numeri con l'unità, nessun gergo e nessun tono promozionale. I testi di guida, spec e interfaccia sono il riferimento.
 
 ## Evidence on Hand
 

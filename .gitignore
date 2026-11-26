@@ -1,4 +1,6 @@
 _site/
+# la cache di Zensical, la riempie la build della guida
+.cache/
 __pycache__/
 .pytest_cache/
 *.tmp

@@ -1,0 +1,67 @@
+# La guida di AI Radar, costruita con Zensical (il successore di Material for MkDocs, che legge questo file).
+# Esce in _site/guida/, accanto all'app. Nel workflow «Aggiorna e pubblica» la costruisce il job «guida», a parte dalla raccolta,
+# e il job «pagine» la aggiunge al sito; i «Controlli» la provano su ogni ramo e pull request.
+# Nessuna risorsa esterna: font e icone stanno nella guida, e senza repo_url il tema non chiede stelle e fork a api.github.com.
+# Il codice del tema sa caricare da unpkg.com Mermaid, glightbox e altre librerie: non attivare le funzioni che le usano (vedi ADR 0005)
+site_name: AI Radar · Guida
+site_description: Come si legge AI Radar, come si pubblica una copia e come si mantiene
+# l'indirizzo pubblico lo passa il workflow, ricavato dal nome del repository come quello dell'app
+site_url: !ENV [AI_RADAR_GUIDA_URL, "https://simones99.github.io/ai-radar/guida/"]
+docs_dir: guida
+site_dir: _site/guida
+
+nav:
+  - Panoramica: index.md
+  - Leggere il sito:
+      - Come si legge il radar: radar.md
+      - Come si legge GeopoliticAI: geopoliticai.md
+      - Edizioni, feed e correzioni: edizioni.md
+  - Pubblicare e mantenere:
+      - Pubblicarlo in 10 minuti: pubblicare.md
+      - Chiavi e Adzuna: chiavi.md
+      - Le visite: visite.md
+      - Personalizzare: personalizzare.md
+  - Sviluppo:
+      - Provarlo in locale: in-locale.md
+      - Struttura e robustezza: struttura.md
+  - Fonti e licenze: fonti.md
+  - Decisioni e ricerche: decisioni.md
+
+theme:
+  language: it
+  font: false
+  logo: immagini/icona.svg
+  favicon: immagini/icona.svg
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle: { icon: lucide/moon, name: Tema scuro }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle: { icon: lucide/sun, name: Tema chiaro }
+  features:
+    - navigation.footer
+    - navigation.sections
+    - content.code.copy
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/simones99/ai-radar
+      name: Il codice su GitHub
+
+extra_css:
+  - stili/guida.css
+
+markdown_extensions:
+  - admonition
+  - tables
+  - attr_list
+  - pymdownx.superfences
+  - toc:
+      permalink: true

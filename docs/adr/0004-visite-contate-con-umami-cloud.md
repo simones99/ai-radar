@@ -19,7 +19,7 @@ La riga promette solo quello che Umami scrive di garantire. La prima versione di
 
 ## Il banner di consenso
 
-Il 20 novembre 2026 l'autore ha deciso di non mettere un banner di consenso. Il contatore non usa cookie e non scrive niente nel browser, e il sito non usa altri cookie né altri servizi che seguono chi legge. I numeri si guardano solo tutti insieme, e non si incrociano con altri dati. Il conteggio si basa sul legittimo interesse del titolare a capire se e come il sito viene letto (art. 6, par. 1, lett. f del GDPR), con dati ridotti al minimo. L'app tiene nel browser solo le scelte di chi legge (ruolo, mercato, settore, area), per ritrovarle alla visita dopo: non escono dal browser e non servono a contare. Umami non dice che il banner non serve: dice che dipende dagli altri servizi usati e dalle regole che si applicano. Se il sito aggiunge un servizio che usa cookie o segue chi legge, la decisione va rifatta.
+Il 20 novembre 2026 l'autore ha deciso di non mettere un banner di consenso. Il contatore non usa cookie e non scrive niente nel browser, e il sito non usa altri cookie né altri servizi che seguono chi legge. I numeri si guardano solo tutti insieme, e non si incrociano con altri dati. Il conteggio si basa sul legittimo interesse del titolare a capire se e come il sito viene letto (art. 6, par. 1, lett. f del GDPR), con dati ridotti al minimo. Il sito tiene nel browser solo le scelte di chi legge, per ritrovarle alla visita dopo: nell'app ruolo, mercato, settore e area, e dal 26 novembre 2026 nella guida il tema chiaro o scuro (ADR 0005). Non escono dal browser e non servono a contare. Umami non dice che il banner non serve: dice che dipende dagli altri servizi usati e dalle regole che si applicano. Se il sito aggiunge un servizio che usa cookie o segue chi legge, la decisione va rifatta.
 
 Le informazioni stanno nella pagina Privacy del sito, in `privacy/`: chi è il titolare e come si contatta, cosa si raccoglie e perché, la base giuridica, per quanto tempo, chi tratta i dati per conto del titolare, chi ospita il sito, cosa resta nel browser, i diritti e il reclamo al Garante. Il titolare si contatta solo dal profilo GitHub, senza nomi di persona. Il testo sta in un modulo solo, `web/src/lib/text/privacy.ts`. La pagina c'è se e solo se c'è il contatore: una copia senza contatore non la pubblica.
 
@@ -32,7 +32,7 @@ La pagina dice solo quello che le fonti confermano, lette il 20 novembre 2026. C
 - Il piano Hobby conta fino a 100.000 eventi al mese e conserva i dati 6 mesi. Cosa succede oltre il limite, le pagine di Umami non lo dicono in modo coerente. Con il traffico di oggi il limite è lontano, ma va controllato nel pannello di Umami, in *Settings → Usage*.
 - I dati più vecchi di 6 mesi non si leggono più nel pannello: un confronto più lungo va annotato prima.
 - Un ad-blocker può bloccare lo script: le misure contano meno visite di quelle vere.
-- I numeri delle visite non si pubblicano, né nel sito né nel README, e il pannello non ha un link pubblico, finché l'autore non decide altrimenti.
+- I numeri delle visite non si pubblicano, né nel sito né nella guida né nel README, e il pannello non ha un link pubblico, finché l'autore non decide altrimenti.
 - Se un giorno il sito avrà una Content Security Policy, dovrà permettere `cloud.umami.is`.
 
 ## Considered Options

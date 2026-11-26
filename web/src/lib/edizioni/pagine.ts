@@ -3,6 +3,7 @@ import { toHash, type TileId } from '../router';
 import { esc, IMMAGINE, IMMAGINE_HOME, linkEsterno, pagina, TITOLO_DEL_FEED, type OpzioniPagine } from '../pagina';
 import { ADZUNA } from '../text/fonti';
 import { day, dayWith } from '../text/format';
+import { laPrecedente } from './precedente';
 import { cardDellaTesta, cifraGrande, porta, type LinkDellaDestinazione } from './porteECard';
 import { cifraDi } from './settimana';
 import { portaConDati, testoPorta, type CardFissa, type Edizione, type PortaFissa } from './tipi';
@@ -22,11 +23,12 @@ const senzaNovita = (e: Edizione): boolean => !!e.precedente && !e.porte.some((p
 
 function frasi(e: Edizione, radice: string): string {
   const card = e.card.filter((c) => !eCardNotizie(c));
+  const da = laPrecedente('da', e);
   const titolo = !e.precedente ? 'La situazione'
-    : card.some((c) => c.frase != null && c.cambiata) ? 'Cambiato dalla settimana scorsa'
-      : senzaNovita(e) ? 'Nulla è cambiato dalla settimana scorsa' : 'Nessuna frase è cambiata dalla settimana scorsa';
+    : card.some((c) => c.frase != null && c.cambiata) ? `Cambiato ${da}`
+      : senzaNovita(e) ? `Nulla è cambiato ${da}` : `Nessuna frase è cambiata ${da}`;
   return `<section>
-<h2>${titolo}</h2>
+<h2>${esc(titolo)}</h2>
 ${e.precedente ? `<p class="ed-nota">Rispetto alla <a href="${esc(`${radice}edizioni/${e.precedente}/`)}">settimana ${esc(dayWith('del', e.precedente))}</a>.</p>` : ''}
 ${e.porte.map((p) => cardDellaTesta(p, card, versoLaCard(radice))).join('\n')}
 </section>`;
@@ -70,11 +72,11 @@ export function corpoEdizione(e: Edizione, radice: string, intestazione = ''): s
   return `<div class="ed-testa">
 ${intestazione}
 <p class="ed-nota">Questa edizione resta com'è, con i dati raccolti ${esc(dayWith('il', e.raccolti))}. Il sito mostra i dati di oggi, quindi può dire altro.</p>
-${senzaNovita(e) ? `<p class="ed-quieta">Settimana senza novità: le frasi sono quelle della settimana scorsa.${e.notizie.temi.length ? ' Qui sotto le notizie.' : ''}</p>` : ''}
+${senzaNovita(e) ? `<p class="ed-quieta">Settimana senza novità: le frasi sono quelle ${esc(laPrecedente('di', e))}.${e.notizie.temi.length ? ' Qui sotto le notizie.' : ''}</p>` : ''}
 ${correzioni}
 </div>
 <div class="ed-porte">
-${e.porte.map((p) => porta(p, versoLaCard(radice))).join('\n')}
+${e.porte.map((p) => porta(p, versoLaCard(radice), laPrecedente('da', e))).join('\n')}
 </div>
 ${frasi(e, radice)}
 ${notizie(e, radice)}

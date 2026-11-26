@@ -167,6 +167,15 @@ describe('il confronto con l’edizione precedente', () => {
     it('Rapporti dà la frase: il mese di prima non è una misura', () => {
       expect(card(dopo(settimanaDopo, conRiga('rapporti', { cifra: 'Marzo', frase: 'Prossimo rapporto previsto: Un altro.' })), 'rapporti').era).toBe('La settimana scorsa: Prossimo rapporto previsto: Un altro.');
     });
+    it('dopo una settimana saltata la frase di prima porta la data della precedente, non «la settimana scorsa»', () => {
+      const dueSettimaneDopo: Dataset = { ...d, status: { ...d.status!, aggiornato: '2026-10-29T08:00:00+00:00' } };
+      const frase = conRiga('modelli', { frase: 'Un’altra frase.' });
+      expect(card(dopo(dueSettimaneDopo, frase), 'modelli').era).toBe('L’edizione del 12 ott 2026: Un’altra frase.');
+      // l'elisione è quella della data: «dell’8»
+      expect(card(dopo(settimanaDopo, { ...frase, settimana: '2026-06-08' }), 'modelli').era).toBe('L’edizione dell’8 giu 2026: Un’altra frase.');
+      // con la cifra diversa la riga non nomina la settimana, e resta com'è
+      expect(card(dopo(dueSettimaneDopo, conRiga('business', { cifra: '12', unita: '%' })), 'business').era).toBe('Era 12%.');
+    });
     it('una card che la settimana prima non aveva dati non dice com’era', () => {
       const senza = dopo(settimanaDopo, conRiga('modelli', { cifra: null, unita: null, frase: null }));
       expect(card(senza, 'modelli').cambiata).toBe(true);
@@ -554,6 +563,44 @@ describe('la pagina di un’edizione', () => {
       expect(perTe.textContent).toContain('MCP entra tra le competenze');
       expect(perTe.textContent).toContain('Nessun cambio qui dalla settimana scorsa');
       expect(italia.textContent).toContain('Nessun cambio qui dalla settimana scorsa');
+    });
+  });
+
+  describe('dopo una settimana saltata', () => {
+    // la precedente è del 12 ottobre, questa del 26: il lunedì 19 è andato male e non è stato recuperato
+    const prima = crea();
+    const conModelli = { ...prima, card: prima.card.map((c) => (c.id === 'modelli' ? { ...c, frase: 'Altra.' } : c)) };
+    const dueSettimaneDopo: Dataset = { ...d, status: { ...d.status!, aggiornato: '2026-10-29T08:00:00+00:00' } };
+
+    it('né la pagina né la voce del feed dicono «settimana scorsa», con le frasi cambiate o senza novità', () => {
+      for (const e of [crea(dueSettimaneDopo, conModelli), crea(dueSettimaneDopo, prima)]) {
+        const tutte = file(prima, e);
+        expect(tutte[`edizioni/${e.settimana}/index.html`]).not.toMatch(/settimana scorsa/i);
+        expect(tutte['feed.xml']).toContain('dall’edizione del 12 ott 2026');
+        expect(tutte['feed.xml']).not.toMatch(/settimana scorsa/i);
+      }
+    });
+    it('le frasi cambiate stanno sotto «Cambiato dall’edizione del…», con la data della precedente', () => {
+      const doc = pagina(crea(dueSettimaneDopo, conModelli));
+      expect(titoli(doc)).toContain('Cambiato dall’edizione del 12 ott 2026');
+    });
+    it('senza novità il titolo è «Nulla è cambiato dall’edizione del…»', () => {
+      expect(titoli(pagina(crea(dueSettimaneDopo, prima)))).toContain('Nulla è cambiato dall’edizione del 12 ott 2026');
+    });
+    it('senza novità la riga in testa dice che le frasi sono quelle dell’edizione del…', () => {
+      const t = pagina(crea({ ...dueSettimaneDopo, news: { ...d.news!, notizie: [] } }, prima)).body.textContent;
+      expect(t).toContain('Settimana senza novità: le frasi sono quelle dell’edizione del 12 ott 2026.');
+    });
+    it('una porta ripetuta dice «Nessun cambio qui dall’edizione del…», con l’elisione della data', () => {
+      const [perTe, italia] = [...pagina(crea(dueSettimaneDopo, prima)).querySelectorAll('article')];
+      expect(perTe.textContent).toContain('Nessun cambio qui dall’edizione del 12 ott 2026');
+      expect(italia.textContent).toContain('Nessun cambio qui dall’edizione del 12 ott 2026');
+      const [daGiugno] = [...pagina(crea(dueSettimaneDopo, { ...prima, settimana: '2026-06-08' })).querySelectorAll('article')];
+      expect(daGiugno.textContent).toContain('Nessun cambio qui dall’edizione dell’8 giu 2026');
+    });
+    it('con la porta cambiata e le frasi no il titolo è «Nessuna frase è cambiata dall’edizione del…»', () => {
+      const conPorta = { ...prima, porte: [{ ...prima.porte[0], titolo: [{ t: 'Altra notizia' }] }, prima.porte[1]] };
+      expect(titoli(pagina(crea(dueSettimaneDopo, conPorta)))).toContain('Nessuna frase è cambiata dall’edizione del 12 ott 2026');
     });
   });
 

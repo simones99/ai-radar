@@ -2,6 +2,7 @@
 import type { Page } from '@playwright/test';
 import { apriFotografo, apriModello, fontCaricato, scegliCorpo } from '../fotografia';
 import { dayWith } from '../text/format';
+import { laPrecedente } from './precedente';
 import { portaConDati, type Edizione } from './tipi';
 
 // il corpo delle due porte, in pixel: il più grande a cui entrano tutte e due. A 30 si legge ancora nei 400 px di un elenco di post
@@ -17,10 +18,11 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
   await apriModello(page, 'immagine-edizione.html');
   const contenuto = {
     data: `Settimana ${dayWith('del', e.settimana)}`,
+    ripetuta: `Nessun cambio ${laPrecedente('da', e)}`,
     // senza dati la frase è già la riga meta: non si ripete
     porte: e.porte.map((p) => ({ nome: p.nome, parti: portaConDati(p) ? p.titolo : [{ t: p.meta }], meta: portaConDati(p) ? p.meta : '', ripetuta: portaConDati(p) && !p.cambiata })),
   };
-  await page.evaluate(({ data, porte }) => {
+  await page.evaluate(({ data, ripetuta, porte }) => {
     document.querySelector('h1')!.textContent = data;
     const articoli = [...document.querySelectorAll('article')];
     porte.forEach((porta, i) => {
@@ -32,7 +34,7 @@ export async function preparaImmagine(page: Page, e: Edizione): Promise<void> {
       }
       const fondo = articoli[i].querySelector('footer')!;
       // una porta ripetuta sembrerebbe una notizia nuova, in un post accanto a quello della settimana prima
-      if (porta.ripetuta) fondo.appendChild(document.createElement('strong')).textContent = 'Nessun cambio dalla settimana scorsa';
+      if (porta.ripetuta) fondo.appendChild(document.createElement('strong')).textContent = ripetuta;
       if (porta.meta) fondo.appendChild(document.createElement('span')).textContent = porta.meta;
     });
   }, contenuto);

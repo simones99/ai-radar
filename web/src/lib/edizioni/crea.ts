@@ -2,6 +2,7 @@
 import type { Dataset } from '../data/types';
 import { fontiNonAggiornate } from './fonti';
 import { notizieDi } from './notizie';
+import { laPrecedente } from './precedente';
 import { cifraDi, settimanaDeiDati, type CardDellaSettimana, type PortaDellaSettimana } from './settimana';
 import { cifraConUnita, portaConDati, testoPorta, VERSIONE, type CardFissa, type Edizione, type PortaFissa } from './tipi';
 
@@ -19,24 +20,25 @@ const cambiata = <T>(ora: T, prima: T | undefined, stessa: (a: T, b: T) => boole
 
 /**
  * Com'era la riga nell'edizione precedente, già composto: il file resta fisso anche se la precedente viene corretta.
+ * quando: la precedente com'è nominata davanti alla frase, «La settimana scorsa» o, dopo una settimana saltata, «L’edizione del …».
  * La cifra di Norme è un conto alla rovescia e quella di Rapporti un mese: non sono un confronto, come una cifra uguale o assente, e vale la frase.
  * In Open source la cifra conta i modelli del tipo in testa: se il tipo è un altro va detto, o sembrerebbe lo stesso numero cresciuto.
  */
-function eraPrima(ora: CardDellaSettimana, prima: CardFissa | undefined): string | null {
+function eraPrima(ora: CardDellaSettimana, prima: CardFissa | undefined, quando: string): string | null {
   if (!prima?.frase) return null;
   const stessaCifra = prima.cifra === ora.cifra && prima.unita === ora.unita;
   const cifra = cifraDi(ora.id);
-  if (cifra === 'conto-alla-rovescia' || cifra === 'mese' || stessaCifra || !prima.cifra || prima.cifra === '—') return `La settimana scorsa: ${prima.frase}`;
+  if (cifra === 'conto-alla-rovescia' || cifra === 'mese' || stessaCifra || !prima.cifra || prima.cifra === '—') return `${quando}: ${prima.frase}`;
   return cifra === 'conta-il-tipo' && prima.frase !== ora.frase ? `Era ${cifraConUnita(prima)}: ${prima.frase}` : `Era ${cifraConUnita(prima)}.`;
 }
 
 const confrontaPorta = (p: PortaDellaSettimana, precedente: Edizione | null): PortaFissa =>
   ({ ...p, cambiata: cambiata(p, precedente?.porte.find((x) => x.id === p.id), stessaPorta) });
 
-function confrontaCard(c: CardDellaSettimana, precedente: Edizione | null): CardFissa {
+function confrontaCard(c: CardDellaSettimana, precedente: Edizione | null, quando: string): CardFissa {
   const prima = precedente?.card.find((x) => x.id === c.id);
   const diversa = cifraDi(c.id) !== 'notizie' && cambiata(c, prima, stessaCard);
-  return { ...c, era: diversa ? eraPrima(c, prima) : null, cambiata: diversa };
+  return { ...c, era: diversa ? eraPrima(c, prima, quando) : null, cambiata: diversa };
 }
 
 /**
@@ -52,7 +54,7 @@ export function creaEdizione(d: Dataset, precedente: Edizione | null): Edizione 
     raccolti: s.raccolti,
     precedente: precedente?.settimana ?? null,
     porte: s.porte.map((p) => confrontaPorta(p, precedente)),
-    card: s.card.map((c) => confrontaCard(c, precedente)),
+    card: s.card.map((c) => confrontaCard(c, precedente, laPrecedente('La', { settimana: s.settimana, precedente: precedente?.settimana ?? null }))),
     notizie: notizieDi(d),
     fonti_non_aggiornate: fontiNonAggiornate(d),
     correzioni: [],

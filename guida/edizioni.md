@@ -2,6 +2,8 @@
 
 Un'**edizione** riassume una settimana: le due porte, le frasi delle card cambiate dalla settimana prima, fino a 3 notizie per tema e le fonti senza dati aggiornati a quel giro. Ogni riga ha fonte, licenza e link alla card. Il testo resta com'è anche quando i dati del sito cambiano: nel file sono salvate le frasi già composte, non i dati da cui derivano.
 
+Un'edizione si confronta con l'ultima uscita prima di lei. Se un lunedì è saltato e non è stato recuperato, quella è più vecchia di una settimana, e i testi la nominano con la sua data: «Cambiato dall’edizione del 9 nov 2026» al posto di «Cambiato dalla settimana scorsa», e lo stesso nelle porte ripetute, nella riga di una settimana senza novità e nell'immagine. Le frasi «com'era» salvate nelle edizioni già uscite restano come sono.
+
 | Indirizzo | Cosa c'è |
 | --- | --- |
 | `/edizioni/AAAA-MM-GG/` | la pagina di un'edizione, con la data del lunedì, in HTML statico senza JavaScript, e la sua immagine di anteprima |

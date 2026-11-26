@@ -98,7 +98,7 @@ test.describe('la pagina Privacy', () => {
       await expect(page).toHaveTitle('Privacy · AI Radar');
       await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacy');
       await expect(page.getByRole('main').getByRole('link', { name: 'profilo GitHub' })).toHaveAttribute('href', 'https://github.com/simones99');
-      const aggiornata = page.getByRole('main').getByText('Aggiornata il 20 novembre 2026.');
+      const aggiornata = page.getByRole('main').getByText('Aggiornata il 26 novembre 2026.');
       await aggiornata.scrollIntoViewIfNeeded();
       await expect(aggiornata).toBeVisible();
       expect(await nessunoScorrimentoOrizzontale(page)).toBe(true);

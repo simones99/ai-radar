@@ -36,5 +36,5 @@ data/*.json ──┬──► app Svelte (D3) ───────────
 
 - Per leggere il sito: [il radar](radar.md), [GeopoliticAI](geopoliticai.md), [le edizioni](edizioni.md).
 - Per pubblicarne una copia: [Pubblicarlo in 10 minuti](pubblicare.md), poi [Chiavi e Adzuna](chiavi.md) e [Le visite](visite.md).
-- Per cambiarlo: [Personalizzare](personalizzare.md), [Provarlo sul proprio computer](in-locale.md), [Struttura e robustezza](struttura.md).
+- Per cambiarlo: [Personalizzare](personalizzare.md), [Provarlo in locale](in-locale.md), [Struttura e robustezza](struttura.md).
 - Per sapere da dove vengono i dati e perché si è scelto così: [Fonti e licenze](fonti.md), [Decisioni e ricerche](decisioni.md).

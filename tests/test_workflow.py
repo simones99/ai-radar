@@ -36,7 +36,7 @@ def test_le_anteprime_delle_competenze_si_fanno_dopo_gli_end_to_end_e_prima_del_
     # gli end-to-end rifanno la build e svuotano la cartella: prima, le immagini andrebbero perse
     passi = [p.get("name") or p.get("uses") for p in job("aggiorna.yml", "aggiorna")["steps"]]
     anteprime = passi.index("Fai le anteprime delle competenze")
-    assert passi.index("Test end-to-end") < anteprime < passi.index("actions/upload-pages-artifact@v5")
+    assert passi.index("Test end-to-end") < anteprime < passi.index("actions/upload-artifact@v7")
     assert "npm run anteprime-competenze" in passo("Fai le anteprime delle competenze")["run"]
 
 
@@ -63,7 +63,7 @@ def test_il_commit_dell_edizione_arriva_dopo_gli_end_to_end_e_prima_del_caricame
     # con gli end-to-end rossi l'edizione non si salva; salvata, esce con il sito che la mostra
     passi = [p.get("name") or p.get("uses") for p in job("aggiorna.yml", "aggiorna")["steps"]]
     salva = passi.index("Salva l'edizione nel repository")
-    assert passi.index("Test end-to-end") < salva < passi.index("actions/upload-pages-artifact@v5")
+    assert passi.index("Test end-to-end") < salva < passi.index("actions/upload-artifact@v7")
 
 
 def test_se_la_creazione_dell_edizione_fallisce_dati_e_sito_proseguono():
@@ -199,6 +199,76 @@ def test_col_sito_uscito_il_job_delle_anteprime_dice_che_le_pagine_hanno_l_immag
     assert "::error::" in giro.stdout
     assert "immagine della home" in giro.stdout
     assert "prossimo giro" in giro.stdout
+
+
+def test_la_guida_non_e_nel_job_della_raccolta():
+    # un link rotto nella guida o un Zensical che non si installa non devono fermare la raccolta del lunedì né l'edizione
+    assert "zensical" not in comandi("aggiorna.yml", "aggiorna")
+    assert "requirements-guida" not in comandi("aggiorna.yml", "aggiorna")
+    assert "needs" not in job("aggiorna.yml", "guida")
+    assert "zensical build --strict" in comandi("aggiorna.yml", "guida")
+
+
+def test_il_sito_della_raccolta_passa_al_job_pagine_con_i_file_nascosti():
+    # .nojekyll è un file nascosto, e senza GitHub Pages passerebbe il sito da Jekyll
+    caricamento = next(p for p in job("aggiorna.yml", "aggiorna")["steps"] if p.get("uses") == "actions/upload-artifact@v7")
+    assert caricamento["with"]["name"] == "sito"
+    assert caricamento["with"]["path"] == "_site"
+    assert caricamento["with"]["include-hidden-files"] is True
+
+
+def test_le_pagine_escono_con_la_raccolta_riuscita_anche_senza_la_guida():
+    pagine = job("aggiorna.yml", "pagine")
+    assert pagine["needs"] == ["aggiorna", "guida"]
+    assert pagine["if"] == "${{ !cancelled() && needs.aggiorna.result == 'success' }}"
+    scaricamenti = [p for p in pagine["steps"] if p.get("uses") == "actions/download-artifact@v8"]
+    assert [(p["with"]["name"], p["with"]["path"], p.get("if")) for p in scaricamenti] == [
+        ("sito", "_site", None),
+        ("guida", "_site/guida", "needs.guida.result == 'success'"),
+    ]
+    passi = [p.get("name") or p.get("uses") for p in pagine["steps"]]
+    assert passi[-1] == "actions/upload-pages-artifact@v5"
+    assert job("aggiorna.yml", "pubblica")["needs"] == "pagine"
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_senza_la_guida_il_giro_lo_dice_ma_il_sito_esce():
+    avviso = next(p for p in job("aggiorna.yml", "pagine")["steps"] if p.get("name") == "Avvisa se la guida manca")
+    assert avviso["if"] == "needs.guida.result != 'success'"
+    giro = subprocess.run([SH, "-c", avviso["run"]], capture_output=True, text=True, encoding="utf-8")
+    assert giro.returncode == 0
+    assert "::error::" in giro.stdout
+    assert "/guida/" in giro.stdout
+
+
+BASH = shutil.which("bash")
+
+
+def indirizzo(file: str, nome_job: str, nome_passo: str, repository: str, tmp_path: Path) -> dict[str, str]:
+    """Il passo vero, con le variabili che GitHub dà al runner: restituisce quello che scrive in GITHUB_ENV."""
+    passo_ = next(p for p in job(file, nome_job)["steps"] if p.get("name") == nome_passo)
+    ambiente = tmp_path / f"{nome_job}.env"
+    ambiente.write_text("")
+    proprietario = repository.split("/")[0]
+    subprocess.run([BASH, "-c", passo_["run"]], check=True, env={**os.environ, "GITHUB_ENV": str(ambiente), "GITHUB_REPOSITORY_OWNER": proprietario, "GITHUB_REPOSITORY": repository})
+    return dict(riga.split("=", 1) for riga in ambiente.read_text().splitlines())
+
+
+@pytest.mark.skipif(not BASH, reason="serve bash, come sul runner")
+@pytest.mark.parametrize(("repository", "atteso"), [
+    ("SimoneS99/ai-radar", "https://simones99.github.io/ai-radar/guida/"),
+    ("SimoneS99/simones99.github.io", "https://simones99.github.io/guida/"),
+])
+def test_la_guida_sta_in_guida_sotto_lo_stesso_indirizzo_dell_app(repository, atteso, tmp_path):
+    # la regola dell'indirizzo base è scritta in due job: se cambia in uno solo, questo test lo vede
+    app = indirizzo("aggiorna.yml", "aggiorna", "Ricava l'indirizzo base dal nome del repository", repository, tmp_path)
+    guida = indirizzo("aggiorna.yml", "guida", "Ricava l'indirizzo della guida", repository, tmp_path)
+    assert guida["AI_RADAR_GUIDA_URL"] == app["AI_RADAR_BASE_URL"] + "guida/" == atteso
+
+
+def test_i_controlli_provano_la_guida_in_un_job_suo():
+    assert "zensical" not in comandi("controlli.yml", "controlli")
+    assert "zensical build --strict" in comandi("controlli.yml", "guida")
 
 
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")

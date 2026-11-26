@@ -89,16 +89,10 @@
 .md-typeset pre > code { border-radius: 16px; }
 .md-typeset code { border-radius: 6px; }
 
-.md-typeset .admonition, .md-typeset details {
+/* i riquadri «!!! note», gli unici che la guida usa: lo sfondo blu tenue delle card in evidenza dell'app */
+.md-typeset .admonition.note {
   border: 0; border-radius: 16px; box-shadow: none; font-size: .78rem;
   background: color-mix(in srgb, var(--accent) 7%, var(--card));
 }
-.md-typeset .admonition > .admonition-title, .md-typeset details > summary {
-  background: transparent; border-radius: 16px 16px 0 0; font-weight: 650;
-}
-.md-typeset .admonition.note, .md-typeset .admonition.tip, .md-typeset .admonition.warning {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 7%, var(--card));
-}
-.md-typeset .note > .admonition-title::before, .md-typeset .tip > .admonition-title::before,
-.md-typeset .warning > .admonition-title::before { background-color: var(--accent); }
+.md-typeset .admonition.note > .admonition-title { background: transparent; border-radius: 16px 16px 0 0; font-weight: 650; }
+.md-typeset .admonition.note > .admonition-title::before { background-color: var(--accent); }

@@ -1,6 +1,8 @@
 # La guida di AI Radar, costruita con Zensical (il successore di Material for MkDocs, che legge questo file).
-# Esce in _site/guida/, accanto all'app: la costruisce il workflow «Aggiorna e pubblica» dopo gli end-to-end.
-# Nessuna risorsa esterna: font e icone stanno nella guida, e senza repo_url il tema non chiede stelle e fork a api.github.com
+# Esce in _site/guida/, accanto all'app. Nel workflow «Aggiorna e pubblica» la costruisce il job «guida», a parte dalla raccolta,
+# e il job «pagine» la aggiunge al sito; i «Controlli» la provano su ogni ramo e pull request.
+# Nessuna risorsa esterna: font e icone stanno nella guida, e senza repo_url il tema non chiede stelle e fork a api.github.com.
+# Il codice del tema sa caricare da unpkg.com Mermaid, glightbox e altre librerie: non attivare le funzioni che le usano (vedi ADR 0005)
 site_name: AI Radar · Guida
 site_description: Come si legge AI Radar, come si pubblica una copia e come si mantiene
 # l'indirizzo pubblico lo passa il workflow, ricavato dal nome del repository come quello dell'app
@@ -20,7 +22,7 @@ nav:
       - Le visite: visite.md
       - Personalizzare: personalizzare.md
   - Sviluppo:
-      - Provarlo sul proprio computer: in-locale.md
+      - Provarlo in locale: in-locale.md
       - Struttura e robustezza: struttura.md
   - Fonti e licenze: fonti.md
   - Decisioni e ricerche: decisioni.md
@@ -60,7 +62,6 @@ markdown_extensions:
   - admonition
   - tables
   - attr_list
-  - md_in_html
   - pymdownx.superfences
   - toc:
       permalink: true

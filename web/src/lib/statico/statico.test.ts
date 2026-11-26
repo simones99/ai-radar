@@ -573,7 +573,7 @@ describe('la pagina Privacy', () => {
       expect(pulito(diritti.textContent)).toContain('(artt. 15-21 del GDPR)');
       expect(pulito(diritti.textContent)).toContain('(art. 11 del GDPR)');
       expect(link(diritti)).toEqual([['Garante per la protezione dei dati personali', 'https://www.garanteprivacy.it/']]);
-      expect(pulito(doc().querySelector('main')!.textContent)).toMatch(/Aggiornata il 20 novembre 2026\.$/);
+      expect(pulito(doc().querySelector('main')!.textContent)).toMatch(/Aggiornata il 26 novembre 2026\.$/);
     });
 
     it('i link dell’informativa portano fuori come gli altri link esterni', () => {

@@ -80,7 +80,7 @@ export const PRIVACY: TestoDellaPrivacy = {
     {
       titolo: 'Nel tuo browser',
       paragrafi: [
-        ['L’app tiene nel browser solo le scelte di chi legge (ruolo, mercato, settore, area), per ritrovarle alla visita dopo. Non escono dal browser e non servono a contare le visite.'],
+        ['Il sito tiene nel browser solo le scelte di chi legge, per ritrovarle alla visita dopo: nell’app ruolo, mercato, settore e area, nella guida il tema chiaro o scuro. Non escono dal browser e non servono a contare le visite.'],
       ],
     },
     {
@@ -92,5 +92,5 @@ export const PRIVACY: TestoDellaPrivacy = {
       ],
     },
   ],
-  aggiornata: 'Aggiornata il 20 novembre 2026.',
+  aggiornata: 'Aggiornata il 26 novembre 2026.',
 };

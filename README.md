@@ -5,7 +5,7 @@
   <img src="guida/immagini/home.png" width="1280" alt="La home di AI Radar il 24 novembre 2026, settimana del 23 novembre. A sinistra le due porte: Per te, «Slancio di LLMOps da +30% a −10%», e Per la tua organizzazione, «Tra 8 giorni: vietate le app che spogliano», scadenza dell'AI Act del 2 dicembre 2026. A destra il radar delle competenze nei quattro quadranti, con Agenti AI, RAG e Multimodali in Impara ora.">
 </picture>
 
-**In English.** A public dashboard on open data that updates itself every Monday: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). It shows which AI skills to learn, from research, open source and job ads in Europe and the US, and where Italy and Europe stand in the AI supply chain. A Python pipeline on GitHub Actions collects the data, and a Svelte + D3 app on GitHub Pages shows it. Interface and docs are in Italian.
+**In English.** A public dashboard on open data that updates itself every Monday: [simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/). It shows which AI skills to learn, from research, open source and job ads in Europe and the US, and where Italy and Europe stand in the AI supply chain. A Python pipeline on GitHub Actions collects the data, and a Svelte + D3 app on GitHub Pages shows it. Every source is licensed and cited; pipeline and app are tested in CI. Interface and docs are in Italian.
 
 Una dashboard pubblica su dati aperti, che si aggiorna da sola ogni lunedì: **[simones99.github.io/ai-radar](https://simones99.github.io/ai-radar/)**. Ha due teste:
 
@@ -25,11 +25,11 @@ python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\
 pip install -r requirements.txt
 npm ci --prefix web
 python -m pipeline.run --months 7                       # dati veri, storico corto
-python scripts/build_site.py                            # costruisce _site/
-cd web && npm run preview                               # il sito su http://localhost:4173
+python scripts/build_site.py                            # copia i dati e costruisce _site/
+cd web && npm run preview                               # apre il sito su http://localhost:4173
 ```
 
-Test, chiavi ed edizioni di prova: [Provarlo sul proprio computer](https://simones99.github.io/ai-radar/guida/in-locale/).
+Test, chiavi ed edizioni di prova: [Provarlo in locale](https://simones99.github.io/ai-radar/guida/in-locale/), nella guida.
 
 ## Nella guida
 

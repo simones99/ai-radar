@@ -18,7 +18,7 @@ Prima della prima edizione questi indirizzi non esistono, e né la home né le p
 - **Avvio manuale:** esce solo con la casella «Crea l'edizione della settimana dei dati», spenta di default. Serve anche a recuperare un lunedì andato male.
 - **Push:** non crea mai un'edizione.
 
-Un'edizione esistente non si sovrascrive. Senza dati in tutte e due le porte l'edizione non esce. Diventa definitiva solo dopo gli end-to-end: se falliscono non si salva e il sito non esce. Se fallisce la sola creazione, dati e sito vanno avanti e il giro finisce in rosso, così arriva la mail di GitHub.
+Un'edizione esistente non si sovrascrive. Senza dati in tutte e due le porte l'edizione non esce. Diventa definitiva solo dopo gli end-to-end: se falliscono non si salva e il sito non esce. Se fallisce la sola creazione, dati e sito vanno avanti e il giro finisce in rosso, così arriva la mail di GitHub. Chromium, che serve all'immagine e agli end-to-end, il giro lo scarica dopo aver salvato i dati e ci prova tre volte, aspettando 5 e poi 15 minuti; se non arriva, il sito non esce, l'edizione non si crea e il log ricorda la casella.
 
 ## Dove stanno
 

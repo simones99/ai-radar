@@ -113,6 +113,12 @@ def test_i_due_salvataggi_passano_dallo_stesso_comando():
     assert "scripts/salva_nel_repo.py data/edizioni " in passo("Salva l'edizione nel repository")["run"]
 
 
+def test_solo_il_salvataggio_dei_dati_ritenta_il_push_dopo_5_e_poi_15_minuti():
+    # i dati di un lunedì non si raccolgono una seconda volta; l'edizione si rifà con la casella
+    assert "--attese 300,900" in passo("Salva i dati nel repository")["run"]
+    assert "--attese" not in passo("Salva l'edizione nel repository")["run"]
+
+
 def test_il_commit_dell_edizione_usa_la_sua_settimana_e_si_salva_solo_se_e_stata_creata():
     salva = passo("Salva l'edizione nel repository")
     assert salva["if"] == "steps.edizione.outputs.settimana != ''"

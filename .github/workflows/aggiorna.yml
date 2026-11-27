@@ -104,9 +104,11 @@ jobs:
           AI_RADAR_USER_AGENT: "ai-radar (+https://github.com/${{ github.repository }})"
         run: python -m pipeline.run
 
+      # Se rebase o push non riescono, lo script li ritenta dopo 5 e poi 15 minuti: i dati di un lunedì non si raccolgono una seconda volta.
+      # Un conflitto invece non si ritenta. Nel caso peggiore il passo dura circa 20 minuti, dentro i 60 del job
       - name: Salva i dati nel repository
         if: github.event_name != 'push'
-        run: python scripts/salva_nel_repo.py data "Dati aggiornati $(date -u +%F)"
+        run: python scripts/salva_nel_repo.py data "Dati aggiornati $(date -u +%F)" --attese 300,900
 
       # dopo i dati salvati: come per gli end-to-end, un download fallito non ferma la raccolta del lunedì e lascia i dati nel repository.
       # Serve all'immagine dell'edizione, ai test con il browser e agli end-to-end

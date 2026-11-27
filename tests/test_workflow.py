@@ -113,6 +113,23 @@ def test_i_due_salvataggi_passano_dallo_stesso_comando():
     assert "scripts/salva_nel_repo.py data/edizioni " in passo("Salva l'edizione nel repository")["run"]
 
 
+def test_solo_il_salvataggio_dei_dati_rifa_pull_e_push_dopo_5_e_poi_15_minuti():
+    # dati non salvati vanno persi, e per riaverli serve un giro a mano; l'edizione si rifà con la casella
+    assert "--attese 300,900" in passo("Salva i dati nel repository")["run"]
+    assert "--attese" not in passo("Salva l'edizione nel repository")["run"]
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_se_il_salvataggio_dei_dati_fallisce_il_log_spiega_il_rimedio(tmp_path):
+    # in una cartella senza lo script: il comando fallisce davvero. Vale per tre tentativi andati male e per un conflitto
+    giro = subprocess.run([SH, "-c", passo("Salva i dati nel repository")["run"]], cwd=tmp_path, capture_output=True, text=True, encoding="utf-8")
+    assert giro.returncode == 1
+    [errore] = [r for r in giro.stdout.splitlines() if r.startswith("::error::")]
+    assert "il sito non esce" in errore
+    assert "giro a mano" in errore
+    assert "casella" in errore
+
+
 def test_il_commit_dell_edizione_usa_la_sua_settimana_e_si_salva_solo_se_e_stata_creata():
     salva = passo("Salva l'edizione nel repository")
     assert salva["if"] == "steps.edizione.outputs.settimana != ''"

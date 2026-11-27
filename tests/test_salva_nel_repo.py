@@ -1,9 +1,11 @@
 """salva_nel_repo: commit, rebase e push di ciò che un giro ha scritto, su un repository vero in una cartella temporanea."""
 from __future__ import annotations
 
+import importlib.util
 import os
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -34,8 +36,8 @@ def git(cartella: Path, *argomenti: str) -> str:
     return subprocess.run(["git", *argomenti], cwd=cartella, check=True, capture_output=True, text=True, encoding="utf-8").stdout
 
 
-def salva(cartella: Path, percorso: str, messaggio: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, str(SCRIPT), percorso, messaggio], cwd=cartella, env={**os.environ, "GITHUB_REF_NAME": "main"}, capture_output=True, text=True, encoding="utf-8", errors="replace")
+def salva(cartella: Path, percorso: str, messaggio: str, *opzioni: str) -> subprocess.CompletedProcess:
+    return subprocess.run([sys.executable, str(SCRIPT), percorso, messaggio, *opzioni], cwd=cartella, env={**os.environ, "GITHUB_REF_NAME": "main"}, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
 
 def su_origin(cartella: Path, formato: str) -> list[str]:
@@ -97,3 +99,144 @@ def test_se_il_push_non_riesce_esce_con_un_errore(repo):
     giro = salva(repo, "data", "Dati")
     assert giro.returncode != 0
     assert giro.stderr != ""
+
+
+def rifiuta_i_primi_push(tmp_path: Path, quanti: int) -> None:
+    """Origin rifiuta i primi push, come GitHub quando non risponde, e poi li accetta."""
+    conta = (tmp_path / "push-arrivati").as_posix()
+    hook = tmp_path / "origin.git" / "hooks" / "pre-receive"
+    hook.write_text(f'#!/bin/sh\nn=$(( $(cat "{conta}" 2>/dev/null || echo 0) + 1 ))\necho "$n" > "{conta}"\n[ "$n" -gt {quanti} ]\n', newline="\n")
+    hook.chmod(0o755)
+
+
+def salva_aspettando(cartella: Path, monkeypatch, *argomenti: str, durante_l_attesa: Callable[[], None] = lambda: None) -> tuple[int, list[float]]:
+    """Il comando vero, nel processo del test, con uno sleep finto che annota quanto avrebbe aspettato invece di aspettare.
+
+    durante_l_attesa è ciò che succede nel mondo mentre il giro aspetta: un push da un altro clone, la rete che torna.
+    """
+    specifica = importlib.util.spec_from_file_location("salva_nel_repo", SCRIPT)
+    script = importlib.util.module_from_spec(specifica)
+    specifica.loader.exec_module(script)
+    attese: list[float] = []
+
+    def sleep(secondi: float) -> None:
+        attese.append(secondi)
+        durante_l_attesa()
+
+    monkeypatch.setattr(script.time, "sleep", sleep)
+    monkeypatch.chdir(cartella)
+    monkeypatch.setenv("GITHUB_REF_NAME", "main")
+    return script.main(list(argomenti)), attese
+
+
+def dati_nuovi(repo: Path, contenuto: str = "{}") -> None:
+    (repo / "data").mkdir(exist_ok=True)
+    (repo / "data" / "a.json").write_text(contenuto)
+
+
+def push_da_un_altro_clone(tmp_path: Path, file: str, contenuto: str, messaggio: str) -> None:
+    altro = tmp_path / "altro"
+    if not altro.exists():
+        git(tmp_path, "clone", str(tmp_path / "origin.git"), str(altro))
+    git(altro, "pull", "origin", "main")
+    (altro / file).parent.mkdir(parents=True, exist_ok=True)
+    (altro / file).write_text(contenuto)
+    git(altro, "add", ".")
+    git(altro, "-c", "user.name=Autore", "-c", "user.email=autore@esempio.org", "commit", "-m", messaggio)
+    git(altro, "push", "origin", "HEAD:main")
+
+
+def righe(testo: str, inizio: str) -> list[str]:
+    return [r for r in testo.splitlines() if r.startswith(inizio)]
+
+
+def test_con_le_attese_un_push_rifiutato_si_ritenta_dopo_5_e_poi_15_minuti_e_i_dati_arrivano_una_volta(repo, tmp_path, monkeypatch, capsys):
+    # il passo dei dati: un guasto di GitHub che dura qualche minuto non deve far perdere la raccolta del lunedì
+    rifiuta_i_primi_push(tmp_path, 2)
+    dati_nuovi(repo)
+    esito, attese = salva_aspettando(repo, monkeypatch, "data", "Dati", "--attese", "300,900")
+    assert esito == 0
+    assert attese == [300, 900]
+    assert su_origin(repo, "%s") == ["Dati", "Primo"]
+    # un avviso dopo il primo e il secondo tentativo falliti
+    avvisi = righe(capsys.readouterr().out, "::warning::")
+    assert len(avvisi) == 2
+    assert avvisi[0].endswith("al tentativo 1 di 3: riprovo fra 5 minuti.")
+    assert avvisi[1].endswith("al tentativo 2 di 3: riprovo fra 15 minuti.")
+
+
+def test_un_push_arrivato_durante_l_attesa_resta_sotto_perche_il_nuovo_tentativo_rifa_anche_il_pull(repo, tmp_path, monkeypatch):
+    # ritentare il solo push non basterebbe: origin è andato avanti, e il push sarebbe rifiutato a ogni tentativo
+    rifiuta_i_primi_push(tmp_path, 1)
+    dati_nuovi(repo)
+    esito, attese = salva_aspettando(
+        repo, monkeypatch, "data", "Dati", "--attese", "300,900",
+        durante_l_attesa=lambda: push_da_un_altro_clone(tmp_path, "web.txt", "push arrivato durante l'attesa", "Push durante l'attesa"),
+    )
+    assert esito == 0
+    assert attese == [300]
+    assert su_origin(repo, "%s") == ["Dati", "Push durante l'attesa", "Primo"]
+
+
+def test_un_pull_che_non_raggiunge_origin_si_ritenta(repo, tmp_path, monkeypatch):
+    # la rete giù al primo tentativo: il fetch fallisce senza nessun rebase in corso, e al ritorno della rete il salvataggio arriva
+    indirizzo = git(repo, "remote", "get-url", "origin").strip()
+    git(repo, "remote", "set-url", "origin", str(tmp_path / "non-esiste.git"))
+    dati_nuovi(repo)
+    esito, attese = salva_aspettando(
+        repo, monkeypatch, "data", "Dati", "--attese", "300,900",
+        durante_l_attesa=lambda: git(repo, "remote", "set-url", "origin", indirizzo),
+    )
+    assert esito == 0
+    assert attese == [300]
+    assert su_origin(repo, "%s") == ["Dati", "Primo"]
+
+
+def test_con_le_attese_dopo_tre_push_rifiutati_esce_con_un_errore_che_conta_i_tentativi(repo, tmp_path, monkeypatch, capsys):
+    rifiuta_i_primi_push(tmp_path, 3)
+    dati_nuovi(repo)
+    esito, attese = salva_aspettando(repo, monkeypatch, "data", "Dati", "--attese", "300,900")
+    assert esito == 1
+    # nessuna attesa dopo il terzo tentativo
+    assert attese == [300, 900]
+    assert su_origin(repo, "%s") == ["Primo"]
+    uscita = capsys.readouterr()
+    [errore] = righe(uscita.out, "::error::")
+    assert "dopo 3 tentativi in circa 20 minuti" in errore
+    assert "Non salvato" in uscita.err
+
+
+def test_un_conflitto_non_si_ritenta_e_lascia_il_repository_fuori_dal_rebase(repo, tmp_path, monkeypatch, capsys):
+    # il 27 ott 2026 un push aveva cambiato gli stessi file di dati: aspettare non risolve un conflitto
+    push_da_un_altro_clone(tmp_path, "data/a.json", '{"da": "altro"}', "Dati da un altro clone")
+    dati_nuovi(repo, '{"da": "giro"}')
+    esito, attese = salva_aspettando(repo, monkeypatch, "data", "Dati", "--attese", "300,900")
+    assert esito == 1
+    assert attese == []
+    assert "conflitto" in capsys.readouterr().err
+    # di nuovo sul ramo, con il commit del giro e nessun file a metà
+    assert git(repo, "branch", "--show-current").strip() == "main"
+    assert git(repo, "log", "-1", "--format=%s").strip() == "Dati"
+    assert (repo / "data" / "a.json").read_text() == '{"da": "giro"}'
+    assert git(repo, "status", "--porcelain") == ""
+    assert su_origin(repo, "%s") == ["Dati da un altro clone", "Primo"]
+
+
+def test_senza_attese_un_push_rifiutato_non_si_ritenta(repo, tmp_path, monkeypatch, capsys):
+    # il passo dell'edizione: un tentativo solo, come prima, e l'errore da annotare lo scrive il workflow
+    rifiuta_i_primi_push(tmp_path, 1)
+    dati_nuovi(repo)
+    esito, attese = salva_aspettando(repo, monkeypatch, "data", "Dati")
+    assert esito == 1
+    assert attese == []
+    assert su_origin(repo, "%s") == ["Primo"]
+    assert "::error::" not in capsys.readouterr().out
+
+
+def test_le_attese_arrivano_dalla_riga_di_comando(repo, tmp_path):
+    # il comando com'è nel workflow, in un processo suo: con attese di zero secondi il secondo tentativo passa
+    rifiuta_i_primi_push(tmp_path, 1)
+    dati_nuovi(repo)
+    giro = salva(repo, "data", "Dati", "--attese", "0,0")
+    assert giro.returncode == 0, giro.stderr
+    assert su_origin(repo, "%s") == ["Dati", "Primo"]

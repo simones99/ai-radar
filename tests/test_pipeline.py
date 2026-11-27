@@ -4,8 +4,12 @@ I numeri qui sotto sono inventati: servono solo a verificare parser e calcoli.
 """
 from __future__ import annotations
 
+import errno
 import json
+import logging
+import os
 import re
+import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -240,44 +244,68 @@ def test_full_run(env):
     assert sum("export.arxiv.org" in u for u in fake.calls) == n_before
 
 
-def _sostituzione_bloccata(monkeypatch, volte: int) -> tuple[list[str], list[float]]:
-    """Path.replace fallisce le prime `volte` volte, come su Windows quando l'antivirus tiene il file, poi sostituisce."""
-    vera = Path.replace
-    tentativi: list[str] = []
-
-    def replace(self, target):
-        tentativi.append(self.name)
-        if len(tentativi) <= volte:
-            raise PermissionError(13, "Accesso negato")
-        return vera(self, target)
-
-    monkeypatch.setattr(Path, "replace", replace)
-    attese: list[float] = []
-    monkeypatch.setattr(common, "_attendi", attese.append)
-    return tentativi, attese
+# Quelli che la guida promette in Struttura e robustezza: fino a cinque tentativi, a 50 ms l'uno dall'altro.
+TENTATIVI_SOSTITUZIONE = 5
+ATTESA_SOSTITUZIONE = 0.05
 
 
-def test_write_json_retries_a_blocked_replace(env, monkeypatch):
+def _sostituzione_bloccata(monkeypatch, volte: int, errore: OSError | None = None) -> list[float]:
+    """Il sistema rifiuta le prime `volte` sostituzioni, come Windows quando un antivirus tiene il file appena
+    scritto, poi sostituisce. Restituisce l'istante di ogni tentativo."""
+    vera = os.replace
+    istanti: list[float] = []
+
+    def replace(src, dst):
+        istanti.append(time.perf_counter())
+        if len(istanti) <= volte:
+            raise errore or PermissionError(13, "Accesso negato")
+        vera(src, dst)
+
+    monkeypatch.setattr(os, "replace", replace)
+    return istanti
+
+
+def _letto(path: Path) -> object:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_write_json_retries_a_blocked_replace(env, monkeypatch, caplog):
     tmp, _ = env
     common.write_json("arxiv.json", {"giro": 1})
-    tentativi, attese = _sostituzione_bloccata(monkeypatch, 4)
-    common.write_json("arxiv.json", {"giro": 2})
-    assert tentativi == ["arxiv.tmp"] * 5
-    assert attese == list(common.ATTESE_SOSTITUZIONE)
-    assert json.loads((tmp / "arxiv.json").read_text(encoding="utf-8")) == {"giro": 2}
-    assert not (tmp / "arxiv.tmp").exists()
+    istanti = _sostituzione_bloccata(monkeypatch, TENTATIVI_SOSTITUZIONE - 1)
+    with caplog.at_level(logging.WARNING):
+        common.write_json("arxiv.json", {"giro": 2})
+    assert _letto(tmp / "arxiv.json") == {"giro": 2}
+    assert [p.name for p in tmp.iterdir()] == ["arxiv.json"]
+    assert len(istanti) == TENTATIVI_SOSTITUZIONE
+    # Aspetta davvero, anche qui dove env rende finta time.sleep: un nuovo tentativo immediato cadrebbe nel blocco.
+    pause = [dopo - prima for prima, dopo in zip(istanti, istanti[1:])]
+    assert min(pause) >= ATTESA_SOSTITUZIONE * 0.9, pause
+    assert caplog.text.count("Sostituzione di arxiv.json bloccata") == TENTATIVI_SOSTITUZIONE - 1
+    assert f"tentativo {TENTATIVI_SOSTITUZIONE} di {TENTATIVI_SOSTITUZIONE} fra 50 ms" in caplog.text
 
 
 def test_write_json_gives_up_after_five_attempts(env, monkeypatch):
     tmp, _ = env
     common.write_json("arxiv.json", {"giro": 1})
-    tentativi, attese = _sostituzione_bloccata(monkeypatch, 5)
+    istanti = _sostituzione_bloccata(monkeypatch, TENTATIVI_SOSTITUZIONE)
     with pytest.raises(PermissionError):
         common.write_json("arxiv.json", {"giro": 2})
-    assert len(tentativi) == 5
-    assert attese == list(common.ATTESE_SOSTITUZIONE)
+    assert len(istanti) == TENTATIVI_SOSTITUZIONE
     # Il file di prima resta intero: la fonte fallisce e in pagina resta l'ultimo dato valido.
-    assert json.loads((tmp / "arxiv.json").read_text(encoding="utf-8")) == {"giro": 1}
+    assert _letto(tmp / "arxiv.json") == {"giro": 1}
+
+
+def test_write_json_does_not_retry_other_errors(env, monkeypatch, caplog):
+    tmp, _ = env
+    common.write_json("arxiv.json", {"giro": 1})
+    istanti = _sostituzione_bloccata(monkeypatch, 1, OSError(errno.ENOSPC, "Spazio esaurito"))
+    with caplog.at_level(logging.WARNING), pytest.raises(OSError) as errore:
+        common.write_json("arxiv.json", {"giro": 2})
+    assert errore.value.errno == errno.ENOSPC
+    assert len(istanti) == 1
+    assert "bloccata" not in caplog.text
+    assert _letto(tmp / "arxiv.json") == {"giro": 1}
 
 
 def test_missing_keys_are_not_errors(env, monkeypatch):

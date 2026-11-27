@@ -55,13 +55,28 @@ def read_json(name: str, default: Any = None) -> Any:
         return json.load(fh)
 
 
+# Su Windows un antivirus può tenere per qualche millisecondo un file appena scritto, e la sostituzione
+# fallisce con PermissionError anche se nessuno lo tiene aperto; riesce poco dopo. Su Linux non succede.
+ATTESE_SOSTITUZIONE = (0.05, 0.05, 0.05, 0.05)
+# La sleep vera, presa all'import: i test sostituiscono time.sleep per non aspettare i retry HTTP,
+# ma qui l'attesa serve proprio a lasciar passare il blocco.
+_attendi = time.sleep
+
+
 def write_json(name: str, obj: Any) -> None:
     path = data_dir() / name
     tmp = path.with_suffix(".tmp")
     with open(tmp, "w", encoding="utf-8") as fh:
         json.dump(obj, fh, ensure_ascii=False, indent=1)
         fh.write("\n")
-    tmp.replace(path)
+    for attesa in (*ATTESE_SOSTITUZIONE, None):
+        try:
+            tmp.replace(path)
+            return
+        except PermissionError:
+            if attesa is None:
+                raise
+            _attendi(attesa)
 
 
 # ---------------------------------------------------------------- HTTP

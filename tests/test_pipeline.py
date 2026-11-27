@@ -240,6 +240,46 @@ def test_full_run(env):
     assert sum("export.arxiv.org" in u for u in fake.calls) == n_before
 
 
+def _sostituzione_bloccata(monkeypatch, volte: int) -> tuple[list[str], list[float]]:
+    """Path.replace fallisce le prime `volte` volte, come su Windows quando l'antivirus tiene il file, poi sostituisce."""
+    vera = Path.replace
+    tentativi: list[str] = []
+
+    def replace(self, target):
+        tentativi.append(self.name)
+        if len(tentativi) <= volte:
+            raise PermissionError(13, "Accesso negato")
+        return vera(self, target)
+
+    monkeypatch.setattr(Path, "replace", replace)
+    attese: list[float] = []
+    monkeypatch.setattr(common, "_attendi", attese.append)
+    return tentativi, attese
+
+
+def test_write_json_retries_a_blocked_replace(env, monkeypatch):
+    tmp, _ = env
+    common.write_json("arxiv.json", {"giro": 1})
+    tentativi, attese = _sostituzione_bloccata(monkeypatch, 4)
+    common.write_json("arxiv.json", {"giro": 2})
+    assert tentativi == ["arxiv.tmp"] * 5
+    assert attese == list(common.ATTESE_SOSTITUZIONE)
+    assert json.loads((tmp / "arxiv.json").read_text(encoding="utf-8")) == {"giro": 2}
+    assert not (tmp / "arxiv.tmp").exists()
+
+
+def test_write_json_gives_up_after_five_attempts(env, monkeypatch):
+    tmp, _ = env
+    common.write_json("arxiv.json", {"giro": 1})
+    tentativi, attese = _sostituzione_bloccata(monkeypatch, 5)
+    with pytest.raises(PermissionError):
+        common.write_json("arxiv.json", {"giro": 2})
+    assert len(tentativi) == 5
+    assert attese == list(common.ATTESE_SOSTITUZIONE)
+    # Il file di prima resta intero: la fonte fallisce e in pagina resta l'ultimo dato valido.
+    assert json.loads((tmp / "arxiv.json").read_text(encoding="utf-8")) == {"giro": 1}
+
+
 def test_missing_keys_are_not_errors(env, monkeypatch):
     from pipeline import run
     tmp, _ = env

@@ -131,25 +131,55 @@ def test_se_il_salvataggio_dell_edizione_fallisce_il_log_spiega_il_rimedio(tmp_p
     assert "casella" in giro.stdout
 
 
-def installa_chromium(esito_di_npx: int) -> subprocess.CompletedProcess:
-    """Il comando vero del passo, con un npx finto: il download non si prova in locale."""
-    comando = f"npx() {{ return {esito_di_npx}; }}\n{passo('Installa Chromium')['run']}"
-    return subprocess.run([SH, "-c", comando], capture_output=True, text=True, encoding="utf-8")
+def installa_chromium(fallimenti: int) -> subprocess.CompletedProcess:
+    """Il comando vero del passo, con un npx finto che fallisce le prime volte e uno sleep finto che annota l'attesa senza aspettare.
+
+    Con -e, come la shell bash -e che GitHub usa per i passi run.
+    """
+    finti = (
+        "tentativi=0\n"
+        f'npx() {{ tentativi=$((tentativi + 1)); echo "npx $*"; [ "$tentativi" -gt {fallimenti} ]; }}\n'
+        'sleep() { echo "sleep $*"; }\n'
+    )
+    return subprocess.run([SH, "-e", "-c", finti + passo("Installa Chromium")["run"]], capture_output=True, text=True, encoding="utf-8")
+
+
+def righe(giro: subprocess.CompletedProcess, inizio: str) -> list[str]:
+    return [r for r in giro.stdout.splitlines() if r.startswith(inizio)]
 
 
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
-def test_se_chromium_non_si_installa_il_log_ricorda_la_casella_e_il_giro_resta_rosso():
+def test_se_chromium_non_si_installa_dopo_tre_tentativi_il_log_ricorda_la_casella_e_il_giro_resta_rosso():
     # il job finale qui non parte: il passo dell'edizione risulta saltato, non fallito
-    giro = installa_chromium(1)
+    giro = installa_chromium(3)
     assert giro.returncode == 1
-    assert "::error::" in giro.stdout
+    assert righe(giro, "npx ") == ["npx playwright install --with-deps chromium"] * 3
+    # un minuto tra un tentativo e l'altro, nessuno dopo l'ultimo
+    assert righe(giro, "sleep ") == ["sleep 60"] * 2
+    assert len(righe(giro, "::error::")) == 1
+    assert "3 tentativi" in giro.stdout
     assert "casella" in giro.stdout
 
 
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
-def test_se_chromium_si_installa_non_c_e_nessun_errore():
+@pytest.mark.parametrize("fallimenti", [1, 2])
+def test_se_chromium_si_installa_a_un_nuovo_tentativo_il_giro_prosegue_e_il_log_lo_dice(fallimenti):
+    # il 26 nov 2026 un mirror di Ubuntu dava 404 su un pacchetto appena uscito: un'ora dopo lo stesso download riusciva
+    giro = installa_chromium(fallimenti)
+    assert giro.returncode == 0
+    assert len(righe(giro, "npx ")) == fallimenti + 1
+    assert righe(giro, "sleep ") == ["sleep 60"] * fallimenti
+    assert len(righe(giro, "::warning::")) == fallimenti
+    assert "::error::" not in giro.stdout
+
+
+@pytest.mark.skipif(not SH, reason="serve una shell POSIX")
+def test_se_chromium_si_installa_al_primo_tentativo_non_c_e_nessun_avviso_e_nessuna_attesa():
     giro = installa_chromium(0)
     assert giro.returncode == 0
+    assert len(righe(giro, "npx ")) == 1
+    assert righe(giro, "sleep ") == []
+    assert "::warning::" not in giro.stdout
     assert "::error::" not in giro.stdout
 
 

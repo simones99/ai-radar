@@ -4,6 +4,10 @@ Dati di [Epoch AI](https://epoch.ai/data/ai-models) (CC BY 4.0), [arXiv](https:/
 
 Our World in Data pubblica in CC BY 4.0, ma i dati restano dei produttori originali, sempre citati: le serie dell'AI Index (Stanford HAI: investimenti, imprese che usano l'AI, annunci di lavoro) sono CC BY-ND 4.0 e vanno citate senza modifiche; le cifre di IEA, NVIDIA e TSMC restano dei produttori. La licenza di ogni serie è nel campo `licenza` di `config/sources.yaml` e compare in pagina accanto alla fonte.
 
+## Un numero che non torna
+
+Ogni numero si può ricontrollare sulla sua fonte. Se non corrisponde, la sezione *Stato delle fonti*, in fondo all'app, porta con «Segnalalo su GitHub» al modello di issue [«Un numero non torna»](https://github.com/simones99/ai-radar/issues/new?template=un-numero-non-torna.yml). Il modello chiede tre cose, tutte obbligatorie: la card, il numero visto, con la sua unità e il periodo, e la fonte controllata, con il link e il numero trovato lì. Il modello sta in `.github/ISSUE_TEMPLATE/un-numero-non-torna.yml`, e il suo elenco delle card segue le etichette di `web/src/lib/tiles/registry.ts`: una card nuova o rinominata va anche lì, e un test lo controlla. Il link dell'app usa l'indirizzo delle issue di `TITOLARE` in `web/src/lib/text/privacy.ts`, quindi una copia del progetto che lo cambia riceve le segnalazioni nel proprio repository.
+
 ## Codice, font e foto
 
 Codice con licenza MIT (vedi [`LICENSE`](https://github.com/simones99/ai-radar/blob/main/LICENSE)). D3 (ISC), Svelte (MIT) e il font Bricolage Grotesque (OFL) arrivano da npm; i testi delle loro licenze sono in `web/public/THIRD_PARTY_LICENSES.txt`, linkato in fondo alla pagina. Le foto sono da Wikimedia Commons, con autore e licenza indicati in pagina.

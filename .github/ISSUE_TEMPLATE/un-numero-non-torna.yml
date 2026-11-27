@@ -1,0 +1,43 @@
+name: Un numero non torna
+description: Un numero del sito non corrisponde a quello che dice la sua fonte.
+title: "Un numero non torna: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ogni numero di AI Radar viene da una fonte pubblica, citata nella card e in «Foto e fonti». Se un numero non corrisponde a quello che dice la fonte, scrivi qui dove l'hai visto, il numero e la fonte che hai controllato.
+
+        La issue è pubblica: non scrivere dati personali.
+  - type: dropdown
+    id: card
+    attributes:
+      label: Card
+      description: La card in cui hai visto il numero.
+      options:
+        - Competenze
+        - Modelli e ricerca
+        - Open source
+        - Notizie
+        - GeopoliticAI
+        - Business
+        - Persone e lavoro
+        - Norme
+        - Rapporti
+        - Un'edizione o la pagina di una competenza
+    validations:
+      required: true
+  - type: input
+    id: numero
+    attributes:
+      label: Numero visto
+      description: Il numero com'è scritto sul sito, con la sua unità e il periodo. Se l'hai visto in un'edizione o nella pagina di una competenza, aggiungi l'indirizzo della pagina.
+      placeholder: Copialo com'è, per esempio con «annunci» o «%» e il mese
+    validations:
+      required: true
+  - type: textarea
+    id: fonte
+    attributes:
+      label: Fonte controllata
+      description: Il link alla pagina della fonte che hai guardato, il numero che ci hai trovato e il giorno in cui l'hai controllata.
+    validations:
+      required: true

@@ -1,5 +1,10 @@
+import { TITOLARE } from './privacy';
+
 /** Adzuna chiede di citare The Adzuna API, con il link, ovunque escano i suoi dati: il nome si scrive solo qui. */
 export const ADZUNA = { nome: 'The Adzuna API', url: 'https://www.adzuna.co.uk' } as const;
+
+/** Il modello di issue «Un numero non torna» (.github/ISSUE_TEMPLATE/un-numero-non-torna.yml), con i campi card, numero visto e fonte controllata. */
+export const SEGNALA_UN_NUMERO = `${TITOLARE.issue}/new?template=un-numero-non-torna.yml`;
 
 /** Le fonti dei dati del colophon, nell'ordine in cui si leggono: un elenco solo per l'app e per la home in chiaro. */
 export const FONTI_DEI_DATI: readonly { nome: string; url: string }[] = [

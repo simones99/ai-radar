@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, within } from '@testing-library/svelte';
 import { describe, expect, it } from 'vitest';
 import { FIXTURE } from '../test/fixtures';
 import SourcesStatus from './SourcesStatus.svelte';
@@ -21,5 +21,21 @@ describe('Stato delle fonti: quanto sono vecchi i dati', () => {
     render(SourcesStatus, { status: FIXTURE.status, today: new Date(2026, 10, 5, 10) });
     expect(stato()).toHaveTextContent('da controllare');
     expect(stato()).toHaveTextContent('Ultimo aggiornamento 21 giorni fa, il 15 ott 2026.');
+  });
+});
+
+describe('Stato delle fonti: un numero che non torna si segnala', () => {
+  const MODELLO = 'https://github.com/simones99/ai-radar/issues/new?template=un-numero-non-torna.yml';
+  const segnala = () => within(stato()).getByRole('link', { name: 'Segnalalo su GitHub' });
+
+  it('il link apre il modello di issue «Un numero non torna», e dice cosa scrivere', () => {
+    render(SourcesStatus, { status: tutteOk, today: new Date(2026, 10, 4, 10) });
+    expect(segnala()).toHaveAttribute('href', MODELLO);
+    expect(stato()).toHaveTextContent('Un numero non torna con la sua fonte? Segnalalo su GitHub, con la card, il numero e la fonte che hai controllato.');
+  });
+  it('c’è anche quando lo stato delle fonti non è arrivato', () => {
+    render(SourcesStatus, { status: undefined, today: new Date(2026, 10, 4, 10), mancanti: ['status'] });
+    expect(stato()).toHaveTextContent('Lo stato delle fonti non è arrivato.');
+    expect(segnala()).toHaveAttribute('href', MODELLO);
   });
 });

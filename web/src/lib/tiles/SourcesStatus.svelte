@@ -2,7 +2,7 @@
   import DataTable from '../charts/DataTable.svelte';
   import type { FileKey } from '../data/load';
   import type { Status } from '../data/types';
-  import { NOMI_FONTI } from '../text/fonti';
+  import { NOMI_FONTI, SEGNALA_UN_NUMERO } from '../text/fonti';
   import { day, dayWith, daysTo } from '../text/format';
 
   // mancanti: i file di dati che questa pagina non ha ricevuto. Lo stato delle fonti dice com'è andato l'aggiornamento, non se i dati sono arrivati qui
@@ -43,6 +43,8 @@
   {:else}
     <p class="muted small">{mancanti.includes('status') ? 'Lo stato delle fonti non è arrivato.' : 'Nessun aggiornamento registrato ancora.'}</p>
   {/if}
+  <!-- ogni numero si può ricontrollare: chi trova un numero che non corrisponde alla fonte ha un posto dove dirlo, anche senza dati -->
+  <p class="muted small">Un numero non torna con la sua fonte? <a href={SEGNALA_UN_NUMERO} target="_blank" rel="noopener">Segnalalo su GitHub</a>, con la card, il numero e la fonte che hai controllato.</p>
 </section>
 
 <style>

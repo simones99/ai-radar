@@ -154,8 +154,8 @@ def test_se_chromium_non_si_installa_dopo_tre_tentativi_il_log_ricorda_la_casell
     giro = installa_chromium(3)
     assert giro.returncode == 1
     assert righe(giro, "npx ") == ["npx playwright install --with-deps chromium"] * 3
-    # un minuto tra un tentativo e l'altro, nessuno dopo l'ultimo
-    assert righe(giro, "sleep ") == ["sleep 60"] * 2
+    # 5 minuti prima del secondo tentativo, 15 prima del terzo, nessuna attesa dopo l'ultimo
+    assert righe(giro, "sleep ") == ["sleep 300", "sleep 900"]
     assert len(righe(giro, "::error::")) == 1
     assert "3 tentativi" in giro.stdout
     assert "casella" in giro.stdout
@@ -164,11 +164,12 @@ def test_se_chromium_non_si_installa_dopo_tre_tentativi_il_log_ricorda_la_casell
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
 @pytest.mark.parametrize("fallimenti", [1, 2])
 def test_se_chromium_si_installa_a_un_nuovo_tentativo_il_giro_prosegue_e_il_log_lo_dice(fallimenti):
-    # il 26 nov 2026 un mirror di Ubuntu dava 404 su un pacchetto appena uscito: un'ora dopo lo stesso download riusciva
+    # il 26 nov 2026 Ubuntu dava 404 su un pacchetto appena uscito: meno di un'ora dopo lo stesso download riusciva
     giro = installa_chromium(fallimenti)
     assert giro.returncode == 0
     assert len(righe(giro, "npx ")) == fallimenti + 1
-    assert righe(giro, "sleep ") == ["sleep 60"] * fallimenti
+    assert righe(giro, "sleep ") == ["sleep 300", "sleep 900"][:fallimenti]
+    assert righe(giro, "::warning::")[0].endswith("riprovo fra 5 minuti.")
     assert len(righe(giro, "::warning::")) == fallimenti
     assert "::error::" not in giro.stdout
 

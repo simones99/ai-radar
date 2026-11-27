@@ -2,7 +2,9 @@
 
 Uso:  python scripts/salva_nel_repo.py <percorso> <messaggio> [--attese 300,900]
 
-Con --attese, se rebase o push non riescono, li ritenta dopo ciascuna attesa, in secondi. Un conflitto non si ritenta.
+Con --attese, se pull o push non riescono per un motivo che non è un conflitto, come la rete o GitHub che non risponde,
+rifà pull --rebase e push dopo ciascuna attesa, in secondi. Un conflitto non si ritenta: aspettare non lo risolve.
+Un errore che non dipende dal tempo, come file modificati e non salvati, si ritenta lo stesso e finisce in rosso dopo le attese.
 """
 from __future__ import annotations
 
@@ -21,7 +23,8 @@ def git(*argomenti: str) -> None:
 
 
 def rebase_in_corso() -> bool:
-    cartelle = subprocess.run(["git", "rev-parse", "--git-path", "rebase-merge", "--git-path", "rebase-apply"], check=True, capture_output=True, text=True).stdout.split()
+    # una riga per percorso: in un worktree git li dà assoluti, e possono contenere spazi
+    cartelle = subprocess.run(["git", "rev-parse", "--git-path", "rebase-merge", "--git-path", "rebase-apply"], check=True, capture_output=True, text=True).stdout.splitlines()
     return any(Path(c).exists() for c in cartelle)
 
 
@@ -34,7 +37,7 @@ def salva(percorso: str, messaggio: str, ramo: str, attese: list[int] | None = N
     if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
         print(f"Niente di nuovo da salvare in {percorso}.")
         return False
-    # il commit una volta sola: i tentativi rifanno solo rebase e push. Ripetere tutto il comando non servirebbe,
+    # il commit una volta sola: i tentativi rifanno solo pull --rebase e push. Ripetere tutto il comando sarebbe sbagliato,
     # perché dopo il commit «Niente di nuovo» farebbe uscire bene un salvataggio mai arrivato
     git("commit", "-m", messaggio)
     attese = attese or []
@@ -57,6 +60,9 @@ def salva(percorso: str, messaggio: str, ramo: str, attese: list[int] | None = N
                 print(f"Il rebase su origin/{ramo} si ferma su un conflitto: è annullato, e aspettare non lo risolve.", file=sys.stderr)
                 raise
             if attesa is None:
+                # con un tentativo solo, come per l'edizione, l'errore da annotare lo scrive il workflow
+                if attese:
+                    print(f"::error::Il salvataggio di {percorso} non è arrivato dopo {tentativi} tentativi in circa {sum(attese) // 60} minuti.", flush=True)
                 raise
             print(f"::warning::Il salvataggio di {percorso} non è arrivato al tentativo {tentativo} di {tentativi}: riprovo fra {attesa // 60} minuti.", flush=True)
             time.sleep(attesa)

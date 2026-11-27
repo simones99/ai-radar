@@ -148,17 +148,31 @@ def righe(giro: subprocess.CompletedProcess, inizio: str) -> list[str]:
     return [r for r in giro.stdout.splitlines() if r.startswith(inizio)]
 
 
+# le attese del passo, in secondi: 5 minuti prima del secondo tentativo, 15 prima del terzo
+ATTESE = [300, 900]
+
+
+def controlla_attese_e_avvisi(giro: subprocess.CompletedProcess, fallimenti: int) -> None:
+    """Dopo ogni tentativo fallito, tranne il terzo, un avviso con il numero del tentativo e i minuti dell'attesa, poi l'attesa."""
+    attese = ATTESE[:fallimenti]
+    assert righe(giro, "sleep ") == [f"sleep {a}" for a in attese]
+    avvisi = righe(giro, "::warning::")
+    attesi = [f"al tentativo {n} di 3: riprovo fra {a // 60} minuti." for n, a in enumerate(attese, start=1)]
+    assert len(avvisi) == len(attesi)
+    for avviso, atteso in zip(avvisi, attesi):
+        assert avviso.endswith(atteso), avviso
+
+
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
 def test_se_chromium_non_si_installa_dopo_tre_tentativi_il_log_ricorda_la_casella_e_il_giro_resta_rosso():
     # il job finale qui non parte: il passo dell'edizione risulta saltato, non fallito
     giro = installa_chromium(3)
     assert giro.returncode == 1
     assert righe(giro, "npx ") == ["npx playwright install --with-deps chromium"] * 3
-    # 5 minuti prima del secondo tentativo, 15 prima del terzo, nessuna attesa dopo l'ultimo
-    assert righe(giro, "sleep ") == ["sleep 300", "sleep 900"]
-    assert len(righe(giro, "::error::")) == 1
-    assert "3 tentativi" in giro.stdout
-    assert "casella" in giro.stdout
+    controlla_attese_e_avvisi(giro, 3)
+    [errore] = righe(giro, "::error::")
+    assert f"3 tentativi in circa {sum(ATTESE) // 60} minuti" in errore
+    assert "casella" in errore
 
 
 @pytest.mark.skipif(not SH, reason="serve una shell POSIX")
@@ -168,9 +182,7 @@ def test_se_chromium_si_installa_a_un_nuovo_tentativo_il_giro_prosegue_e_il_log_
     giro = installa_chromium(fallimenti)
     assert giro.returncode == 0
     assert len(righe(giro, "npx ")) == fallimenti + 1
-    assert righe(giro, "sleep ") == ["sleep 300", "sleep 900"][:fallimenti]
-    assert righe(giro, "::warning::")[0].endswith("riprovo fra 5 minuti.")
-    assert len(righe(giro, "::warning::")) == fallimenti
+    controlla_attese_e_avvisi(giro, fallimenti)
     assert "::error::" not in giro.stdout
 
 

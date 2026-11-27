@@ -115,14 +115,15 @@ jobs:
       - name: Installa Chromium
         working-directory: web
         run: |
-          tentativo=1
-          for attesa in 300 900; do
+          set -- 300 900   # le attese in secondi, prima del secondo e del terzo tentativo
+          for tentativo in 1 2 3; do
             npx playwright install --with-deps chromium && exit 0
-            echo "::warning::Chromium non si è installato al tentativo $tentativo di 3: riprovo fra $((attesa / 60)) minuti."
-            sleep "$attesa"
-            tentativo=$((tentativo + 1))
+            if [ "$tentativo" -lt 3 ]; then
+              echo "::warning::Chromium non si è installato al tentativo $tentativo di 3: riprovo fra $(($1 / 60)) minuti."
+              sleep "$1"
+              shift
+            fi
           done
-          npx playwright install --with-deps chromium && exit 0
           echo "::error::Chromium non si è installato dopo 3 tentativi in circa 20 minuti: il sito non esce e l'edizione non si crea. I dati raccolti sono già salvati. Se era il giro del lunedì, per recuperare l'edizione avvia il giro a mano con la casella accesa."
           exit 1
 
